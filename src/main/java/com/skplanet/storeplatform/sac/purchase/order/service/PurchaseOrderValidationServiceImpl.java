@@ -9,29 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.NoSuchMessageException;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
@@ -60,6 +37,22 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.shopping.repository.ShoppingRepository;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Param;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 
@@ -754,7 +747,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		boolean bPurchaserAgeNotExist = false;
 		boolean bReceiverAgeNotExist = false;
 		boolean bPurchaserNotRealName = false;
-		boolean bReceiverNotRealName = false;
+//		boolean bReceiverNotRealName = false;
 
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
 			// 연령체크 안함: 모바일 회원은 생년월일 저장X, 생년월일도 * 문자 포함으로 확인불가
@@ -769,7 +762,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			bPurchaserAgeNotExist = false;
 			bReceiverAgeNotExist = false;
 			bPurchaserNotRealName = false;
-			bReceiverNotRealName = false;
+//			bReceiverNotRealName = false;
 
 			if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_12)) {
 				if (purchaserAge > 0 && purchaserAge < 12) {
@@ -818,10 +811,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					if (bPurchaserNotRealName == false && bPurchaserAgeNotExist == false
 							&& bPurchaserAgeLimited == false) {
 						for (PurchaseUserDevice receiver : purchaseOrderInfo.getReceiveUserList()) {
-							if (receiver.isRealName() == false) {
-								bReceiverNotRealName = true;
-								break;
-							} else if (receiver.getAge() <= 0) {
+//							if (receiver.isRealName() == false) {  //(2015.06.01 수신자의 실명 인증 여부 체크하지 않음)
+//								bReceiverNotRealName = true;
+//								break;
+//							} else
+							if (receiver.getAge() <= 0) {
 								bReceiverAgeNotExist = true;
 								break;
 							} else if (receiver.getAge() < allowAge) {
@@ -868,14 +862,16 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				} else {
 					throw new StorePlatformException("SAC_PUR_5110");
 				}
-			} else if (bReceiverNotRealName) { // 선물 수신자가 실명 인증 회원이 아닙니다.
-				if (bClink) {
-					product.setResultCd("4108");
-					continue;
-				} else {
-					throw new StorePlatformException("SAC_PUR_4108");
-				}
-			} else if (bReceiverAgeNotExist) { // 선물 수신자 연령 정보가 없습니다.
+			}
+//			else if (bReceiverNotRealName) { // 선물 수신자가 실명 인증 회원이 아닙니다. //(2015.06.01 수신자의 실명 인증 여부 체크하지 않음)
+//				if (bClink) {
+//					product.setResultCd("4108");
+//					continue;
+//				} else {
+//					throw new StorePlatformException("SAC_PUR_4108");
+//				}
+//			}
+			else if (bReceiverAgeNotExist) { // 선물 수신자 연령 정보가 없습니다.
 				if (bClink) {
 					product.setResultCd("4110");
 					continue;
