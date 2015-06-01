@@ -171,7 +171,7 @@ public class VoucherServiceImpl implements VoucherService {
 			throw new StorePlatformException("SAC_DSP_0009");
 
 		// 정액제 상품 메타 조회
-		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+		if (productBasicInfoList.size() > 0) {
 			reqMap.put("tenantHeader", header.getTenantHeader());
 			reqMap.put("deviceHeader", header.getDeviceHeader());
 			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
@@ -290,7 +290,7 @@ public class VoucherServiceImpl implements VoucherService {
 		if (retMetaInfoList == null)
 			throw new StorePlatformException("SAC_DSP_0009", req.getProductId(), req.getProductId());
 
-		if (retMetaInfoList != null && retMetaInfoList.size() > 0) {
+		if (retMetaInfoList.size() > 0) {
 
 			for (MetaInfo metaInfo : retMetaInfoList) {
 

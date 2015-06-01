@@ -154,7 +154,7 @@ public class FreepassServiceImpl implements FreepassService {
 			throw new StorePlatformException("SAC_DSP_0009");
 
 		// 정액제 상품 메타 조회
-		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+		if ( productBasicInfoList.size() > 0) {
 			reqMap.put("tenantHeader", header.getTenantHeader());
 			reqMap.put("deviceHeader", header.getDeviceHeader());
 			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
@@ -659,7 +659,7 @@ public class FreepassServiceImpl implements FreepassService {
 	 */
 	@Override
 	public List<String> getAvailableFixrateProdIdList(PaymentInfoSacReq req) {
-		List<String> availableFixrateProdIdList = new ArrayList<String>();
+		List<String> availableFixrateProdIdList = null;
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("lang", req.getLangCd());
 		paramMap.put("tenantId", req.getTenantId());
@@ -682,7 +682,7 @@ public class FreepassServiceImpl implements FreepassService {
 	 */
 	@Override
 	public List<FreePass> getAvailableFixrateInfoList(PaymentInfoSacReq req) {
-		List<FreePass> availableFixrateInfoList = new ArrayList<FreePass>();
+		List<FreePass> availableFixrateInfoList = null;
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("lang", req.getLangCd());
 		paramMap.put("tenantId", req.getTenantId());
@@ -708,7 +708,7 @@ public class FreepassServiceImpl implements FreepassService {
 		List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>();
 		List<String> prodIdList = req.getProdIdList();
 		List<String> exclusiveFixrateProdIdList = new ArrayList<String>();
-		List<ExclusiveFreePass> exclusiveTypeInfoList = new ArrayList<ExclusiveFreePass>();
+		List<ExclusiveFreePass> exclusiveTypeInfoList = null;
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		// / 단말 지원 정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
@@ -814,7 +814,7 @@ public class FreepassServiceImpl implements FreepassService {
 			throw new StorePlatformException("SAC_DSP_0009");
 
 		// 정액제 상품 메타 조회
-		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+		if (productBasicInfoList.size() > 0) {
 			reqMap.put("tenantHeader", header.getTenantHeader());
 			reqMap.put("deviceHeader", header.getDeviceHeader());
 			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
