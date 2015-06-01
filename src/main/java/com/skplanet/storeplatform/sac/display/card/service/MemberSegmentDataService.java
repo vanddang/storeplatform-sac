@@ -19,9 +19,19 @@ import com.skplanet.storeplatform.sac.display.card.vo.MemberSegment;
  * Updated on : 2014. 11. 13 Updated by : 서대영, SK 플래닛.
  */
 public interface MemberSegmentDataService {
-	
+
 	SearchUserSegmentSacRes searchUserSegment(String userKey, String deviceKey);
 
 	MemberSegment selectMemberSegment(String tenantId, String userKey);
-	
+
+	/**
+	 * <pre>
+	 * 접속한 사용자가 카드를 테스트하기 위한 테스트 유저인지 여부를 확인한다.
+	 * </pre>
+	 * @param tenantId 테넌트 ID
+	 * @param userMdn  사용자 MDN
+	 * @return 카드 테스트 유저 여부
+	 */
+    String selectTestMdnYn( String tenantId, String userMdn );
+
 }

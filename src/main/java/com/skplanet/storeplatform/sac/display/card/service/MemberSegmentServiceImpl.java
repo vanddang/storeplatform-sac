@@ -36,36 +36,42 @@ public class MemberSegmentServiceImpl implements MemberSegmentService {
 	private MemberSegmentDataService dataService;
 	@Autowired
 	private MemberSegmentTypeService typeService;
-	
+
 	@Override
 	public MemberSegmentRes findMemberSegment(MemberSegmentReq req, SacRequestHeader header) {
-		String tenantId = header.getTenantHeader().getTenantId();
-		String userKey = req.getUserKey();
+
+		String tenantId  = header.getTenantHeader().getTenantId();
+		String userKey   = req.getUserKey();
 		String deviceKey = req.getDeviceKey();
-		
+
 		MemberSegmentRes res = new MemberSegmentRes();
-		
+
 		SegmentRes segmentRes = new SegmentRes();
 		SearchUserSegmentSacRes segmentFromSci = dataService.searchUserSegment(userKey, deviceKey);
 		typeService.bindFromSci(segmentRes, segmentFromSci);
-		
+
 		MemberSegment segmentFromDb = dataService.selectMemberSegment(tenantId, userKey);
 		if (segmentFromDb != null) {
 			typeService.bindFromDb(segmentRes, segmentFromDb);
-			List<PreferredCategoryRes> preferredCategoryList = typeService.fromMemberSegmentToPreferredCategoryRes(segmentFromDb);	
+			List<PreferredCategoryRes> preferredCategoryList = typeService.fromMemberSegmentToPreferredCategoryRes(segmentFromDb);
 			res.setPreferredCategoryList(preferredCategoryList);
 		}
-		
+
 		if (StringUtils.isBlank(segmentRes.getOutsdMbrGrdCd())) {
 			segmentRes.setOutsdMbrGrdCd("2"); // Default 외부회원레벨 = "gold"
 		}
-		
+
 		if (StringUtils.isBlank(segmentRes.getSex())) {
 			segmentRes.setSex("Z"); // Default sex = "Z"
 		}
-		
+
+		segmentRes.setTingYn( req.getTingYn() );
+
+		segmentRes.setTestMdnYn( dataService.selectTestMdnYn( tenantId, req.getTestMdn() ) );
+
 		res.setSegment(segmentRes);
 		return res;
+
 	}
 
 }

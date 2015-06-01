@@ -31,10 +31,10 @@ import com.skplanet.storeplatform.sac.display.card.vo.MemberSegment;
  */
 @Service
 public class MemberSegmentDataServiceImpl implements MemberSegmentDataService {
-	
+
 	@Autowired
 	private SearchUserSCI sci;
-	
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -42,7 +42,7 @@ public class MemberSegmentDataServiceImpl implements MemberSegmentDataService {
 	public void setCommonDAO(CommonDAO commonDAO) {
 		this.commonDAO = commonDAO;
 	}
-	
+
 	@Override
 	public SearchUserSegmentSacRes searchUserSegment(String userKey, String deviceKey) {
 		SearchUserSegmentSacReq req = new SearchUserSegmentSacReq();
@@ -50,14 +50,25 @@ public class MemberSegmentDataServiceImpl implements MemberSegmentDataService {
 		req.setDeviceKey(deviceKey);
 		return sci.searchUserSegment(req);
 	}
-	
+
 	@Override
 	public MemberSegment selectMemberSegment(String tenantId, String userKey) {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("tenantId", tenantId);
         param.put("userKey", userKey);
-		
+
 		return commonDAO.queryForObject("MemberSegment.selectMemberSegment", param, MemberSegment.class);
 	}
-	
+
+	@Override
+	public String selectTestMdnYn(String tenantId, String userMdn ) {
+
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put( "tenantId", tenantId );
+		param.put( "userKey",  userMdn  );
+
+		return (String) commonDAO.queryForObject( "MemberSegment.selectTestMdnYn", param );
+
+	}
+
 }
