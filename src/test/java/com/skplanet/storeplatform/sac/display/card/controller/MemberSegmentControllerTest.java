@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -46,8 +47,7 @@ public class MemberSegmentControllerTest {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
-//	@Test
-
+	@Test
 	public void basic() throws Exception {
 
 		// LocalSci 는.. 접속계정이 달라져야 하는데, 이를 현재 감겨있는 프레임워크에서는 유연하게 변경하지 못하는 것 같네요.
@@ -55,9 +55,11 @@ public class MemberSegmentControllerTest {
 
 		MemberSegmentReq req = new MemberSegmentReq();
 
-		req.setTestMdn( "01031155023" );
+		req.setUserMdn( "01031155023" );
 		req.setTingYn( "Y" );
-		req.setUserKey( "DUMMY" );
+		req.setDeviceKey( "DE2015052217084261415049028" );
+		req.setUserKey( "US201505221708425780023912" );
+
 
 		String postBody = new ObjectMapper().writeValueAsString(req);
 
