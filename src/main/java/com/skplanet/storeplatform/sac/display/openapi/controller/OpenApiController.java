@@ -9,9 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.controller;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.openapi.service.*;
+import com.skplanet.storeplatform.sac.display.openapi.vo.MusicProd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +79,9 @@ public class OpenApiController {
 	@Autowired
 	private SupportGameCenterService supportGameCenterService;
 
+    @Autowired
+    private MusicService musicService;
+
 	@InitBinder("bestDownloadAppSacReq")
 	public void initBestDownloadAppSacReqBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new BestDownloadAppSacReqValidator());
@@ -106,7 +111,7 @@ public class OpenApiController {
 	 * App 목록 요청 - TBD.
 	 * </pre>
 	 * 
-	 * @param req
+	 * @param sellerAppListReq
 	 *            req
 	 * @param header
 	 *            header
@@ -124,7 +129,7 @@ public class OpenApiController {
 	 * App 상세 정보 요청.
 	 * </pre>
 	 * 
-	 * @param req
+	 * @param sellerAppDetailReq
 	 *            req
 	 * @param header
 	 *            header
@@ -239,7 +244,7 @@ public class OpenApiController {
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param SearchAppNameSacReq
+	 * @param searchAppNameSacReq
 	 *            searchAppNameSacReq
 	 * @return SearchAppNameSacRes
 	 */
@@ -258,7 +263,7 @@ public class OpenApiController {
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param SearchAppNameSacReq
+	 * @param searchSellerNameSacReq
 	 *            searchAppNameSacReq
 	 * @return SearchAppNameSacRes
 	 */
@@ -315,7 +320,7 @@ public class OpenApiController {
 	 * </pre>
 	 * 
 	 * @param header
-	 * @param salesAppReq
+	 * @param salesAppInfoReq
 	 * @return
 	 */
 	@RequestMapping(value = "/salesApp/detail/v1", method = RequestMethod.GET)
@@ -337,7 +342,7 @@ public class OpenApiController {
 	 * 
 	 * @param appDetailByProductIdSacReq
 	 *            appDetailByProductIdSacReq
-	 * @param SacRequestheader
+	 * @param requestheader
 	 *            requestheader
 	 * @return AppDetailByProductIdSacRes
 	 */
@@ -356,7 +361,7 @@ public class OpenApiController {
 	 * 
 	 * @param appDetailByPackageNameSacReq
 	 *            appDetailByPackageNameSacReq
-	 * @param SacRequestheader
+	 * @param requestheader
 	 *            requestheader
 	 * @return AppDetailByPackageNameSacRes
 	 */
@@ -375,7 +380,7 @@ public class OpenApiController {
 	 * 
 	 * @param supportGameCenterSacReq
 	 *            supportGameCenterSacReq
-	 * @param SacRequestheader
+	 * @param requestheader
 	 *            requestheader
 	 * @return SupportGameCenterSacRes
 	 */
@@ -385,5 +390,34 @@ public class OpenApiController {
 			@RequestBody @Validated SupportGameCenterSacReq supportGameCenterSacReq, SacRequestHeader requestheader) {
 		return this.supportGameCenterService.searchSupportGameCenterByAid(supportGameCenterSacReq, requestheader);
 	}
+
+    /**
+     *
+     * <pre>
+     * 티스토어 음악 정보 조회
+     * </pre>
+     *
+     * @param sacRequestHeader
+     *            sacRequestHeader
+     * @param musicDetailSacReq
+     *            musicDetailSacReq
+     * @return MusicDetailSacRes
+     */
+    @RequestMapping(value = "/music/detail/v1", method = RequestMethod.GET)
+    @ResponseBody
+    public MusicDetailSacRes getMusicDetail(
+            SacRequestHeader sacRequestHeader, @Validated MusicDetailSacReq musicDetailSacReq) {
+
+        String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
+        String outsdContentsId = musicDetailSacReq.getSongId();
+        MusicProd musicProd = musicService.getDetailBySongId(tenantId, outsdContentsId);
+        if(musicProd == null)
+            throw new StorePlatformException("SAC_DSP_0009");
+
+        MusicDetailSacRes musicDetailSacRes = new MusicDetailSacRes();
+        musicDetailSacRes.setProdId(musicProd.getProdId());
+        musicDetailSacRes.setProdStatusCd(musicProd.getProdStatusCd());
+        return musicDetailSacRes;
+    }
 
 }
