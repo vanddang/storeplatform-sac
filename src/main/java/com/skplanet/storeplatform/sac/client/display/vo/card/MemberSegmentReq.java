@@ -30,7 +30,7 @@ public class MemberSegmentReq extends CommonInfo {
 
     private String deviceKey;
 
-    private String testMdn;
+    private String userMdn;
 
     private String tingYn;
 
@@ -58,12 +58,12 @@ public class MemberSegmentReq extends CommonInfo {
 	    this.tingYn = tingYn;
     }
 
-	public String getTestMdn() {
-	    return testMdn;
+	public String getUserMdn() {
+	    return userMdn;
     }
 
-	public void setTestMdn( String testMdn ) {
-	    this.testMdn = testMdn;
+	public void setUserMdn( String testMdn ) {
+	    this.userMdn = testMdn;
     }
 
 }
