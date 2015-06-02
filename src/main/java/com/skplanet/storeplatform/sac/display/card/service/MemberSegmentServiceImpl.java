@@ -67,7 +67,7 @@ public class MemberSegmentServiceImpl implements MemberSegmentService {
 
 		segmentRes.setTingYn( req.getTingYn() );
 
-		segmentRes.setTestMdnYn( dataService.selectTestMdnYn( tenantId, req.getTestMdn() ) );
+		segmentRes.setTestMdnYn( dataService.selectTestMdnYn( tenantId, req.getUserMdn() ) );
 
 		res.setSegment(segmentRes);
 		return res;
