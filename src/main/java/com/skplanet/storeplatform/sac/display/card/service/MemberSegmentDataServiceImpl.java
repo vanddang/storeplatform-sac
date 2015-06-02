@@ -65,7 +65,7 @@ public class MemberSegmentDataServiceImpl implements MemberSegmentDataService {
 
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put( "tenantId", tenantId );
-		param.put( "userKey",  userMdn  );
+		param.put( "userMdn",  userMdn  );
 
 		return (String) commonDAO.queryForObject( "MemberSegment.selectTestMdnYn", param );
 
