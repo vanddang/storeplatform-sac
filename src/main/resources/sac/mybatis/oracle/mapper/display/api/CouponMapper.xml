@@ -797,5 +797,56 @@
           AND LAST_DEPLOY_DT IS NULL
     </update>
         
+        
+    <!--쇼핑 사용중인 상품 조회-->
+    <select id="getShoppingIngYn"  resultType="String" parameterType="Map">
+       /* CouponMapper.xml, getShoppingIngYn, 쇼핑 사용중인 상품 조회, 김형식/SK플래닛  , 2015-06-02 */
+       SELECT 
+               (CASE WHEN COUNT(B.CATALOG_ID)> 0 
+                    THEN 'Y' 
+                    ELSE 'N' 
+               END) ingYn 
+         FROM 
+                TB_DP_SHPG_BRAND         A
+               ,TB_DP_SHPG_CATALOG       B
+               ,TB_DP_PROD_CATALOG_MAPG  G 
+               ,TB_DP_PROD_RSHP          H
+               ,TB_DP_SHPG_PROD          I
+               ,TB_DP_PROD               J
+               ,TB_DP_TENANT_PROD        K
+               ,TB_DP_TENANT_PROD_PRICE  L
+      WHERE 1=1
+        AND A.BRAND_ID = B.BRAND_ID
+        AND B.CATALOG_ID = G.CATALOG_ID
+        AND G.PROD_ID = H.PROD_ID
+        AND H.PROD_ID  !=  H.PART_PROD_ID
+        AND H.PART_PROD_ID = I.PROD_ID
+        AND I.PROD_ID = J.PROD_ID
+        AND I.PROD_ID = K.PROD_ID
+        AND I.PROD_ID = L.PROD_ID
+        AND K.TENANT_ID = L.TENANT_ID 
+        AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+        AND H.PROD_RSHP_CD = 'DP010802'    /*채널-에피소드 상품 관계*/
+        AND NVL(B.CHNL_CNT, 0) > 0  
+        AND G.BASE_YN ='Y'                 /* Y : 기본(기본여부) */
+        AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+        AND NVL(I.B2B_PROD_YN, 'N')  !=  'Y'
+        AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+        AND K.TENANT_ID = 'S01'      /* INPUT 테넌트ID */
+        
+        <foreach collection="list" item="item" index="index" separator="," open="AND H.PART_PROD_ID  IN (" close=")">
+                        #{item} 
+        </foreach>
+    </select>      
+    
+    <!--  채널ID를 이용 카탈로그ID 조회-->
+    <select id="getShoppingCatalogIdByChannelId" resultType="String" parameterType="String">
+       /* CouponMapper.xml, getShoppingCatalogIdByChannelId,채널ID를 이용 카탈로그ID 조회, 김형식/SK플래닛  , 2015-06-02 */
+       SELECT CATALOG_ID 
+		 FROM TB_DP_PROD_CATALOG_MAPG
+		WHERE BASE_YN ='Y'
+		  AND USE_YN ='Y'
+		  AND PROD_ID = #{prodId}
+    </select>         
     
 </mapper>
