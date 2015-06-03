@@ -97,34 +97,6 @@ public class ShoppingCouponSacController {
 
 	}
 
-	/**
-	 * <pre>
-	 * 쇼핑쿠폰 전처리 배치– GET.
-	 * </pre>
-	 * 
-	 * @return ShoppingRes
-	 */
-	@RequestMapping(value = "/api/couponStateUpdateStart/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public ShoppingRes couponStateUpdateStart() {
-		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("CouponStateUpdateStart Controller started!!");
-		this.log.debug("----------------------------------------------------------------");
-		try {
-			String nowTime = DateUtil.getToday() + DateUtil.getTime();
-			if (nowTime.length() >= 8)
-				nowTime = nowTime.substring(0, 8);
-
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-			Date yesDate = DateUtil.getYesterday(sdf.parse(nowTime));
-			String yesterdayTime = DateUtil.getDateString(yesDate, "yyyyMMdd");
-			this.couponProcessService.couponStateUpdateStart(yesterdayTime);
-		} catch (Exception e) {
-			this.log.error("couponStateUpdateStart 생성 중 예외 발생 - ( 쿠폰(아이템) 상태변경 Batch  Call 에러 )", e);
-		}
-		return null;
-
-	}
 
 	/**
 	 * <pre>

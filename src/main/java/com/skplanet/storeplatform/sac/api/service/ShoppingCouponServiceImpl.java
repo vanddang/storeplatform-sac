@@ -10,12 +10,14 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.swing.ImageIcon;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,9 @@ import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
+import com.skplanet.storeplatform.sac.mq.client.search.constant.SearchConstant;
+import com.skplanet.storeplatform.sac.mq.client.search.util.SearchQueueUtils;
+import com.skplanet.storeplatform.sac.mq.client.search.vo.SearchInterfaceQueue;
 
 /**
  * <pre>
@@ -53,6 +58,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	@Value("#{propertiesForSac['shopping.repositoryPath']}")
 	private String repositoryPath;
 
+	@Autowired
+	@Resource(name = "sacSearchIprmAmqpTemplate")
+	private AmqpTemplate sacSearchIprmAmqpTemplate; // 검색 서버 MQ 연동.
 	/**
 	 * <pre>
 	 * 브랜드 카탈로그 이미지 정보.
@@ -339,6 +347,10 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 			// cash flush
 			this.cacheEvictShoppingMeta(null, dpCatalogInfo);
+			
+			//MQ 연동 서비스
+			this.getConnectMqForSearchServer(dpCatalogInfo);
+			
 
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), message, null);
@@ -1058,5 +1070,36 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * getConnectMqForSearchServer MQ 연동
+	 * 
+	 * @param dpCatalogInfo
+	 *            dpCatalogInfo
+	 */
+
+	private void getConnectMqForSearchServer(DpCatalogInfo dpCatalogInfo) {
+
+		this.log.info("■■■■■ 카탈로그 검색서버를 위한 MQ 연동 start ■■■■■");
+		
+		// 수정일때 그냥 무조건 MQ 연동
+		if ("U".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
+    		SearchInterfaceQueue queueMsg = SearchQueueUtils.makeMsg(
+    				  "U"
+    				, "DP28"
+    				, SearchConstant.UPD_ID_SAC_SHOPPING.toString()
+    				, SearchConstant.CONTENT_TYPE_CATALOG.toString()
+    				, dpCatalogInfo.getCreateCatalogId()
+    		);
+			log.info("=================================================");
+			log.info("======================MQ 연동 성공11================");
+			log.info("=================================================");
+
+			this.sacSearchIprmAmqpTemplate.convertAndSend(queueMsg);
+		} 
+
+		this.log.info("■■■■■ 카탈로그 검색서버를 위한 MQ 연동 end ■■■■■");
+
 	}
 }

@@ -2,23 +2,13 @@ package com.skplanet.storeplatform.sac.api.service;
 
 import static com.skplanet.storeplatform.sac.display.common.ProductType.Shopping;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -40,7 +30,6 @@ import com.skplanet.storeplatform.iprm.mq.client.product.vo.ProductTenantPrice;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
-import com.skplanet.storeplatform.sac.api.util.CSVReader;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.SpRegistProd;
@@ -59,6 +48,10 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInf
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.mq.client.search.constant.SearchConstant;
+import com.skplanet.storeplatform.sac.mq.client.search.util.SearchQueueUtils;
+import com.skplanet.storeplatform.sac.mq.client.search.vo.SearchInterfaceQueue;
 
 /**
  * <pre>
@@ -85,6 +78,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	@Autowired
 	@Resource(name = "shoppingIprmAmqpTemplate")
 	private AmqpTemplate shoppingIprmAmqpTemplate; // MQ 연동.
+	
+	@Autowired
+	@Resource(name = "sacSearchIprmAmqpTemplate")
+	private AmqpTemplate sacSearchIprmAmqpTemplate; // 검색 서버 MQ 연동.
+	
 
 	@Override
 	public boolean insertCouponInfo(CouponReq couponReq) {
@@ -198,6 +196,10 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 			this.log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 
+			// 검색 서버를 위한 MQ 연동 
+			this.setForMakeMq(couponInfo, itemInfoList, couponReq);
+			
+			
 			this.log.info("■■■■■ cacheEvictShoppingMeta 시작 ■■■■■");
 			this.cacheEvictShoppingMeta(couponInfo, couponReq);
 			this.log.info("■■■■■ cacheEvictShoppingMeta 완료 ■■■■■");
@@ -1009,6 +1011,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		}
 
 		this.getConnectMq(couponInfo, itemInfoList, couponReq , cudType);
+		
+	
 
 		return true;
 	} // End setTbDpProdDesc
@@ -1189,6 +1193,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			} finally {
 				this.log.info("■■■■■ DB Transaction END ■■■■■");
 			}
+			
+			
+			// 검색 서버를 위한 MQ 연동 
+			setShoppingCatalogIdByChannelIdForMq(newCouponCode);
+			
 
 		} else {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponReq is NULL!!", null);
@@ -1261,242 +1270,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		return info;
 	}
 
-	/**
-	 * <pre>
-	 * 쿠폰(아이템) Batch 처리 호출 메소드 (수동 호출용).
-	 * </pre>
-	 * 
-	 * @param nowTime
-	 *            nowTime
-	 * @return
-	 */
-	@Override
-	public void couponStateUpdateStart(String nowTime) {
-		this.log.debug("<<<<< BatchProductSaleStatService.couponStateUpdateStart CREATE >>>>>");
-		this.log.info("nowTime:::" + nowTime);
 
-		String lineSeparator = System.getProperty("line.separator");
-		StringBuffer sb = new StringBuffer();
-		boolean isOk = false;
-		boolean flag = true;
-
-		ArrayList<CouponReq> couponList = new ArrayList<CouponReq>();
-		ArrayList<String> resultList =null;
-
-		CSVReader reader = null;
-		// 파일명을 위한 날짜
-		Calendar now = Calendar.getInstance();
-		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
-		StringBuffer strFirstValueTot = new StringBuffer();
-
-		try {
-
-			this.log.info(" 쿠폰(아이템) 상태변경 배치 작업 시작 ");
-			// String url = prop.getString("omp.bp.shopping.coupon.batch.url") + nowTime; // 호출 URL
-			// String url = "http://api.coupon.itopping.co.kr/Bp/getCouponStatusList?scrRange=date&scrDate=" + nowTime;
-			String url = "http://api.coupon.itopping.co.kr/Bp/getCouponStatusList?scrRange=date&scrDate=20131015";
-			// 운영 URL
-			// String url ="http://api.coupon.tstore.co.kr/Bp/getCouponStatusList?scrRange=date&scrDate="+nowTime;
-			this.log.info("호출 URL :::::: " + url);
-
-			this.log.debug("■■■■■ 파일디렉토리 설정 S  ■■■■■");
-			String downDir = this.makeFileDirectory();
-			this.log.debug("■■■■■ 파일디렉토리 설정 E  ■■■■■");
-
-			this.log.debug("■■■■■ 파일명 설정 S  ■■■■■");
-			String fileName = "sync_" + sf.format(now.getTime());
-			fileName = "sync_20140120131746";
-			String fileNameCsv = fileName.replaceAll("-", "") + ".csv";
-			String fileNameLog = fileName.replaceAll("-", "") + ".log";
-			this.log.debug("■■■■■ 파일명 설정 E  ■■■■■");
-
-			// 다운로드 호출
-			this.log.debug("■■■■■ 파일 다운로드 시작 ■■■■■");
-			// this.fileUrlReadAndDownload(url, fileNameCsv, downDir);
-			this.log.debug("■■■■■ 파일 다운로드 끝 ■■■■■");
-
-			this.log.info("■■■■■ read CSV 시작 ■■■■■");
-			reader = new CSVReader(new InputStreamReader(new FileInputStream(downDir + File.separator + fileNameCsv),
-					"UTF-8"), '\t');
-			String[] nextLine = null;
-			String nonContentId = "";
-			String nonItemId = "";
-			String itemCode = "";
-			String newItemId = "";
-
-			while ((nextLine = reader.readNext()) != null) {
-				CouponReq info = new CouponReq();
-
-				if (nextLine[0].toString().equals("1")) {
-					info.setUpType("0"); // 0=상품상태변경, 1=단품상태변경
-				} else {
-					info.setUpType("1"); // 0=상품상태변경, 1=단품상태변경
-				}
-
-				String newCouponId = this.couponItemService.getCouponGenerateId(nextLine[1].toString());
-				if (StringUtils.isBlank(newCouponId)) { // content_id 값이 없으면 log에 남기기
-					nonContentId = "nonContentId::" + sf.format(now.getTime()) + ">>>>쿠폰코드::::"
-							+ nextLine[1].toString();
-					strFirstValueTot.append(nonContentId + lineSeparator);
-					flag = false;
-				}
-				if ((StringUtils.equalsIgnoreCase(info.getUpType(), "1"))) { // 1=단품상태변경 item 값은 필수
-					info.setItemCode(nextLine[2].toString()); // 아이템 코드
-					newItemId = this.couponItemService.getItemGenerateId(nextLine[2].toString());
-					if (StringUtils.isBlank(newItemId)) {
-						nonItemId = "nonItemId::" + sf.format(now.getTime()) + ">>>>아이템코드::::" + nextLine[2].toString();
-						strFirstValueTot.append(nonItemId + lineSeparator);
-						flag = false;
-					}
-				}
-				if (flag) {
-					info.setCouponCode(nextLine[1].toString()); // 쿠폰 코드
-					info.setCoupnStatus(this.getDPStatusCode(nextLine[3].toString())); // 2:판매대기 , 3:판매중 , 4:판매중지
-					// ,5:판매금지
-					info.setNewCouponId(newCouponId);
-					info.setItemCode(nextLine[2].toString()); // 아이템 코드
-					info.setNewItemId(newItemId);
-					couponList.add(info);
-				}
-			}
-
-			reader.close();
-			this.log.info("■■■■■ read CSV 끝 ■■■■■");
-			this.log.info("■■■■■ couponList.size() ■■■■■" + couponList.size());
-
-			resultList = this.couponItemService.updateBatchForCouponStatus(couponList);
-
-			File logFile = new File(downDir, fileNameLog);
-
-			for (String resultCd : resultList) {
-				strFirstValueTot.append(resultCd + lineSeparator);
-			}
-			isOk = this.writeStringBufferMy(logFile, strFirstValueTot); // log 파일 쌓기
-
-			if (!isOk) {
-				this.log.info(" (쿠폰(아이템) 상태 판매대기 -> 판매중 상태 전환 오류 ( " + nowTime + ")");
-				sb.append(" (쿠폰(아이템) 상태 판매대기 -> 판매중 상태 전환 오류 ( " + nowTime + ")");
-			} else {
-				sb.append(" (쿠폰(아이템) 상태 변경 성공");
-			}
-
-			this.log.info(" 쿠폰(아이템) 상태변경 배치 작업 종료 ");
-		} catch (Exception e) {
-			this.log.error("couponStateUpdateStart 생성 중 예외 발생 - (쿠폰(아이템) 상태변경 Batch 처리에러 )" + e.getMessage());
-
-		}
-
-	}
-
-	/**
-	 * <pre>
-	 *  File Directory Create.
-	 * </pre>
-	 * 
-	 * 
-	 * @return String
-	 */
-	private String makeFileDirectory() {
-
-		String fullPath = "";
-
-		try {
-			String filePath = "/log/omp/coupon/";
-			File dir = null;
-			dir = new File(filePath);
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
-
-			fullPath = dir.getPath();
-		} catch (Exception e) {
-			this.log.info("ERROR make File Directory : " + e);
-		}
-
-		return fullPath;
-	}
-
-	/**
-	 * fileAddress에서 파일을 읽어, 다운로드 디렉토리에 다운로드.
-	 * 
-	 * @param fileAddress
-	 *            fileAddress
-	 * @param fileName
-	 *            fileName
-	 * @param downloadDir
-	 *            downloadDir
-	 */
-	private void fileUrlReadAndDownload(String fileAddress, String fileName, String downloadDir) {
-
-		OutputStream outStream = null;
-		URLConnection uCon = null;
-
-		InputStream is = null;
-		try {
-
-			this.log.debug("□□□□□□□□□ Download Start □□□□□□□□□");
-
-			URL url;
-			byte[] buf;
-			int byteRead;
-			int byteWritten = 0;
-			url = new URL(fileAddress);
-			outStream = new BufferedOutputStream(new FileOutputStream(downloadDir + File.separator + fileName));
-			this.log.debug("□□□□□□□□□ Download Start □□□□□□□□□" + downloadDir + File.separator + fileName);
-
-			uCon = url.openConnection();
-			is = uCon.getInputStream();
-			int bufferSize = 1024 * 8;
-			buf = new byte[bufferSize];
-			while ((byteRead = is.read(buf)) != -1) {
-				outStream.write(buf, 0, byteRead);
-				byteWritten += byteRead;
-			}
-			this.log.info("File name : " + fileName);
-			this.log.debug("□□□□□□□□□ Download End □□□□□□□□□");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-				outStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 * writeStringBufferMy log 파일 만들기.
-	 * 
-	 * @param file
-	 *            file
-	 * @param sb
-	 *            sb
-	 * @return boolean
-	 * @throws Exception
-	 *             Exception
-	 */
-
-	private boolean writeStringBufferMy(File file, StringBuffer sb) throws Exception {
-		boolean result = true;
-		FileOutputStream fos = new FileOutputStream(file);
-		OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-		int length = sb.length();
-		int bt = 1000;
-		for (int i = 0; i < length;) {
-			int end = i + bt;
-			if (end > length) {
-				end = length;
-			}
-			osw.write(sb.substring(i, end));
-			i = end;
-		}
-		osw.close();
-		fos.close();
-		return result;
-	}
 
 	/**
 	 * 카탈로그 및 메뉴ID 조회 한다.
@@ -1707,4 +1481,92 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		return result;
 	}
 
+	
+	/**
+	 * setForMakeMq 값 만들기 (채널 에피소드 값 xml일경우)
+	 * 
+	 * @param couponInfo
+	 *            couponInfo
+	 * @param itemInfoList
+	 *            itemInfoList
+	 * @param couponReq
+	 *            couponReq	             
+	 */
+
+	private void setForMakeMq(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, CouponReq couponReq) {
+
+		boolean cudFlag = false; // 신규 일때만 true 수정일땐 false
+
+		if ("C".equals(couponReq.getCudType())) {
+			cudFlag = true;
+		}
+		List<String> list = new ArrayList<String>();
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		// ////////////////// Item 정보 S////////////////////////////
+		for (int i = 0; i < itemInfoList.size(); i++) {
+			DpItemInfo itemInfo = itemInfoList.get(i);
+			if ("C".equals(itemInfo.getCudType())) {
+				cudFlag = true;
+				list.add(itemInfo.getProdId());
+			}
+		}
+		// ////////////////// Item 정보 E////////////////////////////
+		reqMap.put("list", list);
+		String ingYn = "";
+		log.info("====================1111================================");
+		if (cudFlag) {		// 신규일 경우는 판매중인것만 MQ 연동
+			ingYn = this.couponItemService.getShoppingIngYn(reqMap);
+		}else{
+			ingYn ="Y";		// 수정일 경우는 무조건 MQ 연동 
+		}
+		log.info("====================2222================================");
+		getConnectMqForSearchServer(ingYn,couponInfo.getStoreCatalogCode());
+		
+
+	}	
+	
+	/**
+	 * setShoppingCatalogIdByChannelIdForMq 상태값만 변경시.
+	 * 
+	 * @param ChannelId
+	 *            ChannelId
+	 */
+
+	private void setShoppingCatalogIdByChannelIdForMq(String ChannelId) {
+
+		String catalogId = this.couponItemService.getShoppingCatalogIdByChannelId(ChannelId);
+	
+		getConnectMqForSearchServer("Y",catalogId);
+
+	}		
+	
+	/**
+	 * getConnectMqForSearchServer MQ 연동
+	 * 
+	 * @param ingYn
+	 *            ingYn
+	 * @param catalogId
+	 *            catalogId
+	 */
+
+	private void getConnectMqForSearchServer(String ingYn , String catalogId) {
+		this.log.info("■■■■■ 상품정보 - 검색 서버 를 위한 MQ 연동 start ■■■■■");
+		
+		SearchInterfaceQueue queueMsg = SearchQueueUtils.makeMsg(
+				  "U"
+				, "DP28"
+				, SearchConstant.UPD_ID_SAC_SHOPPING.toString()
+				, SearchConstant.CONTENT_TYPE_CATALOG.toString(),
+				  catalogId
+				);
+		
+		if("Y".equals(ingYn)){	// 신규일 경우는 판매중인것만 MQ 연동 ,  수정일 경우는 무조건 MQ 연동
+			log.info("=================================================");
+			log.info("======================MQ 연동 성공================");
+			log.info("=================================================");
+			
+			this.sacSearchIprmAmqpTemplate.convertAndSend(queueMsg);
+		}	
+		this.log.info("■■■■■ 상품정보 - 검색 서버 를 위한 MQ 연동 end ■■■■■");
+	}
 }

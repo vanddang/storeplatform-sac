@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.api.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
@@ -259,5 +260,28 @@ public interface CouponItemService {
 	 * @return CouponRes
 	 */
 	public CouponRes getCatalogNmMenuId(String catalogId);
+	
+	/**
+	 * <pre>
+	 * 실제로 판매하는 상품을 조회 한다.
+	 * </pre>
+	 * 
+	 * @param tbDpProdCatalogMapgInfo
+	 *            tbDpProdCatalogMapgInfo
+	 * @return String
+	 */
+	
+	public String getShoppingIngYn(Map<String, Object> reqMap );
+	
+	/**
+	 * <pre>
+	 * 채널ID를 이용 카탈로그ID 조회 한다.
+	 * </pre>
+	 * 
+	 * @param catalogId
+	 *            catalogId
+	 * @return String
+	 */
+	public String getShoppingCatalogIdByChannelId(String channelId);	
 
 }
