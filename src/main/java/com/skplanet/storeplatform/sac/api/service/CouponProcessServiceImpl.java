@@ -1513,13 +1513,14 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		// ////////////////// Item 정보 E////////////////////////////
 		reqMap.put("list", list);
 		String ingYn = "";
-		log.info("====================1111================================");
+		log.info("====================================================");
+		log.info("list::"+list.toString());
+		log.info("====================================================");
 		if (cudFlag) {		// 신규일 경우는 판매중인것만 MQ 연동
 			ingYn = this.couponItemService.getShoppingIngYn(reqMap);
 		}else{
 			ingYn ="Y";		// 수정일 경우는 무조건 MQ 연동 
 		}
-		log.info("====================2222================================");
 		getConnectMqForSearchServer(ingYn,couponInfo.getStoreCatalogCode());
 		
 
@@ -1561,11 +1562,10 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				);
 		
 		if("Y".equals(ingYn)){	// 신규일 경우는 판매중인것만 MQ 연동 ,  수정일 경우는 무조건 MQ 연동
-			log.info("=================================================");
-			log.info("======================MQ 연동 성공================");
-			log.info("=================================================");
-			
 			this.sacSearchIprmAmqpTemplate.convertAndSend(queueMsg);
+			log.info("=================================================");
+			log.info("==MQ 연동 성공 :: queueMsg ::================"+queueMsg.toString());
+			log.info("=================================================");
 		}	
 		this.log.info("■■■■■ 상품정보 - 검색 서버 를 위한 MQ 연동 end ■■■■■");
 	}

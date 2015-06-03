@@ -1092,11 +1092,12 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
     				, SearchConstant.CONTENT_TYPE_CATALOG.toString()
     				, dpCatalogInfo.getCreateCatalogId()
     		);
-			log.info("=================================================");
-			log.info("======================MQ 연동 성공11================");
-			log.info("=================================================");
 
 			this.sacSearchIprmAmqpTemplate.convertAndSend(queueMsg);
+			log.info("=================================================");
+			log.info("==MQ 연동 성공 :: queueMsg ::================"+queueMsg.toString());
+			log.info("=================================================");
+			
 		} 
 
 		this.log.info("■■■■■ 카탈로그 검색서버를 위한 MQ 연동 end ■■■■■");
