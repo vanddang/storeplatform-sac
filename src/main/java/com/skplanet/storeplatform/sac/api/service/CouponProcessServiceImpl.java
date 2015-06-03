@@ -1557,8 +1557,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				  "U"
 				, "DP28"
 				, SearchConstant.UPD_ID_SAC_SHOPPING.toString()
-				, SearchConstant.CONTENT_TYPE_CATALOG.toString(),
-				  catalogId
+				, SearchConstant.CONTENT_TYPE_CATALOG.toString()
+				, catalogId
 				);
 		
 		if("Y".equals(ingYn)){	// 신규일 경우는 판매중인것만 MQ 연동 ,  수정일 경우는 무조건 MQ 연동
