@@ -1555,7 +1555,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		
 		SearchInterfaceQueue queueMsg = SearchQueueUtils.makeMsg(
 				  "U"
-				, "DP28"
+				, CouponConstants.TOP_MENU_ID_CUPON_CONTENT
 				, SearchConstant.UPD_ID_SAC_SHOPPING.toString()
 				, SearchConstant.CONTENT_TYPE_CATALOG.toString()
 				, catalogId

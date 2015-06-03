@@ -1087,7 +1087,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		if ("U".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
     		SearchInterfaceQueue queueMsg = SearchQueueUtils.makeMsg(
     				  "U"
-    				, "DP28"
+    				, CouponConstants.TOP_MENU_ID_CUPON_CONTENT
     				, SearchConstant.UPD_ID_SAC_SHOPPING.toString()
     				, SearchConstant.CONTENT_TYPE_CATALOG.toString()
     				, dpCatalogInfo.getCreateCatalogId()
