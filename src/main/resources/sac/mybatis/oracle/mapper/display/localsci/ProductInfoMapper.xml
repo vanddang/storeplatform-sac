@@ -213,7 +213,8 @@
                    , E.REG_DT
                    , E.PLAY_TM
                    , E.CHAPTER
-                   , E.POSS_LEND_CLSF_CD
+                   , J.DWLD_STRM_CLSF_CD
+                   , J.POSS_LEND_CLSF_CD
                    , E.DOLBY_SPRT_YN
                    , 'paid' as PROD_CLSF_CD
                    , F.PROD_NM
