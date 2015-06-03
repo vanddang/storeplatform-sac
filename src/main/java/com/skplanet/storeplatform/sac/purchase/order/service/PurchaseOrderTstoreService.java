@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreJoinOfferingEcRes;
 
 import java.util.List;
 
@@ -223,4 +224,15 @@ public interface PurchaseOrderTstoreService {
 	 */
 	public void postTstoreNotiV2(String prchsId, String prchsDt, String userKey, String deviceKey, String notiType,
 			boolean bGift, String prodIdInfo);
+
+	/**
+	 * Join offering immediately.
+	 *
+	 * @param prchsId
+	 *            구매ID
+	 * @param userKey
+	 *            사용자 고유 Key
+	 * @return the t store join offering ec res
+	 */
+	public TStoreJoinOfferingEcRes joinOfferingImmediately(String prchsId, String userKey);
 }

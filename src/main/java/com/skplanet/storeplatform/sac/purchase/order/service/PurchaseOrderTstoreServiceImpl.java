@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCouponSCI;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreNotiSCI;
+import com.skplanet.storeplatform.external.client.tstore.sci.TStorePurchaseSCI;
 import com.skplanet.storeplatform.external.client.tstore.vo.*;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -45,6 +46,8 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	private TStoreCashSCI tStoreCashSCI;
 	@Autowired
 	private TStoreNotiSCI tStoreNotiSCI;
+	@Autowired
+	private TStorePurchaseSCI tStorePurchaseSCI;
 
 	/**
 	 * 
@@ -172,9 +175,9 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES,{}",
 					ReflectionToStringBuilder.toString(userCouponListV2EcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
-//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES_EXCEPTION,{}",
-//					ReflectionToStringBuilder.toString(userCouponListV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));
-//			return "NULL";
+			// this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES_EXCEPTION,{}",
+			// ReflectionToStringBuilder.toString(userCouponListV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+			// return "NULL";
 			throw new StorePlatformException("SAC_PUR_7210", e);
 		}
 
@@ -194,9 +197,10 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 				// 쇼핑 특가의 경우
 				if (StringUtils.equals(coupon.getCouponType(), PurchaseConstants.COUPON_TYPE_SHOPPING_SPECIAL_COUPON)) {
 					// 구매 v3.4 규격 - (0)쿠폰번호:(1)쿠폰명:(2)쿠폰할인방식:(3)쿠폰금액/할인율:(4)상한액:(5)하한액:(6)쿠폰생성주체:(7)쿠폰타입
-					sbTstoreCoupon.append(coupon.getCouponId()).append(":") // (0)쿠폰 번호
-							.append(StringUtils
-									.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", "")).append(":") // (1)쿠폰명
+					sbTstoreCoupon.append(coupon.getCouponId()).append(":")
+							// (0)쿠폰 번호
+							.append(StringUtils.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", ""))
+							.append(":") // (1)쿠폰명
 							.append(coupon.getCouponDcType()).append(":") // (2)쿠폰할인방식
 							.append(coupon.getCouponAmt() * purchaseQty).append(":") // (3)쿠폰금액/할인율
 							.append(":") // (4)상한할인금액-없음
@@ -207,9 +211,10 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 					if (purchaseQty > 1)
 						return "NULL";
 					// v3.4 규격 - (0)쿠폰번호:(1)쿠폰명:(2)쿠폰할인방식:(3)쿠폰금액/할인율:(4)상한액:(5)하한액:(6)쿠폰생성주체:(7)쿠폰타입
-					sbTstoreCoupon.append(coupon.getCouponId()).append(":") // (0)쿠폰 번호
-							.append(StringUtils
-									.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", "")).append(":") // (1)쿠폰명
+					sbTstoreCoupon.append(coupon.getCouponId()).append(":")
+							// (0)쿠폰 번호
+							.append(StringUtils.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", ""))
+							.append(":") // (1)쿠폰명
 							.append(coupon.getCouponDcType()).append(":") // (2)쿠폰할인방식
 							.append(coupon.getCouponAmt()).append(":") // (3)쿠폰금액/할인율 (변경 필요)
 							.append(coupon.getDcMaxAmt()).append(":") // (4)상한할인금액
@@ -680,5 +685,39 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			// 예외 throw 차단
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,ERROR,{},{}", prchsId, e.getMessage());
 		}
+	}
+
+	/**
+	 * Join offering immediately.
+	 *
+	 * @param prchsId
+	 *            구매 ID
+	 * @param userKey
+	 *            사용자 고유 Key
+	 * @return 오퍼링 즉시 참여 결과
+	 */
+	@Override
+	public TStoreJoinOfferingEcRes joinOfferingImmediately(String prchsId, String userKey) {
+		TStoreJoinOfferingEcReq tStoreJoinOfferingEcReq = new TStoreJoinOfferingEcReq();
+		TStoreJoinOfferingEcRes tStoreJoinOfferingEcRes;
+
+		tStoreJoinOfferingEcReq.setPrchsId(prchsId);
+		tStoreJoinOfferingEcReq.setUserKey(userKey);
+
+		try {
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,JOINOFFERING,REQ,{}",
+					ReflectionToStringBuilder.toString(tStoreJoinOfferingEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+			tStoreJoinOfferingEcRes = this.tStorePurchaseSCI.joinOfferingImmediately(tStoreJoinOfferingEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,JOINOFFERING,RES,{}",
+					ReflectionToStringBuilder.toString(tStoreJoinOfferingEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+			if (StringUtils.equals(tStoreJoinOfferingEcRes.getResultCd(),
+					PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+				throw new StorePlatformException("SAC_PUR_7224", tStoreJoinOfferingEcRes.getResultCd()+":"+tStoreJoinOfferingEcRes.getResultMsg());
+			}
+		} catch (Exception e) {
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,JOINOFFERING,ERROR,{},{}", prchsId, e.getMessage());
+			throw new StorePlatformException("SAC_PUR_7225", e);
+		}
+		return tStoreJoinOfferingEcRes;
 	}
 }
