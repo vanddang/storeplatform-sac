@@ -28,11 +28,9 @@ public class MemberSegmentReq extends CommonInfo {
     @NotEmpty
     private String userKey;
 
-    private String deviceKey;
-
-    private String userMdn;
-
-    private String tingYn;
+    private String deviceKey = "";
+    private String userMdn   = "";
+    private String tingYn    = "";
 
 	public String getUserKey() {
 		return userKey;
