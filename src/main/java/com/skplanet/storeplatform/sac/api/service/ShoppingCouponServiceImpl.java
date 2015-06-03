@@ -59,8 +59,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	private String repositoryPath;
 
 	@Autowired
-	@Resource(name = "sacSearchIprmAmqpTemplate")
-	private AmqpTemplate sacSearchIprmAmqpTemplate; // 검색 서버 MQ 연동.
+	@Resource(name = "sacSearchAmqpTemplate")
+	private AmqpTemplate sacSearchAmqpTemplate; // 검색 서버 MQ 연동.
+
 	/**
 	 * <pre>
 	 * 브랜드 카탈로그 이미지 정보.
@@ -347,10 +348,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 			// cash flush
 			this.cacheEvictShoppingMeta(null, dpCatalogInfo);
-			
-			//MQ 연동 서비스
+
+			// MQ 연동 서비스
 			this.getConnectMqForSearchServer(dpCatalogInfo);
-			
 
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), message, null);
@@ -379,7 +379,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		String[] imgClsCode = { CouponConstants.BRAND_IMG_177_177 };
 
 		// 파일 생성 크기
-//		int[][] imageSizeForDrived = { { 177, 177 } };
+		// int[][] imageSizeForDrived = { { 177, 177 } };
 		// String IMAGE_TYPE = "PNG";
 
 		String targetFileName = null;
@@ -427,7 +427,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				// TBL_DP_PROD_IMG 테이블에 INSERT/UPDATE
 				this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
 			}
-			
+
 		} catch (CouponException e) {
 			this.log.error("<brandImgResize> brandResize : ", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "브랜드 이미지 Resize 실패", null);
@@ -494,7 +494,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			int nHeightSize = oHeight * 684 / oWidth;
 
 			// 파일 생성 크기
-//			int[][] imageSizeForDrived = { { 182, 182 } };
+			// int[][] imageSizeForDrived = { { 182, 182 } };
 			int[][] imageSizeForDrivedDtl = { { 684, nHeightSize } };
 
 			// 카탈로그 대표이미지 리사이즈
@@ -1071,7 +1071,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 		return true;
 	}
-	
+
 	/**
 	 * getConnectMqForSearchServer MQ 연동
 	 * 
@@ -1082,23 +1082,23 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	private void getConnectMqForSearchServer(DpCatalogInfo dpCatalogInfo) {
 
 		this.log.info("■■■■■ 카탈로그 검색서버를 위한 MQ 연동 start ■■■■■");
-		
+
 		// 수정일때 그냥 무조건 MQ 연동
 		if ("U".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
-    		SearchInterfaceQueue queueMsg = SearchQueueUtils.makeMsg(
-    				  "U"
-    				, CouponConstants.TOP_MENU_ID_CUPON_CONTENT
-    				, SearchConstant.UPD_ID_SAC_SHOPPING.toString()
-    				, SearchConstant.CONTENT_TYPE_CATALOG.toString()
-    				, dpCatalogInfo.getCreateCatalogId()
-    		);
+			SearchInterfaceQueue queueMsg = SearchQueueUtils.makeMsg(
+					"U"
+					, CouponConstants.TOP_MENU_ID_CUPON_CONTENT
+					, SearchConstant.UPD_ID_SAC_SHOPPING.toString()
+					, SearchConstant.CONTENT_TYPE_CATALOG.toString()
+					, dpCatalogInfo.getCreateCatalogId()
+					);
 
-			this.sacSearchIprmAmqpTemplate.convertAndSend(queueMsg);
-			log.info("=================================================");
-			log.info("==MQ 연동 성공 :: queueMsg ::================"+queueMsg.toString());
-			log.info("=================================================");
-			
-		} 
+			this.sacSearchAmqpTemplate.convertAndSend(queueMsg);
+			this.log.info("=================================================");
+			this.log.info("==MQ 연동 성공 :: queueMsg ::================" + queueMsg.toString());
+			this.log.info("=================================================");
+
+		}
 
 		this.log.info("■■■■■ 카탈로그 검색서버를 위한 MQ 연동 end ■■■■■");
 

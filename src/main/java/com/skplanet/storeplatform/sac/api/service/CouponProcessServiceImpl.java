@@ -48,7 +48,6 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInf
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.mq.client.search.constant.SearchConstant;
 import com.skplanet.storeplatform.sac.mq.client.search.util.SearchQueueUtils;
 import com.skplanet.storeplatform.sac.mq.client.search.vo.SearchInterfaceQueue;
@@ -78,11 +77,10 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	@Autowired
 	@Resource(name = "shoppingIprmAmqpTemplate")
 	private AmqpTemplate shoppingIprmAmqpTemplate; // MQ 연동.
-	
+
 	@Autowired
-	@Resource(name = "sacSearchIprmAmqpTemplate")
-	private AmqpTemplate sacSearchIprmAmqpTemplate; // 검색 서버 MQ 연동.
-	
+	@Resource(name = "sacSearchAmqpTemplate")
+	private AmqpTemplate sacSearchAmqpTemplate; // 검색 서버 MQ 연동.
 
 	@Override
 	public boolean insertCouponInfo(CouponReq couponReq) {
@@ -142,21 +140,19 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			if (!this.setTbDpProdDescListValue(couponInfo, itemInfoList, tbDpProdDescList, couponReq.getCudType())) {
 				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
-			
+
 			// TB_DP_PROD_CATALOG_MAPG 값 셋팅
 			// log.info("■■■■■ setTbDpProdCatalogMapgInfoValue 시작 ■■■■■");
 			if (!this.setTbDpProdCatalogMapgInfoValue(couponInfo, itemInfoList, tbDpProdCatalogMapgList,
 					couponReq.getCudType())) {
 				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
-			
-			
+
 			// TB_DP_PROD_RSHP 값 셋팅
 			// log.info("■■■■■ setTbDpProdRshpValue 시작 ■■■■■");
 			if (!this.setTbDpProdRshpValue(couponInfo, itemInfoList, tbDpProdRshpList, couponReq.getCudType())) {
 				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
-
 
 			// TB_DP_TENANT_PROD 값 셋팅
 			// log.info("■■■■■ setTbDpTenantProdListValue 시작 ■■■■■");
@@ -196,10 +192,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 			this.log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 
-			// 검색 서버를 위한 MQ 연동 
+			// 검색 서버를 위한 MQ 연동
 			this.setForMakeMq(couponInfo, itemInfoList, couponReq);
-			
-			
+
 			this.log.info("■■■■■ cacheEvictShoppingMeta 시작 ■■■■■");
 			this.cacheEvictShoppingMeta(couponInfo, couponReq);
 			this.log.info("■■■■■ cacheEvictShoppingMeta 완료 ■■■■■");
@@ -638,7 +633,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				IcmsJobPrint.printTbTenantDpProd(dtpd, "TB_DP_TENANT_PROD - ITEM:::" + i);
 			}
 			// 저장
-			this.couponItemService.insertTbDpTenantProdInfo(tbDpTenantProdList , couponInfo.getProdId());
+			this.couponItemService.insertTbDpTenantProdInfo(tbDpTenantProdList, couponInfo.getProdId());
 			this.log.info("■■■■■ setTbDpTenantProdListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_TENANT_PROD VO 셋팅 실패", null);
@@ -786,7 +781,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private boolean setTbDpProdOptValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpProdOpt> tbDpProdOptList, String cudType) {
 		this.log.info("■■■■■ setTbDpProdOptValue Start ■■■■■");
-		TbDpProdOpt dpo =null;
+		TbDpProdOpt dpo = null;
 		try {
 
 			boolean newOpt = true;
@@ -888,7 +883,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private boolean setTbDpSprtDeviceListValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpSprtDeviceInfo> tbDpSprtDeviceList, String cudType) {
 		this.log.info("■■■■■ setTbDpSprtDeviceListValue Start ■■■■■");
-		TbDpSprtDeviceInfo tdsd =null;
+		TbDpSprtDeviceInfo tdsd = null;
 		try {
 
 			// ////////////////// Item 정보 S////////////////////////////
@@ -1010,9 +1005,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "정산율 배포 실패!!", null);
 		}
 
-		this.getConnectMq(couponInfo, itemInfoList, couponReq , cudType);
-		
-	
+		this.getConnectMq(couponInfo, itemInfoList, couponReq, cudType);
 
 		return true;
 	} // End setTbDpProdDesc
@@ -1029,7 +1022,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		this.log.info("################ [SAC DP LocalSCI] SAC Member Stat : sellerSearchSCI.detailInformation : "
 				+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-		DetailInformationSacRes detailInformationSacRes =null;
+		DetailInformationSacRes detailInformationSacRes = null;
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 		SellerMbrSac sellerMbrSac = new SellerMbrSac();
 		this.log.debug("#########################################################");
@@ -1193,11 +1186,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			} finally {
 				this.log.info("■■■■■ DB Transaction END ■■■■■");
 			}
-			
-			
-			// 검색 서버를 위한 MQ 연동 
-			setShoppingCatalogIdByChannelIdForMq(newCouponCode);
-			
+
+			// 검색 서버를 위한 MQ 연동
+			this.setShoppingCatalogIdByChannelIdForMq(newCouponCode);
 
 		} else {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponReq is NULL!!", null);
@@ -1258,7 +1249,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @return CouponRes
 	 */
 	@Override
-	public CouponRes getSpecialProductDetail(String couponCode,String[] itemsCodes) {
+	public CouponRes getSpecialProductDetail(String couponCode, String[] itemsCodes) {
 		this.log.info("<<<<< CouponContentService >>>>> getSpecialProductDetail...");
 		CouponRes info = null;
 		try {
@@ -1269,8 +1260,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		}
 		return info;
 	}
-
-
 
 	/**
 	 * 카탈로그 및 메뉴ID 조회 한다.
@@ -1298,7 +1287,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @return boolean
 	 */
 
-	private boolean getConnectMq(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, CouponReq couponReq,String cudType) {
+	private boolean getConnectMq(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, CouponReq couponReq, String cudType) {
 		boolean result = true;
 		this.log.info("■■■■■ MQ 연동 start ■■■■■");
 
@@ -1308,7 +1297,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		try {
 			CouponRes couponRes = this.getCatalogNmMenuId(couponInfo.getStoreCatalogCode());
 
-			////////////////////////////////////채널 MQ 연동 //////////////////////////////////////////////////////
+			// //////////////////////////////////채널 MQ 연동 //////////////////////////////////////////////////////
 			noti.setTransactionKey(couponReq.getTxId() + "0000");
 			/**
 			 * 상품정보 세팅.
@@ -1380,13 +1369,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			productTenantPriceList.add(productTenantPrice);
 			noti.setProductTenantPriceList(productTenantPriceList);
-			this.log.info("channel_prod_id S:::"+couponInfo.getProdId());
+			this.log.info("channel_prod_id S:::" + couponInfo.getProdId());
 			this.shoppingIprmAmqpTemplate.convertAndSend(noti); // async
-			this.log.info("channel_prod_id E:::"+couponInfo.getProdId());
+			this.log.info("channel_prod_id E:::" + couponInfo.getProdId());
 
-
-
-			////////////////////////////////////에피소드 MQ 연동 //////////////////////////////////////////////////////
+			// //////////////////////////////////에피소드 MQ 연동 //////////////////////////////////////////////////////
 			for (int i = 0; i < itemInfoList.size(); i++) {
 				DpItemInfo itemInfo = itemInfoList.get(i);
 				noti.setTransactionKey(couponReq.getTxId() + "000" + (i + 1));
@@ -1424,7 +1411,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				productVO.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
 				productVO.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
 				productVO.setMbrStrte(couponInfo.getAccountingRate()); // 파트너 상품정산율
-
 
 				if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
 					productVO.setRegId(couponInfo.getBpId()); // 등록ID
@@ -1464,9 +1450,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 				productTenantPriceList.add(productTenantPriceVO);
 				noti.setProductTenantPriceList(productTenantPriceList);
-				this.log.info("episode_prod_id S:::"+itemInfo.getProdId());
+				this.log.info("episode_prod_id S:::" + itemInfo.getProdId());
 				this.shoppingIprmAmqpTemplate.convertAndSend(noti); // async
-				this.log.info("episode_prod_id E:::"+itemInfo.getProdId());
+				this.log.info("episode_prod_id E:::" + itemInfo.getProdId());
 			}
 
 			this.log.info("■■■■■ MQ 연동 End ■■■■■");
@@ -1481,7 +1467,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		return result;
 	}
 
-	
 	/**
 	 * setForMakeMq 값 만들기 (채널 에피소드 값 xml일경우)
 	 * 
@@ -1490,7 +1475,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @param itemInfoList
 	 *            itemInfoList
 	 * @param couponReq
-	 *            couponReq	             
+	 *            couponReq
 	 */
 
 	private void setForMakeMq(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, CouponReq couponReq) {
@@ -1513,19 +1498,18 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		// ////////////////// Item 정보 E////////////////////////////
 		reqMap.put("list", list);
 		String ingYn = "";
-		log.info("====================================================");
-		log.info("list::"+list.toString());
-		log.info("====================================================");
-		if (cudFlag) {		// 신규일 경우는 판매중인것만 MQ 연동
+		this.log.info("====================================================");
+		this.log.info("list::" + list.toString());
+		this.log.info("====================================================");
+		if (cudFlag) { // 신규일 경우는 판매중인것만 MQ 연동
 			ingYn = this.couponItemService.getShoppingIngYn(reqMap);
-		}else{
-			ingYn ="Y";		// 수정일 경우는 무조건 MQ 연동 
+		} else {
+			ingYn = "Y"; // 수정일 경우는 무조건 MQ 연동
 		}
-		getConnectMqForSearchServer(ingYn,couponInfo.getStoreCatalogCode());
-		
+		this.getConnectMqForSearchServer(ingYn, couponInfo.getStoreCatalogCode());
 
-	}	
-	
+	}
+
 	/**
 	 * setShoppingCatalogIdByChannelIdForMq 상태값만 변경시.
 	 * 
@@ -1536,11 +1520,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private void setShoppingCatalogIdByChannelIdForMq(String ChannelId) {
 
 		String catalogId = this.couponItemService.getShoppingCatalogIdByChannelId(ChannelId);
-	
-		getConnectMqForSearchServer("Y",catalogId);
 
-	}		
-	
+		this.getConnectMqForSearchServer("Y", catalogId);
+
+	}
+
 	/**
 	 * getConnectMqForSearchServer MQ 연동
 	 * 
@@ -1550,23 +1534,23 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 *            catalogId
 	 */
 
-	private void getConnectMqForSearchServer(String ingYn , String catalogId) {
+	private void getConnectMqForSearchServer(String ingYn, String catalogId) {
 		this.log.info("■■■■■ 상품정보 - 검색 서버 를 위한 MQ 연동 start ■■■■■");
-		
+
 		SearchInterfaceQueue queueMsg = SearchQueueUtils.makeMsg(
-				  "U"
+				"U"
 				, CouponConstants.TOP_MENU_ID_CUPON_CONTENT
 				, SearchConstant.UPD_ID_SAC_SHOPPING.toString()
 				, SearchConstant.CONTENT_TYPE_CATALOG.toString()
 				, catalogId
 				);
-		
-		if("Y".equals(ingYn)){	// 신규일 경우는 판매중인것만 MQ 연동 ,  수정일 경우는 무조건 MQ 연동
-			this.sacSearchIprmAmqpTemplate.convertAndSend(queueMsg);
-			log.info("=================================================");
-			log.info("==MQ 연동 성공 :: queueMsg ::================"+queueMsg.toString());
-			log.info("=================================================");
-		}	
+
+		if ("Y".equals(ingYn)) { // 신규일 경우는 판매중인것만 MQ 연동 , 수정일 경우는 무조건 MQ 연동
+			this.sacSearchAmqpTemplate.convertAndSend(queueMsg);
+			this.log.info("=================================================");
+			this.log.info("==MQ 연동 성공 :: queueMsg ::================" + queueMsg.toString());
+			this.log.info("=================================================");
+		}
 		this.log.info("■■■■■ 상품정보 - 검색 서버 를 위한 MQ 연동 end ■■■■■");
 	}
 }
