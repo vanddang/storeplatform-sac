@@ -71,12 +71,12 @@
                     <if test='prodStatusCd != null and prodStatusCd != ""'>
                         AND TP.PROD_STATUS_CD = #{prodStatusCd} /* PD000403 : 판매중 */
                     </if>
-                    <if test='prodGrdExtraCd == null and prodGrdExtraCd == ""'>
-                        AND PD.PROD_GRD_EXTRA_CD IS NULL
+                    <if test='prodGradeExtraCd == null'>
+                       AND PD.PROD_GRD_EXTRA_CD IS NULL
                     </if>
-                    <if test='prodGrdExtraCd != null and prodGrdExtraCd != ""'>
-                        AND PD.PROD_GRD_EXTRA_CD = #{prodGrdExtraCd} /* PD020601 : 19+ 상품 코드 */
-                    </if>
+                    <if test='prodGradeExtraCd == "PD020601"'>
+                        AND (PD.PROD_GRD_EXTRA_CD IS NULL OR PD.PROD_GRD_EXTRA_CD = #{prodGradeExtraCd})
+                    </if>       
 					AND TP.EXPO_YN = 'Y'
 					<if test='kind != null and kind != ""'>
 						AND CM.FREE_PASS_CLSF_CD = #{kind}
