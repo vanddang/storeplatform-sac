@@ -24,7 +24,7 @@ public interface PurchaseOrderTstoreService {
 	/**
 	 *
 	 * <pre>
-	 * T Store 쿠폰 목록 조회(구) - 차후 삭제 필요.
+	 * T Store 쿠폰 목록 조회(구) - (사용 안함)
 	 * </pre>
 	 *
 	 * @param userKey
@@ -41,7 +41,7 @@ public interface PurchaseOrderTstoreService {
 	 *
 	 * @return T Store 쿠폰 목록
 	 */
-	String searchTstoreOldCouponList(String userKey, String deviceId, List<String> prodIdList, int purchaseQty);
+//	String searchTstoreOldCouponList(String userKey, String deviceId, List<String> prodIdList, int purchaseQty);
 
 	/**
 	 * 
@@ -226,7 +226,7 @@ public interface PurchaseOrderTstoreService {
 			boolean bGift, String prodIdInfo);
 
 	/**
-	 * Join offering immediately.
+	 * Join offering immediately. (사용 안함)
 	 *
 	 * @param prchsId
 	 *            구매ID

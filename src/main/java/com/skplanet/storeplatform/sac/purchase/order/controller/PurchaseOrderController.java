@@ -15,7 +15,6 @@ import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.*;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateFreePurchase;
@@ -53,7 +52,7 @@ import java.util.Map;
 
 /**
  * 구매 처리 컨트롤러
- * 
+ *
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 @Controller
@@ -84,11 +83,11 @@ public class PurchaseOrderController {
 	private PurchaseOrderPolicyService policyService;
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 구매 요청 처리 V2: 무료구매 경우는 구매완료 처리, 유료구매 경우는 PayPlanet 결제Page 요청을 위한 처리.
 	 * </pre>
-	 * 
+	 *
 	 * @param req
 	 *            구매요청 정보
 	 * @return 구매요청 처리 결과: 무료구매완료 또는 결제page요청정보
@@ -102,11 +101,11 @@ public class PurchaseOrderController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 구매 요청 처리: 무료구매 경우는 구매완료 처리, 유료구매 경우는 PayPlanet 결제Page 요청을 위한 처리.
 	 * </pre>
-	 * 
+	 *
 	 * @param req
 	 *            구매요청 정보
 	 * @return 구매요청 처리 결과: 무료구매완료 또는 결제page요청정보
@@ -144,11 +143,11 @@ public class PurchaseOrderController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 유료상품 무료결제 구매 요청 처리: 일부 외부판매 사이트에 필요하며, 요청한 사이트에 대해 해당 요청 권한이 있는 지 체크하는 부분이 추가된다.
 	 * </pre>
-	 * 
+	 *
 	 * @param req
 	 *            구매요청 정보
 	 * @return 구매요청 처리 결과: 비과금 구매완료
@@ -182,11 +181,11 @@ public class PurchaseOrderController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * Biz 쿠폰 발행 요청 : 대량의 선물 이력 생성 & biz쿠폰 발급 요청.
 	 * </pre>
-	 * 
+	 *
 	 * @param req
 	 *            구매요청 정보
 	 * @return 구매요청 처리 결과
@@ -219,11 +218,11 @@ public class PurchaseOrderController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * IAP 구매/결제 통합 구매이력 생성 요청.
 	 * </pre>
-	 * 
+	 *
 	 * @param req
 	 *            구매/결제 통합 구매이력 생성 요청 정보
 	 * @return 구매/결제 통합 구매이력 생성 결과
@@ -248,11 +247,11 @@ public class PurchaseOrderController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 결제 진행 전 구매인증 - 구매 유효성 체크 및 결제수단 정보 정의 등 체크.
 	 * </pre>
-	 * 
+	 *
 	 * @param req
 	 *            구매인증 요청 VO
 	 * @return 구매인증 응답 VO
@@ -362,11 +361,11 @@ public class PurchaseOrderController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 결제 처리 결과 Noti.
 	 * </pre>
-	 * 
+	 *
 	 * @param notifyPaymentReq
 	 *            결제 결과 정보
 	 * @return 결제 결과 처리 응답
@@ -426,11 +425,6 @@ public class PurchaseOrderController {
 					&& prchsDtlMoreList.size() == 1
 					&& StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_PURCHASE_CD)) {
 				res.setShippingUrl(prchsDtlMore.getCpnDlvUrl());
-			}
-			if(StringUtil.equals(notifyPaymentReq.getOfferingYn(), "Y"))
-			{
-				res.setOfferingState(prchsDtlMore.getOfferingState());
-				res.setOfferingAmt(prchsDtlMore.getOfferingAmt());
 			}
 
 		} else { // T store 결제 경우
@@ -636,7 +630,7 @@ public class PurchaseOrderController {
 		final String ocb_save_info = verifyRes.getCdOcbSaveInfo();
 		final String ocb_auth_mtd = verifyRes.getOcbAuthMtdCd();
 		final String ocb_num = verifyRes.getNoOcbCard();
-		final String coupon_list = verifyRes.getNoCouponList();
+		final String coupon_list = verifyRes.getCouponList();
 		final String cash_point_list = verifyRes.getCashPointList();
 		final String test_mdn_type = verifyRes.getTypeTestMdn();
 		final String payment_template = verifyRes.getCdPaymentTemplate();

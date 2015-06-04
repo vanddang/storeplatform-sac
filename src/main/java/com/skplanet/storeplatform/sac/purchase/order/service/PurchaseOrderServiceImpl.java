@@ -10,14 +10,11 @@
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemDetailEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2ItemDetailEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TCashInfo;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreJoinOfferingEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
@@ -790,8 +787,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				purchaseQty = prchsDtlMoreList.size();
 			}
 			// (구) 쿠폰 리스트 규격 - 차후 삭제 필요
-			res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreOldCouponList(payUserKey,
-					reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
+//			res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreOldCouponList(payUserKey,
+//					reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
 
 			purchaseQty = prchsDtlMoreList.size();
 			// (신) 쿠폰 리스트 규격
@@ -800,7 +797,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		} else {
 			// (구) 쿠폰 리스트 규격 - 차후 삭제 필요
-			res.setNoCouponList("NULL");
+//			res.setNoCouponList("NULL");
 			// (신) 쿠폰 리스트 규격
 			res.setCouponList("NULL");
 		}
@@ -1064,19 +1061,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.isNotBlank(prchsDtlMore.getResvCol01())) { // 오퍼링 제공으로 예약된 경우
 			if (StringUtils.equals(notifyPaymentReq.getOfferingYn(), PurchaseConstants.USE_N) == false) {
 				offeringId = prchsDtlMore.getResvCol01();
-
-				// IAP 인 경우 오퍼링 즉시 참여 처리
-				if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
-						&& StringUtil.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_PURCHASE_CD)) {
-					TStoreJoinOfferingEcRes offeringEcRes = this.purchaseOrderTstoreService.joinOfferingImmediately(
-							prchsDtlMore.getProdId(), prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getProdId(), offeringId);
-					TCashInfo tCashInfo = offeringEcRes.getTcashInfo();
-					if (tCashInfo != null) {
-						prchsDtlMore.setOfferingState(tCashInfo.getState());
-						prchsDtlMore.setOfferingAmt(tCashInfo.getAmt());
-					}
-				}
 			}
 		}
 

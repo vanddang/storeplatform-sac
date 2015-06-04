@@ -9,6 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.DateUtils;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParseException;
@@ -16,18 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Service;
-
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.DateUtils;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * 
@@ -61,6 +59,7 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 			this.hostNum = "01";
 		}
 		this.hostNum = StringUtils.leftPad(this.hostNum, 2, "0");
+		this.hostNum = StringUtils.substring(this.hostNum, this.hostNum.length() - 2); // max 2자리로
 
 		this.instanceNum = "";
 		if (StringUtils.isNotBlank(this.instanceName)) {

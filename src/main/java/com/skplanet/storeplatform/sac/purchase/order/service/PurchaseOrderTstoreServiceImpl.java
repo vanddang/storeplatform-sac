@@ -52,7 +52,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	/**
 	 * 
 	 * <pre>
-	 * T Store 쿠폰 목록 조회(구) - 차후 삭제 필요
+	 * T Store 쿠폰 목록 조회(구) - (사용 안함)
 	 * </pre>
 	 * 
 	 * @param userKey
@@ -69,62 +69,62 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 * 
 	 * @return T Store 쿠폰 목록
 	 */
-	@Override
-	public String searchTstoreOldCouponList(String userKey, String deviceId, List<String> prodIdList, int purchaseQty) {
-		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
-		// return "NULL";
-		// }
-
-		List<ProdId> prodIdObjList = new ArrayList<ProdId>();
-		ProdId prodIdObj = null;
-		for (String prodId : prodIdList) {
-			prodIdObj = new ProdId();
-			prodIdObj.setProdId(prodId);
-			prodIdObjList.add(prodIdObj);
-		}
-
-		UserCouponListEcReq userCouponListEcReq = new UserCouponListEcReq();
-		userCouponListEcReq.setUserKey(userKey);
-		userCouponListEcReq.setMdn(deviceId);
-		// userCouponListEcReq.setCouponType("");
-		userCouponListEcReq.setProdIdList(prodIdObjList);
-
-		UserCouponListEcRes userCouponListEcRes = null;
-		try {
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,REQ,{}",
-					ReflectionToStringBuilder.toString(userCouponListEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
-			userCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,RES,{}",
-					ReflectionToStringBuilder.toString(userCouponListEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7210", e);
-		}
-
-		if (StringUtils.equals(userCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
-			throw new StorePlatformException("SAC_PUR_7206", userCouponListEcRes.getResultCd(),
-					userCouponListEcRes.getResultMsg());
-		}
-
-		if (CollectionUtils.isNotEmpty(userCouponListEcRes.getCouponList())) {
-			StringBuffer sbTstoreCoupon = new StringBuffer(256);
-
-			for (Coupon coupon : userCouponListEcRes.getCouponList()) {
-				if (sbTstoreCoupon.length() > 0) {
-					sbTstoreCoupon.append(";");
-				}
-				sbTstoreCoupon.append(coupon.getCouponId()).append(":")
-						.append(StringUtils.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", ""))
-						.append(":").append(coupon.getCouponAmt() * purchaseQty).append(":")
-						.append(coupon.getMakeHost()).append(":").append(coupon.getCouponType());
-			}
-
-			return sbTstoreCoupon.toString();
-
-		} else {
-			return "NULL";
-		}
-	}
+//	@Override
+//	public String searchTstoreOldCouponList(String userKey, String deviceId, List<String> prodIdList, int purchaseQty) {
+//		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
+//		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+//		// return "NULL";
+//		// }
+//
+//		List<ProdId> prodIdObjList = new ArrayList<ProdId>();
+//		ProdId prodIdObj = null;
+//		for (String prodId : prodIdList) {
+//			prodIdObj = new ProdId();
+//			prodIdObj.setProdId(prodId);
+//			prodIdObjList.add(prodIdObj);
+//		}
+//
+//		UserCouponListEcReq userCouponListEcReq = new UserCouponListEcReq();
+//		userCouponListEcReq.setUserKey(userKey);
+//		userCouponListEcReq.setMdn(deviceId);
+//		// userCouponListEcReq.setCouponType("");
+//		userCouponListEcReq.setProdIdList(prodIdObjList);
+//
+//		UserCouponListEcRes userCouponListEcRes = null;
+//		try {
+//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,REQ,{}",
+//					ReflectionToStringBuilder.toString(userCouponListEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+//			userCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
+//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,RES,{}",
+//					ReflectionToStringBuilder.toString(userCouponListEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+//		} catch (Exception e) {
+//			throw new StorePlatformException("SAC_PUR_7210", e);
+//		}
+//
+//		if (StringUtils.equals(userCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
+//			throw new StorePlatformException("SAC_PUR_7206", userCouponListEcRes.getResultCd(),
+//					userCouponListEcRes.getResultMsg());
+//		}
+//
+//		if (CollectionUtils.isNotEmpty(userCouponListEcRes.getCouponList())) {
+//			StringBuffer sbTstoreCoupon = new StringBuffer(256);
+//
+//			for (Coupon coupon : userCouponListEcRes.getCouponList()) {
+//				if (sbTstoreCoupon.length() > 0) {
+//					sbTstoreCoupon.append(";");
+//				}
+//				sbTstoreCoupon.append(coupon.getCouponId()).append(":")
+//						.append(StringUtils.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", ""))
+//						.append(":").append(coupon.getCouponAmt() * purchaseQty).append(":")
+//						.append(coupon.getMakeHost()).append(":").append(coupon.getCouponType());
+//			}
+//
+//			return sbTstoreCoupon.toString();
+//
+//		} else {
+//			return "NULL";
+//		}
+//	}
 
 	/**
 	 *
