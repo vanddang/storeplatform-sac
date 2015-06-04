@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserS
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore;
+import com.skplanet.storeplatform.sac.other.feedback.vo.SendMqData;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
 import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
@@ -240,5 +241,10 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	@Override
 	public String getProdSvcGrpCd(String prodId) {
 		return this.commonDAO.queryForObject("Feedback.getProdSvcGrpCd", prodId, String.class);
+	}
+
+	@Override
+	public String getSendMqData(SendMqData data) {
+		return this.commonDAO.queryForObject("Feedback.getFcSendMqData", data, String.class);
 	}
 }

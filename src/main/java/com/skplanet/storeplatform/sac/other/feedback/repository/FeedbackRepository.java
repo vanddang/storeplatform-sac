@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserS
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore;
+import com.skplanet.storeplatform.sac.other.feedback.vo.SendMqData;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
 import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
@@ -452,4 +453,14 @@ public interface FeedbackRepository {
 	 * @return String
 	 */
 	public String getProdSvcGrpCd(String prodId);
+
+	/**
+	 * <pre>
+	 * MQ로 전달할 데이타를 추출한다.
+	 * </pre>
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public String getSendMqData(SendMqData data);
 }

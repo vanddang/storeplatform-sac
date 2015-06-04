@@ -1200,4 +1200,11 @@
     <select id="getProdSvcGrpCd" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT svc_grp_cd FROM TB_DP_PROD WHERE prod_id = #{prodId}
     </select>
+    
+    <!-- MQ 연동시 사용될 데이타를 조회한다. -->
+    <select id="getFcSendMqData" parameterType="SendMqData" resultType="java.lang.String">
+        SELECT /* FeedbackMapper.xml, getFcSendMqData, SAC : 심대진, 2015-06-04 */
+               FC_SEND_MQ_DATA(#{returnType}, #{tenantId}, #{prodId}, #{oldScore, jdbcType=VARCHAR})
+          FROM DUAL
+    </select>
 </mapper>

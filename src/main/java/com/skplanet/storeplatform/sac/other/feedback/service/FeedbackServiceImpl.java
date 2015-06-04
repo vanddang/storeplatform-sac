@@ -16,9 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,11 +74,15 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants.SellerConstants;
+import com.skplanet.storeplatform.sac.mq.client.search.constant.SearchConstant;
+import com.skplanet.storeplatform.sac.mq.client.search.util.SearchQueueUtils;
+import com.skplanet.storeplatform.sac.mq.client.search.vo.SearchInterfaceQueue;
 import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvgScore;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
+import com.skplanet.storeplatform.sac.other.feedback.vo.SendMqData;
 import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 
 /**
@@ -100,6 +107,10 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Autowired
 	private FeedbackRepository feedbackRepository;
+
+	@Autowired
+	@Resource(name = "sacSearchAmqpTemplate")
+	private AmqpTemplate sacSearchAmqpTemplate; // 검색 서버 MQ 연동.
 
 	@Override
 	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackSacReq, SacRequestHeader sacRequestHeader) {
@@ -232,6 +243,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 		mbrAvg.setProdId(removeFeedbackSacReq.getProdId());
 		MbrAvg getRegMbrAvg = this.feedbackRepository.getRegMbrAvg(mbrAvg);
 		if (getRegMbrAvg != null) {
+			String beforeScore = this.getBeforeScore(sacRequestHeader.getTenantHeader().getTenantId(), removeFeedbackSacReq.getProdId());
+			LOGGER.info("평점 수정전 평점 정보 : {}", beforeScore);
+
 			// 기 평가가 존재하면 삭제.
 			this.feedbackRepository.deleteMbrAvg(mbrAvg);
 			TenantProdStats tenantProdStats = new TenantProdStats();
@@ -258,9 +272,10 @@ public class FeedbackServiceImpl implements FeedbackService {
 					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
 				}
 				// 웹툰일경우 채널ID에 에피소드들의 상품통계 평점을 계산한다.
-				this.setWebtoonChannelMbrAvgTenantStats(removeFeedbackSacReq.getProdId(), sacRequestHeader
-						.getTenantHeader().getTenantId(), removeFeedbackSacReq.getUserId());
+				this.setWebtoonChannelMbrAvgTenantStats(removeFeedbackSacReq.getProdId(), sacRequestHeader.getTenantHeader().getTenantId(), removeFeedbackSacReq.getUserId());
 			}
+			// MQ Send - NATE Search.
+			this.sendMq(sacRequestHeader.getTenantHeader().getTenantId(), removeFeedbackSacReq.getProdId(), beforeScore);
 		}
 
 		String notiSeq = "";
@@ -1144,6 +1159,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 		String fbPostYn = (String) beanWrapperImpl.getPropertyValue("fbPostYn");
 
 		if (StringUtils.isNotBlank(score) && StringUtils.isBlank(chnlId)) {
+			String beforeScore = this.getBeforeScore(sacRequestHeader.getTenantHeader().getTenantId(), prodId);
+			LOGGER.info("평점 수정전 평점 정보 : {}", beforeScore);
 			String avgScore = score;
 			if (NumberUtils.toInt(score, 0) > 5) {
 				avgScore = "5";
@@ -1180,6 +1197,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 			}
 			// 웹툰일경우 채널ID에 에피소드들의 상품통계 평점을 계산한다.
 			this.setWebtoonChannelMbrAvgTenantStats(prodId, sacRequestHeader.getTenantHeader().getTenantId(), userId);
+			// MQ Send - NATE Search.
+			this.sendMq(sacRequestHeader.getTenantHeader().getTenantId(), prodId, beforeScore);
 		}
 	}
 
@@ -1477,6 +1496,92 @@ public class FeedbackServiceImpl implements FeedbackService {
 			returnStr.append(cPad);
 		}
 		return returnStr.toString();
+	}
+
+	/**
+	 * <pre>
+	 * MQ 연동처리 한다.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 * @param prodId
+	 * @param oldScore
+	 */
+	private void sendMq(String tenantId, String prodId, String oldScore) {
+
+		try {
+
+			LOGGER.info("MQ Start......");
+			SendMqData data = new SendMqData();
+			data.setReturnType("SEND_MQ_DATA");
+			data.setTenantId(tenantId);
+			data.setProdId(prodId);
+			data.setOldScore(oldScore);
+			String resultStr = this.feedbackRepository.getSendMqData(data);
+			List<String> resultArr = Arrays.asList(resultStr.split(","));
+			LOGGER.info("[[ Result : {} ]] [[ Result Size : {} ]]", resultStr, resultArr.size());
+
+			if (resultArr.size() > 0) {
+				if (resultArr.get(0).equals("SUCCESS")) {
+
+					LOGGER.info("Send MQ -> Nate Search");
+					String contentType = resultArr.get(2).equals(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD) ? SearchConstant.CONTENT_TYPE_CHANNEL.toString() : SearchConstant.CONTENT_TYPE_EPISODE.toString();
+					SearchInterfaceQueue message = SearchQueueUtils.makeMsg(
+							SearchConstant.ACTION_TYPE_UPDATE.toString()
+							, resultArr.get(1)
+							, SearchConstant.UPD_ID_SAC_AVG_EVLU_SCORE.toString()
+							, contentType
+							, prodId
+							);
+					LOGGER.info("Send MQ -> message : {}", message.toString());
+					this.sacSearchAmqpTemplate.convertAndSend(message);
+
+				}
+			}
+
+			LOGGER.info("MQ End......");
+
+		} catch (Exception e) {
+			LOGGER.error("[[ MQ error ]] sendMq() Method Exception Skip.......", e);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * MQ 연동전에 평점 비교를 위해 수정전 평점 데이타를 가져온다. (에러시 Default 0)
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 * @param prodId
+	 * @return
+	 */
+	private String getBeforeScore(String tenantId, String prodId) {
+
+		String resultValue = "0";
+
+		try {
+
+			SendMqData data = new SendMqData();
+			data.setReturnType("BEFORE_SCORE");
+			data.setTenantId(tenantId);
+			data.setProdId(prodId);
+			String resultStr = this.feedbackRepository.getSendMqData(data);
+			List<String> resultArr = Arrays.asList(resultStr.split(","));
+			LOGGER.info("[[ Result : {} ]] [[ Result Size : {} ]]", resultStr, resultArr.size());
+
+			if (resultArr.size() > 0) {
+				if (resultArr.get(0).equals("SUCCESS")) {
+					resultValue = resultArr.get(1);
+				}
+			}
+
+		} catch (Exception e) {
+			LOGGER.error("[[ MQ error ]] getBeforeScore() Method Exception Skip.......", e);
+		}
+
+		return resultValue;
+
 	}
 
 }
