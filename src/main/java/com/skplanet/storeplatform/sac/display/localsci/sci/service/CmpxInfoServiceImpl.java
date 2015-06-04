@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxPr
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductListRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
@@ -175,6 +176,11 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		List<CmpxProductInfoList> cmpxProductInfoList = null;
 		cmpxProductInfoList = this.commonDAO.queryForList("CmpxInfo.searchCmpxProductList", paramMap,
 				CmpxProductInfoList.class);
+		 for (CmpxProductInfoList cmpxProductInfo : cmpxProductInfoList) {
+			 cmpxProductInfo.setUsePeriodSetCd(displayCommonService.getUsePeriodSetCd("", cmpxProductInfo.getProdId(), cmpxProductInfo.getDrmYn()));
+		 }
+		
+		
 		res.setCmpxProductInfoList(cmpxProductInfoList);
 		return res;
 	}
@@ -222,7 +228,8 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if (cmpxProductInfo == null) {
 			throw new StorePlatformException("SAC_DSP_0005", "이용권 " + req.getProdId());
 		}
-
+		cmpxProductInfo.setUsePeriodSetCd(displayCommonService.getUsePeriodSetCd(cmpxProductInfo.getTopMenuId(), cmpxProductInfo.getEpisodeProdId(), cmpxProductInfo.getDrmYn()));
+		
 		return cmpxProductInfo;
 	}
 }

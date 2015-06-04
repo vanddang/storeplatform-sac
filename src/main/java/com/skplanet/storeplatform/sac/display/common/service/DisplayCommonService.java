@@ -188,5 +188,15 @@ public interface DisplayCommonService {
      * @return 나이 값. 요청에 맞는 값이 없는 경우 null 리턴
      */
     Integer getAllowedAge(String topMenuId, String gradeCd);
+    
+    /**
+     * 이용 기간 설정 구분 값을 조회한다.
+     * @param topMenuId topMenuId
+     * @param prodId 상품ID
+     * @param drmYn drmYn
+     * @return 이용 기간 설정 구분
+     */
+    String getUsePeriodSetCd(String topMenuId, String prodId,String drmYn);    
+    
 
 }

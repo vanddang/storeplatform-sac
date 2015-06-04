@@ -126,4 +126,29 @@
         ORDER BY TDMC.MENU_DEPTH, TDMC.MENU_ID
     </select>
 
+    <!-- 상품에 대한 메뉴 아이디 조회 -->
+    <select id="getProdMenuId" parameterType="String" resultType="String">
+        /* DisplayCommonMapper.xml, getProdMenuId, SAC : 김형식 , 2015-06-03 */
+        select
+            MENU_ID
+        from
+            TB_DP_MENU_CATEGORY_PROD_MAPG
+        where prod_id = #{prodId}
+    </select>
+
+    <!-- 이용 기간 설정 구분 조회 -->
+    <select id="getUsePeriodSetCd" parameterType="Map" resultType="String">
+        /* DisplayCommonMapper.xml, getUsePeriodSetCd, SAC : 김형식 , 2015-06-03 */
+		SELECT UP_SET_CD
+		  FROM SPSAC.TB_DP_USE_PERIOD_POLICY
+		 WHERE 1=1
+		   /* DP013020:상품_ID, DP013021:소메뉴_ID, DP013022:TOP메뉴_ID*/
+		   AND UP_ID = (CASE WHEN UP_TYPE_CD ='DP013020' THEN #{prodId}   
+		                     WHEN UP_TYPE_CD ='DP013021' THEN #{menuId} 
+		                     WHEN UP_TYPE_CD ='DP013022' THEN #{topMenuId} 
+		                END)
+		   AND DRM_YN = #{drmYn} 
+    </select>
+
+
 </mapper>
