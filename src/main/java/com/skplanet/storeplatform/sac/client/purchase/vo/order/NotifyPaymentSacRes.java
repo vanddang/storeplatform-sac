@@ -31,6 +31,9 @@ public class NotifyPaymentSacRes extends CommonInfo {
 	private String type; // 구매완료 Noti 타입: 01-일반결제
 	private String publishType; // 쇼핑쿠폰 발행 처리 타입 : 01-동기 (또는 쇼핑 이외 상품), 02-비동기
 
+	private String offeringState; // 오퍼링 지급 상태
+	private Integer offeringAmt; // 오퍼링 지급 금액
+
 	/**
 	 */
 	public NotifyPaymentSacRes() {
@@ -167,4 +170,41 @@ public class NotifyPaymentSacRes extends CommonInfo {
 		this.publishType = publishType;
 	}
 
+	/**
+	 * Gets offering amt.
+	 *
+	 * @return the offering amt
+	 */
+	public Integer getOfferingAmt() {
+		return offeringAmt;
+	}
+
+	/**
+	 * Sets offering amt.
+	 *
+	 * @param offeringAmt
+	 *            the offering amt
+	 */
+	public void setOfferingAmt(Integer offeringAmt) {
+		this.offeringAmt = offeringAmt;
+	}
+
+	/**
+	 * Gets offering state.
+	 *
+	 * @return the offering state
+	 */
+	public String getOfferingState() {
+		return offeringState;
+	}
+
+	/**
+	 * Sets offering state.
+	 *
+	 * @param offeringState
+	 *            the offering state
+	 */
+	public void setOfferingState(String offeringState) {
+		this.offeringState = offeringState;
+	}
 }
