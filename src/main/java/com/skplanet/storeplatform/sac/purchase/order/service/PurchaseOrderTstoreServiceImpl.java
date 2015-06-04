@@ -712,13 +712,13 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			tStoreJoinOfferingEcRes = this.tStorePurchaseSCI.joinOfferingImmediately(tStoreJoinOfferingEcReq);
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,JOINOFFERING,RES,{}",
 					ReflectionToStringBuilder.toString(tStoreJoinOfferingEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
-			if (StringUtils.equals(tStoreJoinOfferingEcRes.getResultCd(),
-					PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
-				throw new StorePlatformException("SAC_PUR_7224", tStoreJoinOfferingEcRes.getResultCd()+":"+tStoreJoinOfferingEcRes.getResultMsg());
-			}
 		} catch (Exception e) {
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,JOINOFFERING,ERROR,{},{}", prchsId, e.getMessage());
 			throw new StorePlatformException("SAC_PUR_7225", e);
+		}
+		if (StringUtils.equals(tStoreJoinOfferingEcRes.getResultCd(),
+				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+			throw new StorePlatformException("SAC_PUR_7224", tStoreJoinOfferingEcRes.getResultCd()+":"+tStoreJoinOfferingEcRes.getResultMsg());
 		}
 		return tStoreJoinOfferingEcRes;
 	}
