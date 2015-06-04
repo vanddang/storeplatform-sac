@@ -421,6 +421,12 @@
                 #{kind}
                 </foreach>
             </if>
+            <if test='prodGradeExtraCd == null'>
+                AND PD.PROD_GRD_EXTRA_CD IS NULL
+            </if>
+            <if test='prodGradeExtraCd == "PD020601"'>
+                AND (PD.PROD_GRD_EXTRA_CD IS NULL OR PD.PROD_GRD_EXTRA_CD = #{prodGradeExtraCd})
+            </if>            
                 ORDER BY TP.EXPO_ORD, PD.REG_DT DESC
               ) IV
             ) OV
