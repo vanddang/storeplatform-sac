@@ -39,7 +39,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String cdOcbSaveInfo; // OCB 적립코드
 	private String ocbAuthMtdCd; // OCB 인증수단 코드
 	private String noOcbCard; // OCB 카드번호
-	private String noCouponList; // (구)쿠폰 List
+//	private String noCouponList; // (구)쿠폰 List
 	private String couponList; // (신)쿠폰 List
 	private String cashPointList; // 캐쉬/포인트 잔액 통합 정보
 	private String userGrade; // 회원등급
@@ -331,21 +331,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setNoOcbCard(String noOcbCard) {
 		this.noOcbCard = noOcbCard;
-	}
-
-	/**
-	 * @return the noCouponList
-	 */
-	public String getNoCouponList() {
-		return this.noCouponList;
-	}
-
-	/**
-	 * @param noCouponList
-	 *            the noCouponList to set
-	 */
-	public void setNoCouponList(String noCouponList) {
-		this.noCouponList = noCouponList;
 	}
 
 	/**
