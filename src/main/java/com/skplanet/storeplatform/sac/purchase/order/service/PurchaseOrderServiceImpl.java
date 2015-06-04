@@ -1070,7 +1070,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
 						&& StringUtil.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_PURCHASE_CD)) {
 					TStoreJoinOfferingEcRes offeringEcRes = this.purchaseOrderTstoreService.joinOfferingImmediately(
-							prchsDtlMore.getProdId(), prchsDtlMore.getUseInsdUsermbrNo());
+							prchsDtlMore.getProdId(), prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getProdId(), offeringId);
 					TCashInfo tCashInfo = offeringEcRes.getTcashInfo();
 					if (tCashInfo != null) {
 						prchsDtlMore.setOfferingState(tCashInfo.getState());

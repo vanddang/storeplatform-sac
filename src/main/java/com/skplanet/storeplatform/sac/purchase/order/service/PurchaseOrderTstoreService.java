@@ -232,7 +232,12 @@ public interface PurchaseOrderTstoreService {
 	 *            구매ID
 	 * @param userKey
 	 *            사용자 고유 Key
+	 * @param prodId
+	 *            상품ID
+	 * @param offeringId
+	 *            오퍼링ID
 	 * @return the t store join offering ec res
 	 */
-	public TStoreJoinOfferingEcRes joinOfferingImmediately(String prchsId, String userKey);
+	public TStoreJoinOfferingEcRes joinOfferingImmediately(String prchsId, String userKey, String prodId,
+			String offeringId);
 }

@@ -697,12 +697,14 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 * @return 오퍼링 즉시 참여 결과
 	 */
 	@Override
-	public TStoreJoinOfferingEcRes joinOfferingImmediately(String prchsId, String userKey) {
+	public TStoreJoinOfferingEcRes joinOfferingImmediately(String prchsId, String userKey, String prodId, String offeringId) {
 		TStoreJoinOfferingEcReq tStoreJoinOfferingEcReq = new TStoreJoinOfferingEcReq();
 		TStoreJoinOfferingEcRes tStoreJoinOfferingEcRes = new TStoreJoinOfferingEcRes();
 
 		tStoreJoinOfferingEcReq.setPrchsId(prchsId);
 		tStoreJoinOfferingEcReq.setUserKey(userKey);
+		tStoreJoinOfferingEcReq.setProdId(prodId);
+		tStoreJoinOfferingEcReq.setOfferingId(offeringId);
 
 		try {
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,JOINOFFERING,REQ,{}",
