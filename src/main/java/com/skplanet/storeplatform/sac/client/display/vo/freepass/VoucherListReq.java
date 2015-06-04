@@ -42,6 +42,7 @@ public class VoucherListReq extends CommonInfo {
 	private String[] arrayCmpxProdGradeCd; // 이용권등급코드 Array
 	private String prodGradeCd; // 상품이용등급코드;
 	private String[] arrayProdGradeCd; // 상품이용등급코드 Array
+	private String prodGrdExtraCd; // 19+ 상품여부
 
 	// common req 전까지 임시
 	private String tenantId; // 테넌트ID
@@ -376,6 +377,22 @@ public class VoucherListReq extends CommonInfo {
 	 */
 	public void setArrayCmpxProdGradeCd(String[] arrayCmpxProdGradeCd) {
 		this.arrayCmpxProdGradeCd = arrayCmpxProdGradeCd;
+	}
+
+	/**
+	 * @param the
+	 *            prodGrdExtraCd
+	 */
+	public String getProdGrdExtraCd() {
+		return this.prodGrdExtraCd;
+	}
+
+	/**
+	 * @param prodGrdExtraCd
+	 *            the prodGrdExtraCd to set
+	 */
+	public void setProdGrdExtraCd(String prodGrdExtraCd) {
+		this.prodGrdExtraCd = prodGrdExtraCd;
 	}
 
 }
