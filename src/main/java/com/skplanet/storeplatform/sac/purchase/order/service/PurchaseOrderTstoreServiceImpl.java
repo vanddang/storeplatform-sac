@@ -699,7 +699,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	@Override
 	public TStoreJoinOfferingEcRes joinOfferingImmediately(String prchsId, String userKey) {
 		TStoreJoinOfferingEcReq tStoreJoinOfferingEcReq = new TStoreJoinOfferingEcReq();
-		TStoreJoinOfferingEcRes tStoreJoinOfferingEcRes;
+		TStoreJoinOfferingEcRes tStoreJoinOfferingEcRes = new TStoreJoinOfferingEcRes();
 
 		tStoreJoinOfferingEcReq.setPrchsId(prchsId);
 		tStoreJoinOfferingEcReq.setUserKey(userKey);

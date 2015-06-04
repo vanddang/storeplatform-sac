@@ -15,7 +15,9 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemDetailEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2ItemDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TCashInfo;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreJoinOfferingEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
@@ -810,7 +812,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
 				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
-				PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
+						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
 			if (StringUtils.contains(res.getCdMaxAmtRate(), "25:0:0")
 					&& StringUtils.contains(res.getCdMaxAmtRate(), "27:0:0")
 					&& StringUtils.contains(res.getCdMaxAmtRate(), "30:0:0")) {
@@ -1064,9 +1066,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				offeringId = prchsDtlMore.getResvCol01();
 
 				// IAP 인 경우 오퍼링 즉시 참여 처리
-				if(StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) && StringUtil
-						.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_PURCHASE_CD))
-					this.purchaseOrderTstoreService.joinOfferingImmediately(prchsDtlMore.getProdId(), prchsDtlMore.getUseInsdUsermbrNo());
+				if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+						&& StringUtil.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_PURCHASE_CD)) {
+					TStoreJoinOfferingEcRes offeringEcRes = this.purchaseOrderTstoreService.joinOfferingImmediately(
+							prchsDtlMore.getProdId(), prchsDtlMore.getUseInsdUsermbrNo());
+					TCashInfo tCashInfo = offeringEcRes.getTcashInfo();
+					if (tCashInfo != null) {
+						prchsDtlMore.setOfferingState(tCashInfo.getState());
+						prchsDtlMore.setOfferingAmt(tCashInfo.getAmt());
+					}
+				}
 			}
 		}
 
@@ -2014,10 +2024,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 상품별 정책은 상품 1개일 경우에만 적용: IAP/쇼핑 별도 정책 적용 상품은 하나의 상품만 구매 가능하다는 전제.
 		String checkProdId = null;
 		if (prchsDtlMoreList.size() == 1
-				|| StringUtils
-				.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+				|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
 				|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-				PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			checkProdId = prchsDtlMore.getProdId();
 		}
 
