@@ -115,6 +115,6 @@
 	   	<!-- shopping - Iprm Rabbit Template -->
 	    <bean id="shoppingIprmAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
         <!-- sacSearch - Iprm Rabbit Template -->
-        <bean id="sacSearchIprmAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
+        <bean id="sacSearchAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	</beans>
 </beans>
