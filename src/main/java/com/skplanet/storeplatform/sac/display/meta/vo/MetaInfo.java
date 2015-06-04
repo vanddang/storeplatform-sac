@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 
 /**
  * Ebook/Comic Meta Info.
- *
+ * 
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
 public class MetaInfo extends CommonInfo {
@@ -319,6 +319,7 @@ public class MetaInfo extends CommonInfo {
 	private String possLendClsfCd; // 소장, 대여 구분코드
 	private String seriesBookClsfCd; // 이북, 코믹, 연재/단행 구분코드
 	private String requestProduct; // 요청상품정보
+	private String prodGrdExtraCd; // 19+ 상품여부
 
 	// ////////////////////////// 하루에 하나 변수 ////////////////////////////
 	private String expoDt;
@@ -1827,7 +1828,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getStoreDlStrmCd() {
-		return storeDlStrmCd;
+		return this.storeDlStrmCd;
 	}
 
 	public void setStoreDlStrmCd(String storeDlStrmCd) {
@@ -1940,7 +1941,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getPlayDlStrmCd() {
-		return playDlStrmCd;
+		return this.playDlStrmCd;
 	}
 
 	public void setPlayDlStrmCd(String playDlStrmCd) {
@@ -4554,17 +4555,17 @@ public class MetaInfo extends CommonInfo {
 	public void setSpecialSaleYn(String specialSaleYn) {
 		this.specialSaleYn = specialSaleYn;
 	}
-	
 
 	/**
 	 * @return the specialTypeCd
 	 */
 	public String getSpecialTypeCd() {
-		return specialTypeCd;
+		return this.specialTypeCd;
 	}
 
 	/**
-	 * @param specialTypeCd the specialTypeCd to set
+	 * @param specialTypeCd
+	 *            the specialTypeCd to set
 	 */
 	public void setSpecialTypeCd(String specialTypeCd) {
 		this.specialTypeCd = specialTypeCd;
@@ -4672,6 +4673,14 @@ public class MetaInfo extends CommonInfo {
 
 	public void setRequestProduct(String requestProduct) {
 		this.requestProduct = requestProduct;
+	}
+
+	public String getProdGrdExtraCd() {
+		return this.prodGrdExtraCd;
+	}
+
+	public void setProdGrdExtraCd(String prodGrdExtraCd) {
+		this.prodGrdExtraCd = prodGrdExtraCd;
 	}
 
 }

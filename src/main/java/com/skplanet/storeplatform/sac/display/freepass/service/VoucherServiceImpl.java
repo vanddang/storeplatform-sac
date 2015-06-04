@@ -141,6 +141,17 @@ public class VoucherServiceImpl implements VoucherService {
 			}
 		}
 
+		// 파라미터 유효값 체크( 19+ 상품여부)
+		if (StringUtils.isNotEmpty(req.getProdGrdExtraCd())) {
+			String prodGrdExtraCd = req.getProdGrdExtraCd();
+			if (!"PD020601".equals(prodGrdExtraCd)) {
+				this.log.debug("----------------------------------------------------------------");
+				this.log.debug("유효하지않은 19+ 상품여부 코드 : " + prodGrdExtraCd);
+				this.log.debug("----------------------------------------------------------------");
+				throw new StorePlatformException("SAC_DSP_0003", "prodGrdExtraCd", prodGrdExtraCd);
+			}
+		}
+
 		// '+'로 연결 된 이용등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getCmpxProdGradeCd())) {
 			try {

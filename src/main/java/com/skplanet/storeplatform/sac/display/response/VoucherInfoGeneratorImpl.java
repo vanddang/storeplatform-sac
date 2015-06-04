@@ -34,7 +34,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 /**
  * 
  * 
- * Updated on : 2014. 2. 11. Updated by : 서영배, GTSOFT.
+ * Updated on : 2015. 05. 08. Updated by : 이태균, IS-PLUS.
  */
 @Component
 public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
@@ -320,6 +320,7 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 	public Rights generateRights(MetaInfo metaInfo) {
 		Rights rights = new Rights();
 		rights.setGrade(metaInfo.getProdGrdCd());
+		rights.setGradeExtra(metaInfo.getProdGrdExtraCd());
 		return rights;
 	}
 
