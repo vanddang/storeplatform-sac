@@ -718,7 +718,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		}
 		if (StringUtils.equals(tStoreJoinOfferingEcRes.getResultCd(),
 				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
-			throw new StorePlatformException("SAC_PUR_7224", tStoreJoinOfferingEcRes.getResultCd()+":"+tStoreJoinOfferingEcRes.getResultMsg());
+			throw new StorePlatformException("SAC_PUR_7224", tStoreJoinOfferingEcRes.getResultCd(),tStoreJoinOfferingEcRes.getResultMsg());
 		}
 		return tStoreJoinOfferingEcRes;
 	}
