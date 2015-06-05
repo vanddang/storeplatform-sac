@@ -399,19 +399,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									this.log.debug("[DownloadVodServiceImpl] token : {}", encryption.getToken());
 									this.log.debug("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
 									this.log.debug("--------------------------------------------------------------");
-									// JSON 복호화
-									// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-									// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-									//
-									// try {
-									// String decData = new String(decrypt, "UTF-8");
-									// this.log.debug("----------------------------------------------------------------");
-									// this.log.debug("[DownloadVodServiceImpl] decData : {}", decData);
-									// System.out.println("decData	:	" + decData);
-									// this.log.debug("----------------------------------------------------------------");
-									// } catch (UnsupportedEncodingException e) {
-									// e.printStackTrace();
-									// }
 								} else {
 									this.log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
 									this.log.debug("##### [SAC DSP LocalSCI] deviceKey : {}",
