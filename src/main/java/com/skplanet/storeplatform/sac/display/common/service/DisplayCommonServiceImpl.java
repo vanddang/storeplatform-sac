@@ -424,9 +424,14 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
     
     
     @Override
-    public String getUsePeriodSetCd(String topMenuId, String prodId,String drmYn) {
+    public String getUsePeriodSetCd(String topMenuId, String prodId,String drmYn,String svcGrpCd) {
     	Map<String, Object> reqMap = new HashMap<String, Object>();
     	String defaultUpSetCd = "DP013002";  // default 값 설정
+    	
+    	if(svcGrpCd.equals("DP000207")){	// 정액권일 경우 예외
+    		return defaultUpSetCd;
+    	}
+    	
     	String menuId = (String) this.commonDAO.queryForObject("DisplayCommon.getProdMenuId", prodId);
     	if(menuId == null){
     		menuId ="";

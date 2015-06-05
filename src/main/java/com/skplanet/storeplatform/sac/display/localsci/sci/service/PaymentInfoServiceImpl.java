@@ -167,7 +167,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             paymentInfo.setAgeAllowedFrom(displayCommonService.getAllowedAge(paymentInfo.getTopMenuId(), paymentInfo.getProdGrdCd()));
             
             //이용 기간 설정 구분
-            paymentInfo.setUsePeriodSetCd(displayCommonService.getUsePeriodSetCd(paymentInfo.getTopMenuId(), paymentInfo.getProdId(), paymentInfo.getDrmYn()));
+            paymentInfo.setUsePeriodSetCd(displayCommonService.getUsePeriodSetCd(paymentInfo.getTopMenuId(), paymentInfo.getProdId(), paymentInfo.getDrmYn(),paymentInfo.getSvcGrpCd()));
         }
 
         res.setPaymentInfoList(paymentInfoList);

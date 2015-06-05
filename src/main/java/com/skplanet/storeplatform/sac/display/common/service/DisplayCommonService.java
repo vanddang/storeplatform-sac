@@ -196,7 +196,7 @@ public interface DisplayCommonService {
      * @param drmYn drmYn
      * @return 이용 기간 설정 구분
      */
-    String getUsePeriodSetCd(String topMenuId, String prodId,String drmYn);    
+    String getUsePeriodSetCd(String topMenuId, String prodId,String drmYn,String svcGrpCd);    
     
 
 }
