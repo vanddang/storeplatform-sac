@@ -19,7 +19,7 @@
                     , DC.LANG_CD
                     , PD.PROD_ID
                     , PD.TOP_MENU_ID
-                    , (SELECT MENU_DESC FROM spsac.TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+                    , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
                     , PD.META_CLSF_CD
                     , PD.PROD_CHRG_YN
                     , PD.SELLER_MBR_NO
@@ -38,12 +38,12 @@
                     , PD.CONTENTS_TYPE_CD
                     , TP.EXPO_ORD
                 FROM
-                      spsac.TB_DP_PROD PD
-                    , spsac.TB_DP_CMPX_PROD CM
-                    , spsac.TB_DP_PROD_DESC DC
-                    , spsac.TB_DP_TENANT_PROD TP
-                    , spsac.TB_DP_TENANT_PROD_PRICE PR
-                    , spsac.TB_DP_USE_POLICY UP
+                      TB_DP_PROD PD
+                    , TB_DP_CMPX_PROD CM
+                    , TB_DP_PROD_DESC DC
+                    , TB_DP_TENANT_PROD TP
+                    , TB_DP_TENANT_PROD_PRICE PR
+                    , TB_DP_USE_POLICY UP
                 WHERE 
                     PD.PROD_ID = CM.PROD_ID
                     AND PD.PROD_ID = DC.PROD_ID
