@@ -1,5 +1,24 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
@@ -17,24 +36,19 @@ import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.VodType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.vo.*;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.util.*;
+import com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest;
+import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+import com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 
 /**
  * 전시 공통 서비스
- *
+ * 
  * Updated on : 2014. 01. 07 Updated by : 정희원, SK 플래닛.
  */
 @Service
@@ -46,14 +60,14 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-//	@Autowired
-//	private ExistenceSCI existenceSCI;
+	// @Autowired
+	// private ExistenceSCI existenceSCI;
 
 	@Autowired
 	private SearchUserSCI searchUserSCI;
-	
-    @Autowired
-    private ExistenceInternalSacSCI existenceInternalSacSCI;
+
+	@Autowired
+	private ExistenceInternalSacSCI existenceInternalSacSCI;
 
 	@Value("#{propertiesForSac['display.previewUrlPrefix']}")
 	private String previewPrefix;
@@ -120,29 +134,29 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Override
 	public boolean checkPurchase(String tenantId, String userKey, String deviceKey, String episodeId) {
 
-        ExistenceReq existenceReq = new ExistenceReq();
-        existenceReq.setTenantId(tenantId);
-        existenceReq.setUserKey(userKey);
-        existenceReq.setDeviceKey(deviceKey);
-        existenceReq.setExistenceItem(new ArrayList<ExistenceItem>());
+		ExistenceReq existenceReq = new ExistenceReq();
+		existenceReq.setTenantId(tenantId);
+		existenceReq.setUserKey(userKey);
+		existenceReq.setDeviceKey(deviceKey);
+		existenceReq.setExistenceItem(new ArrayList<ExistenceItem>());
 
-        ExistenceItem existenceItem = new ExistenceItem();
-        existenceItem.setProdId(episodeId);
-        existenceReq.getExistenceItem().add(existenceItem);
+		ExistenceItem existenceItem = new ExistenceItem();
+		existenceItem.setProdId(episodeId);
+		existenceReq.getExistenceItem().add(existenceItem);
 
-        this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
+		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
 		long start = System.currentTimeMillis();
-        ExistenceListRes res = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
+		ExistenceListRes res = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
 		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : existenceSCI.searchExistenceList");
 		long end = System.currentTimeMillis();
 		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase existenceSCI.searchExistenceList takes {} ms",
 				(end - start));
-        return res.getExistenceListRes() != null && res.getExistenceListRes().size() > 0;
+		return res.getExistenceListRes() != null && res.getExistenceListRes().size() > 0;
 	}
-	
+
 	@Override
 	public ExistenceListRes checkPurchaseList(String tenantId, String userKey, String deviceKey,
-                                              List<String> episodeIdList) {
+			List<String> episodeIdList) {
 		ExistenceScReq existenceScReq = new ExistenceScReq();
 		existenceScReq.setTenantId(tenantId);
 		existenceScReq.setUserKey(userKey);
@@ -156,17 +170,17 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		}
 		existenceScReq.setProductList(itemScList);
 
-        ExistenceReq existenceReq = new ExistenceReq();
-        existenceReq.setTenantId(tenantId);
-        existenceReq.setUserKey(userKey);
-        existenceReq.setDeviceKey(deviceKey);
-        existenceReq.setExistenceItem(new ArrayList<ExistenceItem>());
+		ExistenceReq existenceReq = new ExistenceReq();
+		existenceReq.setTenantId(tenantId);
+		existenceReq.setUserKey(userKey);
+		existenceReq.setDeviceKey(deviceKey);
+		existenceReq.setExistenceItem(new ArrayList<ExistenceItem>());
 
-        for (String episodeId : episodeIdList) {
-            ExistenceItem existenceItem = new ExistenceItem();
-            existenceItem.setProdId(episodeId);
-            existenceReq.getExistenceItem().add(existenceItem);
-        }
+		for (String episodeId : episodeIdList) {
+			ExistenceItem existenceItem = new ExistenceItem();
+			existenceItem.setProdId(episodeId);
+			existenceReq.getExistenceItem().add(existenceItem);
+		}
 
 		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
 		long start = System.currentTimeMillis();
@@ -198,54 +212,53 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Override
 	@Cacheable(value = "sac:display:tmembershipdcrate:v2", unless = "#result == null")
 	public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String topMenuId) {
-        if(topMenuId == null)
-            throw new IllegalArgumentException();
+		if (topMenuId == null)
+			throw new IllegalArgumentException();
 
 		Map<String, String> req = new HashMap<String, String>();
 		req.put("tenantId", tenantId);
 		req.put("policyId", "policy014"); // policy014 - TMembership 할인정책
 
-        if(!topMenuId.equals(DisplayConstants.REQUEST_TMEMBERSHIP_ALL_MENU))
-		    req.put("menuId", topMenuId);
+		if (!topMenuId.equals(DisplayConstants.REQUEST_TMEMBERSHIP_ALL_MENU))
+			req.put("menuId", topMenuId);
 
 		List<TenantSalePolicy> tenantSalePolicies = this.commonDAO.queryForList(
 				"DisplayCommon.getTmembershipDcRateForMenu", req, TenantSalePolicy.class);
 
-        if (topMenuId.equals(DisplayConstants.REQUEST_TMEMBERSHIP_ALL_MENU)) {
-            if (CollectionUtils.isNotEmpty(tenantSalePolicies)) {
-                TenantSalePolicy maxDcInfo = Collections.max(tenantSalePolicies, new Comparator<TenantSalePolicy>() {
-                    @Override
-                    public int compare(TenantSalePolicy tenantSalePolicy, TenantSalePolicy tenantSalePolicy2) {
-                        if(tenantSalePolicy.getDcRate() < tenantSalePolicy2.getDcRate())
-                            return -1;
-                        else if(tenantSalePolicy.getDcRate() > tenantSalePolicy2.getDcRate())
-                            return 1;
-                        else
-                            return 0;
-                    }
-                });
-                tenantSalePolicies = Arrays.asList(maxDcInfo);
-            }
-        }
+		if (topMenuId.equals(DisplayConstants.REQUEST_TMEMBERSHIP_ALL_MENU)) {
+			if (CollectionUtils.isNotEmpty(tenantSalePolicies)) {
+				TenantSalePolicy maxDcInfo = Collections.max(tenantSalePolicies, new Comparator<TenantSalePolicy>() {
+					@Override
+					public int compare(TenantSalePolicy tenantSalePolicy, TenantSalePolicy tenantSalePolicy2) {
+						if (tenantSalePolicy.getDcRate() < tenantSalePolicy2.getDcRate())
+							return -1;
+						else if (tenantSalePolicy.getDcRate() > tenantSalePolicy2.getDcRate())
+							return 1;
+						else
+							return 0;
+					}
+				});
+				tenantSalePolicies = Arrays.asList(maxDcInfo);
+			}
+		}
 
-        TmembershipDcInfo tmembershipDcInfo = new TmembershipDcInfo();
-        for (TenantSalePolicy tsp : tenantSalePolicies) {
-            if ("OR006311".equals(tsp.getProdTp())) {
-                tmembershipDcInfo.setNormalDcRate(tsp.getDcRate());
-            } else if ("OR006331".equals(tsp.getProdTp())) {
-                tmembershipDcInfo.setFreepassDcRate(tsp.getDcRate());
-            }
-        }
-        return tmembershipDcInfo;
+		TmembershipDcInfo tmembershipDcInfo = new TmembershipDcInfo();
+		for (TenantSalePolicy tsp : tenantSalePolicies) {
+			if ("OR006311".equals(tsp.getProdTp())) {
+				tmembershipDcInfo.setNormalDcRate(tsp.getDcRate());
+			} else if ("OR006331".equals(tsp.getProdTp())) {
+				tmembershipDcInfo.setFreepassDcRate(tsp.getDcRate());
+			}
+		}
+		return tmembershipDcInfo;
 	}
 
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
-     */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
+	 */
 	@Override
 	public SupportDevice getSupportDeviceInfo(String deviceModelCd) {
 		if (StringUtils.isEmpty(deviceModelCd)) {
@@ -257,7 +270,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
 	 */
@@ -276,7 +289,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
 	 */
@@ -285,166 +298,159 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		return this.messageSourceAccessor.getMessage("display.chapter.unit.vod");
 	}
 
-    @Override
-    public List<UpdateHistory> getUpdateList(String channelId, Integer offset, Integer count) {
-        Map<String, Object> req = new HashMap<String, Object>();
-        req.put("channelId", channelId);
-        if(offset != null && count != null) {
-            req.put("rowStart", offset);
-            req.put("rowEnd", offset + count - 1);
-        }
-        return this.commonDAO.queryForList("DisplayCommon.getUpdateList", req, UpdateHistory.class);
-    }
+	@Override
+	public List<UpdateHistory> getUpdateList(String channelId, Integer offset, Integer count) {
+		Map<String, Object> req = new HashMap<String, Object>();
+		req.put("channelId", channelId);
+		if (offset != null && count != null) {
+			req.put("rowStart", offset);
+			req.put("rowEnd", offset + count - 1);
+		}
+		return this.commonDAO.queryForList("DisplayCommon.getUpdateList", req, UpdateHistory.class);
+	}
 
-    @Override
-    public int getUpdateCount(String channelId) {
-        return this.commonDAO.queryForObject("DisplayCommon.getUpdateCount", channelId, Integer.class);
-    }
+	@Override
+	public int getUpdateCount(String channelId) {
+		return this.commonDAO.queryForObject("DisplayCommon.getUpdateCount", channelId, Integer.class);
+	}
 
-    @Override
-    public ProductInfo getProductInfo(String prodId) {
-        ProductInfo info = this.commonDAO.queryForObject("DisplayCommon.selectProductInfo", prodId, ProductInfo.class);
+	@Override
+	public ProductInfo getProductInfo(String prodId) {
+		ProductInfo info = this.commonDAO.queryForObject("DisplayCommon.selectProductInfo", prodId, ProductInfo.class);
 
-        if(info == null)
-            throw new StorePlatformException("SAC_DSP_0005", prodId);
+		if (info == null)
+			throw new StorePlatformException("SAC_DSP_0005", prodId);
 
-        // ProductType
-        String svcGrp = StringUtils.defaultString(info.getSvcGrpCd());
-        String svcTp = StringUtils.defaultString(info.getSvcTypeCd());
-        String metaClsf = StringUtils.defaultString(info.getMetaClsfCd());
-        String topMenu = StringUtils.defaultString(info.getTopMenuId());
+		// ProductType
+		String svcGrp = StringUtils.defaultString(info.getSvcGrpCd());
+		String svcTp = StringUtils.defaultString(info.getSvcTypeCd());
+		String metaClsf = StringUtils.defaultString(info.getMetaClsfCd());
+		String topMenu = StringUtils.defaultString(info.getTopMenuId());
 
-        ProductTypeInfo basicInfo = this.getProductTypeInfo(svcGrp, svcTp, metaClsf, topMenu);
-        info.setProductType(basicInfo.getProductType());
-        info.setSeries(basicInfo.isSeries());
-        info.setSubType(basicInfo.getSubType());
+		ProductTypeInfo basicInfo = this.getProductTypeInfo(svcGrp, svcTp, metaClsf, topMenu);
+		info.setProductType(basicInfo.getProductType());
+		info.setSeries(basicInfo.isSeries());
+		info.setSubType(basicInfo.getSubType());
 
-        return info;
-    }
+		return info;
+	}
 
-    @Override
-    public ProductTypeInfo getProductTypeInfo(String svcGrp, String svcTp, String metaClsf, String topMenu) {
-        if(StringUtils.isEmpty(svcGrp))
-            throw new IllegalArgumentException("svcGrp cannot be null.");
+	@Override
+	public ProductTypeInfo getProductTypeInfo(String svcGrp, String svcTp, String metaClsf, String topMenu) {
+		if (StringUtils.isEmpty(svcGrp))
+			throw new IllegalArgumentException("svcGrp cannot be null.");
 
-        String q = StringUtils.join(new String[]{svcGrp, svcTp, metaClsf}, ".");
+		String q = StringUtils.join(new String[] { svcGrp, svcTp, metaClsf }, ".");
 
-        ProductTypeInfo info = new ProductTypeInfo();
-        if(q.startsWith("DP000201")) {
-            info.setProductType(ProductType.App);
-        }
-        else if(q.startsWith("DP000203.DP001111")) {
-            info.setProductType(ProductType.Music);
-        }
-        else if(q.startsWith("DP000208")) {
-            // svcTp='PD002503', metaClsfCd='DP001729'
-            info.setProductType(ProductType.Album);
-        }
-        else if(q.startsWith("DP000203.DP001115")) {
-            info.setProductType(ProductType.Vod);
-            if(DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenu))
-                info.setSubType(VodType.Tv);
-            else
-                info.setSubType(VodType.Movie);
-        }
-        else if(q.matches("DP000203\\.DP001116.*")) {
-            if ("DP13".equals(topMenu) || "DP14".equals(topMenu)) {
-                info.setProductType(ProductType.EbookComic);
-                info.setSubType("DP13".equals(topMenu) ? EbookComicType.Ebook : EbookComicType.Comic);
-            }
-            else if ("DP26".equals(topMenu)) {
-                info.setProductType(ProductType.Webtoon);
-            }
-        }
-        else if(q.matches("(DP000204|DP000203)\\..*\\.CT(30|31|32|33)")) {
-            info.setProductType(ProductType.RingBell);
-            info.setSubType(MetaRingBellType.forCode(metaClsf));
-        }
-        else if(q.startsWith("DP000206")) {
-            info.setProductType(ProductType.Shopping);
-        }
-        else if(q.startsWith("DP000207")) {
-            info.setProductType(ProductType.Freepass);
-        }
-        else
-            throw new StorePlatformException("SAC_DSP_0025", svcGrp, svcTp, metaClsf);
+		ProductTypeInfo info = new ProductTypeInfo();
+		if (q.startsWith("DP000201")) {
+			info.setProductType(ProductType.App);
+		} else if (q.startsWith("DP000203.DP001111")) {
+			info.setProductType(ProductType.Music);
+		} else if (q.startsWith("DP000208")) {
+			// svcTp='PD002503', metaClsfCd='DP001729'
+			info.setProductType(ProductType.Album);
+		} else if (q.startsWith("DP000203.DP001115")) {
+			info.setProductType(ProductType.Vod);
+			if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenu))
+				info.setSubType(VodType.Tv);
+			else
+				info.setSubType(VodType.Movie);
+		} else if (q.matches("DP000203\\.DP001116.*")) {
+			if ("DP13".equals(topMenu) || "DP14".equals(topMenu)) {
+				info.setProductType(ProductType.EbookComic);
+				info.setSubType("DP13".equals(topMenu) ? EbookComicType.Ebook : EbookComicType.Comic);
+			} else if ("DP26".equals(topMenu)) {
+				info.setProductType(ProductType.Webtoon);
+			}
+		} else if (q.matches("(DP000204|DP000203)\\..*\\.CT(30|31|32|33)")) {
+			info.setProductType(ProductType.RingBell);
+			info.setSubType(MetaRingBellType.forCode(metaClsf));
+		} else if (q.startsWith("DP000206")) {
+			info.setProductType(ProductType.Shopping);
+		} else if (q.startsWith("DP000207")) {
+			info.setProductType(ProductType.Freepass);
+		} else
+			throw new StorePlatformException("SAC_DSP_0025", svcGrp, svcTp, metaClsf);
 
-        // 시리즈 여부 반영
-        info.setSeries(DisplayConstants.SET_SERIES_META.contains(metaClsf));
+		// 시리즈 여부 반영
+		info.setSeries(DisplayConstants.SET_SERIES_META.contains(metaClsf));
 
-        return info;
-    }
-    
-    /**
-     * UserKey를 이용하여 회원등급 조회.
-     * @param userKey
-     * @return
-     */
+		return info;
+	}
+
+	/**
+	 * UserKey를 이용하여 회원등급 조회.
+	 * 
+	 * @param userKey
+	 * @return
+	 */
 	@Override
 	public GradeInfoSac getUserGrade(String userKey) {
-		if(StringUtils.isEmpty(userKey)) return null;
+		if (StringUtils.isEmpty(userKey))
+			return null;
 		SearchUserGradeSacReq gradeReq = new SearchUserGradeSacReq();
 		gradeReq.setUserKey(userKey);
 		SearchUserGradeSacRes gradeRes = null;
 		try {
-			gradeRes = searchUserSCI.searchUserGrade(gradeReq);
-		} catch(Exception e) {
-			//ignore. 오류 무시.
+			gradeRes = this.searchUserSCI.searchUserGrade(gradeReq);
+		} catch (Exception e) {
+			// ignore. 오류 무시.
 		}
-        return gradeRes != null ? gradeRes.getGradeInfoSac() : null;
+		return gradeRes != null ? gradeRes.getGradeInfoSac() : null;
 	}
 
+	@Override
+	public Integer getAllowedAge(String topMenuId, String gradeCd) {
+		if ("PD004401".equals(gradeCd))
+			return 0;
 
-    @Override
-    public Integer getAllowedAge(String topMenuId, String gradeCd) {
-        if("PD004401".equals(gradeCd))
-            return 0;
+		if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+			if ("PD004402".equals(gradeCd))
+				return 12;
+			else if ("PD004403".equals(gradeCd))
+				return 15;
+			else if ("PD004404".equals(gradeCd))
+				return 18;
+			else
+				return null;
+		} else {
+			if ("PD004402".equals(gradeCd))
+				return 12;
+			else if ("PD004403".equals(gradeCd))
+				return 15;
+			else if ("PD004404".equals(gradeCd))
+				return 19;
+			else
+				return null;
+		}
+	}
 
-        if(DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-            if("PD004402".equals(gradeCd))
-                return 12;
-            else if("PD004403".equals(gradeCd))
-                return 15;
-            else if ("PD004404".equals(gradeCd))
-                return 18;
-            else
-                return null;
-        }
-        else {
-            if("PD004402".equals(gradeCd))
-                return 12;
-            else if("PD004403".equals(gradeCd))
-                return 15;
-            else if ("PD004404".equals(gradeCd))
-                return 19;
-            else
-                return null;
-        }
-    }
-    
-    
-    @Override
-    public String getUsePeriodSetCd(String topMenuId, String prodId,String drmYn,String svcGrpCd) {
-    	Map<String, Object> reqMap = new HashMap<String, Object>();
-    	String defaultUpSetCd = "DP013002";  // default 값 설정
-    	
-    	if(svcGrpCd.equals("DP000207")){	// 정액권일 경우 예외
-    		return defaultUpSetCd;
-    	}
-    	
-    	String menuId = (String) this.commonDAO.queryForObject("DisplayCommon.getProdMenuId", prodId);
-    	if(menuId == null){
-    		menuId ="";
-    	}
+	@Override
+	public String getUsePeriodSetCd(String topMenuId, String prodId, String drmYn, String svcGrpCd) {
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+
+		// default 값 설정 "DP013002" : 구매시
+		String defaultUpSetCd = "DP013002";
+
+		// 이용권일 경우 예외 처리
+		if (svcGrpCd.equals("DP000207")) {
+			return defaultUpSetCd;
+		}
+
+		String menuId = (String) this.commonDAO.queryForObject("DisplayCommon.getProdMenuId", prodId);
+		if (menuId == null) {
+			menuId = "";
+		}
 		reqMap.put("topMenuId", topMenuId);
 		reqMap.put("prodId", prodId);
 		reqMap.put("menuId", menuId);
 		reqMap.put("drmYn", drmYn);
 		String upSetCd = (String) this.commonDAO.queryForObject("DisplayCommon.getUsePeriodSetCd", reqMap);
-		if(upSetCd == null){
+		if (upSetCd == null) {
 			return defaultUpSetCd;
 		}
-    	
-    	return upSetCd;
-    }    
+
+		return upSetCd;
+	}
 }
