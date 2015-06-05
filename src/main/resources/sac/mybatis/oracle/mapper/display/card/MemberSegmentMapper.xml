@@ -22,7 +22,7 @@
 	</select>
 	<select id="selectTestMdnYn" parameterType="map" resultType="java.lang.String">
     SELECT  /* MemberSegmentMapper.xml, selectTestMdnYn, SAC/정화수, 2015-06-01 */
-            CASE  WHEN COUNT(1) > 1 THEN 'Y' ELSE 'N' END AS test_mdn_yn
+            CASE  WHEN COUNT(1) > 0 THEN 'Y' ELSE 'N' END AS test_mdn_yn
     FROM    TB_DP_TEST_MDN
     WHERE   tenant_id = #{tenantId}
     AND     policy_cd = 'DP01290001' -- 카드 테스트용
