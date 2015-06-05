@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Strings;
 import com.skplanet.storeplatform.sac.display.download.vo.SearchDownloadAppResult;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -170,334 +169,334 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		// 다운로드 앱 상품 조회
 		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadAppInfo", downloadAppSacReq, MetaInfo.class);
 
-        List<Encryption> encryptionList = new ArrayList<Encryption>();
-
-		if (metaInfo != null) {
-			log.debug("----------------------------------------------------------------");
-			log.debug("[DownloadAppServiceImpl] scid : {}", metaInfo.getSubContentsId());
-			log.debug("----------------------------------------------------------------");
-			identifierList = new ArrayList<Identifier>();
-
-			doBunchProdProvisioning(downloadAppSacReq, metaInfo);
-			validateParentBunchProd(downloadAppSacReq, metaInfo);
-
-			/**
-			 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
-			 */
-			metaInfo.setSystemId(tenantHeader.getSystemId());
-            metaInfo.setTenantId(tenantHeader.getTenantId());
-			downloadCommonService.validateVisitPathNm(metaInfo, downloadAppSacReq.getVisitPathNm(), productId);
-			metaInfo.setDwldTypeCd(downloadAppSacReq.getDwldTypeCd());
-
-            /**
-             * 업데이트 알람 수신 여부가 SAC구매에서 테넌트로 옮겨짐.
-             * For D/L API에 파마리터로 현재 상태의 알람 수신 여부를 받도록 변경
-             */
-            metaInfo.setUpdateAlarm(StringUtils.defaultString(downloadAppSacReq.getUpdateAlarmYn(), "Y"));
-
-
-			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
-				// 구매내역 조회를 위한 생성자
-				ProductListSacIn productListSacIn = null;
-				List<ProductListSacIn> productList = null;
-				HistoryListSacInReq historyReq = null;
-				HistoryListSacInRes historyRes = null;
-				boolean purchaseFlag = true;
-
-				try {
-					productListSacIn = new ProductListSacIn();
-					productList = new ArrayList<ProductListSacIn>();
-
-					productListSacIn.setProdId(metaInfo.getProdId());
-					productList.add(productListSacIn);
-
-					historyReq = new HistoryListSacInReq();
-					historyReq.setTenantId(downloadAppSacReq.getTenantId());
-					historyReq.setUserKey(downloadAppSacReq.getUserKey());
-					historyReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
-					historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-					historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-					historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-					historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
-					historyReq.setEndDt(sysDate);
-					historyReq.setOffset(1);
-					historyReq.setCount(1000);
-					historyReq.setProductList(productList);
-
-					log.debug("----------------------------------------------------------------");
-					log.debug("********************	구매 요청 파라미터	***************************");
-					log.debug("[DownloadAppServiceImpl] tenantId : {}", historyReq.getTenantId());
-					log.debug("[DownloadAppServiceImpl] userKey : {}", historyReq.getUserKey());
-					log.debug("[DownloadAppServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
-					log.debug("[DownloadAppServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-					log.debug("[DownloadAppServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
-					log.debug("[DownloadAppServiceImpl] startDt : {}", historyReq.getStartDt());
-					log.debug("[DownloadAppServiceImpl] endDt : {}", historyReq.getEndDt());
-					log.debug("[DownloadAppServiceImpl] offset : {}", historyReq.getOffset());
-					log.debug("[DownloadAppServiceImpl] count : {}", historyReq.getCount());
-					log.debug("[DownloadAppServiceImpl] prodId : {}", productList.get(0).getProdId());
-					log.debug("----------------------------------------------------------------");
-
-					// 구매내역 조회 실행
-					historyRes = historyInternalSCI.searchHistoryList(historyReq);
-
-				} catch (Exception ex) {
-					purchaseFlag = false;
-					log.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
-					// throw new StorePlatformException("SAC_DSP_2001", ex);
-				}
-
-				log.debug("---------------------------------------------------------------------");
-				log.debug("[DownloadAppServiceImpl] purchaseFlag :{}", purchaseFlag);
-				log.debug("[DownloadAppServiceImpl] historyRes :{}", historyRes);
-				if (purchaseFlag && historyRes != null) {
-					log.debug("[DownloadAppServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
-					log.debug("---------------------------------------------------------------------");
-
-					String prchsId = null; // 구매ID
-					String prchsDt = null; // 구매일시
-					String useExprDt = null; // 이용 만료일시
-					String dwldStartDt = null; // 다운로드 시작일시
-					String dwldExprDt = null; // 다운로드 만료일시
-					String prchsCaseCd = null; // 선물 여부
-					String prchsState = null; // 구매상태
-					String prchsProdId = null; // 구매 상품ID
-					String puchsPrice = null; // 구매 상품금액
-					String drmYn = null; // 구매상품 Drm여부
-					String permitDeviceYn = null; // 단말 지원여부
-					String purchaseHide = null; // 구매내역 숨김 여부
-					String updateAlarm = null; // 업데이트 알람 수신 여부
-
-					if (historyRes.getTotalCnt() > 0) {
-						List<Purchase> purchaseList = new ArrayList<Purchase>();
-
-						for (int i = 0; i < historyRes.getTotalCnt(); i++) {
-							prchsId = historyRes.getHistoryList().get(i).getPrchsId();
-							prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
-							useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
-							dwldStartDt = historyRes.getHistoryList().get(i).getDwldStartDt();
-							dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
-							prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
-							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
-							puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
-							drmYn = historyRes.getHistoryList().get(i).getDrmYn();
-							permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
-							purchaseHide = historyRes.getHistoryList().get(i).getHidingYn();
-
-							// 구매상태 확인
-							downloadAppSacReq.setPrchsDt(prchsDt);
-							downloadAppSacReq.setDwldStartDt(dwldStartDt);
-							downloadAppSacReq.setDwldExprDt(dwldExprDt);
-
-							prchsState = (String) ((HashMap) commonDAO.queryForObject(
-									"Download.getDownloadPurchaseState", downloadAppSacReq)).get("PURCHASE_STATE");
-
-							// 구매상태 만료여부 확인
-							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
-								// 구매 및 선물 여부 확인
-								if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
-									prchsState = "payment";
-								} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
-									prchsState = "gift";
-								}
-							}
-
-							log.debug("----------------------------------------------------------------");
-							log.debug("[DownloadAppServiceImpl] prchsId : {}", prchsId);
-							log.debug("[DownloadAppServiceImpl] prchsDt : {}", prchsDt);
-							log.debug("[DownloadAppServiceImpl] useExprDt : {}", useExprDt);
-							log.debug("[DownloadAppServiceImpl] dwldStartDt : {}", dwldStartDt);
-							log.debug("[DownloadAppServiceImpl] dwldExprDt : {}", dwldExprDt);
-							log.debug("[DownloadAppServiceImpl] prchsCaseCd : {}", prchsCaseCd);
-							log.debug("[DownloadAppServiceImpl] prchsState : {}", prchsState);
-							log.debug("[DownloadAppServiceImpl] prchsProdId : {}", prchsProdId);
-							log.debug("[DownloadAppServiceImpl] prchsPrice : {}", puchsPrice);
-							log.debug("----------------------------------------------------------------");
-
-							metaInfo.setPurchaseId(prchsId);
-							metaInfo.setPurchaseProdId(prchsProdId);
-							metaInfo.setPurchaseDt(prchsDt);
-							metaInfo.setPurchaseState(prchsState);
-							metaInfo.setPurchaseDwldExprDt(dwldExprDt);
-							metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
-							metaInfo.setDrmYn(drmYn);
-							// 구매 정보
-							purchaseList.add(commonGenerator.generatePurchase(metaInfo));
-
-							/************************************************************************************************
-							 * 구매 정보에 따른 암호화 시작
-							 ************************************************************************************************/
-							// 구매상태 만료 여부 확인
-							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
-									&& permitDeviceYn.equals("Y")) {
-								String deviceId = null; // Device Id
-								String deviceIdType = null; // Device Id 유형
-								String deviceTelecom = null;
-								SearchDeviceIdSacReq deviceReq = null;
-								SearchDeviceIdSacRes deviceRes = null;
-								boolean memberFlag = true;
-
-								try {
-									deviceReq = new SearchDeviceIdSacReq();
-									deviceReq.setUserKey(downloadAppSacReq.getUserKey());
-									deviceReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
-                                    deviceReq.setTenantId(tenantHeader.getTenantId());
-
-									log.debug("----------------------------------------------------------------");
-									log.debug("*******************회원 단말 정보 조회 파라미터*********************");
-									log.debug("[DownloadAppServiceImpl] userKey : {}", deviceReq.getUserKey());
-									log.debug("[DownloadAppServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
-									log.debug("----------------------------------------------------------------");
-
-									// 기기정보 조회
-									deviceRes = deviceSCI.searchDeviceId(deviceReq);
-
-
-								} catch (Exception ex) {
-									memberFlag = false;
-									log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
-									// 예외 무시
-								}
-
-								log.debug("----------------------------------------------------------------");
-								log.debug("[DownloadAppServiceImpl] memberFlag	:	{}", memberFlag);
-								log.debug("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
-								log.debug("----------------------------------------------------------------");
-
-								if (memberFlag && deviceRes != null) {
-									// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-									if ("Y".equals(deviceRes.getAuthYn())) {
-										deviceId = deviceRes.getDeviceId();
-										deviceTelecom = deviceRes.getDeviceTelecom();
-										deviceIdType = commonService.getDeviceIdType(deviceId);
-
-										metaInfo.setExpiredDate(reqExpireDate);
-										metaInfo.setUseExprDt(useExprDt);
-										metaInfo.setUserKey(userKey);
-										metaInfo.setDeviceKey(deviceKey);
-										metaInfo.setDeviceType(deviceIdType);
-										metaInfo.setDeviceSubKey(deviceId);
-										metaInfo.setPurchaseHide(purchaseHide);
-
-										// 단말의 통신사가 SKT 일때만 적용
-										if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
-											// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
-											if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID
-													.equals(metaInfo.getTopMenuId())
-													&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
-
-												try {
-													UapsEcReq uapsEcReq = new UapsEcReq();
-													uapsEcReq.setDeviceId(deviceId);
-													uapsEcReq.setType("mdn");
-													log.debug("----------------------------------------------------------------");
-													log.debug("********************UAPS 정보 조회************************");
-													log.debug("[DownloadAppServiceImpl] DeviceId : {}",	uapsEcReq.getDeviceId());
-													log.debug("[DownloadAppServiceImpl] Type : {}",uapsEcReq.getType());
-													log.debug("----------------------------------------------------------------");
-
-													UserEcRes uapsEcRes = uapsSCI.getMappingInfo(uapsEcReq);
-
-													for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-														log.debug("[DownloadAppServiceImpl] serviceCd	:{}", uapsEcRes.getServiceCD()[k]);
-														if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING
-																.equals(uapsEcRes.getServiceCD()[k])) {
-															metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
-
-															tingMemberFlag = true;
-														}
-													}
-
-												} catch (Exception e) {
-													log.error("UAPS 조회 연동 중 오류가 발생하였습니다.\n", e);
-													// 예외 무시
-												}
-											}
-										}
-
-										// 암호화 정보 (JSON)
-										genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
-
-                                        // Push 강제 업그레이드인 경우
-                                        generateMetaForPushForceUpgrade(metaInfo, downloadAppSacReq.getPacketFreeYn());
-
-                                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
-                                        encryptionList.add(encryption);
-
-										log.debug("-------------------------------------------------------------");
-										log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
-										log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-										log.debug("-------------------------------------------------------------");
-									} else {
-										log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
-										log.debug("##### [SAC DSP LocalSCI] deviceKey : {}", deviceReq.getDeviceKey());
-										log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-									}
-								}
-								product.setPurchaseList(purchaseList);
-
-								// 암호화 정보
-								if (!encryptionList.isEmpty()) {
-									product.setDl(encryptionList);
-								}
-								break;
-							}
-						}
-
-					} else {
-						/**
-						 * 구매내역이 존재하지 않는 경우 예외적으로 다운로드 허용
-						 * 예) 앱가이드, 스마트청구서, T 통화 도우미
-						 */
-						if ( isProdWithoutPrchsHis(tenantHeader.getTenantId(), productId) ) {
-							makeDefaultMetaWithoutPrchsHis(metaInfo, downloadAppSacReq, purchaseDt, reqExpireDate);
-
-							Encryption encryption = supportService.generateEncryption(metaInfo, productId);
-							encryptionList.add(encryption);
-							product.setDl(encryptionList);
-						}
-
-					}
-				}
-			}
-
-			/************************************************************************************************
-			 * Seed App 정보
-			 ************************************************************************************************/
-
-			component.setIdentifierList(appInfoGenerator.generateComponentIdentifierList(metaInfo));
-			component.setGameCenterVerCd(StringUtils.defaultString(metaInfo.getGameCentrVerCd()));
-			component.setUseYn(metaInfo.getSeedUseYn());
-			component.setCaseRefCd(metaInfo.getSeedCaseRefCd());
-            component.setBunchMessage(metaInfo.getBnchDwldMsg());
-
-			/************************************************************************************************
-			 * 상품 정보
-			 ************************************************************************************************/
-
-			identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
-					metaInfo.getProdId()));
-			identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-					metaInfo.getProdId()));
-			product.setIdentifierList(identifierList); // 상품 Id
-			product.setTitle(commonGenerator.generateTitle(metaInfo)); // 상품명
-			product.setSourceList(commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
-			List<Support> supportList = new ArrayList<Support>();
-			supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
-					metaInfo.getDrmYn()));
-			product.setSupportList(supportList);
-			product.setMenuList(commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
-			product.setApp(appInfoGenerator.generateApp(metaInfo)); // App 상세정보
-			product.setRights(commonGenerator.generateRights(metaInfo)); // 권한
-			product.setDistributor(commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
-            product.setPacketFee(makePacketFee(metaInfo, tingMemberFlag, downloadAppSacReq.getPacketFreeYn()));
-			product.setPlatClsfCd(metaInfo.getPlatClsfCd());
-			product.setPrice(commonGenerator.generatePrice(metaInfo)); // 상품금액 정보
-
-			commonResponse.setTotalCount(1);
-		} else {
+		if (metaInfo == null)  {
 			throw new StorePlatformException("SAC_DSP_0009");
 		}
+
+		List<Encryption> encryptionList = new ArrayList<Encryption>();
+
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadAppServiceImpl] scid : {}", metaInfo.getSubContentsId());
+		log.debug("----------------------------------------------------------------");
+		identifierList = new ArrayList<Identifier>();
+
+		doBunchProdProvisioning(downloadAppSacReq, metaInfo);
+		validateParentBunchProd(downloadAppSacReq, metaInfo);
+
+		/**
+		 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
+		 */
+		metaInfo.setSystemId(tenantHeader.getSystemId());
+        metaInfo.setTenantId(tenantHeader.getTenantId());
+		downloadCommonService.validateVisitPathNm(metaInfo, downloadAppSacReq.getVisitPathNm(), productId);
+		metaInfo.setDwldTypeCd(downloadAppSacReq.getDwldTypeCd());
+
+        /**
+         * 업데이트 알람 수신 여부가 SAC구매에서 테넌트로 옮겨짐.
+         * For D/L API에 파마리터로 현재 상태의 알람 수신 여부를 받도록 변경
+         */
+        metaInfo.setUpdateAlarm(StringUtils.defaultString(downloadAppSacReq.getUpdateAlarmYn(), "Y"));
+
+
+		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
+			// 구매내역 조회를 위한 생성자
+			ProductListSacIn productListSacIn = null;
+			List<ProductListSacIn> productList = null;
+			HistoryListSacInReq historyReq = null;
+			HistoryListSacInRes historyRes = null;
+			boolean purchaseFlag = true;
+
+			try {
+				productListSacIn = new ProductListSacIn();
+				productList = new ArrayList<ProductListSacIn>();
+
+				productListSacIn.setProdId(metaInfo.getProdId());
+				productList.add(productListSacIn);
+
+				historyReq = new HistoryListSacInReq();
+				historyReq.setTenantId(downloadAppSacReq.getTenantId());
+				historyReq.setUserKey(downloadAppSacReq.getUserKey());
+				historyReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
+				historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+				historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+				historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+				historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
+				historyReq.setEndDt(sysDate);
+				historyReq.setOffset(1);
+				historyReq.setCount(1000);
+				historyReq.setProductList(productList);
+
+				log.debug("----------------------------------------------------------------");
+				log.debug("********************	구매 요청 파라미터	***************************");
+				log.debug("[DownloadAppServiceImpl] tenantId : {}", historyReq.getTenantId());
+				log.debug("[DownloadAppServiceImpl] userKey : {}", historyReq.getUserKey());
+				log.debug("[DownloadAppServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+				log.debug("[DownloadAppServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+				log.debug("[DownloadAppServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+				log.debug("[DownloadAppServiceImpl] startDt : {}", historyReq.getStartDt());
+				log.debug("[DownloadAppServiceImpl] endDt : {}", historyReq.getEndDt());
+				log.debug("[DownloadAppServiceImpl] offset : {}", historyReq.getOffset());
+				log.debug("[DownloadAppServiceImpl] count : {}", historyReq.getCount());
+				log.debug("[DownloadAppServiceImpl] prodId : {}", productList.get(0).getProdId());
+				log.debug("----------------------------------------------------------------");
+
+				// 구매내역 조회 실행
+				historyRes = historyInternalSCI.searchHistoryList(historyReq);
+
+			} catch (Exception ex) {
+				purchaseFlag = false;
+				log.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
+				// throw new StorePlatformException("SAC_DSP_2001", ex);
+			}
+
+			log.debug("---------------------------------------------------------------------");
+			log.debug("[DownloadAppServiceImpl] purchaseFlag :{}", purchaseFlag);
+			log.debug("[DownloadAppServiceImpl] historyRes :{}", historyRes);
+			if (purchaseFlag && historyRes != null) {
+				log.debug("[DownloadAppServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
+				log.debug("---------------------------------------------------------------------");
+
+				String prchsId = null; // 구매ID
+				String prchsDt = null; // 구매일시
+				String useExprDt = null; // 이용 만료일시
+				String dwldStartDt = null; // 다운로드 시작일시
+				String dwldExprDt = null; // 다운로드 만료일시
+				String prchsCaseCd = null; // 선물 여부
+				String prchsState = null; // 구매상태
+				String prchsProdId = null; // 구매 상품ID
+				String puchsPrice = null; // 구매 상품금액
+				String drmYn = null; // 구매상품 Drm여부
+				String permitDeviceYn = null; // 단말 지원여부
+				String purchaseHide = null; // 구매내역 숨김 여부
+				String updateAlarm = null; // 업데이트 알람 수신 여부
+
+				if (historyRes.getTotalCnt() > 0) {
+					List<Purchase> purchaseList = new ArrayList<Purchase>();
+
+					for (int i = 0; i < historyRes.getTotalCnt(); i++) {
+						prchsId = historyRes.getHistoryList().get(i).getPrchsId();
+						prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
+						useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
+						dwldStartDt = historyRes.getHistoryList().get(i).getDwldStartDt();
+						dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
+						prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
+						prchsProdId = historyRes.getHistoryList().get(i).getProdId();
+						puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
+						drmYn = historyRes.getHistoryList().get(i).getDrmYn();
+						permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
+						purchaseHide = historyRes.getHistoryList().get(i).getHidingYn();
+
+						// 구매상태 확인
+						downloadAppSacReq.setPrchsDt(prchsDt);
+						downloadAppSacReq.setDwldStartDt(dwldStartDt);
+						downloadAppSacReq.setDwldExprDt(dwldExprDt);
+
+						prchsState = (String) ((HashMap) commonDAO.queryForObject(
+								"Download.getDownloadPurchaseState", downloadAppSacReq)).get("PURCHASE_STATE");
+
+						// 구매상태 만료여부 확인
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+							// 구매 및 선물 여부 확인
+							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
+								prchsState = "payment";
+							} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
+								prchsState = "gift";
+							}
+						}
+
+						log.debug("----------------------------------------------------------------");
+						log.debug("[DownloadAppServiceImpl] prchsId : {}", prchsId);
+						log.debug("[DownloadAppServiceImpl] prchsDt : {}", prchsDt);
+						log.debug("[DownloadAppServiceImpl] useExprDt : {}", useExprDt);
+						log.debug("[DownloadAppServiceImpl] dwldStartDt : {}", dwldStartDt);
+						log.debug("[DownloadAppServiceImpl] dwldExprDt : {}", dwldExprDt);
+						log.debug("[DownloadAppServiceImpl] prchsCaseCd : {}", prchsCaseCd);
+						log.debug("[DownloadAppServiceImpl] prchsState : {}", prchsState);
+						log.debug("[DownloadAppServiceImpl] prchsProdId : {}", prchsProdId);
+						log.debug("[DownloadAppServiceImpl] prchsPrice : {}", puchsPrice);
+						log.debug("----------------------------------------------------------------");
+
+						metaInfo.setPurchaseId(prchsId);
+						metaInfo.setPurchaseProdId(prchsProdId);
+						metaInfo.setPurchaseDt(prchsDt);
+						metaInfo.setPurchaseState(prchsState);
+						metaInfo.setPurchaseDwldExprDt(dwldExprDt);
+						metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
+						metaInfo.setDrmYn(drmYn);
+						// 구매 정보
+						purchaseList.add(commonGenerator.generatePurchase(metaInfo));
+
+						/************************************************************************************************
+						 * 구매 정보에 따른 암호화 시작
+						 ************************************************************************************************/
+						// 구매상태 만료 여부 확인
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
+								&& permitDeviceYn.equals("Y")) {
+							String deviceId = null; // Device Id
+							String deviceIdType = null; // Device Id 유형
+							String deviceTelecom = null;
+							SearchDeviceIdSacReq deviceReq = null;
+							SearchDeviceIdSacRes deviceRes = null;
+							boolean memberFlag = true;
+
+							try {
+								deviceReq = new SearchDeviceIdSacReq();
+								deviceReq.setUserKey(downloadAppSacReq.getUserKey());
+								deviceReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
+                                deviceReq.setTenantId(tenantHeader.getTenantId());
+
+								log.debug("----------------------------------------------------------------");
+								log.debug("*******************회원 단말 정보 조회 파라미터*********************");
+								log.debug("[DownloadAppServiceImpl] userKey : {}", deviceReq.getUserKey());
+								log.debug("[DownloadAppServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+								log.debug("----------------------------------------------------------------");
+
+								// 기기정보 조회
+								deviceRes = deviceSCI.searchDeviceId(deviceReq);
+
+
+							} catch (Exception ex) {
+								memberFlag = false;
+								log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
+								// 예외 무시
+							}
+
+							log.debug("----------------------------------------------------------------");
+							log.debug("[DownloadAppServiceImpl] memberFlag	:	{}", memberFlag);
+							log.debug("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
+							log.debug("----------------------------------------------------------------");
+
+							if (memberFlag && deviceRes != null) {
+								// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+								if ("Y".equals(deviceRes.getAuthYn())) {
+									deviceId = deviceRes.getDeviceId();
+									deviceTelecom = deviceRes.getDeviceTelecom();
+									deviceIdType = commonService.getDeviceIdType(deviceId);
+
+									metaInfo.setExpiredDate(reqExpireDate);
+									metaInfo.setUseExprDt(useExprDt);
+									metaInfo.setUserKey(userKey);
+									metaInfo.setDeviceKey(deviceKey);
+									metaInfo.setDeviceType(deviceIdType);
+									metaInfo.setDeviceSubKey(deviceId);
+									metaInfo.setPurchaseHide(purchaseHide);
+
+									// 단말의 통신사가 SKT 일때만 적용
+									if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
+										// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
+										if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID
+												.equals(metaInfo.getTopMenuId())
+												&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
+
+											try {
+												UapsEcReq uapsEcReq = new UapsEcReq();
+												uapsEcReq.setDeviceId(deviceId);
+												uapsEcReq.setType("mdn");
+												log.debug("----------------------------------------------------------------");
+												log.debug("********************UAPS 정보 조회************************");
+												log.debug("[DownloadAppServiceImpl] DeviceId : {}",	uapsEcReq.getDeviceId());
+												log.debug("[DownloadAppServiceImpl] Type : {}",uapsEcReq.getType());
+												log.debug("----------------------------------------------------------------");
+
+												UserEcRes uapsEcRes = uapsSCI.getMappingInfo(uapsEcReq);
+
+												for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
+													log.debug("[DownloadAppServiceImpl] serviceCd	:{}", uapsEcRes.getServiceCD()[k]);
+													if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING
+															.equals(uapsEcRes.getServiceCD()[k])) {
+														metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
+
+														tingMemberFlag = true;
+													}
+												}
+
+											} catch (Exception e) {
+												log.error("UAPS 조회 연동 중 오류가 발생하였습니다.\n", e);
+												// 예외 무시
+											}
+										}
+									}
+
+									// 암호화 정보 (JSON)
+									genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
+
+                                    // Push 강제 업그레이드인 경우
+                                    generateMetaForPushForceUpgrade(metaInfo, downloadAppSacReq.getPacketFreeYn());
+
+                                    Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+                                    encryptionList.add(encryption);
+
+									log.debug("-------------------------------------------------------------");
+									log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
+									log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+									log.debug("-------------------------------------------------------------");
+								} else {
+									log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
+									log.debug("##### [SAC DSP LocalSCI] deviceKey : {}", deviceReq.getDeviceKey());
+									log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
+								}
+							}
+							product.setPurchaseList(purchaseList);
+
+							// 암호화 정보
+							if (!encryptionList.isEmpty()) {
+								product.setDl(encryptionList);
+							}
+							break;
+						}
+					}
+
+				} else {
+					/**
+					 * 구매내역이 존재하지 않는 경우 예외적으로 다운로드 허용
+					 * 예) 앱가이드, 스마트청구서, T 통화 도우미
+					 */
+					if ( isProdWithoutPrchsHis(tenantHeader.getTenantId(), productId) ) {
+						makeDefaultMetaWithoutPrchsHis(metaInfo, downloadAppSacReq, purchaseDt, reqExpireDate);
+
+						Encryption encryption = supportService.generateEncryption(metaInfo, productId);
+						encryptionList.add(encryption);
+						product.setDl(encryptionList);
+					}
+
+				}
+			}
+		}
+
+		/************************************************************************************************
+		 * Seed App 정보
+		 ************************************************************************************************/
+
+		component.setIdentifierList(appInfoGenerator.generateComponentIdentifierList(metaInfo));
+		component.setGameCenterVerCd(StringUtils.defaultString(metaInfo.getGameCentrVerCd()));
+		component.setUseYn(metaInfo.getSeedUseYn());
+		component.setCaseRefCd(metaInfo.getSeedCaseRefCd());
+        component.setBunchMessage(metaInfo.getBnchDwldMsg());
+
+		/************************************************************************************************
+		 * 상품 정보
+		 ************************************************************************************************/
+
+		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+				metaInfo.getProdId()));
+		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+				metaInfo.getProdId()));
+		product.setIdentifierList(identifierList); // 상품 Id
+		product.setTitle(commonGenerator.generateTitle(metaInfo)); // 상품명
+		product.setSourceList(commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
+		List<Support> supportList = new ArrayList<Support>();
+		supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
+				metaInfo.getDrmYn()));
+		product.setSupportList(supportList);
+		product.setMenuList(commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
+		product.setApp(appInfoGenerator.generateApp(metaInfo)); // App 상세정보
+		product.setRights(commonGenerator.generateRights(metaInfo)); // 권한
+		product.setDistributor(commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
+        product.setPacketFee(makePacketFee(metaInfo, tingMemberFlag, downloadAppSacReq.getPacketFreeYn()));
+		product.setPlatClsfCd(metaInfo.getPlatClsfCd());
+		product.setPrice(commonGenerator.generatePrice(metaInfo)); // 상품금액 정보
+
+		commonResponse.setTotalCount(1);
 
 		response.setCommonResponse(commonResponse);
 		response.setComponent(component);
