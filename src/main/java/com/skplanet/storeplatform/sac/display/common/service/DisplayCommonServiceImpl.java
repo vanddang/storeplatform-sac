@@ -426,16 +426,11 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
     @Override
     public String getUsePeriodSetCd(String topMenuId, String prodId,String drmYn) {
     	Map<String, Object> reqMap = new HashMap<String, Object>();
-    	String defaultUpSetCd = "DP013002";  
+    	String defaultUpSetCd = "DP013002";  // default 값 설정
     	String menuId = (String) this.commonDAO.queryForObject("DisplayCommon.getProdMenuId", prodId);
     	if(menuId == null){
     		menuId ="";
     	}
-    	if(topMenuId.equals("")){
-    		ProductInfo productInfo = (ProductInfo) this.commonDAO.queryForObject("DisplayCommon.selectProductInfo", prodId);
-    		topMenuId = productInfo.getTopMenuId();
-    	}
-    	
 		reqMap.put("topMenuId", topMenuId);
 		reqMap.put("prodId", prodId);
 		reqMap.put("menuId", menuId);
