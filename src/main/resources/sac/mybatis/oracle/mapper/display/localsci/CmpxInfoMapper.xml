@@ -45,6 +45,7 @@
 	              PD.PROD_ID
 	            , DC.PROD_NM
 	            , PR.PROD_AMT
+	            , PD.TOP_MENU_ID
 	            , TP.PROD_STATUS_CD 
 	            ,(CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN PD.PROD_GRD_CD ELSE '' END) AS PROD_GRD_CD
 	            ,  (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
