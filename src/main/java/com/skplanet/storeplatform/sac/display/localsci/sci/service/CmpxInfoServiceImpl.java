@@ -177,7 +177,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		cmpxProductInfoList = this.commonDAO.queryForList("CmpxInfo.searchCmpxProductList", paramMap,
 				CmpxProductInfoList.class);
 		 for (CmpxProductInfoList cmpxProductInfo : cmpxProductInfoList) {
-			 cmpxProductInfo.setUsePeriodSetCd(displayCommonService.getUsePeriodSetCd("", cmpxProductInfo.getProdId(), cmpxProductInfo.getDrmYn()));
+			 cmpxProductInfo.setUsePeriodSetCd(displayCommonService.getUsePeriodSetCd(cmpxProductInfo.getTopMenuId(), cmpxProductInfo.getProdId(), cmpxProductInfo.getDrmYn()));
 		 }
 		
 		
