@@ -11,9 +11,9 @@ package com.skplanet.storeplatform.sac.member.user.sci.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -1152,26 +1152,36 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		Map<String, List<UserExtraInfoSac>> searchUserExtraInfoSacRes = new HashMap<String, List<UserExtraInfoSac>>();
 		List<UserExtraInfoSac> userExtraInfoSacList = null;
 
-		Iterator<String> keys = searchUserExtraInfoResponseMap.keySet().iterator();
-		while (keys.hasNext()) {
-			String key = keys.next();
-			for (MbrMangItemPtcr mangItemPtcr : searchUserExtraInfoResponseMap.get(key)) {
-				userExtraInfoSacList = new ArrayList<UserExtraInfoSac>();
-				for (MbrMangItemPtcr resultMangItemPtcr : searchUserExtraInfoResponseMap.get(key)) {
-					if (StringUtils.equals(key, mangItemPtcr.getUserKey())) {
-						UserExtraInfoSac userExtraInfoSac = new UserExtraInfoSac();
-						userExtraInfoSac.setExtraProfile(resultMangItemPtcr.getExtraProfile());
-						userExtraInfoSac.setExtraProfileValue(resultMangItemPtcr.getExtraProfileValue());
-						userExtraInfoSacList.add(userExtraInfoSac);
-					}
-				}
+		for (Entry<String, List<MbrMangItemPtcr>> entry : searchUserExtraInfoResponseMap.entrySet()) {
+			userExtraInfoSacList = new ArrayList<UserExtraInfoSac>();
+			for (MbrMangItemPtcr mbrMangItemPtcr : entry.getValue()) {
+				UserExtraInfoSac userExtraInfoSac = new UserExtraInfoSac();
+				userExtraInfoSac.setExtraProfile(mbrMangItemPtcr.getExtraProfile());
+				userExtraInfoSac.setExtraProfileValue(mbrMangItemPtcr.getExtraProfileValue());
+				userExtraInfoSacList.add(userExtraInfoSac);
 			}
-			searchUserExtraInfoSacRes.put(key, userExtraInfoSacList);
+			searchUserExtraInfoSacRes.put(entry.getKey(), userExtraInfoSacList);
 		}
+
+		// Iterator<String> keys = searchUserExtraInfoResponseMap.keySet().iterator();
+		// while (keys.hasNext()) {
+		// String key = keys.next();
+		// for (MbrMangItemPtcr mangItemPtcr : searchUserExtraInfoResponseMap.get(key)) {
+		// userExtraInfoSacList = new ArrayList<UserExtraInfoSac>();
+		// for (MbrMangItemPtcr resultMangItemPtcr : searchUserExtraInfoResponseMap.get(key)) {
+		// if (StringUtils.equals(key, mangItemPtcr.getUserKey())) {
+		// UserExtraInfoSac userExtraInfoSac = new UserExtraInfoSac();
+		// userExtraInfoSac.setExtraProfile(resultMangItemPtcr.getExtraProfile());
+		// userExtraInfoSac.setExtraProfileValue(resultMangItemPtcr.getExtraProfileValue());
+		// userExtraInfoSacList.add(userExtraInfoSac);
+		// }
+		// }
+		// }
+		// searchUserExtraInfoSacRes.put(key, userExtraInfoSacList);
+		// }
 
 		SearchUserExtraInfoSacRes res = new SearchUserExtraInfoSacRes();
 		res.setSearchUserExtraInfoSacRes(searchUserExtraInfoSacRes);
 		return res;
 	}
-
 }

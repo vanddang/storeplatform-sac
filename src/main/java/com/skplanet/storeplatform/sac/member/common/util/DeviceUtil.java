@@ -285,8 +285,8 @@ public class DeviceUtil {
 	 */
 	public static String getGmailStr(String gmail) {
 
-		Integer cnt = 0;
-		Integer gmailCnt = 3;
+		int cnt = 0;
+		int gmailCnt = 3;
 		String delim = "\\,";
 		String gmailStr = "";
 
@@ -299,7 +299,7 @@ public class DeviceUtil {
 		/*
 		 * if (tempGmailArr.length == 1) { // 한 건인 경우 return gmail; }
 		 */
-
+		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < tempGmailArr.length; i++) {
 
 			if (tempGmailArr[i].indexOf("@gmail.com") > -1) {
@@ -307,12 +307,12 @@ public class DeviceUtil {
 				if (cnt == gmailCnt) {
 					break;
 				}
-
-				gmailStr = gmailStr + tempGmailArr[i] + ",";
+				buf.append(tempGmailArr[i]).append(",");
 				cnt++;
 			}
 		}
 
+		gmailStr = buf.toString();
 		if (gmailStr.indexOf(",") > -1) {
 			gmailStr = gmailStr.substring(0, gmailStr.lastIndexOf(","));
 		}

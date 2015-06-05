@@ -151,6 +151,8 @@ public class ConvertMapperUtils {
 			// JSon String
 			returnStr = mapper.writeValueAsString(returnObj);
 
+		} catch (RuntimeException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_MEM_0099", e);
 		}

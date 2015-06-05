@@ -39,7 +39,6 @@ import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ChangedDeviceLog;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.NonMbrSegment;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
@@ -612,7 +611,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			createDeviceReq.setIsNew("N");
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
 
-			CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
+			this.deviceSCI.createDevice(createDeviceReq);
 
 			/* MQ 연동 */
 			ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,16 +136,13 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 			// List<SellerMbr> list = sellerMbrMapSc
 			LOGGER.info("요청한 Key값들 중 일부 또는 전체에 대한 결과 존재.");
 			// SC 호출 후 PutAll한 Map을 SacMap에 Setting.
-			Iterator<String> it = sellerMbrMapSc.keySet().iterator();
-
 			List<SellerMbrSac> sellerMbrSacs = null;
 			SellerMbrSac sellerMbrSac = null;
 			Map<String, List<SellerMbrSac>> sellerMbrSacMap = new HashMap<String, List<SellerMbrSac>>();
 
-			while (it.hasNext()) {
-				String key = it.next(); // 요청된 키값
+			for (Entry<String, List<SellerMbr>> entry : sellerMbrMapSc.entrySet()) {
 				sellerMbrSacs = new ArrayList<SellerMbrSac>();
-				for (SellerMbr sellerMbr : sellerMbrMapSc.get(key)) {
+				for (SellerMbr sellerMbr : entry.getValue()) {
 					sellerMbrSac = new SellerMbrSac();
 					sellerMbrSac.setSellerKey(sellerMbr.getSellerKey());
 					sellerMbrSac.setSellerId(sellerMbr.getSellerID());
@@ -161,8 +159,32 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 					sellerMbrSac.setBizRegNumber(sellerMbr.getBizRegNumber());
 					sellerMbrSacs.add(sellerMbrSac);
 				}
-				sellerMbrSacMap.put(key, sellerMbrSacs);
+				sellerMbrSacMap.put(entry.getKey(), sellerMbrSacs);
 			}
+
+			// Iterator<String> it = sellerMbrMapSc.keySet().iterator();
+			// while (it.hasNext()) {
+			// String key = it.next(); // 요청된 키값
+			// sellerMbrSacs = new ArrayList<SellerMbrSac>();
+			// for (SellerMbr sellerMbr : sellerMbrMapSc.get(key)) {
+			// sellerMbrSac = new SellerMbrSac();
+			// sellerMbrSac.setSellerKey(sellerMbr.getSellerKey());
+			// sellerMbrSac.setSellerId(sellerMbr.getSellerID());
+			// sellerMbrSac.setSellerClass(sellerMbr.getSellerClass());
+			// sellerMbrSac.setCharger(sellerMbr.getCharger());
+			// sellerMbrSac.setSellerCompany(sellerMbr.getSellerCompany());
+			// sellerMbrSac.setSellerNickName(sellerMbr.getSellerNickName());
+			// sellerMbrSac.setSellerBizNumber(sellerMbr.getSellerBizNumber());
+			// sellerMbrSac.setSellerName(sellerMbr.getSellerName());
+			// sellerMbrSac.setRepPhone(sellerMbr.getRepPhone());
+			// sellerMbrSac.setSellerEmail(sellerMbr.getSellerEmail());
+			// sellerMbrSac.setSellerAddress(sellerMbr.getSellerAddress());
+			// sellerMbrSac.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
+			// sellerMbrSac.setBizRegNumber(sellerMbr.getBizRegNumber());
+			// sellerMbrSacs.add(sellerMbrSac);
+			// }
+			// sellerMbrSacMap.put(key, sellerMbrSacs);
+			// }
 			response.setSellerMbrListMap(sellerMbrSacMap);
 		} // End if (req.getSellerMbrSacList() != null).
 

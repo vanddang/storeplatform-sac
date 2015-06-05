@@ -144,11 +144,13 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			}
 
 			/** MQ 연동 (회원 탈퇴) */
+			StringBuffer buf = new StringBuffer();
 			String mqDeviceStr = "";
 			if (listDeviceRes.getDeviceInfoList() != null) {
 				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
-					mqDeviceStr += deviceInfo.getDeviceId() + "|";
+					buf.append(deviceInfo.getDeviceId()).append("|");
 				}
+				mqDeviceStr = buf.toString();
 				mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
 			}
 			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();

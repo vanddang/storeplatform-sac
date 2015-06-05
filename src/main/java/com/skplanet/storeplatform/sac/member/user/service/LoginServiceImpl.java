@@ -3780,11 +3780,12 @@ public class LoginServiceImpl implements LoginService {
 				existenceReq.setExistenceItem(existenceItemList);
 				LOGGER.info("{} 기구매체크 Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(existenceReq));
 				ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
-				if (existenceListRes == null) {
-					LOGGER.info("{} 기구매체크 Response : {}", deviceId, existenceListRes);
-				} else {
+				boolean exists = existenceListRes != null;
+				if (exists) {
 					LOGGER.info("{} 기구매체크 Response : {}", deviceId,
 							ConvertMapperUtils.convertObjectToJson(existenceListRes));
+				} else {
+					LOGGER.info("{} 기구매체크 Response : {}", deviceId, existenceListRes);
 				}
 
 				if (existenceListRes != null && existenceListRes.getExistenceListRes() != null

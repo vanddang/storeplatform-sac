@@ -409,7 +409,6 @@ public class IdpServiceImpl implements IdpService {
 					}
 
 					if (searchUserResponse != null) {
-						prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터 연동을 위한 이전 mbrNo셋팅
 						UpdateUserRequest updateUserRequest = this.getUpdateUserRequest(map, searchUserResponse);
 						// JOIN_SST_LIST에 TAC001~TAC006이 있는경우 이용약관이 들어옴.
 						List<MbrClauseAgree> mbrClauseAgreeList = this.getMbrClauseAgreeList(tenantId,
@@ -1568,13 +1567,7 @@ public class IdpServiceImpl implements IdpService {
 		ImResult imResult = new ImResult();
 		String imIntSvcNo = map.get("im_int_svc_no"); // 통합 서비스 번호
 		String userId = map.get("user_id"); // 회원 ID
-		String userKey = "";
-		String prevMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
-		String currentMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
 		String mqDeviceStr = ""; // 회원탈퇴 MQ 연동할 deviceId List
-
-		if (StringUtils.isNotBlank(map.get("user_key")))
-			currentMbrNoForgameCenter = map.get("user_key"); // 게임센터 연동을 위한 변수mbrNo 셋팅
 
 		imResult.setCmd("RXDeleteUserIdIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
@@ -1605,8 +1598,6 @@ public class IdpServiceImpl implements IdpService {
 		try {
 
 			searchUserResponse = this.userSCI.searchUser(searchUserRequest);
-			prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo();
-			userKey = searchUserResponse.getUserKey();
 
 			/** MQ 연동을 위해 userId가 가지고 있는 휴대기기 목록 조회 */
 			SacRequestHeader requestHeader = new SacRequestHeader();
@@ -1619,11 +1610,12 @@ public class IdpServiceImpl implements IdpService {
 			listDeviceReq.setIsMainDevice("N");
 			ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
 
+			StringBuffer buf = new StringBuffer();
 			if (listDeviceRes.getDeviceInfoList() != null) {
 				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두
-																				  // 전달
-					mqDeviceStr += deviceInfo.getDeviceId() + "|";
+					buf.append(deviceInfo.getDeviceId()).append("|"); // 전달
 				}
+				mqDeviceStr = buf.toString();
 				mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
 			}
 
@@ -2633,7 +2625,7 @@ public class IdpServiceImpl implements IdpService {
 		// MDN합치기 관련 추가변수 20140410 START
 		String mdnJsonStringInfo = ""; // mdnJsonStringInfo : mdn합치기 정보
 		ObjectMapper mapper = new ObjectMapper();
-		Map<String, String> jsonParsingMap = new HashMap<String, String>();
+		Map<String, String> jsonParsingMap = null;
 		// MDN합치기 관련 추가변수 20140410 END
 
 		ImResult imResult = new ImResult();
@@ -3134,7 +3126,6 @@ public class IdpServiceImpl implements IdpService {
 								}
 
 								if (searchUserResponse != null) {
-									prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
 									UpdateUserRequest updateUserRequest = this.getUpdateUserRequest(map,
 											searchUserResponse);
 									// JOIN_SST_LIST에 TAC001~TAC006이 있는경우 이용약관이 들어옴.

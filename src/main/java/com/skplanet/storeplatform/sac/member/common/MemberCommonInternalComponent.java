@@ -188,10 +188,11 @@ public class MemberCommonInternalComponent {
 
 		LOGGER.info("{} getIapProductInfo Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(req));
 		IapProductInfoRes res = this.iapProductInfoSCI.getIapProductInfo(req);
-		if (res == null) {
-			LOGGER.info("{} getIapProductInfo Response : {}", deviceId, res);
-		} else {
+		boolean exists = res != null;
+		if (exists) {
 			LOGGER.info("{} getIapProductInfo Response : {}", deviceId, ConvertMapperUtils.convertObjectToJson(res));
+		} else {
+			LOGGER.info("{} getIapProductInfo Response : {}", deviceId, res);
 		}
 
 		return res;
@@ -219,11 +220,12 @@ public class MemberCommonInternalComponent {
 
 		LOGGER.info("{} getUserDownloadInfo Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(req));
 		UserDownloadInfoRes res = this.userDownloadInfoSCI.getUserDownloadInfo(req);
-		if (res == null) {
-			LOGGER.info("{} getUserDownloadInfo Response : {}", deviceId, res);
-		} else {
+		boolean exists = res != null;
+		if (exists) {
 			LOGGER.info("{} getUserDownloadInfo Response : {}", deviceId,
 					ConvertMapperUtils.defaultConvertObjectToJson(res));
+		} else {
+			LOGGER.info("{} getUserDownloadInfo Response : {}", deviceId, res);
 		}
 
 		return res;

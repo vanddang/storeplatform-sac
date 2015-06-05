@@ -1091,10 +1091,12 @@ public class MemberCommonComponent {
 	public String getClauseMappingForOneId(List<AgreementInfo> agreementList) {
 
 		// 테넌트 약관코드와 원아이디의 약관코드 맵핑이 안되는 경우가 존재하여, 필수 약관 TAC001 ~ TAC005는 고정
-		String clauseStr = MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC001 + "^"
-				+ MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC002 + "^" + MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC003
-				+ "^" + MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC004 + "^"
-				+ MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC005;
+		StringBuffer clauseBuf = new StringBuffer();
+		clauseBuf.append(MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC001).append("^");
+		clauseBuf.append(MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC002).append("^");
+		clauseBuf.append(MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC003).append("^");
+		clauseBuf.append(MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC004).append("^");
+		clauseBuf.append(MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC005);
 
 		if (agreementList != null && agreementList.size() > 0) {
 			for (int i = 0; i < agreementList.size(); i++) {
@@ -1106,12 +1108,13 @@ public class MemberCommonComponent {
 
 				if (StringUtils.equals(info.getExtraAgreementId(), MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING)
 						&& StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // TSTORE정보광고활용
-					clauseStr += "^" + MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC006;
+					clauseBuf.append("^").append(MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC006);
 					break;
 				}
 			}
 		}
 
+		String clauseStr = clauseBuf.toString();
 		LOGGER.info("OneId 맵핑 약관정보 : {}", clauseStr);
 
 		return clauseStr;
