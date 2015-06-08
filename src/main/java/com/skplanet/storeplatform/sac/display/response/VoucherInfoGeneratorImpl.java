@@ -183,7 +183,7 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 	 */
 	@Override
 	public List<Menu> generateMenuList(MetaInfo metaInfo) {
-		Menu menu = new Menu();
+		Menu menu = null;
 		List<Menu> menuList = new ArrayList<Menu>();
 
 		menu = new Menu();
@@ -203,7 +203,7 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 	 */
 	@Override
 	public List<Cash> generateCashList(MetaInfo metaInfo) {
-		Cash cash = new Cash();
+		Cash cash = null;
 		List<Cash> cashList = new ArrayList<Cash>();
 
 		if (metaInfo.getCashAmt() != null) {
@@ -216,7 +216,7 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 			cash.setName(DisplayConstants.DP_FREEPASS_BONUS);
 			cash.setText(metaInfo.getBnsCashAmt());
 			cash.setCashRate(metaInfo.getBnsCashRatio());
-			Date date = new Date();
+			Date date = null;
 
 			date = this.generateUsePeriod(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, metaInfo.getBnsUsePeriodUnitCd(),
 					metaInfo.getBnsUsePeriod());
