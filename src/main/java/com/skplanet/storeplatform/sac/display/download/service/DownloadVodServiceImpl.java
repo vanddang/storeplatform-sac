@@ -94,8 +94,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
-		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
-				MetaInfo.class);
+		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "", MetaInfo.class);
 
 		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
@@ -208,9 +207,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 				this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
 				long end = System.currentTimeMillis();
-				this.log.debug(
-						"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
-						(end - start));
+				this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms", (end - start));
 
 			} catch (Exception ex) {
 				purchaseFlag = false;
@@ -269,8 +266,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						// prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
 						// downloadVodSacReq);
 
-						prchsState = (String) ((HashMap) this.commonDAO.queryForObject(
-								"Download.getDownloadPurchaseState", downloadVodSacReq)).get("PURCHASE_STATE");
+						prchsState = (String) ((HashMap) this.commonDAO.queryForObject("Download.getDownloadPurchaseState", downloadVodSacReq)).get("PURCHASE_STATE");
 
 						// 구매상태 만료여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
@@ -312,8 +308,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						this.log.debug("----------------------------------------------------------------");
 
 						// 구매상태 만료 여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
-								&& permitDeviceYn.equals("Y")) {
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) && permitDeviceYn.equals("Y")) {
 							this.log.debug("----------------------------  start set Purchase Info  ------------------------------------");
 							String deviceId = null; // Device Id
 							String deviceIdType = null; // Device Id 유형
@@ -400,10 +395,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									this.log.debug("--------------------------------------------------------------");
 								} else {
 									this.log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
-									this.log.debug("##### [SAC DSP LocalSCI] deviceKey : {}",
-											deviceReq.getDeviceKey());
-									this.log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
-											+ deviceRes.getDeviceId());
+									this.log.debug("##### [SAC DSP LocalSCI] deviceKey : {}", deviceReq.getDeviceKey());
+									this.log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "+ deviceRes.getDeviceId());
 								}
 							}
 							// 구매 정보
@@ -419,7 +412,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							this.log.debug("----------------------------------------------------------------");
 							this.log.debug("----------------------------  end set Purchase Info  ------------------------------------");
 
-
 							break;
 						}
 					}
@@ -434,31 +426,25 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		identifierList = new ArrayList<Identifier>();
 		Identifier identifier;
 
-		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
-				metaInfo.getProdId());
+		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
 		identifierList.add(identifier);
 
 		metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
-		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-				metaInfo.getEspdProdId());
+		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getEspdProdId());
 		identifierList.add(identifier);
 
 		// CID
-		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD,
-				metaInfo.getCid());
+		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, metaInfo.getCid());
 		identifierList.add(identifier);
 
 		product.setIdentifierList(identifierList); // 상품 ID
 		// product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		supportList = new ArrayList<Support>();
-		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM,
-				metaInfo.getHdcpYn()));
-		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM,
-				metaInfo.getHdvYn()));
+		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM, metaInfo.getHdcpYn()));
+		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM, metaInfo.getHdvYn()));
 		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM, "Y"));
-		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM,
-				metaInfo.getDolbySprtYn()));
+		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM, metaInfo.getDolbySprtYn()));
 		product.setSupportList(supportList);
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보

@@ -292,8 +292,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						downloadAppSacReq.setDwldStartDt(dwldStartDt);
 						downloadAppSacReq.setDwldExprDt(dwldExprDt);
 
-						prchsState = (String) ((HashMap) commonDAO.queryForObject(
-								"Download.getDownloadPurchaseState", downloadAppSacReq)).get("PURCHASE_STATE");
+						prchsState = (String) ((HashMap) commonDAO.queryForObject("Download.getDownloadPurchaseState", downloadAppSacReq)).get("PURCHASE_STATE");
 
 						// 구매상태 만료여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {

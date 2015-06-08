@@ -105,8 +105,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         StopWatch sw = new StopWatch();
         sw.start();
 
-        MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
-				MetaInfo.class);
+        MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "", MetaInfo.class);
 
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
 		String sysDate = downloadSystemDate.getSysDate();
@@ -389,12 +388,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		// product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 
 		Identifier identifier = new Identifier();
-		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
-				metaInfo.getChnlProdId());
+		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getChnlProdId());
 		identifierList.add(identifier);
 
-		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-				metaInfo.getProdId());
+		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
 		identifierList.add(identifier);
 
 		product.setIdentifierList(identifierList); // 상품 ID
@@ -419,12 +416,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		// 뮤직의 이미지 정보
 		List<Source> musicSourceList = new ArrayList<Source>();
         if(metaInfo.getFileSize() != null) {
-            musicSourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128,
-                    null, metaInfo.getFileSize()));
+            musicSourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128, null, metaInfo.getFileSize()));
         }
         if(metaInfo.getFileSizeH() != null) {
-            musicSourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192,
-                    null, metaInfo.getFileSizeH()));
+            musicSourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192, null, metaInfo.getFileSizeH()));
         }
 
 		music.setSourceList(musicSourceList);
