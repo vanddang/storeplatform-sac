@@ -649,7 +649,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 			List<Identifier> identifierList;
 
 			product = new Product();
-			identifier = new Identifier();
+			// identifier = new Identifier();
 			title = new Title();
 			app = new App();
 			music = new Music();
