@@ -134,10 +134,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         // 상품 ID 정보
         List<Identifier> identifierList = new ArrayList<Identifier>();
-        identifierList.add(commonMetaInfoGenerator.generateIdentifier(
-                DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
-        identifierList.add(commonMetaInfoGenerator.generateIdentifier(
-                DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
+        identifierList.add(commonMetaInfoGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
+        identifierList.add(commonMetaInfoGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
         product.setIdentifierList(identifierList);
 
         product.setTitle(commonMetaInfoGenerator.generateTitle(metaInfo));
@@ -213,8 +211,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                         // 구매상태 확인
                         comicReq.setDwldStartDt(dwldStartDt);
                         comicReq.setDwldExprDt(dwldExprDt);
-                        prchsState = (String) ((HashMap) commonDAO.queryForObject(
-                                "Download.getDownloadPurchaseState", comicReq)).get("PURCHASE_STATE");
+                        prchsState = (String) ((HashMap) commonDAO.queryForObject("Download.getDownloadPurchaseState", comicReq)).get("PURCHASE_STATE");
 
                         // 구매상태 만료여부 확인
                         if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {

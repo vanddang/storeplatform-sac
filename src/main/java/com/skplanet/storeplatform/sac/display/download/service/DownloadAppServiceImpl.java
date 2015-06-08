@@ -233,7 +233,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				String drmYn = null; // 구매상품 Drm여부
 				String permitDeviceYn = null; // 단말 지원여부
 				String purchaseHide = null; // 구매내역 숨김 여부
-				String updateAlarm = null; // 업데이트 알람 수신 여부
 
 				if (historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -441,10 +440,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		 * 상품 정보
 		 ************************************************************************************************/
 
-		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
-				metaInfo.getProdId()));
-		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-				metaInfo.getProdId()));
+		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,metaInfo.getProdId()));
+		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,metaInfo.getProdId()));
 		product.setIdentifierList(identifierList); // 상품 Id
 		product.setTitle(commonGenerator.generateTitle(metaInfo)); // 상품명
 		product.setSourceList(commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보

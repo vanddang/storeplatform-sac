@@ -189,12 +189,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				String prchsState = null; // 구매상태
 				String prchsProdId = null; // 구매 상품ID
 				String puchsPrice = null; // 구매 상품금액
-				String drmYn = null; // 구매상품 Drm여부
 				String permitDeviceYn = null; // 단말 지원여부
 				String prchsReqPathCd = null; //구매 경로
 				String purchaseHide = null; // 구매내역 숨김 여부
 				String updateAlarm = null; // 업데이트 알람 수신 여부
-				String useFixrateProdId = null; // 정액권 상품ID
 
 				if (historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -208,12 +206,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
 						puchsPrice = historySacIn.getProdAmt();
-						drmYn = historySacIn.getDrmYn();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 						prchsReqPathCd = historySacIn.getPrchsReqPathCd();
 						purchaseHide = historySacIn.getHidingYn();
 						updateAlarm = historySacIn.getAlarmYn();
-						useFixrateProdId = historySacIn.getUseFixrateProdId();
 
 						// 구매상태 확인
 						downloadVodSacReq.setPrchsDt(prchsDt);
