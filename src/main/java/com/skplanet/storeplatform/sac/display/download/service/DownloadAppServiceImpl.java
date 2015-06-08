@@ -227,7 +227,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				String dwldStartDt = null; // 다운로드 시작일시
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
-				String prchsState = null; // 구매상태
 				String prchsProdId = null; // 구매 상품ID
 				String puchsPrice = null; // 구매 상품금액
 				String drmYn = null; // 구매상품 Drm여부
@@ -250,15 +249,11 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 						purchaseHide = historySacIn.getHidingYn();
 
-						// 구매상태 확인
-						downloadAppSacReq.setPrchsDt(prchsDt);
-						downloadAppSacReq.setDwldStartDt(dwldStartDt);
-						downloadAppSacReq.setDwldExprDt(dwldExprDt);
-
-						prchsState = (String) ((HashMap) commonDAO.queryForObject("Download.getDownloadPurchaseState", downloadAppSacReq)).get("PURCHASE_STATE");
-
+						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
+						String prchsState = null;
+						
 						// 구매상태 만료여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime)) {
 							// 구매 및 선물 여부 확인
 							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
 								prchsState = "payment";
@@ -468,6 +463,16 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private String getDownloadPurchaseStateByDbTime(String dwldStartDt, String dwldExprDt) {
+		DownloadAppSacReq req = new DownloadAppSacReq();
+		req.setDwldStartDt(dwldStartDt);
+		req.setDwldExprDt(dwldExprDt);
+
+		HashMap map = (HashMap) commonDAO.queryForObject("Download.getDownloadPurchaseState", req);
+		return (String) map.get("PURCHASE_STATE");
 	}
 
 	private List<ProductListSacIn> makeProdIdList(MetaInfo metaInfo) {

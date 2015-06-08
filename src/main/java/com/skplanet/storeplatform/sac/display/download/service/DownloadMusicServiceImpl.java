@@ -97,8 +97,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 	 * .storeplatform.sac.client.product.vo.DownloadAppReqVO)
 	 */
 	@Override
-	public DownloadMusicSacRes searchDownloadMusic(SacRequestHeader requestheader,
-			DownloadMusicSacReq downloadMusicSacReq) {
+	public DownloadMusicSacRes searchDownloadMusic(SacRequestHeader requestheader, DownloadMusicSacReq downloadMusicSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
         List<Encryption> encryptionList = new ArrayList<Encryption>();
@@ -187,7 +186,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				String dwldStartDt = null; // 다운로드 시작일시
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
-				String prchsState = null; // 구매상태
 				String prchsProdId = null; // 구매 상품ID
 				String puchsPrice = null; // 구매 상품금액
 				String permitDeviceYn = null; // 단말 지원여부
@@ -210,15 +208,11 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						purchaseHide = historySacIn.getHidingYn();
 						updateAlarm = historySacIn.getAlarmYn();
 
-						// 구매상태 확인
-						downloadMusicSacReq.setPrchsDt(prchsDt);
-						downloadMusicSacReq.setDwldStartDt(dwldStartDt);
-						downloadMusicSacReq.setDwldExprDt(dwldExprDt);
-
-						prchsState = (String) ((HashMap) this.commonDAO.queryForObject("Download.getDownloadPurchaseState", downloadMusicSacReq)).get("PURCHASE_STATE");
-
+						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
+						String prchsState = null;
+						
 						// 구매상태 만료여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime)) {
 							// 구매 및 선물 여부 확인
 							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
 								prchsState = "payment";
@@ -371,6 +365,16 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	@SuppressWarnings("rawtypes")
+	private String getDownloadPurchaseStateByDbTime(String dwldStartDt, String dwldExprDt) {
+		DownloadMusicSacReq req = new DownloadMusicSacReq();
+		req.setDwldStartDt(dwldStartDt);
+		req.setDwldExprDt(dwldExprDt);
+
+		HashMap map = (HashMap) commonDAO.queryForObject("Download.getDownloadPurchaseState", req);
+		return (String) map.get("PURCHASE_STATE");
 	}
 
 	private List<ProductListSacIn> makeProdIdList(MetaInfo metaInfo) {

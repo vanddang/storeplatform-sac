@@ -186,7 +186,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				String dwldStartDt = null; // 다운로드 시작일시
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
-				String prchsState = null; // 구매상태
 				String prchsProdId = null; // 구매 상품ID
 				String puchsPrice = null; // 구매 상품금액
 				String permitDeviceYn = null; // 단말 지원여부
@@ -201,8 +200,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						prchsId = historySacIn.getPrchsId();
 						prchsDt = historySacIn.getPrchsDt();
 						useExprDt = historySacIn.getUseExprDt();
-						dwldStartDt = historySacIn.getDwldStartDt();
-						dwldExprDt = historySacIn.getDwldExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
 						puchsPrice = historySacIn.getProdAmt();
@@ -211,15 +208,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						purchaseHide = historySacIn.getHidingYn();
 						updateAlarm = historySacIn.getAlarmYn();
 
-						// 구매상태 확인
-						downloadVodSacReq.setPrchsDt(prchsDt);
-						downloadVodSacReq.setDwldStartDt(dwldStartDt);
-						downloadVodSacReq.setDwldExprDt(dwldExprDt);
-
-						prchsState = (String) ((HashMap) this.commonDAO.queryForObject("Download.getDownloadPurchaseState", downloadVodSacReq)).get("PURCHASE_STATE");
+						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
+						String prchsState = null;
 
 						// 구매상태 만료여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime)) {
 							// 구매 및 선물 여부 확인
 							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
 								prchsState = "payment";
@@ -418,6 +411,16 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	@SuppressWarnings("rawtypes")
+	private String getDownloadPurchaseStateByDbTime(String dwldStartDt, String dwldExprDt) {
+		DownloadVodSacReq req = new DownloadVodSacReq();
+		req.setDwldStartDt(dwldStartDt);
+		req.setDwldExprDt(dwldExprDt);
+
+		HashMap map = (HashMap) commonDAO.queryForObject("Download.getDownloadPurchaseState", req);
+		return (String) map.get("PURCHASE_STATE");
 	}
 
 	private List<ProductListSacIn> makeProdIdList(MetaInfo metaInfo) {

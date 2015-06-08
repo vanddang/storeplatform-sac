@@ -183,7 +183,6 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                 String dwldStartDt = null; // 다운로드 시작일시
                 String dwldExprDt = null; // 다운로드 만료일시
                 String prchsCaseCd = null; // 선물 여부
-                String prchsState = null; // 구매상태
                 String prchsProdId = null; // 구매 상품ID
                 String prchsPrice = null; // 구매금액
                 String drmYn = null; // DRM 지원여부
@@ -208,13 +207,11 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                         purchaseHide = historySacIn.getHidingYn();
 						updateAlarm = historySacIn.getAlarmYn();
 
-                        // 구매상태 확인
-                        comicReq.setDwldStartDt(dwldStartDt);
-                        comicReq.setDwldExprDt(dwldExprDt);
-                        prchsState = (String) ((HashMap) commonDAO.queryForObject("Download.getDownloadPurchaseState", comicReq)).get("PURCHASE_STATE");
-
+						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
+						String prchsState = null;
+						
                         // 구매상태 만료여부 확인
-                        if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+                        if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime)) {
                             // 구매 및 선물 여부 확인
                             if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
                                 prchsState = "payment";
@@ -354,6 +351,16 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         return comicRes;
     }
+	
+	@SuppressWarnings("rawtypes")
+	private String getDownloadPurchaseStateByDbTime(String dwldStartDt, String dwldExprDt) {
+		DownloadComicSacReq req = new DownloadComicSacReq();
+		req.setDwldStartDt(dwldStartDt);
+		req.setDwldExprDt(dwldExprDt);
+
+		HashMap map = (HashMap) commonDAO.queryForObject("Download.getDownloadPurchaseState", req);
+		return (String) map.get("PURCHASE_STATE");
+	}
 
 	private List<ProductListSacIn> makeProdIdList(MetaInfo metaInfo) {
 		List<ProductListSacIn>  productList = new ArrayList<ProductListSacIn>();
