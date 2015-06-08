@@ -524,14 +524,7 @@ public class VoucherServiceImpl implements VoucherService {
 		if (StringUtils.equalsIgnoreCase(req.getKind(), "All")) {
 			req.setKind("");
 		}
-		if (StringUtils.isEmpty(req.getProdGradeExtraCd())) {
-			req.setProdGradeExtraCd(null);
-		}else if (StringUtils.isNotEmpty(req.getProdGradeExtraCd())){
-			if (!StringUtils.equalsIgnoreCase(req.getProdGradeExtraCd(), "PD020601")) {
-				throw new StorePlatformException("SAC_DSP_0003", "prodGradeExtraCd", req.getProdGradeExtraCd());
-			}
-		}
-		
+
 		
 		productBasicInfoList = this.commonDAO
 				.queryForList("Voucher.searchVoucherSpecific", req, ProductBasicInfo.class);

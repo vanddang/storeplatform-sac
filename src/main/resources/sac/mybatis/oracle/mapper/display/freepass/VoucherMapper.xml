@@ -375,7 +375,7 @@
                         , TB_DP_TENANT_PROD TP
                         , TB_DP_TENANT_PROD_PRICE PR
                         , TB_DP_USE_POLICY UP
-                        ,(SELECT /*+ no_merge */ DISTINCT A.PROD_ID 
+                        ,(SELECT /*+ no_merge */ DISTINCT A.PROD_ID , C.PROD_GRD_EXTRA_CD
                             FROM TB_DP_FIXRATE_PROD_MAPG A
                                  ,TB_DP_PROD_RSHP B
                                  ,TB_DP_PROD C
@@ -421,12 +421,9 @@
                 #{kind}
                 </foreach>
             </if>
-            <if test='prodGradeExtraCd == null'>
-                AND PD.PROD_GRD_EXTRA_CD IS NULL
-            </if>
-            <if test='prodGradeExtraCd == "PD020601"'>
-                AND (PD.PROD_GRD_EXTRA_CD IS NULL OR PD.PROD_GRD_EXTRA_CD = #{prodGradeExtraCd})
-            </if>            
+            AND (PD.PROD_GRD_EXTRA_CD IS NULL OR PD.PROD_GRD_EXTRA_CD = PM.PROD_GRD_EXTRA_CD)
+
+
                 ORDER BY TP.EXPO_ORD, PD.REG_DT DESC
               ) IV
             ) OV
