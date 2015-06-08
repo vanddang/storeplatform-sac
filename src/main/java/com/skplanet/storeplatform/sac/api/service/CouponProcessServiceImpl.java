@@ -1549,6 +1549,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			this.sacSearchAmqpTemplate.convertAndSend(queueMsg);
 			this.log.info("=================================================");
 			this.log.info("==MQ 연동 성공 :: queueMsg ::================" + queueMsg.toString());
+			this.log.info("==MQ 연동 성공 :: catalogId ::================" + catalogId);
 			this.log.info("=================================================");
 		}
 		this.log.info("■■■■■ 상품정보 - 검색 서버 를 위한 MQ 연동 end ■■■■■");

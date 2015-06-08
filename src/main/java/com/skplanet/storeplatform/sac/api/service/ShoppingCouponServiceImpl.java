@@ -1096,6 +1096,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			this.sacSearchAmqpTemplate.convertAndSend(queueMsg);
 			this.log.info("=================================================");
 			this.log.info("==MQ 연동 성공 :: queueMsg ::================" + queueMsg.toString());
+			this.log.info("==MQ 연동 성공 :: catalogId ::================" + dpCatalogInfo.getCreateCatalogId());
 			this.log.info("=================================================");
 
 		}
