@@ -185,19 +185,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                 productList.add(productListSacIn);
 
                 HistoryListSacInReq historyReq = makeHistoryListSacInReq(comicReq, sysDate, productList);
-
-                logger.debug("----------------------------------------------------------------");
-                logger.debug("[DownloadComicLog] 구매내역 조회 요청 파라미터");
-                logger.debug("----------------------------------------------------------------");
-                logger.debug("[DownloadComicLog] tenantId : {}", historyReq.getTenantId());
-                logger.debug("[DownloadComicLog] userKey : {}", historyReq.getUserKey());
-                logger.debug("[DownloadComicLog] deviceKey : {}", historyReq.getDeviceKey());
-                logger.debug("[DownloadComicLog] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-                logger.debug("[DownloadComicLog] prchsProdType : {}", historyReq.getPrchsProdType());
-                logger.debug("[DownloadComicLog] startDt : {}", historyReq.getStartDt());
-                logger.debug("[DownloadComicLog] endDt : {}", historyReq.getEndDt());
-                logger.debug("[DownloadComicLog] prodId : {}", productList.get(0).getProdId());
-                logger.debug("----------------------------------------------------------------");
+                loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
 
                 // 구매내역 조회 실행
                 historyRes = historyInternalSCI.searchHistoryList(historyReq);
@@ -395,6 +383,21 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         return comicRes;
     }
+
+	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {
+		logger.debug("----------------------------------------------------------------");
+		logger.debug("[DownloadComicLog] 구매내역 조회 요청 파라미터");
+		logger.debug("----------------------------------------------------------------");
+		logger.debug("[DownloadComicLog] tenantId : {}", historyReq.getTenantId());
+		logger.debug("[DownloadComicLog] userKey : {}", historyReq.getUserKey());
+		logger.debug("[DownloadComicLog] deviceKey : {}", historyReq.getDeviceKey());
+		logger.debug("[DownloadComicLog] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+		logger.debug("[DownloadComicLog] prchsProdType : {}", historyReq.getPrchsProdType());
+		logger.debug("[DownloadComicLog] startDt : {}", historyReq.getStartDt());
+		logger.debug("[DownloadComicLog] endDt : {}", historyReq.getEndDt());
+		logger.debug("[DownloadComicLog] prodId : {}", productList.get(0).getProdId());
+		logger.debug("----------------------------------------------------------------");
+	}
 
 	private HistoryListSacInReq makeHistoryListSacInReq(DownloadComicSacReq comicReq, String sysDate, List<ProductListSacIn> productList) {
 		HistoryListSacInReq historyReq = new HistoryListSacInReq();

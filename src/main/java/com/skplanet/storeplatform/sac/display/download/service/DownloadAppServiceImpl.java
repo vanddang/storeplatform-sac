@@ -211,20 +211,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				productList.add(productListSacIn);
 
 				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadAppSacReq, sysDate, productList);
-
-				log.debug("----------------------------------------------------------------");
-				log.debug("********************	구매 요청 파라미터	***************************");
-				log.debug("[DownloadAppServiceImpl] tenantId : {}", historyReq.getTenantId());
-				log.debug("[DownloadAppServiceImpl] userKey : {}", historyReq.getUserKey());
-				log.debug("[DownloadAppServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
-				log.debug("[DownloadAppServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-				log.debug("[DownloadAppServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
-				log.debug("[DownloadAppServiceImpl] startDt : {}", historyReq.getStartDt());
-				log.debug("[DownloadAppServiceImpl] endDt : {}", historyReq.getEndDt());
-				log.debug("[DownloadAppServiceImpl] offset : {}", historyReq.getOffset());
-				log.debug("[DownloadAppServiceImpl] count : {}", historyReq.getCount());
-				log.debug("[DownloadAppServiceImpl] prodId : {}", productList.get(0).getProdId());
-				log.debug("----------------------------------------------------------------");
+				loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
 
 				// 구매내역 조회 실행
 				historyRes = historyInternalSCI.searchHistoryList(historyReq);
@@ -493,6 +480,22 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {
+		log.debug("----------------------------------------------------------------");
+		log.debug("********************	구매 요청 파라미터	***************************");
+		log.debug("[DownloadAppServiceImpl] tenantId : {}", historyReq.getTenantId());
+		log.debug("[DownloadAppServiceImpl] userKey : {}", historyReq.getUserKey());
+		log.debug("[DownloadAppServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+		log.debug("[DownloadAppServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+		log.debug("[DownloadAppServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+		log.debug("[DownloadAppServiceImpl] startDt : {}", historyReq.getStartDt());
+		log.debug("[DownloadAppServiceImpl] endDt : {}", historyReq.getEndDt());
+		log.debug("[DownloadAppServiceImpl] offset : {}", historyReq.getOffset());
+		log.debug("[DownloadAppServiceImpl] count : {}", historyReq.getCount());
+		log.debug("[DownloadAppServiceImpl] prodId : {}", productList.get(0).getProdId());
+		log.debug("----------------------------------------------------------------");
 	}
 
 	private HistoryListSacInReq makeHistoryListSacInReq(DownloadAppSacReq downloadAppSacReq, String sysDate, List<ProductListSacIn> productList) {

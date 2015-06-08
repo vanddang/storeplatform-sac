@@ -164,20 +164,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				productList.add(productListSacIn);
 
 				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadMusicSacReq, sysDate, productList);
-
-				this.log.info("----------------------------------------------------------------");
-				this.log.info("********************	구매 요청 파라미터	***************************");
-				this.log.info("[DownloadMusicServiceImpl] tenantId : {}", historyReq.getTenantId());
-				this.log.info("[DownloadMusicServiceImpl] userKey : {}", historyReq.getUserKey());
-				this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
-				this.log.info("[DownloadMusicServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-				this.log.info("[DownloadMusicServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
-				this.log.info("[DownloadMusicServiceImpl] startDt : {}", historyReq.getStartDt());
-				this.log.info("[DownloadMusicServiceImpl] endDt : {}", historyReq.getEndDt());
-				this.log.info("[DownloadMusicServiceImpl] offset : {}", historyReq.getOffset());
-				this.log.info("[DownloadMusicServiceImpl] count : {}", historyReq.getCount());
-				this.log.info("[DownloadMusicServiceImpl] prodId : {}", productList.get(0).getProdId());
-				this.log.info("----------------------------------------------------------------");
+				loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
 
 				// 구매내역 조회 실행
 				this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
@@ -424,6 +411,22 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {
+		this.log.info("----------------------------------------------------------------");
+		this.log.info("********************	구매 요청 파라미터	***************************");
+		this.log.info("[DownloadMusicServiceImpl] tenantId : {}", historyReq.getTenantId());
+		this.log.info("[DownloadMusicServiceImpl] userKey : {}", historyReq.getUserKey());
+		this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+		this.log.info("[DownloadMusicServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+		this.log.info("[DownloadMusicServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+		this.log.info("[DownloadMusicServiceImpl] startDt : {}", historyReq.getStartDt());
+		this.log.info("[DownloadMusicServiceImpl] endDt : {}", historyReq.getEndDt());
+		this.log.info("[DownloadMusicServiceImpl] offset : {}", historyReq.getOffset());
+		this.log.info("[DownloadMusicServiceImpl] count : {}", historyReq.getCount());
+		this.log.info("[DownloadMusicServiceImpl] prodId : {}", productList.get(0).getProdId());
+		this.log.info("----------------------------------------------------------------");
 	}
 
 	private HistoryListSacInReq makeHistoryListSacInReq(DownloadMusicSacReq downloadMusicSacReq, String sysDate, List<ProductListSacIn> productList) {

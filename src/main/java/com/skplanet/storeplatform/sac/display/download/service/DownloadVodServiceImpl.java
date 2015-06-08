@@ -170,22 +170,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				productList.add(productListSacIn);
 
 				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadVodSacReq, sysDate, productList);
-
-				this.log.debug("----------------------------------------------------------------");
-				this.log.debug("********************	구매 요청 파라미터	***************************");
-				this.log.debug("[DownloadVodServiceImpl] tenantId : {}", historyReq.getTenantId());
-				this.log.debug("[DownloadVodServiceImpl] userKey : {}", historyReq.getUserKey());
-				this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
-				this.log.debug("[DownloadVodServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-				this.log.debug("[DownloadVodServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
-				this.log.debug("[DownloadVodServiceImpl] startDt : {}", historyReq.getStartDt());
-				this.log.debug("[DownloadVodServiceImpl] endDt : {}", historyReq.getEndDt());
-				this.log.debug("[DownloadVodServiceImpl] offset : {}", historyReq.getOffset());
-				this.log.debug("[DownloadVodServiceImpl] count : {}", historyReq.getCount());
-				this.log.debug("[DownloadVodServiceImpl] store prodId : {}", productList.get(0).getProdId());
-				this.log.debug("[DownloadVodServiceImpl] play prodId : {}", productList.get(1).getProdId());
-				this.log.debug("----------------------------------------------------------------");
-
+				loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
 				// 구매내역 조회 실행
 				this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 				long start = System.currentTimeMillis();
@@ -474,6 +459,23 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		return historyReq;
 	}
 
+	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {
+		this.log.debug("----------------------------------------------------------------");
+		this.log.debug("********************	구매 요청 파라미터	***************************");
+		this.log.debug("[DownloadVodServiceImpl] tenantId : {}", historyReq.getTenantId());
+		this.log.debug("[DownloadVodServiceImpl] userKey : {}", historyReq.getUserKey());
+		this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+		this.log.debug("[DownloadVodServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+		this.log.debug("[DownloadVodServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+		this.log.debug("[DownloadVodServiceImpl] startDt : {}", historyReq.getStartDt());
+		this.log.debug("[DownloadVodServiceImpl] endDt : {}", historyReq.getEndDt());
+		this.log.debug("[DownloadVodServiceImpl] offset : {}", historyReq.getOffset());
+		this.log.debug("[DownloadVodServiceImpl] count : {}", historyReq.getCount());
+		this.log.debug("[DownloadVodServiceImpl] store prodId : {}", productList.get(0).getProdId());
+		this.log.debug("[DownloadVodServiceImpl] play prodId : {}", productList.get(1).getProdId());
+		this.log.debug("----------------------------------------------------------------");
+	}
+	
 	/**
 	 * <pre>
 	 * method 설명.

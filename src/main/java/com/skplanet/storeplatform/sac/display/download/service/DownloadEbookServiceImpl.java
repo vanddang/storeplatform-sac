@@ -207,20 +207,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				productList.add(productListSacIn);
 
 				HistoryListSacInReq historyReq = makeHistoryListSacInReq(ebookReq, sysDate, productList);
-
-				logger.debug("----------------------------------------------------------------");
-				logger.debug("[DownloadEbookLog] 구매내역 조회 요청 파라미터");
-				logger.debug("----------------------------------------------------------------");
-				logger.debug("[DownloadEbookLog] tenantId : {}", historyReq.getTenantId());
-				logger.debug("[DownloadEbookLog] userKey : {}", historyReq.getUserKey());
-				logger.debug("[DownloadEbookLog] deviceKey : {}", historyReq.getDeviceKey());
-				logger.debug("[DownloadEbookLog] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-				logger.debug("[DownloadEbookLog] prchsProdType : {}", historyReq.getPrchsProdType());
-				logger.debug("[DownloadEbookLog] startDt : {}", historyReq.getStartDt());
-				logger.debug("[DownloadEbookLog] endDt : {}", historyReq.getEndDt());
-				logger.debug("[DownloadEbookLog] prodId[0] : {}", productList.get(0).getProdId());
-				logger.debug("[DownloadEbookLog] prodId[1] : {}", productList.get(1).getProdId());
-				logger.debug("----------------------------------------------------------------");
+				loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
 
 				// 구매내역 조회 실행
 				historyRes = historyInternalSCI.searchHistoryList(historyReq);
@@ -423,6 +410,22 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {
+		logger.debug("----------------------------------------------------------------");
+		logger.debug("[DownloadEbookLog] 구매내역 조회 요청 파라미터");
+		logger.debug("----------------------------------------------------------------");
+		logger.debug("[DownloadEbookLog] tenantId : {}", historyReq.getTenantId());
+		logger.debug("[DownloadEbookLog] userKey : {}", historyReq.getUserKey());
+		logger.debug("[DownloadEbookLog] deviceKey : {}", historyReq.getDeviceKey());
+		logger.debug("[DownloadEbookLog] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+		logger.debug("[DownloadEbookLog] prchsProdType : {}", historyReq.getPrchsProdType());
+		logger.debug("[DownloadEbookLog] startDt : {}", historyReq.getStartDt());
+		logger.debug("[DownloadEbookLog] endDt : {}", historyReq.getEndDt());
+		logger.debug("[DownloadEbookLog] prodId[0] : {}", productList.get(0).getProdId());
+		logger.debug("[DownloadEbookLog] prodId[1] : {}", productList.get(1).getProdId());
+		logger.debug("----------------------------------------------------------------");
 	}
 
 	private HistoryListSacInReq makeHistoryListSacInReq(DownloadEbookSacReq ebookReq, String sysDate, List<ProductListSacIn> productList) {
