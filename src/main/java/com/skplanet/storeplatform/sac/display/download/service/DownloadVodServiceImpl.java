@@ -200,6 +200,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						prchsId = historySacIn.getPrchsId();
 						prchsDt = historySacIn.getPrchsDt();
 						useExprDt = historySacIn.getUseExprDt();
+						dwldStartDt = historySacIn.getDwldStartDt();
+						dwldExprDt = historySacIn.getDwldExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
 						prchsPrice = historySacIn.getProdAmt();
