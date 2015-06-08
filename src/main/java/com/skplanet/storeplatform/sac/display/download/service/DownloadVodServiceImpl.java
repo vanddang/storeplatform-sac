@@ -243,7 +243,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						this.log.debug("----------------------------------------------------------------");
 
 						// 구매상태 만료 여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) && permitDeviceYn.equals("Y")) {
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) && permitDeviceYn.equals("Y")) {
 							this.log.debug("----------------------------  start set Purchase Info  ------------------------------------");
 							String deviceId = null; // Device Id
 							String deviceIdType = null; // Device Id 유형

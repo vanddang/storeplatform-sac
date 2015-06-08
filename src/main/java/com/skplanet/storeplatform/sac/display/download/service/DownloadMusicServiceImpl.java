@@ -237,8 +237,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						 * 구매 정보에 따른 암호화 시작
 						 ************************************************************************************************/
 						// 구매상태 만료 여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
-								&& permitDeviceYn.equals("Y")) {
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) && permitDeviceYn.equals("Y")) {
 							String deviceId = null; // Device Id
 							String deviceIdType = null; // Device Id 유형
 							SearchDeviceIdSacReq deviceReq = null;

@@ -252,8 +252,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						purchaseList.add(commonMetaInfoGenerator.generatePurchase(metaInfo));
 
 						// 구매상태 만료여부 및 단말 지원여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
-								&& "Y".equals(permitDeviceYn)) {
+						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) && "Y".equals(permitDeviceYn)) {
 							String deviceId = null; // Device Id
 							String deviceIdType = null; // Device Id 유형
 							SearchDeviceIdSacReq deviceReq = null;
