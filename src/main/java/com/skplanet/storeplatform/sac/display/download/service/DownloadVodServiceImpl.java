@@ -150,25 +150,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		this.log.debug("----------------------------------------------------------------");
 
 		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
-			List<ProductListSacIn> productList = null;
 			HistoryListSacInRes historyRes = null;
 			boolean purchaseFlag = true;
 
 			try {
-				productList = new ArrayList<ProductListSacIn>();
-
-				// 소장 상품ID
-				ProductListSacIn storeProduct = new ProductListSacIn();
-				storeProduct.setProdId(metaInfo.getStoreProdId());
-				productList.add(storeProduct);
-
-				// 대여 상품ID
-				ProductListSacIn playProduct = new ProductListSacIn();
-				playProduct.setProdId(metaInfo.getPlayProdId());
-				productList.add(playProduct);
-
-				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadVodSacReq, sysDate, productList);
-				loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
+				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
+				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadVodSacReq, sysDate, prodIdList);
+				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
 				// 구매내역 조회 실행
 				this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 				long start = System.currentTimeMillis();
@@ -434,6 +422,22 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private List<ProductListSacIn> makeProdIdList(MetaInfo metaInfo) {
+		List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
+
+		// 소장 상품ID
+		ProductListSacIn storeProduct = new ProductListSacIn();
+		storeProduct.setProdId(metaInfo.getStoreProdId());
+		productList.add(storeProduct);
+
+		// 대여 상품ID
+		ProductListSacIn playProduct = new ProductListSacIn();
+		playProduct.setProdId(metaInfo.getPlayProdId());
+		productList.add(playProduct);
+
+		return productList;
 	}
 
 	private HistoryListSacInReq makeHistoryListSacInReq(DownloadVodSacReq downloadVodSacReq, String sysDate, List<ProductListSacIn> productList) {

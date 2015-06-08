@@ -153,19 +153,13 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         product.setContributor(ebookComicGenerator.generateComicContributor(metaInfo));
 
         if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
-            List<ProductListSacIn> productList = null;
             HistoryListSacInRes historyRes = null;
             boolean purchasePassFlag = true;
 
             try {
-                productList = new ArrayList<ProductListSacIn>();
-
-                ProductListSacIn productListSacIn = new ProductListSacIn();
-                productListSacIn.setProdId(metaInfo.getPartProdId());
-                productList.add(productListSacIn);
-
-                HistoryListSacInReq historyReq = makeHistoryListSacInReq(comicReq, sysDate, productList);
-                loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
+            	List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
+                HistoryListSacInReq historyReq = makeHistoryListSacInReq(comicReq, sysDate, prodIdList);
+                loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
 
                 // 구매내역 조회 실행
                 historyRes = historyInternalSCI.searchHistoryList(historyReq);
@@ -363,6 +357,14 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         return comicRes;
     }
+
+	private List<ProductListSacIn> makeProdIdList(MetaInfo metaInfo) {
+		List<ProductListSacIn>  productList = new ArrayList<ProductListSacIn>();
+		ProductListSacIn productListSacIn = new ProductListSacIn();
+		productListSacIn.setProdId(metaInfo.getPartProdId());
+		productList.add(productListSacIn);
+		return productList;
+	}
 
 	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {
 		logger.debug("----------------------------------------------------------------");

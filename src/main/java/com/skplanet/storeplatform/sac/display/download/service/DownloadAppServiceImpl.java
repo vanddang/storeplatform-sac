@@ -197,19 +197,13 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 
 		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
-			List<ProductListSacIn> productList = null;
 			HistoryListSacInRes historyRes = null;
 			boolean purchaseFlag = true;
 
 			try {
-				productList = new ArrayList<ProductListSacIn>();
-
-				ProductListSacIn productListSacIn = new ProductListSacIn();
-				productListSacIn.setProdId(metaInfo.getProdId());
-				productList.add(productListSacIn);
-
-				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadAppSacReq, sysDate, productList);
-				loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
+				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
+				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadAppSacReq, sysDate, prodIdList);
+				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
 
 				// 구매내역 조회 실행
 				historyRes = historyInternalSCI.searchHistoryList(historyReq);
@@ -477,6 +471,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private List<ProductListSacIn> makeProdIdList(MetaInfo metaInfo) {
+		List<ProductListSacIn>  productList = new ArrayList<ProductListSacIn>();
+		ProductListSacIn productListSacIn = new ProductListSacIn();
+		productListSacIn.setProdId(metaInfo.getProdId());
+		productList.add(productListSacIn);
+		return productList;
 	}
 
 	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {

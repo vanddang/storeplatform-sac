@@ -170,25 +170,13 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		product.setContributor(ebookComicGenerator.generateEbookContributor(metaInfo));
 
 		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
-			List<ProductListSacIn> productList = null;
 			HistoryListSacInRes historyRes = null;
 			boolean purchasePassFlag = true;
 
 			try {
-				productList = new ArrayList<ProductListSacIn>();
-
-				// 소장 상품ID
-				ProductListSacIn storeProduct = new ProductListSacIn();
-				storeProduct.setProdId(metaInfo.getStoreProdId());
-				productList.add(storeProduct);
-
-				// 대여 상품ID
-				ProductListSacIn playProduct = new ProductListSacIn();
-				playProduct.setProdId(metaInfo.getPlayProdId());
-				productList.add(playProduct);
-
-				HistoryListSacInReq historyReq = makeHistoryListSacInReq(ebookReq, sysDate, productList);
-				loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
+				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
+				HistoryListSacInReq historyReq = makeHistoryListSacInReq(ebookReq, sysDate, prodIdList);
+				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
 
 				// 구매내역 조회 실행
 				historyRes = historyInternalSCI.searchHistoryList(historyReq);
@@ -391,6 +379,21 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private List<ProductListSacIn> makeProdIdList(MetaInfo metaInfo) {
+		List<ProductListSacIn>  productList = new ArrayList<ProductListSacIn>();
+
+		// 소장 상품ID
+		ProductListSacIn storeProduct = new ProductListSacIn();
+		storeProduct.setProdId(metaInfo.getStoreProdId());
+		productList.add(storeProduct);
+
+		// 대여 상품ID
+		ProductListSacIn playProduct = new ProductListSacIn();
+		playProduct.setProdId(metaInfo.getPlayProdId());
+		productList.add(playProduct);
+		return productList;
 	}
 
 	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {

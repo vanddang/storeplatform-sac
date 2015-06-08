@@ -150,19 +150,13 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		}
 
 		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
-			List<ProductListSacIn> productList = null;
 			HistoryListSacInRes historyRes = null;
 			boolean purchaseFlag = true;
 
 			try {
-				productList = new ArrayList<ProductListSacIn>();
-
-				ProductListSacIn productListSacIn = new ProductListSacIn();
-				productListSacIn.setProdId(metaInfo.getProdId());
-				productList.add(productListSacIn);
-
-				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadMusicSacReq, sysDate, productList);
-				loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
+				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
+				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadMusicSacReq, sysDate, prodIdList);
+				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
 
 				// 구매내역 조회 실행
 				this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
@@ -377,6 +371,14 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private List<ProductListSacIn> makeProdIdList(MetaInfo metaInfo) {
+		List<ProductListSacIn>  productList = new ArrayList<ProductListSacIn>();
+		ProductListSacIn productListSacIn = new ProductListSacIn();
+		productListSacIn.setProdId(metaInfo.getProdId());
+		productList.add(productListSacIn);
+		return productList;
 	}
 
 	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {
