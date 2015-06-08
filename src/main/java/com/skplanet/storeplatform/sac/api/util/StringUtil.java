@@ -538,8 +538,8 @@ public class StringUtil extends StringUtils {
 	 */
 	public static boolean isInteger(String value) {
 		try {
-			Integer num = null;
-			num = new Integer(value);
+//			Integer num = null;
+//			num = new Integer(value);
 			return true;
 		} catch (Exception e) {
 			return false;
