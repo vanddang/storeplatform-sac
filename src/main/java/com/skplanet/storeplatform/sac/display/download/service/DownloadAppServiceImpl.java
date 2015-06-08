@@ -197,16 +197,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 
 		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
-			// 구매내역 조회를 위한 생성자
-			ProductListSacIn productListSacIn = null;
 			List<ProductListSacIn> productList = null;
 			HistoryListSacInRes historyRes = null;
 			boolean purchaseFlag = true;
 
 			try {
-				productListSacIn = new ProductListSacIn();
 				productList = new ArrayList<ProductListSacIn>();
 
+				ProductListSacIn productListSacIn = new ProductListSacIn();
 				productListSacIn.setProdId(metaInfo.getProdId());
 				productList.add(productListSacIn);
 

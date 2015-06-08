@@ -150,24 +150,22 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		this.log.debug("----------------------------------------------------------------");
 
 		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
-			// 구매내역 조회를 위한 생성자
-			ProductListSacIn productListSacIn = null;
 			List<ProductListSacIn> productList = null;
 			HistoryListSacInRes historyRes = null;
 			boolean purchaseFlag = true;
 
 			try {
-				productListSacIn = new ProductListSacIn();
 				productList = new ArrayList<ProductListSacIn>();
 
 				// 소장 상품ID
-				productListSacIn.setProdId(metaInfo.getStoreProdId());
-				productList.add(productListSacIn);
+				ProductListSacIn storeProduct = new ProductListSacIn();
+				storeProduct.setProdId(metaInfo.getStoreProdId());
+				productList.add(storeProduct);
 
 				// 대여 상품ID
-				productListSacIn = new ProductListSacIn();
-				productListSacIn.setProdId(metaInfo.getPlayProdId());
-				productList.add(productListSacIn);
+				ProductListSacIn playProduct = new ProductListSacIn();
+				playProduct.setProdId(metaInfo.getPlayProdId());
+				productList.add(playProduct);
 
 				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadVodSacReq, sysDate, productList);
 				loggingParamsForPurchaseHistoryLocalSCI(productList, historyReq);
