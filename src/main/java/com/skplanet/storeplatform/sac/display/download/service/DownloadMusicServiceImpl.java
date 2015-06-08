@@ -172,9 +172,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 				this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
 				long end = System.currentTimeMillis();
-				this.log.info(
-						"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
-						(end - start));
+				this.log.info("##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",(end - start));
 
 			} catch (Exception ex) {
 				purchaseFlag = false;
@@ -224,11 +222,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						downloadMusicSacReq.setPrchsDt(prchsDt);
 						downloadMusicSacReq.setDwldStartDt(dwldStartDt);
 						downloadMusicSacReq.setDwldExprDt(dwldExprDt);
-						// prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
-						// downloadMusicSacReq);
 
-						prchsState = (String) ((HashMap) this.commonDAO.queryForObject(
-								"Download.getDownloadPurchaseState", downloadMusicSacReq)).get("PURCHASE_STATE");
+						prchsState = (String) ((HashMap) this.commonDAO.queryForObject("Download.getDownloadPurchaseState", downloadMusicSacReq)).get("PURCHASE_STATE");
 
 						// 구매상태 만료여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
@@ -290,9 +285,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 								this.log.info("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
 								long end = System.currentTimeMillis();
-								this.log.info(
-										"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
-										(end - start));
+								this.log.info("##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",(end - start));
 							} catch (Exception ex) {
 								memberFlag = false;
 								this.log.info("[DownloadMusicServiceImpl] Device Search Exception : {}");
@@ -319,7 +312,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 									metaInfo.setPurchaseHide(purchaseHide);
 									metaInfo.setUpdateAlarm(updateAlarm);
 
-
 									// 암호화 정보 (JSON)
 									metaInfo.setSystemId(tanantHeader.getSystemId());
                                     Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
@@ -339,10 +331,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							}
 							// 구매 정보
 							product.setPurchaseList(purchaseList);
-							// 암호화 정보
-							// if (!encryptionList.isEmpty()) {
-							// product.setDl(encryptionList);
-							// }
 							break;
 						}
 					}
@@ -354,11 +342,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 		music = new Music();
 
-		// 상품ID 정보
-		// metaInfo.setPartProdId(metaInfo.getProdId());
-		// metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-		// product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
-
 		Identifier identifier = new Identifier();
 		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getChnlProdId());
 		identifierList.add(identifier);
@@ -367,25 +350,12 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		identifierList.add(identifier);
 
 		product.setIdentifierList(identifierList); // 상품 ID
-
-		// 상품명 정보
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
-
-		// 이미지 정보
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
-
-		// 메뉴 정보
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
-
-		// 제공자 정보
 		product.setContributor(this.musicInfoGenerator.generateContributor(metaInfo));
-
-		// 뮤직 ID 정보
-		identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_SONG_IDENTIFIER_CD,
-				metaInfo.getMusicId()));
+		identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_SONG_IDENTIFIER_CD,metaInfo.getMusicId()));
 		music.setIdentifierList(identifierList);
-
-		// 뮤직의 이미지 정보
 		List<Source> musicSourceList = new ArrayList<Source>();
         if(metaInfo.getFileSize() != null) {
             musicSourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128, null, metaInfo.getFileSize()));
@@ -396,8 +366,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 		music.setSourceList(musicSourceList);
 		product.setMusic(music);
-
-		// 이용등급 정보
 		product.setRights(this.commonGenerator.generateRights(metaInfo));
 
 		CommonResponse commonResponse = new CommonResponse();

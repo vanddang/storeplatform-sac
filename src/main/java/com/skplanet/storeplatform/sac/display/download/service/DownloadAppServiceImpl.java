@@ -457,8 +457,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		product.setTitle(commonGenerator.generateTitle(metaInfo)); // 상품명
 		product.setSourceList(commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
 		List<Support> supportList = new ArrayList<Support>();
-		supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
-				metaInfo.getDrmYn()));
+		supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getDrmYn()));
 		product.setSupportList(supportList);
 		product.setMenuList(commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
 		product.setApp(appInfoGenerator.generateApp(metaInfo)); // App 상세정보

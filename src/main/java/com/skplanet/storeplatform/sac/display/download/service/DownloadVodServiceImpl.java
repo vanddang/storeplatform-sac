@@ -233,8 +233,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						downloadVodSacReq.setPrchsDt(prchsDt);
 						downloadVodSacReq.setDwldStartDt(dwldStartDt);
 						downloadVodSacReq.setDwldExprDt(dwldExprDt);
-						// prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
-						// downloadVodSacReq);
 
 						prchsState = (String) ((HashMap) this.commonDAO.queryForObject("Download.getDownloadPurchaseState", downloadVodSacReq)).get("PURCHASE_STATE");
 
@@ -346,9 +344,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									metaInfo.setPurchaseHide(purchaseHide);
 									metaInfo.setUpdateAlarm(updateAlarm);
 
-									//PROD_CHRG
 									this.mapProdChrg(metaInfo, prchsProdId);
-									//DRM_YN
 									this.mapDrmYn(metaInfo, historySacIn);
 
 									this.log.debug("DownloadVodServiceImpl ProdChrg={}, prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", metaInfo.getProdChrg(), prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
@@ -409,7 +405,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		identifierList.add(identifier);
 
 		product.setIdentifierList(identifierList); // 상품 ID
-		// product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		supportList = new ArrayList<Support>();
 		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM, metaInfo.getHdcpYn()));
 		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM, metaInfo.getHdvYn()));
@@ -475,7 +470,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		this.log.debug("[DownloadVodServiceImpl] play prodId : {}", productList.get(1).getProdId());
 		this.log.debug("----------------------------------------------------------------");
 	}
-	
+
 	/**
 	 * <pre>
 	 * method 설명.

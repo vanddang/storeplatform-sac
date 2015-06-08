@@ -154,36 +154,19 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 		// 상품 ID 정보
 		List<Identifier> identifierList = new ArrayList<Identifier>();
-		identifierList.add(commonMetaInfoGenerator.generateIdentifier(
-				DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
-		identifierList.add(commonMetaInfoGenerator.generateIdentifier(
-				DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
-		product.setIdentifierList(identifierList);
+		identifierList.add(commonMetaInfoGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
+		identifierList.add(commonMetaInfoGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
 
-		// 상품명 정보
+		product.setIdentifierList(identifierList);
 		product.setTitle(commonMetaInfoGenerator.generateTitle(metaInfo));
 		product.setChnlProdNm(metaInfo.getChnlProdNm());
-
-		// 상품 설명 정보
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
-
-		// 이미지 정보
 		product.setSourceList(commonMetaInfoGenerator.generateDownloadSourceList(metaInfo));
-
-		// 메뉴 정보
 		product.setMenuList(commonMetaInfoGenerator.generateMenuList(metaInfo));
-
-		// 도서 정보
 		product.setBook(ebookComicGenerator.generateForDownloadBook(metaInfo));
-
-		// 이용등급 및 소장/대여 정보
 		product.setRights(commonMetaInfoGenerator.generateRights(metaInfo));
-
-		// 배포자 정보
 		product.setDistributor(commonMetaInfoGenerator.generateDistributor(metaInfo));
-
-		// 저작자 정보
 		product.setContributor(ebookComicGenerator.generateEbookContributor(metaInfo));
 
 		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {

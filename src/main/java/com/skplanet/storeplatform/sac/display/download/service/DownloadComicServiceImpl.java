@@ -140,33 +140,16 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                 DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
         product.setIdentifierList(identifierList);
 
-        // 상품명 정보
         product.setTitle(commonMetaInfoGenerator.generateTitle(metaInfo));
         product.setChnlProdNm(metaInfo.getChnlProdNm());
-
-        // 상품 설명 정보
         product.setProductExplain(metaInfo.getProdBaseDesc());
         product.setProductDetailExplain(metaInfo.getProdDtlDesc());
-
-        // 이미지 정보
         product.setSourceList(commonMetaInfoGenerator.generateDownloadSourceList(metaInfo));
-
-        // 메뉴 정보
         product.setMenuList(commonMetaInfoGenerator.generateMenuList(metaInfo));
-
-        // 도서 정보
         product.setBook(ebookComicGenerator.generateForDownloadBook(metaInfo));
-
-        // 상품금액 정보
         product.setPrice(commonMetaInfoGenerator.generatePrice(metaInfo));
-
-        // 이용권한 정보
         product.setRights(commonMetaInfoGenerator.generateRights(metaInfo));
-
-        // 배포자 정보
         product.setDistributor(commonMetaInfoGenerator.generateDistributor(metaInfo));
-
-        // 저작자 정보
         product.setContributor(ebookComicGenerator.generateComicContributor(metaInfo));
 
         if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
