@@ -224,15 +224,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						}
 
 						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("[DownloadVodServiceImpl] prchsId : {}", prchsId);
-						this.log.debug("[DownloadVodServiceImpl] prchsDt : {}", prchsDt);
-						this.log.debug("[DownloadVodServiceImpl] useExprDt : {}", useExprDt);
-						this.log.debug("[DownloadVodServiceImpl] dwldStartDt : {}", dwldStartDt);
-						this.log.debug("[DownloadVodServiceImpl] dwldExprDt : {}", dwldExprDt);
-						this.log.debug("[DownloadVodServiceImpl] prchsCaseCd : {}", prchsCaseCd);
+						this.log.debug("[DownloadVodServiceImpl] prchsId : {}", historySacIn.getPrchsId());
+						this.log.debug("[DownloadVodServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
+						this.log.debug("[DownloadVodServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
+						this.log.debug("[DownloadVodServiceImpl] dwldStartDt : {}", historySacIn.getDwldStartDt());
+						this.log.debug("[DownloadVodServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
+						this.log.debug("[DownloadVodServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
 						this.log.debug("[DownloadVodServiceImpl] prchsState : {}", prchsState);
-						this.log.debug("[DownloadVodServiceImpl] prchsProdId : {}", prchsProdId);
-						this.log.debug("[DownloadVodServiceImpl] prchsPrice : {}", prchsPrice);
+						this.log.debug("[DownloadVodServiceImpl] prchsProdId : {}", historySacIn.getProdId());
+						this.log.debug("[DownloadVodServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
 						this.log.debug("----------------------------------------------------------------");
 
 						metaInfo.setPurchaseId(prchsId);

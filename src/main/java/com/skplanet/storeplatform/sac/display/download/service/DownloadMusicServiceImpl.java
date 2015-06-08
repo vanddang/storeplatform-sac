@@ -210,7 +210,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
 						String prchsState = null;
-						
+
 						// 구매상태 만료여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime)) {
 							// 구매 및 선물 여부 확인
@@ -222,14 +222,14 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						}
 
 						this.log.info("----------------------------------------------------------------");
-						this.log.info("[DownloadMusicServiceImpl] prchsId : {}", prchsId);
-						this.log.info("[DownloadMusicServiceImpl] prchsDt : {}", prchsDt);
-						this.log.info("[DownloadMusicServiceImpl] useExprDt : {}", useExprDt);
-						this.log.info("[DownloadMusicServiceImpl] dwldExprDt : {}", dwldExprDt);
-						this.log.info("[DownloadMusicServiceImpl] prchsCaseCd : {}", prchsCaseCd);
+						this.log.info("[DownloadMusicServiceImpl] prchsId : {}", historySacIn.getPrchsId());
+						this.log.info("[DownloadMusicServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
+						this.log.info("[DownloadMusicServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
+						this.log.info("[DownloadMusicServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
+						this.log.info("[DownloadMusicServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
 						this.log.info("[DownloadMusicServiceImpl] prchsState : {}", prchsState);
-						this.log.info("[DownloadMusicServiceImpl] prchsProdId : {}", prchsProdId);
-						this.log.info("[DownloadMusicServiceImpl] prchsPrice : {}", prchsPrice);
+						this.log.info("[DownloadMusicServiceImpl] prchsProdId : {}", historySacIn.getProdId());
+						this.log.info("[DownloadMusicServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
 						this.log.info("----------------------------------------------------------------");
 
 						metaInfo.setPurchaseId(prchsId);

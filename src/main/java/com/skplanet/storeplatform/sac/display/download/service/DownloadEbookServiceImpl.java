@@ -240,17 +240,17 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						}
 
 						logger.debug("----------------------------------------------------------------");
-						logger.debug("[DownloadEbookLog] prchsId : {}", prchsId);
-						logger.debug("[DownloadEbookLog] prchsDt : {}", prchsDt);
-						logger.debug("[DownloadEbookLog] useExprDt : {}", useExprDt);
-						logger.debug("[DownloadEbookLog] dwldStartDt : {}", dwldStartDt);
-						logger.debug("[DownloadEbookLog] dwldExprDt : {}", dwldExprDt);
-						logger.debug("[DownloadEbookLog] prchsCaseCd : {}", prchsCaseCd);
+						logger.debug("[DownloadEbookLog] prchsId : {}", historySacIn.getPrchsId());
+						logger.debug("[DownloadEbookLog] prchsDt : {}", historySacIn.getPrchsDt());
+						logger.debug("[DownloadEbookLog] useExprDt : {}", historySacIn.getUseExprDt());
+						logger.debug("[DownloadEbookLog] dwldStartDt : {}", historySacIn.getDwldStartDt());
+						logger.debug("[DownloadEbookLog] dwldExprDt : {}", historySacIn.getDwldExprDt());
+						logger.debug("[DownloadEbookLog] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
 						logger.debug("[DownloadEbookLog] prchsState : {}", prchsState);
-						logger.debug("[DownloadEbookLog] prchsProdId : {}", prchsProdId);
-						logger.debug("[DownloadEbookLog] prchsPrice : {}", prchsPrice);
-						logger.debug("[DownloadEbookLog] drmYn : {}", drmYn);
-						logger.debug("[DownloadEbookLog] permitDeviceYn : {}", permitDeviceYn);
+						logger.debug("[DownloadEbookLog] prchsProdId : {}", historySacIn.getProdId());
+						logger.debug("[DownloadEbookLog] prchsPrice : {}", historySacIn.getProdAmt());
+						logger.debug("[DownloadEbookLog] drmYn : {}", historySacIn.getDrmYn());
+						logger.debug("[DownloadEbookLog] permitDeviceYn : {}", historySacIn.getPermitDeviceYn());
 						logger.debug("----------------------------------------------------------------");
 
 						metaInfo.setPurchaseId(prchsId);

@@ -251,7 +251,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
 						String prchsState = null;
-						
+
 						// 구매상태 만료여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime)) {
 							// 구매 및 선물 여부 확인
@@ -263,15 +263,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						}
 
 						log.debug("----------------------------------------------------------------");
-						log.debug("[DownloadAppServiceImpl] prchsId : {}", prchsId);
-						log.debug("[DownloadAppServiceImpl] prchsDt : {}", prchsDt);
-						log.debug("[DownloadAppServiceImpl] useExprDt : {}", useExprDt);
-						log.debug("[DownloadAppServiceImpl] dwldStartDt : {}", dwldStartDt);
-						log.debug("[DownloadAppServiceImpl] dwldExprDt : {}", dwldExprDt);
-						log.debug("[DownloadAppServiceImpl] prchsCaseCd : {}", prchsCaseCd);
+						log.debug("[DownloadAppServiceImpl] prchsId : {}", historySacIn.getPrchsId());
+						log.debug("[DownloadAppServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
+						log.debug("[DownloadAppServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
+						log.debug("[DownloadAppServiceImpl] dwldStartDt : {}", historySacIn.getDwldStartDt());
+						log.debug("[DownloadAppServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
+						log.debug("[DownloadAppServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
 						log.debug("[DownloadAppServiceImpl] prchsState : {}", prchsState);
-						log.debug("[DownloadAppServiceImpl] prchsProdId : {}", prchsProdId);
-						log.debug("[DownloadAppServiceImpl] prchsPrice : {}", prchsPrice);
+						log.debug("[DownloadAppServiceImpl] prchsProdId : {}", historySacIn.getProdId());
+						log.debug("[DownloadAppServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
 						log.debug("----------------------------------------------------------------");
 
 						metaInfo.setPurchaseId(prchsId);
@@ -464,7 +464,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	private String getDownloadPurchaseStateByDbTime(String dwldStartDt, String dwldExprDt) {
 		DownloadAppSacReq req = new DownloadAppSacReq();
