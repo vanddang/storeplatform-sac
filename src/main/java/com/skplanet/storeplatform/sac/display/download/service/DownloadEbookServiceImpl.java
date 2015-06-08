@@ -103,9 +103,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		String reqExpireDate = metaInfo.getExpiredDate();
 		metaInfo = null;
 
-		DownloadEbookSacRes ebookRes = new DownloadEbookSacRes();
-		CommonResponse commonResponse = new CommonResponse();
-
 		String idType = ebookReq.getIdType();
 		String productId = ebookReq.getProductId();
 		String deviceKey = ebookReq.getDeviceKey();
@@ -427,9 +424,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			}
 		}
 
-		ebookRes.setProduct(product);
+		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(1);
 
+		DownloadEbookSacRes ebookRes = new DownloadEbookSacRes();
+		ebookRes.setProduct(product);
 		ebookRes.setCommonResponse(commonResponse);
 
         sw.stop();

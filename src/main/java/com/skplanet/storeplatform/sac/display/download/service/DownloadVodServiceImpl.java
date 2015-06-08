@@ -104,9 +104,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		downloadVodSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 		downloadVodSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
-		DownloadVodSacRes response = new DownloadVodSacRes();
-		CommonResponse commonResponse = new CommonResponse();
-
 		String idType = downloadVodSacReq.getIdType();
 		String productId = downloadVodSacReq.getProductId();
 		String deviceKey = downloadVodSacReq.getDeviceKey();
@@ -460,9 +457,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
                 info.setFilePath(null);
             }
         }
-
+		CommonResponse commonResponse = new CommonResponse();
         commonResponse.setTotalCount(1);
 
+        DownloadVodSacRes response = new DownloadVodSacRes();
 		response.setCommonResponse(commonResponse);
 		response.setProduct(product);
 

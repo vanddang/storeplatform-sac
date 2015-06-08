@@ -95,9 +95,6 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         String reqExpireDate = metaInfo.getExpiredDate();
         metaInfo = null;
 
-        DownloadComicSacRes comicRes = new DownloadComicSacRes();
-        CommonResponse commonResponse = new CommonResponse();
-
         String productId = comicReq.getProductId();
         String deviceKey = comicReq.getDeviceKey();
         String userKey = comicReq.getUserKey();
@@ -398,9 +395,11 @@ public class DownloadComicServiceImpl implements DownloadComicService {
             }
         }
 
-        comicRes.setProduct(product);
+        CommonResponse commonResponse = new CommonResponse();
         commonResponse.setTotalCount(1);
 
+        DownloadComicSacRes comicRes = new DownloadComicSacRes();
+        comicRes.setProduct(product);
         comicRes.setCommonResponse(commonResponse);
 
         sw.stop();

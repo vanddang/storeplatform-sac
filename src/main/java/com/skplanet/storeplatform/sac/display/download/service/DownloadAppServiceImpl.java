@@ -156,9 +156,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
 		String purchaseDt = downloadSystemDate.getPurchaseDt();
 
-
-		DownloadAppSacRes response = new DownloadAppSacRes();
-		CommonResponse commonResponse = new CommonResponse();
 		Product product = new Product();
 		Component component = new Component();
 		log.debug("----------------------------------------------------------------");
@@ -496,8 +493,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		product.setPlatClsfCd(metaInfo.getPlatClsfCd());
 		product.setPrice(commonGenerator.generatePrice(metaInfo)); // 상품금액 정보
 
+		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(1);
 
+		DownloadAppSacRes response = new DownloadAppSacRes();
 		response.setCommonResponse(commonResponse);
 		response.setComponent(component);
 		response.setProduct(product);

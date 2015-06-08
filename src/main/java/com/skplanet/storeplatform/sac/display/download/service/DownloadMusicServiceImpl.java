@@ -116,9 +116,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		downloadMusicSacReq.setLangCd(tanantHeader.getLangCd());
 		downloadMusicSacReq.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
-		DownloadMusicSacRes response = new DownloadMusicSacRes();
-		CommonResponse commonResponse = new CommonResponse();
-
 		String productId = downloadMusicSacReq.getProductId();
 		String deviceKey = downloadMusicSacReq.getDeviceKey();
 		String userKey = downloadMusicSacReq.getUserKey();
@@ -428,8 +425,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		// 이용등급 정보
 		product.setRights(this.commonGenerator.generateRights(metaInfo));
 
+		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(1);
 
+		DownloadMusicSacRes response = new DownloadMusicSacRes();
 		response.setCommonResponse(commonResponse);
 		response.setProduct(product);
 
