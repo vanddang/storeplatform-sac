@@ -187,7 +187,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
 				String prchsProdId = null; // 구매 상품ID
-				String puchsPrice = null; // 구매 상품금액
+				String prchsPrice = null; // 구매 상품금액
 				String permitDeviceYn = null; // 단말 지원여부
 				String purchaseHide = null; // 구매내역 숨김 여부
 				String updateAlarm = null; // 업데이트 알람 수신 여부
@@ -203,7 +203,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						dwldExprDt = historySacIn.getDwldExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
-						puchsPrice = historySacIn.getProdAmt();
+						prchsPrice = historySacIn.getProdAmt();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 						purchaseHide = historySacIn.getHidingYn();
 						updateAlarm = historySacIn.getAlarmYn();
@@ -229,7 +229,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						this.log.info("[DownloadMusicServiceImpl] prchsCaseCd : {}", prchsCaseCd);
 						this.log.info("[DownloadMusicServiceImpl] prchsState : {}", prchsState);
 						this.log.info("[DownloadMusicServiceImpl] prchsProdId : {}", prchsProdId);
-						this.log.info("[DownloadMusicServiceImpl] prchsPrice : {}", puchsPrice);
+						this.log.info("[DownloadMusicServiceImpl] prchsPrice : {}", prchsPrice);
 						this.log.info("----------------------------------------------------------------");
 
 						metaInfo.setPurchaseId(prchsId);
@@ -237,7 +237,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						metaInfo.setPurchaseDt(prchsDt);
 						metaInfo.setPurchaseState(prchsState);
 						metaInfo.setPurchaseDwldExprDt(dwldExprDt);
-						metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
+						metaInfo.setPurchasePrice(Integer.parseInt(prchsPrice));
 
 						// 구매 정보
 						purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));

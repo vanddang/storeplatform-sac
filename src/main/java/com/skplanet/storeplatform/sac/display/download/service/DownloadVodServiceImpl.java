@@ -187,7 +187,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
 				String prchsProdId = null; // 구매 상품ID
-				String puchsPrice = null; // 구매 상품금액
+				String prchsPrice = null; // 구매 상품금액
 				String permitDeviceYn = null; // 단말 지원여부
 				String prchsReqPathCd = null; //구매 경로
 				String purchaseHide = null; // 구매내역 숨김 여부
@@ -202,7 +202,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						useExprDt = historySacIn.getUseExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
-						puchsPrice = historySacIn.getProdAmt();
+						prchsPrice = historySacIn.getProdAmt();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 						prchsReqPathCd = historySacIn.getPrchsReqPathCd();
 						purchaseHide = historySacIn.getHidingYn();
@@ -230,7 +230,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						this.log.debug("[DownloadVodServiceImpl] prchsCaseCd : {}", prchsCaseCd);
 						this.log.debug("[DownloadVodServiceImpl] prchsState : {}", prchsState);
 						this.log.debug("[DownloadVodServiceImpl] prchsProdId : {}", prchsProdId);
-						this.log.debug("[DownloadVodServiceImpl] prchsPrice : {}", puchsPrice);
+						this.log.debug("[DownloadVodServiceImpl] prchsPrice : {}", prchsPrice);
 						this.log.debug("----------------------------------------------------------------");
 
 						metaInfo.setPurchaseId(prchsId);
@@ -238,7 +238,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						metaInfo.setPurchaseDt(prchsDt);
 						metaInfo.setPurchaseState(prchsState);
 						metaInfo.setPurchaseDwldExprDt(dwldExprDt);
-						metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
+						metaInfo.setPurchasePrice(Integer.parseInt(prchsPrice));
 
 						// 구매 정보
 						purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));

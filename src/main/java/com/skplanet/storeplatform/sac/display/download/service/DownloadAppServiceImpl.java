@@ -228,7 +228,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
 				String prchsProdId = null; // 구매 상품ID
-				String puchsPrice = null; // 구매 상품금액
+				String prchsPrice = null; // 구매 상품금액
 				String drmYn = null; // 구매상품 Drm여부
 				String permitDeviceYn = null; // 단말 지원여부
 				String purchaseHide = null; // 구매내역 숨김 여부
@@ -244,7 +244,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						dwldExprDt = historySacIn.getDwldExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
-						puchsPrice = historySacIn.getProdAmt();
+						prchsPrice = historySacIn.getProdAmt();
 						drmYn = historySacIn.getDrmYn();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 						purchaseHide = historySacIn.getHidingYn();
@@ -271,7 +271,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						log.debug("[DownloadAppServiceImpl] prchsCaseCd : {}", prchsCaseCd);
 						log.debug("[DownloadAppServiceImpl] prchsState : {}", prchsState);
 						log.debug("[DownloadAppServiceImpl] prchsProdId : {}", prchsProdId);
-						log.debug("[DownloadAppServiceImpl] prchsPrice : {}", puchsPrice);
+						log.debug("[DownloadAppServiceImpl] prchsPrice : {}", prchsPrice);
 						log.debug("----------------------------------------------------------------");
 
 						metaInfo.setPurchaseId(prchsId);
@@ -279,7 +279,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						metaInfo.setPurchaseDt(prchsDt);
 						metaInfo.setPurchaseState(prchsState);
 						metaInfo.setPurchaseDwldExprDt(dwldExprDt);
-						metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
+						metaInfo.setPurchasePrice(Integer.parseInt(prchsPrice));
 						metaInfo.setDrmYn(drmYn);
 						// 구매 정보
 						purchaseList.add(commonGenerator.generatePurchase(metaInfo));
