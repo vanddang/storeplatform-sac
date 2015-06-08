@@ -80,6 +80,7 @@
 			  <if test="userKey != null">  
 			  , (CASE WHEN ML.STATS_KEY IS NOT NULL THEN 'Y' ELSE 'N' END) AS LIKE_YN
               </if> 
+              , P2.PROD_GRD_EXTRA_CD
 		  FROM (SELECT RSHP.PROD_ID AS CHNL_PROD_ID, 
 		              G.TENANT_ID, 
 		              C.LANG_CD, 
@@ -91,7 +92,7 @@
 		              MAX(DECODE(M.POSS_LEND_CLSF_CD, 'DP010601', D.PROD_ID)) AS STORE_PROD_ID, 
 		              MAX(DECODE(M.POSS_LEND_CLSF_CD, 'DP010601', NULL, D.PROD_ID)) AS PLAY_PROD_ID, 
 		              MAX(DECODE(M.POSS_LEND_CLSF_CD, 'DP010601', NULL, M.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD,
-					  MAX(DECODE(M.POSS_LEND_CLSF_CD, 'DP010601', NULL, M.USE_PERIOD)) AS PLAY_USE_PERIOD 
+					  MAX(DECODE(M.POSS_LEND_CLSF_CD, 'DP010601', NULL, M.USE_PERIOD)) AS PLAY_USE_PERIOD
 		          FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
 		              , TB_DP_MENU_CATEGORY B
 		              , TB_DP_MENU_CATEGORY_DESC C 
@@ -194,7 +195,7 @@
             , USE_PERIOD_UNIT_CD_NM
             , USE_PERIOD_UNIT_CD
 		    , DWLD_AREA_LIMT_YN
-		    , EPSD_PLAY_TM, PROD_GRD_CD
+		    , EPSD_PLAY_TM, PROD_GRD_CD, PROD_GRD_EXTRA_CD
 		    , DECODE( DOLBY_YN , 'Y' , DECODE( DOLBY_SPRT_YN, 'Y', DOLBY_SPRT_YN, 'N' ), 'N' ) AS DOLBY_SPRT_YN
 		    , SELLER_MBR_NO, EXPO_SELLER_NM, EXPO_SELLER_TELNO, EXPO_SELLER_EMAIL
 		    , REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,1) AS NM_SUB_CONTS_ID
@@ -258,7 +259,7 @@
 		       , HDCP_YN, HDV_YN 
 		       , USE_PERIOD, USE_PERIOD_UNIT_CD
 		       , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = USE_PERIOD_UNIT_CD AND LANG_CD = T4.LANG_CD) AS USE_PERIOD_UNIT_CD_NM
-		       , EPSD_PLAY_TM, PROD_GRD_CD
+		       , EPSD_PLAY_TM, PROD_GRD_CD, PROD_GRD_EXTRA_CD
 		       , DOLBY_SPRT_YN, DOLBY_YN
 		       , DWLD_AREA_LIMT_YN, DWLD_NETWORK_CD, STRM_NETWORK_CD
 		       , FILE_PATH
@@ -309,6 +310,7 @@
 		                  , MAX( T1.DWLD_AREA_LIMT_YN ) AS DWLD_AREA_LIMT_YN
 		                  , MAX( T1.PLAY_TM ) AS EPSD_PLAY_TM
 		                  , MAX( T1.PROD_GRD_CD ) AS PROD_GRD_CD
+		                  , MAX( T1.PROD_GRD_EXTRA_CD ) AS PROD_GRD_EXTRA_CD
 		                  , MAX( T1.DOLBY_SPRT_YN ) AS DOLBY_SPRT_YN
 		                  , MAX( T1.DOLBY_YN ) AS DOLBY_YN
 		                  , MAX( T1.DWLD_NETWORK_CD ) AS DWLD_NETWORK_CD
@@ -359,6 +361,7 @@
 		                        , MP.GENRE_CD, MP.ISSUE_DAY, MP.BRDC_COMP_CD, MP.SVC_START_DT, MP.CHNL_COMP_NM
 		                        , MP.HDCP_YN, MP.HDV_YN, MP.DOLBY_SPRT_YN, DV.DOLBY_SPRT_YN AS DOLBY_YN
 		                        , MP.PLAY_TM, PD.PROD_GRD_CD
+                                , PD.PROD_GRD_EXTRA_CD		                        
 		                        , MP.DWLD_AREA_LIMT_YN, MP.DWLD_NETWORK_CD, MP.STRM_NETWORK_CD
 		                        , MP.SAMPL_URL, MP.SC_SAMPL_URL
 		                        , SC.FILE_PATH

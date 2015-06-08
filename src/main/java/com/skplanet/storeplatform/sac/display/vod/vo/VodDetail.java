@@ -15,7 +15,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * VOD 상세조회 Value Object
- *
+ * 
  * Updated on : 2014. 1. 28. Updated by : 임근대, SK플래닛.
  */
 public class VodDetail extends CommonInfo {
@@ -54,11 +54,10 @@ public class VodDetail extends CommonInfo {
 	 */
 	private String svcGrpCd;
 
-
 	/** 등록일시 */
 	private Date regDt;
 
-    /** VOD 타이틀명 */
+	/** VOD 타이틀명 */
 	private String vodTitlNm;
 	/** 상품명 */
 	private String prodNm;
@@ -124,12 +123,13 @@ public class VodDetail extends CommonInfo {
 	private Integer epsdPlayTm;
 	/** 상품 등급 코드 */
 	private String prodGrdCd;
+	/** 기타 상품 등급 코드 */
+	private String prodGrdExtraCd;
 	/** 장르코드 */
 	private String genreCd;
 	private String genreCdNm;
 	/** 발매일 */
 	private String issueDay;
-
 
 	// ---------------------------------------------------
 	// Source File path
@@ -174,7 +174,7 @@ public class VodDetail extends CommonInfo {
 	private String chnlCompNm;
 
 	/** 기획사 */
-	 private String agencyNm;
+	private String agencyNm;
 
 	/** */
 	// private Integer prodAmt;
@@ -231,7 +231,6 @@ public class VodDetail extends CommonInfo {
 	/** 바로보기 망 코드 */
 	private String strmNetworkCd;
 
-
 	// ----------------------------------------
 	// 시리즈 조회
 	// ----------------------------------------
@@ -244,7 +243,7 @@ public class VodDetail extends CommonInfo {
 	private String nmSubContsId;
 	/** 일반화질 상품버전. */
 	private String nmProdVer;
-	/** 일반화질 파일용량.  */
+	/** 일반화질 파일용량. */
 	private String nmFileSize;
 	/** 일반화질 해상도. */
 	private String nmDpPixel;
@@ -255,7 +254,7 @@ public class VodDetail extends CommonInfo {
 	private String sdSubContsId;
 	/** SD화질 상품버전. */
 	private String sdProdVer;
-	/** SD화질 파일용량.  */
+	/** SD화질 파일용량. */
 	private String sdFileSize;
 	/** SD화질 해상도. */
 	private String sdDpPixel;
@@ -266,7 +265,7 @@ public class VodDetail extends CommonInfo {
 	private String hdSubContsId;
 	/** HD화질(C) 상품버전. */
 	private String hdProdVer;
-	/** HD화질(C) 파일용량.  */
+	/** HD화질(C) 파일용량. */
 	private String hdFileSize;
 	/** HD화질(C) 해상도. */
 	private String hdDpPixel;
@@ -277,7 +276,7 @@ public class VodDetail extends CommonInfo {
 	private String hihdSubContsId;
 	/** HD화질 (D화질) 상품버전. */
 	private String hihdProdVer;
-	/** HD화질 (D화질) 파일용량.  */
+	/** HD화질 (D화질) 파일용량. */
 	private String hihdFileSize;
 	/** HD화질 (D화질) 해상도. */
 	private String hihdDpPixel;
@@ -288,7 +287,7 @@ public class VodDetail extends CommonInfo {
 	private String fhdSubContsId;
 	/** FHD화질 상품버전. */
 	private String fhdProdVer;
-	/** FHD화질 파일용량.  */
+	/** FHD화질 파일용량. */
 	private String fhdFileSize;
 	/** FHD화질 해상도. */
 	private String fhdDpPixel;
@@ -298,8 +297,7 @@ public class VodDetail extends CommonInfo {
 	// 좋아요 선택 여부
 	private String likeYn;
 
-
-    public String getTopMenuId() {
+	public String getTopMenuId() {
 		return this.topMenuId;
 	}
 
@@ -347,13 +345,17 @@ public class VodDetail extends CommonInfo {
 		this.prodId = prodId;
 	}
 
-	public String getVodTitlNm() { return this.vodTitlNm; }
+	public String getVodTitlNm() {
+		return this.vodTitlNm;
+	}
 
-	public void setVodTitlNm(String vodTitlNm) { this.vodTitlNm = vodTitlNm;}
+	public void setVodTitlNm(String vodTitlNm) {
+		this.vodTitlNm = vodTitlNm;
+	}
 
 	/**
 	 * 상품명
-	 *
+	 * 
 	 * @return 상품명
 	 */
 	public String getProdNm() {
@@ -362,7 +364,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 상품명
-	 *
+	 * 
 	 * @param prodNm
 	 *            상품명
 	 */
@@ -372,7 +374,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 상품 기본 설명
-	 *
+	 * 
 	 * @return 상품 기본 설명
 	 */
 	public String getProdBaseDesc() {
@@ -381,7 +383,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 상품 기본 설명
-	 *
+	 * 
 	 * @param prodBaseDesc
 	 *            상품 기본 설명
 	 */
@@ -391,7 +393,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 상품 상세 설명
-	 *
+	 * 
 	 * @return 상품 상세 설명
 	 */
 	public String getProdDtlDesc() {
@@ -400,7 +402,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 상품 상세 설명
-	 *
+	 * 
 	 * @param prodDtlDesc
 	 *            상품 상세 설명
 	 */
@@ -448,10 +450,9 @@ public class VodDetail extends CommonInfo {
 		this.chnlCompNm = chnlCompNm;
 	}
 
-
 	/**
 	 * HDV여부
-	 *
+	 * 
 	 * @return HDV여부
 	 */
 	public String getHdvYn() {
@@ -460,7 +461,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HDV여부
-	 *
+	 * 
 	 * @param hdvYn
 	 *            HDV여부
 	 */
@@ -470,7 +471,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 돌비 지원여부
-	 *
+	 * 
 	 * @return 돌비 지원여부
 	 */
 	public String getDolbySprtYn() {
@@ -479,7 +480,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 돌비 지원여부
-	 *
+	 * 
 	 * @param dolbySprtYn
 	 *            돌비 지원여부
 	 */
@@ -489,13 +490,13 @@ public class VodDetail extends CommonInfo {
 
 	/*
 	 * public Integer getProdAmt() { return this.prodAmt; }
-	 *
+	 * 
 	 * public void setProdAmt(Integer prodAmt) { this.prodAmt = prodAmt; }
 	 */
 
 	/**
 	 * 참여자수
-	 *
+	 * 
 	 * @return 참여자수
 	 */
 	public Integer getPaticpersCnt() {
@@ -504,7 +505,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 참여자수
-	 *
+	 * 
 	 * @param paticpersCnt
 	 *            참여자수
 	 */
@@ -514,7 +515,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 구매수
-	 *
+	 * 
 	 * @return 구매수
 	 */
 	public Integer getPrchsCnt() {
@@ -523,7 +524,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 구매수
-	 *
+	 * 
 	 * @param prchsCnt
 	 *            구매수
 	 */
@@ -533,7 +534,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 평균 평가 점수
-	 *
+	 * 
 	 * @return 평균 평가 점수
 	 */
 	public Double getAvgEvluScore() {
@@ -542,7 +543,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 평균 평가 점수
-	 *
+	 * 
 	 * @param avgEvluScore
 	 *            평균 평가 점수
 	 */
@@ -558,10 +559,9 @@ public class VodDetail extends CommonInfo {
 		this.topMenuNm = topMenuNm;
 	}
 
-
 	/**
 	 * thumbnail filePath
-	 *
+	 * 
 	 * @return
 	 */
 	public String getImgPath() {
@@ -570,7 +570,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * thumbnail filePath
-	 *
+	 * 
 	 * @param imgPath
 	 */
 	public void setImgPath(String imgPath) {
@@ -579,7 +579,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * thumbnail fileNm
-	 *
+	 * 
 	 * @return thumbnail fileNm
 	 */
 	public String getImgNm() {
@@ -588,7 +588,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * thumbnail fileNm
-	 *
+	 * 
 	 * @param imgNm
 	 */
 	public void setImgNm(String imgNm) {
@@ -597,7 +597,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * thumbnail fileSize
-	 *
+	 * 
 	 * @return thumbnail fileSize
 	 */
 	public Long getImgSize() {
@@ -606,7 +606,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * thumbnail fileSize
-	 *
+	 * 
 	 * @param imgSize
 	 *            thumbnail fileSize
 	 */
@@ -615,7 +615,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	public String getEpsdImgPath() {
-		return epsdImgPath;
+		return this.epsdImgPath;
 	}
 
 	public void setEpsdImgPath(String epsdImgPath) {
@@ -623,7 +623,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	public String getEpsdImgNm() {
-		return epsdImgNm;
+		return this.epsdImgNm;
 	}
 
 	public void setEpsdImgNm(String epsdImgNm) {
@@ -631,7 +631,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	public Long getEpsdImgSize() {
-		return epsdImgSize;
+		return this.epsdImgSize;
 	}
 
 	public void setEpsdImgSize(Long epsdImgSize) {
@@ -640,7 +640,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 등록 일시
-	 *
+	 * 
 	 * @return 등록 일시
 	 */
 	public Date getRegDt() {
@@ -649,7 +649,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 등록 일시
-	 *
+	 * 
 	 * @param regDt
 	 *            등록 일시
 	 */
@@ -659,7 +659,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 상품 소개 내용
-	 *
+	 * 
 	 * @return 상품 소개 내용
 	 */
 	public String getProdIntrDscr() {
@@ -668,7 +668,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 상품 소개 내용
-	 *
+	 * 
 	 * @param prodIntrDscr
 	 *            상품 소개 내용
 	 */
@@ -758,7 +758,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 에피소드 수
-	 *
+	 * 
 	 * @return 에피소드 수
 	 */
 	public Integer getEpsdCnt() {
@@ -767,7 +767,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 에피소드 수
-	 *
+	 * 
 	 * @param epsdCnt
 	 *            바로보기 에피소드 수
 	 */
@@ -777,7 +777,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 바로보기 에피소드 수
-	 *
+	 * 
 	 * @return 바로보기 에피소드 수
 	 */
 	public Integer getStrmEpsdCnt() {
@@ -786,7 +786,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 바로보기 에피소드 수
-	 *
+	 * 
 	 * @param strmEpsdCnt
 	 *            바로보기 에피소드 수
 	 */
@@ -796,7 +796,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 사용기간 단위 코드 (PD00310 == 무제한), 무제한인 경우 Store, 그외 Play
-	 *
+	 * 
 	 * @return
 	 */
 	public String getUsePeriodUnitCd() {
@@ -805,7 +805,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 사용기간 단위 코드 (PD00310 == 무제한), 무제한인 경우 Store, 그외 Play
-	 *
+	 * 
 	 * @param usePeriodUnitCd
 	 */
 	public void setUsePeriodUnitCd(String usePeriodUnitCd) {
@@ -816,11 +816,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the usePeriodUnitCdNm
 	 */
 	public String getUsePeriodUnitCdNm() {
-		return usePeriodUnitCdNm;
+		return this.usePeriodUnitCdNm;
 	}
 
 	/**
-	 * @param usePeriodUnitCdNm the usePeriodUnitCdNm to set
+	 * @param usePeriodUnitCdNm
+	 *            the usePeriodUnitCdNm to set
 	 */
 	public void setUsePeriodUnitCdNm(String usePeriodUnitCdNm) {
 		this.usePeriodUnitCdNm = usePeriodUnitCdNm;
@@ -828,7 +829,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 사용기간 (사용기간 단위가 무제한이 아닌 경우 사용)
-	 *
+	 * 
 	 * @return
 	 */
 	public Integer getUsePeriod() {
@@ -837,7 +838,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 사용기간 (사용기간 단위가 무제한이 아닌 경우 사용)
-	 *
+	 * 
 	 * @param usePeriod
 	 */
 	public void setUsePeriod(Integer usePeriod) {
@@ -846,7 +847,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 다운로드 망 코드
-	 *
+	 * 
 	 * @return 다운로드 망 코드
 	 */
 	public String getDwldNetworkCd() {
@@ -855,7 +856,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 다운로드 망 코드
-	 *
+	 * 
 	 * @param dwldNetworkCd
 	 *            다운로드 망 코드
 	 */
@@ -865,7 +866,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 바로보기 망 코드
-	 *
+	 * 
 	 * @return 바로보기 망 코드
 	 */
 	public String getStrmNetworkCd() {
@@ -874,7 +875,7 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 바로보기 망 코드
-	 *
+	 * 
 	 * @param strmNetworkCd
 	 *            바로보기 망 코드
 	 */
@@ -923,7 +924,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	public String getStoreDlStrmCd() {
-		return storeDlStrmCd;
+		return this.storeDlStrmCd;
 	}
 
 	public void setStoreDlStrmCd(String storeDlStrmCd) {
@@ -950,11 +951,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the storeProdNetAmt
 	 */
 	public Integer getStoreProdNetAmt() {
-		return storeProdNetAmt;
+		return this.storeProdNetAmt;
 	}
 
 	/**
-	 * @param storeProdNetAmt the storeProdNetAmt to set
+	 * @param storeProdNetAmt
+	 *            the storeProdNetAmt to set
 	 */
 	public void setStoreProdNetAmt(Integer storeProdNetAmt) {
 		this.storeProdNetAmt = storeProdNetAmt;
@@ -964,11 +966,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the playProdNetAmt
 	 */
 	public Integer getPlayProdNetAmt() {
-		return playProdNetAmt;
+		return this.playProdNetAmt;
 	}
 
 	/**
-	 * @param playProdNetAmt the playProdNetAmt to set
+	 * @param playProdNetAmt
+	 *            the playProdNetAmt to set
 	 */
 	public void setPlayProdNetAmt(Integer playProdNetAmt) {
 		this.playProdNetAmt = playProdNetAmt;
@@ -983,7 +986,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	public String getPlayDlStrmCd() {
-		return playDlStrmCd;
+		return this.playDlStrmCd;
 	}
 
 	public void setPlayDlStrmCd(String playDlStrmCd) {
@@ -1040,8 +1043,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 일반화질 sub 컨텐츠 Id.
-	 * @return
-	 * 		일반화질 sub 컨텐츠 Id.
+	 * 
+	 * @return 일반화질 sub 컨텐츠 Id.
 	 */
 	public String getNmSubContsId() {
 		return this.nmSubContsId;
@@ -1049,8 +1052,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 일반화질 sub 컨텐츠 Id.
+	 * 
 	 * @param nmSubContsId
-	 * 			일반화질 sub 컨텐츠 Id.
+	 *            일반화질 sub 컨텐츠 Id.
 	 */
 	public void setNmSubContsId(String nmSubContsId) {
 		this.nmSubContsId = nmSubContsId;
@@ -1058,8 +1062,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 일반화질 상품버전.
-	 * @return
-	 * 		일반화질 상품버전.
+	 * 
+	 * @return 일반화질 상품버전.
 	 */
 	public String getNmProdVer() {
 		return this.nmProdVer;
@@ -1067,8 +1071,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 일반화질 상품버전.
+	 * 
 	 * @param nmProdVer
-	 * 			일반화질 상품버전.
+	 *            일반화질 상품버전.
 	 */
 	public void setNmProdVer(String nmProdVer) {
 		this.nmProdVer = nmProdVer;
@@ -1076,8 +1081,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 일반화질 파일용량.
-	 * @return
-	 * 		일반화질 파일용량.
+	 * 
+	 * @return 일반화질 파일용량.
 	 */
 	public String getNmFileSize() {
 		return this.nmFileSize;
@@ -1085,8 +1090,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 일반화질 파일용량.
+	 * 
 	 * @param nmFileSize
-	 * 			일반화질 파일용량.
+	 *            일반화질 파일용량.
 	 */
 	public void setNmFileSize(String nmFileSize) {
 		this.nmFileSize = nmFileSize;
@@ -1094,16 +1100,18 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 일반화질 해상도.
-	 * @return
-	 * 		일반화질 해상도.
+	 * 
+	 * @return 일반화질 해상도.
 	 */
 	public String getNmDpPixel() {
 		return this.nmDpPixel;
 	}
+
 	/**
 	 * 일반화질 해상도.
+	 * 
 	 * @param nmDpPixel
-	 * 		일반화질 해상도.
+	 *            일반화질 해상도.
 	 */
 	public void setNmDpPixel(String nmDpPixel) {
 		this.nmDpPixel = nmDpPixel;
@@ -1111,8 +1119,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 일반화질 화면비율.
-	 * @return
-	 * 		일반화질 화면비율.
+	 * 
+	 * @return 일반화질 화면비율.
 	 */
 	public String getNmDpPicRatio() {
 		return this.nmDpPicRatio;
@@ -1120,8 +1128,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * 일반화질 화면비율.
+	 * 
 	 * @param nmDpPicRatio
-	 * 				일반화질 화면비율.
+	 *            일반화질 화면비율.
 	 */
 	public void setNmDpPicRatio(String nmDpPicRatio) {
 		this.nmDpPicRatio = nmDpPicRatio;
@@ -1129,8 +1138,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * SD화질 sub 컨텐츠 Id.
-	 * @return
-	 * 		SD화질 sub 컨텐츠 Id.
+	 * 
+	 * @return SD화질 sub 컨텐츠 Id.
 	 */
 	public String getSdSubContsId() {
 		return this.sdSubContsId;
@@ -1138,8 +1147,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * SD화질 sub 컨텐츠 Id.
+	 * 
 	 * @param sdSubContsId
-	 * 			SD화질 sub 컨텐츠 Id.
+	 *            SD화질 sub 컨텐츠 Id.
 	 */
 	public void setSdSubContsId(String sdSubContsId) {
 		this.sdSubContsId = sdSubContsId;
@@ -1147,8 +1157,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * SD화질 상품버전.
-	 * @return
-	 * 		SD화질 상품버전.
+	 * 
+	 * @return SD화질 상품버전.
 	 */
 	public String getSdProdVer() {
 		return this.sdProdVer;
@@ -1156,8 +1166,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * SD화질 상품버전.
+	 * 
 	 * @param sdProdVer
-	 * 		SD화질 상품버전.
+	 *            SD화질 상품버전.
 	 */
 	public void setSdProdVer(String sdProdVer) {
 		this.sdProdVer = sdProdVer;
@@ -1165,8 +1176,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * SD화질 파일용량.
-	 * @return
-	 * 		SD화질 파일용량.
+	 * 
+	 * @return SD화질 파일용량.
 	 */
 	public String getSdFileSize() {
 		return this.sdFileSize;
@@ -1174,8 +1185,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * SD화질 파일용량.
+	 * 
 	 * @param sdFileSize
-	 * 			SD화질 파일용량.
+	 *            SD화질 파일용량.
 	 */
 	public void setSdFileSize(String sdFileSize) {
 		this.sdFileSize = sdFileSize;
@@ -1183,8 +1195,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * SD화질 해상도.
-	 * @return
-	 * 		SD화질 해상도.
+	 * 
+	 * @return SD화질 해상도.
 	 */
 	public String getSdDpPixel() {
 		return this.sdDpPixel;
@@ -1192,8 +1204,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * SD화질 해상도.
+	 * 
 	 * @param sdDpPixel
-	 * 			SD화질 해상도.
+	 *            SD화질 해상도.
 	 */
 	public void setSdDpPixel(String sdDpPixel) {
 		this.sdDpPixel = sdDpPixel;
@@ -1201,8 +1214,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * SD화질 화면비율.
-	 * @return
-	 * 		SD화질 화면비율.
+	 * 
+	 * @return SD화질 화면비율.
 	 */
 	public String getSdDpPicRatio() {
 		return this.sdDpPicRatio;
@@ -1210,8 +1223,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * SD화질 화면비율.
+	 * 
 	 * @param sdDpPicRatio
-	 * 			SD화질 화면비율.
+	 *            SD화질 화면비율.
 	 */
 	public void setSdDpPicRatio(String sdDpPicRatio) {
 		this.sdDpPicRatio = sdDpPicRatio;
@@ -1219,8 +1233,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HD화질(C) sub 컨텐츠 Id.
-	 * @return
-	 * 		HD화질 sub 컨텐츠 Id.
+	 * 
+	 * @return HD화질 sub 컨텐츠 Id.
 	 */
 	public String getHdSubContsId() {
 		return this.hdSubContsId;
@@ -1228,8 +1242,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HD화질(C) sub 컨텐츠 Id.
+	 * 
 	 * @param hdSubContsId
-	 * 			HD화질 sub 컨텐츠 Id.
+	 *            HD화질 sub 컨텐츠 Id.
 	 */
 	public void setHdSubContsId(String hdSubContsId) {
 		this.hdSubContsId = hdSubContsId;
@@ -1237,8 +1252,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HD화질(C) 상품버전.
-	 * @return
-	 * 		HD화질 상품버전.
+	 * 
+	 * @return HD화질 상품버전.
 	 */
 	public String getHdProdVer() {
 		return this.hdProdVer;
@@ -1246,8 +1261,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HD화질(C) 상품버전.
+	 * 
 	 * @param hdProdVer
-	 * 			HD화질 상품버전.
+	 *            HD화질 상품버전.
 	 */
 	public void setHdProdVer(String hdProdVer) {
 		this.hdProdVer = hdProdVer;
@@ -1255,8 +1271,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HD화질(C) 파일용량.
-	 * @return
-	 * 		HD화질 파일용량.
+	 * 
+	 * @return HD화질 파일용량.
 	 */
 	public String getHdFileSize() {
 		return this.hdFileSize;
@@ -1264,8 +1280,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HD화질(C) 파일용량.
+	 * 
 	 * @param hdFileSize
-	 * 		HD화질 파일용량.
+	 *            HD화질 파일용량.
 	 */
 	public void setHdFileSize(String hdFileSize) {
 		this.hdFileSize = hdFileSize;
@@ -1273,8 +1290,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HD화질(C) 해상도.
-	 * @return
-	 * 		HD화질 해상도.
+	 * 
+	 * @return HD화질 해상도.
 	 */
 	public String getHdDpPixel() {
 		return this.hdDpPixel;
@@ -1282,8 +1299,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HD화질(C) 해상도.
+	 * 
 	 * @param hdDpPixel
-	 * 			HD화질 해상도.
+	 *            HD화질 해상도.
 	 */
 	public void setHdDpPixel(String hdDpPixel) {
 		this.hdDpPixel = hdDpPixel;
@@ -1291,8 +1309,8 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HD화질(C) 화면비율.
-	 * @return
-	 * 		HD화질 화면비율.
+	 * 
+	 * @return HD화질 화면비율.
 	 */
 	public String getHdDpPicRatio() {
 		return this.hdDpPicRatio;
@@ -1300,8 +1318,9 @@ public class VodDetail extends CommonInfo {
 
 	/**
 	 * HD화질(C) 화면비율.
+	 * 
 	 * @param hdDpPicRatio
-	 * 				HD화질 화면비율.
+	 *            HD화질 화면비율.
 	 */
 	public void setHdDpPicRatio(String hdDpPicRatio) {
 		this.hdDpPicRatio = hdDpPicRatio;
@@ -1319,11 +1338,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the filePath
 	 */
 	public String getFilePath() {
-		return filePath;
+		return this.filePath;
 	}
 
 	/**
-	 * @param filePath the filePath to set
+	 * @param filePath
+	 *            the filePath to set
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
@@ -1333,11 +1353,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the svcGrpCd
 	 */
 	public String getSvcGrpCd() {
-		return svcGrpCd;
+		return this.svcGrpCd;
 	}
 
 	/**
-	 * @param svcGrpCd the svcGrpCd to set
+	 * @param svcGrpCd
+	 *            the svcGrpCd to set
 	 */
 	public void setSvcGrpCd(String svcGrpCd) {
 		this.svcGrpCd = svcGrpCd;
@@ -1347,11 +1368,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the storeProdStatusCd
 	 */
 	public String getStoreProdStatusCd() {
-		return storeProdStatusCd;
+		return this.storeProdStatusCd;
 	}
 
 	/**
-	 * @param storeProdStatusCd the storeProdStatusCd to set
+	 * @param storeProdStatusCd
+	 *            the storeProdStatusCd to set
 	 */
 	public void setStoreProdStatusCd(String storeProdStatusCd) {
 		this.storeProdStatusCd = storeProdStatusCd;
@@ -1361,11 +1383,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the playProdStatusCd
 	 */
 	public String getPlayProdStatusCd() {
-		return playProdStatusCd;
+		return this.playProdStatusCd;
 	}
 
 	/**
-	 * @param playProdStatusCd the playProdStatusCd to set
+	 * @param playProdStatusCd
+	 *            the playProdStatusCd to set
 	 */
 	public void setPlayProdStatusCd(String playProdStatusCd) {
 		this.playProdStatusCd = playProdStatusCd;
@@ -1375,26 +1398,27 @@ public class VodDetail extends CommonInfo {
 	 * @return the genreCdNm
 	 */
 	public String getGenreCdNm() {
-		return genreCdNm;
+		return this.genreCdNm;
 	}
 
 	/**
-	 * @param genreCdNm the genreCdNm to set
+	 * @param genreCdNm
+	 *            the genreCdNm to set
 	 */
 	public void setGenreCdNm(String genreCdNm) {
 		this.genreCdNm = genreCdNm;
 	}
 
-
 	/**
 	 * @return the playUsePeriod
 	 */
 	public Integer getPlayUsePeriod() {
-		return playUsePeriod;
+		return this.playUsePeriod;
 	}
 
 	/**
-	 * @param playUsePeriod the playUsePeriod to set
+	 * @param playUsePeriod
+	 *            the playUsePeriod to set
 	 */
 	public void setPlayUsePeriod(Integer playUsePeriod) {
 		this.playUsePeriod = playUsePeriod;
@@ -1404,11 +1428,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the playUsePeriodUnitCd
 	 */
 	public String getPlayUsePeriodUnitCd() {
-		return playUsePeriodUnitCd;
+		return this.playUsePeriodUnitCd;
 	}
 
 	/**
-	 * @param playUsePeriodUnitCd the playUsePeriodUnitCd to set
+	 * @param playUsePeriodUnitCd
+	 *            the playUsePeriodUnitCd to set
 	 */
 	public void setPlayUsePeriodUnitCd(String playUsePeriodUnitCd) {
 		this.playUsePeriodUnitCd = playUsePeriodUnitCd;
@@ -1418,26 +1443,27 @@ public class VodDetail extends CommonInfo {
 	 * @return the playUsePeriodUnitCdNm
 	 */
 	public String getPlayUsePeriodUnitCdNm() {
-		return playUsePeriodUnitCdNm;
+		return this.playUsePeriodUnitCdNm;
 	}
 
 	/**
-	 * @param playUsePeriodUnitCdNm the playUsePeriodUnitCdNm to set
+	 * @param playUsePeriodUnitCdNm
+	 *            the playUsePeriodUnitCdNm to set
 	 */
 	public void setPlayUsePeriodUnitCdNm(String playUsePeriodUnitCdNm) {
 		this.playUsePeriodUnitCdNm = playUsePeriodUnitCdNm;
 	}
 
-
 	/**
 	 * @return the hihdSubContsId
 	 */
 	public String getHihdSubContsId() {
-		return hihdSubContsId;
+		return this.hihdSubContsId;
 	}
 
 	/**
-	 * @param hihdSubContsId the hihdSubContsId to set
+	 * @param hihdSubContsId
+	 *            the hihdSubContsId to set
 	 */
 	public void setHihdSubContsId(String hihdSubContsId) {
 		this.hihdSubContsId = hihdSubContsId;
@@ -1447,11 +1473,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the hihdProdVer
 	 */
 	public String getHihdProdVer() {
-		return hihdProdVer;
+		return this.hihdProdVer;
 	}
 
 	/**
-	 * @param hihdProdVer the hihdProdVer to set
+	 * @param hihdProdVer
+	 *            the hihdProdVer to set
 	 */
 	public void setHihdProdVer(String hihdProdVer) {
 		this.hihdProdVer = hihdProdVer;
@@ -1461,11 +1488,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the hihdFileSize
 	 */
 	public String getHihdFileSize() {
-		return hihdFileSize;
+		return this.hihdFileSize;
 	}
 
 	/**
-	 * @param hihdFileSize the hihdFileSize to set
+	 * @param hihdFileSize
+	 *            the hihdFileSize to set
 	 */
 	public void setHihdFileSize(String hihdFileSize) {
 		this.hihdFileSize = hihdFileSize;
@@ -1475,11 +1503,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the hihdDpPixel
 	 */
 	public String getHihdDpPixel() {
-		return hihdDpPixel;
+		return this.hihdDpPixel;
 	}
 
 	/**
-	 * @param hihdDpPixel the hihdDpPixel to set
+	 * @param hihdDpPixel
+	 *            the hihdDpPixel to set
 	 */
 	public void setHihdDpPixel(String hihdDpPixel) {
 		this.hihdDpPixel = hihdDpPixel;
@@ -1489,11 +1518,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the hihdDpPicRatio
 	 */
 	public String getHihdDpPicRatio() {
-		return hihdDpPicRatio;
+		return this.hihdDpPicRatio;
 	}
 
 	/**
-	 * @param hihdDpPicRatio the hihdDpPicRatio to set
+	 * @param hihdDpPicRatio
+	 *            the hihdDpPicRatio to set
 	 */
 	public void setHihdDpPicRatio(String hihdDpPicRatio) {
 		this.hihdDpPicRatio = hihdDpPicRatio;
@@ -1503,11 +1533,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the fhdSubContsId
 	 */
 	public String getFhdSubContsId() {
-		return fhdSubContsId;
+		return this.fhdSubContsId;
 	}
 
 	/**
-	 * @param fhdSubContsId the fhdSubContsId to set
+	 * @param fhdSubContsId
+	 *            the fhdSubContsId to set
 	 */
 	public void setFhdSubContsId(String fhdSubContsId) {
 		this.fhdSubContsId = fhdSubContsId;
@@ -1517,11 +1548,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the fhdProdVer
 	 */
 	public String getFhdProdVer() {
-		return fhdProdVer;
+		return this.fhdProdVer;
 	}
 
 	/**
-	 * @param fhdProdVer the fhdProdVer to set
+	 * @param fhdProdVer
+	 *            the fhdProdVer to set
 	 */
 	public void setFhdProdVer(String fhdProdVer) {
 		this.fhdProdVer = fhdProdVer;
@@ -1531,11 +1563,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the fhdFileSize
 	 */
 	public String getFhdFileSize() {
-		return fhdFileSize;
+		return this.fhdFileSize;
 	}
 
 	/**
-	 * @param fhdFileSize the fhdFileSize to set
+	 * @param fhdFileSize
+	 *            the fhdFileSize to set
 	 */
 	public void setFhdFileSize(String fhdFileSize) {
 		this.fhdFileSize = fhdFileSize;
@@ -1545,11 +1578,12 @@ public class VodDetail extends CommonInfo {
 	 * @return the fhdDpPixel
 	 */
 	public String getFhdDpPixel() {
-		return fhdDpPixel;
+		return this.fhdDpPixel;
 	}
 
 	/**
-	 * @param fhdDpPixel the fhdDpPixel to set
+	 * @param fhdDpPixel
+	 *            the fhdDpPixel to set
 	 */
 	public void setFhdDpPixel(String fhdDpPixel) {
 		this.fhdDpPixel = fhdDpPixel;
@@ -1559,21 +1593,38 @@ public class VodDetail extends CommonInfo {
 	 * @return the fhdDpPicRatio
 	 */
 	public String getFhdDpPicRatio() {
-		return fhdDpPicRatio;
+		return this.fhdDpPicRatio;
 	}
 
 	/**
-	 * @param fhdDpPicRatio the fhdDpPicRatio to set
+	 * @param fhdDpPicRatio
+	 *            the fhdDpPicRatio to set
 	 */
 	public void setFhdDpPicRatio(String fhdDpPicRatio) {
 		this.fhdDpPicRatio = fhdDpPicRatio;
 	}
 
 	public String getLikeYn() {
-		return likeYn;
+		return this.likeYn;
 	}
 
 	public void setLikeYn(String likeYn) {
 		this.likeYn = likeYn;
 	}
+
+	/**
+	 * @return the prodGrdExtraCd
+	 */
+	public String getProdGrdExtraCd() {
+		return this.prodGrdExtraCd;
+	}
+
+	/**
+	 * @param prodGrdExtraCd
+	 *            the prodGrdExtraCd to set
+	 */
+	public void setProdGrdExtraCd(String prodGrdExtraCd) {
+		this.prodGrdExtraCd = prodGrdExtraCd;
+	}
+
 }
