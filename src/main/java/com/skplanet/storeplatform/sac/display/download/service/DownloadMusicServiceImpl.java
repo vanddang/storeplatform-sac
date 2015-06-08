@@ -221,16 +221,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							}
 						}
 
-						this.log.info("----------------------------------------------------------------");
-						this.log.info("[DownloadMusicServiceImpl] prchsId : {}", historySacIn.getPrchsId());
-						this.log.info("[DownloadMusicServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
-						this.log.info("[DownloadMusicServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
-						this.log.info("[DownloadMusicServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
-						this.log.info("[DownloadMusicServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
-						this.log.info("[DownloadMusicServiceImpl] prchsState : {}", prchsState);
-						this.log.info("[DownloadMusicServiceImpl] prchsProdId : {}", historySacIn.getProdId());
-						this.log.info("[DownloadMusicServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
-						this.log.info("----------------------------------------------------------------");
+						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
 
 						metaInfo.setPurchaseId(prchsId);
 						metaInfo.setPurchaseProdId(prchsProdId);
@@ -365,6 +356,19 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {
+		log.info("----------------------------------------------------------------");
+		log.info("[DownloadMusicServiceImpl] prchsId : {}", historySacIn.getPrchsId());
+		log.info("[DownloadMusicServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
+		log.info("[DownloadMusicServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
+		log.info("[DownloadMusicServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
+		log.info("[DownloadMusicServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
+		log.info("[DownloadMusicServiceImpl] prchsState : {}", prchsState);
+		log.info("[DownloadMusicServiceImpl] prchsProdId : {}", historySacIn.getProdId());
+		log.info("[DownloadMusicServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
+		log.info("----------------------------------------------------------------");
 	}
 
 	@SuppressWarnings("rawtypes")

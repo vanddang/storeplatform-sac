@@ -223,17 +223,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							}
 						}
 
-						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("[DownloadVodServiceImpl] prchsId : {}", historySacIn.getPrchsId());
-						this.log.debug("[DownloadVodServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
-						this.log.debug("[DownloadVodServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
-						this.log.debug("[DownloadVodServiceImpl] dwldStartDt : {}", historySacIn.getDwldStartDt());
-						this.log.debug("[DownloadVodServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
-						this.log.debug("[DownloadVodServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
-						this.log.debug("[DownloadVodServiceImpl] prchsState : {}", prchsState);
-						this.log.debug("[DownloadVodServiceImpl] prchsProdId : {}", historySacIn.getProdId());
-						this.log.debug("[DownloadVodServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
-						this.log.debug("----------------------------------------------------------------");
+						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
 
 						metaInfo.setPurchaseId(prchsId);
 						metaInfo.setPurchaseProdId(prchsProdId);
@@ -413,6 +403,20 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadVodServiceImpl] prchsId : {}", historySacIn.getPrchsId());
+		log.debug("[DownloadVodServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
+		log.debug("[DownloadVodServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
+		log.debug("[DownloadVodServiceImpl] dwldStartDt : {}", historySacIn.getDwldStartDt());
+		log.debug("[DownloadVodServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
+		log.debug("[DownloadVodServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
+		log.debug("[DownloadVodServiceImpl] prchsState : {}", prchsState);
+		log.debug("[DownloadVodServiceImpl] prchsProdId : {}", historySacIn.getProdId());
+		log.debug("[DownloadVodServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
+		log.debug("----------------------------------------------------------------");
 	}
 
 	@SuppressWarnings("rawtypes")

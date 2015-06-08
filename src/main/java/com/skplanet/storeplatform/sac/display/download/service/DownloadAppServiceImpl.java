@@ -262,17 +262,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							}
 						}
 
-						log.debug("----------------------------------------------------------------");
-						log.debug("[DownloadAppServiceImpl] prchsId : {}", historySacIn.getPrchsId());
-						log.debug("[DownloadAppServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
-						log.debug("[DownloadAppServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
-						log.debug("[DownloadAppServiceImpl] dwldStartDt : {}", historySacIn.getDwldStartDt());
-						log.debug("[DownloadAppServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
-						log.debug("[DownloadAppServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
-						log.debug("[DownloadAppServiceImpl] prchsState : {}", prchsState);
-						log.debug("[DownloadAppServiceImpl] prchsProdId : {}", historySacIn.getProdId());
-						log.debug("[DownloadAppServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
-						log.debug("----------------------------------------------------------------");
+						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
 
 						metaInfo.setPurchaseId(prchsId);
 						metaInfo.setPurchaseProdId(prchsProdId);
@@ -463,6 +453,20 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadAppServiceImpl] prchsId : {}", historySacIn.getPrchsId());
+		log.debug("[DownloadAppServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
+		log.debug("[DownloadAppServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
+		log.debug("[DownloadAppServiceImpl] dwldStartDt : {}", historySacIn.getDwldStartDt());
+		log.debug("[DownloadAppServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
+		log.debug("[DownloadAppServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
+		log.debug("[DownloadAppServiceImpl] prchsState : {}", prchsState);
+		log.debug("[DownloadAppServiceImpl] prchsProdId : {}", historySacIn.getProdId());
+		log.debug("[DownloadAppServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
+		log.debug("----------------------------------------------------------------");
 	}
 
 	@SuppressWarnings("rawtypes")

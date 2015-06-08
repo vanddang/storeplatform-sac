@@ -239,19 +239,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							}
 						}
 
-						logger.debug("----------------------------------------------------------------");
-						logger.debug("[DownloadEbookLog] prchsId : {}", historySacIn.getPrchsId());
-						logger.debug("[DownloadEbookLog] prchsDt : {}", historySacIn.getPrchsDt());
-						logger.debug("[DownloadEbookLog] useExprDt : {}", historySacIn.getUseExprDt());
-						logger.debug("[DownloadEbookLog] dwldStartDt : {}", historySacIn.getDwldStartDt());
-						logger.debug("[DownloadEbookLog] dwldExprDt : {}", historySacIn.getDwldExprDt());
-						logger.debug("[DownloadEbookLog] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
-						logger.debug("[DownloadEbookLog] prchsState : {}", prchsState);
-						logger.debug("[DownloadEbookLog] prchsProdId : {}", historySacIn.getProdId());
-						logger.debug("[DownloadEbookLog] prchsPrice : {}", historySacIn.getProdAmt());
-						logger.debug("[DownloadEbookLog] drmYn : {}", historySacIn.getDrmYn());
-						logger.debug("[DownloadEbookLog] permitDeviceYn : {}", historySacIn.getPermitDeviceYn());
-						logger.debug("----------------------------------------------------------------");
+						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
 
 						metaInfo.setPurchaseId(prchsId);
 						metaInfo.setPurchaseProdId(prchsProdId);
@@ -374,6 +362,22 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {
+		logger.debug("----------------------------------------------------------------");
+		logger.debug("[DownloadEbookLog] prchsId : {}", historySacIn.getPrchsId());
+		logger.debug("[DownloadEbookLog] prchsDt : {}", historySacIn.getPrchsDt());
+		logger.debug("[DownloadEbookLog] useExprDt : {}", historySacIn.getUseExprDt());
+		logger.debug("[DownloadEbookLog] dwldStartDt : {}", historySacIn.getDwldStartDt());
+		logger.debug("[DownloadEbookLog] dwldExprDt : {}", historySacIn.getDwldExprDt());
+		logger.debug("[DownloadEbookLog] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
+		logger.debug("[DownloadEbookLog] prchsState : {}", prchsState);
+		logger.debug("[DownloadEbookLog] prchsProdId : {}", historySacIn.getProdId());
+		logger.debug("[DownloadEbookLog] prchsPrice : {}", historySacIn.getProdAmt());
+		logger.debug("[DownloadEbookLog] drmYn : {}", historySacIn.getDrmYn());
+		logger.debug("[DownloadEbookLog] permitDeviceYn : {}", historySacIn.getPermitDeviceYn());
+		logger.debug("----------------------------------------------------------------");
 	}
 
 	@SuppressWarnings("rawtypes")

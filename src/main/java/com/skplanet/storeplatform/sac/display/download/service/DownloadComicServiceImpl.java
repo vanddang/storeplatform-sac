@@ -220,19 +220,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                             }
                         }
 
-                        logger.debug("----------------------------------------------------------------");
-                        logger.debug("[DownloadComicLog] prchsId : {}", historySacIn.getPrchsId());
-                        logger.debug("[DownloadComicLog] prchsDt : {}", historySacIn.getPrchsDt());
-                        logger.debug("[DownloadComicLog] useExprDt : {}", historySacIn.getUseExprDt());
-                        logger.debug("[DownloadComicLog] dwldStartDt : {}", historySacIn.getDwldStartDt());
-                        logger.debug("[DownloadComicLog] dwldExprDt : {}", historySacIn.getDwldExprDt());
-                        logger.debug("[DownloadComicLog] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
-                        logger.debug("[DownloadComicLog] prchsState : {}", prchsState);
-                        logger.debug("[DownloadComicLog] prchsProdId : {}", historySacIn.getProdId());
-                        logger.debug("[DownloadComicLog] prchsPrice : {}", historySacIn.getProdAmt());
-                        logger.debug("[DownloadComicLog] drmYn : {}", historySacIn.getDrmYn());
-                        logger.debug("[DownloadComicLog] permitDeviceYn : {}", historySacIn.getPermitDeviceYn());
-                        logger.debug("----------------------------------------------------------------");
+                        loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
 
                         metaInfo.setPurchaseId(prchsId);
                         metaInfo.setPurchaseProdId(prchsProdId);
@@ -351,6 +339,22 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         return comicRes;
     }
+
+	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {
+		logger.debug("----------------------------------------------------------------");
+		logger.debug("[DownloadComicLog] prchsId : {}", historySacIn.getPrchsId());
+		logger.debug("[DownloadComicLog] prchsDt : {}", historySacIn.getPrchsDt());
+		logger.debug("[DownloadComicLog] useExprDt : {}", historySacIn.getUseExprDt());
+		logger.debug("[DownloadComicLog] dwldStartDt : {}", historySacIn.getDwldStartDt());
+		logger.debug("[DownloadComicLog] dwldExprDt : {}", historySacIn.getDwldExprDt());
+		logger.debug("[DownloadComicLog] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
+		logger.debug("[DownloadComicLog] prchsState : {}", prchsState);
+		logger.debug("[DownloadComicLog] prchsProdId : {}", historySacIn.getProdId());
+		logger.debug("[DownloadComicLog] prchsPrice : {}", historySacIn.getProdAmt());
+		logger.debug("[DownloadComicLog] drmYn : {}", historySacIn.getDrmYn());
+		logger.debug("[DownloadComicLog] permitDeviceYn : {}", historySacIn.getPermitDeviceYn());
+		logger.debug("----------------------------------------------------------------");
+	}
 
 	@SuppressWarnings("rawtypes")
 	private String getDownloadPurchaseStateByDbTime(String dwldStartDt, String dwldExprDt) {
