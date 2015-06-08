@@ -153,7 +153,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			// 구매내역 조회를 위한 생성자
 			ProductListSacIn productListSacIn = null;
 			List<ProductListSacIn> productList = null;
-			HistoryListSacInReq historyReq = null;
 			HistoryListSacInRes historyRes = null;
 			boolean purchaseFlag = true;
 
@@ -170,18 +169,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				productListSacIn.setProdId(metaInfo.getPlayProdId());
 				productList.add(productListSacIn);
 
-				historyReq = new HistoryListSacInReq();
-				historyReq.setTenantId(downloadVodSacReq.getTenantId());
-				historyReq.setUserKey(downloadVodSacReq.getUserKey());
-				historyReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
-				historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-				historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-				historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-				historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
-				historyReq.setEndDt(sysDate);
-				historyReq.setOffset(1);
-				historyReq.setCount(1000);
-				historyReq.setProductList(productList);
+				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadVodSacReq, sysDate, productList);
 
 				this.log.debug("----------------------------------------------------------------");
 				this.log.debug("********************	구매 요청 파라미터	***************************");
@@ -468,6 +456,22 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private HistoryListSacInReq makeHistoryListSacInReq(DownloadVodSacReq downloadVodSacReq, String sysDate, List<ProductListSacIn> productList) {
+		HistoryListSacInReq historyReq = new HistoryListSacInReq();
+		historyReq.setTenantId(downloadVodSacReq.getTenantId());
+		historyReq.setUserKey(downloadVodSacReq.getUserKey());
+		historyReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
+		historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+		historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+		historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+		historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
+		historyReq.setEndDt(sysDate);
+		historyReq.setOffset(1);
+		historyReq.setCount(1000);
+		historyReq.setProductList(productList);
+		return historyReq;
 	}
 
 	/**

@@ -190,7 +190,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			// 구매내역 조회를 위한 생성자
 			ProductListSacIn productListSacIn = null;
 			List<ProductListSacIn> productList = null;
-			HistoryListSacInReq historyReq = null;
 			HistoryListSacInRes historyRes = null;
 			boolean purchasePassFlag = true;
 
@@ -207,18 +206,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				productListSacIn.setProdId(metaInfo.getPlayProdId());
 				productList.add(productListSacIn);
 
-				historyReq = new HistoryListSacInReq();
-				historyReq.setTenantId(ebookReq.getTenantId());
-				historyReq.setUserKey(ebookReq.getUserKey());
-				historyReq.setDeviceKey(ebookReq.getDeviceKey());
-				historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-				historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-				historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-				historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
-				historyReq.setEndDt(sysDate);
-				historyReq.setOffset(1);
-				historyReq.setCount(1000);
-				historyReq.setProductList(productList);
+				HistoryListSacInReq historyReq = makeHistoryListSacInReq(ebookReq, sysDate, productList);
 
 				logger.debug("----------------------------------------------------------------");
 				logger.debug("[DownloadEbookLog] 구매내역 조회 요청 파라미터");
@@ -435,5 +423,21 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private HistoryListSacInReq makeHistoryListSacInReq(DownloadEbookSacReq ebookReq, String sysDate, List<ProductListSacIn> productList) {
+		HistoryListSacInReq historyReq = new HistoryListSacInReq();
+		historyReq.setTenantId(ebookReq.getTenantId());
+		historyReq.setUserKey(ebookReq.getUserKey());
+		historyReq.setDeviceKey(ebookReq.getDeviceKey());
+		historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+		historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+		historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+		historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
+		historyReq.setEndDt(sysDate);
+		historyReq.setOffset(1);
+		historyReq.setCount(1000);
+		historyReq.setProductList(productList);
+		return historyReq;
 	}
 }
