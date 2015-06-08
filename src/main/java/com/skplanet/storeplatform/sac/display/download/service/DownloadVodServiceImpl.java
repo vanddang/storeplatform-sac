@@ -268,12 +268,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 								this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
 								long end = System.currentTimeMillis();
-								this.log.debug(
-										"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
-										(end - start));
+								this.log.debug("##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",(end - start));
 								this.log.debug("---------------------------------------------------------------");
-								this.log.debug("[DownloadVodServiceImpl] deviceRes.getDeviceId{} : "
-										+ deviceRes.getDeviceId());
+								this.log.debug("[DownloadVodServiceImpl] deviceRes.getDeviceId : {}", deviceRes.getDeviceId());
 								this.log.debug("---------------------------------------------------------------");
 							} catch (Exception ex) {
 								memberFlag = false;
