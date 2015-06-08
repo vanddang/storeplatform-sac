@@ -37,6 +37,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDevic
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -273,18 +274,18 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				if (historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 
-					for (int i = 0; i < historyRes.getTotalCnt(); i++) {
-						prchsId = historyRes.getHistoryList().get(i).getPrchsId();
-						prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
-						useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
-						dwldStartDt = historyRes.getHistoryList().get(i).getDwldStartDt();
-						dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
-						prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
-						prchsProdId = historyRes.getHistoryList().get(i).getProdId();
-						puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
-						drmYn = historyRes.getHistoryList().get(i).getDrmYn();
-						permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
-						purchaseHide = historyRes.getHistoryList().get(i).getHidingYn();
+					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
+						prchsId = historySacIn.getPrchsId();
+						prchsDt = historySacIn.getPrchsDt();
+						useExprDt = historySacIn.getUseExprDt();
+						dwldStartDt = historySacIn.getDwldStartDt();
+						dwldExprDt = historySacIn.getDwldExprDt();
+						prchsCaseCd = historySacIn.getPrchsCaseCd();
+						prchsProdId = historySacIn.getProdId();
+						puchsPrice = historySacIn.getProdAmt();
+						drmYn = historySacIn.getDrmYn();
+						permitDeviceYn = historySacIn.getPermitDeviceYn();
+						purchaseHide = historySacIn.getHidingYn();
 
 						// 구매상태 확인
 						downloadAppSacReq.setPrchsDt(prchsDt);

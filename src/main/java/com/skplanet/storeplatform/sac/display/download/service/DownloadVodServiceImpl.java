@@ -246,7 +246,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				if (historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 
-					//for (int i = 0; i < historyRes.getTotalCnt(); i++) {
 					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
 						prchsId = historySacIn.getPrchsId();
 						prchsDt = historySacIn.getPrchsDt();
