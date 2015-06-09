@@ -249,37 +249,35 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							this.log.debug("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
 							this.log.debug("----------------------------------------------------------------");
 
-							if (memberFlag && deviceRes != null) {
-								// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-								if ("Y".equals(deviceRes.getAuthYn())) {
-									String deviceId = deviceRes.getDeviceId();
-									String deviceIdType = this.commonService.getDeviceIdType(deviceId);
+							// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+							if (!"Y".equals(deviceRes.getAuthYn())) {
+								log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
+							} else if (memberFlag && deviceRes != null) {
+								String deviceId = deviceRes.getDeviceId();
+								String deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
-									metaInfo.setExpiredDate(reqExpireDate);
-									metaInfo.setUseExprDt(useExprDt);
-									metaInfo.setUserKey(userKey);
-									metaInfo.setDeviceKey(deviceKey);
-									metaInfo.setDeviceType(deviceIdType);
-									metaInfo.setDeviceSubKey(deviceId);
-									metaInfo.setPurchaseHide(purchaseHide);
-									metaInfo.setUpdateAlarm(updateAlarm);
+								metaInfo.setExpiredDate(reqExpireDate);
+								metaInfo.setUseExprDt(useExprDt);
+								metaInfo.setUserKey(userKey);
+								metaInfo.setDeviceKey(deviceKey);
+								metaInfo.setDeviceType(deviceIdType);
+								metaInfo.setDeviceSubKey(deviceId);
+								metaInfo.setPurchaseHide(purchaseHide);
+								metaInfo.setUpdateAlarm(updateAlarm);
 
-									mapProdChrg(metaInfo, prchsProdId);
-									mapDrmYn(metaInfo, historySacIn);
+								mapProdChrg(metaInfo, prchsProdId);
+								mapDrmYn(metaInfo, historySacIn);
 
-									// 암호화 정보 (JSON)
-									metaInfo.setSystemId(tenantHeader.getSystemId());
-                                    metaInfo.setTenantId(tenantHeader.getTenantId());
-                                    Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId, supportFhdVideo);
-									encryptionList.add(encryption);
+								// 암호화 정보 (JSON)
+								metaInfo.setSystemId(tenantHeader.getSystemId());
+                                metaInfo.setTenantId(tenantHeader.getTenantId());
+                                Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId, supportFhdVideo);
+								encryptionList.add(encryption);
 
-									this.log.debug("-------------------------------------------------------------");
-									this.log.debug("[DownloadVodServiceImpl] token : {}", encryption.getToken());
-									this.log.debug("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-									this.log.debug("--------------------------------------------------------------");
-								} else {
-									this.log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "+ deviceRes.getDeviceId());
-								}
+								this.log.debug("-------------------------------------------------------------");
+								this.log.debug("[DownloadVodServiceImpl] token : {}", encryption.getToken());
+								this.log.debug("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+								this.log.debug("--------------------------------------------------------------");
 							}
 							// 구매 정보
 							product.setPurchaseList(purchaseList);

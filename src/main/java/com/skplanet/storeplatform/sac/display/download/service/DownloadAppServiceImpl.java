@@ -286,73 +286,71 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							log.debug("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
 							log.debug("----------------------------------------------------------------");
 
-							if (memberFlag && deviceRes != null) {
-								// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-								if ("Y".equals(deviceRes.getAuthYn())) {
-									String deviceId = deviceRes.getDeviceId();
-									String deviceTelecom = deviceRes.getDeviceTelecom();
-									String deviceIdType = commonService.getDeviceIdType(deviceId);
+							// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+							if (!"Y".equals(deviceRes.getAuthYn())) {
+								log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
+							} else if (memberFlag && deviceRes != null) {
+								String deviceId = deviceRes.getDeviceId();
+								String deviceTelecom = deviceRes.getDeviceTelecom();
+								String deviceIdType = commonService.getDeviceIdType(deviceId);
 
-									metaInfo.setExpiredDate(reqExpireDate);
-									metaInfo.setUseExprDt(useExprDt);
-									metaInfo.setUserKey(userKey);
-									metaInfo.setDeviceKey(deviceKey);
-									metaInfo.setDeviceType(deviceIdType);
-									metaInfo.setDeviceSubKey(deviceId);
-									metaInfo.setPurchaseHide(purchaseHide);
+								metaInfo.setExpiredDate(reqExpireDate);
+								metaInfo.setUseExprDt(useExprDt);
+								metaInfo.setUserKey(userKey);
+								metaInfo.setDeviceKey(deviceKey);
+								metaInfo.setDeviceType(deviceIdType);
+								metaInfo.setDeviceSubKey(deviceId);
+								metaInfo.setPurchaseHide(purchaseHide);
 
-									// 단말의 통신사가 SKT 일때만 적용
-									if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
-										// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
-										if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID
-												.equals(metaInfo.getTopMenuId())
-												&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
+								// 단말의 통신사가 SKT 일때만 적용
+								if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
+									// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
+									if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID
+											.equals(metaInfo.getTopMenuId())
+											&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
 
-											try {
-												UapsEcReq uapsEcReq = new UapsEcReq();
-												uapsEcReq.setDeviceId(deviceId);
-												uapsEcReq.setType("mdn");
-												log.debug("----------------------------------------------------------------");
-												log.debug("********************UAPS 정보 조회************************");
-												log.debug("[DownloadAppServiceImpl] DeviceId : {}",	uapsEcReq.getDeviceId());
-												log.debug("[DownloadAppServiceImpl] Type : {}",uapsEcReq.getType());
-												log.debug("----------------------------------------------------------------");
+										try {
+											UapsEcReq uapsEcReq = new UapsEcReq();
+											uapsEcReq.setDeviceId(deviceId);
+											uapsEcReq.setType("mdn");
+											log.debug("----------------------------------------------------------------");
+											log.debug("********************UAPS 정보 조회************************");
+											log.debug("[DownloadAppServiceImpl] DeviceId : {}",	uapsEcReq.getDeviceId());
+											log.debug("[DownloadAppServiceImpl] Type : {}",uapsEcReq.getType());
+											log.debug("----------------------------------------------------------------");
 
-												UserEcRes uapsEcRes = uapsSCI.getMappingInfo(uapsEcReq);
+											UserEcRes uapsEcRes = uapsSCI.getMappingInfo(uapsEcReq);
 
-												for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-													log.debug("[DownloadAppServiceImpl] serviceCd	:{}", uapsEcRes.getServiceCD()[k]);
-													if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING
-															.equals(uapsEcRes.getServiceCD()[k])) {
-														metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
+											for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
+												log.debug("[DownloadAppServiceImpl] serviceCd	:{}", uapsEcRes.getServiceCD()[k]);
+												if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING
+														.equals(uapsEcRes.getServiceCD()[k])) {
+													metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
 
-														tingMemberFlag = true;
-													}
+													tingMemberFlag = true;
 												}
-
-											} catch (Exception e) {
-												log.error("UAPS 조회 연동 중 오류가 발생하였습니다.\n", e);
-												// 예외 무시
 											}
+
+										} catch (Exception e) {
+											log.error("UAPS 조회 연동 중 오류가 발생하였습니다.\n", e);
+											// 예외 무시
 										}
 									}
-
-									// 암호화 정보 (JSON)
-									genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
-
-                                    // Push 강제 업그레이드인 경우
-                                    generateMetaForPushForceUpgrade(metaInfo, downloadAppSacReq.getPacketFreeYn());
-
-                                    Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
-                                    encryptionList.add(encryption);
-
-									log.debug("-------------------------------------------------------------");
-									log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
-									log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-									log.debug("-------------------------------------------------------------");
-								} else {
-									log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 								}
+
+								// 암호화 정보 (JSON)
+								genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
+
+                                // Push 강제 업그레이드인 경우
+                                generateMetaForPushForceUpgrade(metaInfo, downloadAppSacReq.getPacketFreeYn());
+
+                                Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+                                encryptionList.add(encryption);
+
+								log.debug("-------------------------------------------------------------");
+								log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
+								log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+								log.debug("-------------------------------------------------------------");
 							}
 							product.setPurchaseList(purchaseList);
 

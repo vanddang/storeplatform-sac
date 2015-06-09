@@ -242,33 +242,31 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							log.debug("[DownloadMusicServiceImpl] memberFlag	:	{}", memberFlag);
 							log.debug("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
 							log.debug("----------------------------------------------------------------");
-							if (memberFlag && deviceRes != null) {
-								// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-								if ("Y".equals(deviceRes.getAuthYn())) {
-									String deviceId = deviceRes.getDeviceId();
-									String deviceIdType = this.commonService.getDeviceIdType(deviceId);
+							// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+							if (!"Y".equals(deviceRes.getAuthYn())) {
+								log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
+							} else if (memberFlag && deviceRes != null) {
+								String deviceId = deviceRes.getDeviceId();
+								String deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
-									metaInfo.setExpiredDate(reqExpireDate);
-									metaInfo.setUseExprDt(useExprDt);
-									metaInfo.setUserKey(userKey);
-									metaInfo.setDeviceKey(deviceKey);
-									metaInfo.setDeviceType(deviceIdType);
-									metaInfo.setDeviceSubKey(deviceId);
-									metaInfo.setPurchaseHide(purchaseHide);
-									metaInfo.setUpdateAlarm(updateAlarm);
+								metaInfo.setExpiredDate(reqExpireDate);
+								metaInfo.setUseExprDt(useExprDt);
+								metaInfo.setUserKey(userKey);
+								metaInfo.setDeviceKey(deviceKey);
+								metaInfo.setDeviceType(deviceIdType);
+								metaInfo.setDeviceSubKey(deviceId);
+								metaInfo.setPurchaseHide(purchaseHide);
+								metaInfo.setUpdateAlarm(updateAlarm);
 
-									// 암호화 정보 (JSON)
-									metaInfo.setSystemId(tenantHeader.getSystemId());
-                                    Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
-									encryptionList.add(encryption);
+								// 암호화 정보 (JSON)
+								metaInfo.setSystemId(tenantHeader.getSystemId());
+                                Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
+								encryptionList.add(encryption);
 
-									log.debug("-----------------------------------------------------------");
-									log.debug("[DownloadEbookLog] token : {}", encryption.getToken());
-									log.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
-									log.debug("-----------------------------------------------------------");
-								} else {
-									log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-								}
+								log.debug("-----------------------------------------------------------");
+								log.debug("[DownloadEbookLog] token : {}", encryption.getToken());
+								log.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
+								log.debug("-----------------------------------------------------------");
 							}
 							// 구매 정보
 							product.setPurchaseList(purchaseList);
