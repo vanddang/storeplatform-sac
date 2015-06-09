@@ -241,12 +241,12 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
 
-						metaInfo.setPurchaseId(prchsId);
-						metaInfo.setPurchaseProdId(prchsProdId);
-						metaInfo.setPurchaseDt(prchsDt);
+						metaInfo.setPurchaseId(historySacIn.getPrchsId());
+						metaInfo.setPurchaseProdId(historySacIn.getProdId());
+						metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
 						metaInfo.setPurchaseState(prchsState);
-						metaInfo.setPurchaseDwldExprDt(dwldExprDt);
-						metaInfo.setPurchasePrice(Integer.parseInt(prchsPrice));
+						metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
+						metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
 
 						// 구매 정보
 						purchaseList.add(commonMetaInfoGenerator.generatePurchase(metaInfo));
