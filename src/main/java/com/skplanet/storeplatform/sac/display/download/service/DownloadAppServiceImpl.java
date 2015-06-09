@@ -302,41 +302,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								metaInfo.setDeviceSubKey(deviceId);
 								metaInfo.setPurchaseHide(purchaseHide);
 
-								// 단말의 통신사가 SKT 일때만 적용
-								if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
-									// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
-									if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID
-											.equals(metaInfo.getTopMenuId())
-											&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
-
-										try {
-											UapsEcReq uapsEcReq = new UapsEcReq();
-											uapsEcReq.setDeviceId(deviceId);
-											uapsEcReq.setType("mdn");
-											log.debug("----------------------------------------------------------------");
-											log.debug("********************UAPS 정보 조회************************");
-											log.debug("[DownloadAppServiceImpl] DeviceId : {}",	uapsEcReq.getDeviceId());
-											log.debug("[DownloadAppServiceImpl] Type : {}",uapsEcReq.getType());
-											log.debug("----------------------------------------------------------------");
-
-											UserEcRes uapsEcRes = uapsSCI.getMappingInfo(uapsEcReq);
-
-											for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-												log.debug("[DownloadAppServiceImpl] serviceCd	:{}", uapsEcRes.getServiceCD()[k]);
-												if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING
-														.equals(uapsEcRes.getServiceCD()[k])) {
-													metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
-
-													tingMemberFlag = true;
-												}
-											}
-
-										} catch (Exception e) {
-											log.error("UAPS 조회 연동 중 오류가 발생하였습니다.\n", e);
-											// 예외 무시
-										}
-									}
-								}
+								tingMemberFlag = getTingMemberFlag(deviceId, deviceTelecom, deviceIdType, metaInfo);
 
 								// 암호화 정보 (JSON)
 								genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
@@ -382,7 +348,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		/************************************************************************************************
 		 * Seed App 정보
 		 ************************************************************************************************/
-
 		component.setIdentifierList(appInfoGenerator.generateComponentIdentifierList(metaInfo));
 		component.setGameCenterVerCd(StringUtils.defaultString(metaInfo.getGameCentrVerCd()));
 		component.setUseYn(metaInfo.getSeedUseYn());
@@ -392,7 +357,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		/************************************************************************************************
 		 * 상품 정보
 		 ************************************************************************************************/
-
 		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,metaInfo.getProdId()));
 		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,metaInfo.getProdId()));
 		product.setIdentifierList(identifierList); // 상품 Id
@@ -421,6 +385,42 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private boolean getTingMemberFlag(String deviceId, String deviceTelecom, String deviceIdType, MetaInfo metaInfo) {
+		// 단말의 통신사가 SKT 일때만 적용
+		if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
+			// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
+			if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
+					&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
+
+				try {
+					UapsEcReq uapsEcReq = new UapsEcReq();
+					uapsEcReq.setDeviceId(deviceId);
+					uapsEcReq.setType("mdn");
+					log.debug("----------------------------------------------------------------");
+					log.debug("********************UAPS 정보 조회************************");
+					log.debug("[DownloadAppServiceImpl] DeviceId : {}",	uapsEcReq.getDeviceId());
+					log.debug("[DownloadAppServiceImpl] Type : {}",uapsEcReq.getType());
+					log.debug("----------------------------------------------------------------");
+
+					UserEcRes uapsEcRes = uapsSCI.getMappingInfo(uapsEcReq);
+
+					for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
+						log.debug("[DownloadAppServiceImpl] serviceCd	:{}", uapsEcRes.getServiceCD()[k]);
+						if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING.equals(uapsEcRes.getServiceCD()[k])) {
+							metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
+							return true;
+						}
+					}
+
+				} catch (Exception e) {
+					log.error("UAPS 조회 연동 중 오류가 발생하였습니다.\n", e);
+					// 예외 무시
+				}
+			}
+		}
+		return false;
 	}
 
 	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadAppSacReq downloadAppSacReq, TenantHeader tenantHeader) {
