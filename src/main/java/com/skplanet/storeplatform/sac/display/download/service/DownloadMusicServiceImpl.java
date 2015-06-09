@@ -123,11 +123,11 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		Product product = new Product();
 		Music music = null;
 
-		this.log.info("----------------------------------------------------------------");
-		this.log.info("[DownloadMusicServiceImpl] productId : {}", productId);
-		this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", deviceKey);
-		this.log.info("[DownloadMusicServiceImpl] userKey : {}", userKey);
-		this.log.info("----------------------------------------------------------------");
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadMusicServiceImpl] productId : {}", productId);
+		log.debug("[DownloadMusicServiceImpl] deviceKey : {}", deviceKey);
+		log.debug("[DownloadMusicServiceImpl] userKey : {}", userKey);
+		log.debug("----------------------------------------------------------------");
 
         MetaInfo metaInfo;
 
@@ -159,18 +159,18 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 			} catch (Exception ex) {
 				purchaseFlag = false;
-				this.log.info("[DownloadMusicServiceImpl] Purchase History Search Exception : {}");
-				this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+				log.debug("[DownloadMusicServiceImpl] Purchase History Search Exception : {}");
+				log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 				// throw new StorePlatformException("SAC_DSP_2001", ex);
 			}
 
-			this.log.info("---------------------------------------------------------------------");
-			this.log.info("[DownloadMusicServiceImpl] purchaseFlag :{}", purchaseFlag);
-			this.log.info("[DownloadMusicServiceImpl] historyRes :{}", historyRes);
+			log.debug("---------------------------------------------------------------------");
+			log.debug("[DownloadMusicServiceImpl] purchaseFlag :{}", purchaseFlag);
+			log.debug("[DownloadMusicServiceImpl] historyRes :{}", historyRes);
 			if (purchaseFlag && historyRes != null) {
 
-				this.log.info("[DownloadMusicServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
-				this.log.info("---------------------------------------------------------------------");
+				log.debug("[DownloadMusicServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
+				log.debug("---------------------------------------------------------------------");
 
 				String useExprDt = null; // 이용 만료일시
 				String dwldStartDt = null; // 다운로드 시작일시
@@ -233,15 +233,15 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 							} catch (Exception ex) {
 								memberFlag = false;
-								this.log.info("[DownloadMusicServiceImpl] Device Search Exception : {}");
-								this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+								log.debug("[DownloadMusicServiceImpl] Device Search Exception : {}");
+								log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 								// throw new StorePlatformException("SAC_DSP_1001", ex);
 							}
 
-							this.log.info("----------------------------------------------------------------");
-							this.log.info("[DownloadMusicServiceImpl] memberFlag	:	{}", memberFlag);
-							this.log.info("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
-							this.log.info("----------------------------------------------------------------");
+							log.debug("----------------------------------------------------------------");
+							log.debug("[DownloadMusicServiceImpl] memberFlag	:	{}", memberFlag);
+							log.debug("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
+							log.debug("----------------------------------------------------------------");
 							if (memberFlag && deviceRes != null) {
 								// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
 								if ("Y".equals(deviceRes.getAuthYn())) {
@@ -262,12 +262,12 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
                                     Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
 									encryptionList.add(encryption);
 
-									this.log.debug("-----------------------------------------------------------");
-									this.log.debug("[DownloadEbookLog] token : {}", encryption.getToken());
-									this.log.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
-									this.log.debug("-----------------------------------------------------------");
+									log.debug("-----------------------------------------------------------");
+									log.debug("[DownloadEbookLog] token : {}", encryption.getToken());
+									log.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
+									log.debug("-----------------------------------------------------------");
 								} else {
-									this.log.info("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
+									log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 								}
 							}
 							// 구매 정보
@@ -327,25 +327,25 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		deviceReq.setUserKey(downloadMusicSacReq.getUserKey());
 		deviceReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
 		deviceReq.setTenantId(tenantHeader.getTenantId());
-		this.log.info("----------------------------------------------------------------");
-		this.log.info("*******************회원 단말 정보 조회 파라미터*********************");
-		this.log.info("[DownloadMusicServiceImpl] userKey : {}", deviceReq.getUserKey());
-		this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
-		this.log.info("----------------------------------------------------------------");
+		log.debug("----------------------------------------------------------------");
+		log.debug("*******************회원 단말 정보 조회 파라미터*********************");
+		log.debug("[DownloadMusicServiceImpl] userKey : {}", deviceReq.getUserKey());
+		log.debug("[DownloadMusicServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+		log.debug("----------------------------------------------------------------");
 		return deviceReq;
 	}
 
 	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {
-		log.info("----------------------------------------------------------------");
-		log.info("[DownloadMusicServiceImpl] prchsId : {}", historySacIn.getPrchsId());
-		log.info("[DownloadMusicServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
-		log.info("[DownloadMusicServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
-		log.info("[DownloadMusicServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
-		log.info("[DownloadMusicServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
-		log.info("[DownloadMusicServiceImpl] prchsState : {}", prchsState);
-		log.info("[DownloadMusicServiceImpl] prchsProdId : {}", historySacIn.getProdId());
-		log.info("[DownloadMusicServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
-		log.info("----------------------------------------------------------------");
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadMusicServiceImpl] prchsId : {}", historySacIn.getPrchsId());
+		log.debug("[DownloadMusicServiceImpl] prchsDt : {}", historySacIn.getPrchsDt());
+		log.debug("[DownloadMusicServiceImpl] useExprDt : {}", historySacIn.getUseExprDt());
+		log.debug("[DownloadMusicServiceImpl] dwldExprDt : {}", historySacIn.getDwldExprDt());
+		log.debug("[DownloadMusicServiceImpl] prchsCaseCd : {}", historySacIn.getPrchsCaseCd());
+		log.debug("[DownloadMusicServiceImpl] prchsState : {}", prchsState);
+		log.debug("[DownloadMusicServiceImpl] prchsProdId : {}", historySacIn.getProdId());
+		log.debug("[DownloadMusicServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
+		log.debug("----------------------------------------------------------------");
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -367,19 +367,19 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 	}
 
 	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {
-		this.log.info("----------------------------------------------------------------");
-		this.log.info("********************	구매 요청 파라미터	***************************");
-		this.log.info("[DownloadMusicServiceImpl] tenantId : {}", historyReq.getTenantId());
-		this.log.info("[DownloadMusicServiceImpl] userKey : {}", historyReq.getUserKey());
-		this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
-		this.log.info("[DownloadMusicServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-		this.log.info("[DownloadMusicServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
-		this.log.info("[DownloadMusicServiceImpl] startDt : {}", historyReq.getStartDt());
-		this.log.info("[DownloadMusicServiceImpl] endDt : {}", historyReq.getEndDt());
-		this.log.info("[DownloadMusicServiceImpl] offset : {}", historyReq.getOffset());
-		this.log.info("[DownloadMusicServiceImpl] count : {}", historyReq.getCount());
-		this.log.info("[DownloadMusicServiceImpl] prodId : {}", productList.get(0).getProdId());
-		this.log.info("----------------------------------------------------------------");
+		log.debug("----------------------------------------------------------------");
+		log.debug("********************	구매 요청 파라미터	***************************");
+		log.debug("[DownloadMusicServiceImpl] tenantId : {}", historyReq.getTenantId());
+		log.debug("[DownloadMusicServiceImpl] userKey : {}", historyReq.getUserKey());
+		log.debug("[DownloadMusicServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+		log.debug("[DownloadMusicServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+		log.debug("[DownloadMusicServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+		log.debug("[DownloadMusicServiceImpl] startDt : {}", historyReq.getStartDt());
+		log.debug("[DownloadMusicServiceImpl] endDt : {}", historyReq.getEndDt());
+		log.debug("[DownloadMusicServiceImpl] offset : {}", historyReq.getOffset());
+		log.debug("[DownloadMusicServiceImpl] count : {}", historyReq.getCount());
+		log.debug("[DownloadMusicServiceImpl] prodId : {}", productList.get(0).getProdId());
+		log.debug("----------------------------------------------------------------");
 	}
 
 	private HistoryListSacInReq makeHistoryListSacInReq(DownloadMusicSacReq downloadMusicSacReq, String sysDate, List<ProductListSacIn> productList) {
