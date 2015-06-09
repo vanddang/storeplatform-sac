@@ -204,10 +204,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
 				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadAppSacReq, sysDate, prodIdList);
 				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
-
-				// 구매내역 조회 실행
 				historyRes = historyInternalSCI.searchHistoryList(historyReq);
-
 			} catch (Exception ex) {
 				purchaseFlag = false;
 				log.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);

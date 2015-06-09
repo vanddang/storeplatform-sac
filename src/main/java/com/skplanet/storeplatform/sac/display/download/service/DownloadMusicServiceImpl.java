@@ -156,15 +156,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
 				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadMusicSacReq, sysDate, prodIdList);
 				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
-
-				// 구매내역 조회 실행
-				this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
-				long start = System.currentTimeMillis();
 				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
-				this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
-				long end = System.currentTimeMillis();
-				this.log.info("##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",(end - start));
-
 			} catch (Exception ex) {
 				purchaseFlag = false;
 				this.log.info("[DownloadMusicServiceImpl] Purchase History Search Exception : {}");
@@ -255,13 +247,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 								this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
 								this.log.info("----------------------------------------------------------------");
 
-								// 기기정보 조회
-								this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
-								long start = System.currentTimeMillis();
 								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-								this.log.info("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
-								long end = System.currentTimeMillis();
-								this.log.info("##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",(end - start));
 							} catch (Exception ex) {
 								memberFlag = false;
 								this.log.info("[DownloadMusicServiceImpl] Device Search Exception : {}");

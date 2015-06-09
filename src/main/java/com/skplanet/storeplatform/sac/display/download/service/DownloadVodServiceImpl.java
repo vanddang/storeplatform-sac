@@ -157,14 +157,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
 				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadVodSacReq, sysDate, prodIdList);
 				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
-				// 구매내역 조회 실행
-				this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
-				long start = System.currentTimeMillis();
 				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
-				this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
-				long end = System.currentTimeMillis();
-				this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms", (end - start));
-
 			} catch (Exception ex) {
 				purchaseFlag = false;
 				this.log.debug("[DownloadVodServiceImpl] Purchase History Search Exception : {}");
@@ -262,13 +255,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
 								this.log.debug("----------------------------------------------------------------");
 
-								// 기기정보 조회
-								this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
-								long start = System.currentTimeMillis();
 								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-								this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
-								long end = System.currentTimeMillis();
-								this.log.debug("##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",(end - start));
 								this.log.debug("---------------------------------------------------------------");
 								this.log.debug("[DownloadVodServiceImpl] deviceRes.getDeviceId : {}", deviceRes.getDeviceId());
 								this.log.debug("---------------------------------------------------------------");

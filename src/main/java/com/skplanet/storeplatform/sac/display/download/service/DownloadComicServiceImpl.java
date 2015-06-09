@@ -158,10 +158,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
             	List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
                 HistoryListSacInReq historyReq = makeHistoryListSacInReq(comicReq, sysDate, prodIdList);
                 loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
-
-                // 구매내역 조회 실행
                 historyRes = historyInternalSCI.searchHistoryList(historyReq);
-
             } catch (Exception ex) {
                 purchasePassFlag = false;
                 logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
@@ -253,9 +250,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                                 logger.debug("[DownloadComicLog] deviceKey : {}", deviceReq.getDeviceKey());
                                 logger.debug("--------------------------------------------------------------");
 
-                                // 기기정보 조회
                                 deviceRes = deviceSCI.searchDeviceId(deviceReq);
-
                             } catch (Exception ex) {
                                 memberPassFlag = false;
                                 logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
