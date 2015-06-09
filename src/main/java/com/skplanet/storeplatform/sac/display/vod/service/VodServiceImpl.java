@@ -39,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Badge;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
@@ -361,6 +362,9 @@ public class VodServiceImpl implements VodService {
 		Vod vod = this.mapVod(mapperVO, supportFhdVideo);
 		product.setVod(vod);
 
+		// Badge
+		Badge badge = this.getBadgeInfo(mapperVO);
+		product.setBadge(badge);
 		// tmembership 할인율
 		TmembershipDcInfo tmembershipDcInfo = this.commonService.getTmembershipDcRateForMenu(req.getTenantId(),
 				mapperVO.getTopMenuId());
@@ -397,7 +401,7 @@ public class VodServiceImpl implements VodService {
 	 */
 	private Title mapTitle(VodDetail mapperVO) {
 		Title title = new Title();
-		title.setPrefix(mapperVO.getVodTitlNm());
+		title.setPrefix(mapperVO.getPrefixTitle());
 		title.setText(mapperVO.getProdNm());
 		return title;
 	}
@@ -907,6 +911,8 @@ public class VodServiceImpl implements VodService {
 				// Accrual
 				Accrual accrual = this.mapAccrual(mapperVO);
 				subProduct.setAccrual(accrual);
+				// Badge
+				subProduct.setBadge(this.getBadgeInfo(mapperVO));
 
 				subProjectList.add(subProduct);
 			}
@@ -1066,6 +1072,20 @@ public class VodServiceImpl implements VodService {
 				salesStatus = "restricted";
 		}
 		return salesStatus;
+	}
+
+	/**
+	 * Badge 정보 리턴
+	 * 
+	 * @param mapperVO
+	 * @return
+	 */
+	private Badge getBadgeInfo(VodDetail mapperVO) {
+		Badge badge = new Badge();
+		badge.setBadgeCd(mapperVO.getBadgeCd());
+		badge.setBadgeText(mapperVO.getBadgeText());
+
+		return badge;
 	}
 
 }

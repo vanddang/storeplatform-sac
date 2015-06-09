@@ -297,6 +297,16 @@ public class VodDetail extends CommonInfo {
 	// 좋아요 선택 여부
 	private String likeYn;
 
+	/**
+	 * 2015.06.09 prefixTitle, badgeCd, badgeText 추가 , 이석희, I-S PLUS.
+	 */
+	/** VOD PREFIX 명 */
+	private String prefixTitle;
+	/** BADGE 코드 */
+	private String badgeCd;
+	/** BADGE 설명 */
+	private String badgeText;
+
 	public String getTopMenuId() {
 		return this.topMenuId;
 	}
@@ -1625,6 +1635,51 @@ public class VodDetail extends CommonInfo {
 	 */
 	public void setProdGrdExtraCd(String prodGrdExtraCd) {
 		this.prodGrdExtraCd = prodGrdExtraCd;
+	}
+
+	/**
+	 * @return the prefixTitle
+	 */
+	public String getPrefixTitle() {
+		return this.prefixTitle;
+	}
+
+	/**
+	 * @param prefixTitle
+	 *            the prefixTitle to set
+	 */
+	public void setPrefixTitle(String prefixTitle) {
+		this.prefixTitle = prefixTitle;
+	}
+
+	/**
+	 * @return the badgeCd
+	 */
+	public String getBadgeCd() {
+		return this.badgeCd;
+	}
+
+	/**
+	 * @param badgeCd
+	 *            the badgeCd to set
+	 */
+	public void setBadgeCd(String badgeCd) {
+		this.badgeCd = badgeCd;
+	}
+
+	/**
+	 * @return the badgeText
+	 */
+	public String getBadgeText() {
+		return this.badgeText;
+	}
+
+	/**
+	 * @param badgeText
+	 *            the badgeText to set
+	 */
+	public void setBadgeText(String badgeText) {
+		this.badgeText = badgeText;
 	}
 
 }
