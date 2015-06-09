@@ -1599,41 +1599,41 @@ public class IdpServiceImpl implements IdpService {
 
 			searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
-			/** MQ 연동을 위해 userId가 가지고 있는 휴대기기 목록 조회 */
-			SacRequestHeader requestHeader = new SacRequestHeader();
-			TenantHeader tenant = new TenantHeader();
-			tenant.setSystemId(map.get("systemID"));
-			tenant.setTenantId(map.get("tenantID"));
-			requestHeader.setTenantHeader(tenant);
-			ListDeviceReq listDeviceReq = new ListDeviceReq();
-			listDeviceReq.setUserId(userId);
-			listDeviceReq.setIsMainDevice("N");
-			ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
-
-			StringBuffer buf = new StringBuffer();
-			if (listDeviceRes.getDeviceInfoList() != null) {
-				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두
-					buf.append(deviceInfo.getDeviceId()).append("|"); // 전달
-				}
-				mqDeviceStr = buf.toString();
-				mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
-			}
-
-			RemoveUserRequest removeUserRequest = new RemoveUserRequest();
-			removeUserRequest.setCommonRequest(commonRequest);
-			removeUserRequest.setUserKey(searchUserResponse.getUserKey());
-			removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
-			removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
-			removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
-			this.userSCI.remove(removeUserRequest);
-
-			RemoveMbrOneIDRequest removeMbrOneIDRequest = new RemoveMbrOneIDRequest();
-			removeMbrOneIDRequest.setCommonRequest(commonRequest);
-			removeMbrOneIDRequest.setImSvcNo(imIntSvcNo);
-			this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
-
 			// 회원 탈퇴 정보를 전달 하는 mq 호출.
 			if (searchUserResponse != null) {
+
+				/** MQ 연동을 위해 userId가 가지고 있는 휴대기기 목록 조회 */
+				SacRequestHeader requestHeader = new SacRequestHeader();
+				TenantHeader tenant = new TenantHeader();
+				tenant.setSystemId(map.get("systemID"));
+				tenant.setTenantId(map.get("tenantID"));
+				requestHeader.setTenantHeader(tenant);
+				ListDeviceReq listDeviceReq = new ListDeviceReq();
+				listDeviceReq.setUserId(userId);
+				listDeviceReq.setIsMainDevice("N");
+				ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
+
+				StringBuffer buf = new StringBuffer();
+				if (listDeviceRes.getDeviceInfoList() != null) {
+					for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두
+						buf.append(deviceInfo.getDeviceId()).append("|"); // 전달
+					}
+					mqDeviceStr = buf.toString();
+					mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
+				}
+
+				RemoveUserRequest removeUserRequest = new RemoveUserRequest();
+				removeUserRequest.setCommonRequest(commonRequest);
+				removeUserRequest.setUserKey(searchUserResponse.getUserKey());
+				removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
+				removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
+				removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
+				this.userSCI.remove(removeUserRequest);
+
+				RemoveMbrOneIDRequest removeMbrOneIDRequest = new RemoveMbrOneIDRequest();
+				removeMbrOneIDRequest.setCommonRequest(commonRequest);
+				removeMbrOneIDRequest.setImSvcNo(imIntSvcNo);
+				this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
 
 				RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
 				mqInfo.setUserId(userId);
