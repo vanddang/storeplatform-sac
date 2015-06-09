@@ -9,18 +9,25 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import java.io.Serializable;
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonRawValue;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import java.io.Serializable;
-import java.util.List;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 
 /**
  * Interface Message Product Value Object.
- *
+ * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -81,6 +88,12 @@ public class Product extends CommonInfo implements Serializable {
 	 * > short : 한 줄 설명 > long : 상세 설명.
 	 */
 	private String requestType;
+
+	/**
+	 * Badge
+	 */
+	private Badge badge;
+
 	/**
 	 * 상품설명.
 	 */
@@ -267,7 +280,7 @@ public class Product extends CommonInfo implements Serializable {
 	 * 특가상품 쿠폰 ID
 	 */
 	private String specialCouponId;
-	
+
 	/**
 	 * 특가상품 타입 코드
 	 */
@@ -372,17 +385,17 @@ public class Product extends CommonInfo implements Serializable {
 	private String expoOrd;
 	private String expoOrdSub;
 
-    private List<TenantProduct> tenantProductList;
+	private List<TenantProduct> tenantProductList;
 
-    public List<TenantProduct> getTenantProductList() {
-        return tenantProductList;
-    }
+	public List<TenantProduct> getTenantProductList() {
+		return this.tenantProductList;
+	}
 
-    public void setTenantProductList(List<TenantProduct> tenantProductList) {
-        this.tenantProductList = tenantProductList;
-    }
+	public void setTenantProductList(List<TenantProduct> tenantProductList) {
+		this.tenantProductList = tenantProductList;
+	}
 
-    public String getProdCase() {
+	public String getProdCase() {
 		return this.prodCase;
 	}
 
@@ -1203,11 +1216,12 @@ public class Product extends CommonInfo implements Serializable {
 	 * @return the specialTypeCd
 	 */
 	public String getSpecialTypeCd() {
-		return specialTypeCd;
+		return this.specialTypeCd;
 	}
 
 	/**
-	 * @param specialTypeCd the specialTypeCd to set
+	 * @param specialTypeCd
+	 *            the specialTypeCd to set
 	 */
 	public void setSpecialTypeCd(String specialTypeCd) {
 		this.specialTypeCd = specialTypeCd;
@@ -1434,7 +1448,7 @@ public class Product extends CommonInfo implements Serializable {
 
 	@JsonIgnore
 	public String getExpoOrd() {
-		return expoOrd;
+		return this.expoOrd;
 	}
 
 	public void setExpoOrd(String expoOrd) {
@@ -1443,11 +1457,25 @@ public class Product extends CommonInfo implements Serializable {
 
 	@JsonIgnore
 	public String getExpoOrdSub() {
-		return expoOrdSub;
+		return this.expoOrdSub;
 	}
 
 	public void setExpoOrdSub(String expoOrdSub) {
 		this.expoOrdSub = expoOrdSub;
 	}
 
+	/**
+	 * @return the badge
+	 */
+	public Badge getBadge() {
+		return this.badge;
+	}
+
+	/**
+	 * @param badge
+	 *            the badge to set
+	 */
+	public void setBadge(Badge badge) {
+		this.badge = badge;
+	}
 }

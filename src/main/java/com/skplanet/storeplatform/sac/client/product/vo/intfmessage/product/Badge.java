@@ -25,6 +25,8 @@ public class Badge extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String name; // Facebook과 연동한 댓글인 경우 표기 > facebook
+	private String badgeCd; // Badge Code
+	private String badgeText; // Badge Text
 
 	/**
 	 * @return String
@@ -46,6 +48,36 @@ public class Badge extends CommonInfo implements Serializable {
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	/**
+	 * @return the badgeCd
+	 */
+	public String getBadgeCd() {
+		return this.badgeCd;
+	}
+
+	/**
+	 * @param badgeCd
+	 *            the badgeCd to set
+	 */
+	public void setBadgeCd(String badgeCd) {
+		this.badgeCd = badgeCd;
+	}
+
+	/**
+	 * @return the badgeText
+	 */
+	public String getBadgeText() {
+		return this.badgeText;
+	}
+
+	/**
+	 * @param badgeText
+	 *            the badgeText to set
+	 */
+	public void setBadgeText(String badgeText) {
+		this.badgeText = badgeText;
 	}
 
 }
