@@ -105,6 +105,7 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 								item.setExtraData(objItem.getExtraData());
 
 								item.setSystemId(systemId);
+								item.setTenantId(tenantId);
 
 								// 쿠폰정보 업데이트 및 구매상태 구매완료처리
 								updateCnt += this.shoppingAsyncSCI.updateShoppingAsyncItem(item);
