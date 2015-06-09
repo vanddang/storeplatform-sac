@@ -390,7 +390,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 
 		// 응답 셋팅.
-		Feedback feedback = this.setFeedback(res, "", detailInformationSacRes, searchUserSacRes);
+		Feedback feedback = this.setFeedback(res, null, detailInformationSacRes, searchUserSacRes);
 
 		// 응답.
 		CreateRecommendFeedbackSacRes createRecommendFeedbackSacRes = new CreateRecommendFeedbackSacRes();
@@ -489,7 +489,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 
 		// 응답셋팅.
-		Feedback feedback = this.setFeedback(res, "", detailInformationSacRes, searchUserSacRes);
+		Feedback feedback = this.setFeedback(res, null, detailInformationSacRes, searchUserSacRes);
 
 		// 응답
 		RemoveRecommendFeedbackSacRes removeRecommendFeedbackSacRes = new RemoveRecommendFeedbackSacRes();
