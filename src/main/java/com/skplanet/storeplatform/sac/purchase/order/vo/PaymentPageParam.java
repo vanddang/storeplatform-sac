@@ -12,9 +12,9 @@ package com.skplanet.storeplatform.sac.purchase.order.vo;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 
+ *
  * Pay Planet 결제 Page 요청 파라미터 VO
- * 
+ *
  * Updated on : 2014. 1. 24. Updated by : 이승택, nTels.
  */
 public class PaymentPageParam extends CommonInfo {
@@ -62,6 +62,10 @@ public class PaymentPageParam extends CommonInfo {
 	private String emailSeller; // 판매자 이메일 주소
 	private String noTelSeller; // 판매자 전화번호
 	private String sellerType; // 판매자 타입
+	private String hasFullProdYn; // 정식판 전환 여부
+
+	private String sellerAddress; // 판매자 주소
+	private String bizRegNumber; // 판매자 사업자 번호
 
 	// ==========================================================================================
 
@@ -639,4 +643,60 @@ public class PaymentPageParam extends CommonInfo {
 		this.flag = flag;
 	}
 
+	/**
+	 * Gets has full prod yn.
+	 *
+	 * @return the has full prod yn
+	 */
+	public String getHasFullProdYn() {
+		return hasFullProdYn;
+	}
+
+	/**
+	 * Sets has full prod yn.
+	 *
+	 * @param hasFullProdYn
+	 *            the has full prod yn
+	 */
+	public void setHasFullProdYn(String hasFullProdYn) {
+		this.hasFullProdYn = hasFullProdYn;
+	}
+
+	/**
+	 * Gets seller address.
+	 *
+	 * @return the seller address
+	 */
+	public String getSellerAddress() {
+		return sellerAddress;
+	}
+
+	/**
+	 * Sets seller address.
+	 *
+	 * @param sellerAddress
+	 *            the seller address
+	 */
+	public void setSellerAddress(String sellerAddress) {
+		this.sellerAddress = sellerAddress;
+	}
+
+	/**
+	 * Gets biz reg number.
+	 *
+	 * @return the biz reg number
+	 */
+	public String getBizRegNumber() {
+		return bizRegNumber;
+	}
+
+	/**
+	 * Sets biz reg number.
+	 *
+	 * @param bizRegNumber
+	 *            the biz reg number
+	 */
+	public void setBizRegNumber(String bizRegNumber) {
+		this.bizRegNumber = bizRegNumber;
+	}
 }
