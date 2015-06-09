@@ -249,18 +249,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							boolean memberPassFlag = true;
 
 							try {
-								deviceReq = new SearchDeviceIdSacReq();
-								deviceReq.setUserKey(ebookReq.getUserKey());
-								deviceReq.setDeviceKey(ebookReq.getDeviceKey());
-                                deviceReq.setTenantId(header.getTenantHeader().getTenantId());
-
-								logger.debug("--------------------------------------------------------------");
-								logger.debug("[DownloadEbookLog] 단말정보 조회 요청 파라미터");
-								logger.debug("--------------------------------------------------------------");
-								logger.debug("[DownloadEbookLog] userKey : {}", deviceReq.getUserKey());
-								logger.debug("[DownloadEbookLog] deviceKey : {}", deviceReq.getDeviceKey());
-								logger.debug("--------------------------------------------------------------");
-
+								deviceReq = makeSearchDeviceIdSacReq(ebookReq, header);
 								deviceRes = deviceSCI.searchDeviceId(deviceReq);
 							} catch (Exception ex) {
 								memberPassFlag = false;
@@ -345,6 +334,22 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadEbookSacReq ebookReq, SacRequestHeader header) {
+		SearchDeviceIdSacReq deviceReq;
+		deviceReq = new SearchDeviceIdSacReq();
+		deviceReq.setUserKey(ebookReq.getUserKey());
+		deviceReq.setDeviceKey(ebookReq.getDeviceKey());
+		deviceReq.setTenantId(header.getTenantHeader().getTenantId());
+
+		logger.debug("--------------------------------------------------------------");
+		logger.debug("[DownloadEbookLog] 단말정보 조회 요청 파라미터");
+		logger.debug("--------------------------------------------------------------");
+		logger.debug("[DownloadEbookLog] userKey : {}", deviceReq.getUserKey());
+		logger.debug("[DownloadEbookLog] deviceKey : {}", deviceReq.getDeviceKey());
+		logger.debug("--------------------------------------------------------------");
+		return deviceReq;
 	}
 
 	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {

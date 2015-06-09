@@ -98,7 +98,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 	 */
 	@Override
 	public DownloadMusicSacRes searchDownloadMusic(SacRequestHeader requestheader, DownloadMusicSacReq downloadMusicSacReq) {
-		TenantHeader tanantHeader = requestheader.getTenantHeader();
+		TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
         List<Encryption> encryptionList = new ArrayList<Encryption>();
         StopWatch sw = new StopWatch();
@@ -109,10 +109,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
 		String sysDate = downloadSystemDate.getSysDate();
 
-		downloadMusicSacReq.setTenantId(tanantHeader.getTenantId());
+		downloadMusicSacReq.setTenantId(tenantHeader.getTenantId());
 		downloadMusicSacReq.setDeviceModelCd(deviceHeader.getModel());
 		downloadMusicSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-		downloadMusicSacReq.setLangCd(tanantHeader.getLangCd());
+		downloadMusicSacReq.setLangCd(tenantHeader.getLangCd());
 		downloadMusicSacReq.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
 		String productId = downloadMusicSacReq.getProductId();
@@ -229,16 +229,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							boolean memberFlag = true;
 
 							try {
-								deviceReq = new SearchDeviceIdSacReq();
-								deviceReq.setUserKey(downloadMusicSacReq.getUserKey());
-								deviceReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
-                                deviceReq.setTenantId(tanantHeader.getTenantId());
-								this.log.info("----------------------------------------------------------------");
-								this.log.info("*******************회원 단말 정보 조회 파라미터*********************");
-								this.log.info("[DownloadMusicServiceImpl] userKey : {}", deviceReq.getUserKey());
-								this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
-								this.log.info("----------------------------------------------------------------");
-
+								deviceReq = makeSearchDeviceIdSacReq(downloadMusicSacReq, tenantHeader);
 								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 							} catch (Exception ex) {
 								memberFlag = false;
@@ -267,7 +258,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 									metaInfo.setUpdateAlarm(updateAlarm);
 
 									// 암호화 정보 (JSON)
-									metaInfo.setSystemId(tanantHeader.getSystemId());
+									metaInfo.setSystemId(tenantHeader.getSystemId());
                                     Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
 									encryptionList.add(encryption);
 
@@ -329,6 +320,19 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadMusicSacReq downloadMusicSacReq, TenantHeader tenantHeader) {
+		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
+		deviceReq.setUserKey(downloadMusicSacReq.getUserKey());
+		deviceReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
+		deviceReq.setTenantId(tenantHeader.getTenantId());
+		this.log.info("----------------------------------------------------------------");
+		this.log.info("*******************회원 단말 정보 조회 파라미터*********************");
+		this.log.info("[DownloadMusicServiceImpl] userKey : {}", deviceReq.getUserKey());
+		this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+		this.log.info("----------------------------------------------------------------");
+		return deviceReq;
 	}
 
 	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {

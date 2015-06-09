@@ -237,20 +237,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							boolean memberFlag = true;
 
 							try {
-								deviceReq = new SearchDeviceIdSacReq();
-								deviceReq.setUserKey(downloadVodSacReq.getUserKey());
-								deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
-                                deviceReq.setTenantId(tenantHeader.getTenantId());
-								this.log.debug("----------------------------------------------------------------");
-								this.log.debug("*******************회원 단말 정보 조회 파라미터*********************");
-								this.log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
-								this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
-								this.log.debug("----------------------------------------------------------------");
-
-								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-								this.log.debug("---------------------------------------------------------------");
-								this.log.debug("[DownloadVodServiceImpl] deviceRes.getDeviceId : {}", deviceRes.getDeviceId());
-								this.log.debug("---------------------------------------------------------------");
+								deviceReq = makeSearchDeviceIdSacReq(downloadVodSacReq, tenantHeader);
+								deviceRes = deviceSCI.searchDeviceId(deviceReq);
 							} catch (Exception ex) {
 								memberFlag = false;
 								this.log.debug("[DownloadVodServiceImpl] Device Search Exception : {}");
@@ -366,6 +354,19 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader) {
+		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
+		deviceReq.setUserKey(downloadVodSacReq.getUserKey());
+		deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
+		deviceReq.setTenantId(tenantHeader.getTenantId());
+		this.log.debug("----------------------------------------------------------------");
+		this.log.debug("*******************회원 단말 정보 조회 파라미터*********************");
+		this.log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
+		this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+		this.log.debug("----------------------------------------------------------------");
+		return deviceReq;
 	}
 
 	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {

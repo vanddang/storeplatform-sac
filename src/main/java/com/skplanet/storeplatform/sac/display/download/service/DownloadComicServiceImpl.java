@@ -230,18 +230,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                             boolean memberPassFlag = true;
 
                             try {
-                                deviceReq = new SearchDeviceIdSacReq();
-                                deviceReq.setUserKey(comicReq.getUserKey());
-                                deviceReq.setDeviceKey(comicReq.getDeviceKey());
-                                deviceReq.setTenantId(header.getTenantHeader().getTenantId());
-
-                                logger.debug("--------------------------------------------------------------");
-                                logger.debug("[DownloadComicLog] 단말정보 조회 요청 파라미터");
-                                logger.debug("--------------------------------------------------------------");
-                                logger.debug("[DownloadComicLog] userKey : {}", deviceReq.getUserKey());
-                                logger.debug("[DownloadComicLog] deviceKey : {}", deviceReq.getDeviceKey());
-                                logger.debug("--------------------------------------------------------------");
-
+                                deviceReq = makeSearchDeviceIdSacReq(comicReq, header);
                                 deviceRes = deviceSCI.searchDeviceId(deviceReq);
                             } catch (Exception ex) {
                                 memberPassFlag = false;
@@ -323,6 +312,21 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         return comicRes;
     }
+
+	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadComicSacReq comicReq, SacRequestHeader header) {
+		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
+		deviceReq.setUserKey(comicReq.getUserKey());
+		deviceReq.setDeviceKey(comicReq.getDeviceKey());
+		deviceReq.setTenantId(header.getTenantHeader().getTenantId());
+
+		logger.debug("--------------------------------------------------------------");
+		logger.debug("[DownloadComicLog] 단말정보 조회 요청 파라미터");
+		logger.debug("--------------------------------------------------------------");
+		logger.debug("[DownloadComicLog] userKey : {}", deviceReq.getUserKey());
+		logger.debug("[DownloadComicLog] deviceKey : {}", deviceReq.getDeviceKey());
+		logger.debug("--------------------------------------------------------------");
+		return deviceReq;
+	}
 
 	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {
 		logger.debug("----------------------------------------------------------------");

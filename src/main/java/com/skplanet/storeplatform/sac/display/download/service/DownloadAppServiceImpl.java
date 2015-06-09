@@ -273,20 +273,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							boolean memberFlag = true;
 
 							try {
-								deviceReq = new SearchDeviceIdSacReq();
-								deviceReq.setUserKey(downloadAppSacReq.getUserKey());
-								deviceReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
-                                deviceReq.setTenantId(tenantHeader.getTenantId());
-
-								log.debug("----------------------------------------------------------------");
-								log.debug("*******************회원 단말 정보 조회 파라미터*********************");
-								log.debug("[DownloadAppServiceImpl] userKey : {}", deviceReq.getUserKey());
-								log.debug("[DownloadAppServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
-								log.debug("----------------------------------------------------------------");
-
-								// 기기정보 조회
+								deviceReq = makeSearchDeviceIdSacReq(downloadAppSacReq, tenantHeader);
 								deviceRes = deviceSCI.searchDeviceId(deviceReq);
-
 							} catch (Exception ex) {
 								memberFlag = false;
 								log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
@@ -435,6 +423,20 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadAppSacReq downloadAppSacReq, TenantHeader tenantHeader) {
+		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
+		deviceReq.setUserKey(downloadAppSacReq.getUserKey());
+		deviceReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
+		deviceReq.setTenantId(tenantHeader.getTenantId());
+
+		log.debug("----------------------------------------------------------------");
+		log.debug("*******************회원 단말 정보 조회 파라미터*********************");
+		log.debug("[DownloadAppServiceImpl] userKey : {}", deviceReq.getUserKey());
+		log.debug("[DownloadAppServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+		log.debug("----------------------------------------------------------------");
+		return deviceReq;
 	}
 
 	private void loggingResponseOfPurchaseHistoryLocalSCI(HistorySacIn historySacIn, String prchsState) {
