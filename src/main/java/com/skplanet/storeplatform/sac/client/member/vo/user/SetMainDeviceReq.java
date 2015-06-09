@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import java.io.Serializable;
-
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -62,7 +60,12 @@ public class SetMainDeviceReq extends CommonInfo {
 		this.deviceId = deviceId;
 	}
 
-	public class CommonRequest implements Serializable {
+	public class CommonRequest extends CommonInfo {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		/** The tenant id. */
 		private String tenantID;

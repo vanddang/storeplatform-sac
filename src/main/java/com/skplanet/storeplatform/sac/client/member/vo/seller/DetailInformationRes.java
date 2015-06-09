@@ -116,7 +116,11 @@ public class DetailInformationRes extends CommonInfo {
 	 * 
 	 * Updated on : 2014. 3. 24. Updated by : Rejoice, Burkhan
 	 */
-	public static class TabAuthSac {
+	public static class TabAuthSac extends CommonInfo {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		/** 탭 코드. */
 		private String tabCode;
 

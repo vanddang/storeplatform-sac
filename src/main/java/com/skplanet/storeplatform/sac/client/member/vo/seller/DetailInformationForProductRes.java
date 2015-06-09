@@ -92,7 +92,11 @@ public class DetailInformationForProductRes extends CommonInfo {
 	 * Updated on : 2014. 4. 1. Updated by : 김다슬, 인크로스.
 	 */
 	@JsonSerialize(include = Inclusion.NON_NULL)
-	public static class SellerMbrAppSac {
+	public static class SellerMbrAppSac extends CommonInfo {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		/** 상하구분 . */
 		public String appStat;
 		/** 회사명 . */

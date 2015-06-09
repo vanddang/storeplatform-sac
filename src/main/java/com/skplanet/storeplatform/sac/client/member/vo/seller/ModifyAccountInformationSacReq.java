@@ -726,8 +726,12 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	 * 
 	 * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
 	 */
-	public static class ExtraDocument {
+	public static class ExtraDocument extends CommonInfo {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		/** 서류코드. */
 		public String documentCode;
 		/** 서류경로. */

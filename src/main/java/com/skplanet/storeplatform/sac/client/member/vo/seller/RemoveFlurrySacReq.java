@@ -73,8 +73,12 @@ public class RemoveFlurrySacReq extends CommonInfo {
 	 * 
 	 * Updated on : 2014. 2. 25. Updated by : Rejoice, Burkhan
 	 */
-	public static class FlurryAuth {
+	public static class FlurryAuth extends CommonInfo {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		/** Access 코드. */
 		@NotBlank
 		private String authToken;

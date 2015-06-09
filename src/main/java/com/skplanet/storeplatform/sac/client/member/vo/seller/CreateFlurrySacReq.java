@@ -72,7 +72,11 @@ public class CreateFlurrySacReq extends CommonInfo {
 	 * 
 	 * Updated on : 2014. 2. 27. Updated by : Rejoice, Burkhan
 	 */
-	public static class FlurryAuth {
+	public static class FlurryAuth extends CommonInfo {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		/** Access Code. */
 		private String accessCode;
 		/** Token. */

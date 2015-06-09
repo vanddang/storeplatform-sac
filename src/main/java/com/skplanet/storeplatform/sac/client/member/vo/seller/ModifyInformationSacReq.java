@@ -543,7 +543,12 @@ public class ModifyInformationSacReq extends CommonInfo {
 	 * 
 	 * Updated on : 2014. 3. 13. Updated by : Rejoice, Burkhan
 	 */
-	public static class PwReminder {
+	public static class PwReminder extends CommonInfo {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/** 보안질문 답변. */
 		private String answerString;
 
