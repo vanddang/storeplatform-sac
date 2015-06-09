@@ -224,8 +224,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						 ************************************************************************************************/
 						// 구매상태 만료 여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) && permitDeviceYn.equals("Y")) {
-							String deviceId = null; // Device Id
-							String deviceIdType = null; // Device Id 유형
 							SearchDeviceIdSacReq deviceReq = null;
 							SearchDeviceIdSacRes deviceRes = null;
 							boolean memberFlag = true;
@@ -256,8 +254,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							if (memberFlag && deviceRes != null) {
 								// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
 								if ("Y".equals(deviceRes.getAuthYn())) {
-									deviceId = deviceRes.getDeviceId();
-									deviceIdType = this.commonService.getDeviceIdType(deviceId);
+									String deviceId = deviceRes.getDeviceId();
+									String deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
 									metaInfo.setExpiredDate(reqExpireDate);
 									metaInfo.setUseExprDt(useExprDt);

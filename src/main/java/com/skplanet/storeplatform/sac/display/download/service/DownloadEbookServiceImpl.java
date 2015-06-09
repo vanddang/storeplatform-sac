@@ -244,8 +244,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 						// 구매상태 만료여부 및 단말 지원여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) && "Y".equals(permitDeviceYn)) {
-							String deviceId = null; // Device Id
-							String deviceIdType = null; // Device Id 유형
 							SearchDeviceIdSacReq deviceReq = null;
 							SearchDeviceIdSacRes deviceRes = null;
 							boolean memberPassFlag = true;
@@ -277,8 +275,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							if (memberPassFlag && deviceRes != null) {
 								// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
 								if ("Y".equals(deviceRes.getAuthYn())) {
-									deviceId = deviceRes.getDeviceId();
-									deviceIdType = commonService.getDeviceIdType(deviceId);
+									String deviceId = deviceRes.getDeviceId();
+									String deviceIdType = commonService.getDeviceIdType(deviceId);
 
 									metaInfo.setExpiredDate(reqExpireDate);
 									metaInfo.setUseExprDt(useExprDt);

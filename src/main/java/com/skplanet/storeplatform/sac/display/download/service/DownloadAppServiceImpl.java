@@ -268,9 +268,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						 ************************************************************************************************/
 						// 구매상태 만료 여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) && permitDeviceYn.equals("Y")) {
-							String deviceId = null; // Device Id
-							String deviceIdType = null; // Device Id 유형
-							String deviceTelecom = null;
 							SearchDeviceIdSacReq deviceReq = null;
 							SearchDeviceIdSacRes deviceRes = null;
 							boolean memberFlag = true;
@@ -290,7 +287,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								// 기기정보 조회
 								deviceRes = deviceSCI.searchDeviceId(deviceReq);
 
-
 							} catch (Exception ex) {
 								memberFlag = false;
 								log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
@@ -305,9 +301,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							if (memberFlag && deviceRes != null) {
 								// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
 								if ("Y".equals(deviceRes.getAuthYn())) {
-									deviceId = deviceRes.getDeviceId();
-									deviceTelecom = deviceRes.getDeviceTelecom();
-									deviceIdType = commonService.getDeviceIdType(deviceId);
+									String deviceId = deviceRes.getDeviceId();
+									String deviceTelecom = deviceRes.getDeviceTelecom();
+									String deviceIdType = commonService.getDeviceIdType(deviceId);
 
 									metaInfo.setExpiredDate(reqExpireDate);
 									metaInfo.setUseExprDt(useExprDt);

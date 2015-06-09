@@ -232,8 +232,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						// 구매상태 만료 여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) && permitDeviceYn.equals("Y")) {
 							this.log.debug("----------------------------  start set Purchase Info  ------------------------------------");
-							String deviceId = null; // Device Id
-							String deviceIdType = null; // Device Id 유형
 							SearchDeviceIdSacReq deviceReq = null;
 							SearchDeviceIdSacRes deviceRes = null;
 							boolean memberFlag = true;
@@ -271,9 +269,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									this.log.debug("----------------------------------------------------------------");
 									this.log.debug("[DownloadVodServiceImpl] Start Encription");
 
-									deviceId = deviceRes.getDeviceId();
+									String deviceId = deviceRes.getDeviceId();
 									this.log.debug("[DownloadVodServiceImpl] deviceId	: {}", deviceId);
-									deviceIdType = this.commonService.getDeviceIdType(deviceId);
+									String deviceIdType = this.commonService.getDeviceIdType(deviceId);
 									this.log.debug("[DownloadVodServiceImpl] deviceIdType	:	{}", deviceIdType);
 									this.log.debug("[DownloadVodServiceImpl] reqExpireDate	:	{}", reqExpireDate);
 									this.log.debug("[DownloadVodServiceImpl] useExprDt	:	{}", useExprDt);
