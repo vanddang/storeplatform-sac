@@ -172,14 +172,11 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				this.log.info("[DownloadMusicServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
 				this.log.info("---------------------------------------------------------------------");
 
-				String prchsId = null; // 구매ID
-				String prchsDt = null; // 구매일시
 				String useExprDt = null; // 이용 만료일시
 				String dwldStartDt = null; // 다운로드 시작일시
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
 				String prchsProdId = null; // 구매 상품ID
-				String prchsPrice = null; // 구매 상품금액
 				String permitDeviceYn = null; // 단말 지원여부
 				String purchaseHide = null; // 구매내역 숨김 여부
 				String updateAlarm = null; // 업데이트 알람 수신 여부
@@ -188,14 +185,11 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-						prchsId = historySacIn.getPrchsId();
-						prchsDt = historySacIn.getPrchsDt();
 						useExprDt = historySacIn.getUseExprDt();
 						dwldStartDt = historySacIn.getDwldStartDt();
 						dwldExprDt = historySacIn.getDwldExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
-						prchsPrice = historySacIn.getProdAmt();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 						purchaseHide = historySacIn.getHidingYn();
 						updateAlarm = historySacIn.getAlarmYn();
