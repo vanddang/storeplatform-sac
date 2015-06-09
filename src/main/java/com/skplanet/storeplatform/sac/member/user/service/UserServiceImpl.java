@@ -198,7 +198,7 @@ public class UserServiceImpl implements UserService {
 		// 실제 moveType 정보는 정상/휴면 회원 여부를 체크 해서 아래 둘중 하나로 넣도록 한다.
 		// Constant.USERMBR_MOVE_TYPE_ACTIVATE(정상 처리), Constant.USERMBR_MOVE_TYPE_DORMANT(휴면 처리)
 		moveUserInfoRequest.setMoveType(moveUserInfoSacReq.getMoveType());
-		MoveUserInfoResponse moveUserInfoResponse = this.userSCI.moveUserMbr(moveUserInfoRequest);
+		MoveUserInfoResponse moveUserInfoResponse = this.userSCI.executeMoveUserMbr(moveUserInfoRequest);
 
 		MoveUserInfoSacRes moveUserInfoSacRes = new MoveUserInfoSacRes();
 		moveUserInfoSacRes.setUserKey(moveUserInfoResponse.getUserKey());
