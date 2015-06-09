@@ -316,8 +316,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 									logger.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
 									logger.debug("-----------------------------------------------------------");
 								} else {
-									logger.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
-									logger.debug("##### [SAC DSP LocalSCI] deviceKey : {}",	deviceReq.getDeviceKey());
 									logger.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {} ", deviceRes.getDeviceId());
 								}
 							}

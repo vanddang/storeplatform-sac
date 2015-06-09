@@ -276,11 +276,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 									this.log.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
 									this.log.debug("-----------------------------------------------------------");
 								} else {
-									this.log.info("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
-									this.log.info("##### [SAC DSP LocalSCI] deviceKey : {}",
-											deviceReq.getDeviceKey());
-									this.log.info("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
-											+ deviceRes.getDeviceId());
+									this.log.info("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 								}
 							}
 							// 구매 정보

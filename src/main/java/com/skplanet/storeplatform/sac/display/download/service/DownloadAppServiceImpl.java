@@ -363,8 +363,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 									log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
 									log.debug("-------------------------------------------------------------");
 								} else {
-									log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
-									log.debug("##### [SAC DSP LocalSCI] deviceKey : {}", deviceReq.getDeviceKey());
 									log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 								}
 							}

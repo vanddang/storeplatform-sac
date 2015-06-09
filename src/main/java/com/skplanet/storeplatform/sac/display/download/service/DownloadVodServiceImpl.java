@@ -266,17 +266,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							if (memberFlag && deviceRes != null) {
 								// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
 								if ("Y".equals(deviceRes.getAuthYn())) {
-									this.log.debug("----------------------------------------------------------------");
-									this.log.debug("[DownloadVodServiceImpl] Start Encription");
-
 									String deviceId = deviceRes.getDeviceId();
-									this.log.debug("[DownloadVodServiceImpl] deviceId	: {}", deviceId);
 									String deviceIdType = this.commonService.getDeviceIdType(deviceId);
-									this.log.debug("[DownloadVodServiceImpl] deviceIdType	:	{}", deviceIdType);
-									this.log.debug("[DownloadVodServiceImpl] reqExpireDate	:	{}", reqExpireDate);
-									this.log.debug("[DownloadVodServiceImpl] useExprDt	:	{}", useExprDt);
-									this.log.debug("[DownloadVodServiceImpl] userKey	:	{}", userKey);
-									this.log.debug("[DownloadVodServiceImpl] deviceKey	:	{}", deviceKey);
 
 									metaInfo.setExpiredDate(reqExpireDate);
 									metaInfo.setUseExprDt(useExprDt);
@@ -287,10 +278,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									metaInfo.setPurchaseHide(purchaseHide);
 									metaInfo.setUpdateAlarm(updateAlarm);
 
-									this.mapProdChrg(metaInfo, prchsProdId);
-									this.mapDrmYn(metaInfo, historySacIn);
-
-									this.log.debug("DownloadVodServiceImpl ProdChrg={}, prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", metaInfo.getProdChrg(), prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
+									mapProdChrg(metaInfo, prchsProdId);
+									mapDrmYn(metaInfo, historySacIn);
 
 									// 암호화 정보 (JSON)
 									metaInfo.setSystemId(tenantHeader.getSystemId());
@@ -303,8 +292,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									this.log.debug("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
 									this.log.debug("--------------------------------------------------------------");
 								} else {
-									this.log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
-									this.log.debug("##### [SAC DSP LocalSCI] deviceKey : {}", deviceReq.getDeviceKey());
 									this.log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "+ deviceRes.getDeviceId());
 								}
 							}
