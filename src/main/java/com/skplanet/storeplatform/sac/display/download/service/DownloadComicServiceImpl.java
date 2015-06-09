@@ -89,11 +89,10 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         sw.start();
 
         // 현재일시 및 만료일시 조회
-        MetaInfo metaInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
+        MetaInfo dateInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
-        String sysDate = metaInfo.getSysDate();
-        String reqExpireDate = metaInfo.getExpiredDate();
-        metaInfo = null;
+        String sysDate = dateInfo.getSysDate();
+        String reqExpireDate = dateInfo.getExpiredDate();
 
         String productId = comicReq.getProductId();
         String deviceKey = comicReq.getDeviceKey();
@@ -112,12 +111,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         comicReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
         comicReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
-        // comic 상품 정보 조회(for download)
-        metaInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadComicInfo", comicReq);
-
-        if (metaInfo == null)  {
-            throw new StorePlatformException("SAC_DSP_0009");
-        }
+        MetaInfo metaInfo = getComicMetaInfo(comicReq);
 
         logger.debug("----------------------------------------------------------------");
         logger.debug("[DownloadComicLog] scid : {}", metaInfo.getSubContentsId());
@@ -310,6 +304,13 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         return comicRes;
     }
+
+	private MetaInfo getComicMetaInfo(DownloadComicSacReq comicReq) {
+        MetaInfo metaInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadComicInfo", comicReq);
+        if (metaInfo == null)
+            throw new StorePlatformException("SAC_DSP_0009");
+		return metaInfo;
+	}
 
 	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadComicSacReq comicReq, SacRequestHeader header) {
 		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();

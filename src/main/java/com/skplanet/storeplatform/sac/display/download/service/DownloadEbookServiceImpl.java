@@ -97,11 +97,10 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         sw.start();
 
         // 현재일시 및 요청만료일시 조회
-		MetaInfo metaInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
+		MetaInfo dateInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
-		String sysDate = metaInfo.getSysDate();
-		String reqExpireDate = metaInfo.getExpiredDate();
-		metaInfo = null;
+		String sysDate = dateInfo.getSysDate();
+		String reqExpireDate = dateInfo.getExpiredDate();
 
 		String idType = ebookReq.getIdType();
 		String productId = ebookReq.getProductId();
@@ -127,17 +126,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		ebookReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 		ebookReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
-		// ebook 상품 정보 조회(for download)
-		metaInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadEbookInfo", ebookReq);
-
-		if (metaInfo == null) {
-			throw new StorePlatformException("SAC_DSP_0009");
-		}
-
-		if ("channel".equals(idType) && DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
-			// 단품인 상품만 조회가능 합니다.
-			throw new StorePlatformException("SAC_DSP_0013");
-		}
+		MetaInfo metaInfo = getEbookMetaInfo(ebookReq);
 
 		logger.debug("----------------------------------------------------------------");
 		logger.debug("[DownloadEbookLog] scid : {}", metaInfo.getSubContentsId());
@@ -332,6 +321,16 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private MetaInfo getEbookMetaInfo(DownloadEbookSacReq ebookReq) {
+		MetaInfo metaInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadEbookInfo", ebookReq);
+		if (metaInfo == null)
+			throw new StorePlatformException("SAC_DSP_0009");
+		// 단품인 상품만 조회가능 합니다.
+		if ("channel".equals(ebookReq.getIdType()) && DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd()))
+			throw new StorePlatformException("SAC_DSP_0013");
+		return metaInfo;
 	}
 
 	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadEbookSacReq ebookReq, SacRequestHeader header) {

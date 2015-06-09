@@ -165,11 +165,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		log.debug("----------------------------------------------------------------");
 
 		// 다운로드 앱 상품 조회
-		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadAppInfo", downloadAppSacReq, MetaInfo.class);
-
-		if (metaInfo == null)  {
-			throw new StorePlatformException("SAC_DSP_0009");
-		}
+		MetaInfo metaInfo = getAppMetaInfo(downloadAppSacReq);
 
 		List<Encryption> encryptionList = new ArrayList<Encryption>();
 
@@ -385,6 +381,13 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private MetaInfo getAppMetaInfo(DownloadAppSacReq downloadAppSacReq) {
+		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadAppInfo", downloadAppSacReq, MetaInfo.class);
+		if (metaInfo == null)
+			throw new StorePlatformException("SAC_DSP_0009");
+		return metaInfo;
 	}
 
 	private boolean getTingMemberFlag(String deviceId, String deviceTelecom, String deviceIdType, MetaInfo metaInfo) {

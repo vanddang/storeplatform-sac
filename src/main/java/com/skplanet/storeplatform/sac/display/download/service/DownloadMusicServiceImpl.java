@@ -129,24 +129,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		log.debug("[DownloadMusicServiceImpl] userKey : {}", userKey);
 		log.debug("----------------------------------------------------------------");
 
-        MetaInfo metaInfo;
-
-		// 다운로드 Music 상품 조회
-        ProductInfo info = this.commonService.getProductInfo(downloadMusicSacReq.getProductId());
-
-        if (info.getProductType() == ProductType.Music) {
-            metaInfo = this.commonDAO.queryForObject("Download.getDownloadMusicInfo", downloadMusicSacReq, MetaInfo.class);
-        }
-        else if(info.getProductType() == ProductType.RingBell) {
-            // 벨소리 타입인 경우
-            metaInfo = this.commonDAO.queryForObject("Download.getDownloadRingBellInfo", downloadMusicSacReq, MetaInfo.class);
-        }
-        else
-            throw new StorePlatformException("");
-
-		if (metaInfo == null) {
-			throw new StorePlatformException("SAC_DSP_0009");
-		}
+        MetaInfo metaInfo = getMusicMetaInfo(downloadMusicSacReq);
 
 		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
 			HistoryListSacInRes historyRes = null;
@@ -318,6 +301,21 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private MetaInfo getMusicMetaInfo(DownloadMusicSacReq req) {
+		MetaInfo metaInfo;
+        ProductInfo info = this.commonService.getProductInfo(req.getProductId());
+
+        if (info.getProductType() == ProductType.Music)
+            metaInfo = this.commonDAO.queryForObject("Download.getDownloadMusicInfo", req, MetaInfo.class);
+        else if(info.getProductType() == ProductType.RingBell)
+            metaInfo = this.commonDAO.queryForObject("Download.getDownloadRingBellInfo", req, MetaInfo.class);
+        else
+            throw new StorePlatformException("");
+		if (metaInfo == null)
+			throw new StorePlatformException("SAC_DSP_0009");
+		return metaInfo;
 	}
 
 	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadMusicSacReq downloadMusicSacReq, TenantHeader tenantHeader) {

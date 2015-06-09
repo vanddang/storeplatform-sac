@@ -126,21 +126,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		this.log.debug("[DownloadVodServiceImpl] userKey : {}", userKey);
 		this.log.debug("----------------------------------------------------------------");
 
-		// 다운로드 Vod 상품 조회
-		MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq, MetaInfo.class);
-
-		if (metaInfo == null) {
-			throw new StorePlatformException("SAC_DSP_0009");
-		}
+		MetaInfo metaInfo = getVodMetaInfo(downloadVodSacReq);
 
 		Product product = new Product();
-
-
-		if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)) {
-			if (DisplayConstants.DP_SERIAL_VOD_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
-				throw new StorePlatformException("SAC_DSP_0013");
-			}
-		}
 
 		this.log.debug("----------------------------------------------------------------");
 		this.log.debug("[DownloadVodServiceImpl] NORMAL scid : {}", metaInfo.getNmSubContsId());
@@ -350,6 +338,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private MetaInfo getVodMetaInfo(DownloadVodSacReq req) {
+		MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", req, MetaInfo.class);
+		if (metaInfo == null)
+			throw new StorePlatformException("SAC_DSP_0009");
+		if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(req.getIdType()) && DisplayConstants.DP_SERIAL_VOD_META_CLASS_CD.equals(metaInfo.getMetaClsfCd()))
+				throw new StorePlatformException("SAC_DSP_0013");
+		return metaInfo;
 	}
 
 	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader) {
