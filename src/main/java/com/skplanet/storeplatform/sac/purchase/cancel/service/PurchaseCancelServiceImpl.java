@@ -9,6 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.sap.sci.SapPurchaseSCI;
 import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiEcReq;
@@ -44,23 +55,19 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.Coupo
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.repository.PurchaseCancelRepository;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.*;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacResult;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * 구매 취소 Service Implements.
@@ -189,12 +196,13 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				// - 특가상품 여부 체크
 				if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
-						&& purchaseCancelRepository.useSpecialCoupon(prchsDtlSacParam.getTenantId(),
+						&& this.purchaseCancelRepository.useSpecialCoupon(prchsDtlSacParam.getTenantId(),
 								prchsDtlSacParam.getPrchsId())) {
 					this.purchaseDisplayRepository.updateSpecialPurchaseCount(prchsDtlSacParam.getTenantId(),
 							prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getProdId(),
-							PurchaseConstants.PRCHS_STATUS_CANCEL, -purchaseCancelDetailSacParam.getPrchsDtlSacParamList().size(),
-							prchsDtlSacParam.getPrchsDt(), purchaseCancelDetailSacParam.getCancelDt());
+							PurchaseConstants.PRCHS_STATUS_CANCEL, -purchaseCancelDetailSacParam
+									.getPrchsDtlSacParamList().size(), prchsDtlSacParam.getPrchsDt(),
+							purchaseCancelDetailSacParam.getCancelDt());
 				}
 			} else {
 				failCnt++;
@@ -389,9 +397,32 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			if (purchaseCancelDetailSacParam.getPaymentSacParamList() != null
 					&& purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0) {
 				if (StringUtils.isBlank(purchaseCancelDetailSacParam.getPaymentSacParamList().get(0).getMid())) {
-					// T Store 결제.
-					purchaseCancelDetailSacParam.settStorePayCancelResultList(this.purchaseCancelRepository
-							.cancelPaymentToTStore(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+
+					try {
+						// T Store 결제.
+						purchaseCancelDetailSacParam.settStorePayCancelResultList(this.purchaseCancelRepository
+								.cancelPaymentToTStore(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+					} catch (StorePlatformException e) {
+
+						ErrorInfo errorInfo = e.getErrorInfo();
+
+						// 결제 실패 시 결제내역에 실패오류코드 저장
+						this.purchaseCancelRepository.updatePaymentError(purchaseCancelSacParam,
+								purchaseCancelDetailSacParam, errorInfo.getCode());
+
+						throw e;
+					} catch (Exception e) {
+
+						// 결제 실패 시 결제내역에 실패오류코드 저장
+						this.purchaseCancelRepository.updatePaymentError(purchaseCancelSacParam,
+								purchaseCancelDetailSacParam, "SAC_PUR_9999");
+						try {
+							throw e;
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+
 				} else {
 
 					try {
@@ -399,9 +430,25 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 						purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
 								.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
 					} catch (StorePlatformException e) {
+
 						ErrorInfo errorInfo = e.getErrorInfo();
+
+						// 결제 실패 시 결제내역에 실패오류코드 저장
+						this.purchaseCancelRepository.updatePaymentError(purchaseCancelSacParam,
+								purchaseCancelDetailSacParam, errorInfo.getCode());
+
 						if (!"EC_PAYPLANET_9984".equals(errorInfo.getCode())) {
 							throw e;
+						}
+					} catch (Exception e) {
+
+						// 결제 실패 시 결제내역에 실패오류코드 저장
+						this.purchaseCancelRepository.updatePaymentError(purchaseCancelSacParam,
+								purchaseCancelDetailSacParam, "SAC_PUR_9999");
+						try {
+							throw e;
+						} catch (Exception e1) {
+							e1.printStackTrace();
 						}
 					}
 				}

@@ -145,6 +145,20 @@ public interface PurchaseCancelRepository {
 
 	/**
 	 * <pre>
+	 * 구매 결제 실패시  DB 업데이트.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelSacParam
+	 *            purchaseCancelSacParam
+	 * @param purchaseCancelDetailSacParam
+	 *            purchaseCancelDetailSacParam
+	 * @return PurchaseCancelDetailSacParam
+	 */
+	PurchaseCancelDetailSacParam updatePaymentError(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, String errorCode);
+
+	/**
+	 * <pre>
 	 * T마일리지 적립 취소 처리 DB 업데이트.
 	 * </pre>
 	 * 
@@ -280,7 +294,7 @@ public interface PurchaseCancelRepository {
 	 * <pre>
 	 * 특가쿠폰 사용 여부.
 	 * </pre>
-	 *
+	 * 
 	 * @param tenantId
 	 *            테넌트 ID
 	 * @param prchsId
