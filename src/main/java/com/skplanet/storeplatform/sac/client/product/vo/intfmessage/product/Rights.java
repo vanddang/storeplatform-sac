@@ -38,7 +38,7 @@ public class Rights extends CommonInfo implements Serializable {
 	private String durationUsagePeriodView; // 전시를 목적으로 추가 이용 기간을 표기할 경우 사용한다.
 	private String subscription; // 정기구독정보
 	private List<Date> dateList; // 사용가능 시작/만료 일자 LIST
-	private String gradeExtra; // 19+ 상품여부
+	private String plus19Yn; // 19+ 상품 Yn
 
 	/**
 	 * @return String
@@ -214,18 +214,17 @@ public class Rights extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return String
+	 * @return the plus19Yn
 	 */
-	public String getGradeExtra() {
-		return this.gradeExtra;
+	public String getPlus19Yn() {
+		return this.plus19Yn;
 	}
 
 	/**
-	 * @param gradeExtra
-	 *            gradeExtra
+	 * @param plus19Yn
+	 *            the plus19Yn to set
 	 */
-	public void setGradeExtra(String gradeExtra) {
-		this.gradeExtra = gradeExtra;
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
 	}
-
 }
