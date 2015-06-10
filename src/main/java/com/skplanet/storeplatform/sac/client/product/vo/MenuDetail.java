@@ -50,7 +50,7 @@ public class MenuDetail extends CommonInfo {
     private String imgPath;
 
     /** PIN 인증여부 (Y/N) */
-    private String pinAuthYn;
+    private String plus19Yn;
 
     /** 주입 변수 */
     @JsonRawValue
@@ -128,11 +128,11 @@ public class MenuDetail extends CommonInfo {
         this.urlParam = urlParam;
     }
 
-	public String getPinAuthYn() {
-	    return pinAuthYn;
+	public String getPlus19Yn() {
+	    return plus19Yn;
     }
 
-	public void setPinAuthYn( String pinAuthYn ) {
-	    this.pinAuthYn = pinAuthYn;
+	public void setPlus19Yn( String plus19Yn ) {
+	    this.plus19Yn = plus19Yn;
     }
 }
