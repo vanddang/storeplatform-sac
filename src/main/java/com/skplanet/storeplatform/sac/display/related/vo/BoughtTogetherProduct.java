@@ -40,6 +40,7 @@ public class BoughtTogetherProduct extends CommonInfo {
 	private Integer count;
 	private String testYn;
 	private String prodGradeCd;
+	private String plus19Yn;
 
 	public String getProductId() {
 		return this.productId;
@@ -190,5 +191,20 @@ public class BoughtTogetherProduct extends CommonInfo {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return this.plus19Yn;
+	}
+
+	/**
+	 * @param plus19Yn
+	 *            the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
 	}
 }

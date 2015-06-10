@@ -100,7 +100,9 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 			vo.setMusicSprtYn(supportDevice.getMusicSprtYn());
 			vo.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
 			vo.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+			String plus19Yn = this.getPlus19Yn(requestVO.getProductId());
 
+			vo.setPlus19Yn(plus19Yn); // 19+상품 여부
 			this.log.debug("이 상품과 함께 구매한 상품 조회");
 			boughtTogetherProductList = this.dataSvc.selectList(vo);
 		}
@@ -216,8 +218,9 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 			vo.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
 			vo.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
 
-			this.log.info("################################ vo.getTopMenuId() : " + vo.getTopMenuId());
-			this.log.info("################################ vo.getProdGradeCd() : " + vo.getProdGradeCd());
+			String plus19Yn = this.getPlus19Yn(requestVO.getProductId());
+
+			vo.setPlus19Yn(plus19Yn); // 19+상품 여부
 
 			this.log.debug("########## 이 상품과 함께 구매한 상품 조회V3");
 			boughtTogetherProductList = this.dataSvc.selectListV3(vo);
@@ -304,5 +307,11 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 		this.log.debug("이 상품과 함께 구매한 상품 조회 결과 : " + commonResponse.getTotalCount() + "건");
 		boughtTogetherProductSacRes.setCommonResponse(commonResponse);
 		return boughtTogetherProductSacRes;
+	}
+
+	public String getPlus19Yn(String prodId) {
+		String prodGrdExtraYn = (String) this.commonDAO.queryForObject("SimilarProduct.getPlus19Yn", prodId);
+
+		return prodGrdExtraYn;
 	}
 }

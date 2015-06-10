@@ -118,6 +118,9 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 			requestVO.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
 			requestVO.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
 
+			String plus19Yn = this.getPlus19Yn(requestVO.getProductId());
+
+			requestVO.setPlus19Yn(plus19Yn); // 19+상품 여부
 			// 이 상품과 유사 상품 조회
 			this.log.debug("이 상품과 유사 상품 조회");
 			similarProductList = this.commonDAO.queryForList("SimilarProduct.selectSimilarProductList", requestVO,
@@ -257,6 +260,9 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 			requestVO.setMusicSprtYn(supportDevice.getMusicSprtYn());
 			requestVO.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
 			requestVO.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+			String plus19Yn = this.getPlus19Yn(requestVO.getProductId());
+
+			requestVO.setPlus19Yn(plus19Yn); // 19+상품 여부
 
 			// 이 상품과 유사 상품 조회
 			this.log.debug("이 상품과 유사 상품 조회");
@@ -339,5 +345,11 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 		this.log.debug("이 상품과 유사 상품 조회 결과 : " + commonResponse.getTotalCount() + "건");
 		similarProductSacRes.setCommonResponse(commonResponse);
 		return similarProductSacRes;
+	}
+
+	public String getPlus19Yn(String prodId) {
+		String prodGrdExtraYn = (String) this.commonDAO.queryForObject("SimilarProduct.getPlus19Yn", prodId);
+
+		return prodGrdExtraYn;
 	}
 }

@@ -41,6 +41,8 @@ public class ProductBasicInfo extends CommonInfo {
 	// 앱코디 관련
 	private String recmReason;
 
+	private String plus19Yn;
+
 	/**
 	 * @return the totalCount
 	 */
@@ -251,7 +253,7 @@ public class ProductBasicInfo extends CommonInfo {
 	public void setSeriallyWkdy(String seriallyWkdy) {
 		this.seriallyWkdy = seriallyWkdy;
 	}
-	
+
 	/**
 	 * @return the connectedProdId
 	 */
@@ -318,5 +320,20 @@ public class ProductBasicInfo extends CommonInfo {
 	 */
 	public void setRecmReason(String recmReason) {
 		this.recmReason = recmReason;
+	}
+
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return this.plus19Yn;
+	}
+
+	/**
+	 * @param plus19Yn
+	 *            the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
 	}
 }
