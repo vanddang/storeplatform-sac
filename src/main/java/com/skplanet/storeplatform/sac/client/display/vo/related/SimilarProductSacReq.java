@@ -51,6 +51,7 @@ public class SimilarProductSacReq extends CommonInfo implements Serializable {
 								// : 청소년이용불가
 
 	private String[] prodGradeCdArr;
+	private String plus19Yn;
 
 	/**
 	 * 
@@ -523,4 +524,18 @@ public class SimilarProductSacReq extends CommonInfo implements Serializable {
 		this.prodGradeCdArr = prodGradeCdArr == null ? null : prodGradeCdArr.clone();
 	}
 
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return this.plus19Yn;
+	}
+
+	/**
+	 * @param plus19Yn
+	 *            the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
+	}
 }

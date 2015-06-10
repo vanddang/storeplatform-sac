@@ -45,6 +45,8 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	private String videoDrmSprtYn; // VOD 상품 DRM 지원 여부
 	private String sdVideoSprtYn; // VOD 상품 SD 지원 여부
 
+	private String plus19Yn; // 19+ 상품 여부
+
 	/**
 	 * 
 	 * <pre>
@@ -445,4 +447,20 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	public void setSdVideoSprtYn(String sdVideoSprtYn) {
 		this.sdVideoSprtYn = sdVideoSprtYn;
 	}
+
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return this.plus19Yn;
+	}
+
+	/**
+	 * @param plus19Yn
+	 *            the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
+	}
+
 }
