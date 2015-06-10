@@ -994,6 +994,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
 		product.setRights(this.vodGenerator.generateRights(metaInfo));
 		product.setContributor(this.vodGenerator.generateMovieContributor(metaInfo));
+		product.setBadge(this.commonGenerator.generateBadge(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
@@ -1034,7 +1035,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
 		product.setRights(this.vodGenerator.generateRights(metaInfo));
-		product.setContributor(this.vodGenerator.generateBroadcastContributor(metaInfo));
+		product.setContributor(this.vodGenerator.generateMovieContributor(metaInfo));
+		product.setBadge(this.commonGenerator.generateBadge(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));

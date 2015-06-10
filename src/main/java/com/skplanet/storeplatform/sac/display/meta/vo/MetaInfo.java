@@ -212,6 +212,13 @@ public class MetaInfo extends CommonInfo {
 	/** 도서 목차 */
 	private String bookTbctns;
 
+	/**
+	 * 2015.06.09 멀티미디어(VOD) 관련 변수 추가, 이석희, I-S PLUS
+	 */
+	private String prefixTitle;
+	private String badgeCd;
+	private String badgeOptText;
+
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
 	private Date updDt;
@@ -4579,6 +4586,66 @@ public class MetaInfo extends CommonInfo {
 		this.bookTbctns = bookTbctns;
 	}
 
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return this.plus19Yn;
+	}
+
+	/**
+	 * @param plus19Yn
+	 *            the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
+	}
+
+	/**
+	 * @return the prefixTitle
+	 */
+	public String getPrefixTitle() {
+		return this.prefixTitle;
+	}
+
+	/**
+	 * @param prefixTitle
+	 *            the prefixTitle to set
+	 */
+	public void setPrefixTitle(String prefixTitle) {
+		this.prefixTitle = prefixTitle;
+	}
+
+	/**
+	 * @return the badgeCd
+	 */
+	public String getBadgeCd() {
+		return this.badgeCd;
+	}
+
+	/**
+	 * @param badgeCd
+	 *            the badgeCd to set
+	 */
+	public void setBadgeCd(String badgeCd) {
+		this.badgeCd = badgeCd;
+	}
+
+	/**
+	 * @return the badgeOptText
+	 */
+	public String getBadgeOptText() {
+		return this.badgeOptText;
+	}
+
+	/**
+	 * @param badgeOptText
+	 *            the badgeOptText to set
+	 */
+	public void setBadgeOptText(String badgeOptText) {
+		this.badgeOptText = badgeOptText;
+	}
+
 	public Integer getBookLastChapter() {
 		return this.bookLastChapter;
 	}
@@ -4673,19 +4740,5 @@ public class MetaInfo extends CommonInfo {
 
 	public void setRequestProduct(String requestProduct) {
 		this.requestProduct = requestProduct;
-	}
-
-	/**
-	 * @return the plus19Yn
-	 */
-	public String getPlus19Yn() {
-		return plus19Yn;
-	}
-
-	/**
-	 * @param plus19Yn the plus19Yn to set
-	 */
-	public void setPlus19Yn(String plus19Yn) {
-		this.plus19Yn = plus19Yn;
 	}
 }
