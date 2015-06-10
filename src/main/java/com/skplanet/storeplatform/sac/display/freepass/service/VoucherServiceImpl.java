@@ -144,6 +144,11 @@ public class VoucherServiceImpl implements VoucherService {
 		if (StringUtils.isEmpty(req.getPlus19Yn())) {
 			req.setPlus19Yn("N");
 		}
+		
+		if (!"Y".equals(req.getPlus19Yn()) && !"N".equals(req.getPlus19Yn())) {
+			throw new StorePlatformException("SAC_DSP_0003", "plus19Yn", req.getPlus19Yn());
+		}
+		
 
 		// '+'로 연결 된 이용등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getCmpxProdGradeCd())) {

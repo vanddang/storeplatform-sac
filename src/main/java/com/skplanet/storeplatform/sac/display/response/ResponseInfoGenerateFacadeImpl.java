@@ -1334,7 +1334,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 				|| freepassAttr.getSerialBook() != null) {
 			coupon.setFreepassAttr(freepassAttr);
 		}
-		if (rights.getGrade() != null || rights.getGradeExtra() != null) {
+		if (rights.getGrade() != null || rights.getPlus19Yn() != null) {
 			coupon.setRights(rights);
 		}
 		// coupon.setDate(date);

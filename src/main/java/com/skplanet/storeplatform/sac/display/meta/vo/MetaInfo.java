@@ -319,7 +319,7 @@ public class MetaInfo extends CommonInfo {
 	private String possLendClsfCd; // 소장, 대여 구분코드
 	private String seriesBookClsfCd; // 이북, 코믹, 연재/단행 구분코드
 	private String requestProduct; // 요청상품정보
-	private String prodGrdExtraCd; // 19+ 상품여부
+	private String plus19Yn; // 19+ 상품 Yn
 
 	// ////////////////////////// 하루에 하나 변수 ////////////////////////////
 	private String expoDt;
@@ -4675,12 +4675,17 @@ public class MetaInfo extends CommonInfo {
 		this.requestProduct = requestProduct;
 	}
 
-	public String getProdGrdExtraCd() {
-		return this.prodGrdExtraCd;
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return plus19Yn;
 	}
 
-	public void setProdGrdExtraCd(String prodGrdExtraCd) {
-		this.prodGrdExtraCd = prodGrdExtraCd;
+	/**
+	 * @param plus19Yn the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
 	}
-
 }

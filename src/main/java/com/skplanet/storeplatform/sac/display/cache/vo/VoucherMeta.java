@@ -76,6 +76,7 @@ public class VoucherMeta extends CommonInfo {
 	private String cmpxProdGrpCd;
 	private String possLendClsfCd;
 	private String seriesBookClsfCd;
+	private String plus19Yn; // 19+ 상품 Yn
 
 	public String getProdId() {
 		return this.prodId;
@@ -515,6 +516,20 @@ public class VoucherMeta extends CommonInfo {
 
 	public void setCmpxProdGrpCd(String cmpxProdGrpCd) {
 		this.cmpxProdGrpCd = cmpxProdGrpCd;
+	}
+
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return plus19Yn;
+	}
+
+	/**
+	 * @param plus19Yn the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
 	}
 
 }
