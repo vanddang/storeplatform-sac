@@ -46,7 +46,7 @@ public class CardInfo extends CommonInfo {
 	private String smartOfrListId;
 	private String shareUrl;
 	private String testMdnYn;
-	private String lndPinAuthYn;
+	private String lndPlus19Yn;
 	private String cardUseGrdCd;
 
 	/**
@@ -460,12 +460,12 @@ public class CardInfo extends CommonInfo {
 	    this.cardUseGrdCd = cardUseGrdCd;
     }
 
-	public String getLndPinAuthYn() {
-	    return lndPinAuthYn;
+	public String getLndPlus19Yn() {
+	    return lndPlus19Yn;
     }
 
-	public void setLndPinAuthYn( String lndPinAuthYn ) {
-	    this.lndPinAuthYn = lndPinAuthYn;
+	public void setLndPlus19Yn( String lndPlus19Yn ) {
+	    this.lndPlus19Yn = lndPlus19Yn;
     }
 
 	public String getTestMdnYn() {

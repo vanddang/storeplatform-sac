@@ -55,7 +55,7 @@ public class IntegratedMenuServiceImpl implements IntegratedMenuService {
             md.setImgPath(mc.getImgPath());
             md.setMenuName(mc.getMenuNm());
             md.setUrlParam(mc.getInjtVar());
-            md.setPinAuthYn(mc.getPinAuthYn());
+            md.setPlus19Yn(mc.getPlus19Yn());
 
             if(MENU_TP_MENU.equals(mc.getKeyType()))
                 categoryMenuList.add(md);

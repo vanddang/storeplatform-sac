@@ -170,7 +170,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 		card.setLndTitle(cardDetail.getLndTitle());
 		card.setLndDesc(cardDetail.getLndDesc());
 		card.setLndLayout(StringUtils.defaultString(cardDetail.getLndLayOut()));
-		card.setLndPinAuthYn( cardDetail.getLndPinAuthYn() );
+		card.setLndPlus19Yn( cardDetail.getLndPlus19Yn() );
 		card.setMenuId(StringUtils.defaultString(cardDetail.getMenuId()));
 		card.setLikeYn(cardDetail.getLikeYn());
 		card.setShareUrl(StringUtils.defaultString(cardDetail.getShareUrl()).replaceAll("#\\{cardId\\}",cardDetail.getCardId()));

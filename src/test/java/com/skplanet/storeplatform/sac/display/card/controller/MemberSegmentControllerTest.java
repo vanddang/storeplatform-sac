@@ -55,7 +55,7 @@ public class MemberSegmentControllerTest {
 
 		MemberSegmentReq req = new MemberSegmentReq();
 
-		req.setUserMdn( "01031155023" );
+		req.setUserMdn( "01085226051" );
 		req.setTingYn( "Y" );
 		req.setDeviceKey( "DE2015052217084261415049028" );
 		req.setUserKey( "US201505221708425780023912" );
