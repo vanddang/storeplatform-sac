@@ -68,12 +68,12 @@
     <select id="selectProductSongInfoList" resultType="ProductBasicInfo">
         SELECT /* CategorySpecificProductMapper.xml, selectProductSongInfoList, SAC 전시, 2014-03-03*/
             Z.PROD_ID,
-            Z.SVC_GRP_CD,
-            Z.SVC_TYPE_CD,
-            Z.CONTENTS_TYPE_CD,
-            Z.META_CLSF_CD,
-            Z.TOP_MENU_ID,
-            Z.PROD_ID AS PART_PROD_ID,
+        Z.SVC_GRP_CD,
+        Z.SVC_TYPE_CD,
+        Z.CONTENTS_TYPE_CD,
+        Z.META_CLSF_CD,
+        Z.TOP_MENU_ID,
+        Z.PROD_ID AS PART_PROD_ID,
             Z.OUTSD_CONTENTS_ID,
             ROWNUM
         FROM 
@@ -646,7 +646,7 @@
                  , 0) AS AVG_EVLU_SCORE
             ]]>  
          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-            , P2.CID     -- 채널 상품 ID 조회       
+            , P2.CID     -- 채널 상품 ID 조회
          </if>
          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
             , P.CID   -- 에피소드 상품 ID 조회
@@ -702,6 +702,7 @@
        ----------------------------------------------------------------------------- 
           <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
             AND CP.PROD_ID = #{productBasicInfo.prodId}
+            AND P.SVC_GRP_CD = 'DP000203' -- MP3
           </if>
           <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
             AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
