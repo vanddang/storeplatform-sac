@@ -124,41 +124,45 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				purchaseProduct.getSellerMbrNo(), purchaseOrderInfo.getTenantProdGrpCd());
 		paymentPageParam.setSellerType(sellerInfo.getSellerClass());
 
-//		if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_APP)
-//				|| StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-//						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) { // APP/IAP 상품
-//			// 상품 정보의 판매자명은 회사명에만 세팅: 2015.01.05.염동환M
-//			paymentPageParam.setNmSellerCompany(purchaseProduct.getSellerNm());
-//			paymentPageParam.setNmSeller(null);
-//			paymentPageParam.setEmailSeller(purchaseProduct.getSellerEmail());
-//			paymentPageParam.setNoTelSeller(purchaseProduct.getSellerTelno());
-//
-//			if (StringUtils.isBlank(paymentPageParam.getNmSellerCompany())
-//					|| StringUtils.isBlank(paymentPageParam.getEmailSeller())
-//					|| StringUtils.isBlank(paymentPageParam.getNoTelSeller())) {
-//
-//				if (StringUtils.isBlank(paymentPageParam.getNmSellerCompany())) {
-//					paymentPageParam.setNmSellerCompany(sellerInfo.getSellerCompany());
-//				}
-//				// paymentPageParam.setNmSeller(sellerInfo.getSellerName());
-//				if (StringUtils.isBlank(paymentPageParam.getEmailSeller())) {
-//					paymentPageParam.setEmailSeller(sellerInfo.getSellerEmail());
-//				}
-//				if (StringUtils.isBlank(paymentPageParam.getNoTelSeller())) {
-//					paymentPageParam.setNoTelSeller(sellerInfo.getSellerPhone());
-//				}
-//			}
-//
-//		} else {
+		if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_APP)
+				|| StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) { // APP/IAP 상품
+			// 상품 정보의 판매자명은 회사명에만 세팅: 2015.01.05.염동환M
+			paymentPageParam.setNmSellerCompany(purchaseProduct.getSellerNm());
+			paymentPageParam.setNmSeller(null);
+			paymentPageParam.setEmailSeller(purchaseProduct.getSellerEmail());
+			paymentPageParam.setNoTelSeller(purchaseProduct.getSellerTelno());
+			if (StringUtils.isBlank(paymentPageParam.getNmSellerCompany())
+					|| StringUtils.isBlank(paymentPageParam.getEmailSeller())
+					|| StringUtils.isBlank(paymentPageParam.getNoTelSeller())) {
 
-		// 2015.06.09 판매자 정보를 회원 기반으로 세팅(전시에서도 회원에서 관리하는 판매자 데이터가 정확하다고 함)
-		paymentPageParam.setNmSellerCompany(sellerInfo.getSellerCompany());
-		paymentPageParam.setNmSeller(sellerInfo.getSellerName());
-		paymentPageParam.setEmailSeller(sellerInfo.getSellerEmail());
-		paymentPageParam.setNoTelSeller(sellerInfo.getSellerPhone());
+				if (StringUtils.isBlank(paymentPageParam.getNmSellerCompany())) {
+					paymentPageParam.setNmSellerCompany(sellerInfo.getSellerCompany());
+				}
+				// paymentPageParam.setNmSeller(sellerInfo.getSellerName());
+				if (StringUtils.isBlank(paymentPageParam.getEmailSeller())) {
+					paymentPageParam.setEmailSeller(sellerInfo.getSellerEmail());
+				}
+				if (StringUtils.isBlank(paymentPageParam.getNoTelSeller())) {
+					paymentPageParam.setNoTelSeller(sellerInfo.getSellerPhone());
+				}
+			}
+
+		} else {
+			paymentPageParam.setNmSellerCompany(sellerInfo.getSellerCompany());
+			paymentPageParam.setNmSeller(sellerInfo.getSellerName());
+			paymentPageParam.setEmailSeller(sellerInfo.getSellerEmail());
+			paymentPageParam.setNoTelSeller(sellerInfo.getSellerPhone());
+		}
 		paymentPageParam.setSellerAddress(sellerInfo.getSellerAddress());
 		paymentPageParam.setBizRegNumber(sellerInfo.getBizRegNumber());
-//		}
+
+		// 판매자가 개인일 경우 해당 내용 삭제
+		if(StringUtils.equals(sellerInfo.getSellerClass(),PurchaseConstants.SELLER_TYPE_INDIVISUAL)) {
+			paymentPageParam.setNoTelSeller(null);
+			paymentPageParam.setSellerAddress(null);
+			paymentPageParam.setBizRegNumber(null);
+		}
 
 		// pDescription
 		paymentPageParam.setpDescription(this.makeProductDescription(purchaseOrderInfo.getTenantProdGrpCd(),

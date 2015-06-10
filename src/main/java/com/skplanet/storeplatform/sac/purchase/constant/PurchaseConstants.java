@@ -113,7 +113,6 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String SHOPPING_SELLER_DEFAULT_NAME = "Tstore"; // 판매자명
 	public static final String SHOPPING_SELLER_DEFAULT_EMAIL = "cscenter@tstore.co.kr"; // 이메일주소
 	public static final String SHOPPING_SELLER_DEFAULT_TEL = "1600-6573"; // 전화번호
-	public static final String SHOPPING_SELLER_TYPE = "US010103"; // 법인 사업자
 
 	/** 구매 요청 이후 진행 알림 */
 	public static final String CREATE_PURCHASE_RESULT_FREE = "free"; // 무료구매완료

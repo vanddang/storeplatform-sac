@@ -372,7 +372,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 				sellerMbrAppSacParam.setSellerName(PurchaseConstants.SHOPPING_SELLER_DEFAULT_NAME); // 판매자명
 				sellerMbrAppSacParam.setSellerEmail(PurchaseConstants.SHOPPING_SELLER_DEFAULT_EMAIL); // 판매자 이메일 주소
 				sellerMbrAppSacParam.setSellerPhone(PurchaseConstants.SHOPPING_SELLER_DEFAULT_TEL); // 판매자 전화번호
-				sellerMbrAppSacParam.setSellerClass(PurchaseConstants.SHOPPING_SELLER_TYPE);
+				sellerMbrAppSacParam.setSellerClass(PurchaseConstants.SELLER_TYPE_COPORATION);
 			}
 		}
 
