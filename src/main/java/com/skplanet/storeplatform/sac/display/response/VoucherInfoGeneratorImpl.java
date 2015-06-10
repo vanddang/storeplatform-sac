@@ -320,8 +320,7 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 	public Rights generateRights(MetaInfo metaInfo) {
 		Rights rights = new Rights();
 		rights.setGrade(metaInfo.getProdGrdCd());
-		rights.setGradeExtra(metaInfo.getProdGrdExtraCd());
+		rights.setPlus19Yn(metaInfo.getPlus19Yn());
 		return rights;
 	}
-
 }

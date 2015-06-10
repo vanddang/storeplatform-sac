@@ -71,11 +71,11 @@
                     <if test='prodStatusCd != null and prodStatusCd != ""'>
                         AND TP.PROD_STATUS_CD = #{prodStatusCd} /* PD000403 : 판매중 */
                     </if>
-                    <if test='prodGradeExtraCd == null'>
-                       AND PD.PROD_GRD_EXTRA_CD IS NULL
+                    <if test='plus19Yn == "N" or plus19Yn == null'> /* 19+ 상품 코드 */
+                       AND (PD.PLUS19_YN IS NULL OR PD.PLUS19_YN  = 'N') 
                     </if>
-                    <if test='prodGradeExtraCd == "PD020601"'>
-                        AND (PD.PROD_GRD_EXTRA_CD IS NULL OR PD.PROD_GRD_EXTRA_CD = #{prodGradeExtraCd})
+                    <if test='plus19Yn == "Y"'>
+                       AND (PD.PLUS19_YN IS NULL OR PD.PLUS19_YN  = 'Y')
                     </if>       
 					AND TP.EXPO_YN = 'Y'
 					<if test='kind != null and kind != ""'>
@@ -375,7 +375,7 @@
                         , TB_DP_TENANT_PROD TP
                         , TB_DP_TENANT_PROD_PRICE PR
                         , TB_DP_USE_POLICY UP
-                        ,(SELECT /*+ no_merge */ DISTINCT A.PROD_ID , C.PROD_GRD_EXTRA_CD
+                        ,(SELECT /*+ no_merge */ DISTINCT A.PROD_ID , C.PLUS19_YN
                             FROM TB_DP_FIXRATE_PROD_MAPG A
                                  ,TB_DP_PROD_RSHP B
                                  ,TB_DP_PROD C
@@ -421,7 +421,7 @@
                 #{kind}
                 </foreach>
             </if>
-            AND (PD.PROD_GRD_EXTRA_CD IS NULL OR PD.PROD_GRD_EXTRA_CD = PM.PROD_GRD_EXTRA_CD)
+            AND (PD.PLUS19_YN IS NULL OR PD.PLUS19_YN = PM.PLUS19_YN)
 
 
                 ORDER BY TP.EXPO_ORD, PD.REG_DT DESC

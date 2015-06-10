@@ -401,7 +401,8 @@ public class VodServiceImpl implements VodService {
 	 */
 	private Title mapTitle(VodDetail mapperVO) {
 		Title title = new Title();
-		title.setPrefix(mapperVO.getPrefixTitle());
+		// title.setPrefix(mapperVO.getPrefixTitle());
+		title.setPrefix(mapperVO.getVodTitlNm());
 		title.setText(mapperVO.getProdNm());
 		return title;
 	}
@@ -433,7 +434,8 @@ public class VodServiceImpl implements VodService {
 		rights.setGrade(mapperVO.getProdGrdCd());
 
 		/** 기타 상품 등급 코드 */
-		rights.setGradeExtra(mapperVO.getProdGrdExtraCd());
+		// rights.setGradeExtra(mapperVO.getProdGrdExtraCd());
+		rights.setPlus19Yn(mapperVO.getPlus19Yn());
 
 		// 영화,TV방송에 대한 allow 설정
 		if (StringUtils.equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID, mapperVO.getTopMenuId())

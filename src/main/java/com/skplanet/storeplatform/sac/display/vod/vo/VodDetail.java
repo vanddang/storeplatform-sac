@@ -306,6 +306,8 @@ public class VodDetail extends CommonInfo {
 	private String badgeCd;
 	/** BADGE 설명 */
 	private String badgeText;
+	/** 19+ 상품여부 */
+	private String plus19Yn;
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -1680,6 +1682,21 @@ public class VodDetail extends CommonInfo {
 	 */
 	public void setBadgeText(String badgeText) {
 		this.badgeText = badgeText;
+	}
+
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return this.plus19Yn;
+	}
+
+	/**
+	 * @param plus19Yn
+	 *            the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
 	}
 
 }

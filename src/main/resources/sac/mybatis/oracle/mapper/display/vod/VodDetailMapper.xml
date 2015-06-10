@@ -49,10 +49,11 @@
               , TPP.CHNL_PERIOD_AMT AS PLAY_PROD_AMT
               , TPP.CHNL_UNLMT_AMT AS STORE_PROD_AMT
               , MP.GENRE_CD, (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM FROM TB_CM_CD WHERE CD_ID = MP.GENRE_CD AND LANG_CD = P.LANG_CD) AS GENRE_CD_NM
-              , PREFIX.PREFIX_TITLE           
+              , '['|| PREFIX.PREFIX_TITLE || ']' AS PREFIX_TITLE
+              , '['|| PREFIX.PREFIX_TITLE || ']' AS VOD_TITL_NM
               , (SELECT /*+ INDEX_JOIN(TB_CM_CD) */
-                        CASE WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NULL) THEN Y.CD_NM
-                             WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NOT NULL) THEN PREFIX.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM
+                        CASE WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NULL) THEN '['|| Y.CD_NM || ']' 
+                             WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NOT NULL) THEN '['|| PREFIX.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM || ']'
                              ELSE NULL END
                    FROM TB_CM_CD Y
                   WHERE PREFIX.BADGE_CD = Y.CD_ID(+)
@@ -88,7 +89,7 @@
 			  <if test="userKey != null">  
 			  , (CASE WHEN ML.STATS_KEY IS NOT NULL THEN 'Y' ELSE 'N' END) AS LIKE_YN
               </if> 
-              , P2.PROD_GRD_EXTRA_CD
+              , NVL(P2.PLUS19_YN, 'N') AS PLUS19_YN
 		  FROM (SELECT RSHP.PROD_ID AS CHNL_PROD_ID, 
 		              G.TENANT_ID, 
 		              C.LANG_CD, 
@@ -197,9 +198,10 @@
 		    , T.META_CLSF_CD
 		    , T.CID, T.CHNL_PROD_ID, T.PROD_ID, T.REG_DT, T.LAST_DEPLOY_DT
 		    , PROD_NM, T.PROD_BASE_DESC, T.PROD_DTL_DESC, T.PROD_INTR_DSCR, T.ARTIST1_NM, T.ARTIST2_NM
-		    , T.PREFIX_TITLE
+		    , '['|| T.PREFIX_TITLE || ']' AS PREFIX_TITLE
+		    , '['|| T.PREFIX_TITLE || ']' AS VOD_TITL_NM		    
             , T.BADGE_CD
-            , T.BADGE_TEXT 
+            , '['|| T.BADGE_TEXT || ']' AS BADGE_TEXT
 		    , GENRE_CD, (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM FROM TB_CM_CD WHERE CD_ID = T.GENRE_CD AND LANG_CD = T.LANG_CD) AS GENRE_CD_NM
 		    , ISSUE_DAY, SVC_START_DT, CHNL_COMP_NM
 		    , BRDC_COMP_CD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = T.BRDC_COMP_CD AND LANG_CD = T.LANG_CD) AS BRDC_COMP_CD_NM
@@ -209,7 +211,7 @@
             , USE_PERIOD_UNIT_CD_NM
             , USE_PERIOD_UNIT_CD
 		    , DWLD_AREA_LIMT_YN
-		    , EPSD_PLAY_TM, PROD_GRD_CD, PROD_GRD_EXTRA_CD
+		    , EPSD_PLAY_TM, PROD_GRD_CD
 		    , DECODE( DOLBY_YN , 'Y' , DECODE( DOLBY_SPRT_YN, 'Y', DOLBY_SPRT_YN, 'N' ), 'N' ) AS DOLBY_SPRT_YN
 		    , SELLER_MBR_NO, EXPO_SELLER_NM, EXPO_SELLER_TELNO, EXPO_SELLER_EMAIL
 		    , REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,1) AS NM_SUB_CONTS_ID
@@ -261,6 +263,7 @@
                    WHEN PLAY_DWLD_STRM='DP010502' THEN 'strm'
                    WHEN PLAY_DWLD_STRM='DP010503' THEN 'both' END
               ) AS PLAY_DL_STRM_CD
+            , T.PLUS19_YN
 		FROM
 		(
 		    SELECT  
@@ -276,7 +279,7 @@
 		       , HDCP_YN, HDV_YN 
 		       , USE_PERIOD, USE_PERIOD_UNIT_CD
 		       , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = USE_PERIOD_UNIT_CD AND LANG_CD = T4.LANG_CD) AS USE_PERIOD_UNIT_CD_NM
-		       , EPSD_PLAY_TM, PROD_GRD_CD, PROD_GRD_EXTRA_CD
+		       , EPSD_PLAY_TM, PROD_GRD_CD
 		       , DOLBY_SPRT_YN, DOLBY_YN
 		       , DWLD_AREA_LIMT_YN, DWLD_NETWORK_CD, STRM_NETWORK_CD
 		       , FILE_PATH
@@ -290,6 +293,7 @@
 		       , STORE_PROD_ID, STORE_PROD_AMT, STORE_PROD_NET_AMT, STORE_DRM_YN, STORE_PROD_STATUS_CD, STORE_USE_PERIOD, STORE_USE_PERIOD_UNIT_CD
 		       , PLAY_PROD_ID, PLAY_PROD_AMT, PLAY_PROD_NET_AMT, PLAY_DRM_YN, PLAY_PROD_STATUS_CD, PLAY_USE_PERIOD, PLAY_USE_PERIOD_UNIT_CD
 		       , STORE_DWLD_STRM, PLAY_DWLD_STRM
+		       , PLUS19_YN
 		     FROM
 		          (
 				SELECT * FROM (
@@ -329,7 +333,6 @@
 		                  , MAX( T1.DWLD_AREA_LIMT_YN ) AS DWLD_AREA_LIMT_YN
 		                  , MAX( T1.PLAY_TM ) AS EPSD_PLAY_TM
 		                  , MAX( T1.PROD_GRD_CD ) AS PROD_GRD_CD
-		                  , MAX( T1.PROD_GRD_EXTRA_CD ) AS PROD_GRD_EXTRA_CD
 		                  , MAX( T1.DOLBY_SPRT_YN ) AS DOLBY_SPRT_YN
 		                  , MAX( T1.DOLBY_YN ) AS DOLBY_YN
 		                  , MAX( T1.DWLD_NETWORK_CD ) AS DWLD_NETWORK_CD
@@ -367,6 +370,7 @@
 		                  , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD ) ) AS PLAY_USE_PERIOD
 		                  , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
 		                  , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD
+		                  , MAX( T1.PLUS19_YN) AS PLUS19_YN
 		                FROM
 		                   (
 		                    SELECT
@@ -388,8 +392,7 @@
                                 , PREFIX.PREFIX_TITLE
 		                        , MP.GENRE_CD, MP.ISSUE_DAY, MP.BRDC_COMP_CD, MP.SVC_START_DT, MP.CHNL_COMP_NM
 		                        , MP.HDCP_YN, MP.HDV_YN, MP.DOLBY_SPRT_YN, DV.DOLBY_SPRT_YN AS DOLBY_YN
-		                        , MP.PLAY_TM, PD.PROD_GRD_CD
-                                , PD.PROD_GRD_EXTRA_CD		                        
+		                        , MP.PLAY_TM, PD.PROD_GRD_CD                        
 		                        , MP.DWLD_AREA_LIMT_YN, MP.DWLD_NETWORK_CD, MP.STRM_NETWORK_CD
 		                        , MP.SAMPL_URL, MP.SC_SAMPL_URL
 		                        , SC.FILE_PATH
@@ -426,6 +429,7 @@
 		                        , ( CASE WHEN (  MP.HDV_YN = 'Y' AND ( SC.AUDIO_TYPE_CD IS NULL OR SC.AUDIO_TYPE_CD != 'PD002215' ) AND SC.DP_PG_QULT_CD = 'PD009705' ) THEN
 		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
 		                            END ) AS FHD_SUB_CONTS
+		                        , NVL(PD.PLUS19_YN, 'N') AS PLUS19_YN
 		                  FROM TB_DP_PROD_RSHP PR
 		                    , TB_DP_PROD PD
 		                    , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
