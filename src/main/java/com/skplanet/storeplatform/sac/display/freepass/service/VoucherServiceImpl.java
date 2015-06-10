@@ -496,13 +496,13 @@ public class VoucherServiceImpl implements VoucherService {
 			req.setCount(20);
 		}
 
-		if (StringUtils.isEmpty(req.getUserKey())) {
-			throw new StorePlatformException("SAC_DSP_0002", "userKey", req.getUserKey());
-		}
-
-		if (StringUtils.isEmpty(req.getDeviceKey())) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceKey", req.getDeviceKey());
-		}
+//		if (StringUtils.isEmpty(req.getUserKey())) {
+//			throw new StorePlatformException("SAC_DSP_0002", "userKey", req.getUserKey());
+//		}
+//
+//		if (StringUtils.isEmpty(req.getDeviceKey())) {
+//			throw new StorePlatformException("SAC_DSP_0002", "deviceKey", req.getDeviceKey());
+//		}
 
 		// '+'로 연결 된 상품등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getKind())) {
@@ -537,17 +537,18 @@ public class VoucherServiceImpl implements VoucherService {
 					prodIdList.add(productBasicInfo.getProdId());
 				}
 			}
-
-			if (prodIdList.size() > 0) { // 판매 중지가 있는 상품에 대해서만 기구매 체크를 해야함
-				try {
-					res = this.displayCommonService.checkPurchaseList(header.getTenantHeader().getTenantId(),
-							req.getUserKey(), req.getDeviceKey(), prodIdList);
-				} catch (StorePlatformException e) {
-					// ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로
-					// 처리한다.
-					res = new ExistenceListRes();
-					res.setExistenceListRes(new ArrayList<ExistenceRes>());
-				}
+			if (StringUtils.isNotEmpty(req.getUserKey())) {
+    			if (prodIdList.size() > 0) { // 판매 중지가 있는 상품에 대해서만 기구매 체크를 해야함
+    				try {
+    					res = this.displayCommonService.checkPurchaseList(header.getTenantHeader().getTenantId(),
+    							req.getUserKey(), req.getDeviceKey(), prodIdList);
+    				} catch (StorePlatformException e) {
+    					// ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로
+    					// 처리한다.
+    					res = new ExistenceListRes();
+    					res.setExistenceListRes(new ArrayList<ExistenceRes>());
+    				}
+    			}
 			}
 
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -561,22 +562,24 @@ public class VoucherServiceImpl implements VoucherService {
 					couponList.add(coupon);
 					commonResponse.setTotalCount(totalCnt);
 				} else {
-					// 기구매 여부 조회
-					for (ExistenceRes existenceRes : res.getExistenceListRes()) {
-						// this.log.info("existenceRes.getProdId():::::" +
-						// existenceRes.getProdId());
-						if (existenceRes.getProdId().equals(productBasicInfo.getProdId())) {
-							purchaseYn = true;
-						}
-					}
-					this.log.info("구매 여부:purchaseYn=>" + purchaseYn);
-					if (purchaseYn) {
-						totalCnt++;
-						reqMap.put("productBasicInfo", productBasicInfo);
-						retMetaInfo = this.metaInfoService.getVoucherMetaInfo(reqMap);
-						coupon = this.responseInfoGenerateFacade.generateVoucherProduct(retMetaInfo);
-						couponList.add(coupon);
-						commonResponse.setTotalCount(totalCnt);
+					if (StringUtils.isNotEmpty(req.getUserKey())) {
+    					// 기구매 여부 조회
+    					for (ExistenceRes existenceRes : res.getExistenceListRes()) {
+    						// this.log.info("existenceRes.getProdId():::::" +
+    						// existenceRes.getProdId());
+    						if (existenceRes.getProdId().equals(productBasicInfo.getProdId())) {
+    							purchaseYn = true;
+    						}
+    					}
+    					this.log.info("구매 여부:purchaseYn=>" + purchaseYn);
+    					if (purchaseYn) {
+    						totalCnt++;
+    						reqMap.put("productBasicInfo", productBasicInfo);
+    						retMetaInfo = this.metaInfoService.getVoucherMetaInfo(reqMap);
+    						coupon = this.responseInfoGenerateFacade.generateVoucherProduct(retMetaInfo);
+    						couponList.add(coupon);
+    						commonResponse.setTotalCount(totalCnt);
+    					}
 					}
 				}
 			}
