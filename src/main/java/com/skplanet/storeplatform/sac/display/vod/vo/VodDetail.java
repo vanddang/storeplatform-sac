@@ -305,7 +305,7 @@ public class VodDetail extends CommonInfo {
 	/** BADGE 코드 */
 	private String badgeCd;
 	/** BADGE 설명 */
-	private String badgeText;
+	private String badgeOptText;
 	/** 19+ 상품여부 */
 	private String plus19Yn;
 
@@ -1670,18 +1670,18 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * @return the badgeText
+	 * @return the badgeOptText
 	 */
-	public String getBadgeText() {
-		return this.badgeText;
+	public String getBadgeOptText() {
+		return this.badgeOptText;
 	}
 
 	/**
-	 * @param badgeText
-	 *            the badgeText to set
+	 * @param badgeOptText
+	 *            the badgeOptText to set
 	 */
-	public void setBadgeText(String badgeText) {
-		this.badgeText = badgeText;
+	public void setBadgeOptText(String badgeOptText) {
+		this.badgeOptText = badgeOptText;
 	}
 
 	/**

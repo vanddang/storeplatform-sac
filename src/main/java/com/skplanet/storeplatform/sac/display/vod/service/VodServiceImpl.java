@@ -1084,8 +1084,8 @@ public class VodServiceImpl implements VodService {
 	 */
 	private Badge getBadgeInfo(VodDetail mapperVO) {
 		Badge badge = new Badge();
-		badge.setBadgeCd(mapperVO.getBadgeCd());
-		badge.setBadgeText(mapperVO.getBadgeText());
+		badge.setCode(mapperVO.getBadgeCd());
+		badge.setText(mapperVO.getBadgeOptText());
 
 		return badge;
 	}

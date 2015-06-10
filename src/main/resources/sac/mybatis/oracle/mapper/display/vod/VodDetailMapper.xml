@@ -57,7 +57,7 @@
                              ELSE NULL END
                    FROM TB_CM_CD Y
                   WHERE PREFIX.BADGE_CD = Y.CD_ID(+)
-                    AND Y.LANG_CD(+) = P.LANG_CD) AS BADGE_TEXT
+                    AND Y.LANG_CD(+) = P.LANG_CD) AS BADGE_OPT_TEXT
               , PREFIX.BADGE_CD  
 		      , MP.DWLD_AREA_LIMT_YN 
 		      , MP.SVC_START_DT
@@ -201,7 +201,7 @@
 		    , '['|| T.PREFIX_TITLE || ']' AS PREFIX_TITLE
 		    , '['|| T.PREFIX_TITLE || ']' AS VOD_TITL_NM		    
             , T.BADGE_CD
-            , '['|| T.BADGE_TEXT || ']' AS BADGE_TEXT
+            , '['|| T.BADGE_OPT_TEXT || ']' AS BADGE_OPT_TEXT
 		    , GENRE_CD, (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM FROM TB_CM_CD WHERE CD_ID = T.GENRE_CD AND LANG_CD = T.LANG_CD) AS GENRE_CD_NM
 		    , ISSUE_DAY, SVC_START_DT, CHNL_COMP_NM
 		    , BRDC_COMP_CD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = T.BRDC_COMP_CD AND LANG_CD = T.LANG_CD) AS BRDC_COMP_CD_NM
@@ -274,7 +274,7 @@
 		       , PROD_NM, PROD_BASE_DESC, PROD_DTL_DESC, PROD_INTR_DSCR, ARTIST1_NM, ARTIST2_NM
                , PREFIX_TITLE
                , BADGE_CD
-               , BADGE_TEXT
+               , BADGE_OPT_TEXT
 		       , GENRE_CD, ISSUE_DAY, BRDC_COMP_CD, SVC_START_DT, CHNL_COMP_NM
 		       , HDCP_YN, HDV_YN 
 		       , USE_PERIOD, USE_PERIOD_UNIT_CD
@@ -313,7 +313,7 @@
 		                  , MAX( T1.LAST_DEPLOY_DT ) AS LAST_DEPLOY_DT
                           , MAX( T1.PREFIX_TITLE) AS PREFIX_TITLE
                           , MAX( T1.BADGE_CD) AS BADGE_CD
-                          , MAX( T1.BADGE_TEXT) AS BADGE_TEXT
+                          , MAX( T1.BADGE_OPT_TEXT) AS BADGE_OPT_TEXT
 		                  , MAX( T1.PROD_NM ) AS PROD_NM
 		                  , MAX( T1.PROD_BASE_DESC ) AS PROD_BASE_DESC
 		                  , MAX( T1.PROD_DTL_DESC ) AS PROD_DTL_DESC
@@ -387,7 +387,7 @@
                                                ELSE NULL END
                                      FROM TB_CM_CD Y
                                     WHERE PREFIX.BADGE_CD = Y.CD_ID(+)
-                                      AND Y.LANG_CD(+) = DSC.LANG_CD) AS BADGE_TEXT                                                    
+                                      AND Y.LANG_CD(+) = DSC.LANG_CD) AS BADGE_OPT_TEXT                                                    
                                 , PREFIX.BADGE_CD
                                 , PREFIX.PREFIX_TITLE
 		                        , MP.GENRE_CD, MP.ISSUE_DAY, MP.BRDC_COMP_CD, MP.SVC_START_DT, MP.CHNL_COMP_NM
