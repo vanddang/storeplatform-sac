@@ -452,6 +452,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		String nmSellerCompanyWithUrlEncoding = paymentPageParam.getNmSellerCompany();
 		String nmSellerWithUrlEncoding = paymentPageParam.getNmSeller();
 		String nmsellerAddressEncoding = paymentPageParam.getSellerAddress();
+		String nmsellerBizRegNumberEncoding = paymentPageParam.getBizRegNumber();
 
 		// P/P 적용 이후 반영
 		try {
@@ -472,6 +473,9 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			}
 			if (StringUtils.isNotBlank(paymentPageParam.getSellerAddress())) {
 				nmsellerAddressEncoding = URLEncoder.encode(paymentPageParam.getSellerAddress(), "UTF-8");
+			}
+			if (StringUtils.isNotBlank(paymentPageParam.getBizRegNumber())) {
+				nmsellerBizRegNumberEncoding = URLEncoder.encode(paymentPageParam.getBizRegNumber(), "UTF-8");
 			}
 		} catch (UnsupportedEncodingException e) {
 			throw new StorePlatformException("SAC_PUR_7201", e);
@@ -511,11 +515,11 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		sb.append("&nmSellerCompany=").append(StringUtils.defaultString(nmSellerCompanyWithUrlEncoding));
 		sb.append("&nmSeller=").append(StringUtils.defaultString(nmSellerWithUrlEncoding));
 		sb.append("&emailSeller=").append(StringUtils.defaultString(paymentPageParam.getEmailSeller()));
-		sb.append("&noTelSeller=").append(StringUtils.defaultString(StringUtils.replace(paymentPageParam.getNoTelSeller(),"-","")));
+		sb.append("&noTelSeller=").append(StringUtils.defaultString(paymentPageParam.getNoTelSeller()));
 		sb.append("&sellerType=").append(StringUtils.defaultString(paymentPageParam.getSellerType()));
 		sb.append("&flag=").append(StringUtils.defaultString(paymentPageParam.getFlag()));
 		sb.append("&sellerAddress=").append(StringUtils.defaultString(nmsellerAddressEncoding));
-		sb.append("&bizRegNumber=").append(StringUtils.defaultString(StringUtils.replace(paymentPageParam.getBizRegNumber(),"-","")));
+		sb.append("&bizRegNumber=").append(StringUtils.defaultString(nmsellerBizRegNumberEncoding));
 		sb.append("&hasFullProdYn=").append(paymentPageParam.getHasFullProdYn());
 
 		String plainData = sb.toString();
