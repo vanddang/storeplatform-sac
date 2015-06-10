@@ -537,7 +537,7 @@ public class VoucherServiceImpl implements VoucherService {
 					prodIdList.add(productBasicInfo.getProdId());
 				}
 			}
-			if (StringUtils.isNotEmpty(req.getUserKey())) {
+			if (StringUtils.isNotEmpty(req.getUserKey())&& StringUtils.isNotEmpty(req.getDeviceKey())) {
     			if (prodIdList.size() > 0) { // 판매 중지가 있는 상품에 대해서만 기구매 체크를 해야함
     				try {
     					res = this.displayCommonService.checkPurchaseList(header.getTenantHeader().getTenantId(),
@@ -562,7 +562,7 @@ public class VoucherServiceImpl implements VoucherService {
 					couponList.add(coupon);
 					commonResponse.setTotalCount(totalCnt);
 				} else {
-					if (StringUtils.isNotEmpty(req.getUserKey())) {
+					if (StringUtils.isNotEmpty(req.getUserKey())&& StringUtils.isNotEmpty(req.getDeviceKey())) {
     					// 기구매 여부 조회
     					for (ExistenceRes existenceRes : res.getExistenceListRes()) {
     						// this.log.info("existenceRes.getProdId():::::" +
