@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.member.user.service;
 
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
@@ -23,6 +25,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -123,4 +127,29 @@ public interface UserModifyService {
 	 */
 	public InitRealNameRes initRealName(SacRequestHeader sacHeader, InitRealNameReq req);
 
+	/**
+	 * <pre>
+	 * 2.1.56. 소셜 계정 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateSocialAccountSacReq
+	 * @return CreateSocialAccountSacRes
+	 */
+	public CreateSocialAccountSacRes regSocialAccount(SacRequestHeader header, CreateSocialAccountSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.57. 소셜 계정 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            RemoveSocialAccountSacReq
+	 * @return RemoveSocialAccountSacRes
+	 */
+	public RemoveSocialAccountSacRes removeSocialAccount(SacRequestHeader header, RemoveSocialAccountSacReq req);
 }

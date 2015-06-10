@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -44,6 +46,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
@@ -358,4 +362,47 @@ public class UserSearchController {
 
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * 2.1.58. 소셜 계정 등록 가능 여부 체크.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            CheckSocialAccountSacReq
+	 * @param req
+	 *            CheckSocialAccountSacReq
+	 * @return CheckSocialAccountSacRes
+	 */
+	@RequestMapping(value = "/member/user/checkSocialAccount/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CheckSocialAccountSacRes checkSocialAccount(SacRequestHeader header,
+			@RequestBody @Validated CheckSocialAccountSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		CheckSocialAccountSacRes res = this.svc.checkSocialAccount(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.59. 소셜 계정 등록 회원 리스트.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchSocialAccountSacReq
+	 * @return SearchSocialAccountSacRes
+	 */
+	@RequestMapping(value = "/member/user/searchSocialAccount/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchSocialAccountSacRes searchSocialAccount(SacRequestHeader header,
+			@RequestBody @Validated SearchSocialAccountSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		SearchSocialAccountSacRes res = this.svc.searchSocialAccount(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
 }

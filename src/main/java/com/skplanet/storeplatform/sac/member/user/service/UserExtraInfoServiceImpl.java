@@ -282,9 +282,9 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 			// 회원 부가정보 조회 요청
 			searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
-			LOGGER.info("tenantId : {}, userKey : {}, extraProfile : {}, extraProfileValue : {}",
-					searchManagementResponse.getTenantId(), searchManagementResponse.getUserKey(),
-					searchManagementResponse.getExtraProfile(), searchManagementResponse.getExtraProfileValue());
+			// LOGGER.info("tenantId : {}, userKey : {}, extraProfile : {}, extraProfileValue : {}",
+			// searchManagementResponse.getTenantId(), searchManagementResponse.getUserKey(),
+			// searchManagementResponse.getExtraProfile(), searchManagementResponse.getExtraProfileValue());
 
 		} catch (StorePlatformException e) {
 			if (e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
@@ -300,7 +300,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 			// 테넌트 아이디 셋팅
 			TenantHeader tenant = sacHeader.getTenantHeader();
-			tenant.setTenantId(searchManagementResponse.getTenantId()); // 소셜네트워크 계정을 가지고 있는 회원의 tenantId
+			// tenant.setTenantId(searchManagementResponse.getTenantId()); // 소셜네트워크 계정을 가지고 있는 회원의 tenantId
 			sacHeader.setTenantHeader(tenant);
 			sacHeader.setTenantHeader(tenant);
 
@@ -323,7 +323,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 			res.setUseYn(MemberConstants.USE_Y);
 			res.setUserKey(searchManagementResponse.getUserKey());
-			res.setTenantId(searchManagementResponse.getTenantId());
+			// res.setTenantId(searchManagementResponse.getTenantId());
 			res.setDeviceKeyList(deviceKeyList);
 
 		} catch (StorePlatformException e) {

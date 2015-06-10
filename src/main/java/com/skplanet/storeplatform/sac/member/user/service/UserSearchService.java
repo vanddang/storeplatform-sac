@@ -16,6 +16,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserD
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -40,6 +42,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -299,4 +303,30 @@ public interface UserSearchService {
 	 * @return ListTenantRes
 	 */
 	public ListTenantRes listTenant(SacRequestHeader requestHeader, ListTenantReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.58. 소셜 계정 등록 가능 여부 체크.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            CheckSocialAccountSacReq
+	 * @param req
+	 *            CheckSocialAccountSacReq
+	 * @return CheckSocialAccountSacRes
+	 */
+	public CheckSocialAccountSacRes checkSocialAccount(SacRequestHeader header, CheckSocialAccountSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.59. 소셜 계정 등록 회원 리스트.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchSocialAccountSacReq
+	 * @return SearchSocialAccountSacRes
+	 */
+	public SearchSocialAccountSacRes searchSocialAccount(SacRequestHeader header, SearchSocialAccountSacReq req);
 }

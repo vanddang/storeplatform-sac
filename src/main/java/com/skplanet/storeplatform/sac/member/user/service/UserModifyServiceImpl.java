@@ -35,17 +35,24 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearch
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
+import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
+import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
@@ -55,9 +62,12 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -72,6 +82,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -1208,4 +1220,173 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * 2.1.56. 소셜 계정 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateSocialAccountSacReq
+	 * @return CreateSocialAccountSacRes
+	 */
+	@Override
+	public CreateSocialAccountSacRes regSocialAccount(SacRequestHeader header, CreateSocialAccountSacReq req) {
+
+		CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
+
+		// 1.회원 정보 조회
+		SearchUserRequest searchUserRequest = new SearchUserRequest();
+		searchUserRequest.setCommonRequest(commonRequest);
+		DetailReq detailReq = new DetailReq();
+		detailReq.setUserKey(req.getUserKey());
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		detailReq.setSearchExtent(searchExtent);
+		this.userSearchService.detailV2(header, detailReq);
+
+		// 2.부가속성 등록/수정
+		UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
+		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
+		MbrMangItemPtcr ptcr = null;
+
+		if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK, req.getSocialAcctType())) {
+			// facebook
+			ptcr = new MbrMangItemPtcr();
+			ptcr.setExtraProfile(MemberConstants.USER_EXTRA_FACEBOOKACCESSTOKEN);
+			ptcr.setExtraProfileValue(req.getSocialAcctToken());
+			ptcrList.add(ptcr);
+
+			ptcr = new MbrMangItemPtcr();
+			ptcr.setExtraProfile(MemberConstants.USER_EXTRA_FACEBOOK_ID);
+			ptcr.setExtraProfileValue(req.getSocialAcctId());
+			ptcrList.add(ptcr);
+
+		} else if (StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE, req.getSocialAcctType())) {
+			// google
+			ptcr = new MbrMangItemPtcr();
+			ptcr.setExtraProfile(MemberConstants.USER_EXTRA_GOOGLE_ACCESSTOKEN);
+			ptcr.setExtraProfileValue(req.getSocialAcctToken());
+			ptcrList.add(ptcr);
+
+			ptcr = new MbrMangItemPtcr();
+			ptcr.setExtraProfile(MemberConstants.USER_EXTRA_GOOGLE_ID);
+			ptcr.setExtraProfileValue(req.getSocialAcctId());
+			ptcrList.add(ptcr);
+
+		} else if (StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO, req.getSocialAcctType())) {
+			// kakao
+			ptcr = new MbrMangItemPtcr();
+			ptcr.setExtraProfile(MemberConstants.USER_EXTRA_KAKAO_ACCESSTOKEN);
+			ptcr.setExtraProfileValue(req.getSocialAcctToken());
+			ptcrList.add(ptcr);
+
+			ptcr = new MbrMangItemPtcr();
+			ptcr.setExtraProfile(MemberConstants.USER_EXTRA_KAKAO_ID);
+			ptcr.setExtraProfileValue(req.getSocialAcctId());
+			ptcrList.add(ptcr);
+		}
+
+		updateManagementRequest.setUserKey(req.getUserKey());
+		updateManagementRequest.setMbrMangItemPtcr(ptcrList);
+		updateManagementRequest.setCommonRequest(commonRequest);
+		this.userSCI.updateManagement(updateManagementRequest);
+
+		// 3.소셜이력 등록
+		CreateSocialAccountRequest createSocialAccountRequest = new CreateSocialAccountRequest();
+		createSocialAccountRequest.setCommonRequest(commonRequest);
+		createSocialAccountRequest.setSocialAcctId(req.getSocialAcctId());
+		createSocialAccountRequest.setSocialAcctType(req.getSocialAcctType());
+		createSocialAccountRequest.setUserKey(req.getUserKey());
+
+		CreateSocialAccountResponse createSocialAccountResponse = this.userSCI
+				.createSocialAccount(createSocialAccountRequest);
+
+		// 4. 응답값 셋팅
+		CreateSocialAccountSacRes res = new CreateSocialAccountSacRes();
+		res.setUserKey(createSocialAccountResponse.getUserKey());
+
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.57. 소셜 계정 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            RemoveSocialAccountSacReq
+	 * @return RemoveSocialAccountSacRes
+	 */
+	@Override
+	public RemoveSocialAccountSacRes removeSocialAccount(SacRequestHeader header, RemoveSocialAccountSacReq req) {
+
+		CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
+
+		// 1.회원 정보 조회
+		SearchUserRequest searchUserRequest = new SearchUserRequest();
+		searchUserRequest.setCommonRequest(commonRequest);
+		DetailReq detailReq = new DetailReq();
+		detailReq.setUserKey(req.getUserKey());
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+		DetailV2Res detailRes = this.userSearchService.detailV2(header, detailReq);
+
+		// 2. 회원 부가속성 삭제 (토큰,아이디 삭제)
+		RemoveManagementRequest removeManagementRequest = new RemoveManagementRequest();
+		removeManagementRequest.setCommonRequest(commonRequest);
+
+		List<MbrMangItemPtcr> ptcrList = null;
+		List<UserExtraInfo> userExtraInfos = null;
+		MbrMangItemPtcr mbrMangItemPtcr = null;
+
+		if (detailRes.getUserInfo() != null && detailRes.getUserInfo().getUserExtraInfoList() != null) {
+			userExtraInfos = detailRes.getUserInfo().getUserExtraInfoList();
+			ptcrList = new ArrayList<MbrMangItemPtcr>();
+
+			for (UserExtraInfo userExtraInfo : userExtraInfos) {
+				// facebook
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK_ID, userExtraInfo.getExtraProfile())) {
+					mbrMangItemPtcr = new MbrMangItemPtcr();
+					mbrMangItemPtcr.setExtraProfile(userExtraInfo.getExtraProfile());
+					ptcrList.add(mbrMangItemPtcr);
+					mbrMangItemPtcr = new MbrMangItemPtcr();
+					mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_FACEBOOKACCESSTOKEN);
+					ptcrList.add(mbrMangItemPtcr);
+				}
+				// google
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE_ID, userExtraInfo.getExtraProfile())) {
+					mbrMangItemPtcr = new MbrMangItemPtcr();
+					mbrMangItemPtcr.setExtraProfile(userExtraInfo.getExtraProfile());
+					ptcrList.add(mbrMangItemPtcr);
+					mbrMangItemPtcr = new MbrMangItemPtcr();
+					mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_GOOGLE_ACCESSTOKEN);
+					ptcrList.add(mbrMangItemPtcr);
+				}
+				// kakao
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO_ID, userExtraInfo.getExtraProfile())) {
+					mbrMangItemPtcr = new MbrMangItemPtcr();
+					mbrMangItemPtcr.setExtraProfile(userExtraInfo.getExtraProfile());
+					ptcrList.add(mbrMangItemPtcr);
+					mbrMangItemPtcr = new MbrMangItemPtcr();
+					mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_KAKAO_ACCESSTOKEN);
+					ptcrList.add(mbrMangItemPtcr);
+				}
+			}
+		}
+		removeManagementRequest.setUserKey(req.getUserKey());
+		removeManagementRequest.setMbrMangItemPtcr(ptcrList);
+		RemoveManagementResponse removeManagementResponse = this.userSCI.removeManagement(removeManagementRequest);
+
+		// 3. 응답 셋팅
+		RemoveSocialAccountSacRes res = new RemoveSocialAccountSacRes();
+		res.setUserKey(removeManagementResponse.getUserKey());
+
+		return res;
+	}
+
 }

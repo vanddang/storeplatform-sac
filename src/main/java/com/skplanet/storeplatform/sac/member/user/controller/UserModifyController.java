@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
@@ -35,6 +37,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
@@ -291,4 +295,47 @@ public class UserModifyController {
 
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * 2.1.56. 소셜 계정 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateSocialAccountSacReq
+	 * @return CreateSocialAccountSacRes
+	 */
+	@RequestMapping(value = "/member/user/createSocialAccount/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateSocialAccountSacRes createSocialAccount(SacRequestHeader header,
+			@RequestBody @Validated CreateSocialAccountSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		CreateSocialAccountSacRes res = this.svc.regSocialAccount(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.57. 소셜 계정 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            RemoveSocialAccountSacReq
+	 * @return RemoveSocialAccountSacRes
+	 */
+	@RequestMapping(value = "/member/user/removeSocialAccount/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public RemoveSocialAccountSacRes removeSocialAccount(SacRequestHeader header,
+			@RequestBody @Validated RemoveSocialAccountSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		RemoveSocialAccountSacRes res = this.svc.removeSocialAccount(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
 }
