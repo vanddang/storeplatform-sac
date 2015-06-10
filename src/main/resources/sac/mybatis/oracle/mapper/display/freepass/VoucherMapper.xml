@@ -71,10 +71,10 @@
                     <if test='prodStatusCd != null and prodStatusCd != ""'>
                         AND TP.PROD_STATUS_CD = #{prodStatusCd} /* PD000403 : 판매중 */
                     </if>
-                    <if test='plus19Yn == "N" or plus19Yn == null'> /* 19+ 상품 코드 */
+                    <if test='plus19Yn == "N"'> /* 19+ 상품포함하여 조회하지 않음 */
                        AND (PD.PLUS19_YN IS NULL OR PD.PLUS19_YN  = 'N') 
                     </if>
-                    <if test='plus19Yn == "Y"'>
+                    <if test='plus19Yn == "Y"'> /* 19+ 상품 포함하여 조회 */
                        AND (PD.PLUS19_YN IS NULL OR PD.PLUS19_YN  = 'Y')
                     </if>       
 					AND TP.EXPO_YN = 'Y'
