@@ -98,6 +98,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MarketPinInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.TstoreEtcInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserAuthMethod;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
@@ -776,6 +777,35 @@ public class LoginServiceImpl implements LoginService {
 																				  // 없는경우
 
 				LOGGER.info("{} 추가인증수단 없음, 탈퇴처리", req.getDeviceId());
+
+				/* MQ 연동(회원 탈퇴) */
+				DetailReq detailReq = new DetailReq();
+				SearchExtentReq searchExtent = new SearchExtentReq();
+				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+				detailReq.setDeviceId(req.getDeviceId());
+				detailReq.setSearchExtent(searchExtent);
+				DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+				RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+				try {
+					mqInfo.setUserId(detailRes.getUserInfo().getUserId());
+					mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					mqInfo.setDeviceId(req.getDeviceId());
+					List<UserExtraInfo> list = detailRes.getUserInfo().getUserExtraInfoList();
+					if (list != null) {
+						for (int i = 0; i < list.size(); i++) {
+							UserExtraInfo extraInfo = list.get(i);
+							if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH,
+									extraInfo.getExtraProfile())) {
+								mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+							}
+						}
+					}
+					this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+
+				} catch (AmqpException ex) {
+					LOGGER.error("MQ process fail {}", mqInfo);
+				}
 
 				/* SC회원탈퇴 */
 				RemoveUserRequest removeUserReq = new RemoveUserRequest();
