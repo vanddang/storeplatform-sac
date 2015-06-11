@@ -122,24 +122,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         downloadCommonService.validateVisitPathNm(metaInfo, comicReq.getVisitPathNm(), productId);
 
         Product product = new Product();
-
-        // 상품 ID 정보
-        List<Identifier> identifierList = new ArrayList<Identifier>();
-        identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
-        identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
-        product.setIdentifierList(identifierList);
-
-        product.setTitle(commonGenerator.generateTitle(metaInfo));
-        product.setChnlProdNm(metaInfo.getChnlProdNm());
-        product.setProductExplain(metaInfo.getProdBaseDesc());
-        product.setProductDetailExplain(metaInfo.getProdDtlDesc());
-        product.setSourceList(commonGenerator.generateDownloadSourceList(metaInfo));
-        product.setMenuList(commonGenerator.generateMenuList(metaInfo));
-        product.setBook(ebookComicGenerator.generateForDownloadBook(metaInfo));
-        product.setPrice(commonGenerator.generatePrice(metaInfo));
-        product.setRights(commonGenerator.generateRights(metaInfo));
-        product.setDistributor(commonGenerator.generateDistributor(metaInfo));
-        product.setContributor(ebookComicGenerator.generateComicContributor(metaInfo));
+        setProduct(product, metaInfo);
 
         if (StringUtils.isNotEmpty(comicReq.getDeviceKey()) && StringUtils.isNotEmpty(comicReq.getUserKey())) {
             HistoryListSacInRes historyRes = null;
@@ -247,6 +230,26 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         return comicRes;
     }
+
+	private void setProduct(Product product, MetaInfo metaInfo) {
+		// 상품 ID 정보
+        List<Identifier> identifierList = new ArrayList<Identifier>();
+        identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
+        identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
+        product.setIdentifierList(identifierList);
+
+        product.setTitle(commonGenerator.generateTitle(metaInfo));
+        product.setChnlProdNm(metaInfo.getChnlProdNm());
+        product.setProductExplain(metaInfo.getProdBaseDesc());
+        product.setProductDetailExplain(metaInfo.getProdDtlDesc());
+        product.setSourceList(commonGenerator.generateDownloadSourceList(metaInfo));
+        product.setMenuList(commonGenerator.generateMenuList(metaInfo));
+        product.setBook(ebookComicGenerator.generateForDownloadBook(metaInfo));
+        product.setPrice(commonGenerator.generatePrice(metaInfo));
+        product.setRights(commonGenerator.generateRights(metaInfo));
+        product.setDistributor(commonGenerator.generateDistributor(metaInfo));
+        product.setContributor(ebookComicGenerator.generateComicContributor(metaInfo));
+	}
 
 	private void loggingEncResult(Encryption encryption) {
 		logger.debug("-----------------------------------------------------------");
