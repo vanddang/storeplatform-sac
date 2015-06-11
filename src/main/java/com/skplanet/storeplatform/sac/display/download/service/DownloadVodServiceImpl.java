@@ -158,7 +158,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				String dwldStartDt = null; // 다운로드 시작일시
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
-				String prchsProdId = null; // 구매 상품ID
 				String permitDeviceYn = null; // 단말 지원여부
 
 				if (historyRes.getTotalCnt() > 0) {
@@ -168,7 +167,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						dwldStartDt = historySacIn.getDwldStartDt();
 						dwldExprDt = historySacIn.getDwldExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
-						prchsProdId = historySacIn.getProdId();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 
 						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
@@ -238,13 +236,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
 							metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
 
-							mapProdChrg(metaInfo, prchsProdId);
+							mapProdChrg(metaInfo, historySacIn.getProdId()); // 구매 상품ID
 							mapDrmYn(metaInfo, historySacIn);
 
 							// 암호화 정보 (JSON)
 							metaInfo.setSystemId(tenantHeader.getSystemId());
                             metaInfo.setTenantId(tenantHeader.getTenantId());
-                            Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId, supportFhdVideo);
+                            Encryption encryption = this.supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
 							encryptionList.add(encryption);
 
 							this.log.debug("-------------------------------------------------------------");
