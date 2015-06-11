@@ -263,65 +263,67 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						 * 구매 정보에 따른 암호화 시작
 						 ************************************************************************************************/
 						// 구매상태 만료 여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) && permitDeviceYn.equals("Y")) {
-							SearchDeviceIdSacReq deviceReq = null;
-							SearchDeviceIdSacRes deviceRes = null;
-							boolean memberFlag = true;
-
-							try {
-								deviceReq = makeSearchDeviceIdSacReq(downloadAppSacReq, tenantHeader);
-								deviceRes = deviceSCI.searchDeviceId(deviceReq);
-							} catch (Exception ex) {
-								memberFlag = false;
-								log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
-								// 예외 무시
-							}
-
-							log.debug("----------------------------------------------------------------");
-							log.debug("[DownloadAppServiceImpl] memberFlag	:	{}", memberFlag);
-							log.debug("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
-							log.debug("----------------------------------------------------------------");
-
-							// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-							if (!"Y".equals(deviceRes.getAuthYn())) {
-								log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-							} else if (memberFlag && deviceRes != null) {
-								String deviceId = deviceRes.getDeviceId();
-								String deviceTelecom = deviceRes.getDeviceTelecom();
-								String deviceIdType = commonService.getDeviceIdType(deviceId);
-
-								metaInfo.setExpiredDate(reqExpireDate);
-								metaInfo.setUseExprDt(useExprDt);
-								metaInfo.setUserKey(userKey);
-								metaInfo.setDeviceKey(deviceKey);
-								metaInfo.setDeviceType(deviceIdType);
-								metaInfo.setDeviceSubKey(deviceId);
-								metaInfo.setPurchaseHide(purchaseHide);
-
-								tingMemberFlag = getTingMemberFlag(deviceId, deviceTelecom, deviceIdType, metaInfo);
-
-								// 암호화 정보 (JSON)
-								genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
-
-                                // Push 강제 업그레이드인 경우
-                                generateMetaForPushForceUpgrade(metaInfo, downloadAppSacReq.getPacketFreeYn());
-
-                                Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
-                                encryptionList.add(encryption);
-
-								log.debug("-------------------------------------------------------------");
-								log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
-								log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-								log.debug("-------------------------------------------------------------");
-							}
-							product.setPurchaseList(purchaseList);
-
-							// 암호화 정보
-							if (!encryptionList.isEmpty()) {
-								product.setDl(encryptionList);
-							}
-							break;
+						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) || !permitDeviceYn.equals("Y")) {
+							continue;
 						}
+
+						SearchDeviceIdSacReq deviceReq = null;
+						SearchDeviceIdSacRes deviceRes = null;
+						boolean memberFlag = true;
+
+						try {
+							deviceReq = makeSearchDeviceIdSacReq(downloadAppSacReq, tenantHeader);
+							deviceRes = deviceSCI.searchDeviceId(deviceReq);
+						} catch (Exception ex) {
+							memberFlag = false;
+							log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
+							// 예외 무시
+						}
+
+						log.debug("----------------------------------------------------------------");
+						log.debug("[DownloadAppServiceImpl] memberFlag	:	{}", memberFlag);
+						log.debug("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
+						log.debug("----------------------------------------------------------------");
+
+						// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+						if (!"Y".equals(deviceRes.getAuthYn())) {
+							log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
+						} else if (memberFlag && deviceRes != null) {
+							String deviceId = deviceRes.getDeviceId();
+							String deviceTelecom = deviceRes.getDeviceTelecom();
+							String deviceIdType = commonService.getDeviceIdType(deviceId);
+
+							metaInfo.setExpiredDate(reqExpireDate);
+							metaInfo.setUseExprDt(useExprDt);
+							metaInfo.setUserKey(userKey);
+							metaInfo.setDeviceKey(deviceKey);
+							metaInfo.setDeviceType(deviceIdType);
+							metaInfo.setDeviceSubKey(deviceId);
+							metaInfo.setPurchaseHide(purchaseHide);
+
+							tingMemberFlag = getTingMemberFlag(deviceId, deviceTelecom, deviceIdType, metaInfo);
+
+							// 암호화 정보 (JSON)
+							genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
+
+                            // Push 강제 업그레이드인 경우
+                            generateMetaForPushForceUpgrade(metaInfo, downloadAppSacReq.getPacketFreeYn());
+
+                            Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+                            encryptionList.add(encryption);
+
+							log.debug("-------------------------------------------------------------");
+							log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
+							log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+							log.debug("-------------------------------------------------------------");
+						}
+						product.setPurchaseList(purchaseList);
+
+						// 암호화 정보
+						if (!encryptionList.isEmpty()) {
+							product.setDl(encryptionList);
+						}
+						break;
 					}
 
 				} else {

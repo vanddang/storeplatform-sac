@@ -232,79 +232,80 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						purchaseList.add(commonMetaInfoGenerator.generatePurchase(metaInfo));
 
 						// 구매상태 만료여부 및 단말 지원여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) && "Y".equals(permitDeviceYn)) {
-							SearchDeviceIdSacReq deviceReq = null;
-							SearchDeviceIdSacRes deviceRes = null;
-							boolean memberPassFlag = true;
-
-							try {
-								deviceReq = makeSearchDeviceIdSacReq(ebookReq, header);
-								deviceRes = deviceSCI.searchDeviceId(deviceReq);
-							} catch (Exception ex) {
-								memberPassFlag = false;
-								logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
-							}
-
-							logger.debug("----------------------------------------------------------------");
-							logger.debug("[DownloadEbookLog] memberPassFlag : {}", memberPassFlag);
-							logger.debug("[DownloadEbookLog] deviceRes : {}", deviceRes);
-							logger.debug("----------------------------------------------------------------");
-
-							// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-							if (!"Y".equals(deviceRes.getAuthYn())) {
-								logger.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-							} else if (memberPassFlag && deviceRes != null) {
-								String deviceId = deviceRes.getDeviceId();
-								String deviceIdType = commonService.getDeviceIdType(deviceId);
-
-								metaInfo.setExpiredDate(reqExpireDate);
-								metaInfo.setUseExprDt(useExprDt);
-								metaInfo.setUserKey(userKey);
-								metaInfo.setDeviceKey(deviceKey);
-								if (StringUtils.isNotBlank(ebookReq.getAdditionalMsisdn())) {
-                                	metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
-                                	metaInfo.setDeviceSubKey(ebookReq.getAdditionalMsisdn());
-                                } else {
-                                	metaInfo.setDeviceType(deviceIdType);
-                                	metaInfo.setDeviceSubKey(deviceId);
-                                }
-								metaInfo.setPurchaseHide(purchaseHide);
-								metaInfo.setUpdateAlarm(updateAlarm);
-
-								// 구매시점 DRM 여부값으로 세팅
-								if (StringUtils.isNotEmpty(drmYn)) {
-									metaInfo.setStoreDrmYn(drmYn);
-									metaInfo.setPlayDrmYn(drmYn);
-								}
-
-								// 소장, 대여 구분(Store : 소장, Play : 대여)
-								if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-									metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-									metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
-								} else {
-									metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-									metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
-								}
-
-								// 암호화 정보 (JSON)
-                                Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
-								encryptionList.add(encryption);
-
-								logger.debug("-----------------------------------------------------------");
-								logger.debug("[DownloadEbookLog] token : {}", encryption.getToken());
-								logger.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
-								logger.debug("-----------------------------------------------------------");
-							}
-							// 구매 정보
-							product.setPurchaseList(purchaseList);
-
-							// 암호화 정보
-							if (!encryptionList.isEmpty()) {
-								product.setDl(encryptionList);
-							}
-
-							break;
+						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) || !"Y".equals(permitDeviceYn)) {
+							continue;
 						}
+						SearchDeviceIdSacReq deviceReq = null;
+						SearchDeviceIdSacRes deviceRes = null;
+						boolean memberPassFlag = true;
+
+						try {
+							deviceReq = makeSearchDeviceIdSacReq(ebookReq, header);
+							deviceRes = deviceSCI.searchDeviceId(deviceReq);
+						} catch (Exception ex) {
+							memberPassFlag = false;
+							logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
+						}
+
+						logger.debug("----------------------------------------------------------------");
+						logger.debug("[DownloadEbookLog] memberPassFlag : {}", memberPassFlag);
+						logger.debug("[DownloadEbookLog] deviceRes : {}", deviceRes);
+						logger.debug("----------------------------------------------------------------");
+
+						// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+						if (!"Y".equals(deviceRes.getAuthYn())) {
+							logger.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
+						} else if (memberPassFlag && deviceRes != null) {
+							String deviceId = deviceRes.getDeviceId();
+							String deviceIdType = commonService.getDeviceIdType(deviceId);
+
+							metaInfo.setExpiredDate(reqExpireDate);
+							metaInfo.setUseExprDt(useExprDt);
+							metaInfo.setUserKey(userKey);
+							metaInfo.setDeviceKey(deviceKey);
+							if (StringUtils.isNotBlank(ebookReq.getAdditionalMsisdn())) {
+                            	metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
+                            	metaInfo.setDeviceSubKey(ebookReq.getAdditionalMsisdn());
+                            } else {
+                            	metaInfo.setDeviceType(deviceIdType);
+                            	metaInfo.setDeviceSubKey(deviceId);
+                            }
+							metaInfo.setPurchaseHide(purchaseHide);
+							metaInfo.setUpdateAlarm(updateAlarm);
+
+							// 구매시점 DRM 여부값으로 세팅
+							if (StringUtils.isNotEmpty(drmYn)) {
+								metaInfo.setStoreDrmYn(drmYn);
+								metaInfo.setPlayDrmYn(drmYn);
+							}
+
+							// 소장, 대여 구분(Store : 소장, Play : 대여)
+							if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+								metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+								metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+							} else {
+								metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+								metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+							}
+
+							// 암호화 정보 (JSON)
+                            Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+							encryptionList.add(encryption);
+
+							logger.debug("-----------------------------------------------------------");
+							logger.debug("[DownloadEbookLog] token : {}", encryption.getToken());
+							logger.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
+							logger.debug("-----------------------------------------------------------");
+						}
+						// 구매 정보
+						product.setPurchaseList(purchaseList);
+
+						// 암호화 정보
+						if (!encryptionList.isEmpty()) {
+							product.setDl(encryptionList);
+						}
+
+						break;
 					}
 				}
 			}

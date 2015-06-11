@@ -206,55 +206,56 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						 * 구매 정보에 따른 암호화 시작
 						 ************************************************************************************************/
 						// 구매상태 만료 여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) && permitDeviceYn.equals("Y")) {
-							SearchDeviceIdSacReq deviceReq = null;
-							SearchDeviceIdSacRes deviceRes = null;
-							boolean memberFlag = true;
-
-							try {
-								deviceReq = makeSearchDeviceIdSacReq(downloadMusicSacReq, tenantHeader);
-								deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-							} catch (Exception ex) {
-								memberFlag = false;
-								log.debug("[DownloadMusicServiceImpl] Device Search Exception : {}");
-								log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-								// throw new StorePlatformException("SAC_DSP_1001", ex);
-							}
-
-							log.debug("----------------------------------------------------------------");
-							log.debug("[DownloadMusicServiceImpl] memberFlag	:	{}", memberFlag);
-							log.debug("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
-							log.debug("----------------------------------------------------------------");
-							// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-							if (!"Y".equals(deviceRes.getAuthYn())) {
-								log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-							} else if (memberFlag && deviceRes != null) {
-								String deviceId = deviceRes.getDeviceId();
-								String deviceIdType = this.commonService.getDeviceIdType(deviceId);
-
-								metaInfo.setExpiredDate(reqExpireDate);
-								metaInfo.setUseExprDt(useExprDt);
-								metaInfo.setUserKey(userKey);
-								metaInfo.setDeviceKey(deviceKey);
-								metaInfo.setDeviceType(deviceIdType);
-								metaInfo.setDeviceSubKey(deviceId);
-								metaInfo.setPurchaseHide(purchaseHide);
-								metaInfo.setUpdateAlarm(updateAlarm);
-
-								// 암호화 정보 (JSON)
-								metaInfo.setSystemId(tenantHeader.getSystemId());
-                                Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
-								encryptionList.add(encryption);
-
-								log.debug("-----------------------------------------------------------");
-								log.debug("[DownloadEbookLog] token : {}", encryption.getToken());
-								log.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
-								log.debug("-----------------------------------------------------------");
-							}
-							// 구매 정보
-							product.setPurchaseList(purchaseList);
-							break;
+						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) || !permitDeviceYn.equals("Y")) {
+							continue;
 						}
+						SearchDeviceIdSacReq deviceReq = null;
+						SearchDeviceIdSacRes deviceRes = null;
+						boolean memberFlag = true;
+
+						try {
+							deviceReq = makeSearchDeviceIdSacReq(downloadMusicSacReq, tenantHeader);
+							deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
+						} catch (Exception ex) {
+							memberFlag = false;
+							log.debug("[DownloadMusicServiceImpl] Device Search Exception : {}");
+							log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+							// throw new StorePlatformException("SAC_DSP_1001", ex);
+						}
+
+						log.debug("----------------------------------------------------------------");
+						log.debug("[DownloadMusicServiceImpl] memberFlag	:	{}", memberFlag);
+						log.debug("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
+						log.debug("----------------------------------------------------------------");
+						// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+						if (!"Y".equals(deviceRes.getAuthYn())) {
+							log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
+						} else if (memberFlag && deviceRes != null) {
+							String deviceId = deviceRes.getDeviceId();
+							String deviceIdType = this.commonService.getDeviceIdType(deviceId);
+
+							metaInfo.setExpiredDate(reqExpireDate);
+							metaInfo.setUseExprDt(useExprDt);
+							metaInfo.setUserKey(userKey);
+							metaInfo.setDeviceKey(deviceKey);
+							metaInfo.setDeviceType(deviceIdType);
+							metaInfo.setDeviceSubKey(deviceId);
+							metaInfo.setPurchaseHide(purchaseHide);
+							metaInfo.setUpdateAlarm(updateAlarm);
+
+							// 암호화 정보 (JSON)
+							metaInfo.setSystemId(tenantHeader.getSystemId());
+                            Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
+							encryptionList.add(encryption);
+
+							log.debug("-----------------------------------------------------------");
+							log.debug("[DownloadEbookLog] token : {}", encryption.getToken());
+							log.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
+							log.debug("-----------------------------------------------------------");
+						}
+						// 구매 정보
+						product.setPurchaseList(purchaseList);
+						break;
 					}
 				}
 			}
