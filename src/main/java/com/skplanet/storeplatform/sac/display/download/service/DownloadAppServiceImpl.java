@@ -305,20 +305,16 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				}
 			}
 		}
+		Component component = setComponentAsSeedApp(metaInfo);
+		setProduct(product, metaInfo, downloadAppSacReq, tingMemberFlag);
+		DownloadAppSacRes response = makeResponse(product, component);
+        sw.stop();
+        supportService.logDownloadResult(downloadAppSacReq.getUserKey(), downloadAppSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
-		/************************************************************************************************
-		 * Seed App 정보
-		 ************************************************************************************************/
-		Component component = new Component();
-		component.setIdentifierList(appInfoGenerator.generateComponentIdentifierList(metaInfo));
-		component.setGameCenterVerCd(StringUtils.defaultString(metaInfo.getGameCentrVerCd()));
-		component.setUseYn(metaInfo.getSeedUseYn());
-		component.setCaseRefCd(metaInfo.getSeedCaseRefCd());
-        component.setBunchMessage(metaInfo.getBnchDwldMsg());
+		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
 
-		/************************************************************************************************
-		 * 상품 정보
-		 ************************************************************************************************/
+	private void setProduct(Product product, MetaInfo metaInfo, DownloadAppSacReq downloadAppSacReq, boolean tingMemberFlag) {
 		List<Identifier> identifierList = new ArrayList<Identifier>();
 		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,metaInfo.getProdId()));
 		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,metaInfo.getProdId()));
@@ -335,12 +331,16 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         product.setPacketFee(makePacketFee(metaInfo, tingMemberFlag, downloadAppSacReq.getPacketFreeYn()));
 		product.setPlatClsfCd(metaInfo.getPlatClsfCd());
 		product.setPrice(commonGenerator.generatePrice(metaInfo)); // 상품금액 정보
+	}
 
-		DownloadAppSacRes response = makeResponse(product, component);
-        sw.stop();
-        supportService.logDownloadResult(downloadAppSacReq.getUserKey(), downloadAppSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
-
-		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	private Component setComponentAsSeedApp(MetaInfo metaInfo) {
+		Component component = new Component();
+		component.setIdentifierList(appInfoGenerator.generateComponentIdentifierList(metaInfo));
+		component.setGameCenterVerCd(StringUtils.defaultString(metaInfo.getGameCentrVerCd()));
+		component.setUseYn(metaInfo.getSeedUseYn());
+		component.setCaseRefCd(metaInfo.getSeedCaseRefCd());
+        component.setBunchMessage(metaInfo.getBnchDwldMsg());
+		return component;
 	}
 
 	private void loggingEncResult(Encryption encryption) {

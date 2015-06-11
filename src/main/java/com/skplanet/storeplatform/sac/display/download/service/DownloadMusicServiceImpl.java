@@ -218,6 +218,15 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				}
 			}
 		}
+		setProduct(product, metaInfo);
+		DownloadMusicSacRes response = makeResponse(product);
+        sw.stop();
+        this.supportService.logDownloadResult(downloadMusicSacReq.getUserKey(), downloadMusicSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
+
+		return response;
+	}
+
+	private void setProduct(Product product, MetaInfo metaInfo) {
 		Music music = new Music();
 		List<Identifier> identifierList = new ArrayList<Identifier>();
 		Identifier identifier = new Identifier();
@@ -245,12 +254,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		music.setSourceList(musicSourceList);
 		product.setMusic(music);
 		product.setRights(commonGenerator.generateRights(metaInfo));
-
-		DownloadMusicSacRes response = makeResponse(product);
-        sw.stop();
-        this.supportService.logDownloadResult(downloadMusicSacReq.getUserKey(), downloadMusicSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
-
-		return response;
 	}
 
 	private void loggingEncResult(Encryption encryption) {

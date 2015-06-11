@@ -243,9 +243,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			}
 		}
 
-		/************************************************************************************************
-		 * 상품 정보
-		 ************************************************************************************************/
+		setProduct(product, metaInfo, supportFhdVideo);
+		DownloadVodSacRes response = makeResponse(product);
+        sw.stop();
+        this.supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
+
+		return response;
+	}
+
+	private void setProduct(Product product, MetaInfo metaInfo, boolean supportFhdVideo) {
 		List<Identifier>  identifierList = new ArrayList<Identifier>();
 		Identifier identifier;
 
@@ -282,11 +288,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
                 info.setFilePath(null);
             }
         }
-		DownloadVodSacRes response = makeResponse(product);
-        sw.stop();
-        this.supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
-
-		return response;
 	}
 
 	private void loggingEncResult(Encryption encryption) {
