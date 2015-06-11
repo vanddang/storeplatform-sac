@@ -109,10 +109,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		String deviceKey = downloadVodSacReq.getDeviceKey();
 		String userKey = downloadVodSacReq.getUserKey();
 
-		List<Support> supportList = null;
-
-		List<Identifier> identifierList = null;
-
 		// ID유형 유효값 체크
 		if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)
 				&& !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
@@ -292,8 +288,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		/************************************************************************************************
 		 * 상품 정보
 		 ************************************************************************************************/
-
-		identifierList = new ArrayList<Identifier>();
+		List<Identifier>  identifierList = new ArrayList<Identifier>();
 		Identifier identifier;
 
 		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
@@ -309,7 +304,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		identifierList.add(identifier);
 
 		product.setIdentifierList(identifierList); // 상품 ID
-		supportList = new ArrayList<Support>();
+		List<Support>  supportList = new ArrayList<Support>();
 		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM, metaInfo.getHdcpYn()));
 		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM, metaInfo.getHdvYn()));
 		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM, "Y"));

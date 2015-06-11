@@ -119,7 +119,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		String deviceKey = downloadMusicSacReq.getDeviceKey();
 		String userKey = downloadMusicSacReq.getUserKey();
 
-		List<Identifier> identifierList = null;
 		Product product = new Product();
 		Music music = null;
 
@@ -260,8 +259,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				}
 			}
 		}
-
-		identifierList = new ArrayList<Identifier>();
+		List<Identifier> identifierList = new ArrayList<Identifier>();
 
 		music = new Music();
 

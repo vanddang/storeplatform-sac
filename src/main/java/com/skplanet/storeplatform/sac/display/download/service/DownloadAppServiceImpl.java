@@ -120,7 +120,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		String deviceKey = downloadAppSacReq.getDeviceKey();
 		String userKey = downloadAppSacReq.getUserKey();
 		String packageName = downloadAppSacReq.getPackageName();
-		List<Identifier> identifierList = null;
 		boolean tingMemberFlag = false;
 
         StopWatch sw = new StopWatch();
@@ -172,7 +171,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		log.debug("----------------------------------------------------------------");
 		log.debug("[DownloadAppServiceImpl] scid : {}", metaInfo.getSubContentsId());
 		log.debug("----------------------------------------------------------------");
-		identifierList = new ArrayList<Identifier>();
 
 		doBunchProdProvisioning(downloadAppSacReq, metaInfo);
 		validateParentBunchProd(downloadAppSacReq, metaInfo);
@@ -355,6 +353,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		/************************************************************************************************
 		 * 상품 정보
 		 ************************************************************************************************/
+		List<Identifier> identifierList = new ArrayList<Identifier>();
 		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,metaInfo.getProdId()));
 		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,metaInfo.getProdId()));
 		product.setIdentifierList(identifierList); // 상품 Id
