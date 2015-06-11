@@ -2059,7 +2059,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		// Response
 		int socialMemberCnt = 0;
 		int socialRegCnt = 0;
-		String socialRegDate = "";
+		String socialRegDate = null;
 
 		try {
 			// 1. 회원 부가속성 조회 (Tenant_id 구분없이) : 사이즈 => socialMemberCnt
@@ -2087,7 +2087,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 			// 3. 소셜이력 조회값이 2 => 첫번째 등록한 날짜 + 한달 + 1일 응답 => socialRegDate
 			if (socialRegCnt > 1) {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-				Calendar todayCal = DateUtil.getCalendar(socialRegDate);
+				Calendar todayCal = DateUtil.getCalendar(searchSocialAccountResponse.getSocialAccountList().get(1)
+						.getInsDt());
 				todayCal.add(Calendar.MONTH, 1); // +1 한달
 				todayCal.add(Calendar.DATE, 1); // +1 하루
 				socialRegDate = sdf.format(todayCal.getTime());
@@ -2103,9 +2104,16 @@ public class UserSearchServiceImpl implements UserSearchService {
 			res.setRegYn(MemberConstants.USE_Y);
 		} else {
 			res.setRegYn(MemberConstants.USE_N);
-			res.setSocialMemberCnt(String.valueOf(socialMemberCnt));
-			res.setSocialRegCnt(String.valueOf(socialRegCnt));
-			res.setSocialRegDate(socialRegDate);
+			if (socialMemberCnt > 4 && socialRegCnt > 1) {
+				res.setSocialMemberCnt(String.valueOf(socialMemberCnt));
+				res.setSocialRegCnt(String.valueOf(socialRegCnt));
+				res.setSocialRegDate(socialRegDate);
+			} else if (socialMemberCnt > 4) {
+				res.setSocialMemberCnt(String.valueOf(socialMemberCnt));
+			} else if (socialRegCnt > 1) {
+				res.setSocialRegCnt(String.valueOf(socialRegCnt));
+				res.setSocialRegDate(socialRegDate);
+			}
 		}
 
 		res.setUserKey(req.getUserKey());
