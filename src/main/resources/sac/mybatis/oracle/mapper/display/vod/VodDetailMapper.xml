@@ -49,13 +49,11 @@
               , TPP.CHNL_PERIOD_AMT AS PLAY_PROD_AMT
               , TPP.CHNL_UNLMT_AMT AS STORE_PROD_AMT
               , MP.GENRE_CD, (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM FROM TB_CM_CD WHERE CD_ID = MP.GENRE_CD AND LANG_CD = P.LANG_CD) AS GENRE_CD_NM
-              , '['|| PREFIX.PREFIX_TITLE || ']' AS PREFIX_TITLE
-              , (CASE WHEN PREFIX.PREFIX_TITLE IS NOT NULL THEN '['|| PREFIX.PREFIX_TITLE || ']' 
-                 ELSE NULL
-                 END ) AS VOD_TITL_NM
+              , PREFIX.PREFIX_TITLE AS PREFIX_TITLE
+              , PREFIX.PREFIX_TITLE AS VOD_TITL_NM
               , (SELECT /*+ INDEX_JOIN(TB_CM_CD) */
-                        CASE WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NULL) THEN '['|| Y.CD_NM || ']' 
-                             WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NOT NULL) THEN '['|| PREFIX.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM || ']'
+                        CASE WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NULL) THEN  Y.CD_NM  
+                             WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NOT NULL) THEN  PREFIX.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM 
                              ELSE NULL END
                    FROM TB_CM_CD Y
                   WHERE PREFIX.BADGE_CD = Y.CD_ID(+)
@@ -200,14 +198,6 @@
 		    , T.META_CLSF_CD
 		    , T.CID, T.CHNL_PROD_ID, T.PROD_ID, T.REG_DT, T.LAST_DEPLOY_DT
 		    , PROD_NM, T.PROD_BASE_DESC, T.PROD_DTL_DESC, T.PROD_INTR_DSCR, T.ARTIST1_NM, T.ARTIST2_NM
-		    , '['|| T.PREFIX_TITLE || ']' AS PREFIX_TITLE
-            , (CASE WHEN T.PREFIX_TITLE IS NOT NULL THEN '['|| T.PREFIX_TITLE || ']' 
-               ELSE NULL
-                END ) AS VOD_TITL_NM		    
-            , T.BADGE_CD
-            , (CASE WHEN T.BADGE_OPT_TEXT IS NOT NULL THEN '['|| T.BADGE_OPT_TEXT || ']' 
-               ELSE NULL
-                END ) AS BADGE_OPT_TEXT            
 		    , GENRE_CD, (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM FROM TB_CM_CD WHERE CD_ID = T.GENRE_CD AND LANG_CD = T.LANG_CD) AS GENRE_CD_NM
 		    , ISSUE_DAY, SVC_START_DT, CHNL_COMP_NM
 		    , BRDC_COMP_CD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = T.BRDC_COMP_CD AND LANG_CD = T.LANG_CD) AS BRDC_COMP_CD_NM
@@ -269,7 +259,6 @@
                    WHEN PLAY_DWLD_STRM='DP010502' THEN 'strm'
                    WHEN PLAY_DWLD_STRM='DP010503' THEN 'both' END
               ) AS PLAY_DL_STRM_CD
-            , T.PLUS19_YN
 		FROM
 		(
 		    SELECT  
@@ -278,9 +267,6 @@
 		       , TOP_MENU_ID, MENU_ID, META_CLSF_CD
 		       , CHNL_PROD_ID, PROD_ID, REG_DT, LAST_DEPLOY_DT
 		       , PROD_NM, PROD_BASE_DESC, PROD_DTL_DESC, PROD_INTR_DSCR, ARTIST1_NM, ARTIST2_NM
-               , PREFIX_TITLE
-               , BADGE_CD
-               , BADGE_OPT_TEXT
 		       , GENRE_CD, ISSUE_DAY, BRDC_COMP_CD, SVC_START_DT, CHNL_COMP_NM
 		       , HDCP_YN, HDV_YN 
 		       , USE_PERIOD, USE_PERIOD_UNIT_CD
@@ -299,7 +285,6 @@
 		       , STORE_PROD_ID, STORE_PROD_AMT, STORE_PROD_NET_AMT, STORE_DRM_YN, STORE_PROD_STATUS_CD, STORE_USE_PERIOD, STORE_USE_PERIOD_UNIT_CD
 		       , PLAY_PROD_ID, PLAY_PROD_AMT, PLAY_PROD_NET_AMT, PLAY_DRM_YN, PLAY_PROD_STATUS_CD, PLAY_USE_PERIOD, PLAY_USE_PERIOD_UNIT_CD
 		       , STORE_DWLD_STRM, PLAY_DWLD_STRM
-		       , PLUS19_YN
 		     FROM
 		          (
 				SELECT * FROM (
@@ -317,9 +302,6 @@
 		                  , MAX( T1.PROD_ID ) AS PROD_ID
 		                  , MAX( T1.REG_DT ) AS REG_DT
 		                  , MAX( T1.LAST_DEPLOY_DT ) AS LAST_DEPLOY_DT
-                          , MAX( T1.PREFIX_TITLE) AS PREFIX_TITLE
-                          , MAX( T1.BADGE_CD) AS BADGE_CD
-                          , MAX( T1.BADGE_OPT_TEXT) AS BADGE_OPT_TEXT
 		                  , MAX( T1.PROD_NM ) AS PROD_NM
 		                  , MAX( T1.PROD_BASE_DESC ) AS PROD_BASE_DESC
 		                  , MAX( T1.PROD_DTL_DESC ) AS PROD_DTL_DESC
@@ -376,7 +358,6 @@
 		                  , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD ) ) AS PLAY_USE_PERIOD
 		                  , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
 		                  , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD
-		                  , MAX( T1.PLUS19_YN) AS PLUS19_YN
 		                FROM
 		                   (
 		                    SELECT
@@ -387,15 +368,6 @@
 		                        , MP.CHAPTER
 		                        , PD.REG_DT, PD.LAST_DEPLOY_DT, UP.USE_PERIOD, UP.USE_PERIOD_UNIT_CD, UP.POSS_LEND_CLSF_CD, UP.DWLD_STRM_CLSF_CD
 		                        , DSC.PROD_NM, DSC.PROD_BASE_DESC, DSC.PROD_DTL_DESC, PREFIX.PROD_INTR_DSCR, DSC.ARTIST1_NM, DSC.ARTIST2_NM, DSC.ARTIST3_NM
-                                , (SELECT /*+ INDEX_JOIN(TB_CM_CD) */
-                                          CASE WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NULL) THEN Y.CD_NM
-                                               WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NOT NULL) THEN PREFIX.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM
-                                               ELSE NULL END
-                                     FROM TB_CM_CD Y
-                                    WHERE PREFIX.BADGE_CD = Y.CD_ID(+)
-                                      AND Y.LANG_CD(+) = DSC.LANG_CD) AS BADGE_OPT_TEXT                                                    
-                                , PREFIX.BADGE_CD
-                                , PREFIX.PREFIX_TITLE
 		                        , MP.GENRE_CD, MP.ISSUE_DAY, MP.BRDC_COMP_CD, MP.SVC_START_DT, MP.CHNL_COMP_NM
 		                        , MP.HDCP_YN, MP.HDV_YN, MP.DOLBY_SPRT_YN, DV.DOLBY_SPRT_YN AS DOLBY_YN
 		                        , MP.PLAY_TM, PD.PROD_GRD_CD                        
@@ -435,7 +407,6 @@
 		                        , ( CASE WHEN (  MP.HDV_YN = 'Y' AND ( SC.AUDIO_TYPE_CD IS NULL OR SC.AUDIO_TYPE_CD != 'PD002215' ) AND SC.DP_PG_QULT_CD = 'PD009705' ) THEN
 		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
 		                            END ) AS FHD_SUB_CONTS
-		                        , NVL(PD.PLUS19_YN, 'N') AS PLUS19_YN
 		                  FROM TB_DP_PROD_RSHP PR
 		                    , TB_DP_PROD PD
 		                    , TB_DP_MENU_CATEGORY_PROD_MAPG CPM

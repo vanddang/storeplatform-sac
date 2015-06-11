@@ -913,8 +913,6 @@ public class VodServiceImpl implements VodService {
 				// Accrual
 				Accrual accrual = this.mapAccrual(mapperVO);
 				subProduct.setAccrual(accrual);
-				// Badge
-				subProduct.setBadge(this.getBadgeInfo(mapperVO));
 
 				subProjectList.add(subProduct);
 			}
@@ -1083,6 +1081,9 @@ public class VodServiceImpl implements VodService {
 	 * @return
 	 */
 	private Badge getBadgeInfo(VodDetail mapperVO) {
+
+		if (mapperVO.getBadgeCd() == null && mapperVO.getBadgeOptText() == null)
+			return null;
 		Badge badge = new Badge();
 		badge.setCode(mapperVO.getBadgeCd());
 		badge.setText(mapperVO.getBadgeOptText());

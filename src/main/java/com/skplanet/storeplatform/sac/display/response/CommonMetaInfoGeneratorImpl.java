@@ -899,6 +899,8 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	@Override
 	public Badge generateBadge(MetaInfo metaInfo) {
+		if (metaInfo.getBadgeCd() == null && metaInfo.getBadgeOptText() == null)
+			return null;
 		Badge badge = new Badge();
 		badge.setCode(metaInfo.getBadgeCd());
 		badge.setText(metaInfo.getBadgeOptText());
