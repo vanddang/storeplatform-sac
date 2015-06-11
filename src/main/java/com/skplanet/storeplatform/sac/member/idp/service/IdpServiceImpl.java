@@ -49,7 +49,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRe
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
@@ -941,7 +940,7 @@ public class IdpServiceImpl implements IdpService {
 		String idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
 		try {
-			UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
+			this.userSCI.updateStatus(updateUserVo);
 		} catch (StorePlatformException spe) {
 			LOGGER.error(spe.getMessage(), spe);
 			LOGGER.debug("RXSetLoginConditionIDP ------- update state excetion error code = "
@@ -1110,7 +1109,7 @@ public class IdpServiceImpl implements IdpService {
 		String idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
 		try {
-			UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
+			this.userSCI.updateStatus(updateUserVo);
 		} catch (StorePlatformException spe) {
 			LOGGER.error(spe.getMessage(), spe);
 			LOGGER.info("RXSetSuspendUserIdIDP 직권중지상태정보배포회원정보수정실패 : {} : {} : {}", imIntSvcNo, spe.getErrorInfo()
@@ -2093,7 +2092,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult rXTerminateRetryIDP(HashMap map) {
+	public ImResult rXTerminateRetryIDP(HashMap<String, String> map) {
 		String idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
 		String idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 
@@ -2185,7 +2184,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult rXChangePWDIDP(HashMap map) {
+	public ImResult rXChangePWDIDP(HashMap<String, String> map) {
 
 		/*
 		 * UpdatePasswordUserRequest updatePasswordUserRequest = new UpdatePasswordUserRequest(); IdpConstants
@@ -2565,7 +2564,6 @@ public class IdpServiceImpl implements IdpService {
 		String imMemTypeCd = ""; // 통합회원 유형 코드 100: 국내회원 900: 글로벌회원
 		String userType = ""; // 가입자 유형코드 1: 개인, 2:법인사업자, 3: 단체사업자, 4:개인사업자, 5사회공헌단체
 		String userStatusCode = ""; // 가입자 상태 코드 10:정상 11:가인증
-		String telecomCode = ""; // 통신사 코드
 		String emailRecvYn = ""; // 이메일 수신 여부
 		String prevMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
 		String currentMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
@@ -3051,8 +3049,8 @@ public class IdpServiceImpl implements IdpService {
 												}
 											}
 
-											String afterDeviceKey = this.deviceService.regDeviceInfo(systemId,
-													tenantId, userKey, getDeviceInfo);
+											this.deviceService
+													.regDeviceInfo(systemId, tenantId, userKey, getDeviceInfo);
 
 											// insertDeviceInfo 호출시 deviceKey가 새로 생성되는데 새로 생성된 값을 updateDeviceInfo
 											// api호출해서 부가속성을 모두 바꿔줘야함.
