@@ -101,13 +101,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         logger.debug("[DownloadComicLog] userKey : {}", comicReq.getUserKey());
         logger.debug("----------------------------------------------------------------");
 
-        // 헤더정보 세팅
-        comicReq.setTenantId(header.getTenantHeader().getTenantId());
-        comicReq.setLangCd(header.getTenantHeader().getLangCd());
-        comicReq.setDeviceModelCd(header.getDeviceHeader().getModel());
-        comicReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-        comicReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-
+        setRequest(comicReq, header);
         MetaInfo metaInfo = getComicMetaInfo(comicReq);
 
         logger.debug("----------------------------------------------------------------");
@@ -230,6 +224,14 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         return comicRes;
     }
+
+	private void setRequest(DownloadComicSacReq comicReq, SacRequestHeader header) {
+		comicReq.setTenantId(header.getTenantHeader().getTenantId());
+        comicReq.setLangCd(header.getTenantHeader().getLangCd());
+        comicReq.setDeviceModelCd(header.getDeviceHeader().getModel());
+        comicReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+        comicReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+	}
 
 	private void setProduct(Product product, MetaInfo metaInfo) {
 		// 상품 ID 정보

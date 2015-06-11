@@ -109,11 +109,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
 		String sysDate = downloadSystemDate.getSysDate();
 
-		downloadMusicSacReq.setTenantId(tenantHeader.getTenantId());
-		downloadMusicSacReq.setDeviceModelCd(deviceHeader.getModel());
-		downloadMusicSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-		downloadMusicSacReq.setLangCd(tenantHeader.getLangCd());
-		downloadMusicSacReq.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+		setRequest(downloadMusicSacReq, tenantHeader, deviceHeader);
 
 		String productId = downloadMusicSacReq.getProductId();
 		Product product = new Product();
@@ -224,6 +220,14 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         this.supportService.logDownloadResult(downloadMusicSacReq.getUserKey(), downloadMusicSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private void setRequest(DownloadMusicSacReq downloadMusicSacReq, TenantHeader tenantHeader, DeviceHeader deviceHeader) {
+		downloadMusicSacReq.setTenantId(tenantHeader.getTenantId());
+		downloadMusicSacReq.setDeviceModelCd(deviceHeader.getModel());
+		downloadMusicSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		downloadMusicSacReq.setLangCd(tenantHeader.getLangCd());
+		downloadMusicSacReq.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 	}
 
 	private void setProduct(Product product, MetaInfo metaInfo) {

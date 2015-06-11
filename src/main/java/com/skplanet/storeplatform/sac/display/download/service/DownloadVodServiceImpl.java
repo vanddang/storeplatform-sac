@@ -99,11 +99,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
-		downloadVodSacReq.setTenantId(tenantHeader.getTenantId());
-		downloadVodSacReq.setDeviceModelCd(deviceHeader.getModel());
-		downloadVodSacReq.setLangCd(tenantHeader.getLangCd());
-		downloadVodSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-		downloadVodSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		setRequest(downloadVodSacReq, tenantHeader, deviceHeader);
 
 		String idType = downloadVodSacReq.getIdType();
 		String productId = downloadVodSacReq.getProductId();
@@ -249,6 +245,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private void setRequest(DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader, DeviceHeader deviceHeader) {
+		downloadVodSacReq.setTenantId(tenantHeader.getTenantId());
+		downloadVodSacReq.setDeviceModelCd(deviceHeader.getModel());
+		downloadVodSacReq.setLangCd(tenantHeader.getLangCd());
+		downloadVodSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+		downloadVodSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 	}
 
 	private void setProduct(Product product, MetaInfo metaInfo, boolean supportFhdVideo) {

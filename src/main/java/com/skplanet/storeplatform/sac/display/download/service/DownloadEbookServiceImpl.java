@@ -116,13 +116,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
 		}
 
-		// 헤더정보 세팅
-		ebookReq.setTenantId(header.getTenantHeader().getTenantId());
-		ebookReq.setLangCd(header.getTenantHeader().getLangCd());
-		ebookReq.setDeviceModelCd(header.getDeviceHeader().getModel());
-		ebookReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-		ebookReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-
+		setRequest(ebookReq, header);
 		MetaInfo metaInfo = getEbookMetaInfo(ebookReq);
 
 		logger.debug("----------------------------------------------------------------");
@@ -244,6 +238,14 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(ebookReq.getUserKey(), ebookReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private void setRequest(DownloadEbookSacReq ebookReq, SacRequestHeader header) {
+		ebookReq.setTenantId(header.getTenantHeader().getTenantId());
+		ebookReq.setLangCd(header.getTenantHeader().getLangCd());
+		ebookReq.setDeviceModelCd(header.getDeviceHeader().getModel());
+		ebookReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		ebookReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 	}
 
 	private void setProduct(Product product, MetaInfo metaInfo) {

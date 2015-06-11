@@ -107,13 +107,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
 		String osVersion = DisplayCommonUtil.extractOsVer(deviceHeader.getOs());
-		downloadAppSacReq.setTenantId(tenantHeader.getTenantId());
-		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
-		downloadAppSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-		downloadAppSacReq.setLangCd(tenantHeader.getLangCd());
-		downloadAppSacReq.setOsVersion(osVersion); // OS Version
-		downloadAppSacReq.setLcdSize(deviceHeader.getResolution()); // LCD SIZE
-		downloadAppSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+		setRequest(downloadAppSacReq, tenantHeader, deviceHeader, osVersion);
 
 		String filteredBy = downloadAppSacReq.getFilteredBy();
 		String productId = downloadAppSacReq.getProductId();
@@ -312,6 +306,16 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(downloadAppSacReq.getUserKey(), downloadAppSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private void setRequest(DownloadAppSacReq downloadAppSacReq, TenantHeader tenantHeader, DeviceHeader deviceHeader, String osVersion) {
+		downloadAppSacReq.setTenantId(tenantHeader.getTenantId());
+		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
+		downloadAppSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		downloadAppSacReq.setLangCd(tenantHeader.getLangCd());
+		downloadAppSacReq.setOsVersion(osVersion); // OS Version
+		downloadAppSacReq.setLcdSize(deviceHeader.getResolution()); // LCD SIZE
+		downloadAppSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 	}
 
 	private void setProduct(Product product, MetaInfo metaInfo, DownloadAppSacReq downloadAppSacReq, boolean tingMemberFlag) {
