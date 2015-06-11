@@ -914,6 +914,10 @@ public class VodServiceImpl implements VodService {
 				Accrual accrual = this.mapAccrual(mapperVO);
 				subProduct.setAccrual(accrual);
 
+				// Badge
+				Badge badge = this.getBadgeInfo(mapperVO);
+				subProduct.setBadge(badge);
+
 				subProjectList.add(subProduct);
 			}
 		} else

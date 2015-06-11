@@ -372,12 +372,12 @@
               , LA.GENRE_CD
               , TO_CHAR(LA.REG_DT,'YYYYMMDDHH24MISS') REG_DT
               , LA.DWLD_AREA_LIMT_YN
-              <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
               , LA.PREFIX_TITLE AS VOD_TITL_NM /* CommonGenerator 변경 문제로 인해 alias변경 */
-              , NVL(LA.PLUS19_YN, 'N') AS PLUS19_YN
               , LA.PREFIX_TITLE
               , LA.BADGE_CD 
               , LA.BADGE_OPT_TEXT               
+              <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+              , NVL(LA.PLUS19_YN, 'N') AS PLUS19_YN
               </if>
           FROM (          
                 SELECT 
@@ -431,10 +431,10 @@
                     , JA.REG_DT
                     , JA.DWLD_AREA_LIMT_YN
                     , JA.EPSD_CID
-                    <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
                     , JA.PREFIX_TITLE
                     , JA.BADGE_CD
                     , JA.BADGE_OPT_TEXT
+                    <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
                     , JA.PLUS19_YN
                     </if>
                 FROM (SELECT G.TENANT_ID
@@ -503,6 +503,18 @@
                            , J.PROD_GRD_CD  /* 에피소드 상품 ID 조회 */
                            , L.ISSUE_DAY
                            , L.DWLD_AREA_LIMT_YN
+                           , (CASE WHEN CH_PF.PREFIX_TITLE IS NOT NULL THEN CH_PF.PREFIX_TITLE  
+                              ELSE NULL
+                               END ) AS PREFIX_TITLE   
+                           , EP_PF.BADGE_CD
+                           , ( SELECT /*+ INDEX_JOIN(TB_CM_CD) */
+                                      CASE WHEN (EP_PF.BADGE_CD IS NOT NULL AND EP_PF.BADGE_OPT_TEXT IS NULL) THEN  Y.CD_NM  
+                                           WHEN (EP_PF.BADGE_CD IS NOT NULL AND EP_PF.BADGE_OPT_TEXT IS NOT NULL) THEN EP_PF.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM 
+                                           ELSE NULL END
+                                 FROM TB_CM_CD Y
+                                WHERE EP_PF.BADGE_CD = Y.CD_ID(+)
+                                  AND Y.LANG_CD(+) = #{tenantHeader.langCd} 
+                              ) AS BADGE_OPT_TEXT                          
                          </if>
                            , D.SVC_GRP_CD
                            , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM   
@@ -525,6 +537,7 @@
                            , TB_DP_TENANT_PROD_STATS       N
                            , TB_DP_TENANT_PROD_PRICE       O
                            , TB_DP_TENANT_PROD             P
+                           , TB_DP_PROD_PREFIX             EP_PF
                            , TB_DP_USE_POLICY              Q
                        WHERE A.MENU_ID = B.MENU_ID
                          AND A.MENU_ID = C.MENU_ID
@@ -545,6 +558,7 @@
                          AND I.PART_PROD_ID = L.PROD_ID
                          AND I.PART_PROD_ID = O.PROD_ID
                          AND I.PART_PROD_ID = P.PROD_ID
+                         AND J.PROD_ID = EP_PF.PROD_ID(+) /* 에피소드의 PREFIX */
 			             AND D.USE_POLICY_ID = Q.USE_POLICY_ID(+)
                          AND A.USE_YN = 'Y'
                          AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
