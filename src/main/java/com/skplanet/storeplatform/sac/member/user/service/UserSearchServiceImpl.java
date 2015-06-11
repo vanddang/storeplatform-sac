@@ -2068,6 +2068,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 			SearchManagementResponse searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
 			socialMemberCnt = searchManagementResponse.getMbrMangItemPtcrList().size();
 
+		} catch (StorePlatformException e) {
+			// 소셜 부가속성이 없을경우 => socialMemberCnt = 0.
+			LOGGER.info("회원 부가속성 결과 없음 : socialMemberCnt [{}]", socialMemberCnt);
+		}
+		try {
+
 			// 2. 소셜이력 테이블 조회 (한달이내 등록) : 사이즈 => socialRegCnt
 			SearchSocialAccountRequest searchSocialAccountRequest = new SearchSocialAccountRequest();
 			searchSocialAccountRequest.setCommonRequest(commonRequest);
@@ -2081,8 +2087,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 				socialRegDate = Integer.parseInt(searchSocialAccountResponse.getSocialAccountList().get(1).getInsDt()) + 1;
 			}
 
-		} catch (StorePlatformException e) {
-
+		} catch (Exception e) {
+			// 소셜계정 등록 이력이 없을경우 => socialRegCnt = 0.
+			LOGGER.info("소셜계정 등록 이력 없음 : socialRegCnt [{}]", socialRegCnt);
 		}
 
 		// 4. 소셜 계정 등록 가능여부 => regYn
