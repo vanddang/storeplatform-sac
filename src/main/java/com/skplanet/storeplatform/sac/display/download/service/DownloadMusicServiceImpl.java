@@ -209,11 +209,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							setMetaInfo(metaInfo, historySacIn, downloadMusicSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
                             Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
 							encryptionList.add(encryption);
-
-							log.debug("-----------------------------------------------------------");
-							log.debug("[DownloadEbookLog] token : {}", encryption.getToken());
-							log.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
-							log.debug("-----------------------------------------------------------");
+							loggingEncResult(encryption);
 						}
 						// 구매 정보
 						product.setPurchaseList(purchaseList);
@@ -255,6 +251,13 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         this.supportService.logDownloadResult(downloadMusicSacReq.getUserKey(), downloadMusicSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private void loggingEncResult(Encryption encryption) {
+		log.debug("-----------------------------------------------------------");
+		log.debug("[DownloadEbookLog] token : {}", encryption.getToken());
+		log.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
+		log.debug("-----------------------------------------------------------");
 	}
 
 	private DownloadMusicSacRes makeResponse(Product product) {

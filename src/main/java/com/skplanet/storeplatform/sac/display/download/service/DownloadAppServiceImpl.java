@@ -280,15 +280,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
                             Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
                             encryptionList.add(encryption);
-
-							log.debug("-------------------------------------------------------------");
-							log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
-							log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-							log.debug("-------------------------------------------------------------");
+							loggingEncResult(encryption);
 						}
 						product.setPurchaseList(purchaseList);
-
-						// 암호화 정보
 						if (!encryptionList.isEmpty()) {
 							product.setDl(encryptionList);
 						}
@@ -347,6 +341,13 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(downloadAppSacReq.getUserKey(), downloadAppSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private void loggingEncResult(Encryption encryption) {
+		log.debug("-------------------------------------------------------------");
+		log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
+		log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+		log.debug("-------------------------------------------------------------");
 	}
 
 	private DownloadAppSacRes makeResponse(Product product, Component component) {

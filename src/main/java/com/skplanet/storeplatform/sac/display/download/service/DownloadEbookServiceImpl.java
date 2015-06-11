@@ -239,11 +239,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							setMetaInfo(metaInfo, historySacIn, ebookReq, reqExpireDate, prchsProdId, drmYn, prchsState, deviceRes);
                             Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
 							encryptionList.add(encryption);
-
-							logger.debug("-----------------------------------------------------------");
-							logger.debug("[DownloadEbookLog] token : {}", encryption.getToken());
-							logger.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
-							logger.debug("-----------------------------------------------------------");
+							loggingEncResult(encryption);
 						}
 						// 구매 정보
 						product.setPurchaseList(purchaseList);
@@ -264,6 +260,13 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(ebookReq.getUserKey(), ebookReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private void loggingEncResult(Encryption encryption) {
+		logger.debug("-----------------------------------------------------------");
+		logger.debug("[DownloadEbookLog] token : {}", encryption.getToken());
+		logger.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
+		logger.debug("-----------------------------------------------------------");
 	}
 
 	private DownloadEbookSacRes makeResponse(Product product) {

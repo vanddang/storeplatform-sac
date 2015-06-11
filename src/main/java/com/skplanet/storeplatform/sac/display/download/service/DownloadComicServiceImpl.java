@@ -225,11 +225,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                         	setMetaInfo(comicReq, reqExpireDate, metaInfo, prchsProdId, drmYn, historySacIn, prchsState, deviceRes);
                             Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
                             encryptionList.add(encryption);
-
-                            logger.debug("-----------------------------------------------------------");
-                            logger.debug("[DownloadComicLog] token : {}", encryption.getToken());
-                            logger.debug("[DownloadComicLog] keyIdx : {}", encryption.getKeyIndex());
-                            logger.debug("-----------------------------------------------------------");
+                            loggingEncResult(encryption);
                         }
                         // 구매 정보
                         product.setPurchaseList(purchaseList);
@@ -251,6 +247,13 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         return comicRes;
     }
+
+	private void loggingEncResult(Encryption encryption) {
+		logger.debug("-----------------------------------------------------------");
+		logger.debug("[DownloadComicLog] token : {}", encryption.getToken());
+		logger.debug("[DownloadComicLog] keyIdx : {}", encryption.getKeyIndex());
+		logger.debug("-----------------------------------------------------------");
+	}
 
 	private DownloadComicSacRes makeResponse(Product product) {
 		CommonResponse commonResponse = new CommonResponse();

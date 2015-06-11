@@ -221,11 +221,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
                             Encryption encryption = this.supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
 							encryptionList.add(encryption);
-
-							this.log.debug("-------------------------------------------------------------");
-							this.log.debug("[DownloadVodServiceImpl] token : {}", encryption.getToken());
-							this.log.debug("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-							this.log.debug("--------------------------------------------------------------");
+							loggingEncResult(encryption);
 						}
 						// 구매 정보
 						product.setPurchaseList(purchaseList);
@@ -291,6 +287,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private void loggingEncResult(Encryption encryption) {
+		this.log.debug("-------------------------------------------------------------");
+		this.log.debug("[DownloadVodServiceImpl] token : {}", encryption.getToken());
+		this.log.debug("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+		this.log.debug("--------------------------------------------------------------");
 	}
 
 	private DownloadVodSacRes makeResponse(Product product) {
