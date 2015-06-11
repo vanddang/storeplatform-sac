@@ -236,45 +236,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						if (!"Y".equals(deviceRes.getAuthYn())) {
 							logger.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 						} else if (memberPassFlag && deviceRes != null) {
-							String deviceId = deviceRes.getDeviceId();
-							String deviceIdType = commonService.getDeviceIdType(deviceId);
-
-							metaInfo.setPurchaseId(historySacIn.getPrchsId());
-							metaInfo.setPurchaseProdId(historySacIn.getProdId());
-							metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
-							metaInfo.setPurchaseState(prchsState);
-							metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
-							metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
-							metaInfo.setExpiredDate(reqExpireDate);
-							metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
-							metaInfo.setUserKey(ebookReq.getUserKey());
-							metaInfo.setDeviceKey(ebookReq.getDeviceKey());
-							if (StringUtils.isNotBlank(ebookReq.getAdditionalMsisdn())) {
-                            	metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
-                            	metaInfo.setDeviceSubKey(ebookReq.getAdditionalMsisdn());
-                            } else {
-                            	metaInfo.setDeviceType(deviceIdType);
-                            	metaInfo.setDeviceSubKey(deviceId);
-                            }
-							metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
-							metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
-
-							// 구매시점 DRM 여부값으로 세팅
-							if (StringUtils.isNotEmpty(drmYn)) {
-								metaInfo.setStoreDrmYn(drmYn);
-								metaInfo.setPlayDrmYn(drmYn);
-							}
-
-							// 소장, 대여 구분(Store : 소장, Play : 대여)
-							if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-								metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-								metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
-							} else {
-								metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-								metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
-							}
-
-							// 암호화 정보 (JSON)
+							setMetaInfo(metaInfo, historySacIn, ebookReq, reqExpireDate, prchsProdId, drmYn, prchsState, deviceRes);
                             Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
 							encryptionList.add(encryption);
 
@@ -308,6 +270,47 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(ebookReq.getUserKey(), ebookReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private void setMetaInfo(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadEbookSacReq ebookReq, String reqExpireDate, String prchsProdId,
+			String drmYn, String prchsState, SearchDeviceIdSacRes deviceRes) {
+		String deviceId = deviceRes.getDeviceId();
+		String deviceIdType = commonService.getDeviceIdType(deviceId);
+
+		metaInfo.setPurchaseId(historySacIn.getPrchsId());
+		metaInfo.setPurchaseProdId(historySacIn.getProdId());
+		metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
+		metaInfo.setPurchaseState(prchsState);
+		metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
+		metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
+		metaInfo.setExpiredDate(reqExpireDate);
+		metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
+		metaInfo.setUserKey(ebookReq.getUserKey());
+		metaInfo.setDeviceKey(ebookReq.getDeviceKey());
+		if (StringUtils.isNotBlank(ebookReq.getAdditionalMsisdn())) {
+			metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
+			metaInfo.setDeviceSubKey(ebookReq.getAdditionalMsisdn());
+		} else {
+			metaInfo.setDeviceType(deviceIdType);
+			metaInfo.setDeviceSubKey(deviceId);
+		}
+		metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
+		metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
+
+		// 구매시점 DRM 여부값으로 세팅
+		if (StringUtils.isNotEmpty(drmYn)) {
+			metaInfo.setStoreDrmYn(drmYn);
+			metaInfo.setPlayDrmYn(drmYn);
+		}
+
+		// 소장, 대여 구분(Store : 소장, Play : 대여)
+		if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+			metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+			metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+		} else {
+			metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+			metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+		}
 	}
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {

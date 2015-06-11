@@ -218,30 +218,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						if (!"Y".equals(deviceRes.getAuthYn())) {
 							log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 						} else if (memberFlag && deviceRes != null) {
-							String deviceId = deviceRes.getDeviceId();
-							String deviceIdType = this.commonService.getDeviceIdType(deviceId);
-
-							metaInfo.setPurchaseId(historySacIn.getPrchsId());
-							metaInfo.setPurchaseProdId(historySacIn.getProdId());
-							metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
-							metaInfo.setPurchaseState(prchsState);
-							metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
-							metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
-							metaInfo.setExpiredDate(reqExpireDate);
-							metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
-							metaInfo.setUserKey(downloadVodSacReq.getUserKey());
-							metaInfo.setDeviceKey(downloadVodSacReq.getDeviceKey());
-							metaInfo.setDeviceType(deviceIdType);
-							metaInfo.setDeviceSubKey(deviceId);
-							metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
-							metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
-
-							mapProdChrg(metaInfo, historySacIn.getProdId()); // 구매 상품ID
-							mapDrmYn(metaInfo, historySacIn);
-
-							// 암호화 정보 (JSON)
-							metaInfo.setSystemId(tenantHeader.getSystemId());
-                            metaInfo.setTenantId(tenantHeader.getTenantId());
+							setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
                             Encryption encryption = this.supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
 							encryptionList.add(encryption);
 
@@ -320,6 +297,33 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private void setMetaInfo(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader,
+			String reqExpireDate, String prchsState, SearchDeviceIdSacRes deviceRes) {
+		String deviceId = deviceRes.getDeviceId();
+		String deviceIdType = this.commonService.getDeviceIdType(deviceId);
+
+		metaInfo.setPurchaseId(historySacIn.getPrchsId());
+		metaInfo.setPurchaseProdId(historySacIn.getProdId());
+		metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
+		metaInfo.setPurchaseState(prchsState);
+		metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
+		metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
+		metaInfo.setExpiredDate(reqExpireDate);
+		metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
+		metaInfo.setUserKey(downloadVodSacReq.getUserKey());
+		metaInfo.setDeviceKey(downloadVodSacReq.getDeviceKey());
+		metaInfo.setDeviceType(deviceIdType);
+		metaInfo.setDeviceSubKey(deviceId);
+		metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
+		metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
+
+		mapProdChrg(metaInfo, historySacIn.getProdId()); // 구매 상품ID
+		mapDrmYn(metaInfo, historySacIn);
+
+		metaInfo.setSystemId(tenantHeader.getSystemId());
+		metaInfo.setTenantId(tenantHeader.getTenantId());
 	}
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {

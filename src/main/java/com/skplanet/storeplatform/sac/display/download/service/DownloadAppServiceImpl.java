@@ -271,21 +271,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							String deviceTelecom = deviceRes.getDeviceTelecom();
 							String deviceIdType = commonService.getDeviceIdType(deviceId);
 
-							metaInfo.setPurchaseId(historySacIn.getPrchsId());
-							metaInfo.setPurchaseProdId(historySacIn.getProdId());
-							metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
-							metaInfo.setPurchaseState(prchsState);
-							metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
-							metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
-							metaInfo.setDrmYn(historySacIn.getDrmYn());
-							metaInfo.setExpiredDate(reqExpireDate);
-							metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
-							metaInfo.setUserKey(downloadAppSacReq.getUserKey());
-							metaInfo.setDeviceKey(downloadAppSacReq.getDeviceKey());
-							metaInfo.setDeviceType(deviceIdType);
-							metaInfo.setDeviceSubKey(deviceId);
-							metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
-
+							setMetaInfo(metaInfo, historySacIn, downloadAppSacReq, reqExpireDate, prchsState, deviceId, deviceIdType);
 							tingMemberFlag = getTingMemberFlag(deviceId, deviceTelecom, deviceIdType, metaInfo);
 
 							// 암호화 정보 (JSON)
@@ -369,6 +355,24 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(downloadAppSacReq.getUserKey(), downloadAppSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private void setMetaInfo(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadAppSacReq downloadAppSacReq, String reqExpireDate,
+			String prchsState, String deviceId, String deviceIdType) {
+		metaInfo.setPurchaseId(historySacIn.getPrchsId());
+		metaInfo.setPurchaseProdId(historySacIn.getProdId());
+		metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
+		metaInfo.setPurchaseState(prchsState);
+		metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
+		metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
+		metaInfo.setDrmYn(historySacIn.getDrmYn());
+		metaInfo.setExpiredDate(reqExpireDate);
+		metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
+		metaInfo.setUserKey(downloadAppSacReq.getUserKey());
+		metaInfo.setDeviceKey(downloadAppSacReq.getDeviceKey());
+		metaInfo.setDeviceType(deviceIdType);
+		metaInfo.setDeviceSubKey(deviceId);
+		metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
 	}
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {

@@ -222,41 +222,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 						if (!"Y".equals(deviceRes.getAuthYn())) {
 							logger.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 						} else if (memberPassFlag && deviceRes != null) {
-                        	String deviceId = deviceRes.getDeviceId();
-                        	String deviceIdType = commonService.getDeviceIdType(deviceId);
-
-                        	metaInfo.setPurchaseId(historySacIn.getPrchsId());
-                        	metaInfo.setPurchaseProdId(historySacIn.getProdId());
-                        	metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
-                        	metaInfo.setPurchaseState(prchsState);
-                        	metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
-                        	metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
-                            metaInfo.setExpiredDate(reqExpireDate);
-                            metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
-                            metaInfo.setUserKey(comicReq.getUserKey());
-                            metaInfo.setDeviceKey(comicReq.getDeviceKey());
-                            if (StringUtils.isNotBlank(comicReq.getAdditionalMsisdn())) {
-                            	metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
-                            	metaInfo.setDeviceSubKey(comicReq.getAdditionalMsisdn());
-                            } else {
-                            	metaInfo.setDeviceType(deviceIdType);
-                            	metaInfo.setDeviceSubKey(deviceId);
-                            }
-                            metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
-							metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
-
-                            // 구매시점 DRM 여부값으로 세팅
-                            if (StringUtils.isNotEmpty(drmYn)) {
-                                metaInfo.setDrmYn(drmYn);
-                            }
-							// 소장, 대여 구분(Store : 소장, Play : 대여)
-							if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-								metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-							} else {
-								metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-							}
-
-                            // 암호화 정보 (JSON)
+                        	setMetaInfo(comicReq, reqExpireDate, metaInfo, prchsProdId, drmYn, historySacIn, prchsState, deviceRes);
                             Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
                             encryptionList.add(encryption);
 
@@ -291,6 +257,43 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
         return comicRes;
     }
+
+	private void setMetaInfo(DownloadComicSacReq comicReq, String reqExpireDate, MetaInfo metaInfo, String prchsProdId, String drmYn,
+			HistorySacIn historySacIn, String prchsState, SearchDeviceIdSacRes deviceRes) {
+		String deviceId = deviceRes.getDeviceId();
+		String deviceIdType = commonService.getDeviceIdType(deviceId);
+
+		metaInfo.setPurchaseId(historySacIn.getPrchsId());
+		metaInfo.setPurchaseProdId(historySacIn.getProdId());
+		metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
+		metaInfo.setPurchaseState(prchsState);
+		metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
+		metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
+		metaInfo.setExpiredDate(reqExpireDate);
+		metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
+		metaInfo.setUserKey(comicReq.getUserKey());
+		metaInfo.setDeviceKey(comicReq.getDeviceKey());
+		if (StringUtils.isNotBlank(comicReq.getAdditionalMsisdn())) {
+			metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
+			metaInfo.setDeviceSubKey(comicReq.getAdditionalMsisdn());
+		} else {
+			metaInfo.setDeviceType(deviceIdType);
+			metaInfo.setDeviceSubKey(deviceId);
+		}
+		metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
+		metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
+
+		// 구매시점 DRM 여부값으로 세팅
+		if (StringUtils.isNotEmpty(drmYn)) {
+		    metaInfo.setDrmYn(drmYn);
+		}
+		// 소장, 대여 구분(Store : 소장, Play : 대여)
+		if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+			metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+		} else {
+			metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+		}
+	}
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {
 		Purchase p = commonGenerator.generatePurchase(historySacIn.getPrchsId(),
