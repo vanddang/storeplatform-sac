@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,6 +85,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
@@ -2057,7 +2059,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		// Response
 		int socialMemberCnt = 0;
 		int socialRegCnt = 0;
-		int socialRegDate = 0;
+		String socialRegDate = "";
 
 		try {
 			// 1. 회원 부가속성 조회 (Tenant_id 구분없이) : 사이즈 => socialMemberCnt
@@ -2082,9 +2084,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 					.searchSocialAccount(searchSocialAccountRequest);
 			socialRegCnt = searchSocialAccountResponse.getSocialAccountList().size();
 
-			// 3. 소셜이력 조회값이 2 => 첫번째 등록한 날짜 + 1일 응답 => socialRegDate
+			// 3. 소셜이력 조회값이 2 => 첫번째 등록한 날짜 + 한달 + 1일 응답 => socialRegDate
 			if (socialRegCnt > 1) {
-				socialRegDate = Integer.parseInt(searchSocialAccountResponse.getSocialAccountList().get(1).getInsDt()) + 1;
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+				Calendar todayCal = DateUtil.getCalendar(socialRegDate);
+				todayCal.add(Calendar.MONTH, 1); // +1 한달
+				todayCal.add(Calendar.DATE, 1); // +1 하루
+				socialRegDate = sdf.format(todayCal.getTime());
 			}
 
 		} catch (Exception e) {
@@ -2099,7 +2105,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			res.setRegYn(MemberConstants.USE_N);
 			res.setSocialMemberCnt(String.valueOf(socialMemberCnt));
 			res.setSocialRegCnt(String.valueOf(socialRegCnt));
-			res.setSocialRegDate(String.valueOf(socialRegDate));
+			res.setSocialRegDate(socialRegDate);
 		}
 
 		res.setUserKey(req.getUserKey());
