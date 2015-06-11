@@ -278,31 +278,31 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		List<Identifier>  identifierList = new ArrayList<Identifier>();
 		Identifier identifier;
 
-		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
+		identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
 		identifierList.add(identifier);
 
 		metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
-		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getEspdProdId());
+		identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getEspdProdId());
 		identifierList.add(identifier);
 
 		// CID
-		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, metaInfo.getCid());
+		identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, metaInfo.getCid());
 		identifierList.add(identifier);
 
 		product.setIdentifierList(identifierList); // 상품 ID
 		List<Support>  supportList = new ArrayList<Support>();
-		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM, metaInfo.getHdcpYn()));
-		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM, metaInfo.getHdvYn()));
-		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM, "Y"));
-		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM, metaInfo.getDolbySprtYn()));
+		supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM, metaInfo.getHdcpYn()));
+		supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM, metaInfo.getHdvYn()));
+		supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM, "Y"));
+		supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM, metaInfo.getDolbySprtYn()));
 		product.setSupportList(supportList);
-		product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
-		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
-		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
+		product.setTitle(commonGenerator.generateTitle(metaInfo)); // 상품명
+		product.setMenuList(commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
+		product.setSourceList(commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
 		product.setVod(this.vodGenerator.generateVod(metaInfo, supportFhdVideo)); // VOD 정보
-		product.setRights(this.commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
-		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
+		product.setRights(commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
+		product.setDistributor(commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 
         // 보안을 위해 물리파일 경로는 API응답에서 삭제
         if (product.getVod() != null) {

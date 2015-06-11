@@ -247,30 +247,30 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		music = new Music();
 
 		Identifier identifier = new Identifier();
-		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getChnlProdId());
+		identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getChnlProdId());
 		identifierList.add(identifier);
 
-		identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
+		identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
 		identifierList.add(identifier);
 
 		product.setIdentifierList(identifierList); // 상품 ID
-		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
-		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
-		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
+		product.setTitle(commonGenerator.generateTitle(metaInfo));
+		product.setSourceList(commonGenerator.generateSourceList(metaInfo));
+		product.setMenuList(commonGenerator.generateMenuList(metaInfo));
 		product.setContributor(this.musicInfoGenerator.generateContributor(metaInfo));
-		identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_SONG_IDENTIFIER_CD,metaInfo.getMusicId()));
+		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_SONG_IDENTIFIER_CD,metaInfo.getMusicId()));
 		music.setIdentifierList(identifierList);
 		List<Source> musicSourceList = new ArrayList<Source>();
         if(metaInfo.getFileSize() != null) {
-            musicSourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128, null, metaInfo.getFileSize()));
+            musicSourceList.add(commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128, null, metaInfo.getFileSize()));
         }
         if(metaInfo.getFileSizeH() != null) {
-            musicSourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192, null, metaInfo.getFileSizeH()));
+            musicSourceList.add(commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192, null, metaInfo.getFileSizeH()));
         }
 
 		music.setSourceList(musicSourceList);
 		product.setMusic(music);
-		product.setRights(this.commonGenerator.generateRights(metaInfo));
+		product.setRights(commonGenerator.generateRights(metaInfo));
 
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(1);
