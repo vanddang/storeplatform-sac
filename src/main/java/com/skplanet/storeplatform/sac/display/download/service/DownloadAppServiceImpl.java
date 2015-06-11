@@ -255,7 +255,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
 						metaInfo.setDrmYn(historySacIn.getDrmYn());
 						// 구매 정보
-						purchaseList.add(commonGenerator.generatePurchase(metaInfo));
+						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
 
 						/************************************************************************************************
 						 * 구매 정보에 따른 암호화 시작
@@ -382,6 +382,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {
+		Purchase p = commonGenerator.generatePurchase(historySacIn.getPrchsId(),
+													historySacIn.getProdId(),
+		            								prchsState,
+		            								historySacIn.getPrchsDt(),
+		            								historySacIn.getDwldExprDt());
+		purchaseList.add(p);
 	}
 
 	private MetaInfo getAppMetaInfo(DownloadAppSacReq downloadAppSacReq) {

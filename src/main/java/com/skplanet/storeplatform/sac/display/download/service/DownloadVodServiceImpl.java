@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -201,8 +202,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
 						metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
 
-						// 구매 정보
-						purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
+						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
 
 						/************************************************************************************************
 						 * 구매 정보에 따른 암호화 시작
@@ -335,6 +335,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {
+		Purchase p = commonGenerator.generatePurchase(historySacIn.getPrchsId(),
+													historySacIn.getProdId(),
+		            								prchsState,
+		            								historySacIn.getPrchsDt(),
+		            								historySacIn.getDwldExprDt());
+		purchaseList.add(p);
 	}
 
 	private MetaInfo getVodMetaInfo(DownloadVodSacReq req) {

@@ -62,7 +62,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	private HistoryInternalSCI historyInternalSCI;
 
 	@Autowired
-	private CommonMetaInfoGenerator commonMetaInfoGenerator;
+	private CommonMetaInfoGenerator commonGenerator;
 
 	@Autowired
 	private EbookComicGenerator ebookComicGenerator;
@@ -143,19 +143,19 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 		// 상품 ID 정보
 		List<Identifier> identifierList = new ArrayList<Identifier>();
-		identifierList.add(commonMetaInfoGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
-		identifierList.add(commonMetaInfoGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
+		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
+		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
 
 		product.setIdentifierList(identifierList);
-		product.setTitle(commonMetaInfoGenerator.generateTitle(metaInfo));
+		product.setTitle(commonGenerator.generateTitle(metaInfo));
 		product.setChnlProdNm(metaInfo.getChnlProdNm());
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
-		product.setSourceList(commonMetaInfoGenerator.generateDownloadSourceList(metaInfo));
-		product.setMenuList(commonMetaInfoGenerator.generateMenuList(metaInfo));
+		product.setSourceList(commonGenerator.generateDownloadSourceList(metaInfo));
+		product.setMenuList(commonGenerator.generateMenuList(metaInfo));
 		product.setBook(ebookComicGenerator.generateForDownloadBook(metaInfo));
-		product.setRights(commonMetaInfoGenerator.generateRights(metaInfo));
-		product.setDistributor(commonMetaInfoGenerator.generateDistributor(metaInfo));
+		product.setRights(commonGenerator.generateRights(metaInfo));
+		product.setDistributor(commonGenerator.generateDistributor(metaInfo));
 		product.setContributor(ebookComicGenerator.generateEbookContributor(metaInfo));
 
 		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
@@ -228,8 +228,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
 						metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
 
-						// 구매 정보
-						purchaseList.add(commonMetaInfoGenerator.generatePurchase(metaInfo));
+						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
 
 						// 구매상태 만료여부 및 단말 지원여부 확인
 						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) || !"Y".equals(permitDeviceYn)) {
@@ -322,6 +321,15 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {
+		Purchase p = commonGenerator.generatePurchase(historySacIn.getPrchsId(),
+													historySacIn.getProdId(),
+		            								prchsState,
+		            								historySacIn.getPrchsDt(),
+		            								historySacIn.getDwldExprDt());
+		purchaseList.add(p);
 	}
 
 	private MetaInfo getEbookMetaInfo(DownloadEbookSacReq ebookReq) {
