@@ -2,14 +2,17 @@ package com.skplanet.storeplatform.sac.client.member.vo.common;
 
 import java.util.List;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 소셜계정 이력 정보.
  * 
- * Updated on : 2015. 6. 10.
- * Updated by : Rejoice, Burkhan
+ * Updated on : 2015. 6. 10. Updated by : Rejoice, Burkhan
  */
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class SocialAccountInfo extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
@@ -23,7 +26,7 @@ public class SocialAccountInfo extends CommonInfo {
 	/** 사용자 구분코드. */
 	private String userType;
 	/** 기기 Key 리스트. */
-	private List<String> deviceKeyList;
+	private List<DeviceInfo> deviceKeyList;
 
 	/**
 	 * @return the tenantId
@@ -88,7 +91,7 @@ public class SocialAccountInfo extends CommonInfo {
 	/**
 	 * @return the deviceKeyList
 	 */
-	public List<String> getDeviceKeyList() {
+	public List<DeviceInfo> getDeviceKeyList() {
 		return this.deviceKeyList;
 	}
 
@@ -96,7 +99,7 @@ public class SocialAccountInfo extends CommonInfo {
 	 * @param deviceKeyList
 	 *            the deviceKeyList to set
 	 */
-	public void setDeviceKeyList(List<String> deviceKeyList) {
+	public void setDeviceKeyList(List<DeviceInfo> deviceKeyList) {
 		this.deviceKeyList = deviceKeyList;
 	}
 
