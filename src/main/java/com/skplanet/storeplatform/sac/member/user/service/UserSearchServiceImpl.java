@@ -2104,13 +2104,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 			res.setRegYn(MemberConstants.USE_Y);
 		} else {
 			res.setRegYn(MemberConstants.USE_N);
-			if (socialMemberCnt > 4 && socialRegCnt > 1) {
+			if (socialMemberCnt > 4) {
 				res.setSocialMemberCnt(String.valueOf(socialMemberCnt));
-				res.setSocialRegCnt(String.valueOf(socialRegCnt));
-				res.setSocialRegDate(socialRegDate);
-			} else if (socialMemberCnt > 4) {
-				res.setSocialMemberCnt(String.valueOf(socialMemberCnt));
-			} else if (socialRegCnt > 1) {
+			}
+			if (socialRegCnt > 1) {
 				res.setSocialRegCnt(String.valueOf(socialRegCnt));
 				res.setSocialRegDate(socialRegDate);
 			}
