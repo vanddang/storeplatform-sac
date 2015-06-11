@@ -45,6 +45,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrSapUserRequest;
@@ -67,6 +69,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
@@ -77,6 +81,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserS
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SocialUserInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserExtraInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
@@ -1184,4 +1189,90 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		res.setSearchUserExtraInfoSacRes(searchUserExtraInfoSacRes);
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * 2.1.14. 소셜 계정 등록 회원 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchSocialAccountSacReq
+	 * @return SearchSocialAccountSacRes
+	 */
+	@Override
+	public SearchSocialAccountSacRes searchSocialAccount(SacRequestHeader header, SearchSocialAccountSacReq req) {
+
+		CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
+
+		// 1. userKey로 부가속성 테이블 조회 (구글,페이스북,카카오)
+		SearchManagementRequest searchManagementRequest = new SearchManagementRequest();
+		searchManagementRequest.setCommonRequest(commonRequest);
+		searchManagementRequest.setUserKey(req.getUserKey());
+		SearchManagementResponse searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
+
+		List<SearchMbrSapUserInfo> searchSapUserInfoList = new ArrayList<SearchMbrSapUserInfo>();
+		SearchMbrSapUserInfo searchSapUserInfo = null;
+		for (MbrMangItemPtcr mangItemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
+			if (StringUtils.isBlank(mangItemPtcr.getUserKey()) || StringUtils.isBlank(mangItemPtcr.getTenantID())) {
+				throw new StorePlatformException("SAC_MEM_0001",
+						StringUtils.isBlank(mangItemPtcr.getUserKey()) ? "userKey" : "tenantId");
+			}
+			if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK_ID, mangItemPtcr.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE_ID, mangItemPtcr.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO_ID, mangItemPtcr.getExtraProfile())) {
+				searchSapUserInfo = new SearchMbrSapUserInfo();
+				searchSapUserInfo.setUserKey(mangItemPtcr.getUserKey());
+				searchSapUserInfo.setTenantId(mangItemPtcr.getTenantID());
+				searchSapUserInfoList.add(searchSapUserInfo);
+			}
+		}
+
+		// 2. 테넌트 별로 회원 조회
+		SearchMbrSapUserRequest searchMbrSapUserRequest = new SearchMbrSapUserRequest();
+		searchMbrSapUserRequest.setUserKeyList(searchSapUserInfoList);
+		searchMbrSapUserRequest.setCommonRequest(commonRequest);
+		SearchMbrSapUserResponse searchMbrSapUserResponse = this.userSCI.searchMbrSapUser(searchMbrSapUserRequest);
+
+		// 3. 회원 정보 조회 결과 값 응답 설정
+		Map<String, UserMbrStatus> userInfoMap = searchMbrSapUserResponse.getUserMbrStatusMap();
+
+		Map<String, SocialUserInfoSac> socialUserInfoMap = null;
+		SocialUserInfoSac socialAccountInfo = null;
+		if (userInfoMap != null) {
+			socialUserInfoMap = new HashMap<String, SocialUserInfoSac>();
+			for (int i = 0; i < searchSapUserInfoList.size(); i++) {
+				if (userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()) != null) {
+					socialAccountInfo = new SocialUserInfoSac();
+					socialAccountInfo.setTenantId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+							.getTenantID());
+					socialAccountInfo.setUserKey(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+							.getUserKey());
+
+					if (StringUtils.equals(MemberConstants.USER_TYPE_MOBILE,
+							userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getUserType())) {
+						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+								.getDeviceID());
+					} else {
+						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+								.getUserID());
+					}
+					socialAccountInfo.setUserType(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+							.getUserType());
+					socialAccountInfo.setDeviceKeyList(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+							.getDeviceKeyList());
+					socialUserInfoMap.put(searchSapUserInfoList.get(i).getUserKey(), socialAccountInfo);
+				}
+			}
+		}
+
+		// 회원정보 없는 경우 SC 회원에서 Exception 처리함.
+		SearchSocialAccountSacRes searchSocialAccountSacRes = new SearchSocialAccountSacRes();
+		searchSocialAccountSacRes.setSocialUserInfo(socialUserInfoMap);
+
+		// 4. 응답 값 설정
+		return searchSocialAccountSacRes;
+	}
+
 }

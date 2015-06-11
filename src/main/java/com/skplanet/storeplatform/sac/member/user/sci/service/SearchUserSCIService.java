@@ -15,6 +15,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
@@ -237,4 +239,18 @@ public interface SearchUserSCIService {
 	 * @return SearchUserExtraInfoSacRes
 	 */
 	public SearchUserExtraInfoSacRes searchUserExtraInfo(SacRequestHeader header, SearchUserExtraInfoSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.14. 소셜 계정 등록 회원 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchSocialAccountSacReq
+	 * @return SearchSocialAccountSacRes
+	 */
+	public SearchSocialAccountSacRes searchSocialAccount(SacRequestHeader header, SearchSocialAccountSacReq req);
+
 }

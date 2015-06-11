@@ -23,6 +23,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
@@ -429,4 +431,27 @@ public class SearchUserSCIController implements SearchUserSCI {
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * 2.1.14. 소셜계정 등록 회원 정보 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            SearchSocialAccountSacReq
+	 * @return SearchSocialAccountSacRes
+	 */
+	@Override
+	@RequestMapping(value = "/searchSocialAccount", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchSocialAccountSacRes searchSocialAccount(@RequestBody @Validated SearchSocialAccountSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		SacRequestHeader header = SacRequestHeaderHolder.getValue();
+
+		SearchSocialAccountSacRes res = this.searchUserSCIService.searchSocialAccount(header, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
 }
