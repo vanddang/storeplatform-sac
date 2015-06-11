@@ -259,17 +259,21 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			}
 		}
 
+		DownloadEbookSacRes ebookRes = makeResponse(product);
+        sw.stop();
+        supportService.logDownloadResult(ebookReq.getUserKey(), ebookReq.getDeviceKey(), productId, encryptionList, sw.getTime());
+
+        return ebookRes;
+	}
+
+	private DownloadEbookSacRes makeResponse(Product product) {
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(1);
 
 		DownloadEbookSacRes ebookRes = new DownloadEbookSacRes();
 		ebookRes.setProduct(product);
 		ebookRes.setCommonResponse(commonResponse);
-
-        sw.stop();
-        supportService.logDownloadResult(ebookReq.getUserKey(), ebookReq.getDeviceKey(), productId, encryptionList, sw.getTime());
-
-        return ebookRes;
+		return ebookRes;
 	}
 
 	private void setMetaInfo(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadEbookSacReq ebookReq, String reqExpireDate, String prchsProdId,

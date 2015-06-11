@@ -245,18 +245,22 @@ public class DownloadComicServiceImpl implements DownloadComicService {
             }
         }
 
-        CommonResponse commonResponse = new CommonResponse();
-        commonResponse.setTotalCount(1);
-
-        DownloadComicSacRes comicRes = new DownloadComicSacRes();
-        comicRes.setProduct(product);
-        comicRes.setCommonResponse(commonResponse);
-
+        DownloadComicSacRes comicRes = makeResponse(product);
         sw.stop();
         supportService.logDownloadResult(comicReq.getUserKey(), comicReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
         return comicRes;
     }
+
+	private DownloadComicSacRes makeResponse(Product product) {
+		CommonResponse commonResponse = new CommonResponse();
+        commonResponse.setTotalCount(1);
+
+        DownloadComicSacRes comicRes = new DownloadComicSacRes();
+        comicRes.setProduct(product);
+        comicRes.setCommonResponse(commonResponse);
+		return comicRes;
+	}
 
 	private void setMetaInfo(DownloadComicSacReq comicReq, String reqExpireDate, MetaInfo metaInfo, String prchsProdId, String drmYn,
 			HistorySacIn historySacIn, String prchsState, SearchDeviceIdSacRes deviceRes) {

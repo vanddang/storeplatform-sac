@@ -253,16 +253,20 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		product.setMusic(music);
 		product.setRights(commonGenerator.generateRights(metaInfo));
 
+		DownloadMusicSacRes response = makeResponse(product);
+        sw.stop();
+        this.supportService.logDownloadResult(downloadMusicSacReq.getUserKey(), downloadMusicSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
+
+		return response;
+	}
+
+	private DownloadMusicSacRes makeResponse(Product product) {
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(1);
 
 		DownloadMusicSacRes response = new DownloadMusicSacRes();
 		response.setCommonResponse(commonResponse);
 		response.setProduct(product);
-
-        sw.stop();
-        this.supportService.logDownloadResult(downloadMusicSacReq.getUserKey(), downloadMusicSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
-
 		return response;
 	}
 

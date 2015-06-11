@@ -286,16 +286,20 @@ public class DownloadVodServiceImpl implements DownloadVodService {
                 info.setFilePath(null);
             }
         }
+		DownloadVodSacRes response = makeResponse(product);
+        sw.stop();
+        this.supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
+
+		return response;
+	}
+
+	private DownloadVodSacRes makeResponse(Product product) {
 		CommonResponse commonResponse = new CommonResponse();
         commonResponse.setTotalCount(1);
 
         DownloadVodSacRes response = new DownloadVodSacRes();
 		response.setCommonResponse(commonResponse);
 		response.setProduct(product);
-
-        sw.stop();
-        this.supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
-
 		return response;
 	}
 

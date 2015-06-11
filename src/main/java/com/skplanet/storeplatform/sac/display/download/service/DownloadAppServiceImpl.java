@@ -343,6 +343,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		product.setPlatClsfCd(metaInfo.getPlatClsfCd());
 		product.setPrice(commonGenerator.generatePrice(metaInfo)); // 상품금액 정보
 
+		DownloadAppSacRes response = makeResponse(product, component);
+        sw.stop();
+        supportService.logDownloadResult(downloadAppSacReq.getUserKey(), downloadAppSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
+
+		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private DownloadAppSacRes makeResponse(Product product, Component component) {
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(1);
 
@@ -350,11 +358,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		response.setCommonResponse(commonResponse);
 		response.setComponent(component);
 		response.setProduct(product);
-
-        sw.stop();
-        supportService.logDownloadResult(downloadAppSacReq.getUserKey(), downloadAppSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
-
-		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+		return response;
 	}
 
 	private void setMetaInfo(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadAppSacReq downloadAppSacReq, String reqExpireDate,
