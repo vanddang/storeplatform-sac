@@ -244,22 +244,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								prchsState = "gift";
 							}
 						}
-
 						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
-
-						metaInfo.setPurchaseId(historySacIn.getPrchsId());
-						metaInfo.setPurchaseProdId(historySacIn.getProdId());
-						metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
-						metaInfo.setPurchaseState(prchsState);
-						metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
-						metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
-						metaInfo.setDrmYn(historySacIn.getDrmYn());
-						// 구매 정보
 						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
-
-						/************************************************************************************************
-						 * 구매 정보에 따른 암호화 시작
-						 ************************************************************************************************/
 						// 구매상태 만료 여부 확인
 						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) || !permitDeviceYn.equals("Y")) {
 							continue;
@@ -291,6 +277,13 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							String deviceTelecom = deviceRes.getDeviceTelecom();
 							String deviceIdType = commonService.getDeviceIdType(deviceId);
 
+							metaInfo.setPurchaseId(historySacIn.getPrchsId());
+							metaInfo.setPurchaseProdId(historySacIn.getProdId());
+							metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
+							metaInfo.setPurchaseState(prchsState);
+							metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
+							metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
+							metaInfo.setDrmYn(historySacIn.getDrmYn());
 							metaInfo.setExpiredDate(reqExpireDate);
 							metaInfo.setUseExprDt(useExprDt);
 							metaInfo.setUserKey(userKey);

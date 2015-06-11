@@ -192,18 +192,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								prchsState = "gift";
 							}
 						}
-
 						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
-
-						metaInfo.setPurchaseId(historySacIn.getPrchsId());
-						metaInfo.setPurchaseProdId(historySacIn.getProdId());
-						metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
-						metaInfo.setPurchaseState(prchsState);
-						metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
-						metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
-
 						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
-
 						/************************************************************************************************
 						 * 구매 정보에 따른 암호화 시작
 						 ************************************************************************************************/
@@ -242,6 +232,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							String deviceId = deviceRes.getDeviceId();
 							String deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
+							metaInfo.setPurchaseId(historySacIn.getPrchsId());
+							metaInfo.setPurchaseProdId(historySacIn.getProdId());
+							metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
+							metaInfo.setPurchaseState(prchsState);
+							metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
+							metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
 							metaInfo.setExpiredDate(reqExpireDate);
 							metaInfo.setUseExprDt(useExprDt);
 							metaInfo.setUserKey(userKey);

@@ -204,18 +204,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                                 prchsState = "gift";
                             }
                         }
-
                         loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
-
-                        metaInfo.setPurchaseId(historySacIn.getPrchsId());
-                        metaInfo.setPurchaseProdId(historySacIn.getProdId());
-                        metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
-                        metaInfo.setPurchaseState(prchsState);
-                        metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
-                        metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
-
                         addPurchaseIntoList(purchaseList, historySacIn, prchsState);
-
                         // 구매상태 만료여부 및 단말 지원여부 확인
                         if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) || !"Y".equals(permitDeviceYn)) {
                         	continue;
@@ -244,6 +234,12 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                         	String deviceId = deviceRes.getDeviceId();
                         	String deviceIdType = commonService.getDeviceIdType(deviceId);
 
+                        	metaInfo.setPurchaseId(historySacIn.getPrchsId());
+                        	metaInfo.setPurchaseProdId(historySacIn.getProdId());
+                        	metaInfo.setPurchaseDt(historySacIn.getPrchsDt());
+                        	metaInfo.setPurchaseState(prchsState);
+                        	metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
+                        	metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
                             metaInfo.setExpiredDate(reqExpireDate);
                             metaInfo.setUseExprDt(useExprDt);
                             metaInfo.setUserKey(userKey);
