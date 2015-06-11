@@ -2144,29 +2144,58 @@ public class UserSearchServiceImpl implements UserSearchService {
 		searchMbrSapUserRequest.setCommonRequest(commonRequest);
 		SearchMbrSapUserResponse searchMbrSapUserResponse = this.userSCI.searchMbrSapUser(searchMbrSapUserRequest);
 
-		// 3. 회원 정보 조회 요청
+		// 3. 회원 정보 조회 결과 값 응답 설정
 		Map<String, UserMbrStatus> userInfoMap = searchMbrSapUserResponse.getUserMbrStatusMap();
 
-		List<SocialAccountInfo> socialAccountInfos = null;
+		// 응답값 설정을 위한 객체 선언.
+		DeviceInfo deviceInfo = null;
+		List<String> deviceKeyList = null;
+		List<DeviceInfo> deviceInfos = null;
 		SocialAccountInfo socialAccountInfo = null;
+		List<SocialAccountInfo> socialAccountInfos = null;
+
 		if (userInfoMap != null) {
+			// 소셜정보 리스트 객체 생성.
 			socialAccountInfos = new ArrayList<SocialAccountInfo>();
 			for (int i = 0; i < searchSapUserInfoList.size(); i++) {
 				if (userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()) != null) {
+					// 소셜정보 생성.
 					socialAccountInfo = new SocialAccountInfo();
 					socialAccountInfo.setTenantId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
 							.getTenantID());
 					socialAccountInfo.setUserKey(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
 							.getUserKey());
-					socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getUserID());
+
+					if (StringUtils.equals(MemberConstants.USER_TYPE_MOBILE,
+							userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getUserType())) {
+						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+								.getDeviceID());
+					} else {
+						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+								.getUserID());
+					}
 					socialAccountInfo.setUserType(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
 							.getUserType());
-					socialAccountInfo.setDeviceKeyList(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
-							.getDeviceKeyList());
+
+					// deviceKey List Get.
+					deviceKeyList = userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceKeyList();
+					if (deviceKeyList != null && deviceKeyList.size() > 0) {
+						// 디바이스정보 리스트 생성.
+						deviceInfos = new ArrayList<DeviceInfo>();
+						for (String deviceKey : deviceKeyList) {
+							// 디바이스 정보 생성.
+							deviceInfo = new DeviceInfo();
+							deviceInfo.setDeviceKey(deviceKey);
+							deviceInfos.add(deviceInfo);
+						}
+					}
+
+					socialAccountInfo.setDeviceKeyList(deviceInfos);
 					socialAccountInfos.add(socialAccountInfo);
 				}
 			}
 		}
+
 		// 회원정보 없는 경우 SC 회원에서 Exception 처리함.
 		SearchSocialAccountSacRes searchSocialAccountSacRes = new SearchSocialAccountSacRes();
 		searchSocialAccountSacRes.setUserList(socialAccountInfos);
@@ -2174,5 +2203,4 @@ public class UserSearchServiceImpl implements UserSearchService {
 		// 4. 응답 값 설정
 		return searchSocialAccountSacRes;
 	}
-
 }
