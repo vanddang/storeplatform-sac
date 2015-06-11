@@ -152,9 +152,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
 		String purchaseDt = downloadSystemDate.getPurchaseDt();
-
 		Product product = new Product();
-		Component component = new Component();
 		log.debug("----------------------------------------------------------------");
 		log.debug("[DownloadAppServiceImpl] productId : {}", productId);
 		log.debug("[DownloadAppServiceImpl] deviceKey : {}", downloadAppSacReq.getDeviceKey());
@@ -317,6 +315,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		/************************************************************************************************
 		 * Seed App 정보
 		 ************************************************************************************************/
+		Component component = new Component();
 		component.setIdentifierList(appInfoGenerator.generateComponentIdentifierList(metaInfo));
 		component.setGameCenterVerCd(StringUtils.defaultString(metaInfo.getGameCentrVerCd()));
 		component.setUseYn(metaInfo.getSeedUseYn());

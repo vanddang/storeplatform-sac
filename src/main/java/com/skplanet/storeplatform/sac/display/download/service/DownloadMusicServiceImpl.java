@@ -117,7 +117,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 		String productId = downloadMusicSacReq.getProductId();
 		Product product = new Product();
-		Music music = null;
 
 		log.debug("----------------------------------------------------------------");
 		log.debug("[DownloadMusicServiceImpl] productId : {}", productId);
@@ -223,10 +222,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				}
 			}
 		}
+		Music music = new Music();
 		List<Identifier> identifierList = new ArrayList<Identifier>();
-
-		music = new Music();
-
 		Identifier identifier = new Identifier();
 		identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getChnlProdId());
 		identifierList.add(identifier);
