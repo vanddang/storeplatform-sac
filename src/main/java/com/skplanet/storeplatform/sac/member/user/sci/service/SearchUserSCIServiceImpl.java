@@ -1212,6 +1212,27 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		searchManagementRequest.setUserKey(req.getUserKey());
 		SearchManagementResponse searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
 
+		String extraProfile = "";
+		String extraProfileValue = "";
+		for (MbrMangItemPtcr mangItemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
+			if (StringUtils.isBlank(mangItemPtcr.getUserKey()) || StringUtils.isBlank(mangItemPtcr.getTenantID())) {
+				throw new StorePlatformException("SAC_MEM_0001",
+						StringUtils.isBlank(mangItemPtcr.getUserKey()) ? "userKey" : "tenantId");
+			}
+			if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK_ID, mangItemPtcr.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE_ID, mangItemPtcr.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO_ID, mangItemPtcr.getExtraProfile())) {
+				extraProfile = mangItemPtcr.getExtraProfile();
+				extraProfileValue = mangItemPtcr.getExtraProfileValue();
+			}
+		}
+		// 2. extraProfile 회원키 조회
+		searchManagementRequest = new SearchManagementRequest();
+		searchManagementRequest.setCommonRequest(commonRequest);
+		searchManagementRequest.setExtraProfile(extraProfile);
+		searchManagementRequest.setExtraProfileValue(extraProfileValue);
+		searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
+
 		List<SearchMbrSapUserInfo> searchSapUserInfoList = new ArrayList<SearchMbrSapUserInfo>();
 		SearchMbrSapUserInfo searchSapUserInfo = null;
 		for (MbrMangItemPtcr mangItemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
@@ -1229,13 +1250,13 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 			}
 		}
 
-		// 2. 테넌트 별로 회원 조회
+		// 3. 테넌트 별로 회원 조회
 		SearchMbrSapUserRequest searchMbrSapUserRequest = new SearchMbrSapUserRequest();
 		searchMbrSapUserRequest.setUserKeyList(searchSapUserInfoList);
 		searchMbrSapUserRequest.setCommonRequest(commonRequest);
 		SearchMbrSapUserResponse searchMbrSapUserResponse = this.userSCI.searchMbrSapUser(searchMbrSapUserRequest);
 
-		// 3. 회원 정보 조회 결과 값 응답 설정
+		// 4. 회원 정보 조회 결과 값 응답 설정
 		Map<String, UserMbrStatus> userInfoMap = searchMbrSapUserResponse.getUserMbrStatusMap();
 
 		Map<String, SocialUserInfoSac> socialUserInfoMap = null;
@@ -1271,7 +1292,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		SearchSocialAccountSacRes searchSocialAccountSacRes = new SearchSocialAccountSacRes();
 		searchSocialAccountSacRes.setSocialUserInfo(socialUserInfoMap);
 
-		// 4. 응답 값 설정
+		// 5. 응답 값 설정
 		return searchSocialAccountSacRes;
 	}
 
