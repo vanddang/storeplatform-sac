@@ -92,7 +92,7 @@ public class Product extends CommonInfo implements Serializable {
 	/**
 	 * Badge
 	 */
-	private Badge badge;
+	private Badge badge = null;
 
 	/**
 	 * 상품설명.
