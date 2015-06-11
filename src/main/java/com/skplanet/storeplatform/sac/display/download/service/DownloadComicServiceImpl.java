@@ -95,13 +95,10 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         String reqExpireDate = dateInfo.getExpiredDate();
 
         String productId = comicReq.getProductId();
-        String deviceKey = comicReq.getDeviceKey();
-        String userKey = comicReq.getUserKey();
-
         logger.debug("----------------------------------------------------------------");
         logger.debug("[DownloadComicLog] productId : {}", productId);
-        logger.debug("[DownloadComicLog] deviceKey : {}", deviceKey);
-        logger.debug("[DownloadComicLog] userKey : {}", userKey);
+        logger.debug("[DownloadComicLog] deviceKey : {}", comicReq.getDeviceKey());
+        logger.debug("[DownloadComicLog] userKey : {}", comicReq.getUserKey());
         logger.debug("----------------------------------------------------------------");
 
         // 헤더정보 세팅
@@ -144,7 +141,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         product.setDistributor(commonGenerator.generateDistributor(metaInfo));
         product.setContributor(ebookComicGenerator.generateComicContributor(metaInfo));
 
-        if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
+        if (StringUtils.isNotEmpty(comicReq.getDeviceKey()) && StringUtils.isNotEmpty(comicReq.getUserKey())) {
             HistoryListSacInRes historyRes = null;
             boolean purchasePassFlag = true;
 
@@ -168,29 +165,23 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                 logger.debug("[DownloadComicLog] 구매건수 : {}", historyRes.getTotalCnt());
                 logger.debug("----------------------------------------------------------------");
 
-                String useExprDt = null; // 이용 만료일시
                 String dwldStartDt = null; // 다운로드 시작일시
                 String dwldExprDt = null; // 다운로드 만료일시
                 String prchsCaseCd = null; // 선물 여부
                 String prchsProdId = null; // 구매 상품ID
                 String drmYn = null; // DRM 지원여부
                 String permitDeviceYn = null; // 단말지원여부
-                String purchaseHide = null; // 구매내역 숨김 여부
-				String updateAlarm = null; // 업데이트 알람 수신 여부
 
                 if (historyRes.getTotalCnt() > 0) {
                     List<Purchase> purchaseList = new ArrayList<Purchase>();
 
                     for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-                        useExprDt = historySacIn.getUseExprDt();
                         dwldStartDt = historySacIn.getDwldStartDt();
                         dwldExprDt = historySacIn.getDwldExprDt();
                         prchsCaseCd = historySacIn.getPrchsCaseCd();
                         prchsProdId = historySacIn.getProdId();
                         drmYn = historySacIn.getDrmYn();
                         permitDeviceYn = historySacIn.getPermitDeviceYn();
-                        purchaseHide = historySacIn.getHidingYn();
-						updateAlarm = historySacIn.getAlarmYn();
 
 						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
 						String prchsState = null;
@@ -241,9 +232,9 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                         	metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
                         	metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
                             metaInfo.setExpiredDate(reqExpireDate);
-                            metaInfo.setUseExprDt(useExprDt);
-                            metaInfo.setUserKey(userKey);
-                            metaInfo.setDeviceKey(deviceKey);
+                            metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
+                            metaInfo.setUserKey(comicReq.getUserKey());
+                            metaInfo.setDeviceKey(comicReq.getDeviceKey());
                             if (StringUtils.isNotBlank(comicReq.getAdditionalMsisdn())) {
                             	metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
                             	metaInfo.setDeviceSubKey(comicReq.getAdditionalMsisdn());
@@ -251,8 +242,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                             	metaInfo.setDeviceType(deviceIdType);
                             	metaInfo.setDeviceSubKey(deviceId);
                             }
-                            metaInfo.setPurchaseHide(purchaseHide);
-							metaInfo.setUpdateAlarm(updateAlarm);
+                            metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
+							metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
 
                             // 구매시점 DRM 여부값으로 세팅
                             if (StringUtils.isNotEmpty(drmYn)) {
@@ -296,7 +287,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         comicRes.setCommonResponse(commonResponse);
 
         sw.stop();
-        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        supportService.logDownloadResult(comicReq.getUserKey(), comicReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
         return comicRes;
     }

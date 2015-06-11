@@ -107,9 +107,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		String idType = downloadVodSacReq.getIdType();
 		String productId = downloadVodSacReq.getProductId();
-		String deviceKey = downloadVodSacReq.getDeviceKey();
-		String userKey = downloadVodSacReq.getUserKey();
-
 		// ID유형 유효값 체크
 		if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)
 				&& !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
@@ -119,8 +116,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		this.log.debug("----------------------------------------------------------------");
 		this.log.debug("[DownloadVodServiceImpl] idType : {}", idType);
 		this.log.debug("[DownloadVodServiceImpl] productId : {}", productId);
-		this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceKey);
-		this.log.debug("[DownloadVodServiceImpl] userKey : {}", userKey);
+		this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", downloadVodSacReq.getDeviceKey());
+		this.log.debug("[DownloadVodServiceImpl] userKey : {}", downloadVodSacReq.getUserKey());
 		this.log.debug("----------------------------------------------------------------");
 
 		MetaInfo metaInfo = getVodMetaInfo(downloadVodSacReq);
@@ -134,7 +131,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		this.log.debug("[DownloadVodServiceImpl] CID : {}", metaInfo.getCid());
 		this.log.debug("----------------------------------------------------------------");
 
-		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
+		if (StringUtils.isNotEmpty(downloadVodSacReq.getDeviceKey()) && StringUtils.isNotEmpty(downloadVodSacReq.getUserKey())) {
 			HistoryListSacInRes historyRes = null;
 			boolean purchaseFlag = true;
 
@@ -158,27 +155,21 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				this.log.debug("[DownloadVodServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
 				this.log.debug("---------------------------------------------------------------------");
 
-				String useExprDt = null; // 이용 만료일시
 				String dwldStartDt = null; // 다운로드 시작일시
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
 				String prchsProdId = null; // 구매 상품ID
 				String permitDeviceYn = null; // 단말 지원여부
-				String purchaseHide = null; // 구매내역 숨김 여부
-				String updateAlarm = null; // 업데이트 알람 수신 여부
 
 				if (historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-						useExprDt = historySacIn.getUseExprDt();
 						dwldStartDt = historySacIn.getDwldStartDt();
 						dwldExprDt = historySacIn.getDwldExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
-						purchaseHide = historySacIn.getHidingYn();
-						updateAlarm = historySacIn.getAlarmYn();
 
 						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
 						String prchsState = null;
@@ -239,13 +230,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
 							metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
 							metaInfo.setExpiredDate(reqExpireDate);
-							metaInfo.setUseExprDt(useExprDt);
-							metaInfo.setUserKey(userKey);
-							metaInfo.setDeviceKey(deviceKey);
+							metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
+							metaInfo.setUserKey(downloadVodSacReq.getUserKey());
+							metaInfo.setDeviceKey(downloadVodSacReq.getDeviceKey());
 							metaInfo.setDeviceType(deviceIdType);
 							metaInfo.setDeviceSubKey(deviceId);
-							metaInfo.setPurchaseHide(purchaseHide);
-							metaInfo.setUpdateAlarm(updateAlarm);
+							metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
+							metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
 
 							mapProdChrg(metaInfo, prchsProdId);
 							mapDrmYn(metaInfo, historySacIn);
@@ -328,7 +319,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		response.setProduct(product);
 
         sw.stop();
-        this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        this.supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return response;
 	}

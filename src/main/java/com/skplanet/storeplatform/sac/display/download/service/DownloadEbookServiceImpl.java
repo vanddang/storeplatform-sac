@@ -104,14 +104,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 		String idType = ebookReq.getIdType();
 		String productId = ebookReq.getProductId();
-		String deviceKey = ebookReq.getDeviceKey();
-		String userKey = ebookReq.getUserKey();
-
 		logger.debug("----------------------------------------------------------------");
 		logger.debug("[DownloadEbookLog] idType : {}", idType);
 		logger.debug("[DownloadEbookLog] productId : {}", productId);
-		logger.debug("[DownloadEbookLog] deviceKey : {}", deviceKey);
-		logger.debug("[DownloadEbookLog] userKey : {}", userKey);
+		logger.debug("[DownloadEbookLog] deviceKey : {}", ebookReq.getDeviceKey());
+		logger.debug("[DownloadEbookLog] userKey : {}", ebookReq.getUserKey());
 		logger.debug("----------------------------------------------------------------");
 
 		// ID유형 유효값 체크
@@ -158,7 +155,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		product.setDistributor(commonGenerator.generateDistributor(metaInfo));
 		product.setContributor(ebookComicGenerator.generateEbookContributor(metaInfo));
 
-		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
+		if (StringUtils.isNotEmpty(ebookReq.getDeviceKey()) && StringUtils.isNotEmpty(ebookReq.getUserKey())) {
 			HistoryListSacInRes historyRes = null;
 			boolean purchasePassFlag = true;
 
@@ -182,29 +179,23 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				logger.debug("[DownloadEbookLog] 구매건수 : {}", historyRes.getTotalCnt());
 				logger.debug("----------------------------------------------------------------");
 
-				String useExprDt = null; // 이용 만료일시
 				String dwldStartDt = null; // 다운로드 시작일시
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
 				String prchsProdId = null; // 구매 상품ID
 				String drmYn = null; // DRM 지원여부
 				String permitDeviceYn = null; // 단말지원여부
-				String purchaseHide = null; // 구매내역 숨김 여부
-				String updateAlarm = null; // 업데이트 알람 수신 여부
 
 				if (historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-						useExprDt = historySacIn.getUseExprDt();
 						dwldStartDt = historySacIn.getDwldStartDt();
 						dwldExprDt = historySacIn.getDwldExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
 						drmYn = historySacIn.getDrmYn();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
-						purchaseHide = historySacIn.getHidingYn();
-						updateAlarm = historySacIn.getAlarmYn();
 
 						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
 						String prchsState = null;
@@ -255,9 +246,9 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
 							metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
 							metaInfo.setExpiredDate(reqExpireDate);
-							metaInfo.setUseExprDt(useExprDt);
-							metaInfo.setUserKey(userKey);
-							metaInfo.setDeviceKey(deviceKey);
+							metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
+							metaInfo.setUserKey(ebookReq.getUserKey());
+							metaInfo.setDeviceKey(ebookReq.getDeviceKey());
 							if (StringUtils.isNotBlank(ebookReq.getAdditionalMsisdn())) {
                             	metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
                             	metaInfo.setDeviceSubKey(ebookReq.getAdditionalMsisdn());
@@ -265,8 +256,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
                             	metaInfo.setDeviceType(deviceIdType);
                             	metaInfo.setDeviceSubKey(deviceId);
                             }
-							metaInfo.setPurchaseHide(purchaseHide);
-							metaInfo.setUpdateAlarm(updateAlarm);
+							metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
+							metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
 
 							// 구매시점 DRM 여부값으로 세팅
 							if (StringUtils.isNotEmpty(drmYn)) {
@@ -314,7 +305,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		ebookRes.setCommonResponse(commonResponse);
 
         sw.stop();
-        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        supportService.logDownloadResult(ebookReq.getUserKey(), ebookReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
         return ebookRes;
 	}

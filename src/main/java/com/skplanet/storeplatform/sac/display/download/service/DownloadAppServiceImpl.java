@@ -117,8 +117,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		String filteredBy = downloadAppSacReq.getFilteredBy();
 		String productId = downloadAppSacReq.getProductId();
-		String deviceKey = downloadAppSacReq.getDeviceKey();
-		String userKey = downloadAppSacReq.getUserKey();
 		String packageName = downloadAppSacReq.getPackageName();
 		boolean tingMemberFlag = false;
 
@@ -159,8 +157,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		Component component = new Component();
 		log.debug("----------------------------------------------------------------");
 		log.debug("[DownloadAppServiceImpl] productId : {}", productId);
-		log.debug("[DownloadAppServiceImpl] deviceKey : {}", deviceKey);
-		log.debug("[DownloadAppServiceImpl] userKey : {}", userKey);
+		log.debug("[DownloadAppServiceImpl] deviceKey : {}", downloadAppSacReq.getDeviceKey());
+		log.debug("[DownloadAppServiceImpl] userKey : {}", downloadAppSacReq.getUserKey());
 		log.debug("----------------------------------------------------------------");
 
 		// 다운로드 앱 상품 조회
@@ -190,7 +188,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         metaInfo.setUpdateAlarm(StringUtils.defaultString(downloadAppSacReq.getUpdateAlarmYn(), "Y"));
 
 
-		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
+		if (StringUtils.isNotEmpty(downloadAppSacReq.getDeviceKey()) && StringUtils.isNotEmpty(downloadAppSacReq.getUserKey())) {
 			HistoryListSacInRes historyRes = null;
 			boolean purchaseFlag = true;
 
@@ -212,25 +210,21 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				log.debug("[DownloadAppServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
 				log.debug("---------------------------------------------------------------------");
 
-				String useExprDt = null; // 이용 만료일시
 				String dwldStartDt = null; // 다운로드 시작일시
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
 				String prchsProdId = null; // 구매 상품ID
 				String permitDeviceYn = null; // 단말 지원여부
-				String purchaseHide = null; // 구매내역 숨김 여부
 
 				if (historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-						useExprDt = historySacIn.getUseExprDt();
 						dwldStartDt = historySacIn.getDwldStartDt();
 						dwldExprDt = historySacIn.getDwldExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
-						purchaseHide = historySacIn.getHidingYn();
 
 						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
 						String prchsState = null;
@@ -285,12 +279,12 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
 							metaInfo.setDrmYn(historySacIn.getDrmYn());
 							metaInfo.setExpiredDate(reqExpireDate);
-							metaInfo.setUseExprDt(useExprDt);
-							metaInfo.setUserKey(userKey);
-							metaInfo.setDeviceKey(deviceKey);
+							metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
+							metaInfo.setUserKey(downloadAppSacReq.getUserKey());
+							metaInfo.setDeviceKey(downloadAppSacReq.getDeviceKey());
 							metaInfo.setDeviceType(deviceIdType);
 							metaInfo.setDeviceSubKey(deviceId);
-							metaInfo.setPurchaseHide(purchaseHide);
+							metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
 
 							tingMemberFlag = getTingMemberFlag(deviceId, deviceTelecom, deviceIdType, metaInfo);
 
@@ -372,7 +366,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		response.setProduct(product);
 
         sw.stop();
-        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        supportService.logDownloadResult(downloadAppSacReq.getUserKey(), downloadAppSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
 	}

@@ -116,21 +116,18 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		downloadMusicSacReq.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
 		String productId = downloadMusicSacReq.getProductId();
-		String deviceKey = downloadMusicSacReq.getDeviceKey();
-		String userKey = downloadMusicSacReq.getUserKey();
-
 		Product product = new Product();
 		Music music = null;
 
 		log.debug("----------------------------------------------------------------");
 		log.debug("[DownloadMusicServiceImpl] productId : {}", productId);
-		log.debug("[DownloadMusicServiceImpl] deviceKey : {}", deviceKey);
-		log.debug("[DownloadMusicServiceImpl] userKey : {}", userKey);
+		log.debug("[DownloadMusicServiceImpl] deviceKey : {}", downloadMusicSacReq.getDeviceKey());
+		log.debug("[DownloadMusicServiceImpl] userKey : {}", downloadMusicSacReq.getUserKey());
 		log.debug("----------------------------------------------------------------");
 
         MetaInfo metaInfo = getMusicMetaInfo(downloadMusicSacReq);
 
-		if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
+		if (StringUtils.isNotEmpty(downloadMusicSacReq.getDeviceKey()) && StringUtils.isNotEmpty(downloadMusicSacReq.getUserKey())) {
 			HistoryListSacInRes historyRes = null;
 			boolean purchaseFlag = true;
 
@@ -154,27 +151,21 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				log.debug("[DownloadMusicServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
 				log.debug("---------------------------------------------------------------------");
 
-				String useExprDt = null; // 이용 만료일시
 				String dwldStartDt = null; // 다운로드 시작일시
 				String dwldExprDt = null; // 다운로드 만료일시
 				String prchsCaseCd = null; // 선물 여부
 				String prchsProdId = null; // 구매 상품ID
 				String permitDeviceYn = null; // 단말 지원여부
-				String purchaseHide = null; // 구매내역 숨김 여부
-				String updateAlarm = null; // 업데이트 알람 수신 여부
 
 				if (historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-						useExprDt = historySacIn.getUseExprDt();
 						dwldStartDt = historySacIn.getDwldStartDt();
 						dwldExprDt = historySacIn.getDwldExprDt();
 						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
-						purchaseHide = historySacIn.getHidingYn();
-						updateAlarm = historySacIn.getAlarmYn();
 
 						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
 						String prchsState = null;
@@ -226,13 +217,13 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt());
 							metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt()));
 							metaInfo.setExpiredDate(reqExpireDate);
-							metaInfo.setUseExprDt(useExprDt);
-							metaInfo.setUserKey(userKey);
-							metaInfo.setDeviceKey(deviceKey);
+							metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
+							metaInfo.setUserKey(downloadMusicSacReq.getUserKey());
+							metaInfo.setDeviceKey(downloadMusicSacReq.getDeviceKey());
 							metaInfo.setDeviceType(deviceIdType);
 							metaInfo.setDeviceSubKey(deviceId);
-							metaInfo.setPurchaseHide(purchaseHide);
-							metaInfo.setUpdateAlarm(updateAlarm);
+							metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
+							metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
 
 							// 암호화 정보 (JSON)
 							metaInfo.setSystemId(tenantHeader.getSystemId());
@@ -289,7 +280,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		response.setProduct(product);
 
         sw.stop();
-        this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        this.supportService.logDownloadResult(downloadMusicSacReq.getUserKey(), downloadMusicSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return response;
 	}
