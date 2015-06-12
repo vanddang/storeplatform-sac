@@ -154,6 +154,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 		ISFRes response = null;
 		try {
 			// ISF 연동
+			response = new ISFRes();
 			response = this.invoker.invoke(this.makeRequest(requestVO));
 
 			int multiCount = (response.getProps().getMultiValues() != null) ? response.getProps().getMultiValues()
