@@ -52,7 +52,7 @@ import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
  */
 @Service
 public class DownloadComicServiceImpl implements DownloadComicService {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	@Qualifier("sac")

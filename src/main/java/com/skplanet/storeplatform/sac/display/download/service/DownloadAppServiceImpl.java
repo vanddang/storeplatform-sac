@@ -68,7 +68,7 @@ import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
  */
 @Service
 public class DownloadAppServiceImpl implements DownloadAppService {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	@Qualifier("sac")

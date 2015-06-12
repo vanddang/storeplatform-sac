@@ -60,7 +60,7 @@ import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 @Service
 public class DownloadMusicServiceImpl implements DownloadMusicService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -104,7 +104,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         StopWatch sw = new StopWatch();
         sw.start();
 
-        MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "", MetaInfo.class);
+        MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "", MetaInfo.class);
 
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
 		String sysDate = downloadSystemDate.getSysDate();
@@ -130,7 +130,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
 				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadMusicSacReq, sysDate, prodIdList);
 				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
-				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
+				historyRes = historyInternalSCI.searchHistoryList(historyReq);
 			} catch (Exception ex) {
 				purchaseFlag = false;
 				log.debug("[DownloadMusicServiceImpl] Purchase History Search Exception : {}");
@@ -186,7 +186,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 						try {
 							deviceReq = makeSearchDeviceIdSacReq(downloadMusicSacReq, tenantHeader);
-							deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
+							deviceRes = deviceSCI.searchDeviceId(deviceReq);
 						} catch (Exception ex) {
 							memberFlag = false;
 							log.debug("[DownloadMusicServiceImpl] Device Search Exception : {}");
@@ -202,7 +202,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 						} else if (memberFlag && deviceRes != null) {
 							setMetaInfo(metaInfo, historySacIn, downloadMusicSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
-                            Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
+                            Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
 							encryptionList.add(encryption);
 							loggingEncResult(encryption);
 						}
@@ -215,7 +215,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		setProduct(product, metaInfo);
 		DownloadMusicSacRes response = makeResponse(product);
         sw.stop();
-        this.supportService.logDownloadResult(downloadMusicSacReq.getUserKey(), downloadMusicSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
+        supportService.logDownloadResult(downloadMusicSacReq.getUserKey(), downloadMusicSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return response;
 	}
@@ -242,7 +242,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		product.setTitle(commonGenerator.generateTitle(metaInfo));
 		product.setSourceList(commonGenerator.generateSourceList(metaInfo));
 		product.setMenuList(commonGenerator.generateMenuList(metaInfo));
-		product.setContributor(this.musicInfoGenerator.generateContributor(metaInfo));
+		product.setContributor(musicInfoGenerator.generateContributor(metaInfo));
 		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_SONG_IDENTIFIER_CD,metaInfo.getMusicId()));
 		music.setIdentifierList(identifierList);
 		List<Source> musicSourceList = new ArrayList<Source>();
@@ -278,7 +278,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 	private void setMetaInfo(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadMusicSacReq downloadMusicSacReq, TenantHeader tenantHeader,
 			String reqExpireDate, String prchsState, SearchDeviceIdSacRes deviceRes) {
 		String deviceId = deviceRes.getDeviceId();
-		String deviceIdType = this.commonService.getDeviceIdType(deviceId);
+		String deviceIdType = commonService.getDeviceIdType(deviceId);
 
 		metaInfo.setPurchaseId(historySacIn.getPrchsId());
 		metaInfo.setPurchaseProdId(historySacIn.getProdId());
@@ -308,12 +308,12 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 	private MetaInfo getMusicMetaInfo(DownloadMusicSacReq req) {
 		MetaInfo metaInfo;
-        ProductInfo info = this.commonService.getProductInfo(req.getProductId());
+        ProductInfo info = commonService.getProductInfo(req.getProductId());
 
         if (info.getProductType() == ProductType.Music)
-            metaInfo = this.commonDAO.queryForObject("Download.getDownloadMusicInfo", req, MetaInfo.class);
+            metaInfo = commonDAO.queryForObject("Download.getDownloadMusicInfo", req, MetaInfo.class);
         else if(info.getProductType() == ProductType.RingBell)
-            metaInfo = this.commonDAO.queryForObject("Download.getDownloadRingBellInfo", req, MetaInfo.class);
+            metaInfo = commonDAO.queryForObject("Download.getDownloadRingBellInfo", req, MetaInfo.class);
         else
             throw new StorePlatformException("");
 		if (metaInfo == null)

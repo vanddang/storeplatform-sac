@@ -55,7 +55,7 @@ import com.skplanet.storeplatform.sac.display.response.VodGenerator;
 @Service
 public class DownloadVodServiceImpl implements DownloadVodService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -95,7 +95,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
-		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "", MetaInfo.class);
+		MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "", MetaInfo.class);
 
 		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
@@ -109,22 +109,22 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
 		}
 
-		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("[DownloadVodServiceImpl] idType : {}", idType);
-		this.log.debug("[DownloadVodServiceImpl] productId : {}", productId);
-		this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", downloadVodSacReq.getDeviceKey());
-		this.log.debug("[DownloadVodServiceImpl] userKey : {}", downloadVodSacReq.getUserKey());
-		this.log.debug("----------------------------------------------------------------");
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadVodServiceImpl] idType : {}", idType);
+		log.debug("[DownloadVodServiceImpl] productId : {}", productId);
+		log.debug("[DownloadVodServiceImpl] deviceKey : {}", downloadVodSacReq.getDeviceKey());
+		log.debug("[DownloadVodServiceImpl] userKey : {}", downloadVodSacReq.getUserKey());
+		log.debug("----------------------------------------------------------------");
 
 		MetaInfo metaInfo = getVodMetaInfo(downloadVodSacReq);
 		Product product = new Product();
 
-		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("[DownloadVodServiceImpl] NORMAL scid : {}", metaInfo.getNmSubContsId());
-		this.log.debug("[DownloadVodServiceImpl] SD scid : {}", metaInfo.getSdSubContsId());
-		this.log.debug("[DownloadVodServiceImpl] HD scid : {}", metaInfo.getHdSubContsId());
-		this.log.debug("[DownloadVodServiceImpl] CID : {}", metaInfo.getCid());
-		this.log.debug("----------------------------------------------------------------");
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadVodServiceImpl] NORMAL scid : {}", metaInfo.getNmSubContsId());
+		log.debug("[DownloadVodServiceImpl] SD scid : {}", metaInfo.getSdSubContsId());
+		log.debug("[DownloadVodServiceImpl] HD scid : {}", metaInfo.getHdSubContsId());
+		log.debug("[DownloadVodServiceImpl] CID : {}", metaInfo.getCid());
+		log.debug("----------------------------------------------------------------");
 
 		if (StringUtils.isNotEmpty(downloadVodSacReq.getDeviceKey()) && StringUtils.isNotEmpty(downloadVodSacReq.getUserKey())) {
 			HistoryListSacInRes historyRes = null;
@@ -134,21 +134,21 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
 				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadVodSacReq, sysDate, prodIdList);
 				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
-				historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
+				historyRes = historyInternalSCI.searchHistoryList(historyReq);
 			} catch (Exception ex) {
 				purchaseFlag = false;
-				this.log.debug("[DownloadVodServiceImpl] Purchase History Search Exception : {}");
-				this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+				log.debug("[DownloadVodServiceImpl] Purchase History Search Exception : {}");
+				log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 				// throw new StorePlatformException("SAC_DSP_2001", ex);
 			}
 
-			this.log.debug("---------------------------------------------------------------------");
-			this.log.debug("[DownloadVodServiceImpl] purchaseFlag :{}", purchaseFlag);
-			this.log.debug("[DownloadVodServiceImpl] historyRes :{}", historyRes);
+			log.debug("---------------------------------------------------------------------");
+			log.debug("[DownloadVodServiceImpl] purchaseFlag :{}", purchaseFlag);
+			log.debug("[DownloadVodServiceImpl] historyRes :{}", historyRes);
 
 			if (purchaseFlag && historyRes != null) {
-				this.log.debug("[DownloadVodServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
-				this.log.debug("---------------------------------------------------------------------");
+				log.debug("[DownloadVodServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
+				log.debug("---------------------------------------------------------------------");
 
 				String dwldStartDt = null; // 다운로드 시작일시
 				String dwldExprDt = null; // 다운로드 만료일시
@@ -181,15 +181,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						/************************************************************************************************
 						 * 구매 정보에 따른 암호화 시작
 						 ************************************************************************************************/
-						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("[DownloadVodServiceImpl] prchsState	:	{}", prchsState);
-						this.log.debug("----------------------------------------------------------------");
+						log.debug("----------------------------------------------------------------");
+						log.debug("[DownloadVodServiceImpl] prchsState	:	{}", prchsState);
+						log.debug("----------------------------------------------------------------");
 
 						// 구매상태 만료 여부 확인
 						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) || !permitDeviceYn.equals("Y")) {
 							continue;
 						}
-						this.log.debug("----------------------------  start set Purchase Info  ------------------------------------");
+						log.debug("----------------------------  start set Purchase Info  ------------------------------------");
 						SearchDeviceIdSacReq deviceReq = null;
 						SearchDeviceIdSacRes deviceRes = null;
 						boolean memberFlag = true;
@@ -199,35 +199,35 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							deviceRes = deviceSCI.searchDeviceId(deviceReq);
 						} catch (Exception ex) {
 							memberFlag = false;
-							this.log.debug("[DownloadVodServiceImpl] Device Search Exception : {}");
-							this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+							log.debug("[DownloadVodServiceImpl] Device Search Exception : {}");
+							log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 							// throw new StorePlatformException("SAC_DSP_1001", ex);
 						}
 
-						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
-						this.log.debug("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
-						this.log.debug("----------------------------------------------------------------");
+						log.debug("----------------------------------------------------------------");
+						log.debug("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
+						log.debug("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
+						log.debug("----------------------------------------------------------------");
 
 						// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
 						if (!"Y".equals(deviceRes.getAuthYn())) {
 							log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 						} else if (memberFlag && deviceRes != null) {
 							setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
-                            Encryption encryption = this.supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
+                            Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
 							encryptionList.add(encryption);
 							loggingEncResult(encryption);
 						}
 						// 구매 정보
 						product.setPurchaseList(purchaseList);
-						this.log.debug("----------------------------------------------------------------");
+						log.debug("----------------------------------------------------------------");
 						// 암호화 정보
 						if (!encryptionList.isEmpty()) {
-							this.log.debug("[DownloadVodServiceImpl]	setDl : {}");
+							log.debug("[DownloadVodServiceImpl]	setDl : {}");
 							product.setDl(encryptionList);
 						}
 
-						this.log.debug("----------------------------  end set Purchase Info  ------------------------------------");
+						log.debug("----------------------------  end set Purchase Info  ------------------------------------");
 
 						break;
 
@@ -239,7 +239,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		setProduct(product, metaInfo, supportFhdVideo);
 		DownloadVodSacRes response = makeResponse(product);
         sw.stop();
-        this.supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
+        supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return response;
 	}
@@ -278,7 +278,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		product.setTitle(commonGenerator.generateTitle(metaInfo)); // 상품명
 		product.setMenuList(commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
 		product.setSourceList(commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
-		product.setVod(this.vodGenerator.generateVod(metaInfo, supportFhdVideo)); // VOD 정보
+		product.setVod(vodGenerator.generateVod(metaInfo, supportFhdVideo)); // VOD 정보
 		product.setRights(commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
 		product.setDistributor(commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 
@@ -292,10 +292,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	}
 
 	private void loggingEncResult(Encryption encryption) {
-		this.log.debug("-------------------------------------------------------------");
-		this.log.debug("[DownloadVodServiceImpl] token : {}", encryption.getToken());
-		this.log.debug("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-		this.log.debug("--------------------------------------------------------------");
+		log.debug("-------------------------------------------------------------");
+		log.debug("[DownloadVodServiceImpl] token : {}", encryption.getToken());
+		log.debug("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+		log.debug("--------------------------------------------------------------");
 	}
 
 	private DownloadVodSacRes makeResponse(Product product) {
@@ -311,7 +311,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	private void setMetaInfo(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader,
 			String reqExpireDate, String prchsState, SearchDeviceIdSacRes deviceRes) {
 		String deviceId = deviceRes.getDeviceId();
-		String deviceIdType = this.commonService.getDeviceIdType(deviceId);
+		String deviceIdType = commonService.getDeviceIdType(deviceId);
 
 		metaInfo.setPurchaseId(historySacIn.getPrchsId());
 		metaInfo.setPurchaseProdId(historySacIn.getProdId());
@@ -345,7 +345,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	}
 
 	private MetaInfo getVodMetaInfo(DownloadVodSacReq req) {
-		MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", req, MetaInfo.class);
+		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadVodInfo", req, MetaInfo.class);
 		if (metaInfo == null)
 			throw new StorePlatformException("SAC_DSP_0009");
 		if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(req.getIdType()) && DisplayConstants.DP_SERIAL_VOD_META_CLASS_CD.equals(metaInfo.getMetaClsfCd()))
@@ -358,11 +358,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		deviceReq.setUserKey(downloadVodSacReq.getUserKey());
 		deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
 		deviceReq.setTenantId(tenantHeader.getTenantId());
-		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("*******************회원 단말 정보 조회 파라미터*********************");
-		this.log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
-		this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
-		this.log.debug("----------------------------------------------------------------");
+		log.debug("----------------------------------------------------------------");
+		log.debug("*******************회원 단말 정보 조회 파라미터*********************");
+		log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
+		log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+		log.debug("----------------------------------------------------------------");
 		return deviceReq;
 	}
 
@@ -423,20 +423,20 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	}
 
 	private void loggingParamsForPurchaseHistoryLocalSCI(List<ProductListSacIn> productList, HistoryListSacInReq historyReq) {
-		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("********************	구매 요청 파라미터	***************************");
-		this.log.debug("[DownloadVodServiceImpl] tenantId : {}", historyReq.getTenantId());
-		this.log.debug("[DownloadVodServiceImpl] userKey : {}", historyReq.getUserKey());
-		this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
-		this.log.debug("[DownloadVodServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-		this.log.debug("[DownloadVodServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
-		this.log.debug("[DownloadVodServiceImpl] startDt : {}", historyReq.getStartDt());
-		this.log.debug("[DownloadVodServiceImpl] endDt : {}", historyReq.getEndDt());
-		this.log.debug("[DownloadVodServiceImpl] offset : {}", historyReq.getOffset());
-		this.log.debug("[DownloadVodServiceImpl] count : {}", historyReq.getCount());
-		this.log.debug("[DownloadVodServiceImpl] store prodId : {}", productList.get(0).getProdId());
-		this.log.debug("[DownloadVodServiceImpl] play prodId : {}", productList.get(1).getProdId());
-		this.log.debug("----------------------------------------------------------------");
+		log.debug("----------------------------------------------------------------");
+		log.debug("********************	구매 요청 파라미터	***************************");
+		log.debug("[DownloadVodServiceImpl] tenantId : {}", historyReq.getTenantId());
+		log.debug("[DownloadVodServiceImpl] userKey : {}", historyReq.getUserKey());
+		log.debug("[DownloadVodServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+		log.debug("[DownloadVodServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+		log.debug("[DownloadVodServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+		log.debug("[DownloadVodServiceImpl] startDt : {}", historyReq.getStartDt());
+		log.debug("[DownloadVodServiceImpl] endDt : {}", historyReq.getEndDt());
+		log.debug("[DownloadVodServiceImpl] offset : {}", historyReq.getOffset());
+		log.debug("[DownloadVodServiceImpl] count : {}", historyReq.getCount());
+		log.debug("[DownloadVodServiceImpl] store prodId : {}", productList.get(0).getProdId());
+		log.debug("[DownloadVodServiceImpl] play prodId : {}", productList.get(1).getProdId());
+		log.debug("----------------------------------------------------------------");
 	}
 
 	/**
@@ -480,7 +480,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				paramFixrateProd.put("fixrateProdId", useFixrateProdId);
 				paramFixrateProd.put("prodId", metaInfo.getEspdProdId());
 
-				MetaInfo fixrateProd = (MetaInfo) this.commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
+				MetaInfo fixrateProd = (MetaInfo) commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
 
 				// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
 				if(fixrateProd != null) {
