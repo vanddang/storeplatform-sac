@@ -175,7 +175,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 					userInfoSac.setUserSubStatus(userInfoMap.get(userKeyList.get(i)).getUserSubStatus());
 					userInfoSac.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
 					// 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
-					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
+					// userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
 					// tenantId 추가, incross_bottangs, 2015.02.10
 					userInfoSac.setTenantId(userInfoMap.get(userKeyList.get(i)).getTenantID());
 
@@ -1274,7 +1274,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 					if (StringUtils.equals(MemberConstants.USER_TYPE_MOBILE,
 							userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getUserType())) {
 						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
-								.getDeviceID());
+								.getDeviceIDList().get(0));
 					} else {
 						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
 								.getUserID());

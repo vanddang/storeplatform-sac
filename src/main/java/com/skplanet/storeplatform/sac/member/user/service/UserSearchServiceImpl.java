@@ -2208,7 +2208,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					if (StringUtils.equals(MemberConstants.USER_TYPE_MOBILE,
 							userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getUserType())) {
 						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
-								.getDeviceID());
+								.getDeviceIDList().get(0));
 					} else {
 						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
 								.getUserID());
@@ -2227,9 +2227,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 							deviceInfo.setDeviceKey(deviceKey);
 							deviceInfos.add(deviceInfo);
 						}
+						socialAccountInfo.setDeviceKeyList(deviceInfos);
 					}
-
-					socialAccountInfo.setDeviceKeyList(deviceInfos);
 					socialAccountInfos.add(socialAccountInfo);
 				}
 			}
