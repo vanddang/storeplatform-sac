@@ -90,14 +90,13 @@ public class PurchaseProduct extends PaymentInfo {
 		this.setTopMenuId(displayInfo.getTopMenuId());
 		this.setSvcGrpCd(displayInfo.getSvcGrpCd());
 		this.setInAppYn(displayInfo.getInAppYn());
-		// APP,멀티미디어 상품 변수
+
 		this.setProdId(displayInfo.getProdId());
 		this.setProdNm(displayInfo.getProdNm());
 		this.setProdAmt(displayInfo.getProdAmt());
 		this.setProdStatusCd(displayInfo.getProdStatusCd());
 		this.setProdGrdCd(displayInfo.getProdGrdCd());
-		// 허용 연령 (상품등급이 청소년이용불가 등급일 경우에 18/19 판별을 위해 사용)
-		this.setAgeAllowedFrom(displayInfo.getAgeAllowedFrom());
+		this.setAgeAllowedFrom(displayInfo.getAgeAllowedFrom()); // 허용 연령 (상품등급이 청소년이용불가 등급일 경우에 18/19 판별을 위해 사용)
 
 		this.setProdSprtYn(displayInfo.getProdSprtYn());
 		this.setDrmYn(StringUtils.defaultString(displayInfo.getDrmYn(), PurchaseConstants.USE_N));
@@ -105,6 +104,7 @@ public class PurchaseProduct extends PaymentInfo {
 		this.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
 		this.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(),
 				PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) ? "0" : displayInfo.getUsePeriod());
+		this.setUsePeriodSetCd(displayInfo.getUsePeriodSetCd()); // DP013001-이용시점,DP013002-구매시점
 
 		this.setAid(displayInfo.getAid());
 		this.setTenantProdGrpCd(displayInfo.getTenantProdGrpCd());
@@ -120,7 +120,7 @@ public class PurchaseProduct extends PaymentInfo {
 		this.setChapter(displayInfo.getChapter());
 		this.setChapterText(displayInfo.getChapterText());
 		this.setChapterUnit(displayInfo.getChapterUnit());
-		// ////////////////////////// 쇼핑 상품 변수 ////////////////////////////
+		// 쇼핑
 		this.setProdCaseCd(displayInfo.getProdCaseCd()); // DP006301-상품권, DP006302-교환권, DP006303-배송상품
 		this.setCouponCode(displayInfo.getCouponCode());
 		this.setItemCode(displayInfo.getItemCode());
@@ -134,7 +134,7 @@ public class PurchaseProduct extends PaymentInfo {
 		this.setSpecialSaleMonthLimitPerson(displayInfo.getSpecialSaleMonthLimitPerson());
 		this.setSpecialSaleDayLimitPerson(displayInfo.getSpecialSaleDayLimitPerson());
 		this.setSpecialSaleOncePrchsLimit(displayInfo.getSpecialSaleOncePrchsLimit());
-		// ////////////////////////// 정액제 상품 변수 ////////////////////////////
+		// 정액제
 		this.setAvailableFixrateProdIdList(displayInfo.getAvailableFixrateProdIdList());
 		this.setAvailableFixrateInfoList(displayInfo.getAvailableFixrateInfoList());
 		this.setAutoPrchsYN(displayInfo.getAutoPrchsYN());
@@ -159,7 +159,6 @@ public class PurchaseProduct extends PaymentInfo {
 
 		this.setSeriesYn(displayInfo.getSeriesYn());
 		this.setPackagePrchsYn(displayInfo.getPackagePrchsYn());
-
 	}
 
 	/**

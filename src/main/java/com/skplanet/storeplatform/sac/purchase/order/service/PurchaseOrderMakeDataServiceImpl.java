@@ -188,6 +188,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					prchsDtlMore.setResvCol05(product.getResvCol05());
 					prchsDtlMore.setUsePeriodUnitCd(product.getUsePeriodUnitCd());
 					prchsDtlMore.setUsePeriod(product.getUsePeriod() == null ? "0" : product.getUsePeriod());
+					prchsDtlMore.setUsePeriodSetCd(product.getUsePeriodSetCd());
+
 					// 정액권으로 에피소드 이용시, 다운로드 종료 일시
 					if (StringUtils.isNotBlank(product.getUseFixrateProdId())
 							&& StringUtils.isNotBlank(product.getDwldExprDt())) {
@@ -201,9 +203,24 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 						prchsDtlMore.setDwldExprDt(prchsDtlMore.getUseExprDt());
 					}
 
-					// 선물 시, 초기 재다운로드 종료일시는 무제한
-					if (bGift) {
-						prchsDtlMore.setDwldExprDt(PurchaseConstants.UNLIMITED_DATE);
+					if (bGift) { // 선물 시
+						prchsDtlMore.setDwldExprDt(PurchaseConstants.UNLIMITED_DATE); // 초기 재다운로드 종료일시: 무제한
+						prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_STANDBY); // 기간 재산정: 처리대기
+						prchsDtlMore.setUsePeriodSetCd(null); // 이용기간 설정 타입은 NULL
+
+					} else {
+						if (StringUtils.equals(product.getUsePeriodSetCd(),
+								PurchaseConstants.PRODUCT_USE_PERIOD_SET_DOWNLOAD)) { // 이용기간 설정 타입: 이용시점
+							prchsDtlMore.setDwldExprDt(PurchaseConstants.UNLIMITED_DATE); // 초기 재다운로드 종료일시: 무제한
+							prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_STANDBY); // 기간 재산정:
+																											// 처리대기
+
+						} else if (StringUtils.equals(product.getUsePeriodSetCd(),
+								PurchaseConstants.PRODUCT_USE_PERIOD_SET_PURCHASE)) { // 이용기간 설정 타입: 구매시점
+							prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE); // 기간 재산정:
+																											 // 처리완료
+						}
+						// else {} 2015.06.전시: 100% 확률로 위 2개 값 중에 하나가 내려갈거임 (null 경우도 없음)
 					}
 
 					prchsDtlMore.setDrmYn(product.getDrmYn());
