@@ -356,7 +356,13 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// UAPS 연동, 단말 부가정보 등록
-		if (limitChargeFlag && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
+		// 자사, 오늘 끝자리와 디바이스 끝번호가 같을 경우 (ex : '20150612 == '01088880002') UAPS 연동
+		String today = DateUtil.getToday();
+		today = "20150610";
+		if (limitChargeFlag
+				&& StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
+				&& StringUtils.equals(today.substring(today.length() - 1),
+						req.getDeviceId().substring(req.getDeviceId().length() - 1))) {
 			UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
 			updateDeviceManagementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 			updateDeviceManagementRequest.setDeviceKey(dbDeviceInfo.getDeviceKey());
@@ -584,7 +590,11 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// UAPS 연동, 단말 부가정보 등록
-		if (limitChargeFlag && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
+		// 자사, 오늘 끝자리와 디바이스 끝번호가 같을 경우 (ex : '20150612 == '01088880002') UAPS 연동
+		if (limitChargeFlag
+				&& StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
+				&& StringUtils.equals(DateUtil.getToday().substring(DateUtil.getToday().length() - 1), req
+						.getDeviceId().substring(req.getDeviceId().length() - 1))) {
 			UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
 			updateDeviceManagementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 			updateDeviceManagementRequest.setDeviceKey(dbDeviceInfo.getDeviceKey());
