@@ -1270,11 +1270,14 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 							.getTenantID());
 					socialAccountInfo.setUserKey(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
 							.getUserKey());
-
+					// userId 셋팅
 					if (StringUtils.equals(MemberConstants.USER_TYPE_MOBILE,
 							userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getUserType())) {
-						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
-								.getDeviceIDList().get(0));
+						if (userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList() != null
+								&& userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList().size() > 0) {
+							socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+									.getDeviceIDList().get(0));
+						}
 					} else {
 						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
 								.getUserID());
