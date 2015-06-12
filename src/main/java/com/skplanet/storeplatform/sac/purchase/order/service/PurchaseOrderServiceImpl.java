@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.*;
 import com.skplanet.storeplatform.purchase.client.promotion.sci.PurchasePromotionSCI;
+import com.skplanet.storeplatform.purchase.order.service.PurchaseOrderSCService;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.BannerInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
@@ -102,6 +103,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private PayPlanetShopService payPlanetShopService;
 	@Autowired
 	private MembershipReserveService membershipReserveService;
+	@Autowired
+	private PurchaseOrderSCService purchaseOrderSCService;
 
 	@Autowired
 	private PurchaseMemberRepository purchaseMemberRepository;
@@ -997,10 +1000,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 특가 상품 여부
 		boolean bSpecialProd = StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"));
 
+		String currentDate = this.purchaseOrderSCService.selectCurrentDate();
+
 		// 공통 작업용 세팅
 		for (PrchsDtlMore createPurchaseInfo : prchsDtlMoreList) {
 			createPurchaseInfo.setSystemId(reservedDataMap.get("systemId"));
 			createPurchaseInfo.setNetworkTypeCd(reservedDataMap.get("networkTypeCd"));
+			createPurchaseInfo.setPrchsDt(currentDate);
 
 			createPurchaseInfo.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT); // 구매확정
 			createPurchaseInfo.setSprcProdYn(bSpecialProd ? PurchaseConstants.USE_Y : PurchaseConstants.USE_N);
@@ -1120,9 +1126,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -------------------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
 
-		String tstoreNotiPublishType = PurchaseConstants.TSTORE_NOTI_PUBLISH_TYPE_SYNC;
+ 		String tstoreNotiPublishType = PurchaseConstants.TSTORE_NOTI_PUBLISH_TYPE_SYNC;
 
-		List<ShoppingCouponPublishInfo> shoppingCouponList = null;
+                		List<ShoppingCouponPublishInfo> shoppingCouponList = null;
 
 		if (prchsDtlMore.getTenantProdGrpCd().startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 
@@ -1389,6 +1395,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			confirmPurchaseScReq.setUseInsdUsermbrNo(mctSpareParam.getUseUserKey());
 			confirmPurchaseScReq.setNetworkTypeCd(prchsDtlMore.getNetworkTypeCd());
 			confirmPurchaseScReq.setOfferingId(offeringId);
+			confirmPurchaseScReq.setPrchsDt(currentDate);
 			if (CollectionUtils.isNotEmpty(cashReserveResList)) {
 				for (TStoreCashChargeReserveDetailEcRes chargeInfo : cashReserveResList) {
 					// T store Cash 충전형 - 01 : Point, 02 : Cash
