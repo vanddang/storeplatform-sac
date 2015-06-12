@@ -84,13 +84,10 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader header, DownloadComicSacReq comicReq) {
 
         List<Encryption> encryptionList = new ArrayList<Encryption>();
-
         StopWatch sw = new StopWatch();
         sw.start();
 
-        // 현재일시 및 만료일시 조회
         MetaInfo dateInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
-
         String sysDate = dateInfo.getSysDate();
         String reqExpireDate = dateInfo.getExpiredDate();
 
@@ -108,9 +105,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         logger.debug("[DownloadComicLog] scid : {}", metaInfo.getSubContentsId());
         logger.debug("----------------------------------------------------------------");
 
-        /*
-		 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
-		 */
+        // 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
         metaInfo.setSystemId(header.getTenantHeader().getSystemId());
         metaInfo.setTenantId(header.getTenantHeader().getTenantId());
         downloadCommonService.validateVisitPathNm(metaInfo, comicReq.getVisitPathNm(), productId);
@@ -189,7 +184,6 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                             memberPassFlag = false;
                             logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
                         }
-
                         logger.debug("----------------------------------------------------------------");
                         logger.debug("[DownloadComicLog] memberPassFlag : {}", memberPassFlag);
                         logger.debug("[DownloadComicLog] deviceRes : {}", deviceRes);
@@ -204,14 +198,10 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                             encryptionList.add(encryption);
                             loggingEncResult(encryption);
                         }
-                        // 구매 정보
                         product.setPurchaseList(purchaseList);
-
-                        // 암호화 정보
                         if (!encryptionList.isEmpty()) {
                             product.setDl(encryptionList);
                         }
-
                         break;
                     }
                 }

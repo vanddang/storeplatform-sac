@@ -193,7 +193,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 							// throw new StorePlatformException("SAC_DSP_1001", ex);
 						}
-
 						log.debug("----------------------------------------------------------------");
 						log.debug("[DownloadMusicServiceImpl] memberFlag	:	{}", memberFlag);
 						log.debug("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
@@ -207,7 +206,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							encryptionList.add(encryption);
 							loggingEncResult(encryption);
 						}
-						// 구매 정보
 						product.setPurchaseList(purchaseList);
 						break;
 					}

@@ -165,20 +165,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		doBunchProdProvisioning(downloadAppSacReq, metaInfo);
 		validateParentBunchProd(downloadAppSacReq, metaInfo);
 
-		/**
-		 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
-		 */
+		// 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
 		metaInfo.setSystemId(tenantHeader.getSystemId());
         metaInfo.setTenantId(tenantHeader.getTenantId());
 		downloadCommonService.validateVisitPathNm(metaInfo, downloadAppSacReq.getVisitPathNm(), productId);
 		metaInfo.setDwldTypeCd(downloadAppSacReq.getDwldTypeCd());
 
-        /**
-         * 업데이트 알람 수신 여부가 SAC구매에서 테넌트로 옮겨짐.
-         * For D/L API에 파마리터로 현재 상태의 알람 수신 여부를 받도록 변경
-         */
+        // 업데이트 알람 수신 여부가 SAC구매에서 테넌트로 옮겨짐.
+        // For D/L API에 파마리터로 현재 상태의 알람 수신 여부를 받도록 변경
         metaInfo.setUpdateAlarm(StringUtils.defaultString(downloadAppSacReq.getUpdateAlarmYn(), "Y"));
-
 
 		if (StringUtils.isNotEmpty(downloadAppSacReq.getDeviceKey()) && StringUtils.isNotEmpty(downloadAppSacReq.getUserKey())) {
 			HistoryListSacInRes historyRes = null;
@@ -284,10 +279,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					}
 
 				} else {
-					/**
-					 * 구매내역이 존재하지 않는 경우 예외적으로 다운로드 허용
-					 * 예) 앱가이드, 스마트청구서, T 통화 도우미
-					 */
+					// 구매내역이 존재하지 않는 경우 예외적으로 다운로드 허용
+					// 예) 앱가이드, 스마트청구서, T 통화 도우미
 					if ( isProdWithoutPrchsHis(tenantHeader.getTenantId(), productId) ) {
 						makeDefaultMetaWithoutPrchsHis(metaInfo, downloadAppSacReq, purchaseDt, reqExpireDate);
 

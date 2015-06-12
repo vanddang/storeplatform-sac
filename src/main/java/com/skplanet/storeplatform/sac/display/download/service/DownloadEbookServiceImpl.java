@@ -118,14 +118,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 		setRequest(ebookReq, header);
 		MetaInfo metaInfo = getEbookMetaInfo(ebookReq);
-
 		logger.debug("----------------------------------------------------------------");
 		logger.debug("[DownloadEbookLog] scid : {}", metaInfo.getSubContentsId());
 		logger.debug("----------------------------------------------------------------");
 
-		/*
-		 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
-		 */
+		// 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
 		metaInfo.setSystemId(header.getTenantHeader().getSystemId());
         metaInfo.setTenantId(header.getTenantHeader().getTenantId());
 		downloadCommonService.validateVisitPathNm(metaInfo, ebookReq.getVisitPathNm(), productId);
@@ -232,7 +229,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				}
 			}
 		}
-
 		DownloadEbookSacRes ebookRes = makeResponse(product);
         sw.stop();
         supportService.logDownloadResult(ebookReq.getUserKey(), ebookReq.getDeviceKey(), productId, encryptionList, sw.getTime());

@@ -117,7 +117,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		this.log.debug("----------------------------------------------------------------");
 
 		MetaInfo metaInfo = getVodMetaInfo(downloadVodSacReq);
-
 		Product product = new Product();
 
 		this.log.debug("----------------------------------------------------------------");
@@ -228,8 +227,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							product.setDl(encryptionList);
 						}
 
-						this.log.debug("[DownloadVodServiceImpl] End Encription");
-						this.log.debug("----------------------------------------------------------------");
 						this.log.debug("----------------------------  end set Purchase Info  ------------------------------------");
 
 						break;
