@@ -357,9 +357,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// UAPS 연동, 단말 부가정보 등록
 		// 자사, 오늘 끝자리와 디바이스 끝번호가 같을 경우 (ex : '20150612 == '01088880002') UAPS 연동
-		// String today = DateUtil.getToday();
-		// @TODO 테스트 변수
-		String today = "20150610";
+		String today = DateUtil.getToday();
 		// 자사(SKT)
 		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
 			// 1. 한도요금제 조회시간 +7 < sysdate
@@ -596,9 +594,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// UAPS 연동, 단말 부가정보 등록
 		// 자사, 오늘 끝자리와 디바이스 끝번호가 같을 경우 (ex : '20150612 == '01088880002') UAPS 연동
-		// String today = DateUtil.getToday();
-		// @TODO 테스트 변수
-		String today = "20150610";
+		String today = DateUtil.getToday();
 		// 자사(SKT)
 		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
 			// 1. 한도요금제 조회시간 +7 < sysdate
