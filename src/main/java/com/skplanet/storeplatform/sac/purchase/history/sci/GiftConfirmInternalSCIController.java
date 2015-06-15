@@ -139,6 +139,10 @@ public class GiftConfirmInternalSCIController implements GiftConfirmInternalSCI 
 		res.setPrchsId(giftComfirmScRes.getPrchsId());
 		res.setProdId(giftComfirmScRes.getProdId());
 		res.setResultYn(giftComfirmScRes.getResultYn());
+		res.setUseStartDt(giftComfirmScRes.getUseStartDt());
+		res.setUseExprDt(giftComfirmScRes.getUseExprDt());
+		res.setDwldStartDt(giftComfirmScRes.getDwldStartDt());
+		res.setDwldExprDt(giftComfirmScRes.getDwldExprDt());
 		this.logger.info("PRCHS,GiftController,SAC,GiftConfirmSacInRes,{}", res);
 		return res;
 	}
