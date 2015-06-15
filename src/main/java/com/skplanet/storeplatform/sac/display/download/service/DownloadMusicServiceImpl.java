@@ -163,7 +163,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 
 						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
-						String prchsState = null;
+						String prchsState = DisplayConstants.PRCHS_STATE_TYPE_EXPIRED;
 
 						// 구매상태 만료여부 확인
 						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime)) {
