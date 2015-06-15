@@ -99,7 +99,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         // 현재일시 및 요청만료일시 조회
 		MetaInfo dateInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
-		String sysDate = dateInfo.getSysDate();
+//		String sysDate = dateInfo.getSysDate();
 		String reqExpireDate = dateInfo.getExpiredDate();
 
 		String idType = ebookReq.getIdType();
@@ -136,7 +136,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 			try {
 				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
-				HistoryListSacInReq historyReq = makeHistoryListSacInReq(ebookReq, sysDate, prodIdList);
+				HistoryListSacInReq historyReq = makeHistoryListSacInReq(ebookReq, prodIdList);
 				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
 				historyRes = historyInternalSCI.searchHistoryList(historyReq);
 			} catch (Exception ex) {
@@ -413,7 +413,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		log.debug("----------------------------------------------------------------");
 	}
 
-	private HistoryListSacInReq makeHistoryListSacInReq(DownloadEbookSacReq ebookReq, String sysDate, List<ProductListSacIn> productList) {
+	private HistoryListSacInReq makeHistoryListSacInReq(DownloadEbookSacReq ebookReq, List<ProductListSacIn> productList) {
 		HistoryListSacInReq historyReq = new HistoryListSacInReq();
 		historyReq.setTenantId(ebookReq.getTenantId());
 		historyReq.setUserKey(ebookReq.getUserKey());
@@ -422,7 +422,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
 		historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 		historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
-		historyReq.setEndDt(sysDate);
+		historyReq.setEndDt("20991231235959");
 		historyReq.setOffset(1);
 		historyReq.setCount(1000);
 		historyReq.setProductList(productList);

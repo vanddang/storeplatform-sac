@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
@@ -33,7 +33,7 @@ import java.util.*;
 
 /**
  * 상품 상세 정보 요청(Package Name) Service 구현체
- * 
+ *
  * Updated on : 2014. 3. 6. Updated by : 백승현, 인크로스.
  */
 @Service
@@ -51,7 +51,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.openapi.service.AppDetailByPkgNmService(com.skplanet
 	 * com.skplanet.storeplatform.sac.client.display.vo.openapi.appDetailByPackageNameSacReq)
 	 */
@@ -65,9 +65,8 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
 		String partParentClsfCd = DisplayConstants.DP_PART_CHILD_CLSF_CD;
 
-		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
-				MetaInfo.class);
-		String sysDate = downloadSystemDate.getSysDate();
+		//DB에서 sysdate를 select 해왔으나 SQL에 아래 값이 hard coding되어 있어 수정함. SVN 이력 참고바람.
+		String sysDate = "20991231235959";
 
 		String deviceModelNo = supportGameCenterSacReq.getDeviceModelNo();
 		String userKey = supportGameCenterSacReq.getUserKey();

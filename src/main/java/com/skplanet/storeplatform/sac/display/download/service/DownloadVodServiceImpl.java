@@ -97,7 +97,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "", MetaInfo.class);
 
-		String sysDate = downloadSystemDate.getSysDate();
+//		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
 		setRequest(downloadVodSacReq, tenantHeader, deviceHeader);
 
@@ -132,7 +132,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 			try {
 				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
-				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadVodSacReq, sysDate, prodIdList);
+				HistoryListSacInReq historyReq = makeHistoryListSacInReq(downloadVodSacReq, prodIdList);
 				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
 				historyRes = historyInternalSCI.searchHistoryList(historyReq);
 			} catch (Exception ex) {
@@ -406,7 +406,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		return productList;
 	}
 
-	private HistoryListSacInReq makeHistoryListSacInReq(DownloadVodSacReq downloadVodSacReq, String sysDate, List<ProductListSacIn> productList) {
+	private HistoryListSacInReq makeHistoryListSacInReq(DownloadVodSacReq downloadVodSacReq, List<ProductListSacIn> productList) {
 		HistoryListSacInReq historyReq = new HistoryListSacInReq();
 		historyReq.setTenantId(downloadVodSacReq.getTenantId());
 		historyReq.setUserKey(downloadVodSacReq.getUserKey());
@@ -415,7 +415,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
 		historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 		historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
-		historyReq.setEndDt(sysDate);
+		historyReq.setEndDt("20991231235959");
 		historyReq.setOffset(1);
 		historyReq.setCount(1000);
 		historyReq.setProductList(productList);

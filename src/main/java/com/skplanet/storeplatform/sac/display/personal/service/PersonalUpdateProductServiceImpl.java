@@ -27,7 +27,6 @@ import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManag
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
@@ -269,9 +268,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
             try {
                 this.log.debug("##### Purchase check start!!!!!!!!!");
                 List<ProductListSacIn> productListSacInList = new ArrayList<ProductListSacIn>();
-                MetaInfo downloadSystemDate = this.commonDAO.queryForObject(
-                        "Download.selectDownloadSystemDate", "", MetaInfo.class);
-                String endDate = downloadSystemDate.getSysDate();
+                String endDate = "20991231235959";
 
                 this.log.debug("##### endDate :: {}", endDate);
                 for (String prodId : listPid) {

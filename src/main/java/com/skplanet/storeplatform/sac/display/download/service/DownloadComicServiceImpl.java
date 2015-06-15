@@ -88,7 +88,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         sw.start();
 
         MetaInfo dateInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
-        String sysDate = dateInfo.getSysDate();
+//        String sysDate = dateInfo.getSysDate();
         String reqExpireDate = dateInfo.getExpiredDate();
 
         String productId = comicReq.getProductId();
@@ -119,7 +119,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
             try {
             	List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo);
-                HistoryListSacInReq historyReq = makeHistoryListSacInReq(comicReq, sysDate, prodIdList);
+                HistoryListSacInReq historyReq = makeHistoryListSacInReq(comicReq, prodIdList);
                 loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq);
                 historyRes = historyInternalSCI.searchHistoryList(historyReq);
             } catch (Exception ex) {
@@ -377,7 +377,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		logger.debug("----------------------------------------------------------------");
 	}
 
-	private HistoryListSacInReq makeHistoryListSacInReq(DownloadComicSacReq comicReq, String sysDate, List<ProductListSacIn> productList) {
+	private HistoryListSacInReq makeHistoryListSacInReq(DownloadComicSacReq comicReq, List<ProductListSacIn> productList) {
 		HistoryListSacInReq historyReq = new HistoryListSacInReq();
 		historyReq.setTenantId(comicReq.getTenantId());
 		historyReq.setUserKey(comicReq.getUserKey());
@@ -386,7 +386,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
 		historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 		historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
-		historyReq.setEndDt(sysDate);
+		historyReq.setEndDt("20991231235959");
 		historyReq.setOffset(1);
 		historyReq.setCount(1000);
 		historyReq.setProductList(productList);
