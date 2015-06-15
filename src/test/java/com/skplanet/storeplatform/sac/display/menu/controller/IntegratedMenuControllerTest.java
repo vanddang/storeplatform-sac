@@ -45,13 +45,13 @@ public class IntegratedMenuControllerTest {
 	}
 
 	@Test
-	public void searchMenuCategoryList() throws Exception {
+	public void tstore4Category() throws Exception {
 
 //		String useGrdCd = "useGrdCd=PD004405";
 		String useGrdCd = "";
 
 		this.mvc.perform(
-			get( String.format("/display/menu/integration/list/v1?upMenuKey=DP17&%s", useGrdCd) )
+			get( String.format("/display/menu/integration/list/v1?upMenuId=DP17&%s", useGrdCd) )
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 				.header("x-sac-tenant-id", "S01")
 				.header("x-sac-system-id", "S01-01014")
@@ -61,6 +61,24 @@ public class IntegratedMenuControllerTest {
 		.andExpect(content().contentType("application/json;charset=UTF-8"))
 		.andExpect(header().string("x-sac-result-code", "SUCC"))
 		;
+	}
+
+	@Test
+	public void ebookCategory() throws Exception {
+
+		String useGrdCd = "";
+
+		this.mvc.perform(
+				get( String.format("/display/menu/integration/list/v1?upMenuId=genre&%s", useGrdCd) )
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-tenant-id", "S01")
+				.header("x-sac-system-id", "S01-01005")
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(header().string("x-sac-result-code", "SUCC"))
+				;
 	}
 
 }
