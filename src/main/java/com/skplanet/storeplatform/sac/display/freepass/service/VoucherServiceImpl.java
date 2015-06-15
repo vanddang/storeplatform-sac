@@ -144,11 +144,10 @@ public class VoucherServiceImpl implements VoucherService {
 		if (StringUtils.isEmpty(req.getPlus19Yn())) {
 			req.setPlus19Yn("N");
 		}
-		
+
 		if (!"Y".equals(req.getPlus19Yn()) && !"N".equals(req.getPlus19Yn())) {
 			throw new StorePlatformException("SAC_DSP_0003", "plus19Yn", req.getPlus19Yn());
 		}
-		
 
 		// '+'로 연결 된 이용등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getCmpxProdGradeCd())) {
@@ -217,8 +216,8 @@ public class VoucherServiceImpl implements VoucherService {
 		CommonResponse commonResponse = new CommonResponse();
 
 		Coupon coupon = null;
-		List<Coupon> couponList = new ArrayList<Coupon>();
 		Product product = null;
+		List<Coupon> couponList = new ArrayList<Coupon>();
 		List<Product> productList = new ArrayList<Product>();
 
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -293,6 +292,14 @@ public class VoucherServiceImpl implements VoucherService {
 		String cmpxProdGrpCd = (String) this.commonDAO.queryForObject("Voucher.selectCmpxProdGrpCd", req);
 		req.setCmpxProdGrpCd(cmpxProdGrpCd);
 
+		// 상품ID가 19+ 상품인지 조회
+		String plus19Yn = (String) this.commonDAO.queryForObject("Voucher.searchProdIdPlus19Yn", req.getProductId());
+		if (StringUtils.isEmpty(plus19Yn)) {
+			req.setPlus19Yn("N");
+		} else {
+			req.setPlus19Yn(plus19Yn);
+		}
+
 		// 정액제 상품 조회
 		retMetaInfoList = this.commonDAO.queryForList("Voucher.selectVoucherDetail", req, MetaInfo.class);
 
@@ -359,7 +366,7 @@ public class VoucherServiceImpl implements VoucherService {
 					coupon.setPointList(pointList);
 					couponList.add(coupon);
 
-					// 요청한 상품에대해서만 상품을 조회한다.
+					// 요청한 상품에 대해서만 상품을 조회한다.
 					if ("Y".equals(metaInfo.getRequestProduct())) {
 						mapList = this.commonDAO.queryForList("Voucher.selectVoucherMapProduct", req,
 								VoucherProdMap.class);
@@ -410,6 +417,7 @@ public class VoucherServiceImpl implements VoucherService {
 									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
 							}
 							product.setStatus(prodMap.getIconClsfCd());
+							// product.getRights().setPlus19Yn(prodMap.getPlus19Yn());
 							productList.add(product);
 						} // for
 					} // if
@@ -496,13 +504,13 @@ public class VoucherServiceImpl implements VoucherService {
 			req.setCount(20);
 		}
 
-//		if (StringUtils.isEmpty(req.getUserKey())) {
-//			throw new StorePlatformException("SAC_DSP_0002", "userKey", req.getUserKey());
-//		}
-//
-//		if (StringUtils.isEmpty(req.getDeviceKey())) {
-//			throw new StorePlatformException("SAC_DSP_0002", "deviceKey", req.getDeviceKey());
-//		}
+		// if (StringUtils.isEmpty(req.getUserKey())) {
+		// throw new StorePlatformException("SAC_DSP_0002", "userKey", req.getUserKey());
+		// }
+		//
+		// if (StringUtils.isEmpty(req.getDeviceKey())) {
+		// throw new StorePlatformException("SAC_DSP_0002", "deviceKey", req.getDeviceKey());
+		// }
 
 		// '+'로 연결 된 상품등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getKind())) {
@@ -537,18 +545,18 @@ public class VoucherServiceImpl implements VoucherService {
 					prodIdList.add(productBasicInfo.getProdId());
 				}
 			}
-			if (StringUtils.isNotEmpty(req.getUserKey())&& StringUtils.isNotEmpty(req.getDeviceKey())) {
-    			if (prodIdList.size() > 0) { // 판매 중지가 있는 상품에 대해서만 기구매 체크를 해야함
-    				try {
-    					res = this.displayCommonService.checkPurchaseList(header.getTenantHeader().getTenantId(),
-    							req.getUserKey(), req.getDeviceKey(), prodIdList);
-    				} catch (StorePlatformException e) {
-    					// ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로
-    					// 처리한다.
-    					res = new ExistenceListRes();
-    					res.setExistenceListRes(new ArrayList<ExistenceRes>());
-    				}
-    			}
+			if (StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
+				if (prodIdList.size() > 0) { // 판매 중지가 있는 상품에 대해서만 기구매 체크를 해야함
+					try {
+						res = this.displayCommonService.checkPurchaseList(header.getTenantHeader().getTenantId(),
+								req.getUserKey(), req.getDeviceKey(), prodIdList);
+					} catch (StorePlatformException e) {
+						// ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로
+						// 처리한다.
+						res = new ExistenceListRes();
+						res.setExistenceListRes(new ArrayList<ExistenceRes>());
+					}
+				}
 			}
 
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -562,24 +570,24 @@ public class VoucherServiceImpl implements VoucherService {
 					couponList.add(coupon);
 					commonResponse.setTotalCount(totalCnt);
 				} else {
-					if (StringUtils.isNotEmpty(req.getUserKey())&& StringUtils.isNotEmpty(req.getDeviceKey())) {
-    					// 기구매 여부 조회
-    					for (ExistenceRes existenceRes : res.getExistenceListRes()) {
-    						// this.log.info("existenceRes.getProdId():::::" +
-    						// existenceRes.getProdId());
-    						if (existenceRes.getProdId().equals(productBasicInfo.getProdId())) {
-    							purchaseYn = true;
-    						}
-    					}
-    					this.log.info("구매 여부:purchaseYn=>" + purchaseYn);
-    					if (purchaseYn) {
-    						totalCnt++;
-    						reqMap.put("productBasicInfo", productBasicInfo);
-    						retMetaInfo = this.metaInfoService.getVoucherMetaInfo(reqMap);
-    						coupon = this.responseInfoGenerateFacade.generateVoucherProduct(retMetaInfo);
-    						couponList.add(coupon);
-    						commonResponse.setTotalCount(totalCnt);
-    					}
+					if (StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
+						// 기구매 여부 조회
+						for (ExistenceRes existenceRes : res.getExistenceListRes()) {
+							// this.log.info("existenceRes.getProdId():::::" +
+							// existenceRes.getProdId());
+							if (existenceRes.getProdId().equals(productBasicInfo.getProdId())) {
+								purchaseYn = true;
+							}
+						}
+						this.log.info("구매 여부:purchaseYn=>" + purchaseYn);
+						if (purchaseYn) {
+							totalCnt++;
+							reqMap.put("productBasicInfo", productBasicInfo);
+							retMetaInfo = this.metaInfoService.getVoucherMetaInfo(reqMap);
+							coupon = this.responseInfoGenerateFacade.generateVoucherProduct(retMetaInfo);
+							couponList.add(coupon);
+							commonResponse.setTotalCount(totalCnt);
+						}
 					}
 				}
 			}

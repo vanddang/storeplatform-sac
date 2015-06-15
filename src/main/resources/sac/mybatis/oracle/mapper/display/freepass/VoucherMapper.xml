@@ -102,6 +102,11 @@
             OV.RNUM
     </select>
     
+
+    <!-- 해당상품이 19+ 상품인지 체크말은  -->
+    <select id="searchProdIdPlus19Yn"  parameterType="String" resultType="String">
+        SELECT PLUS19_YN FROM TB_DP_PROD WHERE PROD_ID = #{value} AND SVC_GRP_CD = 'DP000207'
+    </select>
         
     <!-- 복합상품 그룹코드 가져오기 -->
     <select id="selectCmpxProdGrpCd" parameterType="VoucherDetailSacReq" resultType="String">
@@ -175,7 +180,8 @@
             , DECODE(PD.PROD_ID, #{productId}, 'Y', 'N') AS REQUEST_PRODUCT
             , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.CMPX_PROD_GRP_CD ELSE '' END) AS CMPX_PROD_GRP_CD
             , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.SERIES_BOOK_CLSF_CD ELSE '' END) AS SERIES_BOOK_CLSF_CD
-            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN UP.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD               
+            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN UP.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD        
+            , NVL(PD.PLUS19_YN, 'N') AS PLUS19_YN 
         FROM 
             TB_DP_PROD PD
             <if test='cmpxProdGrpCd != null and cmpxProdGrpCd != ""'>
@@ -236,7 +242,11 @@
 				<foreach collection="arrayCmpxProdGradeCd" item="cmpxProdGradeCd" separator="," open="(" close=")">
 				    #{cmpxProdGradeCd}
 				</foreach>
-            </if>            
+            </if>    
+            <if test='plus19Yn == "N"'>
+            AND PD.PLUS19_YN = 'N' OR PD.PLUS19_YN IS NULL
+            </if>
+                    
     ) IV LEFT OUTER JOIN TB_DP_PROD_IMG BIG
     ON BIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = BIG.PROD_ID AND BIG.IMG_CD = #{bannerImageCd}
     LEFT OUTER JOIN TB_DP_PROD_IMG TIG
@@ -273,6 +283,7 @@
                     , FM.STD_PRICE
                     , FM.STRM_DRM_YN
                     , PD.TOP_MENU_ID
+                    , NVL(PD.PLUS19_YN, 'N') AS PLUS19_YN       
                 FROM
                       TB_DP_FIXRATE_PROD_MAPG FM
                     , TB_DP_PROD PD

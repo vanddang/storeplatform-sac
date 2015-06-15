@@ -31,6 +31,7 @@ public class VoucherProdMap {
 	private String topMenuId;
 
 	private Integer totalCount;
+	private String plus19Yn;
 
 	/**
 	 * @return the partProdId
@@ -217,6 +218,21 @@ public class VoucherProdMap {
 	 */
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
+	}
+
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return this.plus19Yn;
+	}
+
+	/**
+	 * @param plus19Yn
+	 *            the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
 	}
 
 }

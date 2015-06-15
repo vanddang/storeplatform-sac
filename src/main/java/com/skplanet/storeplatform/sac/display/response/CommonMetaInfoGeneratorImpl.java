@@ -427,6 +427,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		}
 
 		rights.setGrade(metaInfo.getProdGrdCd());
+		rights.setPlus19Yn(metaInfo.getPlus19Yn());
 
 		// 소장 정보
 		if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {
