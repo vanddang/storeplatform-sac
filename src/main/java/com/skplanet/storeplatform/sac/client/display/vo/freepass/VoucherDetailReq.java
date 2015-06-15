@@ -46,6 +46,9 @@ public class VoucherDetailReq {
 	// 이용권 상품 그룹코드
 	private String cmpxProdGrpCd;
 
+	// 19+상품여부
+	private String plus19Yn;
+
 	// 구매내역 체크
 	private String userKey; // 사용자키
 	private String deviceKey; // 단말키
@@ -385,6 +388,21 @@ public class VoucherDetailReq {
 	 */
 	public void setCmpxProdGrpCd(String cmpxProdGrpCd) {
 		this.cmpxProdGrpCd = cmpxProdGrpCd;
+	}
+
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return this.plus19Yn;
+	}
+
+	/**
+	 * @param plus19Yn
+	 *            the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
 	}
 
 }
