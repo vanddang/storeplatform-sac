@@ -31,7 +31,10 @@ import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacR
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftConfirmInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
@@ -68,6 +71,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	private HistoryInternalSCI historyInternalSCI;
 
     @Autowired
+    private GiftConfirmInternalSCI giftConfirmInternalSCI;
+
+    @Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 
     @Autowired
@@ -97,7 +103,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "", MetaInfo.class);
 
-//		String sysDate = downloadSystemDate.getSysDate();
+		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
 		setRequest(downloadVodSacReq, tenantHeader, deviceHeader);
 
@@ -149,34 +155,19 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			if (purchaseFlag && historyRes != null) {
 				log.debug("[DownloadVodServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
 				log.debug("---------------------------------------------------------------------");
-
-				String dwldStartDt = null; // 다운로드 시작일시
-				String dwldExprDt = null; // 다운로드 만료일시
-				String prchsCaseCd = null; // 선물 여부
 				String permitDeviceYn = null; // 단말 지원여부
 
 				if (historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-						dwldStartDt = historySacIn.getDwldStartDt();
-						dwldExprDt = historySacIn.getDwldExprDt();
-						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 
-						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
-						String prchsState = DisplayConstants.PRCHS_STATE_TYPE_EXPIRED;
-
-						// 구매상태 만료여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime)) {
-							// 구매 및 선물 여부 확인
-							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
-								prchsState = "payment";
-							} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
-								prchsState = "gift";
-							}
-						}
+						String prchsState = setPrchsState(historySacIn);
 						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
+						resetExprDtOfGift(historySacIn, downloadVodSacReq, sysDate, prchsState);
+						prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
+
 						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
 						/************************************************************************************************
 						 * 구매 정보에 따른 암호화 시작
@@ -186,7 +177,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						log.debug("----------------------------------------------------------------");
 
 						// 구매상태 만료 여부 확인
-						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) || !permitDeviceYn.equals("Y")) {
+						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !permitDeviceYn.equals("Y")) {
 							continue;
 						}
 						log.debug("----------------------------  start set Purchase Info  ------------------------------------");
@@ -242,6 +233,50 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	private String setPrchsState(HistorySacIn historySacIn) {
+		String prchsState = getDownloadPurchaseStateByDbTime(historySacIn);
+
+		// 구매상태 만료여부 확인
+		if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+			// 구매 및 선물 여부 확인
+			if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(historySacIn.getPrchsCaseCd())) {
+				prchsState = "payment";
+			} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(historySacIn.getPrchsCaseCd())) {
+				prchsState = "gift";
+			}
+		}
+		return prchsState;
+	}
+
+	// 선물인경우 다운로드 시점에 만료기간을 reset한다.
+	// 이는 선물 받은 상품이 다운로드 하는 시점에 만료가 되어 사용할 수 없게 되는 것을 방지하기 위함이다.
+	private void resetExprDtOfGift(HistorySacIn historySacIn, DownloadVodSacReq downloadVodSacReq, String sysDate, String prchsState) {
+		if(prchsState.equals("gift")){
+			GiftConfirmSacInReq req = makeGiftConfirmSacInReq(downloadVodSacReq, historySacIn, sysDate);
+			GiftConfirmSacInRes res = giftConfirmInternalSCI.modifyGiftConfirm(req);
+			copyStartDtAndExprDt(historySacIn, res);
+		}
+	}
+
+	private void copyStartDtAndExprDt(HistorySacIn historySacIn, GiftConfirmSacInRes giftConfirmSacInRes) {
+		historySacIn.setUseStartDt(giftConfirmSacInRes.getUseStartDt());
+		historySacIn.setUseExprDt(giftConfirmSacInRes.getUseExprDt());
+		historySacIn.setDwldStartDt(giftConfirmSacInRes.getDwldStartDt());
+		historySacIn.setDwldExprDt(giftConfirmSacInRes.getDwldExprDt());
+	}
+
+	private GiftConfirmSacInReq makeGiftConfirmSacInReq(DownloadVodSacReq downloadVodSacReq, HistorySacIn historySacIn, String sysDate) {
+		GiftConfirmSacInReq req = new GiftConfirmSacInReq();
+		req.setTenantId(downloadVodSacReq.getTenantId());
+		req.setSystemId(downloadVodSacReq.getSystemId());
+		req.setUserKey(downloadVodSacReq.getUserKey());
+		req.setPrchsId(historySacIn.getPrchsId());
+		req.setProdId(historySacIn.getProdId());
+		req.setRecvConfPathCd(historySacIn.getRecvConfPathCd());
+		req.setRecvDt(sysDate);
+		return req;
 	}
 
 	private void setRequest(DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader, DeviceHeader deviceHeader) {
@@ -381,10 +416,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private String getDownloadPurchaseStateByDbTime(String dwldStartDt, String dwldExprDt) {
+	private String getDownloadPurchaseStateByDbTime(HistorySacIn historySacIn) {
 		DownloadVodSacReq req = new DownloadVodSacReq();
-		req.setDwldStartDt(dwldStartDt);
-		req.setDwldExprDt(dwldExprDt);
+		req.setDwldStartDt(historySacIn.getDwldStartDt());
+		req.setDwldExprDt(historySacIn.getDwldExprDt());
 
 		HashMap map = (HashMap) commonDAO.queryForObject("Download.getDownloadPurchaseState", req);
 		return (String) map.get("PURCHASE_STATE");
