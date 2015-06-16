@@ -106,8 +106,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 				}
                 else if(typeInfo.getProductType() == ProductType.Vod) {
                     paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-                    product = this.commonDAO.queryForObject("ProductInfo.getVODMetaInfo", paramMap,
-                            ProductInfo.class);
+                    product = this.commonDAO.queryForObject("ProductInfo.getVODMetaInfo", paramMap, ProductInfo.class);
 
                     if (product != null) {
                         product.setChapterUnit(this.displayCommonService.getVodChapterUnit());

@@ -812,6 +812,7 @@
              , TB.ISBN
              , TB.BOOK_TBCTNS
              , TB.EPSD_CID
+             , TB.PLUS19_YN
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
@@ -861,6 +862,7 @@
             		  , E.BOOK_CONTENTS_CNT
             		  , E.MGZIN_CONTENTS_CNT
                       , J.CID AS EPSD_CID
+                      , NVL(D.PLUS19_YN, 'N') AS PLUS19_YN
                     <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
                       , D.CID
                       , D.PROD_GRD_CD   -- 채널 상품 ID 조회

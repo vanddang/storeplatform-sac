@@ -539,6 +539,7 @@
              , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
              , TB.PROD_STATUS_CD
              , TB.SELLER_MBR_NO
+             , TB.PLUS19_YN
           FROM (
                  SELECT 
                         ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
@@ -591,6 +592,7 @@
                       </if>
                       , G.PROD_STATUS_CD
                       , J.CID
+                      , NVL(D.PLUS19_YN, 'N') AS PLUS19_YN
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C

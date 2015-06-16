@@ -398,11 +398,7 @@
         , R.PROD_STATUS_CD
         , FC_GET_CM_CD_NM(R.BRDC_COMP_CD, 'ko') AS BRDC_COMP_NM
         , R.PLAY_TM as EPSD_PLAY_TM
-        ]]>
-        <if test="prodIdType == 'CHANNEL'">
         , R.PLUS19_YN
-        </if>
-        <![CDATA[
         FROM
         (
             SELECT
@@ -454,11 +450,7 @@
             , EMCD.MENU_DESC
             , TMCD.MENU_NM AS TOP_MENU_NM
             , EPROD.CID
-            ]]>
-             <if test="prodIdType == 'CHANNEL'">
             , NVL(CPROD.PLUS19_YN, 'N') AS PLUS19_YN
-            </if>         
-            <![CDATA[
         FROM TB_DP_PROD_RSHP RSHP
           INNER JOIN TB_DP_TENANT_PROD CTPROD
             ON CTPROD.PROD_ID = RSHP.PROD_ID
@@ -615,6 +607,7 @@
             ) AS EPSD_PERIOD_AMT  /* 에피소드 동일 CID 대여 가격 */
             ]]>
             , TB.SELLER_MBR_NO
+            , TB.PLUS19_YN
         FROM (
             SELECT
                 CMC.UP_MENU_ID,
@@ -664,7 +657,8 @@
                 <if test="prodIdType == 'EPISODE'">
                 EEBOOK.SAMPL_URL,
                 </if>
-                EPROD.CID
+                EPROD.CID,
+                NVL(CPROD.PLUS19_YN, 'N') AS PLUS19_YN
             FROM TB_DP_PROD_RSHP RSHP
                 INNER JOIN TB_DP_TENANT_PROD CTPROD
                 ON CTPROD.PROD_ID = RSHP.PROD_ID

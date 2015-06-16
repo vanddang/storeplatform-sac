@@ -201,6 +201,7 @@
                    , J.USE_PERIOD_UNIT_CD
                    , D.SELLER_MBR_NO
                    , D.CID
+                   , NVL(CPROD.PLUS19_YN, 'N') AS PLUS19_YN
                    , E.COMPT_YN
                    , E.VOD_TITL_NM
                    , E.STRM_EPSD_CNT
@@ -258,12 +259,14 @@
                     , TB_DP_PROD_RSHP               I
                     , TB_DP_USE_POLICY              J
                     , TB_DP_TENANT_PROD             TENANT
+                    , TB_DP_PROD                    CPROD
                WHERE A.MENU_ID = B.MENU_ID
                  AND A.MENU_ID = C.MENU_ID
                  AND B.PROD_ID = D.PROD_ID
                  AND B.PROD_ID = E.PROD_ID
                  AND B.PROD_ID = F.PROD_ID
                  AND B.PROD_ID = I.PART_PROD_ID
+                 AND CPROD.PROD_ID = I.PROD_ID
                  AND B.PROD_ID = TENANT.PROD_ID
                  AND D.USE_POLICY_ID = J.USE_POLICY_ID(+)
                  AND TENANT.TENANT_ID = #{tenantId}
@@ -536,6 +539,7 @@
                  , CE.BOOK_CONTENTS_CNT
                  , CE.SERIES_CONTENTS_CNT
                  , CE.MGZIN_CONTENTS_CNT
+                 , NVL(CPROD.PLUS19_YN, 'N') AS PLUS19_YN
              FROM  TB_DP_MENU_CATEGORY           A
                  , TB_DP_MENU_CATEGORY_PROD_MAPG B
                  , TB_DP_MENU_CATEGORY_DESC      C
@@ -547,6 +551,7 @@
                  , TB_DP_TENANT_PROD             TENANT
                  , TB_DP_SUB_CONTENTS            SUBCONTENTS 
                  , TB_DP_EBOOK_PROD              CE
+                 , TB_DP_PROD                    CPROD
             WHERE A.MENU_ID = B.MENU_ID
               AND A.MENU_ID = C.MENU_ID
               AND B.PROD_ID = D.PROD_ID
@@ -555,6 +560,7 @@
               AND I.PROD_ID = CE.PROD_ID
               AND B.PROD_ID = TENANT.PROD_ID
               AND B.PROD_ID = SUBCONTENTS.PROD_ID
+              AND CPROD.PROD_ID = I.PROD_ID
               AND D.USE_POLICY_ID = J.USE_POLICY_ID(+)
               AND TENANT.TENANT_ID = #{tenantId}
               AND B.PROD_ID = I.PART_PROD_ID
