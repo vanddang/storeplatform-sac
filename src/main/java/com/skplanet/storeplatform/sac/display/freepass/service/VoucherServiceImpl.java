@@ -294,12 +294,9 @@ public class VoucherServiceImpl implements VoucherService {
 
 		// 상품ID가 19+ 상품인지 조회
 		String plus19Yn = (String) this.commonDAO.queryForObject("Voucher.searchProdIdPlus19Yn", req.getProductId());
-		if (StringUtils.isEmpty(plus19Yn)) {
-			req.setPlus19Yn("N");
-		} else {
-			req.setPlus19Yn(plus19Yn);
-		}
-
+	
+		req.setPlus19Yn(plus19Yn);
+		
 		// 정액제 상품 조회
 		retMetaInfoList = this.commonDAO.queryForList("Voucher.selectVoucherDetail", req, MetaInfo.class);
 
