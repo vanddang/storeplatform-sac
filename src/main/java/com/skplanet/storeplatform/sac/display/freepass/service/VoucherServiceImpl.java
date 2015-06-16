@@ -288,14 +288,11 @@ public class VoucherServiceImpl implements VoucherService {
 			req.setCount(20);
 		}
 
-		// CMPX_PROD_GRP_CD 알아오기
-		String cmpxProdGrpCd = (String) this.commonDAO.queryForObject("Voucher.selectCmpxProdGrpCd", req);
-		req.setCmpxProdGrpCd(cmpxProdGrpCd);
+		// CMPX_PROD_GRP_CD, Plus19Yn 알아오기
+		MetaInfo beforeInfo = (MetaInfo) this.commonDAO.queryForObject("Voucher.selectCmpxProdGrpCd", req.getProductId());
+		req.setCmpxProdGrpCd(beforeInfo.getCmpxProdGrpCd());
+		req.setPlus19Yn(beforeInfo.getPlus19Yn());
 
-		// 상품ID가 19+ 상품인지 조회
-		String plus19Yn = (String) this.commonDAO.queryForObject("Voucher.searchProdIdPlus19Yn", req.getProductId());
-	
-		req.setPlus19Yn(plus19Yn);
 		
 		// 정액제 상품 조회
 		retMetaInfoList = this.commonDAO.queryForList("Voucher.selectVoucherDetail", req, MetaInfo.class);
