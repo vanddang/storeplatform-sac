@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
@@ -137,8 +138,6 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                 logger.debug("[DownloadComicLog] 구매건수 : {}", historyRes.getTotalCnt());
                 logger.debug("----------------------------------------------------------------");
 
-                String dwldStartDt = null; // 다운로드 시작일시
-                String dwldExprDt = null; // 다운로드 만료일시
                 String prchsCaseCd = null; // 선물 여부
                 String prchsProdId = null; // 구매 상품ID
                 String drmYn = null; // DRM 지원여부
@@ -148,18 +147,15 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                     List<Purchase> purchaseList = new ArrayList<Purchase>();
 
                     for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-                        dwldStartDt = historySacIn.getDwldStartDt();
-                        dwldExprDt = historySacIn.getDwldExprDt();
                         prchsCaseCd = historySacIn.getPrchsCaseCd();
                         prchsProdId = historySacIn.getProdId();
                         drmYn = historySacIn.getDrmYn();
                         permitDeviceYn = historySacIn.getPermitDeviceYn();
 
-						String prchsStateCheckedByDbTime = getDownloadPurchaseStateByDbTime(dwldStartDt, dwldExprDt);
-						String prchsState = DisplayConstants.PRCHS_STATE_TYPE_EXPIRED;
+						String prchsState = getDownloadPurchaseStateByDbTime(historySacIn);
 
                         // 구매상태 만료여부 확인
-                        if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime)) {
+                        if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
                             // 구매 및 선물 여부 확인
                             if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
                                 prchsState = "payment";
@@ -170,7 +166,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                         loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
                         addPurchaseIntoList(purchaseList, historySacIn, prchsState);
                         // 구매상태 만료여부 및 단말 지원여부 확인
-                        if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsStateCheckedByDbTime) || !"Y".equals(permitDeviceYn)) {
+                        if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !"Y".equals(permitDeviceYn)) {
                         	continue;
                         }
                         SearchDeviceIdSacReq deviceReq = null;
@@ -345,10 +341,10 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private String getDownloadPurchaseStateByDbTime(String dwldStartDt, String dwldExprDt) {
+	private String getDownloadPurchaseStateByDbTime(HistorySacIn historySacIn) {
 		DownloadComicSacReq req = new DownloadComicSacReq();
-		req.setDwldStartDt(dwldStartDt);
-		req.setDwldExprDt(dwldExprDt);
+		req.setDwldStartDt(historySacIn.getDwldStartDt());
+		req.setDwldExprDt(historySacIn.getDwldExprDt());
 
 		HashMap map = (HashMap) commonDAO.queryForObject("Download.getDownloadPurchaseState", req);
 		return (String) map.get("PURCHASE_STATE");
