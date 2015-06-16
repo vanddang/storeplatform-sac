@@ -102,26 +102,16 @@
             OV.RNUM
     </select>
     
-
-    <!-- 해당상품이 19+ 상품인지 체크말은  -->
-    <select id="searchProdIdPlus19Yn"  parameterType="String" resultType="String">
+    <!-- 복합상품 그룹코드 가져오기 -->
+    <select id="selectCmpxProdGrpCd" parameterType="String" resultType="metaInfo">
         SELECT 
-              NVL(A.PLUS19_YN ,'N') 
+               NVL(A.PLUS19_YN ,'N') as PLUS19_YN
+              ,CMPX_PROD_GRP_CD
         FROM  TB_DP_PROD A
              ,TB_DP_CMPX_PROD B
         WHERE A.PROD_ID = B.PROD_ID
-          AND A.PROD_ID = #{value} 
+          AND A.PROD_ID = #{productId}
           AND A.SVC_GRP_CD = 'DP000207'
-    </select>
-        
-    <!-- 복합상품 그룹코드 가져오기 -->
-    <select id="selectCmpxProdGrpCd" parameterType="VoucherDetailSacReq" resultType="String">
-        SELECT 
-            CMPX_PROD_GRP_CD 
-        FROM 
-            TB_DP_CMPX_PROD 
-        WHERE 
-            PROD_ID = #{productId}
     </select>
     
     <!-- 이용권 상품 상세 조회 -->
