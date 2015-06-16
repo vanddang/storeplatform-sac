@@ -18,7 +18,6 @@ import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.order.vo.AutoPrchsMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoList;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
@@ -117,28 +116,6 @@ public interface PurchaseOrderMakeDataService {
 	 */
 	public List<MembershipReserve> makeMembershipReserveList(List<PrchsDtlMore> prchsDtlMoreList,
 			MileageSubInfo mileageSubInfo);
-
-	/**
-	 * <pre>
-	 * 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록 생성.
-	 * </pre>
-	 * 
-	 * @param ebookfixrateInfo
-	 *            이북/코믹 전권 소장/대여 구매 정보 VO
-	 * 
-	 * @param episodeList
-	 *            이북/코믹 전권 소장/대여 에피소드 상품 정보 VO
-	 * 
-	 * @param cmpxProdClsfCd
-	 *            정액권 타입 : 전권소장 / 전권대여
-	 * 
-	 * @param statusCd
-	 *            구매상태코드
-	 * 
-	 * @return 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록
-	 */
-	public List<PrchsDtlMore> makeEbookComicEpisodeList(PrchsDtlMore ebookfixrateInfo,
-			List<EpisodeInfoRes> episodeList, String cmpxProdClsfCd, String statusCd);
 
 	/**
 	 * <pre>

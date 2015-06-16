@@ -9,37 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemDetailEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2ItemDetailEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
-import com.skplanet.storeplatform.purchase.client.common.vo.*;
-import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
-import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
-import com.skplanet.storeplatform.purchase.client.order.vo.*;
-import com.skplanet.storeplatform.purchase.client.promotion.sci.PurchasePromotionSCI;
-import com.skplanet.storeplatform.purchase.order.service.PurchaseOrderSCService;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.BannerInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.*;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
-import com.skplanet.storeplatform.sac.purchase.common.service.MembershipReserveService;
-import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
-import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
-import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
-import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
-import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShoppingOrderRepository;
-import com.skplanet.storeplatform.sac.purchase.order.vo.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -54,13 +30,77 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemDetailEcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2ItemDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
+import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
+import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
+import com.skplanet.storeplatform.purchase.client.common.vo.PaymentPromotion;
+import com.skplanet.storeplatform.purchase.client.common.vo.PpProperty;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
+import com.skplanet.storeplatform.purchase.client.common.vo.UniqueTid;
+import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
+import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
+import com.skplanet.storeplatform.purchase.client.order.vo.AutoPrchsMore;
+import com.skplanet.storeplatform.purchase.client.order.vo.ConfirmPurchaseScReq;
+import com.skplanet.storeplatform.purchase.client.order.vo.ConfirmPurchaseScRes;
+import com.skplanet.storeplatform.purchase.client.order.vo.CreateCompletePurchaseScReq;
+import com.skplanet.storeplatform.purchase.client.order.vo.MakeFreePurchaseScReq;
+import com.skplanet.storeplatform.purchase.client.order.vo.MakeFreePurchaseScRes;
+import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
+import com.skplanet.storeplatform.purchase.client.order.vo.ReservePurchaseScReq;
+import com.skplanet.storeplatform.purchase.client.order.vo.ReservePurchaseScRes;
+import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseListByStatusScReq;
+import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseListByStatusScRes;
+import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseSequenceAndDateRes;
+import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
+import com.skplanet.storeplatform.purchase.client.promotion.sci.PurchasePromotionSCI;
+import com.skplanet.storeplatform.purchase.order.service.PurchaseOrderSCService;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.BannerInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Banner;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.BannerInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.BannerInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoList;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseInfoSac;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderBannerInfoSac;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderIapInfoSac;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderPromotionInfoSac;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
+import com.skplanet.storeplatform.sac.purchase.common.service.MembershipReserveService;
+import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
+import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShoppingOrderRepository;
+import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyResult;
+import com.skplanet.storeplatform.sac.purchase.order.vo.MctSpareParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
+import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
 
 /**
- *
+ * 
  * 구매 서비스 구현
- *
+ * 
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 @Service
@@ -114,11 +154,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private PurchaseShoppingOrderRepository purchaseShoppingOrderRepository;
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * 비과금 구매 처리.
 	 * </pre>
-	 *
+	 * 
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 * @return 생성된 구매이력 건수
@@ -132,11 +172,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * Biz 쿠폰 발급 요청 처리.
 	 * </pre>
-	 *
+	 * 
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 * @return 생성된 구매이력 건수
@@ -149,11 +189,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * 상품 구매요청 처리.
 	 * </pre>
-	 *
+	 * 
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 * @return 생성된 구매이력 건수
@@ -263,25 +303,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		PurchaseUserDevice useUser = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getReceiveUserList().get(0) : purchaseOrderInfo
 				.getPurchaseUser();
-
-		// List<EpisodeInfoRes> episodeList0 = null;
-		//
-		// if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-		// PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE)
-		// || StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-		// PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_COMIC_FIXRATE)) {
-		// episodeList0 = this.purchaseDisplayRepository.searchEbookComicEpisodeList(prchsDtlMore.getTenantId(),
-		// prchsDtlMore.getCurrencyCd(), useUser.getDeviceModelCd(), prchsDtlMore.getProdId(),
-		// purchaseOrderInfo.getPurchaseProductList().get(0).getCmpxProdClsfCd());
-		// }
-		//
-		// // 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터
-		// List<PrchsDtlMore> ebookComicEpisodeList = null;
-		// if (CollectionUtils.isNotEmpty(episodeList0)) {
-		// ebookComicEpisodeList = this.purchaseOrderMakeDataService.makeEbookComicEpisodeList(prchsDtlMore,
-		// episodeList0, purchaseOrderInfo.getPurchaseProductList().get(0).getCmpxProdClsfCd(),
-		// PurchaseConstants.PRCHS_STATUS_COMPT);
-		// }
 
 		// -------------------------------------------------------------------------------------------
 		// 정액제 상품 에피소드 상품 목록 조회 : 일괄 구매 대상 경우
@@ -436,7 +457,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			makeFreePurchaseScReq.setPrchsDtlMoreList(prchsDtlMoreList);
 			makeFreePurchaseScReq.setPrchsProdCntList(prchsProdCntList);
 			makeFreePurchaseScReq.setPaymentList(paymentList);
-			// makeFreePurchaseScReq.setEbookComicEpisodeList(ebookComicEpisodeList);
 			makeFreePurchaseScReq.setPackageEpisodeList(packageEpisodeList);
 
 			MakeFreePurchaseScRes makeFreePurchaseScRes = this.purchaseOrderSCI.makeFreePurchase(makeFreePurchaseScReq);
@@ -671,11 +691,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * 구매인증.
 	 * </pre>
-	 *
+	 * 
 	 * @param verifyOrderInfo
 	 *            구매인증 요청 정보
 	 */
@@ -763,9 +783,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 결제수단 별 가능 거래금액/비율 조정 정보
 		res.setCdMaxAmtRate(checkPaymentPolicyResult.getPaymentAdjInfo());
-		// res.setCdMaxAmtRate(this.adjustPaymethod(sktPaymethodInfo, prchsDtlMore.getTenantId(),
-		// verifyOrderInfo.getSystemId(), prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("prodCaseCd"),
-		// reservedDataMap.get("cmpxProdClsfCd"), prchsDtlMore.getTotAmt().doubleValue()));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제수단 정렬 재조정
@@ -775,8 +792,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// T store 쿠폰 조회
 
-		// this.logger.info("PRCHS,ORDER,SAC,VERIFY,ORDERSACRES,RES,{}",
-		// ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		if (StringUtils.contains(res.getCdMaxAmtRate(), "26:0:0") == false
 				&& StringUtils.equals(PurchaseConstants.TENANT_ID_TSTORE, verifyOrderInfo.getTenantId())) {
 			List<String> prodIdList = new ArrayList<String>();
@@ -790,8 +805,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				purchaseQty = prchsDtlMoreList.size();
 			}
 			// (구) 쿠폰 리스트 규격 - 차후 삭제 필요
-//			res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreOldCouponList(payUserKey,
-//					reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
+			// res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreOldCouponList(payUserKey,
+			// reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
 
 			purchaseQty = prchsDtlMoreList.size();
 			// (신) 쿠폰 리스트 규격
@@ -800,7 +815,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		} else {
 			// (구) 쿠폰 리스트 규격 - 차후 삭제 필요
-//			res.setNoCouponList("NULL");
+			// res.setNoCouponList("NULL");
 			// (신) 쿠폰 리스트 규격
 			res.setCouponList("NULL");
 		}
@@ -971,11 +986,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * 유료구매 - 구매확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장.
 	 * </pre>
-	 *
+	 * 
 	 * @param notifyPaymentReq
 	 *            결제결과 정보
 	 */
@@ -1090,20 +1105,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
-		// // -------------------------------------------------------------------------------------------
-		// // 이북/코믹 전권 소장/대여 에피소드 상품 목록 조회
-		//
-		// List<EpisodeInfoRes> episodeList0 = null;
-		//
-		// if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-		// PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE)
-		// || StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-		// PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_COMIC_FIXRATE)) {
-		// episodeList0 = this.purchaseDisplayRepository.searchEbookComicEpisodeList(tenantId,
-		// prchsDtlMore.getCurrencyCd(), reservedDataMap.get("useDeviceModelCd"), prchsDtlMore.getProdId(),
-		// reservedDataMap.get("cmpxProdClsfCd"));
-		// }
-
 		// -------------------------------------------------------------------------------------------
 		// 정액제 상품 에피소드 상품 목록 조회 : 일괄 구매 대상 경우
 
@@ -1126,9 +1127,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -------------------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
 
- 		String tstoreNotiPublishType = PurchaseConstants.TSTORE_NOTI_PUBLISH_TYPE_SYNC;
+		String tstoreNotiPublishType = PurchaseConstants.TSTORE_NOTI_PUBLISH_TYPE_SYNC;
 
-                		List<ShoppingCouponPublishInfo> shoppingCouponList = null;
+		List<ShoppingCouponPublishInfo> shoppingCouponList = null;
 
 		if (prchsDtlMore.getTenantProdGrpCd().startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 
@@ -1263,13 +1264,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				autoPrchsMoreList = this.purchaseOrderMakeDataService.makeAutoPrchsMoreList(prchsDtlMore,
 						reservedDataMap.get("deviceModelCd"), reservedDataMap.get("autoLastPeriod"));
 			}
-
-			// // 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터
-			// List<PrchsDtlMore> ebookComicEpisodeList = null;
-			// if (CollectionUtils.isNotEmpty(episodeList0)) {
-			// ebookComicEpisodeList = this.purchaseOrderMakeDataService.makeEbookComicEpisodeList(prchsDtlMore,
-			// episodeList0, reservedDataMap.get("cmpxProdClsfCd"), PurchaseConstants.PRCHS_STATUS_COMPT);
-			// }
 
 			// 정액제 상품 하위 에피소드 상품 - 일괄 구매이력 생성 요청 데이터
 			List<PrchsDtlMore> packageEpisodeList = null;
@@ -1412,7 +1406,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			confirmPurchaseScReq.setPaymentList(paymentList); // 결제
 			confirmPurchaseScReq.setAutoPrchsMoreList(autoPrchsMoreList); // 자동구매
 			confirmPurchaseScReq.setShoppingCouponList(shoppingCouponList); // 쇼핑발급 목록
-			// confirmPurchaseScReq.setEbookComicEpisodeList(ebookComicEpisodeList);
 			confirmPurchaseScReq.setPackageEpisodeList(packageEpisodeList);
 			confirmPurchaseScReq.setMembershipReserveList(membershipReserveList);
 
@@ -1544,11 +1537,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * IAP 구매/결제 통합 구매이력 생성 요청.
 	 * </pre>
-	 *
+	 * 
 	 * @param req
 	 *            구매/결제 통합 구매이력 생성 요청 VO
 	 * @param tenantId
@@ -2015,7 +2008,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 상품별 정책은 상품 1개일 경우에만 적용: IAP/쇼핑 별도 정책 적용 상품은 하나의 상품만 구매 가능하다는 전제.
 		String checkProdId = null;
 		if (prchsDtlMoreList.size() == 1
-				|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+				|| StringUtils
+						.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
 				|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			checkProdId = prchsDtlMore.getProdId();

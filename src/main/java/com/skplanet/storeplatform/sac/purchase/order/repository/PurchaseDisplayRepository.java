@@ -15,7 +15,6 @@ import java.util.Map;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoList;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
@@ -80,27 +79,6 @@ public interface PurchaseDisplayRepository {
 	 * @return 정액제 상품 DRM 정보
 	 */
 	public FreePassInfo searchFreePassDrmInfo(String tenantId, String langCd, String fixrateProdId, String episodeProdId);
-
-	/**
-	 * 
-	 * <pre>
-	 * 이북/코믹 전권 소장/대여 상품에 딸린 에피소드 상품 목록 조회.
-	 * </pre>
-	 * 
-	 * @param tenantId
-	 *            테넌트ID
-	 * @param langCd
-	 *            언어코드
-	 * @param deviceModelCd
-	 *            디바이스 모델 코드
-	 * @param prodId
-	 *            이북/코믹 전권 소장/대여 상품ID
-	 * @param cmpxProdClsfCd
-	 *            복합 상품 구분 코드
-	 * @return 에피소드 상품 목록
-	 */
-	public List<EpisodeInfoRes> searchEbookComicEpisodeList(String tenantId, String langCd, String deviceModelCd,
-			String prodId, String cmpxProdClsfCd);
 
 	/**
 	 * 
