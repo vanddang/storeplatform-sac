@@ -50,12 +50,9 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
  */
 @Service
 public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataService {
-	private static final String PRE_DOWNLOAD_FLAG = "A"; // DRM 적용상품에 대해 다운로드 이전 상태 관리 플래그 값
 
 	@Value("#{systemProperties['spring.profiles.active']}")
 	private String envServerLevel;
-	@Value("#{propertiesForSac['purchase.order.drm.redate']}")
-	private boolean drmRedate;
 
 	@Autowired
 	private PurchaseOrderAssistService purchaseOrderAssistService;
@@ -224,21 +221,6 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					}
 
 					prchsDtlMore.setDrmYn(product.getDrmYn());
-					// <DB 컬럼 의미 확장>
-					// VOD/EBOOK DRM 적용 상품 대상으로
-					// - 초기 재다운로드 종료일시는 무제한 (다운로드 비대상인 정액제상품 & 정액제로 이용하는 에피소드 상품은 제외)
-					// - DRM_YN 값 변경
-					// - 외부구매경로(T프리미엄 등 비과금 구매요청 경로), 정액제 상품, 정액제 이용 에피소드 상품 경우 제외
-					if (this.drmRedate) {
-						if (StringUtils.equals("Y", product.getDrmYn())
-								&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
-								&& purchaseOrderInfo.isFlat() == false
-								&& StringUtils.isBlank(product.getUseFixrateProdId())
-								&& purchaseOrderInfo.isFreeChargeReq() == false) {
-							prchsDtlMore.setDwldExprDt(PurchaseConstants.UNLIMITED_DATE);
-							prchsDtlMore.setDrmYn(PRE_DOWNLOAD_FLAG);
-						}
-					}
 
 					prchsDtlMore.setUseFixrateProdId(product.getUseFixrateProdId());
 					prchsDtlMore.setUseFixratePrchsId(product.getUseFixratePrchsId());
