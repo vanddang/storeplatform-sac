@@ -240,7 +240,7 @@
 				</foreach>
             </if>    
             <if test='plus19Yn == "N"'>
-            AND PD.PLUS19_YN = 'N' OR PD.PLUS19_YN IS NULL
+            AND (PD.PLUS19_YN = 'N' OR PD.PLUS19_YN IS NULL)
             </if>
                     
     ) IV LEFT OUTER JOIN TB_DP_PROD_IMG BIG
