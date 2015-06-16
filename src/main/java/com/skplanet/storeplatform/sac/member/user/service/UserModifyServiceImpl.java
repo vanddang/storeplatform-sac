@@ -1237,14 +1237,74 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
 
+		String extraProfile = null;
+		if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK, req.getSocialAcctType())) {
+			extraProfile = MemberConstants.USER_EXTRA_FACEBOOK_ID;
+		} else if (StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE, req.getSocialAcctType())) {
+			extraProfile = MemberConstants.USER_EXTRA_GOOGLE_ID;
+		} else if (StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO, req.getSocialAcctType())) {
+			extraProfile = MemberConstants.USER_EXTRA_KAKAO_ID;
+		}
+
 		// 1.회원 정보 조회
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		searchUserRequest.setCommonRequest(commonRequest);
 		DetailReq detailReq = new DetailReq();
 		detailReq.setUserKey(req.getUserKey());
 		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 		detailReq.setSearchExtent(searchExtent);
-		this.userSearchService.detailV2(header, detailReq);
+
+		DetailV2Res detailV2Res = this.userSearchService.detailV2(header, detailReq);
+		List<MbrMangItemPtcr> delPtcrList = null;
+		if (detailV2Res.getUserInfo() != null) {
+			List<UserExtraInfo> userExtraInfos = detailV2Res.getUserInfo().getUserExtraInfoList();
+			if (userExtraInfos != null && userExtraInfos.size() > 0) {
+				MbrMangItemPtcr ptcr = null;
+				delPtcrList = new ArrayList<MbrMangItemPtcr>();
+				for (UserExtraInfo userExtraInfo : userExtraInfos) {
+					// 삭제 필요 계정 정보들
+					if (!StringUtils.equals(userExtraInfo.getExtraProfile(), extraProfile)) {
+						// facebook
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK_ID, userExtraInfo.getExtraProfile())) {
+							ptcr = new MbrMangItemPtcr();
+							ptcr.setExtraProfile(userExtraInfo.getExtraProfile());
+							delPtcrList.add(ptcr);
+							ptcr = new MbrMangItemPtcr();
+							ptcr.setExtraProfile(MemberConstants.USER_EXTRA_FACEBOOKACCESSTOKEN);
+							delPtcrList.add(ptcr);
+						}
+						// google
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE_ID, userExtraInfo.getExtraProfile())) {
+							ptcr = new MbrMangItemPtcr();
+							ptcr.setExtraProfile(userExtraInfo.getExtraProfile());
+							delPtcrList.add(ptcr);
+							ptcr = new MbrMangItemPtcr();
+							ptcr.setExtraProfile(MemberConstants.USER_EXTRA_GOOGLE_ACCESSTOKEN);
+							delPtcrList.add(ptcr);
+						}
+						// kakao
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO_ID, userExtraInfo.getExtraProfile())) {
+							ptcr = new MbrMangItemPtcr();
+							ptcr.setExtraProfile(userExtraInfo.getExtraProfile());
+							delPtcrList.add(ptcr);
+							ptcr = new MbrMangItemPtcr();
+							ptcr.setExtraProfile(MemberConstants.USER_EXTRA_KAKAO_ACCESSTOKEN);
+							delPtcrList.add(ptcr);
+						}
+					}
+				}
+			}
+		}
+
+		if (delPtcrList != null) {
+			// 등록 된 부가속성 소셜계정 삭제 처리.
+			RemoveManagementRequest removeManagementRequest = new RemoveManagementRequest();
+			removeManagementRequest.setCommonRequest(commonRequest);
+			removeManagementRequest.setUserKey(req.getUserKey());
+			removeManagementRequest.setMbrMangItemPtcr(delPtcrList);
+			this.userSCI.removeManagement(removeManagementRequest);
+		}
 
 		// 2.부가속성 등록/수정
 		UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
