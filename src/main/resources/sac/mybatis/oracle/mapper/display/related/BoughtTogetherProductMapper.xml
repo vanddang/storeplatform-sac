@@ -72,9 +72,6 @@
                 <if test='plus19Yn == "N"'> /* 19+ 상품 코드 */
                 AND (B.PLUS19_YN IS NULL OR B.PLUS19_YN  = 'N') 
                 </if>
-                <if test='plus19Yn == "Y"'> /* 19+ 상품 코드 */
-                AND (B.PLUS19_YN IS NULL OR B.PLUS19_YN  = 'Y') 
-                </if>                      
                 <if test="arrayExceptId != null"> /* 제외 상품ID */
                     AND A.RECOM_PROD_ID NOT IN 
                     <foreach collection="arrayExceptId" item="exceptId" separator="," open="(" close=")">
@@ -137,9 +134,6 @@
 	              <if test='plus19Yn == "N"'> /* 19+ 상품 코드 */
 	              AND (CH.PLUS19_YN IS NULL OR CH.PLUS19_YN  = 'N') 
 	              </if>
-	              <if test='plus19Yn == "Y"'> /* 19+ 상품 코드 */
-	              AND (CH.PLUS19_YN IS NULL OR CH.PLUS19_YN  = 'Y') 
-	              </if>                      
                   <if test="arrayExceptId != null"> /* 제외 상품ID */
                     AND A.RECOM_PROD_ID NOT IN 
                     <foreach collection="arrayExceptId" item="exceptId" separator="," open="(" close=")">
@@ -219,9 +213,6 @@
                 <if test='plus19Yn == "N"'> /* 19+ 상품 코드 */
                 AND (B.PLUS19_YN IS NULL OR B.PLUS19_YN  = 'N') 
                 </if>
-                <if test='plus19Yn == "Y"'> /* 19+ 상품 코드 */
-                AND (B.PLUS19_YN IS NULL OR B.PLUS19_YN  = 'Y') 
-                </if>                           
                 <if test="arrayProdGradeCd != null"> /* 상품 이용 등급 */
                 AND B.PROD_GRD_CD IN
                     <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
@@ -288,9 +279,6 @@
                    <if test='plus19Yn == "N"'> /* 19+ 상품 코드 */
                    AND (CH.PLUS19_YN IS NULL OR CH.PLUS19_YN  = 'N') 
                    </if>
-                   <if test='plus19Yn == "Y"'> /* 19+ 상품 코드 */
-                   AND (CH.PLUS19_YN IS NULL OR CH.PLUS19_YN  = 'Y') 
-                   </if>                  
                    <if test="arrayProdGradeCd != null"> /* 상품 이용 등급 */
                    AND E.PROD_GRD_CD IN
                     <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
