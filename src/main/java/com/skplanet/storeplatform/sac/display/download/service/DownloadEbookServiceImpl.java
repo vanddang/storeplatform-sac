@@ -25,7 +25,6 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
@@ -155,7 +154,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				log.debug("[DownloadEbookLog] 구매건수 : {}", historyRes.getTotalCnt());
 				log.debug("----------------------------------------------------------------");
 
-				String prchsCaseCd = null; // 선물 여부
 				String prchsProdId = null; // 구매 상품ID
 				String drmYn = null; // DRM 지원여부
 				String permitDeviceYn = null; // 단말지원여부
@@ -164,22 +162,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
 						drmYn = historySacIn.getDrmYn();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 
-						String prchsState = getDownloadPurchaseStateByDbTime(historySacIn);
-
-						// 구매상태 만료여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
-							// 구매 및 선물 여부 확인
-							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
-								prchsState = "payment";
-							} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
-								prchsState = "gift";
-							}
-						}
+						String prchsState = setPrchsState(historySacIn);
 						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
 						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
 						// 구매상태 만료여부 및 단말 지원여부 확인
@@ -230,6 +217,21 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         supportService.logDownloadResult(ebookReq.getUserKey(), ebookReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
         return ebookRes;
+	}
+
+	private String setPrchsState(HistorySacIn historySacIn) {
+		String prchsState = getDownloadPurchaseStateByDbTime(historySacIn);
+
+		// 구매상태 만료여부 확인
+		if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+			// 구매 및 선물 여부 확인
+			if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(historySacIn.getPrchsCaseCd())) {
+				prchsState = "payment";
+			} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(historySacIn.getPrchsCaseCd())) {
+				prchsState = "gift";
+			}
+		}
+		return prchsState;
 	}
 
 	private void setRequest(DownloadEbookSacReq ebookReq, SacRequestHeader header) {

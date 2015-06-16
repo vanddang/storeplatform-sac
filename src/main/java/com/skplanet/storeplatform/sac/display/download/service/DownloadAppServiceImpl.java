@@ -31,7 +31,6 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
@@ -198,7 +197,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				log.debug("[DownloadAppServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
 				log.debug("---------------------------------------------------------------------");
 
-				String prchsCaseCd = null; // 선물 여부
 				String prchsProdId = null; // 구매 상품ID
 				String permitDeviceYn = null; // 단말 지원여부
 
@@ -206,21 +204,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-						prchsCaseCd = historySacIn.getPrchsCaseCd();
 						prchsProdId = historySacIn.getProdId();
 						permitDeviceYn = historySacIn.getPermitDeviceYn();
 
-						String prchsState = getDownloadPurchaseStateByDbTime(historySacIn);
-
-						// 구매상태 만료여부 확인
-						if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
-							// 구매 및 선물 여부 확인
-							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
-								prchsState = "payment";
-							} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
-								prchsState = "gift";
-							}
-						}
+						String prchsState = setPrchsState(historySacIn);
 						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
 						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
 						// 구매상태 만료 여부 확인
@@ -295,6 +282,21 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         supportService.logDownloadResult(downloadAppSacReq.getUserKey(), downloadAppSacReq.getDeviceKey(), productId, encryptionList, sw.getTime());
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
+	}
+
+	private String setPrchsState(HistorySacIn historySacIn) {
+		String prchsState = getDownloadPurchaseStateByDbTime(historySacIn);
+
+		// 구매상태 만료여부 확인
+		if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+			// 구매 및 선물 여부 확인
+			if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(historySacIn.getPrchsCaseCd())) {
+				prchsState = "payment";
+			} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(historySacIn.getPrchsCaseCd())) {
+				prchsState = "gift";
+			}
+		}
+		return prchsState;
 	}
 
 	private void setRequest(DownloadAppSacReq downloadAppSacReq, TenantHeader tenantHeader, DeviceHeader deviceHeader, String osVersion) {
