@@ -191,7 +191,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						}
 						log.debug("----------------------------  start set Purchase Info  ------------------------------------");
 						SearchDeviceIdSacReq deviceReq = null;
-						SearchDeviceIdSacRes deviceRes = null;
+						SearchDeviceIdSacRes deviceRes = new SearchDeviceIdSacRes();
 						boolean memberFlag = true;
 
 						try {
@@ -460,9 +460,16 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	 * @param historySacIn
 	 */
 	private void mapDrmYn(MetaInfo metaInfo, HistorySacIn historySacIn) {
-		String prchsProdId = historySacIn.getProdId();
-		String prchsReqPathCd = historySacIn.getPrchsReqPathCd();
-		String useFixrateProdId = historySacIn.getUseFixrateProdId();
+
+		String prchsProdId = "";
+		String prchsReqPathCd = "";
+		String useFixrateProdId = "";
+
+		if (historySacIn != null) {
+			prchsProdId = historySacIn.getProdId();
+			prchsReqPathCd = historySacIn.getPrchsReqPathCd();
+			useFixrateProdId = historySacIn.getUseFixrateProdId();
+		}
 
 		// 2014.07.01. kdlim. 구매 내역 drmYn 값이 정확하지 않아 상품정보 drmYn으로 변경
 		// 단, T Freemium을 통한 구매건의 경우는 무조건 DRM적용이므로 아래의 조건을 예외처리 해야함.
