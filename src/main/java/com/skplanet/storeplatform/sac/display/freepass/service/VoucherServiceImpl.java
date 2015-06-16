@@ -294,6 +294,8 @@ public class VoucherServiceImpl implements VoucherService {
 		if (null != beforeInfo) {
 			req.setCmpxProdGrpCd(beforeInfo.getCmpxProdGrpCd());
 			req.setPlus19Yn(beforeInfo.getPlus19Yn());
+		}else{
+			req.setPlus19Yn("N");
 		}
 
 		// 정액제 상품 조회
