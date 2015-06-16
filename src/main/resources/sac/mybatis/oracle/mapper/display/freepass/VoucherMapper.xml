@@ -105,7 +105,13 @@
 
     <!-- 해당상품이 19+ 상품인지 체크말은  -->
     <select id="searchProdIdPlus19Yn"  parameterType="String" resultType="String">
-        SELECT PLUS19_YN FROM TB_DP_PROD WHERE PROD_ID = #{value} AND SVC_GRP_CD = 'DP000207'
+        SELECT 
+              NVL(A.PLUS19_YN ,'N') 
+        FROM  TB_DP_PROD A
+             ,TB_DP_CMPX_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND A.PROD_ID = #{value} 
+          AND A.SVC_GRP_CD = 'DP000207'
     </select>
         
     <!-- 복합상품 그룹코드 가져오기 -->
