@@ -398,7 +398,11 @@
         , R.PROD_STATUS_CD
         , FC_GET_CM_CD_NM(R.BRDC_COMP_CD, 'ko') AS BRDC_COMP_NM
         , R.PLAY_TM as EPSD_PLAY_TM
+        ]]>
+        <if test="prodIdType == 'CHANNEL'">
         , R.PLUS19_YN
+        </if>
+        <![CDATA[
         FROM
         (
             SELECT
@@ -453,10 +457,7 @@
             ]]>
              <if test="prodIdType == 'CHANNEL'">
             , NVL(CPROD.PLUS19_YN, 'N') AS PLUS19_YN
-            </if>
-             <if test="prodIdType == 'EPISODE'">
-            , NVL(EPROD.PLUS19_YN, 'N') AS PLUS19_YN
-            </if>            
+            </if>         
             <![CDATA[
         FROM TB_DP_PROD_RSHP RSHP
           INNER JOIN TB_DP_TENANT_PROD CTPROD

@@ -187,7 +187,9 @@
 		     , A1.PROD_DTL_DESC
 		     , A1.PROD_STATUS_CD
 		     , FC_GET_CM_CD_NM(A1.BRDC_COMP_CD, #{tenantHeader.langCd}) AS BRDC_COMP_NM
+		     <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
 		     , PLUS19_YN
+		     </if>
 		  FROM (SELECT A.PROD_ID
 		             , A.PART_PROD_ID
 		             , B.PROD_GRD_CD
@@ -236,9 +238,6 @@
 		             , P.MENU_NM AS TOP_MENU_NM
 		             <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
 		             , NVL(B.PLUS19_YN, 'N') AS PLUS19_YN
-		             </if>
-		             <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-		             , NVL(I.PLUS19_YN, 'N') AS PLUS19_YN
 		             </if>
 		          FROM TB_DP_PROD_RSHP A
 		             , TB_DP_PROD B  /* 채널 */
