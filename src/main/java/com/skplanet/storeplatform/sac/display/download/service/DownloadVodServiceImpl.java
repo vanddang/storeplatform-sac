@@ -151,78 +151,74 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			log.debug("---------------------------------------------------------------------");
 			log.debug("[DownloadVodServiceImpl] purchaseFlag :{}", purchaseFlag);
 			log.debug("[DownloadVodServiceImpl] historyRes :{}", historyRes);
-
 			if (purchaseFlag && historyRes != null) {
 				log.debug("[DownloadVodServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
 				log.debug("---------------------------------------------------------------------");
 				String permitDeviceYn = null; // 단말 지원여부
+				List<Purchase> purchaseList = new ArrayList<Purchase>();
 
-				if (historyRes.getTotalCnt() > 0) {
-					List<Purchase> purchaseList = new ArrayList<Purchase>();
+				for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
+					permitDeviceYn = historySacIn.getPermitDeviceYn();
 
-					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-						permitDeviceYn = historySacIn.getPermitDeviceYn();
+					String prchsState = setPrchsState(historySacIn);
+					loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
+					resetExprDtOfGift(historySacIn, downloadVodSacReq, sysDate, prchsState);
+					prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
 
-						String prchsState = setPrchsState(historySacIn);
-						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
-						resetExprDtOfGift(historySacIn, downloadVodSacReq, sysDate, prchsState);
-						prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
+					addPurchaseIntoList(purchaseList, historySacIn, prchsState);
+					/************************************************************************************************
+					 * 구매 정보에 따른 암호화 시작
+					 ************************************************************************************************/
+					log.debug("----------------------------------------------------------------");
+					log.debug("[DownloadVodServiceImpl] prchsState	:	{}", prchsState);
+					log.debug("----------------------------------------------------------------");
 
-						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
-						/************************************************************************************************
-						 * 구매 정보에 따른 암호화 시작
-						 ************************************************************************************************/
-						log.debug("----------------------------------------------------------------");
-						log.debug("[DownloadVodServiceImpl] prchsState	:	{}", prchsState);
-						log.debug("----------------------------------------------------------------");
-
-						// 구매상태 만료 여부 확인
-						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !permitDeviceYn.equals("Y")) {
-							continue;
-						}
-						log.debug("----------------------------  start set Purchase Info  ------------------------------------");
-						SearchDeviceIdSacReq deviceReq = null;
-						SearchDeviceIdSacRes deviceRes = new SearchDeviceIdSacRes();
-						boolean memberFlag = true;
-
-						try {
-							deviceReq = makeSearchDeviceIdSacReq(downloadVodSacReq, tenantHeader);
-							deviceRes = deviceSCI.searchDeviceId(deviceReq);
-						} catch (Exception ex) {
-							memberFlag = false;
-							log.debug("[DownloadVodServiceImpl] Device Search Exception : {}");
-							log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-							// throw new StorePlatformException("SAC_DSP_1001", ex);
-						}
-
-						log.debug("----------------------------------------------------------------");
-						log.debug("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
-						log.debug("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
-						log.debug("----------------------------------------------------------------");
-
-						// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-						if (!"Y".equals(deviceRes.getAuthYn())) {
-							log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-						} else if (memberFlag && deviceRes != null) {
-							setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
-                            Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
-							encryptionList.add(encryption);
-							loggingEncResult(encryption);
-						}
-						// 구매 정보
-						product.setPurchaseList(purchaseList);
-						log.debug("----------------------------------------------------------------");
-						// 암호화 정보
-						if (!encryptionList.isEmpty()) {
-							log.debug("[DownloadVodServiceImpl]	setDl : {}");
-							product.setDl(encryptionList);
-						}
-
-						log.debug("----------------------------  end set Purchase Info  ------------------------------------");
-
-						break;
-
+					// 구매상태 만료 여부 확인
+					if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !permitDeviceYn.equals("Y")) {
+						continue;
 					}
+					log.debug("----------------------------  start set Purchase Info  ------------------------------------");
+					SearchDeviceIdSacReq deviceReq = null;
+					SearchDeviceIdSacRes deviceRes = new SearchDeviceIdSacRes();
+					boolean memberFlag = true;
+
+					try {
+						deviceReq = makeSearchDeviceIdSacReq(downloadVodSacReq, tenantHeader);
+						deviceRes = deviceSCI.searchDeviceId(deviceReq);
+					} catch (Exception ex) {
+						memberFlag = false;
+						log.debug("[DownloadVodServiceImpl] Device Search Exception : {}");
+						log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+						// throw new StorePlatformException("SAC_DSP_1001", ex);
+					}
+
+					log.debug("----------------------------------------------------------------");
+					log.debug("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
+					log.debug("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
+					log.debug("----------------------------------------------------------------");
+
+					// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+					if (!"Y".equals(deviceRes.getAuthYn())) {
+						log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
+					} else if (memberFlag && deviceRes != null) {
+						setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
+                        Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
+						encryptionList.add(encryption);
+						loggingEncResult(encryption);
+					}
+					// 구매 정보
+					product.setPurchaseList(purchaseList);
+					log.debug("----------------------------------------------------------------");
+					// 암호화 정보
+					if (!encryptionList.isEmpty()) {
+						log.debug("[DownloadVodServiceImpl]	setDl : {}");
+						product.setDl(encryptionList);
+					}
+
+					log.debug("----------------------------  end set Purchase Info  ------------------------------------");
+
+					break;
+
 				}
 			}
 		}

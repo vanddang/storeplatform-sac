@@ -148,67 +148,62 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			log.debug("[DownloadEbookLog] purchasePassFlag : {}", purchasePassFlag);
 			log.debug("[DownloadEbookLog] historyRes : {}", historyRes);
 			log.debug("----------------------------------------------------------------");
-
 			if (purchasePassFlag && historyRes != null) {
 				log.debug("----------------------------------------------------------------");
 				log.debug("[DownloadEbookLog] 구매건수 : {}", historyRes.getTotalCnt());
 				log.debug("----------------------------------------------------------------");
-
 				String prchsProdId = null; // 구매 상품ID
 				String drmYn = null; // DRM 지원여부
 				String permitDeviceYn = null; // 단말지원여부
+				List<Purchase> purchaseList = new ArrayList<Purchase>();
 
-				if (historyRes.getTotalCnt() > 0) {
-					List<Purchase> purchaseList = new ArrayList<Purchase>();
+				for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
+					prchsProdId = historySacIn.getProdId();
+					drmYn = historySacIn.getDrmYn();
+					permitDeviceYn = historySacIn.getPermitDeviceYn();
 
-					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-						prchsProdId = historySacIn.getProdId();
-						drmYn = historySacIn.getDrmYn();
-						permitDeviceYn = historySacIn.getPermitDeviceYn();
-
-						String prchsState = setPrchsState(historySacIn);
-						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
-						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
-						// 구매상태 만료여부 및 단말 지원여부 확인
-						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !"Y".equals(permitDeviceYn)) {
-							continue;
-						}
-						SearchDeviceIdSacReq deviceReq = null;
-						SearchDeviceIdSacRes deviceRes = null;
-						boolean memberPassFlag = true;
-
-						try {
-							deviceReq = makeSearchDeviceIdSacReq(ebookReq, header);
-							deviceRes = deviceSCI.searchDeviceId(deviceReq);
-						} catch (Exception ex) {
-							memberPassFlag = false;
-							log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
-						}
-
-						log.debug("----------------------------------------------------------------");
-						log.debug("[DownloadEbookLog] memberPassFlag : {}", memberPassFlag);
-						log.debug("[DownloadEbookLog] deviceRes : {}", deviceRes);
-						log.debug("----------------------------------------------------------------");
-
-						// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-						if (!"Y".equals(deviceRes.getAuthYn())) {
-							log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-						} else if (memberPassFlag && deviceRes != null) {
-							setMetaInfo(metaInfo, historySacIn, ebookReq, reqExpireDate, prchsProdId, drmYn, prchsState, deviceRes);
-                            Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
-							encryptionList.add(encryption);
-							loggingEncResult(encryption);
-						}
-						// 구매 정보
-						product.setPurchaseList(purchaseList);
-
-						// 암호화 정보
-						if (!encryptionList.isEmpty()) {
-							product.setDl(encryptionList);
-						}
-
-						break;
+					String prchsState = setPrchsState(historySacIn);
+					loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
+					addPurchaseIntoList(purchaseList, historySacIn, prchsState);
+					// 구매상태 만료여부 및 단말 지원여부 확인
+					if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !"Y".equals(permitDeviceYn)) {
+						continue;
 					}
+					SearchDeviceIdSacReq deviceReq = null;
+					SearchDeviceIdSacRes deviceRes = null;
+					boolean memberPassFlag = true;
+
+					try {
+						deviceReq = makeSearchDeviceIdSacReq(ebookReq, header);
+						deviceRes = deviceSCI.searchDeviceId(deviceReq);
+					} catch (Exception ex) {
+						memberPassFlag = false;
+						log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
+					}
+
+					log.debug("----------------------------------------------------------------");
+					log.debug("[DownloadEbookLog] memberPassFlag : {}", memberPassFlag);
+					log.debug("[DownloadEbookLog] deviceRes : {}", deviceRes);
+					log.debug("----------------------------------------------------------------");
+
+					// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+					if (!"Y".equals(deviceRes.getAuthYn())) {
+						log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
+					} else if (memberPassFlag && deviceRes != null) {
+						setMetaInfo(metaInfo, historySacIn, ebookReq, reqExpireDate, prchsProdId, drmYn, prchsState, deviceRes);
+                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+						encryptionList.add(encryption);
+						loggingEncResult(encryption);
+					}
+					// 구매 정보
+					product.setPurchaseList(purchaseList);
+
+					// 암호화 정보
+					if (!encryptionList.isEmpty()) {
+						product.setDl(encryptionList);
+					}
+
+					break;
 				}
 			}
 		}
