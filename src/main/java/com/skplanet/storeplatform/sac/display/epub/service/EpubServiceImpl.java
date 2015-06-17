@@ -737,7 +737,9 @@ public class EpubServiceImpl implements EpubService {
 				rights.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_SUBSCRIPTION);
 			}
 		}
-
+		
+		// 19+ 상품여부
+		rights.setPlus19Yn(mapperVO.getPlus19Yn());
 
 		rights.setGrade(mapperVO.getProdGrdCd());
 		// 소장 정보

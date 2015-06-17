@@ -178,6 +178,9 @@ public class EpubDetail extends CommonInfo {
 	private Integer bookFreeCnt;
 	private Integer serialFreeCnt;
 	private Integer magazineFreeCnt;
+	
+	/** 19+ 상품여부 */
+	private String plus19Yn;	
 
 	// 미리보기
 	private String samplUrl;
@@ -1053,6 +1056,14 @@ public class EpubDetail extends CommonInfo {
 
 	public void setLikeYn(String likeYn) {
 		this.likeYn = likeYn;
+	}
+	
+	public String getPlus19Yn() {
+		return plus19Yn;
+	}
+
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
 	}
 
 	
