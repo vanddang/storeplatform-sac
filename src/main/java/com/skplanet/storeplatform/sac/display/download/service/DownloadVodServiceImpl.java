@@ -253,7 +253,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	// 선물인경우 다운로드 시점에 만료기간을 reset한다.
 	// 이는 선물 받은 상품이 다운로드 하는 시점에 만료가 되어 사용할 수 없게 되는 것을 방지하기 위함이다.
 	private void resetExprDtOfGift(HistorySacIn historySacIn, DownloadVodSacReq downloadVodSacReq, String sysDate, String prchsState) {
-		if(prchsState.equals("gift")){
+		if(prchsState.equals("gift") && StringUtils.isEmpty(historySacIn.getRecvDt()) ){
 			GiftConfirmSacInReq req = makeGiftConfirmSacInReq(downloadVodSacReq, historySacIn, sysDate);
 			GiftConfirmSacInRes res = giftConfirmInternalSCI.modifyGiftConfirm(req);
 			copyStartDtAndExprDt(historySacIn, res);
