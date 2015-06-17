@@ -39,7 +39,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String cdOcbSaveInfo; // OCB 적립코드
 	private String ocbAuthMtdCd; // OCB 인증수단 코드
 	private String noOcbCard; // OCB 카드번호
-//	private String noCouponList; // (구)쿠폰 List
+	// private String noCouponList; // (구)쿠폰 List
 	private String couponList; // (신)쿠폰 List
 	private String cashPointList; // 캐쉬/포인트 잔액 통합 정보
 	private String userGrade; // 회원등급
@@ -58,6 +58,10 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String dwldAvailableDayCnt; // 다운로드 가능기간(일)
 	private String usePeriodCnt; // 이용기간(일)
 	private String prodKind; // 쇼핑상품 종류
+
+	// 전시 정보
+	private String svcGrpCd; // 서비스 그룹 코드
+	private String prodCaseCd; // 쇼핑 상품 유형 코드
 
 	private VerifyOrderIapInfoSac iapProdInfo; // IAP상품 정보
 	private List<VerifyOrderPromotionInfoSac> promotionList; // 프로모션 정보
@@ -650,5 +654,43 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public String getCouponList() {
 		return couponList;
+	}
+
+	/**
+	 * Gets svc grp cd.
+	 *
+	 * @return the svc grp cd
+	 */
+	public String getSvcGrpCd() {
+		return svcGrpCd;
+	}
+
+	/**
+	 * Sets svc grp cd.
+	 *
+	 * @param svcGrpCd
+	 *            the svc grp cd
+	 */
+	public void setSvcGrpCd(String svcGrpCd) {
+		this.svcGrpCd = svcGrpCd;
+	}
+
+	/**
+	 * Gets prod case cd.
+	 *
+	 * @return the prod case cd
+	 */
+	public String getProdCaseCd() {
+		return prodCaseCd;
+	}
+
+	/**
+	 * Sets prod case cd.
+	 *
+	 * @param prodCaseCd
+	 *            the prod case cd
+	 */
+	public void setProdCaseCd(String prodCaseCd) {
+		this.prodCaseCd = prodCaseCd;
 	}
 }
