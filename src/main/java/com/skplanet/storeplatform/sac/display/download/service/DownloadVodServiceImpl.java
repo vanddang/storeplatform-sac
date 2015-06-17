@@ -536,18 +536,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				}
 			}
 
-		} else {
-			//정액권 상품이 아닌 경우 상품의 DRM_YN 을 리턴
-			// 소장, 대여 구분(Store : 소장, Play : 대여)
-			if (StringUtils.equals(prchsProdId, metaInfo.getStoreProdId())) {
-				metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-			} else {
-				metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+			//상품/정액권의 DRM_YN 설정 값이 없을 경우 구매 DRM_YN 을 참조
+			if(StringUtils.isEmpty(metaInfo.getDrmYn()) && (historySacIn != null && StringUtils.isNotEmpty(historySacIn.getDrmYn()))) {
+				metaInfo.setDrmYn(historySacIn.getDrmYn());
 			}
+			return;
 		}
-		//상품/정액권의 DRM_YN 설정 값이 없을 경우 구매 DRM_YN 을 참조
-		if(StringUtils.isEmpty(metaInfo.getDrmYn()) && (historySacIn != null && StringUtils.isNotEmpty(historySacIn.getDrmYn()))) {
-			metaInfo.setDrmYn(historySacIn.getDrmYn());
-		}
+
+		// 2015.06.17
+		// 별다른 조건이 없다면 구매당시의 DRM 정보를 사용하도록 수정 (이전에는 전시 정보 사용)
+		metaInfo.setDrmYn(historySacIn.getDrmYn());
 	}
 }
