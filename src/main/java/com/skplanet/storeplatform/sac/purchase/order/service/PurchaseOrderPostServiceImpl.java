@@ -9,19 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.sap.sci.SapPurchaseSCI;
 import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiEcReq;
 import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiPaymentInfoEc;
@@ -46,6 +33,18 @@ import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -91,7 +90,8 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	 */
 	@Override
 	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList, NotifyPaymentSacReq notifyPaymentReq) {
-		this.logger.info("PRCHS,ORDER,SAC,POST,START,{}", prchsDtlMoreList.get(0).getPrchsId());
+		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
+		this.logger.info("PRCHS,ORDER,SAC,POST,START,{}", prchsDtlMore.getPrchsId());
 
 		Exception exception = null;
 		try {
@@ -100,6 +100,18 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 
 			// 결제완료 Noti
 			this.sendPurchaseNoti(prchsDtlMoreList, notifyPaymentReq);
+
+			// 회원 정보 업데이트
+			try{
+				if (notifyPaymentReq.getPaymentInfoList().size() > 0
+						&& StringUtils.isNotBlank(notifyPaymentReq.getPaymentInfoList().get(0).getLimitMemberYn())) {
+					this.purchaseMemberRepository.updateLimitChargeYn(prchsDtlMore.getUseInsdUsermbrNo(),
+							prchsDtlMore.getUseInsdDeviceId(), prchsDtlMore.getPrchsDt(), notifyPaymentReq
+									.getPaymentInfoList().get(0).getLimitMemberYn());
+				}
+			} catch(Exception ignore){
+				this.logger.info("PRCHS,ORDER,SAC,MEMBER,UPDATELIMITCHARGEYN,ERROR,{},{}", prchsDtlMore.getPrchsId(), ignore.getMessage());
+			}
 		} catch (Exception e) {
 			exception = e;
 		}

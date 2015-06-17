@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.*;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac.SellerMbrAppSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.*;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -52,6 +53,8 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	private SellerSearchSCI sellerSearchSCI;
 	@Autowired
 	private MiscellaneousSCI miscellaneousSCI;
+	@Autowired
+	private DeviceSCI deviceSCI;
 
 	/**
 	 * 
@@ -377,6 +380,19 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		}
 
 		return sellerMbrAppSacParam;
+	}
+
+	@Override
+	public void updateLimitChargeYn(String userKey, String deviceKey, String searchDt, String limitChargeYn) {
+		UpdateLimitChargeYnSacReq updateLimitChargeYnSacReq = new UpdateLimitChargeYnSacReq();
+		updateLimitChargeYnSacReq.setUserKey(userKey);
+		updateLimitChargeYnSacReq.setDeviceKey(deviceKey);
+		updateLimitChargeYnSacReq.setSearchDt(searchDt);
+		updateLimitChargeYnSacReq.setLimitChargeYn(limitChargeYn);
+
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,UPDATELIMITCHARGEYN,REQ,{}", updateLimitChargeYnSacReq);
+		UpdateLimitChargeYnSacRes updateLimitChargeYnSacRes = this.deviceSCI.updateLimitChargeYn(updateLimitChargeYnSacReq);
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,UPDATELIMITCHARGEYN,REQ,{}", updateLimitChargeYnSacRes);
 	}
 
 	/*

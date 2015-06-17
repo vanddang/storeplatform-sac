@@ -9,15 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
-import java.util.List;
-import java.util.Map;
-
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SellerMbrAppSacParam;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -123,4 +123,6 @@ public interface PurchaseMemberRepository {
 	 * @return 판매자 정보
 	 */
 	public SellerMbrAppSacParam detailInformationListForProduct(String sellerKey, String tenantProdGrpCd);
+
+	public void updateLimitChargeYn(String userKey, String deviceKey, String searchDt, String limitChargeYn);
 }
