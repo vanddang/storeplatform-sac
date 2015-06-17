@@ -425,10 +425,7 @@ public class EpubServiceImpl implements EpubService {
 		identifierList.add(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
 		product.setIdentifierList(identifierList);
 
-		// 상품 정보 (상품명)
-	//	product.setTitle(new Title(mapperVO.getProdNm()));
-		
-		// 상품명 (Prefix Title 정보, 상품명)
+		// 상품 정보 (Prefix Title 정보, 상품명)
 		Title title = new Title();
 		if(StringUtils.isNotBlank(mapperVO.getPrefixTitle())) {
 			title.setPrefix(mapperVO.getPrefixTitle());
