@@ -515,40 +515,39 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			metaInfo.setDrmYn("Y");
 			metaInfo.setStoreDrmYn("Y");
 			metaInfo.setPlayDrmYn("Y");
-		} else {
+			return;
+		}
 
-			if(StringUtils.isNotEmpty(useFixrateProdId)) {
-				Map<String, String> paramFixrateProd = new HashMap<String, String>();
-				paramFixrateProd.put("fixrateProdId", useFixrateProdId);
-				paramFixrateProd.put("prodId", metaInfo.getEspdProdId());
+		if(StringUtils.isNotEmpty(useFixrateProdId)) {
+			Map<String, String> paramFixrateProd = new HashMap<String, String>();
+			paramFixrateProd.put("fixrateProdId", useFixrateProdId);
+			paramFixrateProd.put("prodId", metaInfo.getEspdProdId());
 
-				MetaInfo fixrateProd = (MetaInfo) commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
+			MetaInfo fixrateProd = (MetaInfo) commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
 
-				// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
-				if(fixrateProd != null) {
-					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-						metaInfo.setStoreDrmYn(fixrateProd.getStoreDrmYn());
-						metaInfo.setDrmYn(fixrateProd.getStoreDrmYn());
-					} else {
-						metaInfo.setPlayDrmYn(fixrateProd.getPlayDrmYn());
-						metaInfo.setDrmYn(fixrateProd.getPlayDrmYn());
-					}
-				}
-
-			} else {
-				//정액권 상품이 아닌 경우 상품의 DRM_YN 을 리턴
-				// 소장, 대여 구분(Store : 소장, Play : 대여)
-				if (StringUtils.equals(prchsProdId, metaInfo.getStoreProdId())) {
-					metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+			// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
+			if(fixrateProd != null) {
+				if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+					metaInfo.setStoreDrmYn(fixrateProd.getStoreDrmYn());
+					metaInfo.setDrmYn(fixrateProd.getStoreDrmYn());
 				} else {
-					metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+					metaInfo.setPlayDrmYn(fixrateProd.getPlayDrmYn());
+					metaInfo.setDrmYn(fixrateProd.getPlayDrmYn());
 				}
 			}
-			//상품/정액권의 DRM_YN 설정 값이 없을 경우 구매 DRM_YN 을 참조
-			if(StringUtils.isEmpty(metaInfo.getDrmYn())
-					&& (historySacIn != null && StringUtils.isNotEmpty(historySacIn.getDrmYn()))) {
-				metaInfo.setDrmYn(historySacIn.getDrmYn());
+
+		} else {
+			//정액권 상품이 아닌 경우 상품의 DRM_YN 을 리턴
+			// 소장, 대여 구분(Store : 소장, Play : 대여)
+			if (StringUtils.equals(prchsProdId, metaInfo.getStoreProdId())) {
+				metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+			} else {
+				metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
 			}
+		}
+		//상품/정액권의 DRM_YN 설정 값이 없을 경우 구매 DRM_YN 을 참조
+		if(StringUtils.isEmpty(metaInfo.getDrmYn()) && (historySacIn != null && StringUtils.isNotEmpty(historySacIn.getDrmYn()))) {
+			metaInfo.setDrmYn(historySacIn.getDrmYn());
 		}
 	}
 }
