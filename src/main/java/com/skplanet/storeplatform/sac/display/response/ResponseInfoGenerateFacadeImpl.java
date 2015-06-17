@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,22 +25,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.FreepassAttr;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
@@ -342,6 +327,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Contributor contributor = this.vodGenerator.generateMovieContributor(metaInfo);
 		// Vod 설정
 		Vod vod = this.vodGenerator.generateVod(metaInfo);
+        Badge badge = this.commonGenerator.generateBadge(metaInfo);
 
 		product.setTitle(title);
 		product.setPrice(price);
@@ -350,7 +336,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setPreviewSourceList(previewSourceList);
 		product.setAccrual(accrual);
 		product.setRights(rights);
-		product.setContributor(contributor);
+        product.setBadge(badge);
+        product.setContributor(contributor);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
 		// Movie 상품상세설명
@@ -444,6 +431,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Contributor contributor = this.vodGenerator.generateBroadcastContributor(metaInfo);
 		// 방송용 Vod 설정
 		Vod vod = this.vodGenerator.generateVod(metaInfo);
+        Badge badge = this.commonGenerator.generateBadge(metaInfo);
 
 		product.setTitle(title);
 		product.setPrice(price);
@@ -454,6 +442,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(rights);
 		product.setContributor(contributor);
 		product.setVod(vod);
+        product.setBadge(badge);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
 		// Broadcast 상품상세설명
@@ -546,6 +535,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Contributor contributor = this.ebookComicGenerator.generateEbookContributor(metaInfo);
 		// Book 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
+        Badge badge = this.commonGenerator.generateBadge(metaInfo);
 
 		this.generateEpubPreview(metaInfo, rights);
 
@@ -558,6 +548,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setBook(book);
+        product.setBadge(badge);
 		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
 		// Ebook 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());

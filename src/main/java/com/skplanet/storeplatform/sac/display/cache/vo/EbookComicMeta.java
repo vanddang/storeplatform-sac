@@ -16,9 +16,9 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * EbookComicMeta
  *
  * Changes on v3:
- * - serialCount, magazineCount 추가
+ *  - serialCount, magazineCount 추가
  * Changes on v4:
- * - plus19Yn 추가
+ *  - plus19Yn, prefixTitle, badgeCd, badgeOptText 추가
  * </p>
  * Updated on : 2014. 04. 17 Updated by : 정희원, SK 플래닛.
  */
@@ -71,6 +71,10 @@ public class EbookComicMeta extends CommonInfo {
     private Integer serialCount;
     private Integer magazineCount;
     private String plus19Yn;
+    private String prefixTitle;
+    private String badgeCd;
+    private String badgeOptText;
+
 
     public Integer getChnlUnlmtAmt() {
         return chnlUnlmtAmt;
@@ -438,5 +442,29 @@ public class EbookComicMeta extends CommonInfo {
 
     public void setPlus19Yn(String plus19Yn) {
         this.plus19Yn = plus19Yn;
+    }
+
+    public String getPrefixTitle() {
+        return prefixTitle;
+    }
+
+    public void setPrefixTitle(String prefixTitle) {
+        this.prefixTitle = prefixTitle;
+    }
+
+    public String getBadgeCd() {
+        return badgeCd;
+    }
+
+    public void setBadgeCd(String badgeCd) {
+        this.badgeCd = badgeCd;
+    }
+
+    public String getBadgeOptText() {
+        return badgeOptText;
+    }
+
+    public void setBadgeOptText(String badgeOptText) {
+        this.badgeOptText = badgeOptText;
     }
 }

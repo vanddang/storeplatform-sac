@@ -15,10 +15,15 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * <p>
  * VodMeta
  * 
- * Changes on v2: - fileSize를 Long형으로 변경 Changes on v3: - add epsdPlayTm (재생시간) Changes on v4: - add epsdUnlmtAmt,
- * epsdPeriodAmt
+ * Changes on v2:
+ *  - fileSize를 Long형으로 변경
+ * Changes on v3:
+ *  - add epsdPlayTm (재생시간)
+ * Changes on v4:
+ *  - add epsdUnlmtAmt, epsdPeriodAmt
  * Changes on v5:
- *  - add plus19Yn
+ *  - add plus19Yn, badgeCd, badgeOptText, prefix
+ *
  * </p>
  * Updated on : 2014. 04. 15 Updated by : 정희원, SK 플래닛.
  */
@@ -34,7 +39,7 @@ public class VodMeta extends CommonInfo {
 	private String comptYn;
 	private String prodId;
 	private String partProdId;
-	private String vodTitlNm;
+	private String prefixTitle;
 	private String prodNm;
 	private String chapter;
 	private String samplUrl;
@@ -72,6 +77,8 @@ public class VodMeta extends CommonInfo {
 	private Integer epsdPeriodAmt;
 	private String epsdPlayTm;
 	private String plus19Yn;
+    private String badgeCd;
+    private String badgeOptText;
 
 	public String getUpMenuId() {
 		return this.upMenuId;
@@ -143,14 +150,6 @@ public class VodMeta extends CommonInfo {
 
 	public void setPartProdId(String partProdId) {
 		this.partProdId = partProdId;
-	}
-
-	public String getVodTitlNm() {
-		return this.vodTitlNm;
-	}
-
-	public void setVodTitlNm(String vodTitlNm) {
-		this.vodTitlNm = vodTitlNm;
 	}
 
 	public String getProdNm() {
@@ -447,5 +446,29 @@ public class VodMeta extends CommonInfo {
 
     public void setPlus19Yn(String plus19Yn) {
         this.plus19Yn = plus19Yn;
+    }
+
+    public String getBadgeCd() {
+        return badgeCd;
+    }
+
+    public void setBadgeCd(String badgeCd) {
+        this.badgeCd = badgeCd;
+    }
+
+    public String getBadgeOptText() {
+        return badgeOptText;
+    }
+
+    public void setBadgeOptText(String badgeOptText) {
+        this.badgeOptText = badgeOptText;
+    }
+
+    public String getPrefixTitle() {
+        return this.prefixTitle;
+    }
+
+    public void setPrefixTitle(String prefixTitle) {
+        this.prefixTitle = prefixTitle;
     }
 }

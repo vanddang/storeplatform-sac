@@ -187,9 +187,19 @@
 		     , A1.PROD_DTL_DESC
 		     , A1.PROD_STATUS_CD
 		     , FC_GET_CM_CD_NM(A1.BRDC_COMP_CD, #{tenantHeader.langCd}) AS BRDC_COMP_NM
-		     <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-		     , PLUS19_YN
-		     </if>
+		     , A1.PLUS19_YN
+             , A1.PREFIX_TITLE
+             , A1.BADGE_CD
+             , (
+                SELECT /*+ INDEX_JOIN(TB_CM_CD) */
+                  CASE
+                   WHEN (A1.BADGE_CD IS NOT NULL AND A1.BADGE_OPT_TEXT IS NULL) THEN  Y.CD_NM
+                   WHEN (A1.BADGE_CD IS NOT NULL AND A1.BADGE_OPT_TEXT IS NOT NULL) THEN  A1.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM
+                   ELSE NULL
+                END
+                FROM TB_CM_CD Y
+                  WHERE Y.CD_ID(+) = A1.BADGE_CD AND Y.LANG_CD(+) = A1.LANG_CD
+                ) AS BADGE_OPT_TEXT
 		  FROM (SELECT A.PROD_ID
 		             , A.PART_PROD_ID
 		             , B.PROD_GRD_CD
@@ -236,9 +246,11 @@
 		             , O.MENU_NM
 		             , O.MENU_DESC
 		             , P.MENU_NM AS TOP_MENU_NM
-		             <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
 		             , NVL(B.PLUS19_YN, 'N') AS PLUS19_YN
-		             </if>
+                     , CPP.PREFIX_TITLE
+                     , CPP.BADGE_CD
+                     , CPP.BADGE_OPT_TEXT
+                     , C.LANG_CD
 		          FROM TB_DP_PROD_RSHP A
 		             , TB_DP_PROD B  /* 채널 */
 		             , TB_DP_PROD_DESC C  /* 채널 */
@@ -255,6 +267,7 @@
 		             , TB_DP_MENU_CATEGORY N
 		             , TB_DP_MENU_CATEGORY_DESC O  /* 에피소드 */
 		             , TB_DP_MENU_CATEGORY_DESC P  /* 채널 */
+                     , TB_DP_PROD_PREFIX CPP
 		         WHERE A.PROD_RSHP_CD = 'DP010802'
 		           <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
 		           AND A.PROD_ID = #{productBasicInfo.prodId}  /* 채널 ID */
@@ -273,6 +286,7 @@
 		           AND E.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
 		           </if>
 		           AND E.EXPO_YN = 'Y'
+                   AND CPP.PROD_ID(+) = B.PROD_ID
 		           AND E.TENANT_ID = F.TENANT_ID
 		           AND E.PROD_ID = F.PROD_ID
 		           AND SYSDATE BETWEEN F.APPLY_START_DT AND F.APPLY_END_DT
@@ -540,6 +554,18 @@
              , TB.PROD_STATUS_CD
              , TB.SELLER_MBR_NO
              , TB.PLUS19_YN
+             , TB.PREFIX_TITLE
+             , TB.BADGE_CD
+             , (
+                SELECT /*+ INDEX_JOIN(TB_CM_CD) */
+                  CASE
+                    WHEN (TB.BADGE_CD IS NOT NULL AND TB.BADGE_OPT_TEXT IS NULL) THEN  Y.CD_NM
+                    WHEN (TB.BADGE_CD IS NOT NULL AND TB.BADGE_OPT_TEXT IS NOT NULL) THEN  TB.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM
+                    ELSE NULL
+                  END
+                FROM TB_CM_CD Y
+                  WHERE Y.CD_ID(+) = TB.BADGE_CD AND Y.LANG_CD(+) = TB.LANG_CD
+                ) AS BADGE_OPT_TEXT
           FROM (
                  SELECT 
                         ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
@@ -593,6 +619,10 @@
                       , G.PROD_STATUS_CD
                       , J.CID
                       , NVL(D.PLUS19_YN, 'N') AS PLUS19_YN
+                      , CPP.PREFIX_TITLE
+                      , CPP.BADGE_CD
+                      , CPP.BADGE_OPT_TEXT
+                      , F.LANG_CD
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -609,6 +639,7 @@
                       , TB_DP_TENANT_PROD_PRICE       O /* 에피소드 Tenant 상품 가격 */
                       , TB_DP_TENANT_PROD             P /* 에피소드 Tenant 상품 */
                       , TB_DP_USE_POLICY              Q /* 에피소드 상품 정책 */
+                      , TB_DP_PROD_PREFIX             CPP
                  WHERE A.MENU_ID = B.MENU_ID
                    AND A.MENU_ID = C.MENU_ID
                    AND B.PROD_ID = D.PROD_ID
@@ -628,6 +659,7 @@
                    AND I.PART_PROD_ID = O.PROD_ID
                    AND I.PART_PROD_ID = P.PROD_ID
                    AND J.USE_POLICY_ID = Q.USE_POLICY_ID(+)
+                   AND CPP.PROD_ID(+) = D.PROD_ID
                    AND A.USE_YN = 'Y'        
                    AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                    AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */

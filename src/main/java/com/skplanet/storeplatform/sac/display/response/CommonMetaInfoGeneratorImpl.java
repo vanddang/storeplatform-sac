@@ -9,10 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.google.common.collect.Collections2;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -490,7 +490,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
 			title.setText(metaInfo.getCatalogNm());
 		} else {
-			title.setPrefix(metaInfo.getVodTitlNm());
+			title.setPrefix(metaInfo.getPrefixTitle());
 			title.setText(metaInfo.getProdNm());
 			// 시리즈 상품의 경우
 			if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd())) { // Postfix 세팅
@@ -607,8 +607,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		return date;
 	}
 
-	@Override
+    private static final Set<String> SET_EBOOK_COMIC = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("DP13", "DP14")));
+
+    @Override
 	public Store generateStore(MetaInfo metaInfo) {
+		// FIXME
 		Store store = new Store();
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
@@ -637,6 +640,16 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	@Override
 	public Play generatePlay(MetaInfo metaInfo) {
+		// MM 상품 & 에피소드 상품이면
+        // rights.play.price
+        // rights.store.price
+        if(SET_EBOOK_COMIC.contains(metaInfo.getTopMenuId()) &&
+                DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd())) {
+
+
+
+        }
+
 		Play play = new Play();
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
@@ -649,6 +662,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			play.setUsePeriodUnitCd(metaInfo.getPlayUsePeriodUnitCd());
 		}
 
+        // NOTICE
 		metaInfo.setProdAmt(metaInfo.getPlayProdAmt());
 		metaInfo.setProdNetAmt(metaInfo.getPlayProdNetAmt());
 		play.setPrice(this.generatePrice(metaInfo));
