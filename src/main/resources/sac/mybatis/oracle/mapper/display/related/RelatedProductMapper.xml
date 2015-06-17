@@ -92,5 +92,25 @@
            AND L.TENANT_ID(+) = #{tenantHeader.tenantId}
            AND ROWNUM = 1      
     </select>
+
+    <select id="selectRelatedProduct" parameterType="java.util.Map" resultType="com.skplanet.storeplatform.sac.display.related.vo.RelatedProduct">
+        SELECT /* RelatedProductMapper.xml, selectRelatedProduct, SAC 전시 */
+          TENANT_ID
+          , STD_DT
+          , RELA_TYPE
+          , PROD_ID
+          , PROD_ID_LIST
+          , REG_ID
+          , REG_DT
+          , UPD_ID
+          , UPD_DT
+        FROM
+          TB_DP_PROD_RELA PR
+        WHERE 1=1
+        AND TENANT_ID = #{tenantId}
+        AND STD_DT = (SELECT BC.STD_DT FROM TB_DP_BATCH_COMPT BC WHERE BC.TENANT_ID = #{tenantId} AND BC.BATCH_ID = #{relaType})
+        AND RELA_TYPE = #{relaType}
+        AND PROD_ID = #{prodId}
+    </select>
     	    
 </mapper>
