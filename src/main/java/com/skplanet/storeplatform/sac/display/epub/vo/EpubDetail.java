@@ -181,6 +181,14 @@ public class EpubDetail extends CommonInfo {
 	
 	/** 19+ 상품여부 */
 	private String plus19Yn;	
+	
+	// Prefix Title, Badge 정보 추가
+	/** PREFIX 명 */
+	private String prefixTitle;
+	/** BADGE 코드 */
+	private String badgeCd;
+	/** BADGE 설명 */
+	private String badgeOptText;
 
 	// 미리보기
 	private String samplUrl;
@@ -1065,6 +1073,29 @@ public class EpubDetail extends CommonInfo {
 	public void setPlus19Yn(String plus19Yn) {
 		this.plus19Yn = plus19Yn;
 	}
-
 	
+	public String getPrefixTitle() {
+		return prefixTitle;
+	}
+
+	public void setPrefixTitle(String prefixTitle) {
+		this.prefixTitle = prefixTitle;
+	}
+	
+	public String getBadgeCd() {
+		return badgeCd;
+	}
+
+	public void setBadgeCd(String badgeCd) {
+		this.badgeCd = badgeCd;
+	}
+	
+	public String getBadgeOptText() {
+		return badgeOptText;
+	}
+
+	public void setBadgeOptText(String badgeOptText) {
+		this.badgeOptText = badgeOptText;
+	}
+
 }

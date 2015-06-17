@@ -58,6 +58,7 @@ import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 /**
@@ -425,8 +426,24 @@ public class EpubServiceImpl implements EpubService {
 		product.setIdentifierList(identifierList);
 
 		// 상품 정보 (상품명)
-		product.setTitle(new Title(mapperVO.getProdNm()));
-
+	//	product.setTitle(new Title(mapperVO.getProdNm()));
+		
+		// 상품명 (Prefix Title 정보, 상품명)
+		Title title = new Title();
+		if(StringUtils.isNotBlank(mapperVO.getPrefixTitle())) {
+			title.setPrefix(mapperVO.getPrefixTitle());
+		}
+		title.setText(mapperVO.getProdNm());
+		product.setTitle(title);
+		
+		// Badge 정보
+		if(StringUtils.isNotBlank(mapperVO.getBadgeCd()) && StringUtils.isNotBlank(mapperVO.getBadgeOptText())) {
+			MetaInfo metaInfo = new MetaInfo();
+			metaInfo.setBadgeCd(mapperVO.getBadgeCd());
+			metaInfo.setBadgeOptText(mapperVO.getBadgeOptText());
+			product.setBadge(metaInfoGenerator.generateBadge(metaInfo));
+		}
+		
 		// productExplain(상품설명) 
 		// 저자 설명(PROD_BASE_DESC)값이 아닌 상품 상세설명(PROD_DTL_DESC) 값으로 변경 (14.02.24)
 		product.setProductExplain(mapperVO.getProdDtlDesc());	
