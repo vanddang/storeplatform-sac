@@ -376,10 +376,8 @@
               , LA.PREFIX_TITLE
               , LA.BADGE_CD 
               , LA.BADGE_OPT_TEXT               
-              <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
               , NVL(LA.PLUS19_YN, 'N') AS PLUS19_YN
-              </if>
-          FROM (          
+          FROM (
                 SELECT 
                     JA.TENANT_ID
                     , JA.MENU_ID
@@ -434,9 +432,7 @@
                     , JA.PREFIX_TITLE
                     , JA.BADGE_CD
                     , JA.BADGE_OPT_TEXT
-                    <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
                     , JA.PLUS19_YN
-                    </if>
                 FROM (SELECT G.TENANT_ID
                            , A.MENU_ID
                            , A.UP_MENU_ID
@@ -479,42 +475,29 @@
                            , G.PROD_STATUS_CD
                            , D.SELLER_MBR_NO
                            , J.CID AS EPSD_CID
+                           , NVL(D.PLUS19_YN, 'N') AS PLUS19_YN
+                           , CH_PF.PREFIX_TITLE
+                           , CH_PF.BADGE_CD
+                           , ( SELECT /*+ INDEX_JOIN(TB_CM_CD) */
+                                    CASE WHEN (CH_PF.BADGE_CD IS NOT NULL AND CH_PF.BADGE_OPT_TEXT IS NULL) THEN  Y.CD_NM
+                                    WHEN (CH_PF.BADGE_CD IS NOT NULL AND CH_PF.BADGE_OPT_TEXT IS NOT NULL) THEN CH_PF.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM
+                                    ELSE NULL
+                                    END
+                                FROM TB_CM_CD Y
+                                  WHERE CH_PF.BADGE_CD = Y.CD_ID(+)
+                                  AND Y.LANG_CD(+) = #{tenantHeader.langCd}
+                            ) AS BADGE_OPT_TEXT
                          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
                            , D.CID
                            , D.PROD_GRD_CD   /* 채널 상품 ID 조회 */
                            , E.ISSUE_DAY
                            , E.DWLD_AREA_LIMT_YN
-				           , (CASE WHEN CH_PF.PREFIX_TITLE IS NOT NULL THEN CH_PF.PREFIX_TITLE 
-				              ELSE NULL
-				               END ) AS PREFIX_TITLE                                   
-                           , CH_PF.BADGE_CD
-                           , ( SELECT /*+ INDEX_JOIN(TB_CM_CD) */
-			                          CASE WHEN (CH_PF.BADGE_CD IS NOT NULL AND CH_PF.BADGE_OPT_TEXT IS NULL) THEN  Y.CD_NM  
-			                               WHEN (CH_PF.BADGE_CD IS NOT NULL AND CH_PF.BADGE_OPT_TEXT IS NOT NULL) THEN CH_PF.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM 
-			                               ELSE NULL END
-			                     FROM TB_CM_CD Y
-			                    WHERE CH_PF.BADGE_CD = Y.CD_ID(+)
-			                      AND Y.LANG_CD(+) = #{tenantHeader.langCd}
-                              ) AS BADGE_OPT_TEXT
-                           , D.PLUS19_YN                           
                          </if>
                          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                            , J.CID   /* 에피소드 상품 ID 조회 */
                            , J.PROD_GRD_CD  /* 에피소드 상품 ID 조회 */
                            , L.ISSUE_DAY
                            , L.DWLD_AREA_LIMT_YN
-                           , (CASE WHEN CH_PF.PREFIX_TITLE IS NOT NULL THEN CH_PF.PREFIX_TITLE  
-                              ELSE NULL
-                               END ) AS PREFIX_TITLE   
-                           , EP_PF.BADGE_CD
-                           , ( SELECT /*+ INDEX_JOIN(TB_CM_CD) */
-                                      CASE WHEN (EP_PF.BADGE_CD IS NOT NULL AND EP_PF.BADGE_OPT_TEXT IS NULL) THEN  Y.CD_NM  
-                                           WHEN (EP_PF.BADGE_CD IS NOT NULL AND EP_PF.BADGE_OPT_TEXT IS NOT NULL) THEN EP_PF.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM 
-                                           ELSE NULL END
-                                 FROM TB_CM_CD Y
-                                WHERE EP_PF.BADGE_CD = Y.CD_ID(+)
-                                  AND Y.LANG_CD(+) = #{tenantHeader.langCd} 
-                              ) AS BADGE_OPT_TEXT                          
                          </if>
                            , D.SVC_GRP_CD
                            , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM   
@@ -813,6 +796,18 @@
              , TB.BOOK_TBCTNS
              , TB.EPSD_CID
              , TB.PLUS19_YN
+             , TB.PREFIX_TITLE
+             , TB.BADGE_CD
+             , (
+                SELECT /*+ INDEX_JOIN(TB_CM_CD) */
+                    CASE
+                      WHEN (TB.BADGE_CD IS NOT NULL AND TB.BADGE_OPT_TEXT IS NULL) THEN  Y.CD_NM
+                      WHEN (TB.BADGE_CD IS NOT NULL AND TB.BADGE_OPT_TEXT IS NOT NULL) THEN  TB.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM
+                      ELSE NULL
+                    END
+                FROM TB_CM_CD Y
+                  WHERE Y.CD_ID(+) = TB.BADGE_CD AND Y.LANG_CD(+) = TB.LANG_CD
+              ) AS BADGE_OPT_TEXT
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
@@ -863,6 +858,10 @@
             		  , E.MGZIN_CONTENTS_CNT
                       , J.CID AS EPSD_CID
                       , NVL(D.PLUS19_YN, 'N') AS PLUS19_YN
+                      , CPP.PREFIX_TITLE
+                      , CPP.BADGE_CD
+                      , CPP.BADGE_OPT_TEXT
+                      , F.LANG_CD
                     <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
                       , D.CID
                       , D.PROD_GRD_CD   -- 채널 상품 ID 조회
@@ -902,6 +901,7 @@
                       , TB_DP_TENANT_PROD_STATS       N /* 채널 Tenant 상품 통계 건수 */
                       , TB_DP_TENANT_PROD_PRICE       O /* 에피소드 Tenant 상품 가격 */
                       , TB_DP_USE_POLICY              P
+                      , TB_DP_PROD_PREFIX             CPP
                    <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                       ,( SELECT 
 							PROD_ID
@@ -929,6 +929,7 @@
                    AND I.PART_PROD_ID = J.PROD_ID
                    AND I.PART_PROD_ID = L.PROD_ID
                    AND I.PART_PROD_ID = O.PROD_ID
+                   AND CPP.PROD_ID(+) = D.PROD_ID
                    <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                    AND I.PART_PROD_ID = M1.PROD_ID(+)
                    </if>

@@ -1085,6 +1085,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
+        product.setBadge(this.commonGenerator.generateBadge(metaInfo));
 
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
 		// 이북/코믹 미리보기 URL 추가
@@ -1142,6 +1143,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(this.ebookComicGenerator.generateComicContributor(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
+        product.setBadge(this.commonGenerator.generateBadge(metaInfo));
 		// product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
 
 		List<Date> dateList = new ArrayList<Date>();
