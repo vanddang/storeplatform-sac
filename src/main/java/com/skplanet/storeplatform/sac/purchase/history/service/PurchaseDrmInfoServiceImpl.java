@@ -70,7 +70,7 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 
 		// 구매내역이 존재하며 쇼핑상품이 아닌경우
 		if (purchaseDrmInfoSc != null
-				&& StringUtils.startsWith(purchaseDrmInfoSc.getTenantProdGrpCd(),
+				&& !StringUtils.startsWith(purchaseDrmInfoSc.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 
 			// 처리대기 상태인 경우만 처리
