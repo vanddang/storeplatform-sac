@@ -442,6 +442,12 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		if (menuId == null) {
 			menuId = "";
 		}
+		if(topMenuId == null){
+		   topMenuId="";
+		}
+		if(drmYn == null){
+		   drmYn="";
+		}		
 		reqMap.put("topMenuId", topMenuId);
 		reqMap.put("prodId", prodId);
 		reqMap.put("menuId", menuId);
