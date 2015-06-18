@@ -341,10 +341,10 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			this.inputBrandFile(null, dpCatalogInfo);
 
 			// 이미지 리사이즈 처리
-//			this.catalogImgResize(dpCatalogInfo);
+			this.catalogImgResize(dpCatalogInfo);
 			
 			// 이미지 리사이즈 Thread 처리
-			this.getCallThreadShoppingImage(dpCatalogInfo);
+//			this.getCallThreadShoppingImage(dpCatalogInfo);
 		
 
 			// 카탈로그 태그정보 처리
