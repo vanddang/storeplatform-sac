@@ -202,7 +202,6 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					if (bGift) { // 선물 시
 						prchsDtlMore.setDwldExprDt(PurchaseConstants.UNLIMITED_DATE); // 초기 재다운로드 종료일시: 무제한
 						prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_STANDBY); // 기간 재산정: 처리대기
-						prchsDtlMore.setUsePeriodSetCd(null); // 이용기간 설정 타입은 NULL
 
 					} else {
 						if (StringUtils.equals(product.getUsePeriodSetCd(),
