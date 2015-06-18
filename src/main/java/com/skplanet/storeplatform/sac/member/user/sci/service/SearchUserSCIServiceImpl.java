@@ -45,6 +45,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceRequest;
@@ -1207,31 +1209,32 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
 
 		// 1. userKey로 부가속성 테이블 조회 (구글,페이스북,카카오)
-		SearchManagementRequest searchManagementRequest = new SearchManagementRequest();
-		searchManagementRequest.setCommonRequest(commonRequest);
-		searchManagementRequest.setUserKey(req.getUserKey());
-		SearchManagementResponse searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
+		SearchManagementListRequest searchManagementListRequest = new SearchManagementListRequest();
+		searchManagementListRequest.setCommonRequest(commonRequest);
+		searchManagementListRequest.setUserKey(req.getUserKey());
+
+		SearchManagementListResponse searchManagementListResponse = this.userSCI
+				.searchManagementList(searchManagementListRequest);
 
 		String extraProfile = "";
 		String extraProfileValue = "";
-		for (MbrMangItemPtcr mangItemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
-			if (StringUtils.isBlank(mangItemPtcr.getUserKey()) || StringUtils.isBlank(mangItemPtcr.getTenantID())) {
-				throw new StorePlatformException("SAC_MEM_0001",
-						StringUtils.isBlank(mangItemPtcr.getUserKey()) ? "userKey" : "tenantId");
-			}
-			if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK_ID, mangItemPtcr.getExtraProfile())
-					|| StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE_ID, mangItemPtcr.getExtraProfile())
-					|| StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO_ID, mangItemPtcr.getExtraProfile())) {
-				extraProfile = mangItemPtcr.getExtraProfile();
-				extraProfileValue = mangItemPtcr.getExtraProfileValue();
+		if (searchManagementListResponse.getMbrMangItemPtcrList() != null
+				&& searchManagementListResponse.getMbrMangItemPtcrList().size() > 0) {
+			for (MbrMangItemPtcr mangItemPtcr : searchManagementListResponse.getMbrMangItemPtcrList()) {
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK_ID, mangItemPtcr.getExtraProfile())
+						|| StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE_ID, mangItemPtcr.getExtraProfile())
+						|| StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO_ID, mangItemPtcr.getExtraProfile())) {
+					extraProfile = mangItemPtcr.getExtraProfile();
+					extraProfileValue = mangItemPtcr.getExtraProfileValue();
+				}
 			}
 		}
 		// 2. extraProfile 회원키 조회
-		searchManagementRequest = new SearchManagementRequest();
+		SearchManagementRequest searchManagementRequest = new SearchManagementRequest();
 		searchManagementRequest.setCommonRequest(commonRequest);
 		searchManagementRequest.setExtraProfile(extraProfile);
 		searchManagementRequest.setExtraProfileValue(extraProfileValue);
-		searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
+		SearchManagementResponse searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
 
 		List<SearchMbrSapUserInfo> searchSapUserInfoList = new ArrayList<SearchMbrSapUserInfo>();
 		SearchMbrSapUserInfo searchSapUserInfo = null;
