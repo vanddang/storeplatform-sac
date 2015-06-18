@@ -28,7 +28,7 @@ public class ThreadShoppingImage implements Runnable {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public BrandCatalogService brandCatalogService;
+	public final BrandCatalogService brandCatalogService;
 
 	public final BrandCatalogProdImgInfo brandCatalogProdImgInfo;
 
