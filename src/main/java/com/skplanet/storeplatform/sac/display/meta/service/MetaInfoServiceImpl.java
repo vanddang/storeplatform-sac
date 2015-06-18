@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +68,9 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 	@Autowired
 	private MemberBenefitService memberBenefitService;
+
+    @Autowired
+    private ProductSubInfoManager subInfoManager;
 
 	private void commonHandler(MetaInfo me, String tenantId, String prodKey) {
 		// 집계는 쇼핑의 경우 catalogId, 그 외에는 항상 채널 기준으로 노출하고 있음
@@ -298,14 +302,15 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 		MetaInfo me;
 		TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+        ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
+        ContentType contentType = ContentType.forCode(basicInfo.getContentsTypeCd());
 
-		if (this.isUseCache()) {
-			ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
+        if (this.isUseCache()) {
 
 			EbookComicMetaParam param = new EbookComicMetaParam();
 			param.setTenantId(tenantHeader.getTenantId());
 			param.setLangCd(tenantHeader.getLangCd());
-			param.setContentType(ContentType.forCode(basicInfo.getContentsTypeCd()));
+			param.setContentType(contentType);
 			if (param.getContentType() == ContentType.Channel) {
 				param.setProdId(basicInfo.getProdId());
 			} else if (param.getContentType() == ContentType.Episode) {
@@ -333,9 +338,22 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 				me.setProdNetAmt(meta.getEpsdProdNetAmt());
 				me.setUnlmtAmt(meta.getEpsdUnlmtAmt());
 				me.setPeriodAmt(meta.getEpsdPeriodAmt());
+                if(meta.getUsePeriod() != null)
+                    me.setUsePeriod(meta.getUsePeriod().toString());
 			}
-		} else
-			me = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
+		} else {
+            me = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
+            if (me != null && contentType == ContentType.Episode) {
+                CidPrice cidPrice = subInfoManager.getCidPriceByEpsdId(tenantHeader.getLangCd(), tenantHeader.getTenantId(), basicInfo.getPartProdId());
+                if (cidPrice != null) {
+                    me.setUsePeriodUnitCd(cidPrice.getRentPeriodUnitCd());
+                    me.setUsePeriod(cidPrice.getRentPeriod() == null ? null : cidPrice.getRentPeriod().toString());
+                    me.setUsePeriodNm(cidPrice.getRentPeriodUnitNm());
+                    me.setUnlmtAmt(cidPrice.getProdAmt());
+                    me.setPeriodAmt(cidPrice.getRentProdAmt());
+                }
+            }
+        }
 
 		if (me != null)
 			this.commonHandler(me, tenantHeader.getTenantId(), me.getProdId());

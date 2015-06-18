@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
- * CidPrice
+ * CidPrice - CID에 해당하는 상품 가격 조회
  * prodId, rentProdId는 에피소드ID
  * </p>
  * Updated on : 2015. 01. 02 Updated by : 정희원, SK 플래닛.
@@ -25,7 +25,8 @@ public class CidPrice extends CommonInfo {
     private Integer prodAmt;
     private String rentProdId;
     private Integer rentPeriod;
-    private String rendPeriodUnitCd;
+    private String rentPeriodUnitCd;
+    private String rentPeriodUnitNm;
     private Integer rentProdAmt;
 
     public String getProdId() {
@@ -60,12 +61,12 @@ public class CidPrice extends CommonInfo {
         this.rentPeriod = rentPeriod;
     }
 
-    public String getRendPeriodUnitCd() {
-        return rendPeriodUnitCd;
+    public String getRentPeriodUnitCd() {
+        return rentPeriodUnitCd;
     }
 
-    public void setRendPeriodUnitCd(String rendPeriodUnitCd) {
-        this.rendPeriodUnitCd = rendPeriodUnitCd;
+    public void setRentPeriodUnitCd(String rentPeriodUnitCd) {
+        this.rentPeriodUnitCd = rentPeriodUnitCd;
     }
 
     public Integer getRentProdAmt() {
@@ -76,10 +77,19 @@ public class CidPrice extends CommonInfo {
         this.rentProdAmt = rentProdAmt;
     }
 
+    public String getRentPeriodUnitNm() {
+        return rentPeriodUnitNm;
+    }
+
+    public void setRentPeriodUnitNm(String rentPeriodUnitNm) {
+        this.rentPeriodUnitNm = rentPeriodUnitNm;
+    }
+
     public static class CidPriceRaw {
         private String prodId;
         private Integer usePeriod;
         private String usePeriodUnitCd;
+        private String usePeriodUnitNm;
         private Integer prodAmt;
 
         public String getProdId() {
@@ -112,6 +122,14 @@ public class CidPrice extends CommonInfo {
 
         public void setProdAmt(Integer prodAmt) {
             this.prodAmt = prodAmt;
+        }
+
+        public String getUsePeriodUnitNm() {
+            return usePeriodUnitNm;
+        }
+
+        public void setUsePeriodUnitNm(String usePeriodUnitNm) {
+            this.usePeriodUnitNm = usePeriodUnitNm;
         }
     }
 }

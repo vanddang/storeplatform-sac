@@ -2022,6 +2022,10 @@ public class MetaInfo extends CommonInfo {
 		return this.usePeriod;
 	}
 
+    public Integer getUsePeriodInt() {
+        return this.usePeriod != null ? Integer.parseInt(this.usePeriod) : null;
+    }
+
 	/**
 	 * @param usePeriod
 	 *            the usePeriod to set

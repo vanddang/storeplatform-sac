@@ -73,6 +73,7 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 	@Override
 	public CategorySpecificSacRes getSpecificEbookList(CategorySpecificSacReq req, SacRequestHeader header) {
         String tenantId = header.getTenantHeader().getTenantId();
+        String langCd = header.getTenantHeader().getLangCd();
         CategorySpecificSacRes res = new CategorySpecificSacRes();
         CommonResponse commonResponse = new CommonResponse();
         Product product = null;
@@ -93,7 +94,7 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
             Map<String, Object> paramMap = new HashMap<String, Object>();
             paramMap.put("tenantHeader", header.getTenantHeader());
             paramMap.put("deviceHeader", header.getDeviceHeader());
-            paramMap.put("lang", "ko");
+            paramMap.put("lang", langCd);
 
             for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
                 String topMenuId = productBasicInfo.getTopMenuId();
@@ -121,7 +122,7 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
                         if(metaInfo == null)
                             continue;
 
-                        CidPrice cidPrice = productSubInfoManager.getCidPrice(tenantId, metaInfo.getEpsdCid());
+                        CidPrice cidPrice = productSubInfoManager.getCidPrice(langCd, tenantId, metaInfo.getEpsdCid());
                         if (cidPrice != null) {
                             metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
                             metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());

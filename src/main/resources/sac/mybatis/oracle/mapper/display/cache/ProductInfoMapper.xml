@@ -581,46 +581,6 @@
             , TB.PROD_CHRG_YN AS PROD_CHRG
             , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
             , TB.PROD_STATUS_CD
-            , (SELECT MAX(SC.PROD_AMT)
-             FROM TB_DP_PROD_RSHP SA
-               , TB_DP_PROD SB
-               , TB_DP_TENANT_PROD_PRICE SC
-               , TB_DP_TENANT_PROD SD
-               , TB_DP_USE_POLICY UP
-             WHERE SA.PROD_ID = TB.PROD_ID
-                   AND SA.PROD_RSHP_CD = 'DP010802'
-                   AND SA.PART_PROD_ID = SB.PROD_ID
-                   AND SB.CID = TB.CID
-                   AND SB.PROD_ID = SC.PROD_ID
-                   AND SB.CONTENTS_TYPE_CD = 'PD002502'
-                   AND SC.TENANT_ID = #{tenantId}
-                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
-                   AND SC.PROD_ID = SD.PROD_ID
-                   AND SD.TENANT_ID = SC.TENANT_ID
-                   AND SD.PROD_STATUS_CD = 'PD000403'
-                   AND SB.USE_POLICY_ID = UP.USE_POLICY_ID(+)
-                   AND UP.POSS_LEND_CLSF_CD = 'DP010601' /* 소장 */
-            ) AS EPSD_UNLMT_AMT  /* 에피소드 동일 CID 소장 가격 */
-          , (SELECT MAX(SC.PROD_AMT)
-             FROM TB_DP_PROD_RSHP SA
-               , TB_DP_PROD SB
-               , TB_DP_TENANT_PROD_PRICE SC
-               , TB_DP_TENANT_PROD SD
-               , TB_DP_USE_POLICY UP
-             WHERE SA.PROD_ID = TB.PROD_ID
-                   AND SA.PROD_RSHP_CD = 'DP010802'
-                   AND SA.PART_PROD_ID = SB.PROD_ID
-                   AND SB.CID = TB.CID
-                   AND SB.PROD_ID = SC.PROD_ID
-                   AND SB.CONTENTS_TYPE_CD = 'PD002502'
-                   AND SC.TENANT_ID = #{tenantId}
-                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
-                   AND SC.PROD_ID = SD.PROD_ID
-                   AND SD.TENANT_ID = SC.TENANT_ID
-                   AND SD.PROD_STATUS_CD = 'PD000403'
-                   AND SB.USE_POLICY_ID = UP.USE_POLICY_ID(+)
-                   AND UP.POSS_LEND_CLSF_CD = 'DP010602' /* 대여 */
-            ) AS EPSD_PERIOD_AMT  /* 에피소드 동일 CID 대여 가격 */
             ]]>
             , TB.SELLER_MBR_NO
             , TB.PLUS19_YN

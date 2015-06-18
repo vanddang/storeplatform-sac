@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.meta.service.ProductSubInfoManager;
+import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -61,6 +63,9 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+    @Autowired
+    private ProductSubInfoManager subInfoManager;
 
 	private static final String APP_SVC_GRP_CD = "DP000201";
 	private static final String APP_IMG_CD = "DP000101";
@@ -182,9 +187,20 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 			reqMap.put("prodIdType", "EPISODE");
 		else
 			throw new RuntimeException("prodIdType cannot be null.");
+        EbookComicMeta ebookComicMeta = commonDAO.queryForObject("ProductInfo.getEbookComicMeta", reqMap, EbookComicMeta.class);
 
-		return commonDAO.queryForObject("ProductInfo.getEbookComicMeta", reqMap, EbookComicMeta.class);
-	}
+        if(ebookComicMeta != null && param.getContentType() == ContentType.Episode) {
+            CidPrice cidPrice = subInfoManager.getCidPriceByEpsdId(param.getLangCd(), param.getTenantId(), param.getProdId());
+            if (cidPrice != null) {
+                ebookComicMeta.setUsePeriodUnitCd(cidPrice.getRentPeriodUnitCd());
+                ebookComicMeta.setUsePeriod(cidPrice.getRentPeriod());
+                ebookComicMeta.setUsePeriodNm(cidPrice.getRentPeriodUnitNm());
+                ebookComicMeta.setEpsdUnlmtAmt(cidPrice.getProdAmt());
+                ebookComicMeta.setEpsdPeriodAmt(cidPrice.getRentProdAmt());
+            }
+        }
+        return ebookComicMeta;
+    }
 
 	@Override
 	public AlbumMeta getAlbumMeta(AlbumMetaParam param, boolean useCache) {

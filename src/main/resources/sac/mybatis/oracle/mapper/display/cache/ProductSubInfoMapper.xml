@@ -10,7 +10,8 @@
                 UP.USE_PERIOD,
                 UP.USE_PERIOD_UNIT_CD,
                 NVL(ETPRC.PROD_AMT, 0) AS PROD_AMT,
-                ROW_NUMBER() OVER (PARTITION BY UP.USE_PERIOD_UNIT_CD, UP.USE_PERIOD ORDER BY ETPRC.PROD_AMT DESC) RN
+                ROW_NUMBER() OVER (PARTITION BY UP.USE_PERIOD_UNIT_CD, UP.USE_PERIOD ORDER BY ETPRC.PROD_AMT DESC) RN,
+                (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = UP.USE_PERIOD_UNIT_CD AND LANG_CD = #{langCd, jdbcType=VARCHAR}) AS USE_PERIOD_UNIT_NM
             FROM TB_DP_PROD EDP
                 INNER JOIN TB_DP_TENANT_PROD ETPP
                     ON ETPP.PROD_ID = EDP.PROD_ID
@@ -22,7 +23,8 @@
                   AND ETPP.TENANT_ID = #{tenantId, jdbcType=VARCHAR}
                   AND ETPP.PROD_STATUS_CD = 'PD000403'
                   AND sysdate between ETPRC.APPLY_START_DT AND ETPRC.APPLY_END_DT
-                  AND EDP.CID = #{cid, jdbcType=VARCHAR}
+                  <if test="cid != null">AND EDP.CID = #{cid, jdbcType=VARCHAR}</if>
+                  <if test="epsdId != null">AND EDP.CID IN (SELECT CID FROM TB_DP_PROD WHERE PROD_ID=#{epsdId, jdbcType=VARCHAR})</if>
                   AND EDP.CONTENTS_TYPE_CD = 'PD002502'
         )
         WHERE RN=1

@@ -35,10 +35,24 @@ public class ProductSubInfoManagerImpl implements ProductSubInfoManager {
     private CommonDAO commonDAO;
 
     @Override
-    public CidPrice getCidPrice(String tenantId, String cid) {
+    public CidPrice getCidPrice(String langCd, String tenantId, String cid) {
         Map<String, Object> req = new HashMap<String, Object>();
+        req.put("langCd", langCd);
         req.put("tenantId", tenantId);
         req.put("cid", cid);
+        return getCidPrice(req);
+    }
+
+    @Override
+    public CidPrice getCidPriceByEpsdId(String langCd, String tenantId, String epsdId) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("langCd", langCd);
+        req.put("tenantId", tenantId);
+        req.put("epsdId", epsdId);
+        return getCidPrice(req);
+    }
+
+    private CidPrice getCidPrice(Map<String, Object> req) {
         List<CidPrice.CidPriceRaw> rawList = commonDAO.queryForList("ProductSubInfo.getCidPrice", req, CidPrice.CidPriceRaw.class);
         if(CollectionUtils.isEmpty(rawList))
             return null;
@@ -53,9 +67,10 @@ public class ProductSubInfoManagerImpl implements ProductSubInfoManager {
             else {
                 // 대여
                 cidPrice.setRentProdId(prcRaw.getProdId());
-                cidPrice.setRendPeriodUnitCd(prcRaw.getUsePeriodUnitCd());
+                cidPrice.setRentPeriodUnitCd(prcRaw.getUsePeriodUnitCd());
                 cidPrice.setRentPeriod(prcRaw.getUsePeriod());
                 cidPrice.setRentProdAmt(prcRaw.getProdAmt());
+                cidPrice.setRentPeriodUnitNm(prcRaw.getUsePeriodUnitNm());
             }
         }
         return cidPrice;

@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Changes on v3:
  *  - serialCount, magazineCount 추가
  * Changes on v4:
- *  - plus19Yn, prefixTitle, badgeCd, badgeOptText 추가
+ *  - plus19Yn, prefixTitle, badgeCd, badgeOptText, usePeriodUnitCd, usePeriodNm, usePeriod 추가
  * </p>
  * Updated on : 2014. 04. 17 Updated by : 정희원, SK 플래닛.
  */
@@ -62,8 +62,8 @@ public class EbookComicMeta extends CommonInfo {
     private String prodChrg;
     private String filePath;
     private String prodStatusCd;
-    private Integer epsdUnlmtAmt;
-    private Integer epsdPeriodAmt;
+    private Integer epsdUnlmtAmt;   // 소장가격
+    private Integer epsdPeriodAmt;  // 대여가격
     private Integer chnlUnlmtAmt;
     private Integer chnlPeriodAmt;
     private String samplUrl; 		//이북/코믹 미리보기 URL
@@ -74,6 +74,9 @@ public class EbookComicMeta extends CommonInfo {
     private String prefixTitle;
     private String badgeCd;
     private String badgeOptText;
+    private String usePeriodUnitCd;
+    private String usePeriodNm;
+    private Integer usePeriod;
 
 
     public Integer getChnlUnlmtAmt() {
@@ -466,5 +469,29 @@ public class EbookComicMeta extends CommonInfo {
 
     public void setBadgeOptText(String badgeOptText) {
         this.badgeOptText = badgeOptText;
+    }
+
+    public String getUsePeriodUnitCd() {
+        return usePeriodUnitCd;
+    }
+
+    public void setUsePeriodUnitCd(String usePeriodUnitCd) {
+        this.usePeriodUnitCd = usePeriodUnitCd;
+    }
+
+    public String getUsePeriodNm() {
+        return usePeriodNm;
+    }
+
+    public void setUsePeriodNm(String usePeriodNm) {
+        this.usePeriodNm = usePeriodNm;
+    }
+
+    public Integer getUsePeriod() {
+        return usePeriod;
+    }
+
+    public void setUsePeriod(Integer usePeriod) {
+        this.usePeriod = usePeriod;
     }
 }

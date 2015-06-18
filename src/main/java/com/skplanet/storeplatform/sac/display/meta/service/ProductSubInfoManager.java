@@ -21,9 +21,20 @@ public interface ProductSubInfoManager {
 
     /**
      * CID를 이용하여 VOD, Ebook, Comic 상품의 가격을 조회한다.
+     *
+     * @param langCd
      * @param tenantId
      * @param cid
      * @return
      */
-    public CidPrice getCidPrice(String tenantId, String cid);
+    CidPrice getCidPrice(String langCd, String tenantId, String cid);
+
+    /**
+     * epsdId를 이용해 VOD, Ebook, Comic 상품의 소장, 대여 가격을 조회한다.
+     * @param langCd 대여 단위 응답에 참조
+     * @param tenantId 테넌트ID
+     * @param epsdId epsdId
+     * @return
+     */
+    CidPrice getCidPriceByEpsdId(String langCd, String tenantId, String epsdId);
 }

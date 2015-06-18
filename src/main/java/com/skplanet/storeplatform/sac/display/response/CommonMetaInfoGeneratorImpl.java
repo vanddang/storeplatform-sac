@@ -395,6 +395,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		return sourceList;
 	}
 
+    private static final Set<String> SET_EBOOK_COMIC = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("DP13", "DP14")));
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -428,6 +429,30 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		rights.setGrade(metaInfo.getProdGrdCd());
 		rights.setPlus19Yn(metaInfo.getPlus19Yn());
+
+        // NOTICE
+        // MM 상품 & 에피소드 상품이면 => 기간, 가격
+        // rights.play.price
+        // rights.store.price
+        if(StringUtils.isEmpty(metaInfo.getStoreProdId()) &&
+                StringUtils.isEmpty(metaInfo.getPlayProdId()) &&
+                SET_EBOOK_COMIC.contains(metaInfo.getTopMenuId()) &&
+                DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd())) {
+
+            if (metaInfo.getUnlmtAmt() != null) {
+                Price storePrice = new Price(metaInfo.getUnlmtAmt());
+                Store store = new Store(null, storePrice, null);
+                store.setUsePeriodUnitCd(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE);
+                rights.setStore(store);
+            }
+            if (metaInfo.getPeriodAmt() != null) {
+                Price playPrice = new Price(metaInfo.getPeriodAmt());
+                Play play = new Play(null, playPrice,
+                        DisplayCommonUtil.makeDateUsagePeriod(metaInfo.getUsePeriodUnitCd(), metaInfo.getUsePeriodInt(), metaInfo.getUsePeriodNm()));
+                play.setUsePeriodUnitCd(metaInfo.getUsePeriodUnitCd());
+                rights.setPlay(play);
+            }
+        }
 
 		// 소장 정보
 		if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {
@@ -607,11 +632,8 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		return date;
 	}
 
-    private static final Set<String> SET_EBOOK_COMIC = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("DP13", "DP14")));
-
     @Override
 	public Store generateStore(MetaInfo metaInfo) {
-		// FIXME
 		Store store = new Store();
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
@@ -623,6 +645,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		if (StringUtils.isNotEmpty(metaInfo.getStoreUsePeriodUnitCd())) {
 			store.setUsePeriodUnitCd(metaInfo.getStoreUsePeriodUnitCd());
 		}
+
 		metaInfo.setProdAmt(metaInfo.getStoreProdAmt());
 		metaInfo.setProdNetAmt(metaInfo.getStoreProdNetAmt());
 		store.setPrice(this.generatePrice(metaInfo));
@@ -640,15 +663,6 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	@Override
 	public Play generatePlay(MetaInfo metaInfo) {
-		// MM 상품 & 에피소드 상품이면
-        // rights.play.price
-        // rights.store.price
-        if(SET_EBOOK_COMIC.contains(metaInfo.getTopMenuId()) &&
-                DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd())) {
-
-
-
-        }
 
 		Play play = new Play();
 
@@ -662,7 +676,6 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			play.setUsePeriodUnitCd(metaInfo.getPlayUsePeriodUnitCd());
 		}
 
-        // NOTICE
 		metaInfo.setProdAmt(metaInfo.getPlayProdAmt());
 		metaInfo.setProdNetAmt(metaInfo.getPlayProdNetAmt());
 		play.setPrice(this.generatePrice(metaInfo));
