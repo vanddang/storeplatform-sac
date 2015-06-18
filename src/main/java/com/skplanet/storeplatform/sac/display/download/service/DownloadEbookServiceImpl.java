@@ -28,7 +28,10 @@ import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSa
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftConfirmInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
@@ -60,6 +63,9 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 	@Autowired
 	private HistoryInternalSCI historyInternalSCI;
+	
+	@Autowired
+    private GiftConfirmInternalSCI giftConfirmInternalSCI;
 
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
@@ -99,7 +105,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         // 현재일시 및 요청만료일시 조회
 		MetaInfo dateInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
-//		String sysDate = dateInfo.getSysDate();
+		String sysDate = dateInfo.getSysDate();
 		String reqExpireDate = dateInfo.getExpiredDate();
 
 		String idType = ebookReq.getIdType();
@@ -158,12 +164,15 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 				for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
+					permitDeviceYn = historySacIn.getPermitDeviceYn();
 					prchsProdId = historySacIn.getProdId();
 					drmYn = historySacIn.getDrmYn();
-					permitDeviceYn = historySacIn.getPermitDeviceYn();
 
 					String prchsState = setPrchsState(historySacIn);
 					loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
+					resetExprDtOfGift(historySacIn, ebookReq, header, sysDate, prchsState);
+					prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
+					
 					addPurchaseIntoList(purchaseList, historySacIn, prchsState);
 					// 구매상태 만료여부 및 단말 지원여부 확인
 					if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !"Y".equals(permitDeviceYn)) {
@@ -227,6 +236,36 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			}
 		}
 		return prchsState;
+	}
+	
+	// 선물인경우 다운로드 시점에 만료기간을 reset한다.
+	// 이는 선물 받은 상품이 다운로드 하는 시점에 만료가 되어 사용할 수 없게 되는 것을 방지하기 위함이다.
+	private void resetExprDtOfGift(HistorySacIn historySacIn, DownloadEbookSacReq ebookReq, SacRequestHeader header, String sysDate, String prchsState) {
+		if(prchsState.equals("gift") && StringUtils.isEmpty(historySacIn.getRecvDt()) ){
+			GiftConfirmSacInReq req = makeGiftConfirmSacInReq(ebookReq, historySacIn, header, sysDate);
+			GiftConfirmSacInRes res = giftConfirmInternalSCI.modifyGiftConfirm(req);
+			copyStartDtAndExprDt(historySacIn, res);
+		}
+	}
+
+	private void copyStartDtAndExprDt(HistorySacIn historySacIn, GiftConfirmSacInRes giftConfirmSacInRes) {
+		historySacIn.setUseStartDt(giftConfirmSacInRes.getUseStartDt());
+		historySacIn.setUseExprDt(giftConfirmSacInRes.getUseExprDt());
+		historySacIn.setDwldStartDt(giftConfirmSacInRes.getDwldStartDt());
+		historySacIn.setDwldExprDt(giftConfirmSacInRes.getDwldExprDt());
+	}
+
+	private GiftConfirmSacInReq makeGiftConfirmSacInReq(DownloadEbookSacReq ebookReq, HistorySacIn historySacIn, SacRequestHeader header, String sysDate) {
+		GiftConfirmSacInReq req = new GiftConfirmSacInReq();
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setSystemId(header.getTenantHeader().getSystemId());
+		req.setUserKey(ebookReq.getUserKey());
+		req.setDeviceKey(ebookReq.getDeviceKey());
+		req.setPrchsId(historySacIn.getPrchsId());
+		req.setProdId(historySacIn.getProdId());
+		req.setRecvConfPathCd(historySacIn.getRecvConfPathCd());
+		req.setRecvDt(sysDate);
+		return req;
 	}
 
 	private void setRequest(DownloadEbookSacReq ebookReq, SacRequestHeader header) {
