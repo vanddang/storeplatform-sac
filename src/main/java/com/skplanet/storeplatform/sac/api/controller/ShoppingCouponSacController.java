@@ -75,7 +75,7 @@ public class ShoppingCouponSacController {
 	@RequestMapping(value = "/api/couponInterface/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CouponRes apiCouponInterface(@RequestBody CouponReq couponReq) {
-
+		this.log.info("################ [SAC Shopping] Start : "+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 		this.log.debug("----------------------------------------------------------------");
 		this.log.debug("apiCouponInterface Controller started!!");
 		this.log.debug("----------------------------------------------------------------");
@@ -93,6 +93,7 @@ public class ShoppingCouponSacController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		this.log.info("################ [SAC Shopping] End : "+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 		return couponRes;
 
 	}
