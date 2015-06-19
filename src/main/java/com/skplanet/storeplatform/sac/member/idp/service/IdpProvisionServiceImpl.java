@@ -1059,7 +1059,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				UserMbr userMbr = new UserMbr();
 				userMbr.setUserKey(userKey);
 
-				String userPhone = StringUtil.nvl(map.get("user_phone"), "");
+				String userPhone = map.get("user_phone");
 				String userId = StringUtil.nvl(map.get("user_id"), "");
 				String userSex = StringUtil.nvl(map.get("user_sex"), "");
 				String userBirthday = StringUtil.nvl(map.get("user_birthday"), "");
@@ -1104,7 +1104,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				}
 
 				/* 휴대기기 기기 정보 변경 */
-				if (!StringUtil.equals(userPhone, "")) {
+				if (userPhone != null && !StringUtils.equals(userPhone, "")) {
 
 					/* 사용자 휴대기기 목록 조회 */
 					SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
@@ -1374,7 +1374,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							this.deviceSCI.removeDevice(removeDeviceReq);
 						}
 					}
-				} else {
+				} else if (StringUtils.equals(userPhone, "")) {
 
 					// user_phone이 빈값으로 내려온 경우 기존IDP계정/통합계정에 MDN이 모두 삭제 된 것으로 판단하여 휴대기기 삭제처리.
 					// ex) AAA 아이디, 111MDN 등록되어 있을 때 , BBB계정에 111MDN 등록시 AAA계정정보로 user_phone이 빈값이 내려옴.
