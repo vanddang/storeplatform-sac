@@ -27,6 +27,7 @@ public class OtherServiceGroup {
 	private String metaClsfCd;
 	private String prodGrdCd;
 	private String prodChrgYn;
+    private String prodNm;
 
 	public String getTopMenuNm() {
 		return this.topMenuNm;
@@ -166,4 +167,11 @@ public class OtherServiceGroup {
 		this.prodChrgYn = prodChrgYn;
 	}
 
+    public String getProdNm() {
+        return prodNm;
+    }
+
+    public void setProdNm(String prodNm) {
+        this.prodNm = prodNm;
+    }
 }
