@@ -665,6 +665,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Contributor contributor = this.ebookComicGenerator.generateComicContributor(metaInfo);
 		// BOOK 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
+		Badge badge = this.commonGenerator.generateBadge(metaInfo);
 
 		this.generateEpubPreview(metaInfo, rights);
 
@@ -677,6 +678,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setBook(book);
+		product.setBadge(badge);
 		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
 		// Comic 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
