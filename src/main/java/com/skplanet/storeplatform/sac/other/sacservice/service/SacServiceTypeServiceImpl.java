@@ -68,7 +68,7 @@ public class SacServiceTypeServiceImpl implements SacServiceTypeService {
 	@Override
 	public SacService fromSetReq(SetActiveReq req, SacRequestHeader header) {
 		String serviceCd = req.getServiceCd();
-		String tenantId = chooseValueFromBodyOrHeader(req.getServiceCd(), header.getTenantHeader().getTenantId());
+		String tenantId = chooseValueFromBodyOrHeader(req.getTenantId(), header.getTenantHeader().getTenantId());
 		String simOperator = chooseValueFromBodyOrHeader(req.getSimOperator(), header.getNetworkHeader().getSimOperator());
 		String model = chooseValueFromBodyOrHeader(req.getModel(), header.getDeviceHeader().getModel());
 		
