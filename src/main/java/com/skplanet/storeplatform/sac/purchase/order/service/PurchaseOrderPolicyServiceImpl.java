@@ -1427,7 +1427,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		sbPaymethodInfo.append(phonePaymethodInfo).append(";"); // 휴대폰
 
-		if (paymethodAdjustInfo.contains("13:0:0") == false) { // SAP 결제정책 : 신용카드 제한
+		if (StringUtils.replace(paymethodAdjustInfo, ":0.0", ":0").contains("13:0:0") == false) { // SAP 결제정책 : 신용카드 제한
 			if (CollectionUtils.isNotEmpty(checkPaymentPolicyParam.getSapPolicyCdList())
 					&& checkPaymentPolicyParam.getSapPolicyCdList().contains(PurchaseConstants.SAP_POLICY_LIMIT_CREDIT)) {
 				sbPaymethodInfo.append("13:0:0;");

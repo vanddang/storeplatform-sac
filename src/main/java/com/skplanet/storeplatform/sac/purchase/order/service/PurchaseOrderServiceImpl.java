@@ -784,6 +784,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 결제수단 별 가능 거래금액/비율 조정 정보
 		res.setCdMaxAmtRate(checkPaymentPolicyResult.getPaymentAdjInfo());
+		String cdMaxAmtRateNoDouble = StringUtils.replace(res.getCdMaxAmtRate(), ":0.0", ":0");
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제수단 정렬 재조정
@@ -793,7 +794,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// T store 쿠폰 조회
 
-		if (StringUtils.contains(res.getCdMaxAmtRate(), "26:0:0") == false
+		if (StringUtils.contains(cdMaxAmtRateNoDouble, "26:0:0") == false
 				&& StringUtils.equals(PurchaseConstants.TENANT_ID_TSTORE, verifyOrderInfo.getTenantId())) {
 			List<String> prodIdList = new ArrayList<String>();
 			for (PrchsDtlMore productInfo : prchsDtlMoreList) {
@@ -829,9 +830,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
 				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-			if (StringUtils.contains(res.getCdMaxAmtRate(), "25:0:0")
-					&& StringUtils.contains(res.getCdMaxAmtRate(), "27:0:0")
-					&& StringUtils.contains(res.getCdMaxAmtRate(), "30:0:0")) {
+			if (StringUtils.contains(cdMaxAmtRateNoDouble, "25:0:0")
+					&& StringUtils.contains(cdMaxAmtRateNoDouble, "27:0:0")
+					&& StringUtils.contains(cdMaxAmtRateNoDouble, "30:0:0")) {
 				cashIntgAmtInf = "25:0;27:0;30:0";
 			} else {
 				cashIntgAmtInf = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(payUserKey);
@@ -841,7 +842,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// T store Cash 조회
 			double tstoreCashAmt = 0;
 
-			if (StringUtils.contains(res.getCdMaxAmtRate(), "25:0:0") == false) {
+			if (StringUtils.contains(cdMaxAmtRateNoDouble, "25:0:0") == false) {
 				tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(payUserKey);
 			}
 
