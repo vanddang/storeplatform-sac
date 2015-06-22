@@ -7,6 +7,8 @@ public class SetActiveReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String serviceCd;
+	
+	private String tenantId;
 
 	private String simOperator;
 
@@ -20,6 +22,14 @@ public class SetActiveReq extends CommonInfo {
 
 	public void setServiceCd(String serviceCd) {
 		this.serviceCd = serviceCd;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	public String getSimOperator() {
