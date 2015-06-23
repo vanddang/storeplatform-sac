@@ -157,13 +157,13 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			paymentPageParam.setNoTelSeller(sellerInfo.getSellerPhone());
 		}
 		paymentPageParam.setSellerAddress(sellerInfo.getSellerAddress());
-		paymentPageParam.setBizRegNumber(sellerInfo.getBizRegNumber());
+		paymentPageParam.setSellerBizNumber(sellerInfo.getSellerBizNumber());
 
 		// 판매자가 개인일 경우 해당 내용 삭제
 		if (StringUtils.equals(sellerInfo.getSellerClass(), PurchaseConstants.SELLER_TYPE_INDIVISUAL)) {
 			paymentPageParam.setNoTelSeller(null);
 			paymentPageParam.setSellerAddress(null);
-			paymentPageParam.setBizRegNumber(null);
+			paymentPageParam.setSellerBizNumber(null);
 		}
 
 		// pDescription
@@ -458,7 +458,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		String nmSellerCompanyWithUrlEncoding = paymentPageParam.getNmSellerCompany();
 		String nmSellerWithUrlEncoding = paymentPageParam.getNmSeller();
 		String nmsellerAddressEncoding = paymentPageParam.getSellerAddress();
-		String nmsellerBizRegNumberEncoding = paymentPageParam.getBizRegNumber();
+		String nmsellerBizRegNumberEncoding = paymentPageParam.getSellerBizNumber();
 
 		// P/P 적용 이후 반영
 		try {
@@ -480,8 +480,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			if (StringUtils.isNotBlank(paymentPageParam.getSellerAddress())) {
 				nmsellerAddressEncoding = URLEncoder.encode(paymentPageParam.getSellerAddress(), "UTF-8");
 			}
-			if (StringUtils.isNotBlank(paymentPageParam.getBizRegNumber())) {
-				nmsellerBizRegNumberEncoding = URLEncoder.encode(paymentPageParam.getBizRegNumber(), "UTF-8");
+			if (StringUtils.isNotBlank(paymentPageParam.getSellerBizNumber())) {
+				nmsellerBizRegNumberEncoding = URLEncoder.encode(paymentPageParam.getSellerBizNumber(), "UTF-8");
 			}
 		} catch (UnsupportedEncodingException e) {
 			throw new StorePlatformException("SAC_PUR_7201", e);
@@ -525,8 +525,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		sb.append("&sellerType=").append(StringUtils.defaultString(paymentPageParam.getSellerType()));
 		sb.append("&flag=").append(StringUtils.defaultString(paymentPageParam.getFlag()));
 		sb.append("&sellerAddress=").append(StringUtils.defaultString(nmsellerAddressEncoding));
-//		sb.append("&bizRegNumber=").append(StringUtils.defaultString(nmsellerBizRegNumberEncoding));
-		sb.append("&bizRegNumber=").append("");
+		sb.append("&bizRegNumber=").append(StringUtils.defaultString(nmsellerBizRegNumberEncoding));
 		sb.append("&hasFullProdYn=").append(paymentPageParam.getHasFullProdYn());
 
 		String plainData = sb.toString();

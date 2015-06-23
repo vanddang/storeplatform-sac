@@ -66,6 +66,7 @@ public class PaymentPageParam extends CommonInfo {
 
 	private String sellerAddress; // 판매자 주소
 	private String bizRegNumber; // 판매자 사업자 번호
+	private String sellerBizNumber; // 사업자 등록번호
 
 	// ==========================================================================================
 
@@ -698,5 +699,24 @@ public class PaymentPageParam extends CommonInfo {
 	 */
 	public void setBizRegNumber(String bizRegNumber) {
 		this.bizRegNumber = bizRegNumber;
+	}
+
+	/**
+	 * Gets seller biz number.
+	 *
+	 * @return the seller biz number
+	 */
+	public String getSellerBizNumber() {
+		return sellerBizNumber;
+	}
+
+	/**
+	 * Sets seller biz number.
+	 *
+	 * @param sellerBizNumber
+	 *            the seller biz number
+	 */
+	public void setSellerBizNumber(String sellerBizNumber) {
+		this.sellerBizNumber = sellerBizNumber;
 	}
 }
