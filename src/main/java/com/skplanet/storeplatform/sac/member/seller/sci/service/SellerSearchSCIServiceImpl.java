@@ -245,6 +245,7 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 				String bizNoLower = null;
 				String addrLower = null;
 				String phoneLower = null;
+				String bizNumber = null;
 
 				// Top + Lower
 				// 내국인
@@ -284,6 +285,8 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 								.getSellerAddress() : "";
 						addrLower += StringUtils.isNotBlank(sellerMbrs.get(0).getSellerDetailAddress()) ? " "
 								+ sellerMbrs.get(0).getSellerDetailAddress() : "";
+						bizNumber = StringUtils.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0)
+								.getSellerBizNumber()) ? sellerMbrs.get(0).getSellerBizNumber() : "");
 					}
 
 				} else { // 외국인
@@ -341,6 +344,7 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 				sellerMbrSac.setBizRegNumber(bizNoLower);
 				sellerMbrSac.setSellerAddress(addrLower);
 				sellerMbrSac.setSellerPhone(phoneLower);
+				sellerMbrSac.setSellerBizNumber(bizNumber); // 2015-06-24 추가
 
 				sellerInfo = new SellerMbrInfoSac();
 				sellerInfo.setSellerId(sellerMbrs.get(0).getSellerID());
