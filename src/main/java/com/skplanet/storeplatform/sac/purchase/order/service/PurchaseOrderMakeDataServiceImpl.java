@@ -218,6 +218,13 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 						}
 					}
 
+					if (product.isFullProd()) { // 정식판 상품
+						// 이용기간 설정 타입: 구매시점
+						prchsDtlMore.setUsePeriodSetCd(PurchaseConstants.PRODUCT_USE_PERIOD_SET_PURCHASE);
+						// 기간 재산정: 처리완료
+						prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE);
+					}
+
 					// 정액권으로 에피소드 이용시
 					if (StringUtils.isNotBlank(product.getUseFixrateProdId())) {
 						prchsDtlMore.setUseExprDt(product.getUseExprDt());
