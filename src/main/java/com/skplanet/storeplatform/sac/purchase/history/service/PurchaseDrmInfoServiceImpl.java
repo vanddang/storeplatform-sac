@@ -38,7 +38,7 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 
 	/**
 	 * 다운로드 여부에 따른 DRM 정보 수정.
-	 * 
+	 *
 	 * @param request
 	 *            DRM정보
 	 * @return PurchaseDrmInfoSacInRes
@@ -59,6 +59,7 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 		scRequest.setTenantId(request.getTenantId());
 		scRequest.setSystemId(request.getSystemId());
 		scRequest.setPrchsId(request.getPrchsId());
+		scRequest.setProdId(request.getProdId());
 		scRequest.setUserKey(request.getUserKey());
 		/*************************************************
 		 * SC Request Setting End
@@ -71,7 +72,7 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 		// 구매내역이 존재하며 쇼핑상품이 아닌경우
 		if (purchaseDrmInfoSc != null
 				&& !StringUtils.startsWith(purchaseDrmInfoSc.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+				PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 
 			// 처리대기 상태인 경우만 처리
 			if (StringUtils.equals(PurchaseConstants.PROCESSING_STATUS_STANDBY,
@@ -98,6 +99,11 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 		 *************************************************/
 		response.setPrchsId(scResponse.getPrchsId());
 		response.setResultYn(!StringUtils.equals("Y", scResponse.getResultYn()) ? "N" : scResponse.getResultYn());
+		response.setProdId(scResponse.getProdId());
+		response.setUseStartDt(scResponse.getUseStartDt());
+		response.setUseExprDt(scResponse.getUseExprDt());
+		response.setDwldStartDt(scResponse.getDwldStartDt());
+		response.setDwldExprDt(scResponse.getDwldExprDt());
 		/*************************************************
 		 * SC -> SAC Response Setting End
 		 *************************************************/
