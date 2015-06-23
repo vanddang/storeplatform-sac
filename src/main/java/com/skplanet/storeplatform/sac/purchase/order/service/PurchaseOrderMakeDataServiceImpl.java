@@ -642,6 +642,10 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			prchsDtlMore.setUsePeriodUnitCd(episode.getUsePeriodUnitCd());
 			prchsDtlMore.setUsePeriod(String.valueOf(episode.getUsePeriod() == null ? 0 : episode.getUsePeriod()));
 			prchsDtlMore.setDrmYn(episode.getDrmYn());
+			// 이용기간 설정 타입: 구매시점
+			prchsDtlMore.setUsePeriodSetCd(PurchaseConstants.PRODUCT_USE_PERIOD_SET_PURCHASE);
+			// 기간 재산정: 처리완료
+			prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE);
 
 			prchsDtlMore.setUseFixrateProdId(fixrateInfo.getProdId());
 			prchsDtlMore.setUseFixratePrchsId(fixrateInfo.getPrchsId());
