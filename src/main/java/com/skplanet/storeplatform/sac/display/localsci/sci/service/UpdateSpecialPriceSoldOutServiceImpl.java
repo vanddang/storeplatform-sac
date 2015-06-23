@@ -49,11 +49,11 @@ public class UpdateSpecialPriceSoldOutServiceImpl implements UpdateSpecialPriceS
 	@Override
 	public void updateSpecialPriceSoldOut(SpecialPriceSoldOutReq req) {
 
-		this.log.debug("----------------------------------------------------------");
-		this.log.debug("tenantId : {}", req.getTenantId());
-		this.log.debug("productId : {}", req.getProductId());
-		this.log.debug("lang : {}", req.getLang());
-		this.log.debug("----------------------------------------------------------");
+		this.log.info("----------------------------------------------------------");
+		this.log.info("tenantId : {}", req.getTenantId());
+		this.log.info("productId : {}", req.getProductId());
+		this.log.info("lang : {}", req.getLang());
+		this.log.info("----------------------------------------------------------");
 
 		Map<String, String> map = new HashMap<String, String>();
 		int prodCnt = 0;
@@ -62,7 +62,11 @@ public class UpdateSpecialPriceSoldOutServiceImpl implements UpdateSpecialPriceS
 
 		// TB_DP_SPRC_PROD 판매중인 상품 존재 유무 확인
 		prodCnt = (Integer) this.commonDAO.queryForObject("SpecialPriceSoldOut.getSpecialPriceSoldOut", map);
-
+		
+		this.log.info("----------------------------------------------------------");
+		this.log.info("prodCnt : {}", prodCnt);
+		this.log.info("----------------------------------------------------------");
+		
 		if (prodCnt < 1) {
 			throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
 		} else {
