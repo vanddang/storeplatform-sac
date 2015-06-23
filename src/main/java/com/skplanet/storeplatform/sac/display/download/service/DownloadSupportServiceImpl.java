@@ -144,6 +144,6 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
 
         PurchaseDrmInfoScRes drmInfoScRes = purchaseDrmInfoSCI.updatePrchaseDrm(req);
         if(drmInfoScRes != null && "Y".equals(drmInfoScRes.getResultYn()))
-            metaInfo.setExpiredDate(drmInfoScRes.getUseStartDt());
+            metaInfo.setExpiredDate(drmInfoScRes.getUseExprDt());
     }
 }
