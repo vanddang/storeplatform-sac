@@ -9,13 +9,22 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.sci.MiscellaneousSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq.PolicyCode;
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.*;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac.SellerMbrAppSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.*;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
+import com.skplanet.storeplatform.sac.purchase.order.vo.SellerMbrAppSacParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -26,37 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.sci.MiscellaneousSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq.PolicyCode;
-import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac.SellerMbrAppSac;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
-import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UpdateLimitChargeYnSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UpdateLimitChargeYnSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
-import com.skplanet.storeplatform.sac.purchase.order.vo.SellerMbrAppSacParam;
+import java.util.*;
 
 /**
  * 
@@ -380,7 +359,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 					sellerMbrAppSacParam.setSellerPhone(seller.getSellerPhone());
 					sellerMbrAppSacParam.setSellerClass(sellerMbrInfoSac.getSellerClass());
 					sellerMbrAppSacParam.setSellerAddress(seller.getSellerAddress());
-					sellerMbrAppSacParam.setBizRegNumber(seller.getBizRegNumber());
+					sellerMbrAppSacParam.setSellerBizNumber(seller.getSellerBizNumber());
 					break;
 				}
 			}
