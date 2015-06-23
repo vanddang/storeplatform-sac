@@ -9,20 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.purchase.client.history.sci.PurchaseDrmInfoSCI;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
@@ -30,12 +20,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDevic
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftConfirmInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
@@ -47,6 +32,16 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
@@ -158,17 +153,13 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				log.debug("----------------------------------------------------------------");
 				log.debug("[DownloadEbookLog] 구매건수 : {}", historyRes.getTotalCnt());
 				log.debug("----------------------------------------------------------------");
-				String prchsProdId = null; // 구매 상품ID
-				String drmYn = null; // DRM 지원여부
-				String permitDeviceYn = null; // 단말지원여부
 				List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 				for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-					permitDeviceYn = historySacIn.getPermitDeviceYn();
-					prchsProdId = historySacIn.getProdId();
-					drmYn = historySacIn.getDrmYn();
-
+                    String permitDeviceYn = historySacIn.getPermitDeviceYn();
+                    String prchsProdId = historySacIn.getProdId();
 					String prchsState = setPrchsState(historySacIn);
+
 					loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
 					resetExprDtOfGift(historySacIn, ebookReq, header, sysDate, prchsState);
 					prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
@@ -199,7 +190,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					if (!"Y".equals(deviceRes.getAuthYn())) {
 						log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 					} else if (memberPassFlag && deviceRes != null) {
-						setMetaInfo(metaInfo, historySacIn, ebookReq, reqExpireDate, prchsProdId, drmYn, prchsState, deviceRes);
+						setMetaInfo(metaInfo, historySacIn, ebookReq, reqExpireDate, prchsProdId, prchsState, deviceRes);
                         Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
 						encryptionList.add(encryption);
 						loggingEncResult(encryption);
@@ -313,7 +304,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	}
 
 	private void setMetaInfo(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadEbookSacReq ebookReq, String reqExpireDate, String prchsProdId,
-			String drmYn, String prchsState, SearchDeviceIdSacRes deviceRes) {
+                             String prchsState, SearchDeviceIdSacRes deviceRes) {
 		String deviceId = deviceRes.getDeviceId();
 		String deviceIdType = commonService.getDeviceIdType(deviceId);
 
@@ -338,17 +329,26 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
 
 		// 구매시점 DRM 여부값으로 세팅
-		if (StringUtils.isNotEmpty(drmYn)) {
-			metaInfo.setStoreDrmYn(drmYn);
-			metaInfo.setPlayDrmYn(drmYn);
-		}
+        String drmYn = historySacIn.getDrmYn();
+        if (StringUtils.isNotEmpty(drmYn)) {
+            metaInfo.setDrmYn(drmYn);
+            if (drmYn.equals("Y"))
+                supportService.mappPurchaseDrmInfo(metaInfo);
+
+            metaInfo.setStoreDrmYn(drmYn);
+            metaInfo.setPlayDrmYn(drmYn);
+        }
 
 		// 소장, 대여 구분(Store : 소장, Play : 대여)
 		if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-			metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+            if (StringUtils.isEmpty(drmYn))
+			    metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+
 			metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
 		} else {
-			metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+            if (StringUtils.isEmpty(drmYn))
+			    metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+
 			metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
 		}
 	}

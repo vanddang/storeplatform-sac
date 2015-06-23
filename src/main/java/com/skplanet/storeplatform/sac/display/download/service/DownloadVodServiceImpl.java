@@ -9,21 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
-
-import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.purchase.client.history.sci.PurchaseDrmInfoSCI;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
@@ -31,14 +20,10 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDevic
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftConfirmInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -47,6 +32,16 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.VodGenerator;
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -152,14 +147,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			if (purchaseFlag && historyRes != null) {
 				log.debug("[DownloadVodServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
 				log.debug("---------------------------------------------------------------------");
-				String permitDeviceYn = null; // 단말 지원여부
 				List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 				for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-					permitDeviceYn = historySacIn.getPermitDeviceYn();
-
+                    String permitDeviceYn = historySacIn.getPermitDeviceYn();
 					String prchsState = setPrchsState(historySacIn);
-					loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
+
+                    loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
 					resetExprDtOfGift(historySacIn, downloadVodSacReq, sysDate, prchsState);
 					prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
 
@@ -176,7 +170,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						continue;
 					}
 					log.debug("----------------------------  start set Purchase Info  ------------------------------------");
-					SearchDeviceIdSacReq deviceReq = null;
+					SearchDeviceIdSacReq deviceReq;
 					SearchDeviceIdSacRes deviceRes = new SearchDeviceIdSacRes();
 					boolean memberFlag = true;
 
@@ -199,6 +193,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					if (!"Y".equals(deviceRes.getAuthYn())) {
 						log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 					} else if (memberFlag && deviceRes != null) {
+                        
 						setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
                         Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
 						encryptionList.add(encryption);
@@ -362,6 +357,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		metaInfo.setSystemId(tenantHeader.getSystemId());
 		metaInfo.setTenantId(tenantHeader.getTenantId());
+
+        if ("Y".equals(historySacIn.getDrmYn()))
+            supportService.mappPurchaseDrmInfo(metaInfo);
 	}
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {
@@ -493,12 +491,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		String prchsProdId = "";
 		String prchsReqPathCd = "";
 		String useFixrateProdId = "";
+		String drmYn = null;
 
 		if (historySacIn != null) {
 			prchsProdId = historySacIn.getProdId();
 			prchsReqPathCd = historySacIn.getPrchsReqPathCd();
 			useFixrateProdId = historySacIn.getUseFixrateProdId();
-		}
+            drmYn = historySacIn.getDrmYn();
+        }
 
 		// 2014.07.01. kdlim. 구매 내역 drmYn 값이 정확하지 않아 상품정보 drmYn으로 변경
 		// 단, T Freemium을 통한 구매건의 경우는 무조건 DRM적용이므로 아래의 조건을 예외처리 해야함.
@@ -540,6 +540,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		// 2015.06.17
 		// 별다른 조건이 없다면 구매당시의 DRM 정보를 사용하도록 수정 (이전에는 전시 정보 사용)
-		metaInfo.setDrmYn(historySacIn.getDrmYn());
+		metaInfo.setDrmYn(drmYn);
 	}
 }

@@ -51,4 +51,10 @@ public interface DownloadSupportService {
     Encryption generateEncryption(MetaInfo metaInfo, String prchProdId, boolean supportFhdVideo);
 
     void createUserDownloadInfo(String mdn, String aid, String tenantId, String prodId);
+
+    /**
+     * 구매에서 조회한 DRM 정보를 기반으로 사용만료일을 매핑한다.
+     * @param metaInfo purchaseId, purchaseProdId, systemId, tenantId, userKey가 매핑된 상태여야 한다.
+     */
+    void mappPurchaseDrmInfo(MetaInfo metaInfo);
 }

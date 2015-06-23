@@ -9,20 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.purchase.client.history.sci.PurchaseDrmInfoSCI;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
@@ -44,6 +33,17 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * DownloadComic Service 인터페이스(CoreStoreBusiness) 구현체
@@ -136,18 +136,13 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                 logger.debug("[DownloadComicLog] 구매건수 : {}", historyRes.getTotalCnt());
                 logger.debug("----------------------------------------------------------------");
 
-                String prchsProdId = null; // 구매 상품ID
-                String drmYn = null; // DRM 지원여부
-                String permitDeviceYn = null; // 단말지원여부
-
                 List<Purchase> purchaseList = new ArrayList<Purchase>();
 
                 for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
-                    prchsProdId = historySacIn.getProdId();
-                    drmYn = historySacIn.getDrmYn();
-                    permitDeviceYn = historySacIn.getPermitDeviceYn();
-
+                    String prchsProdId = historySacIn.getProdId();
+                    String permitDeviceYn = historySacIn.getPermitDeviceYn();
 					String prchsState = setPrchsState(historySacIn);
+
                     loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
                     addPurchaseIntoList(purchaseList, historySacIn, prchsState);
                     // 구매상태 만료여부 및 단말 지원여부 확인
@@ -174,7 +169,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					if (!"Y".equals(deviceRes.getAuthYn())) {
 						logger.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 					} else if (memberPassFlag && deviceRes != null) {
-                    	setMetaInfo(comicReq, reqExpireDate, metaInfo, prchsProdId, drmYn, historySacIn, prchsState, deviceRes);
+                    	setMetaInfo(comicReq, reqExpireDate, metaInfo, prchsProdId, historySacIn, prchsState, deviceRes);
                         Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
                         encryptionList.add(encryption);
                         loggingEncResult(encryption);
@@ -255,8 +250,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		return comicRes;
 	}
 
-	private void setMetaInfo(DownloadComicSacReq comicReq, String reqExpireDate, MetaInfo metaInfo, String prchsProdId, String drmYn,
-			HistorySacIn historySacIn, String prchsState, SearchDeviceIdSacRes deviceRes) {
+	private void setMetaInfo(DownloadComicSacReq comicReq, String reqExpireDate, MetaInfo metaInfo, String prchsProdId,
+                             HistorySacIn historySacIn, String prchsState, SearchDeviceIdSacRes deviceRes) {
 		String deviceId = deviceRes.getDeviceId();
 		String deviceIdType = commonService.getDeviceIdType(deviceId);
 
@@ -281,15 +276,20 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
 
 		// 구매시점 DRM 여부값으로 세팅
-		if (StringUtils.isNotEmpty(drmYn)) {
-		    metaInfo.setDrmYn(drmYn);
+		if (StringUtils.isNotEmpty(historySacIn.getDrmYn())) {
+		    metaInfo.setDrmYn(historySacIn.getDrmYn());
+
+            if ("Y".equals(historySacIn.getDrmYn()))
+                supportService.mappPurchaseDrmInfo(metaInfo);
 		}
-		// 소장, 대여 구분(Store : 소장, Play : 대여)
-		if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-			metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-		} else {
-			metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-		}
+        else {
+            // 소장, 대여 구분(Store : 소장, Play : 대여)
+            if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+                metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+            } else {
+                metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+            }
+        }
 	}
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {

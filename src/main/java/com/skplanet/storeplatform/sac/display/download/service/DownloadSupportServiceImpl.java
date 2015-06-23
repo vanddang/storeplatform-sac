@@ -11,6 +11,9 @@ package com.skplanet.storeplatform.sac.display.download.service;
 
 import com.google.common.base.Strings;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.purchase.client.history.sci.PurchaseDrmInfoSCI;
+import com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
@@ -50,6 +53,9 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
 
     @Autowired
     private DownloadAES128Helper downloadAES128Helper;
+
+    @Autowired
+    private PurchaseDrmInfoSCI purchaseDrmInfoSCI;
 
     @Autowired
     @Qualifier("sac")
@@ -125,5 +131,19 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         catch (DuplicateKeyException e) {
             // NOOP
         }
+    }
+
+    @Override
+    public void mappPurchaseDrmInfo(MetaInfo metaInfo) {
+        PurchaseDrmInfoScReq req = new PurchaseDrmInfoScReq();
+        req.setUserKey(metaInfo.getUserKey());
+        req.setTenantId(metaInfo.getTenantId());
+        req.setSystemId(metaInfo.getSystemId());
+        req.setPrchsId(metaInfo.getPurchaseId());
+        req.setProdId(metaInfo.getPurchaseProdId());
+
+        PurchaseDrmInfoScRes drmInfoScRes = purchaseDrmInfoSCI.updatePrchaseDrm(req);
+        if(drmInfoScRes != null)
+            metaInfo.setExpiredDate(drmInfoScRes.getUseStartDt());
     }
 }
