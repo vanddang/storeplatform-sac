@@ -64,7 +64,7 @@ public class UpdateSpecialPriceSoldOutServiceImpl implements UpdateSpecialPriceS
 		prodCnt = (Integer) this.commonDAO.queryForObject("SpecialPriceSoldOut.getSpecialPriceSoldOut", map);
 		
 		this.log.info("----------------------------------------------------------");
-		this.log.info("prodCnt : {}", prodCnt);
+		this.log.info("special Sold Out prodCnt : {}", prodCnt);
 		this.log.info("----------------------------------------------------------");
 		
 		if (prodCnt < 1) {
