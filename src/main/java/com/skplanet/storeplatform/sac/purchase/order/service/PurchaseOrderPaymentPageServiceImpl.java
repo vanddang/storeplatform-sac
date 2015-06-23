@@ -9,27 +9,22 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
-import com.skplanet.storeplatform.sac.purchase.order.vo.MctSpareParam;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
-import com.skplanet.storeplatform.sac.purchase.order.vo.SellerMbrAppSacParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.*;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * 
@@ -530,7 +525,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		sb.append("&sellerType=").append(StringUtils.defaultString(paymentPageParam.getSellerType()));
 		sb.append("&flag=").append(StringUtils.defaultString(paymentPageParam.getFlag()));
 		sb.append("&sellerAddress=").append(StringUtils.defaultString(nmsellerAddressEncoding));
-		sb.append("&bizRegNumber=").append(StringUtils.defaultString(nmsellerBizRegNumberEncoding));
+//		sb.append("&bizRegNumber=").append(StringUtils.defaultString(nmsellerBizRegNumberEncoding));
+		sb.append("&bizRegNumber=").append("");
 		sb.append("&hasFullProdYn=").append(paymentPageParam.getHasFullProdYn());
 
 		String plainData = sb.toString();
