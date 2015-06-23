@@ -9,22 +9,27 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
-import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
-import com.skplanet.storeplatform.sac.purchase.order.vo.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
+import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
+import com.skplanet.storeplatform.sac.purchase.order.vo.MctSpareParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
+import com.skplanet.storeplatform.sac.purchase.order.vo.SellerMbrAppSacParam;
 
 /**
  * 
@@ -66,7 +71,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		paymentPageParam.setMctTrDate(purchaseOrderInfo.getPrchsDt());
 		paymentPageParam.setAmtPurchase(String.valueOf(purchaseOrderInfo.getRealTotAmt()));
 		paymentPageParam.setPid(product.getProdId());
-		paymentPageParam.setHasFullProdYn(purchaseOrderInfo.isExistCommercialIap() ? "Y":"N");
+		paymentPageParam.setHasFullProdYn(purchaseOrderInfo.isExistCommercialIap() ? "Y" : "N");
 		if (purchaseOrderInfo.getPurchaseProductList().size() > 1) {
 			paymentPageParam.setpName(product.getProdNm() + " 포함 " + purchaseOrderInfo.getPurchaseProductList().size()
 					+ "개");
@@ -96,6 +101,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_LGT); // LGT
 		} else if (StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_KT)) {
 			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_KT); // KT
+		} else if (StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_KCT)) {
+			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_KCT); // KCT
 		} else {
 			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_UNKNOWN); // UKNOWN
 		}
@@ -158,7 +165,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		paymentPageParam.setBizRegNumber(sellerInfo.getBizRegNumber());
 
 		// 판매자가 개인일 경우 해당 내용 삭제
-		if(StringUtils.equals(sellerInfo.getSellerClass(),PurchaseConstants.SELLER_TYPE_INDIVISUAL)) {
+		if (StringUtils.equals(sellerInfo.getSellerClass(), PurchaseConstants.SELLER_TYPE_INDIVISUAL)) {
 			paymentPageParam.setNoTelSeller(null);
 			paymentPageParam.setSellerAddress(null);
 			paymentPageParam.setBizRegNumber(null);
@@ -184,11 +191,11 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> 가맹점 파라미터 구성: 구매인증/결제처리결과알림 요청 시 그대로 전달받음. </pre>
-	 *
+	 * 
 	 * @param purchaseOrderInfo 구매요청 정보
-	 *
+	 * 
 	 * @return 구성된 가맹점 파라미터
 	 */
 	private String makeMctSpareParam(PurchaseOrderInfo purchaseOrderInfo) {
@@ -221,11 +228,11 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> 결제Page 노출 상품명 정보 생성. </pre>
-	 *
+	 * 
 	 * @param purchaseProduct 구매할 상품 정보
-	 *
+	 * 
 	 * @return 결제Page에 노출할 상품명
 	 */
 	private String makeProductName(PurchaseProduct purchaseProduct) {
@@ -276,13 +283,13 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> 구매 상품설명 생성. </pre>
-	 *
+	 * 
 	 * @param tenantProdGrpCd 테넌트 상품 분류 코드
-	 *
+	 * 
 	 * @param purchaseProductList 구매 기본상품 목록
-	 *
+	 * 
 	 * @return 구매 상품설명
 	 */
 	private String makeProductDescription(String tenantProdGrpCd, List<PurchaseProduct> purchaseProductList) {
@@ -440,13 +447,13 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> 결제Page 데이터 암호화. </pre>
-	 *
+	 * 
 	 * @param paymentPageParam 결제Page 데이터
-	 *
+	 * 
 	 * @param encKey 암호화 키
-	 *
+	 * 
 	 * @return 암호화된 데이터
 	 */
 	private String encryptPaymentData(PaymentPageParam paymentPageParam, String encKey) {

@@ -235,6 +235,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYPLANET_TELECOM_SKT = "S"; // SKT
 	public static final String PAYPLANET_TELECOM_KT = "K"; // KT
 	public static final String PAYPLANET_TELECOM_LGT = "L"; // LG U+
+	public static final String PAYPLANET_TELECOM_KCT = "C"; // KCT
 	public static final String PAYPLANET_TELECOM_UNKNOWN = "X"; // Unknown
 
 	/** Pay Planet 결제 취소 사유 */
