@@ -2157,7 +2157,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		// 2. extraProfile 회원키 조회
 		SearchManagementRequest searchManagementRequest = new SearchManagementRequest();
-		searchManagementRequest = new SearchManagementRequest();
 		searchManagementRequest.setCommonRequest(commonRequest);
 		searchManagementRequest.setExtraProfile(extraProfile);
 		searchManagementRequest.setExtraProfileValue(extraProfileValue);
