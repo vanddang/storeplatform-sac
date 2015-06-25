@@ -9,13 +9,37 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.theme.recommend.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendProdSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -30,16 +54,6 @@ import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 테마 추천 상품 리스트 조회 API Interface 구현체.
@@ -79,7 +93,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		mapReq.put("deviceHeader", deviceHeader);
 		mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
-		List<ThemeRecommend> packageInfo = new ArrayList<ThemeRecommend>();
+		// List<ThemeRecommend> packageInfo = new ArrayList<ThemeRecommend>();
 		List<String> imageCodeList = new ArrayList<String>();
 		imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 		imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
@@ -101,8 +115,8 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		mapReq.put("START_ROW", start);
 		mapReq.put("END_ROW", end);
 
-		packageInfo = this.commonDAO
-				.queryForList("Isf.ThemeRecommend.getRecomendPkgList", mapReq, ThemeRecommend.class);
+		List<ThemeRecommend> packageInfo = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgList", mapReq,
+				ThemeRecommend.class);
 
 		if (packageInfo.isEmpty()) {
 			throw new StorePlatformException("SAC_DSP_0009");
@@ -326,7 +340,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 			List<Identifier> identifierList;
 
 			product = new Product();
-			identifier = new Identifier();
+			// identifier = new Identifier();
 			title = new Title();
 			app = new App();
 			music = new Music();
