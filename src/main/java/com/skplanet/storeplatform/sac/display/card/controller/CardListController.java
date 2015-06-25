@@ -30,7 +30,7 @@ import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
  * <p>
  * CardController
  * </p>
- * Updated on : 2014. 10. 08 Updated by : 정희원, SK 플래닛.
+ * Updated on : 2014. 10. 08 Updated by : 정화수, SK 플래닛.
  */
 @Controller
 public class CardListController {
@@ -42,7 +42,7 @@ public class CardListController {
     @ResponseBody
     public Panel listInPanel(@RequestBody @Valid CardListInPanelReq req, SacRequestHeader header) {
 
-    	String      tenantId    = header.getTenantHeader().getTenantId();
+        String      tenantId    = header.getTenantHeader().getTenantId();
         String      langCd      = header.getTenantHeader().getLangCd();
         SegmentInfo segmentInfo = new SegmentInfo(req.getSegment());
 
