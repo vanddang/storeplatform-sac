@@ -342,10 +342,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 			// 이미지 리사이즈 처리
 			this.catalogImgResize(dpCatalogInfo);
-			
-			// 이미지 리사이즈 Thread 처리
-//			this.getCallThreadShoppingImage(dpCatalogInfo);
-		
 
 			// 카탈로그 태그정보 처리
 			this.catalogTagList(dpCatalogInfo);
@@ -362,9 +358,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			e.printStackTrace();
 		}
 
-
-		
-		
 		return true;
 	}
 
@@ -1110,23 +1103,5 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 		this.log.info("■■■■■ 카탈로그 검색서버를 위한 MQ 연동 end ■■■■■");
 
-	}
-	/**
-	 * getCallThreadShoppingImage 이미지 쓰레드 처리
-	 * 
-	 * @param dpCatalogInfo
-	 *            dpCatalogInfo
-	 */	
-	private void getCallThreadShoppingImage(DpCatalogInfo dpCatalogInfo) {
-	
-		ThreadShoppingImage r= new ThreadShoppingImage(dpCatalogInfo,brandCatalogService);
-		Thread thd = new Thread(r);
-		thd.start(); 
-		try{
-			Thread.sleep(1000);
-		}catch (InterruptedException e){
-			e.printStackTrace();
-		}
-		r.stop();	
 	}
 }
