@@ -29,8 +29,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSelle
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAgreementListSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAgreementListSellerResponse;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchFlurryListRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchFlurryListResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest;
@@ -50,7 +48,6 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.Searc
 import com.skplanet.storeplatform.sac.client.member.vo.common.BanksByCountry;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
-import com.skplanet.storeplatform.sac.client.member.vo.common.FlurryAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
@@ -193,12 +190,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		schReq.setKeySearchList(list);
 		SearchSellerResponse schRes = this.sellerSCI.searchSeller(schReq);
 
-		// SC 판매자회원 Fluury 연동정보 목록조회.
-		SearchFlurryListRequest searchFlurryListRequest = new SearchFlurryListRequest();
-		searchFlurryListRequest.setCommonRequest(commonRequest);
-		searchFlurryListRequest.setSellerKey(schRes.getSellerKey());
-		SearchFlurryListResponse searchFlurryListResponse = this.sellerSCI.searchFlurryList(searchFlurryListRequest);
-
 		// 법정대리인정보
 		MbrLglAgent mbrLglAgent = new MbrLglAgent();
 		if (schRes.getMbrLglAgent() != null) {
@@ -243,20 +234,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			}
 		}
 
-		// 판매자 플러리 인증정보
-		List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
-		FlurryAuth flurryAuth = null;
-		if (searchFlurryListResponse.getFlurryAuthList() != null) {
-			for (int i = 0; i < searchFlurryListResponse.getFlurryAuthList().size(); i++) {
-				flurryAuth = new FlurryAuth();
-				flurryAuth.setAccessCode(searchFlurryListResponse.getFlurryAuthList().get(i).getAccessCode());
-				flurryAuth.setAuthToken(searchFlurryListResponse.getFlurryAuthList().get(i).getAuthToken());
-				flurryAuth.setRegDate(searchFlurryListResponse.getFlurryAuthList().get(i).getRegDate());
-				flurryAuth.setUpdateDate(searchFlurryListResponse.getFlurryAuthList().get(i).getUpdateDate());
-				flurryAuthList.add(flurryAuth);
-			}
-		}
-
 		// 실명인증 여부에 따른 판매자 회원정보 Setting.
 		SellerMbrSac sellerMbr = this.sellerMbr(schRes.getSellerMbr(), schRes.getMbrAuth()); // 실명인증 판매자 정보 & 판매자 정보
 
@@ -265,7 +242,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		response.setMbrLglAgent(mbrLglAgent); // 법정대리인정보
 		response.setExtraRightList(extraRightList); // 판매자 멀티미디어 정보
 		response.setTabAuthList(tabAuthList); // 탭권한 정보
-		response.setFlurryAuthList(flurryAuthList); // 판매자 플러리 인증정보
 
 		LOGGER.debug("[SellerSearchServiceImpl.detailInformation()] END.");
 		return response;
@@ -368,9 +344,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, sellerMbrs.get(0)
 					.getSellerClass())) {
 				// first:sellerName, second:sellerCompany, default:""
+				// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-22).
 				nameLower = StringUtils
-						.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
-								.getSellerName() : sellerMbrs.get(0).getSellerCompany(), "");
+						.defaultString(
+								StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? StringUtils.replace(
+										sellerMbrs.get(0).getSellerName(), "|", " ") : sellerMbrs.get(0)
+										.getSellerCompany(), "");
 			}
 			// 개인 사업자, 법인 사업자 ( 상호명, 이메일 )
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, sellerMbrs.get(0)
@@ -812,29 +791,30 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			mbrLglAgent.setSequence(searchSellerRes.getMbrLglAgent().getSequence());
 		}
 
-		// SC 판매자회원 Fluury 연동정보 목록조회.
-		SearchFlurryListRequest searchFlurryListReq = new SearchFlurryListRequest();
-		searchFlurryListReq.setCommonRequest(commonRequest);
-		searchFlurryListReq.setSellerKey(searchSellerRes.getSellerKey());
-		SearchFlurryListResponse searchFlurryListResponse = this.sellerSCI.searchFlurryList(searchFlurryListReq);
+		// SC 판매자회원 Fluury 연동정보 목록조회 (2015-07-22 Fluury 연동 제거).
+		// SearchFlurryListRequest searchFlurryListReq = new SearchFlurryListRequest();
+		// searchFlurryListReq.setCommonRequest(commonRequest);
+		// searchFlurryListReq.setSellerKey(searchSellerRes.getSellerKey());
+		// SearchFlurryListResponse searchFlurryListResponse = this.sellerSCI.searchFlurryList(searchFlurryListReq);
 
-		// 판매자 플러리 인증정보
-		List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
-		FlurryAuth flurryAuth = null;
-		if (searchFlurryListResponse.getFlurryAuthList() != null) {
-			for (int i = 0; i < searchFlurryListResponse.getFlurryAuthList().size(); i++) {
-				flurryAuth = new FlurryAuth();
-				flurryAuth.setAccessCode(searchFlurryListResponse.getFlurryAuthList().get(i).getAccessCode());
-				flurryAuth.setAuthToken(searchFlurryListResponse.getFlurryAuthList().get(i).getAuthToken());
-				flurryAuth.setRegDate(searchFlurryListResponse.getFlurryAuthList().get(i).getRegDate());
-				flurryAuth.setUpdateDate(searchFlurryListResponse.getFlurryAuthList().get(i).getUpdateDate());
-				flurryAuthList.add(flurryAuth);
-			}
-		}
+		// 판매자 플러리 인증정보 (2015-07-22 Fluury 연동 제거).
+		// List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
+		// FlurryAuth flurryAuth = null;
+		// if (searchFlurryListResponse.getFlurryAuthList() != null) {
+		// for (int i = 0; i < searchFlurryListResponse.getFlurryAuthList().size(); i++) {
+		// flurryAuth = new FlurryAuth();
+		// flurryAuth.setAccessCode(searchFlurryListResponse.getFlurryAuthList().get(i).getAccessCode());
+		// flurryAuth.setAuthToken(searchFlurryListResponse.getFlurryAuthList().get(i).getAuthToken());
+		// flurryAuth.setRegDate(searchFlurryListResponse.getFlurryAuthList().get(i).getRegDate());
+		// flurryAuth.setUpdateDate(searchFlurryListResponse.getFlurryAuthList().get(i).getUpdateDate());
+		// flurryAuthList.add(flurryAuth);
+		// }
+		// }
 
 		response.setExtraRightList(extraRightList); // 판매자 멀티미디어정보
 		response.setMbrLglAgent(mbrLglAgent); // 법정대리인정보
-		response.setFlurryAuthList(flurryAuthList);
+		// (2015-07-22 Fluury 연동 제거)
+		// response.setFlurryAuthList(flurryAuthList);
 		response.setSellerMbr(this.sellerMbr(searchSellerRes.getSellerMbr(), searchSellerRes.getMbrAuth())); // 판매자 정보
 
 		return response;
@@ -899,7 +879,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			// sellerMbrRes.setSellerName(sellerMbr.getSellerName());
 			// sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
 			// }
-			sellerMbrRes.setSellerName(sellerMbr.getSellerName());
+			// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-22).
+			sellerMbrRes.setSellerName(StringUtils.replace(sellerMbr.getSellerName(), "|", " "));
 			sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
 			sellerMbrRes.setSellerSSNumber(sellerMbr.getSellerSSNumber());
 			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());

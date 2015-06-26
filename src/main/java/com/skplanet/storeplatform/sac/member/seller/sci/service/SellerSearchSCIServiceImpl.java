@@ -151,7 +151,7 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 					sellerMbrSac.setSellerCompany(sellerMbr.getSellerCompany());
 					sellerMbrSac.setSellerNickName(sellerMbr.getSellerNickName());
 					sellerMbrSac.setSellerBizNumber(sellerMbr.getSellerBizNumber());
-					sellerMbrSac.setSellerName(sellerMbr.getSellerName());
+					sellerMbrSac.setSellerName(StringUtils.replace(sellerMbr.getSellerName(), "|", " "));
 					sellerMbrSac.setRepPhone(sellerMbr.getRepPhone());
 					sellerMbrSac.setSellerEmail(sellerMbr.getSellerEmail());
 					sellerMbrSac.setSellerAddress(sellerMbr.getSellerAddress());
@@ -300,8 +300,9 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 							.get(0).getSellerClass())) {
 						// first:sellerName, second:sellerCompany, default:""
 						nameLower = StringUtils.defaultString(
-								StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
-										.getSellerName() : sellerMbrs.get(0).getSellerCompany(), "");
+								StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? StringUtils.replace(
+										sellerMbrs.get(0).getSellerName(), "|", " ") : sellerMbrs.get(0)
+										.getSellerCompany(), "");
 					}
 					// 개인 사업자, 법인 사업자 ( 상호명, 이메일 )
 					if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, sellerMbrs
