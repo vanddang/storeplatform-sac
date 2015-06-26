@@ -356,15 +356,18 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// UAPS 연동, 단말 부가정보 등록
+		// (2015-07-22 패치 제거).
 		// 자사, 오늘 끝자리와 디바이스 끝번호가 같을 경우 (ex : '20150612 == '01088880002') UAPS 연동
-		String today = DateUtil.getToday();
+		// String today = DateUtil.getToday();
 		// 자사(SKT)
 		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
 			// 1. 한도요금제 조회시간 +7 < sysdate
+			// 2015-07-22 --> 2. 조건 항목 패치 제거
 			// 2. 현재 날짜의 끝자리(12일 -> 2)와 휴대폰 번호 끝자리(01012345432 -> 2)가 동일한 경우
-			if (limitChargeFlag
-					&& StringUtils.equals(today.substring(today.length() - 1),
-							req.getDeviceId().substring(req.getDeviceId().length() - 1))) {
+			// if (limitChargeFlag
+			// && StringUtils.equals(today.substring(today.length() - 1),
+			// req.getDeviceId().substring(req.getDeviceId().length() - 1))) {
+			if (limitChargeFlag) {
 				UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
 				updateDeviceManagementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 				updateDeviceManagementRequest.setDeviceKey(dbDeviceInfo.getDeviceKey());
@@ -593,15 +596,18 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// UAPS 연동, 단말 부가정보 등록
+		// (2015-07-22 패치 제거).
 		// 자사, 오늘 끝자리와 디바이스 끝번호가 같을 경우 (ex : '20150612 == '01088880002') UAPS 연동
-		String today = DateUtil.getToday();
+		// String today = DateUtil.getToday();
 		// 자사(SKT)
 		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
 			// 1. 한도요금제 조회시간 +7 < sysdate
+			// 2015-07-22 --> 2. 조건 항목 패치 제거
 			// 2. 현재 날짜의 끝자리(12일 -> 2)와 휴대폰 번호 끝자리(01012345432 -> 2)가 동일한 경우
-			if (limitChargeFlag
-					&& StringUtils.equals(today.substring(today.length() - 1),
-							req.getDeviceId().substring(req.getDeviceId().length() - 1))) {
+			// if (limitChargeFlag
+			// && StringUtils.equals(today.substring(today.length() - 1),
+			// req.getDeviceId().substring(req.getDeviceId().length() - 1))) {
+			if (limitChargeFlag) {
 				UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
 				updateDeviceManagementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 				updateDeviceManagementRequest.setDeviceKey(dbDeviceInfo.getDeviceKey());
