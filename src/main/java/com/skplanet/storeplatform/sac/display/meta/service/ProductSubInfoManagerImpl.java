@@ -59,6 +59,9 @@ public class ProductSubInfoManagerImpl implements ProductSubInfoManager {
 
         CidPrice cidPrice = new CidPrice();
         for (CidPrice.CidPriceRaw prcRaw : rawList) {
+            if(prcRaw.getUsePeriodUnitCd() == null)
+                continue;
+
             if(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(prcRaw.getUsePeriodUnitCd())) {
                 // 소장
                 cidPrice.setProdId(prcRaw.getProdId());

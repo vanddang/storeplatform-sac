@@ -26,6 +26,7 @@
                   <if test="cid != null">AND EDP.CID = #{cid, jdbcType=VARCHAR}</if>
                   <if test="epsdId != null">AND EDP.CID IN (SELECT CID FROM TB_DP_PROD WHERE PROD_ID=#{epsdId, jdbcType=VARCHAR})</if>
                   AND EDP.CONTENTS_TYPE_CD = 'PD002502'
+                  AND EDP.SVC_GRP_CD = 'DP000203'
         )
         WHERE RN=1
     </select>
