@@ -20,8 +20,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSac
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateChangeSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateChangeSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateTermsAgreementSacReq;
@@ -32,8 +30,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInfor
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyFlurrySacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacReq;
@@ -44,8 +40,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSac
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -335,46 +329,6 @@ public class SellerController {
 
 	/**
 	 * <pre>
-	 * 2.2.30. Flurry 삭제.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            RemoveFlurrySacReq
-	 * @return RemoveFlurrySacRes
-	 */
-	@RequestMapping(value = "/removeFlurry/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, @RequestBody @Validated RemoveFlurrySacReq req) {
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		RemoveFlurrySacRes res = this.sellerService.remFlurry(header, req);
-		LOGGER.info("Response : {}", res.getSellerKey());
-		return res;
-	}
-
-	/**
-	 * <pre>
-	 * 2.2.32. Flurry 등록/수정.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            CreateFlurrySacReq
-	 * @return CreateFlurrySacRes
-	 */
-	@RequestMapping(value = "/createFlurry/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateFlurrySacRes createFlurry(SacRequestHeader header, @RequestBody @Validated CreateFlurrySacReq req) {
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		CreateFlurrySacRes res = this.sellerService.regFlurry(header, req);
-		LOGGER.info("Response : {}", res.getSellerKey());
-		return res;
-	}
-
-	/**
-	 * <pre>
 	 * 2.2.33. 가가입 이메일 수정.
 	 * </pre>
 	 * 
@@ -390,27 +344,6 @@ public class SellerController {
 			@RequestBody @Validated ModifyWaitEmailSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		ModifyWaitEmailSacRes res = this.sellerService.modWaitEmail(header, req);
-		LOGGER.info("Response : {}", res.getSellerKey());
-		return res;
-	}
-
-	/**
-	 * <pre>
-	 * 2.2.34. Flurry 단건 수정.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            ModifyFlurrySacReq
-	 * @return ModifyFlurrySacRes
-	 */
-	@RequestMapping(value = "/modifyFlurry/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public ModifyFlurrySacRes modifyFlurry(SacRequestHeader header, @RequestBody @Validated ModifyFlurrySacReq req) {
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		ModifyFlurrySacRes res = this.sellerService.modFlurry(header, req);
 		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}

@@ -30,13 +30,10 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSe
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.Document;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.FlurryAuth;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginInfo;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveFlurryRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveFlurryResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
@@ -47,8 +44,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSelle
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAgreementSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAgreementSellerResponse;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateFlurryRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateFlurryResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateNewPasswordSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerRequest;
@@ -73,8 +68,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSac
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateChangeSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateChangeSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateTermsAgreementSacReq;
@@ -85,8 +78,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInfor
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyFlurrySacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacReq;
@@ -97,8 +88,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSac
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyWaitEmailSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveAuthorizationKeySacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -1279,101 +1268,6 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 2.2.30. Flurry 삭제.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            RemoveFlurrySacReq
-	 * @return RemoveFlurrySacRes
-	 */
-	@Override
-	public RemoveFlurrySacRes remFlurry(SacRequestHeader header, RemoveFlurrySacReq req) {
-
-		// 1. CommonRequest Setting
-		LOGGER.debug("############ SellerServiceImpl.modInformation() [START] ############");
-		// SC공통 헤더
-		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
-
-		// 2. SessionKey Check
-		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
-
-		// 3. Flurry 삭제
-		RemoveFlurryRequest removeFlurryRequest = new RemoveFlurryRequest();
-		removeFlurryRequest.setCommonRequest(commonRequest);
-
-		removeFlurryRequest.setSellerKey(req.getSellerKey());
-
-		if (req.getFlurryAuthList() != null) {
-			List<FlurryAuth> flurrtAuthList = new ArrayList<FlurryAuth>();
-			FlurryAuth flurryAuth = null;
-			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
-				flurryAuth = new FlurryAuth();
-				flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
-				flurryAuth.setSellerKey(req.getSellerKey());
-				flurrtAuthList.add(flurryAuth);
-			}
-			removeFlurryRequest.setFlurryAuthList(flurrtAuthList);
-		}
-
-		RemoveFlurryResponse removeFlurryResponse = this.sellerSCI.removeFlurry(removeFlurryRequest);
-
-		// 4. Response
-		RemoveFlurrySacRes res = new RemoveFlurrySacRes();
-		res.setSellerKey(removeFlurryResponse.getSellerKey());
-		return res;
-	}
-
-	/**
-	 * <pre>
-	 * 2.2.32. Flurry 등록/수정.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            CreateFlurrySacRes
-	 * @return CreateFlurrySacRes
-	 */
-	@Override
-	public CreateFlurrySacRes regFlurry(SacRequestHeader header, CreateFlurrySacReq req) {
-		// 1. CommonRequest Setting
-		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [START] ############");
-		// SC공통 헤더
-		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
-
-		// 2. SessionKey Check
-		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
-
-		// 3. Flurry 등록/수정
-		UpdateFlurryRequest updateFlurryRequest = new UpdateFlurryRequest();
-		updateFlurryRequest.setSellerKey(req.getSellerKey());
-		updateFlurryRequest.setCommonRequest(commonRequest);
-
-		if (req.getFlurryAuthList() != null) {
-			List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
-			FlurryAuth flurryAuth = null;
-			for (int i = 0; i < req.getFlurryAuthList().size(); i++) {
-				flurryAuth = new FlurryAuth();
-				flurryAuth.setSellerKey(req.getSellerKey());
-				flurryAuth.setAuthToken(req.getFlurryAuthList().get(i).getAuthToken());
-				flurryAuth.setAccessCode(req.getFlurryAuthList().get(i).getAccessCode());
-				flurryAuthList.add(flurryAuth);
-			}
-			updateFlurryRequest.setFlurryAuthList(flurryAuthList);
-		}
-
-		UpdateFlurryResponse updateFlurryResponse = this.sellerSCI.updateFlurry(updateFlurryRequest);
-
-		CreateFlurrySacRes res = new CreateFlurrySacRes();
-		res.setSellerKey(updateFlurryResponse.getSellerKey());
-		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [END] ############");
-		return res;
-	}
-
-	/**
-	 * <pre>
 	 * 2.2.33. 가가입 이메일 수정.
 	 * </pre>
 	 * 
@@ -1433,42 +1327,6 @@ public class SellerServiceImpl implements SellerService {
 
 		ModifyWaitEmailSacRes res = new ModifyWaitEmailSacRes();
 		res.setSellerKey(updateSellerResponse.getSellerKey());
-		return res;
-	}
-
-	/**
-	 * <pre>
-	 * 2.2.34. Flurry 단건 수정.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            ModifyFlurrySacReq
-	 * @return ModifyFlurrySacRes
-	 */
-	@Override
-	public ModifyFlurrySacRes modFlurry(SacRequestHeader header, ModifyFlurrySacReq req) {
-		// 1. CommonRequest Setting
-		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [START] ############");
-		// SC공통 헤더
-		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
-
-		// 3. Flurry 수정
-		UpdateFlurryRequest updateFlurryRequest = new UpdateFlurryRequest();
-		updateFlurryRequest.setCommonRequest(commonRequest);
-
-		List<FlurryAuth> flurryAuthList = new ArrayList<FlurryAuth>();
-		FlurryAuth flurryAuth = new FlurryAuth();
-		flurryAuth.setAuthToken(req.getAuthToken());
-		flurryAuth.setAccessCode(req.getAccessCode());
-		flurryAuthList.add(flurryAuth);
-
-		updateFlurryRequest.setFlurryAuthList(flurryAuthList);
-
-		UpdateFlurryResponse updateFlurryResponse = this.sellerSCI.updateFlurry(updateFlurryRequest);
-		ModifyFlurrySacRes res = new ModifyFlurrySacRes();
-		res.setSellerKey(updateFlurryResponse.getSellerKey());
 		return res;
 	}
 
