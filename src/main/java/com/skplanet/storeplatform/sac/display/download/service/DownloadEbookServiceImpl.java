@@ -60,9 +60,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	private HistoryInternalSCI historyInternalSCI;
 	
 	@Autowired
-    private GiftConfirmInternalSCI giftConfirmInternalSCI;
-
-	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 
 	@Autowired
@@ -161,7 +158,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					String prchsState = setPrchsState(historySacIn);
 
 					loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
-					resetExprDtOfGift(historySacIn, ebookReq, header, sysDate, prchsState);
 					prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
 					
 					addPurchaseIntoList(purchaseList, historySacIn, prchsState);
@@ -229,36 +225,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		return prchsState;
 	}
 	
-	// 선물인경우 다운로드 시점에 만료기간을 reset한다.
-	// 이는 선물 받은 상품이 다운로드 하는 시점에 만료가 되어 사용할 수 없게 되는 것을 방지하기 위함이다.
-	private void resetExprDtOfGift(HistorySacIn historySacIn, DownloadEbookSacReq ebookReq, SacRequestHeader header, String sysDate, String prchsState) {
-		if(prchsState.equals("gift") && StringUtils.isEmpty(historySacIn.getRecvDt()) ){
-			GiftConfirmSacInReq req = makeGiftConfirmSacInReq(ebookReq, historySacIn, header, sysDate);
-			GiftConfirmSacInRes res = giftConfirmInternalSCI.modifyGiftConfirm(req);
-			copyStartDtAndExprDt(historySacIn, res);
-		}
-	}
-
-	private void copyStartDtAndExprDt(HistorySacIn historySacIn, GiftConfirmSacInRes giftConfirmSacInRes) {
-		historySacIn.setUseStartDt(giftConfirmSacInRes.getUseStartDt());
-		historySacIn.setUseExprDt(giftConfirmSacInRes.getUseExprDt());
-		historySacIn.setDwldStartDt(giftConfirmSacInRes.getDwldStartDt());
-		historySacIn.setDwldExprDt(giftConfirmSacInRes.getDwldExprDt());
-	}
-
-	private GiftConfirmSacInReq makeGiftConfirmSacInReq(DownloadEbookSacReq ebookReq, HistorySacIn historySacIn, SacRequestHeader header, String sysDate) {
-		GiftConfirmSacInReq req = new GiftConfirmSacInReq();
-		req.setTenantId(header.getTenantHeader().getTenantId());
-		req.setSystemId(header.getTenantHeader().getSystemId());
-		req.setUserKey(ebookReq.getUserKey());
-		req.setDeviceKey(ebookReq.getDeviceKey());
-		req.setPrchsId(historySacIn.getPrchsId());
-		req.setProdId(historySacIn.getProdId());
-		req.setRecvConfPathCd(historySacIn.getRecvConfPathCd());
-		req.setRecvDt(sysDate);
-		return req;
-	}
-
 	private void setRequest(DownloadEbookSacReq ebookReq, SacRequestHeader header) {
 		ebookReq.setTenantId(header.getTenantHeader().getTenantId());
 		ebookReq.setLangCd(header.getTenantHeader().getLangCd());

@@ -270,6 +270,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 	private void setRequest(DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader, DeviceHeader deviceHeader) {
 		downloadVodSacReq.setTenantId(tenantHeader.getTenantId());
+		downloadVodSacReq.setSystemId(tenantHeader.getSystemId());
 		downloadVodSacReq.setDeviceModelCd(deviceHeader.getModel());
 		downloadVodSacReq.setLangCd(tenantHeader.getLangCd());
 		downloadVodSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
@@ -488,15 +489,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	 */
 	private void mapDrmYn(MetaInfo metaInfo, HistorySacIn historySacIn) {
 
-		String prchsProdId = "";
 		String prchsReqPathCd = "";
-		String useFixrateProdId = "";
 		String drmYn = null;
 
 		if (historySacIn != null) {
-			prchsProdId = historySacIn.getProdId();
 			prchsReqPathCd = historySacIn.getPrchsReqPathCd();
-			useFixrateProdId = historySacIn.getUseFixrateProdId();
             drmYn = historySacIn.getDrmYn();
         }
 
@@ -511,32 +508,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			metaInfo.setPlayDrmYn("Y");
 			return;
 		}
-
-		// 아래 주석부분은 2015년 06월 정기 패치후에는 제거해도 무방함.
-//		if(StringUtils.isNotEmpty(useFixrateProdId)) {
-//			Map<String, String> paramFixrateProd = new HashMap<String, String>();
-//			paramFixrateProd.put("fixrateProdId", useFixrateProdId);
-//			paramFixrateProd.put("prodId", metaInfo.getEspdProdId());
-//
-//			MetaInfo fixrateProd = (MetaInfo) commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
-//
-//			// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
-//			if(fixrateProd != null) {
-//				if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-//					metaInfo.setStoreDrmYn(fixrateProd.getStoreDrmYn());
-//					metaInfo.setDrmYn(fixrateProd.getStoreDrmYn());
-//				} else {
-//					metaInfo.setPlayDrmYn(fixrateProd.getPlayDrmYn());
-//					metaInfo.setDrmYn(fixrateProd.getPlayDrmYn());
-//				}
-//			}
-//
-//			//상품/정액권의 DRM_YN 설정 값이 없을 경우 구매 DRM_YN 을 참조
-//			if(StringUtils.isEmpty(metaInfo.getDrmYn()) && (historySacIn != null && StringUtils.isNotEmpty(historySacIn.getDrmYn()))) {
-//				metaInfo.setDrmYn(historySacIn.getDrmYn());
-//			}
-//			return;
-//		}
 
 		// 2015.06.17
 		// 별다른 조건이 없다면 구매당시의 DRM 정보를 사용하도록 수정 (이전에는 전시 정보 사용)
