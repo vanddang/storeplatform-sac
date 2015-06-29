@@ -22,8 +22,6 @@ public class SetMainDeviceReq extends CommonInfo {
 	/* 기기 아이디 */
 	private String deviceId;
 
-	private CommonRequest commonRequest;
-
 	public String getUserKey() {
 		return this.userKey;
 	}
@@ -44,72 +42,11 @@ public class SetMainDeviceReq extends CommonInfo {
 		return serialVersionUID;
 	}
 
-	public CommonRequest getCommonRequest() {
-		return this.commonRequest;
-	}
-
-	public void setCommonRequest(CommonRequest commonRequest) {
-		this.commonRequest = commonRequest;
-	}
-
 	public String getDeviceId() {
 		return this.deviceId;
 	}
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
-	}
-
-	public class CommonRequest extends CommonInfo {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		/** The tenant id. */
-		private String tenantID;
-
-		/** The system id. */
-		private String systemID;
-
-		/**
-		 * Returns the tenant id.
-		 * 
-		 * @return tenantID - the tenant id
-		 */
-		public String getTenantID() {
-			return this.tenantID;
-		}
-
-		/**
-		 * Sets the tenant id.
-		 * 
-		 * @param tenantID
-		 *            the new tenant id
-		 */
-		public void setTenantID(String tenantID) {
-			this.tenantID = tenantID;
-		}
-
-		/**
-		 * Returns the system id.
-		 * 
-		 * @return systemID - the system id
-		 */
-		public String getSystemID() {
-			return this.systemID;
-		}
-
-		/**
-		 * Sets the system id.
-		 * 
-		 * @param systemID
-		 *            the new system id
-		 */
-		public void setSystemID(String systemID) {
-			this.systemID = systemID;
-		}
-
 	}
 }
