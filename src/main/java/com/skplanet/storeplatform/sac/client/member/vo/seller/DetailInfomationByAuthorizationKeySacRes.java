@@ -7,7 +7,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
-import com.skplanet.storeplatform.sac.client.member.vo.common.FlurryAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 
@@ -35,11 +34,6 @@ public class DetailInfomationByAuthorizationKeySacRes extends CommonInfo {
 	 * 판매자 멀티미디어 정보 목록.
 	 */
 	private List<ExtraRight> extraRightList;
-
-	/**
-	 * Flurry 정보.
-	 */
-	private List<FlurryAuth> flurryAuthList;
 
 	/**
 	 * @return the sellerMbr
@@ -85,20 +79,4 @@ public class DetailInfomationByAuthorizationKeySacRes extends CommonInfo {
 	public void setExtraRightList(List<ExtraRight> extraRightList) {
 		this.extraRightList = extraRightList;
 	}
-
-	/**
-	 * @return the flurryAuthList
-	 */
-	public List<FlurryAuth> getFlurryAuthList() {
-		return this.flurryAuthList;
-	}
-
-	/**
-	 * @param flurryAuthList
-	 *            the flurryAuthList to set
-	 */
-	public void setFlurryAuthList(List<FlurryAuth> flurryAuthList) {
-		this.flurryAuthList = flurryAuthList;
-	}
-
 }
