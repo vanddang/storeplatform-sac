@@ -265,7 +265,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		req.setProdId(historySacIn.getProdId());
 		req.setPrchsId(historySacIn.getPrchsId());
 		req.setRecvDt(sysDate);
-		req.setRecvConfPathCd(historySacIn.getRecvConfPathCd());
+		req.setRecvConfPathCd("OR003904");  // TODO 매핑룰 추가 필요.
 		return req;
 	}
 
