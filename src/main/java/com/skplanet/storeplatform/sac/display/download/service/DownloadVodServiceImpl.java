@@ -261,10 +261,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		req.setTenantId(downloadVodSacReq.getTenantId());
 		req.setSystemId(downloadVodSacReq.getSystemId());
 		req.setUserKey(downloadVodSacReq.getUserKey());
-		req.setPrchsId(historySacIn.getPrchsId());
+        req.setDeviceKey(downloadVodSacReq.getDeviceKey());
 		req.setProdId(historySacIn.getProdId());
-		req.setRecvConfPathCd(historySacIn.getRecvConfPathCd());
+		req.setPrchsId(historySacIn.getPrchsId());
 		req.setRecvDt(sysDate);
+		req.setRecvConfPathCd(historySacIn.getRecvConfPathCd());
 		return req;
 	}
 
