@@ -2,15 +2,18 @@ package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -47,6 +50,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoS
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 
 /**
  * 휴대기기 설정 정보 관련 ServiceImpl
@@ -69,6 +73,10 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 	 */
 	@Autowired
 	private MemberCommonComponent component;
+
+	@Autowired
+	@Qualifier("sac")
+	private CommonDAO commonDao;
 
 	/**
 	 * <pre>
@@ -303,6 +311,8 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		SearchDeviceResponse schDeviceRes = null;
 		final String tlogUserKey = req.getUserKey();
 		final String tlogDeviceKey = req.getDeviceKey();
+		String phoneSign = null; // 휴대기기 PIN 번호 지위확인을 위한 signature
+		boolean isAuthPin = false; // PIN 인증 성공여부
 
 		try {
 			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -410,6 +420,25 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 				}
 			});
 
+			// tb_cm_svc_auth 데이터 생성 2015.06.25 추가
+			/* 인증 Signautre 생성 - guid 형식 */
+			phoneSign = UUID.randomUUID().toString().replace("-", "");
+			LOGGER.debug("## [SAC] phoneSign : {}", phoneSign);
+
+			/* DB에 저장할 파라미터 셋팅 */
+			ServiceAuth serviceAuthInfo = new ServiceAuth();
+			serviceAuthInfo.setTenantId(commonRequest.getTenantID());
+			serviceAuthInfo.setSystemId(commonRequest.getSystemID());
+			serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_PIN);
+			serviceAuthInfo.setAuthSign("PinNumberAuthorization");
+			serviceAuthInfo.setAuthValue(phoneSign);
+			serviceAuthInfo.setAuthComptYn(MemberConstants.USE_Y);
+			serviceAuthInfo.setAuthMdn(checkDevicePinResponse.getDeviceId());
+			Object resultObj = this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
+			if (resultObj != null && Integer.parseInt(resultObj.toString()) > 0) {
+				isAuthPin = true;
+			}
+
 		}
 
 		CheckDevicePinSacRes res = new CheckDevicePinSacRes();
@@ -417,6 +446,10 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		res.setDeviceKey(checkDevicePinResponse.getDeviceKey());
 		res.setUserKey(checkDevicePinResponse.getUserKey());
 		res.setFailCnt(checkDevicePinResponse.getUserMbrDeviceSet().getAuthCnt());
+		// PIN 인증 성공 시 진위여부 확인을 위한 Signature, 2015.06.25 추가
+		if (isAuthPin) {
+			res.setPhoneSign(phoneSign);
+		}
 
 		return res;
 	}
