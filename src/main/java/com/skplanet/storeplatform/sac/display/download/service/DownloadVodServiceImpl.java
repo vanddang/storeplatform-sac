@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.display.download.service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.purchase.client.history.sci.PurchaseDrmInfoSCI;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
@@ -169,49 +168,36 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !permitDeviceYn.equals("Y")) {
 						continue;
 					}
-					log.debug("----------------------------  start set Purchase Info  ------------------------------------");
-					SearchDeviceIdSacReq deviceReq;
-					SearchDeviceIdSacRes deviceRes = new SearchDeviceIdSacRes();
-					boolean memberFlag = true;
 
+					SearchDeviceIdSacRes deviceRes = null;
 					try {
-						deviceReq = makeSearchDeviceIdSacReq(downloadVodSacReq, tenantHeader);
+						SearchDeviceIdSacReq deviceReq = makeSearchDeviceIdSacReq(downloadVodSacReq, tenantHeader);
 						deviceRes = deviceSCI.searchDeviceId(deviceReq);
 					} catch (Exception ex) {
-						memberFlag = false;
-						log.debug("[DownloadVodServiceImpl] Device Search Exception : {}");
 						log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-						// throw new StorePlatformException("SAC_DSP_1001", ex);
 					}
 
 					log.debug("----------------------------------------------------------------");
-					log.debug("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
 					log.debug("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
 					log.debug("----------------------------------------------------------------");
 
-					// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-					if (!"Y".equals(deviceRes.getAuthYn())) {
-						log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-					} else if (memberFlag && deviceRes != null) {
-                        
-						setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
-                        Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
-						encryptionList.add(encryption);
-						loggingEncResult(encryption);
-					}
+					if (deviceRes == null || !"Y".equals(deviceRes.getAuthYn()))
+						break;
+
+					setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
+					Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
+					encryptionList.add(encryption);
+					loggingEncResult(encryption);
+
 					// 구매 정보
 					product.setPurchaseList(purchaseList);
-					log.debug("----------------------------------------------------------------");
+
 					// 암호화 정보
 					if (!encryptionList.isEmpty()) {
 						log.debug("[DownloadVodServiceImpl]	setDl : {}");
 						product.setDl(encryptionList);
 					}
-
-					log.debug("----------------------------  end set Purchase Info  ------------------------------------");
-
 					break;
-
 				}
 			}
 		}
@@ -360,8 +346,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		metaInfo.setSystemId(tenantHeader.getSystemId());
 		metaInfo.setTenantId(tenantHeader.getTenantId());
 
-        if ("Y".equals(historySacIn.getDrmYn()))
-            supportService.mappPurchaseDrmInfo(metaInfo);
+        if ("Y".equals(historySacIn.getDrmYn()) &&
+				supportService.isTfreemiumPurchase(historySacIn.getPrchsReqPathCd())) {
+			// 구매 경로가 Tfreemium 제외하고 호출되도록 수정한다.
+			supportService.mapPurchaseDrmInfo(metaInfo);
+		}
 	}
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {
@@ -502,8 +491,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		// 단, T Freemium을 통한 구매건의 경우는 무조건 DRM적용이므로 아래의 조건을 예외처리 해야함.
 		//-	"prchsReqPathCd": "OR0004xx",
 		//-	OR000413, OR000420 2개 코드가 T Freemium을 통한 구매건임.
-		if(StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM1_CD, prchsReqPathCd)
-				|| StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM2_CD, prchsReqPathCd)) {
+		if (supportService.isTfreemiumPurchase(prchsReqPathCd)) {
 			metaInfo.setDrmYn("Y");
 			metaInfo.setStoreDrmYn("Y");
 			metaInfo.setPlayDrmYn("Y");

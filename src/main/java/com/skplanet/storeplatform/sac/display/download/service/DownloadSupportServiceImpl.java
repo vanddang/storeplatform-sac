@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScRe
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
 import org.apache.commons.collections.CollectionUtils;
@@ -46,7 +47,7 @@ import java.util.Map;
 @Service
 public class DownloadSupportServiceImpl implements DownloadSupportService {
 
-    private static final Logger logger = LoggerFactory.getLogger(DownloadSupportServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(DownloadSupportServiceImpl.class);
 
     @Autowired
     private EncryptionGenerator encryptionGenerator;
@@ -73,8 +74,8 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
             dlEnc = StringUtils.join(encs, ",");
         }
 
-        logger.info("DownloadResult: prodId={}, userKey={}, deviceKey={}, elapTime={}ms, dlEnc={}"
-                ,prodId, userKey, deviceKey, elapTime, dlEnc);
+        log.info("DownloadResult: prodId={}, userKey={}, deviceKey={}, elapTime={}ms, dlEnc={}"
+                , prodId, userKey, deviceKey, elapTime, dlEnc);
     }
 
     @Override
@@ -103,7 +104,7 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         encryption.setKeyIndex(String.valueOf(keyIdx));
         encryption.setToken(encryptString);
 
-        logger.debug("Encryption={}", ReflectionToStringBuilder.reflectionToString(encryption));
+        log.debug("Encryption={}", ReflectionToStringBuilder.reflectionToString(encryption));
 
         return encryption;
     }
@@ -114,11 +115,11 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
 
         String key = DisplayCryptUtils.hashMdnAidKey(mdn, aid);
         if (Strings.isNullOrEmpty(key)) {
-            logger.error("사용자의 다운로드 이력을 저장하지 못했습니다. (mdn:{}, aid:{}, tenantId:{})", mdn, aid, tenantId);
+            log.error("사용자의 다운로드 이력을 저장하지 못했습니다. (mdn:{}, aid:{}, tenantId:{})", mdn, aid, tenantId);
             return;
         }
 
-        logger.info("Regist_UD:{},{},{},{}", mdn,aid,key,tenantId);
+        log.info("Regist_UD:{},{},{},{}", mdn, aid, key, tenantId);
 
         req.put("mdnaidKey", key);
         req.put("aid", aid);
@@ -134,7 +135,7 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
     }
 
     @Override
-    public void mappPurchaseDrmInfo(MetaInfo metaInfo) {
+    public void mapPurchaseDrmInfo(MetaInfo metaInfo) {
         PurchaseDrmInfoScReq req = new PurchaseDrmInfoScReq();
         req.setUserKey(metaInfo.getUserKey());
         req.setTenantId(metaInfo.getTenantId());
@@ -145,5 +146,13 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         PurchaseDrmInfoScRes drmInfoScRes = purchaseDrmInfoSCI.updatePrchaseDrm(req);
         if(drmInfoScRes != null && "Y".equals(drmInfoScRes.getResultYn()))
             metaInfo.setExpiredDate(drmInfoScRes.getUseExprDt());
+    }
+
+    @Override
+    public boolean isTfreemiumPurchase(String prchsReqPathCd) {
+        //-	"prchsReqPathCd": "OR0004xx",
+        //-	OR000413, OR000420 2개 코드가 T Freemium을 통한 구매건임.
+        return StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM1_CD, prchsReqPathCd)
+                || StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM2_CD, prchsReqPathCd);
     }
 }

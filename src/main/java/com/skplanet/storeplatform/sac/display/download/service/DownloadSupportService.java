@@ -56,5 +56,12 @@ public interface DownloadSupportService {
      * 구매에서 조회한 DRM 정보를 기반으로 사용만료일을 매핑한다.
      * @param metaInfo purchaseId, purchaseProdId, systemId, tenantId, userKey가 매핑된 상태여야 한다.
      */
-    void mappPurchaseDrmInfo(MetaInfo metaInfo);
+    void mapPurchaseDrmInfo(MetaInfo metaInfo);
+
+    /**
+     * 구매 경로가 Tfreemium인지 검사한다.
+     * @param prchsReqPathCd: 구매 경로 코드
+     * @return Tfreemium 구매이면 true, 그외 false
+     */
+    boolean isTfreemiumPurchase(String prchsReqPathCd);
 }

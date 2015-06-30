@@ -144,8 +144,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			if (purchaseFlag && historyRes != null) {
 				log.debug("[DownloadMusicServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
 				log.debug("---------------------------------------------------------------------");
-				String prchsProdId = null; // 구매 상품ID
-				String permitDeviceYn = null; // 단말 지원여부
+				String prchsProdId; // 구매 상품ID
+				String permitDeviceYn; // 단말 지원여부
 				List<Purchase> purchaseList = new ArrayList<Purchase>();
 
 				for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
@@ -159,32 +159,26 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !permitDeviceYn.equals("Y")) {
 						continue;
 					}
-					SearchDeviceIdSacReq deviceReq = null;
-					SearchDeviceIdSacRes deviceRes = null;
-					boolean memberFlag = true;
 
+					SearchDeviceIdSacRes deviceRes = null;
 					try {
-						deviceReq = makeSearchDeviceIdSacReq(downloadMusicSacReq, tenantHeader);
+						SearchDeviceIdSacReq deviceReq = makeSearchDeviceIdSacReq(downloadMusicSacReq, tenantHeader);
 						deviceRes = deviceSCI.searchDeviceId(deviceReq);
 					} catch (Exception ex) {
-						memberFlag = false;
-						log.debug("[DownloadMusicServiceImpl] Device Search Exception : {}");
 						log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-						// throw new StorePlatformException("SAC_DSP_1001", ex);
 					}
 					log.debug("----------------------------------------------------------------");
-					log.debug("[DownloadMusicServiceImpl] memberFlag	:	{}", memberFlag);
 					log.debug("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
 					log.debug("----------------------------------------------------------------");
 					// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-					if (!"Y".equals(deviceRes.getAuthYn())) {
-						log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-					} else if (memberFlag && deviceRes != null) {
-						setMetaInfo(metaInfo, historySacIn, downloadMusicSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
-                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
-						encryptionList.add(encryption);
-						loggingEncResult(encryption);
-					}
+					if (deviceRes == null || !"Y".equals(deviceRes.getAuthYn()))
+						break;
+
+					setMetaInfo(metaInfo, historySacIn, downloadMusicSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
+					Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+					encryptionList.add(encryption);
+					loggingEncResult(encryption);
+
 					product.setPurchaseList(purchaseList);
 					break;
 				}
@@ -224,8 +218,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 	private void setProduct(Product product, MetaInfo metaInfo) {
 		Music music = new Music();
 		List<Identifier> identifierList = new ArrayList<Identifier>();
-		Identifier identifier = new Identifier();
-		identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getChnlProdId());
+		Identifier identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getChnlProdId());
 		identifierList.add(identifier);
 
 		identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());

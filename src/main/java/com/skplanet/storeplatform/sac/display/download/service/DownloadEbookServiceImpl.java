@@ -12,13 +12,11 @@ package com.skplanet.storeplatform.sac.display.download.service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.purchase.client.history.sci.PurchaseDrmInfoSCI;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftConfirmInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -58,7 +56,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 	@Autowired
 	private HistoryInternalSCI historyInternalSCI;
-	
+
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 
@@ -158,6 +156,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					String prchsState = setPrchsState(historySacIn);
 
 					loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
+					//resetExprDtOfGift(historySacIn, ebookReq, header, sysDate, prchsState);
 					prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
 					
 					addPurchaseIntoList(purchaseList, historySacIn, prchsState);
@@ -165,32 +164,27 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !"Y".equals(permitDeviceYn)) {
 						continue;
 					}
-					SearchDeviceIdSacReq deviceReq = null;
-					SearchDeviceIdSacRes deviceRes = null;
-					boolean memberPassFlag = true;
 
+					SearchDeviceIdSacRes deviceRes = null;
 					try {
-						deviceReq = makeSearchDeviceIdSacReq(ebookReq, header);
+						SearchDeviceIdSacReq deviceReq = makeSearchDeviceIdSacReq(ebookReq, header);
 						deviceRes = deviceSCI.searchDeviceId(deviceReq);
 					} catch (Exception ex) {
-						memberPassFlag = false;
 						log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
 					}
 
 					log.debug("----------------------------------------------------------------");
-					log.debug("[DownloadEbookLog] memberPassFlag : {}", memberPassFlag);
 					log.debug("[DownloadEbookLog] deviceRes : {}", deviceRes);
 					log.debug("----------------------------------------------------------------");
 
-					// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-					if (!"Y".equals(deviceRes.getAuthYn())) {
-						log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-					} else if (memberPassFlag && deviceRes != null) {
-						setMetaInfo(metaInfo, historySacIn, ebookReq, reqExpireDate, prchsProdId, prchsState, deviceRes);
-                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
-						encryptionList.add(encryption);
-						loggingEncResult(encryption);
-					}
+					if (deviceRes == null || !"Y".equals(deviceRes.getAuthYn()))
+						break;
+
+					setMetaInfo(metaInfo, historySacIn, ebookReq, reqExpireDate, prchsProdId, prchsState, deviceRes);
+					Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+					encryptionList.add(encryption);
+					loggingEncResult(encryption);
+
 					// 구매 정보
 					product.setPurchaseList(purchaseList);
 
@@ -224,7 +218,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		}
 		return prchsState;
 	}
-	
+
 	private void setRequest(DownloadEbookSacReq ebookReq, SacRequestHeader header) {
 		ebookReq.setTenantId(header.getTenantHeader().getTenantId());
 		ebookReq.setLangCd(header.getTenantHeader().getLangCd());
@@ -298,8 +292,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         String drmYn = historySacIn.getDrmYn();
         if (StringUtils.isNotEmpty(drmYn)) {
             metaInfo.setDrmYn(drmYn);
-            if (drmYn.equals("Y"))
-                supportService.mappPurchaseDrmInfo(metaInfo);
+            if (drmYn.equals("Y")
+					&& supportService.isTfreemiumPurchase(historySacIn.getPrchsReqPathCd())) {
+				// 구매 경로가 Tfreemium 제외하고 호출되도록 수정한다.
+				supportService.mapPurchaseDrmInfo(metaInfo);
+			}
 
             metaInfo.setStoreDrmYn(drmYn);
             metaInfo.setPlayDrmYn(drmYn);

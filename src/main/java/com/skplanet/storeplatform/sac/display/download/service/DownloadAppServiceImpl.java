@@ -197,11 +197,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				log.debug("[DownloadAppServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
 				log.debug("---------------------------------------------------------------------");
 
-				String prchsProdId = null; // 구매 상품ID
-				String permitDeviceYn = null; // 단말 지원여부
-
 				if (historyRes.getTotalCnt() > 0) {
 					List<Purchase> purchaseList = new ArrayList<Purchase>();
+					String prchsProdId; // 구매 상품ID
+					String permitDeviceYn; // 단말 지원여부
 
 					for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
 						prchsProdId = historySacIn.getProdId();
@@ -215,46 +214,43 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							continue;
 						}
 
-						SearchDeviceIdSacReq deviceReq = null;
 						SearchDeviceIdSacRes deviceRes = null;
-						boolean memberFlag = true;
-
 						try {
-							deviceReq = makeSearchDeviceIdSacReq(downloadAppSacReq, tenantHeader);
+							SearchDeviceIdSacReq deviceReq = makeSearchDeviceIdSacReq(downloadAppSacReq, tenantHeader);
 							deviceRes = deviceSCI.searchDeviceId(deviceReq);
 						} catch (Exception ex) {
-							memberFlag = false;
 							log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
 							// 예외 무시
 						}
 
 						log.debug("----------------------------------------------------------------");
-						log.debug("[DownloadAppServiceImpl] memberFlag	:	{}", memberFlag);
 						log.debug("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
 						log.debug("----------------------------------------------------------------");
 
-						// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-						if (!"Y".equals(deviceRes.getAuthYn())) {
-							log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
-						} else if (memberFlag && deviceRes != null) {
-							String deviceId = deviceRes.getDeviceId();
-							String deviceTelecom = deviceRes.getDeviceTelecom();
-							String deviceIdType = commonService.getDeviceIdType(deviceId);
+						if (deviceRes == null || !"Y".equals(deviceRes.getAuthYn()))
+							break;
 
-							setMetaInfo(metaInfo, historySacIn, downloadAppSacReq, reqExpireDate, prchsState, deviceId, deviceIdType);
-							tingMemberFlag = getTingMemberFlag(deviceId, deviceTelecom, deviceIdType, metaInfo);
+						String deviceId = deviceRes.getDeviceId();
+						String deviceTelecom = deviceRes.getDeviceTelecom();
+						String deviceIdType = commonService.getDeviceIdType(deviceId);
 
-							// 암호화 정보 (JSON)
-							genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
+						setMetaInfo(metaInfo, historySacIn, downloadAppSacReq, reqExpireDate, prchsState, deviceId, deviceIdType);
+						tingMemberFlag = getTingMemberFlag(deviceId, deviceTelecom, deviceIdType, metaInfo);
 
-                            // Push 강제 업그레이드인 경우
-                            generateMetaForPushForceUpgrade(metaInfo, downloadAppSacReq.getPacketFreeYn());
+						// 암호화 정보 (JSON)
+						genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
 
-                            Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
-                            encryptionList.add(encryption);
-							loggingEncResult(encryption);
-						}
+						// Push 강제 업그레이드인 경우
+						generateMetaForPushForceUpgrade(metaInfo, downloadAppSacReq.getPacketFreeYn());
+
+						Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+						encryptionList.add(encryption);
+						loggingEncResult(encryption);
+
+						// 구매 정보
 						product.setPurchaseList(purchaseList);
+
+						// 암호화 정보
 						if (!encryptionList.isEmpty()) {
 							product.setDl(encryptionList);
 						}
