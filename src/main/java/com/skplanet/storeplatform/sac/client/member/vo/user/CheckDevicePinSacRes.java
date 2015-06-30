@@ -23,6 +23,8 @@ public class CheckDevicePinSacRes extends CommonInfo {
 	private String userKey;
 	/** PIN 인증 실패 횟수. */
 	private String failCnt;
+	/** PIN 인증 진위여부 확인을 위한 Signature. */
+	private String phoneSign; // 2015.06.26 추가
 
 	/**
 	 * @return the deviceKey
@@ -82,6 +84,21 @@ public class CheckDevicePinSacRes extends CommonInfo {
 	 */
 	public void setFailCnt(String failCnt) {
 		this.failCnt = failCnt;
+	}
+
+	/**
+	 * @return the phoneSign
+	 */
+	public String getPhoneSign() {
+		return this.phoneSign;
+	}
+
+	/**
+	 * @param phoneSign
+	 *            the phoneSign to set
+	 */
+	public void setPhoneSign(String phoneSign) {
+		this.phoneSign = phoneSign;
 	}
 
 }
