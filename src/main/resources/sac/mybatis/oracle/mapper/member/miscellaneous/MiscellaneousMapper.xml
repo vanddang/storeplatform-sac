@@ -77,9 +77,9 @@
       )WHERE rnum = 1
     </select>
     
-    <!-- 휴대폰 SMS 및 이메일 인증 코드 정보 저장 -->
+    <!-- 휴대폰 SMS / 이메일 / PIN 인증 코드 정보 저장 -->
     <insert id="createServiceAuthCode" parameterType="ServiceAuth">
-    INSERT  /* MiscellaneousMapper.createServiceAuthCode, 휴대폰 SMS 및 이메일 인증 코드 정보 저장, 김다슬/인크로스, 2014-01-21 */
+    INSERT /* MiscellaneousMapper, createServiceAuthCode, SAC(SAC), 윤보영, 2015-07-28 */
       INTO  tb_cm_svc_auth  
     (
       auth_seq
@@ -95,7 +95,7 @@
       <if test="authMdn !=null">
     , auth_mdn  /* SMS 인증 대상 번호 */
       </if>
-    , auth_type_cd  /* 인증 타입 (CM010901:SMS, CM010902:Email, CM010903:EmailAuthUrl) */
+    , auth_type_cd  /* 인증 타입 (CM010901:SMS, CM010902:Email, CM010903:EmailAuthUrl, CM010904:PIN) */
       <if test="authSign !=null">
     , auth_sign  /* 인증 Signature */
       </if>
@@ -134,7 +134,14 @@
      , #{authEmail}
        </if>
      , SYSDATE
-     , 'N'
+     <choose>
+        <when test="authComptYn != null">
+        , #{authComptYn}
+        </when>
+        <otherwise>
+        , 'N'
+        </otherwise>
+     </choose>
      , 'admin'
      , SYSDATE
      , 'admin'
@@ -172,7 +179,6 @@
        AND  auth_compt_yn = 'N'
        AND  auth_type_cd = #{authTypeCd} /* 인증 타입 (CM010901:SMS, CM010902:Email, CM010903:EmailAuthUrl) */
     </select>
-    
     
     <!--  이메일 인증 코드 업데이트 -->
     <update id="updateServiceAuthCode" parameterType="ServiceAuth">
@@ -235,5 +241,19 @@
       AND auth_type_cd = #{authTypeCd}
       AND auth_mdn = #{authMdn}
       AND auth_sign = #{authSign}
+    </select>
+     
+    <!-- 휴대폰 PIN 번호 인증 여부 확인 -->
+    <select id="searchPinAuthorizationCheckCnt" parameterType="ServiceAuth" resultType="int">
+    SELECT /* MiscellaneousMapper, searchPinAuthorizationCheck, SAC (SAC), 윤보영, 2015-07-28 */
+          COUNT(1) AS resultCnt
+     FROM tb_cm_svc_auth
+    WHERE tenant_id = #{tenantId}
+      AND system_id = #{systemId}
+      AND auth_type_cd = #{authTypeCd}
+      AND auth_compt_yn = 'Y'
+      AND auth_mdn = #{authMdn}
+      AND auth_value = #{authValue}
+      AND auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (#{timeToLive} / 24 / 60))        /* 3분이내 */
     </select>
 </mapper>
