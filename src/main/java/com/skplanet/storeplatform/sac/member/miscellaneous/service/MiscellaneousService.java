@@ -37,6 +37,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRe
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -289,4 +291,18 @@ public interface MiscellaneousService {
 	 */
 	public ConfirmEmailAuthorizationUrlSacRes confirmEmailAuthorizationUrl(SacRequestHeader header,
 			ConfirmEmailAuthorizationUrlSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.60.	휴대기기 PIN 번호 인증 여부 확인.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param request
+	 *            PinAuthorizationCheckReq
+	 * @return PinAuthorizationCheckRes
+	 */
+	public PinAuthorizationCheckRes pinAuthorizationCheck(SacRequestHeader header, PinAuthorizationCheckReq req);
+
 }
