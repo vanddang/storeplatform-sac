@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.other.sacservice.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -99,18 +98,11 @@ public class SacServiceAbilityServiceImpl implements SacServiceAbilityService {
 	}
 	
 	public List<SacService> getServiceList(List<SacService> svcList) {
-		List<String> svcCdList = new ArrayList<String>();
 		for (SacService svc : svcList) {
-			svcCdList.add(svc.getServiceCd());
-		}
-		List<SacService> svcListFromDb = dataSvc.selectServiceList(svcCdList);
-		
-		for (SacService svc : svcListFromDb) {
 			boolean enabled = isServiceEnabled(svc);
 			svc.setActive(enabled);
 		}
-		
-		return svcListFromDb;
+		return svcList;
 	}
 
 }
