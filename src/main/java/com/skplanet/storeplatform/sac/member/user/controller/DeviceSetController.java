@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckDevicePinSacReq;
@@ -21,12 +22,16 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDevicePinSacRe
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDevicePinSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceSetInfoSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceSetInfoSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDevicePinSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDevicePinSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceSetService;
 
 /**
@@ -43,6 +48,9 @@ public class DeviceSetController {
 	/** DeviceSet Service InterFace. */
 	@Autowired
 	private DeviceSetService deviceSetService;
+
+	@Autowired
+	private MiscellaneousService service;
 
 	/**
 	 * <pre>
@@ -187,5 +195,31 @@ public class DeviceSetController {
 		ModifyDeviceSetInfoSacRes res = this.deviceSetService.modDeviceSetInfo(header, req);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.60.휴대기기 PIN 번호 인증 여부 확인
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param request
+	 *            ConfirmPhoneAuthorizationCheckReq
+	 * @return ConfirmPhoneAuthorizationCheckRes
+	 */
+	@RequestMapping(value = "/pinAuthorizationCheck/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public PinAuthorizationCheckRes pinAuthorizationCheck(SacRequestHeader header,
+			@RequestBody @Validated PinAuthorizationCheckReq request) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+
+		if (!ValidationCheckUtils.isMdn(request.getDeviceId())) {
+			throw new StorePlatformException("SAC_MEM_3004");
+		}
+
+		PinAuthorizationCheckRes response = this.service.pinAuthorizationCheck(header, request);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
+		return response;
 	}
 }
