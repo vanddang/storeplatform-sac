@@ -102,6 +102,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndiv
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
+import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -1218,4 +1220,43 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 2.1.60.	휴대기기 PIN 번호 인증 여부 확인.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param request
+	 *            PinAuthorizationCheckReq
+	 * @return PinAuthorizationCheckRes
+	 */
+	@Override
+	public PinAuthorizationCheckRes pinAuthorizationCheck(SacRequestHeader header, PinAuthorizationCheckReq req) {
+		String tenantId = header.getTenantHeader().getTenantId();
+		String systemId = header.getTenantHeader().getSystemId();
+		String deviceId = req.getDeviceId();
+
+		ServiceAuth serviceAuthInfo = new ServiceAuth();
+		serviceAuthInfo.setTenantId(tenantId);
+		serviceAuthInfo.setSystemId(systemId);
+		serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_PIN);
+		serviceAuthInfo.setAuthMdn(deviceId);
+		serviceAuthInfo.setAuthValue(req.getPhoneSign());
+		serviceAuthInfo.setTimeToLive(req.getTimeToLive());
+
+		/** pin 인증 signature 확인 */
+		Object authCntObj = this.commonDao.queryForObject("Miscellaneous.searchPinAuthorizationCheckCnt",
+				serviceAuthInfo);
+
+		PinAuthorizationCheckRes res = new PinAuthorizationCheckRes();
+		res.setDeviceId(deviceId);
+		if (authCntObj != null && Integer.parseInt(authCntObj.toString()) > 0) {
+			res.setComptYn(MemberConstants.USE_Y); // 인증번호 확인 성공
+		} else {
+			res.setComptYn(MemberConstants.USE_N); // 인증번호 확인 실패
+		}
+
+		return res;
+	}
 }
