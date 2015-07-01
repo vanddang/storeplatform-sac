@@ -1798,7 +1798,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					ageChk = ("19".equals(userBirthDay.substring(0, 2))) ? "1" : "3";
 				} else if ("F".equals(userSex)) {
 					ageChk = ("19".equals(userBirthDay.substring(0, 2))) ? "2" : "4";
-				} else if (StringUtils.isBlank(userSex)) { // Default = 성별 미존재시 M 으로 설정
+				} else { // Default M 으로 설정
 					ageChk = ("19".equals(userBirthDay.substring(0, 2))) ? "1" : "3";
 				}
 				int age = CommonUtils.getAgeBySocalNumber(userBirthDay.substring(2, 8), ageChk);
