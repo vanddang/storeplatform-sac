@@ -327,6 +327,7 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 		rights.setPlus19Yn(metaInfo.getPlus19Yn());
 		return rights;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -340,45 +341,44 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 		Support support = null;
 		support = new Support();
 		support.setType("play");
-		if(metaInfo.getPossLendClsfCd().equals("DP010601") || metaInfo.getPossLendClsfCd().equals("DP010603")){
+		if (metaInfo.getPossLendClsfCd().equals("DP010602") || metaInfo.getPossLendClsfCd().equals("DP010603")) {
 			support.setText("Y");
-		}else{
+		} else {
 			support.setText("N");
 		}
 		supportList.add(support);
-		
+
 		support = new Support();
 		support.setType("store");
-		if(metaInfo.getPossLendClsfCd().equals("DP010602") || metaInfo.getPossLendClsfCd().equals("DP010603")){
+		if (metaInfo.getPossLendClsfCd().equals("DP010601") || metaInfo.getPossLendClsfCd().equals("DP010603")) {
 			support.setText("Y");
-		}else{
+		} else {
 			support.setText("N");
-		}		
-		
+		}
+
 		supportList.add(support);
-		
+
 		support = new Support();
 		support.setType("drm");
-		if(StringUtil.isNotEmpty(metaInfo.getDrmYn())){
+		if (StringUtil.isNotEmpty(metaInfo.getDrmYn())) {
 			support.setText(metaInfo.getDrmYn());
 		}
 		supportList.add(support);
-		
-		
+
 		support = new Support();
 		support.setType("dlStrmCd");
-		if(StringUtil.isNotEmpty(metaInfo.getDwldStrmClsfCd())){
-    		if(metaInfo.getDwldStrmClsfCd().equals("DP010501")){
-    			support.setText("dl");
-    		}else if(metaInfo.getDwldStrmClsfCd().equals("DP010502")){
-    			support.setText("strm");
-    		}else if(metaInfo.getDwldStrmClsfCd().equals("DP010503")){
-    			support.setText("both");
-    		}
+		if (StringUtil.isNotEmpty(metaInfo.getDwldStrmClsfCd())) {
+			if (metaInfo.getDwldStrmClsfCd().equals("DP010501")) {
+				support.setText("dl");
+			} else if (metaInfo.getDwldStrmClsfCd().equals("DP010502")) {
+				support.setText("strm");
+			} else if (metaInfo.getDwldStrmClsfCd().equals("DP010503")) {
+				support.setText("both");
+			}
 		}
-		
+
 		supportList.add(support);
-		
+
 		return supportList;
-	}	
+	}
 }
