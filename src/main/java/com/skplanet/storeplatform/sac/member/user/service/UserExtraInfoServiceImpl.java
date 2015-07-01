@@ -272,8 +272,8 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		SearchManagementRequest searchManagementRequest = new SearchManagementRequest();
 		searchManagementRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-		searchManagementRequest.setExtraProfile(req.getExtraProfile());
-		searchManagementRequest.setExtraProfileValue(req.getExtraProfileValue());
+		// searchManagementRequest.setExtraProfile(req.getExtraProfile());
+		// searchManagementRequest.setExtraProfileValue(req.getExtraProfileValue());
 
 		CheckAdditionalInformationSacRes res = new CheckAdditionalInformationSacRes();
 		SearchManagementResponse searchManagementResponse = null;
