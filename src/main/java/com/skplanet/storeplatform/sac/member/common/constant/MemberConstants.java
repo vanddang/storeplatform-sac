@@ -122,10 +122,15 @@ public final class MemberConstants {
 	public static final String USER_EXTRA_MEMBERPOINTJOIN = "US010907"; // 통합포인트 가입 여부
 	public static final String USER_EXTRA_FACEBOOK_ID = "US010911"; // Facebook ID
 	public static final String USER_EXTRA_PROFILEIMGPATH = "US010912"; // 통합포인트 가입 여부
-	public static final String USER_EXTRA_KAKAO_ACCESSTOKEN = "US010913"; // 카카오톡 토큰 정보
-	public static final String USER_EXTRA_KAKAO_ID = "US010914"; // 카카오톡 아이디
-	public static final String USER_EXTRA_GOOGLE_ACCESSTOKEN = "US010915"; // 구글 토큰 정보
-	public static final String USER_EXTRA_GOOGLE_ID = "US010916"; // 구글 아이디
+
+	// 2015-07-28 추가 적용.
+	public static final String USER_EXTRA_SOCIAL_ACCT_TYPE = "US010913";
+	public static final String USER_EXTRA_SOCIAL_ACCT_ID = "US010914";
+	public static final String USER_EXTRA_SOCIAL_ACCT_INT_ID = "US010915";
+	public static final String USER_EXTRA_SOCIAL_EMAIL = "US010916";
+	public static final String USER_EXTRA_SOCIAL_ACCT_TOKEN = "US010917";
+	public static final String USER_EXTRA_SOCIAL_REF_TOKEN = "US010918";
+	public static final String USER_EXTRA_SOCIAL_EXPIRED_TIME = "US010919";
 
 	public static final String USER_EXTRA_FACEBOOK = "facebook";
 	public static final String USER_EXTRA_KAKAO = "kakao";

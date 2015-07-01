@@ -2047,15 +2047,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
 
-		String extraProfile = null;
-		if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK, req.getSocialAcctType())) {
-			extraProfile = MemberConstants.USER_EXTRA_FACEBOOK_ID;
-		} else if (StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE, req.getSocialAcctType())) {
-			extraProfile = MemberConstants.USER_EXTRA_GOOGLE_ID;
-		} else if (StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO, req.getSocialAcctType())) {
-			extraProfile = MemberConstants.USER_EXTRA_KAKAO_ID;
-		}
-
 		// Response
 		int socialMemberCnt = 0;
 		int socialRegCnt = 0;
@@ -2065,10 +2056,32 @@ public class UserSearchServiceImpl implements UserSearchService {
 			// 1. 회원 부가속성 조회 (Tenant_id 구분없이) : 사이즈 => socialMemberCnt
 			SearchManagementRequest searchManagementRequest = new SearchManagementRequest();
 			searchManagementRequest.setCommonRequest(commonRequest);
-			searchManagementRequest.setExtraProfile(extraProfile);
-			searchManagementRequest.setExtraProfileValue(req.getSocialAcctId());
+			List<MbrMangItemPtcr> mbrMangItemPtcr = new ArrayList<MbrMangItemPtcr>();
+			MbrMangItemPtcr mangItemPtcr = null;
+			mangItemPtcr = new MbrMangItemPtcr();
+			mangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE);
+			mangItemPtcr.setExtraProfileValue(req.getSocialAcctType());
+			mbrMangItemPtcr.add(mangItemPtcr);
+			mangItemPtcr = new MbrMangItemPtcr();
+			mangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID);
+			mangItemPtcr.setExtraProfileValue(req.getSocialAcctIntId());
+			mbrMangItemPtcr.add(mangItemPtcr);
+			searchManagementRequest.setMbrMangItemPtcr(mbrMangItemPtcr);
 			SearchManagementResponse searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
-			socialMemberCnt = searchManagementResponse.getMbrMangItemPtcrList().size();
+
+			for (MbrMangItemPtcr itemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, itemPtcr.getExtraProfile())
+						&& StringUtils.equals(req.getSocialAcctType(), itemPtcr.getExtraProfileValue())) {
+					for (MbrMangItemPtcr itemPtcr2 : searchManagementResponse.getMbrMangItemPtcrList()) {
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID,
+								itemPtcr2.getExtraProfile())
+								&& StringUtils.equals(req.getSocialAcctIntId(), itemPtcr2.getExtraProfileValue())) {
+							socialMemberCnt++;
+							break;
+						}
+					}
+				}
+			}
 
 		} catch (StorePlatformException e) {
 			// 소셜 부가속성이 없을경우 => socialMemberCnt = 0.
@@ -2141,16 +2154,26 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchManagementListResponse searchManagementListResponse = this.userSCI
 				.searchManagementList(searchManagementListRequest);
 
-		String extraProfile = "";
-		String extraProfileValue = "";
+		List<MbrMangItemPtcr> mbrMangItemPtcr = new ArrayList<MbrMangItemPtcr>();
+		MbrMangItemPtcr itemPtcr = null;
+		String socialAcctIntId = "";
+		String socialAcctType = "";
 		if (searchManagementListResponse.getMbrMangItemPtcrList() != null
 				&& searchManagementListResponse.getMbrMangItemPtcrList().size() > 0) {
 			for (MbrMangItemPtcr mangItemPtcr : searchManagementListResponse.getMbrMangItemPtcrList()) {
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK_ID, mangItemPtcr.getExtraProfile())
-						|| StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE_ID, mangItemPtcr.getExtraProfile())
-						|| StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO_ID, mangItemPtcr.getExtraProfile())) {
-					extraProfile = mangItemPtcr.getExtraProfile();
-					extraProfileValue = mangItemPtcr.getExtraProfileValue();
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, mangItemPtcr.getExtraProfile())) {
+					itemPtcr = new MbrMangItemPtcr();
+					itemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID);
+					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
+					mbrMangItemPtcr.add(itemPtcr);
+					socialAcctIntId = mangItemPtcr.getExtraProfileValue();
+				}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())) {
+					itemPtcr = new MbrMangItemPtcr();
+					itemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE);
+					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
+					mbrMangItemPtcr.add(itemPtcr);
+					socialAcctType = mangItemPtcr.getExtraProfileValue();
 				}
 			}
 		}
@@ -2158,8 +2181,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		// 2. extraProfile 회원키 조회
 		SearchManagementRequest searchManagementRequest = new SearchManagementRequest();
 		searchManagementRequest.setCommonRequest(commonRequest);
-		searchManagementRequest.setExtraProfile(extraProfile);
-		searchManagementRequest.setExtraProfileValue(extraProfileValue);
+		searchManagementRequest.setMbrMangItemPtcr(mbrMangItemPtcr);
 		SearchManagementResponse searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
 
 		List<SearchMbrSapUserInfo> searchSapUserInfoList = null;
@@ -2168,17 +2190,21 @@ public class UserSearchServiceImpl implements UserSearchService {
 				&& searchManagementResponse.getMbrMangItemPtcrList().size() > 0) {
 			searchSapUserInfoList = new ArrayList<SearchMbrSapUserInfo>();
 			for (MbrMangItemPtcr mangItemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
-				if (StringUtils.isBlank(mangItemPtcr.getUserKey()) || StringUtils.isBlank(mangItemPtcr.getTenantID())) {
-					throw new StorePlatformException("SAC_MEM_0001",
-							StringUtils.isBlank(mangItemPtcr.getUserKey()) ? "userKey" : "tenantId");
-				}
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK_ID, mangItemPtcr.getExtraProfile())
-						|| StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE_ID, mangItemPtcr.getExtraProfile())
-						|| StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO_ID, mangItemPtcr.getExtraProfile())) {
-					searchSapUserInfo = new SearchMbrSapUserInfo();
-					searchSapUserInfo.setUserKey(mangItemPtcr.getUserKey());
-					searchSapUserInfo.setTenantId(mangItemPtcr.getTenantID());
-					searchSapUserInfoList.add(searchSapUserInfo);
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())
+						&& StringUtils.equals(socialAcctType, mangItemPtcr.getExtraProfileValue())) {
+					for (MbrMangItemPtcr itemPtcr2 : searchManagementResponse.getMbrMangItemPtcrList()) {
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID,
+								itemPtcr2.getExtraProfile())
+								&& StringUtils.equals(socialAcctIntId, itemPtcr2.getExtraProfileValue())) {
+							if (StringUtils.equals(mangItemPtcr.getUserKey(), itemPtcr2.getUserKey())) {
+								searchSapUserInfo = new SearchMbrSapUserInfo();
+								searchSapUserInfo.setUserKey(itemPtcr2.getUserKey());
+								searchSapUserInfo.setTenantId(itemPtcr2.getTenantID());
+								searchSapUserInfoList.add(searchSapUserInfo);
+								break;
+							}
+						}
+					}
 				}
 			}
 		}

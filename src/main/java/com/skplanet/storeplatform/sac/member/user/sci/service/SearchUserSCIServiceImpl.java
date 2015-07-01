@@ -1216,40 +1216,58 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		SearchManagementListResponse searchManagementListResponse = this.userSCI
 				.searchManagementList(searchManagementListRequest);
 
-		String extraProfile = "";
-		String extraProfileValue = "";
+		List<MbrMangItemPtcr> mbrMangItemPtcr = new ArrayList<MbrMangItemPtcr>();
+		MbrMangItemPtcr itemPtcr = null;
+		String socialAcctIntId = "";
+		String socialAcctType = "";
 		if (searchManagementListResponse.getMbrMangItemPtcrList() != null
 				&& searchManagementListResponse.getMbrMangItemPtcrList().size() > 0) {
 			for (MbrMangItemPtcr mangItemPtcr : searchManagementListResponse.getMbrMangItemPtcrList()) {
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK_ID, mangItemPtcr.getExtraProfile())
-						|| StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE_ID, mangItemPtcr.getExtraProfile())
-						|| StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO_ID, mangItemPtcr.getExtraProfile())) {
-					extraProfile = mangItemPtcr.getExtraProfile();
-					extraProfileValue = mangItemPtcr.getExtraProfileValue();
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, mangItemPtcr.getExtraProfile())) {
+					itemPtcr = new MbrMangItemPtcr();
+					itemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID);
+					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
+					mbrMangItemPtcr.add(itemPtcr);
+					socialAcctIntId = mangItemPtcr.getExtraProfileValue();
+				}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())) {
+					itemPtcr = new MbrMangItemPtcr();
+					itemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE);
+					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
+					mbrMangItemPtcr.add(itemPtcr);
+					socialAcctType = mangItemPtcr.getExtraProfileValue();
 				}
 			}
 		}
+
 		// 2. extraProfile 회원키 조회
 		SearchManagementRequest searchManagementRequest = new SearchManagementRequest();
 		searchManagementRequest.setCommonRequest(commonRequest);
-		searchManagementRequest.setExtraProfile(extraProfile);
-		searchManagementRequest.setExtraProfileValue(extraProfileValue);
+		searchManagementRequest.setMbrMangItemPtcr(mbrMangItemPtcr);
 		SearchManagementResponse searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
 
 		List<SearchMbrSapUserInfo> searchSapUserInfoList = new ArrayList<SearchMbrSapUserInfo>();
 		SearchMbrSapUserInfo searchSapUserInfo = null;
-		for (MbrMangItemPtcr mangItemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
-			if (StringUtils.isBlank(mangItemPtcr.getUserKey()) || StringUtils.isBlank(mangItemPtcr.getTenantID())) {
-				throw new StorePlatformException("SAC_MEM_0001",
-						StringUtils.isBlank(mangItemPtcr.getUserKey()) ? "userKey" : "tenantId");
-			}
-			if (StringUtils.equals(MemberConstants.USER_EXTRA_FACEBOOK_ID, mangItemPtcr.getExtraProfile())
-					|| StringUtils.equals(MemberConstants.USER_EXTRA_GOOGLE_ID, mangItemPtcr.getExtraProfile())
-					|| StringUtils.equals(MemberConstants.USER_EXTRA_KAKAO_ID, mangItemPtcr.getExtraProfile())) {
-				searchSapUserInfo = new SearchMbrSapUserInfo();
-				searchSapUserInfo.setUserKey(mangItemPtcr.getUserKey());
-				searchSapUserInfo.setTenantId(mangItemPtcr.getTenantID());
-				searchSapUserInfoList.add(searchSapUserInfo);
+		if (searchManagementResponse.getMbrMangItemPtcrList() != null
+				&& searchManagementResponse.getMbrMangItemPtcrList().size() > 0) {
+			searchSapUserInfoList = new ArrayList<SearchMbrSapUserInfo>();
+			for (MbrMangItemPtcr mangItemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())
+						&& StringUtils.equals(socialAcctType, mangItemPtcr.getExtraProfileValue())) {
+					for (MbrMangItemPtcr itemPtcr2 : searchManagementResponse.getMbrMangItemPtcrList()) {
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID,
+								itemPtcr2.getExtraProfile())
+								&& StringUtils.equals(socialAcctIntId, itemPtcr2.getExtraProfileValue())) {
+							if (StringUtils.equals(mangItemPtcr.getUserKey(), itemPtcr2.getUserKey())) {
+								searchSapUserInfo = new SearchMbrSapUserInfo();
+								searchSapUserInfo.setUserKey(itemPtcr2.getUserKey());
+								searchSapUserInfo.setTenantId(itemPtcr2.getTenantID());
+								searchSapUserInfoList.add(searchSapUserInfo);
+								break;
+							}
+						}
+					}
+				}
 			}
 		}
 
