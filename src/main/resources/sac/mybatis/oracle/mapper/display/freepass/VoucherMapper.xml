@@ -201,6 +201,9 @@
 					, BNS_USE_PERIOD   
 					, CMPX_PROD_GRP_CD
 					, SERIES_BOOK_CLSF_CD
+					, DRM_ATTR_CLSF
+					, DWLD_STRM_ATTR_CLSF
+					, USE_PERIOD_ATTR_CLSF
                 FROM 
                     TB_DP_CMPX_PROD WHERE CMPX_PROD_GRP_CD = (SELECT CMPX_PROD_GRP_CD FROM TB_DP_CMPX_PROD WHERE PROD_ID = #{productId} )
             ) CM
