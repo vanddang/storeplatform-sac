@@ -9,20 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.DateUtils;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
@@ -35,11 +22,16 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxPr
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
-import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseReservedData;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
+import com.skplanet.storeplatform.sac.purchase.order.vo.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * 
@@ -236,12 +228,18 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 						prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE);
 					}
 
-					// 비과금 구매요청 시, 이용종료일시&재다운로드종료일시 세팅
-					if (purchaseOrderInfo.isFreeChargeReq() && StringUtils.isNotBlank(product.getUseExprDt())) {
-						prchsDtlMore
-								.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
-										.getUseExprDt() + "235959");
-						prchsDtlMore.setDwldExprDt(prchsDtlMore.getUseExprDt());
+					// 비과금 구매요청 시 - 종료일자가 있는 경우와 T프리미엄인 경우 이용일자 재산정 안함
+					if (purchaseOrderInfo.isFreeChargeReq()) {
+						if (StringUtils.isNotBlank(product.getUseExprDt())) {
+							prchsDtlMore
+									.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
+											.getUseExprDt() + "235959");
+							prchsDtlMore.setDwldExprDt(prchsDtlMore.getUseExprDt());
+							prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE);
+						} else if (StringUtil.equals(purchaseOrderInfo.getPrchsReqPathCd(),
+								PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM)) {
+							prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE);
+						}
 					}
 
 					// ######################################################################
@@ -525,7 +523,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	 * 멤버쉽 적립을 위한 목록 생성.
 	 * </pre>
 	 * 
-	 * @param prchsDtlMore
+	 * @param prchsDtlMoreList
 	 *            구매생성 정보
 	 * 
 	 * @param mileageSubInfo
