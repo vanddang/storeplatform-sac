@@ -22,9 +22,9 @@ public class CheckSocialAccountSacReq extends CommonInfo {
 	@NotBlank
 	@Pattern(regexp = "^google|^facebook|^kakao")
 	private String socialAcctType;
-	/** 소셜계정 아이디. */
+	/** 소셜계정 내부 아이디. */
 	@NotBlank
-	private String socialAcctId;
+	private String socialAcctIntId;
 
 	/**
 	 * @return the userKey
@@ -57,18 +57,18 @@ public class CheckSocialAccountSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the socialAcctId
+	 * @return the socialAcctIntId
 	 */
-	public String getSocialAcctId() {
-		return this.socialAcctId;
+	public String getSocialAcctIntId() {
+		return this.socialAcctIntId;
 	}
 
 	/**
-	 * @param socialAcctId
-	 *            the socialAcctId to set
+	 * @param socialAcctIntId
+	 *            the socialAcctIntId to set
 	 */
-	public void setSocialAcctId(String socialAcctId) {
-		this.socialAcctId = socialAcctId;
+	public void setSocialAcctIntId(String socialAcctIntId) {
+		this.socialAcctIntId = socialAcctIntId;
 	}
 
 }

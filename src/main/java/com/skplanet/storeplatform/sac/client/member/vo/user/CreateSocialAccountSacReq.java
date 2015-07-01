@@ -23,11 +23,19 @@ public class CreateSocialAccountSacReq extends CommonInfo {
 	@Pattern(regexp = "^google|^facebook|^kakao")
 	private String socialAcctType;
 	/** 소셜계정 아이디. */
-	@NotBlank
 	private String socialAcctId;
-	/** 소셜계정 토큰. */
+	/** 소셜계정 내부 아이디. */
+	@NotBlank
+	private String socialAcctIntId;
+	/** 소셜계정 이메일. */
+	private String socialEmail;
+	/** 소셜계정 AccessToken. */
 	@NotBlank
 	private String socialAcctToken;
+	/** 소셜계정 RefreshToken. */
+	private String socialRefToken;
+	/** 소셜계정 만료시간. */
+	private String socialExpiredTime;
 
 	/**
 	 * @return the userKey
@@ -75,6 +83,36 @@ public class CreateSocialAccountSacReq extends CommonInfo {
 	}
 
 	/**
+	 * @return the socialAcctIntId
+	 */
+	public String getSocialAcctIntId() {
+		return this.socialAcctIntId;
+	}
+
+	/**
+	 * @param socialAcctIntId
+	 *            the socialAcctIntId to set
+	 */
+	public void setSocialAcctIntId(String socialAcctIntId) {
+		this.socialAcctIntId = socialAcctIntId;
+	}
+
+	/**
+	 * @return the socialEmail
+	 */
+	public String getSocialEmail() {
+		return this.socialEmail;
+	}
+
+	/**
+	 * @param socialEmail
+	 *            the socialEmail to set
+	 */
+	public void setSocialEmail(String socialEmail) {
+		this.socialEmail = socialEmail;
+	}
+
+	/**
 	 * @return the socialAcctToken
 	 */
 	public String getSocialAcctToken() {
@@ -87,6 +125,36 @@ public class CreateSocialAccountSacReq extends CommonInfo {
 	 */
 	public void setSocialAcctToken(String socialAcctToken) {
 		this.socialAcctToken = socialAcctToken;
+	}
+
+	/**
+	 * @return the socialRefToken
+	 */
+	public String getSocialRefToken() {
+		return this.socialRefToken;
+	}
+
+	/**
+	 * @param socialRefToken
+	 *            the socialRefToken to set
+	 */
+	public void setSocialRefToken(String socialRefToken) {
+		this.socialRefToken = socialRefToken;
+	}
+
+	/**
+	 * @return the socialExpiredTime
+	 */
+	public String getSocialExpiredTime() {
+		return this.socialExpiredTime;
+	}
+
+	/**
+	 * @param socialExpiredTime
+	 *            the socialExpiredTime to set
+	 */
+	public void setSocialExpiredTime(String socialExpiredTime) {
+		this.socialExpiredTime = socialExpiredTime;
 	}
 
 }
