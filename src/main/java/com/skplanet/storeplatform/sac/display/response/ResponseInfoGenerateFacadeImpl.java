@@ -1339,6 +1339,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		if (metaInfo.getCashAmt() != null) {
 			coupon.setCashList(this.voucherGenerator.generateCashList(metaInfo));
 		}
+		coupon.setSupportList(this.voucherGenerator.generateSupportList(metaInfo));
 		return coupon;
 	}
 

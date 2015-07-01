@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Auto
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cash;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.FreepassAttr;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -138,4 +139,13 @@ public interface VoucherInfoGenerator {
 	 */
 	public Rights generateRights(MetaInfo metaInfo);
 
+	/**
+	 * <pre>
+	 * 지원 Support 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 * @return
+	 */
+	public List<Support> generateSupportList(MetaInfo metaInfo);
 }

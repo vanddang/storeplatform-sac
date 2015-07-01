@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Auto
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cash;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.FreepassAttr;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -305,6 +306,9 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 		freepassAttr.setCouponGroup(metaInfo.getCmpxProdGrpCd());
 		freepassAttr.setPossLend(metaInfo.getPossLendClsfCd());
 		freepassAttr.setSerialBook(metaInfo.getSeriesBookClsfCd());
+		freepassAttr.setDrmAttrCd(metaInfo.getDrmAttrCd());
+		freepassAttr.setDlStrmAttrCd(metaInfo.getDlStrmAttrCd());
+		freepassAttr.setUsePeriodAttrCd(metaInfo.getUsePeriodAttrCd());
 
 		return freepassAttr;
 	}
@@ -323,4 +327,58 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 		rights.setPlus19Yn(metaInfo.getPlus19Yn());
 		return rights;
 	}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.VoucherInfoGenerator#generateSupportList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Support> generateSupportList(MetaInfo metaInfo) {
+		List<Support> supportList = new ArrayList<Support>();
+		Support support = null;
+		support = new Support();
+		support.setType("play");
+		if(metaInfo.getPossLendClsfCd().equals("DP010601") || metaInfo.getPossLendClsfCd().equals("DP010603")){
+			support.setText("Y");
+		}else{
+			support.setText("N");
+		}
+		supportList.add(support);
+		
+		support = new Support();
+		support.setType("store");
+		if(metaInfo.getPossLendClsfCd().equals("DP010602") || metaInfo.getPossLendClsfCd().equals("DP010603")){
+			support.setText("Y");
+		}else{
+			support.setText("N");
+		}		
+		
+		supportList.add(support);
+		
+		support = new Support();
+		support.setType("drm");
+		if(StringUtil.isNotEmpty(metaInfo.getDrmYn())){
+			support.setText(metaInfo.getDrmYn());
+		}
+		supportList.add(support);
+		
+		
+		support = new Support();
+		support.setType("dlStrmCd");
+		if(StringUtil.isNotEmpty(metaInfo.getDwldStrmClsfCd())){
+    		if(metaInfo.getDwldStrmClsfCd().equals("DP010501")){
+    			support.setText("dl");
+    		}else if(metaInfo.getDwldStrmClsfCd().equals("DP010502")){
+    			support.setText("strm");
+    		}else if(metaInfo.getDwldStrmClsfCd().equals("DP010503")){
+    			support.setText("both");
+    		}
+		}
+		
+		supportList.add(support);
+		
+		return supportList;
+	}	
 }
