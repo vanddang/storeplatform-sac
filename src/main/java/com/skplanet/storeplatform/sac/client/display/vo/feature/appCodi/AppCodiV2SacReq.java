@@ -32,6 +32,8 @@ public class AppCodiV2SacReq extends CommonInfo {
 
 	private String prodGradeCd; // 상품이용등급코드
 
+	private String topMenuId; // TOP 메뉴ID
+
 	/**
 	 * @return the preference
 	 */
@@ -75,5 +77,20 @@ public class AppCodiV2SacReq extends CommonInfo {
 	 */
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
+	}
+
+	/**
+	 * @return the topMenuId
+	 */
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	/**
+	 * @param topMenuId
+	 *            the topMenuId to set
+	 */
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 }
