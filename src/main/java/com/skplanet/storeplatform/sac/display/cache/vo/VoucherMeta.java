@@ -77,6 +77,11 @@ public class VoucherMeta extends CommonInfo {
 	private String possLendClsfCd;
 	private String seriesBookClsfCd;
 	private String plus19Yn; // 19+ 상품 Yn
+	private String drmAttrCd; //     DRM 속성 이용
+	private String dlStrmAttrCd; //  바로보기/다운로드속성
+	private String usePeriodAttrCd; // 이용기간 이용
+	private String dwldStrmClsfCd; // 다운로드 스트리밍 구분 코드
+	
 
 	public String getProdId() {
 		return this.prodId;
@@ -530,6 +535,62 @@ public class VoucherMeta extends CommonInfo {
 	 */
 	public void setPlus19Yn(String plus19Yn) {
 		this.plus19Yn = plus19Yn;
+	}
+
+	/**
+	 * @return the drmAttrCd
+	 */
+	public String getDrmAttrCd() {
+		return drmAttrCd;
+	}
+
+	/**
+	 * @param drmAttrCd the drmAttrCd to set
+	 */
+	public void setDrmAttrCd(String drmAttrCd) {
+		this.drmAttrCd = drmAttrCd;
+	}
+
+	/**
+	 * @return the dlStrmAttrCd
+	 */
+	public String getDlStrmAttrCd() {
+		return dlStrmAttrCd;
+	}
+
+	/**
+	 * @param dlStrmAttrCd the dlStrmAttrCd to set
+	 */
+	public void setDlStrmAttrCd(String dlStrmAttrCd) {
+		this.dlStrmAttrCd = dlStrmAttrCd;
+	}
+
+	/**
+	 * @return the usePeriodAttrCd
+	 */
+	public String getUsePeriodAttrCd() {
+		return usePeriodAttrCd;
+	}
+
+	/**
+	 * @param usePeriodAttrCd the usePeriodAttrCd to set
+	 */
+	public void setUsePeriodAttrCd(String usePeriodAttrCd) {
+		this.usePeriodAttrCd = usePeriodAttrCd;
+	}
+
+	/**
+	 * @return the dwldStrmClsfCd
+	 */
+	public String getDwldStrmClsfCd() {
+		return dwldStrmClsfCd;
+	}
+
+	/**
+	 * @param dwldStrmClsfCd the dwldStrmClsfCd to set
+	 */
+	public void setDwldStrmClsfCd(String dwldStrmClsfCd) {
+		this.dwldStrmClsfCd = dwldStrmClsfCd;
 	}
 
 }
