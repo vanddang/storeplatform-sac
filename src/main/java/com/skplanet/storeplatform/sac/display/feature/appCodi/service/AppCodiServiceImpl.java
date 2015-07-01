@@ -635,16 +635,25 @@ public class AppCodiServiceImpl implements AppCodiService {
 		String userKey = requestVO.getUserKey();
 		String preference = requestVO.getPreference();
 		String prodGradeCd = requestVO.getProdGradeCd();
+		String topMenuId = requestVO.getTopMenuId();
 
 		try {
 			ecReq = new IsfV2EcReq();
 			ecReq.setUserKey(userKey);
 			ecReq.setPreference(preference);
+			ecReq.setCateId(StringUtils.equals(topMenuId, "DP00") ? "" : topMenuId);
 			if (StringUtils.isEmpty(prodGradeCd) || prodGradeCd.indexOf("PD004404") >= 0) {
 				ecReq.setAdultYN("Y");
 			} else {
 				ecReq.setAdultYN("N");
 			}
+
+			this.log.info("----------------------------------------------------");
+			this.log.info(">>> [appCodiV2EcParam] preference : {}", ecReq.getPreference());
+			this.log.info(">>> [appCodiV2EcParam] userKey : {}", ecReq.getUserKey());
+			this.log.info(">>> [appCodiV2EcParam] adultYN : {}", ecReq.getAdultYN());
+			this.log.info(">>> [appCodiV2EcParam] cateId : {}", ecReq.getCateId());
+			this.log.info("----------------------------------------------------");
 
 			// App Codi ISF 연동
 			ecRes = this.invoker.invokeV2(ecReq);
