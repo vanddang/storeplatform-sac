@@ -35,12 +35,28 @@ public class FreepassAttr extends CommonInfo {
 	/*
 	 * 소장,대여 구분코드 (“DP010601” : 소장 / “DP010602” : 대여 / “DP010603” : 소장/대여 모두 가능)
 	 */
-	private String possLend;
+	private String possLend; 
 
 	/*
 	 * 이북,코믹 연재/단행 구분코드 (“DP004301” : 단행 / “DP004302” : 연재)
 	 */
 	private String serialBook;
+	
+	/*
+	 * “PD013401” : 이용권의 DRM 속성 이용, “PD013402” : 에피소드의 DRM 속성 이용
+	 */
+	private String drmAttrCd;
+	
+	/*
+	 * “PD013401” : 이용권의 바로보기/다운로드속성 이용 ,“PD013402” : 에피소드의 바로보기/다운로드속성 이용
+	 */
+	private String dlStrmAttrCd;
+	/*
+	 * “PD013401” : 이용권의 이용기간 이용 ,“PD013402” : 에피소드의 이용기간 이용
+	 */
+	private String usePeriodAttrCd;	
+
+	
 
 	/**
 	 * @return the couponGroup
@@ -87,6 +103,54 @@ public class FreepassAttr extends CommonInfo {
 	 */
 	public void setSerialBook(String serialBook) {
 		this.serialBook = serialBook;
+	}
+
+
+	/**
+	 * @return the drmAttrCd
+	 */
+	public String getDrmAttrCd() {
+		return drmAttrCd;
+	}
+
+
+	/**
+	 * @param drmAttrCd the drmAttrCd to set
+	 */
+	public void setDrmAttrCd(String drmAttrCd) {
+		this.drmAttrCd = drmAttrCd;
+	}
+
+
+	/**
+	 * @return the dlStrmAttrCd
+	 */
+	public String getDlStrmAttrCd() {
+		return dlStrmAttrCd;
+	}
+
+
+	/**
+	 * @param dlStrmAttrCd the dlStrmAttrCd to set
+	 */
+	public void setDlStrmAttrCd(String dlStrmAttrCd) {
+		this.dlStrmAttrCd = dlStrmAttrCd;
+	}
+
+
+	/**
+	 * @return the usePeriodAttrCd
+	 */
+	public String getUsePeriodAttrCd() {
+		return usePeriodAttrCd;
+	}
+
+
+	/**
+	 * @param usePeriodAttrCd the usePeriodAttrCd to set
+	 */
+	public void setUsePeriodAttrCd(String usePeriodAttrCd) {
+		this.usePeriodAttrCd = usePeriodAttrCd;
 	}
 
 

@@ -140,6 +140,11 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * 이용권 속성정보
 	 */
 	private Rights rights;
+	
+	/**
+	 * 이용권 지원 정보
+	 */
+	private List<Support> supportList  ;
 
 	/**
 	 * 이용권 속성정보
@@ -159,6 +164,20 @@ public class Coupon extends CommonInfo implements Serializable {
 	 */
 	public void setRights(Rights rights) {
 		this.rights = rights;
+	}
+
+	/**
+	 * @return the supportList
+	 */
+	public List<Support> getSupportList() {
+		return supportList;
+	}
+
+	/**
+	 * @param supportList the supportList to set
+	 */
+	public void setSupportList(List<Support> supportList) {
+		this.supportList = supportList;
 	}
 
 	/**
