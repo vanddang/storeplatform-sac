@@ -186,7 +186,7 @@ public class CardListServiceImpl implements CardListService {
         if( CARD_TYPE_TING.equals(cardInfo.getCardTypeCd()) && ! "Y".equalsIgnoreCase(param.getSegmentInfo().getTingYn()) ) return true;
 
         // TEST MDN 제어
-        if( "Y".equalsIgnoreCase(cardInfo.getTestMdnYn()) && ! "Y".equalsIgnoreCase(param.getSegmentInfo().getTestMdnYn()) ) return true;
+        if( "Y".equalsIgnoreCase(cardInfo.getTestMdnUseYn()) && ! "Y".equalsIgnoreCase(param.getSegmentInfo().getTestMdnYn()) ) return true;
 
         // Segment 제어
         if( CARD_SGMT_TP_SEGMENT.equals(cardInfo.getSegmTypeCd()) && isSegmentProvisioned( param.getTenantId(), cardInfo.getCardId(), param.getSegmentInfo()) ) return true;

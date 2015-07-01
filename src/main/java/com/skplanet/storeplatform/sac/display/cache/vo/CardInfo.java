@@ -45,7 +45,7 @@ public class CardInfo extends CommonInfo {
 	private String menuId;
 	private String smartOfrListId;
 	private String shareUrl;
-	private String testMdnYn;
+	private String testMdnUseYn;
 	private String lndPlus19Yn;
 	private String cardUseGrdCd;
 
@@ -468,12 +468,12 @@ public class CardInfo extends CommonInfo {
 	    this.lndPlus19Yn = lndPlus19Yn;
     }
 
-	public String getTestMdnYn() {
-	    return testMdnYn;
+	public String getTestMdnUseYn() {
+	    return testMdnUseYn;
     }
 
-	public void setTestMdnYn( String testMdnYn ) {
-	    this.testMdnYn = testMdnYn;
+	public void setTestMdnUseYn(String testMdnUseYn) {
+	    this.testMdnUseYn = testMdnUseYn;
     }
 
 }

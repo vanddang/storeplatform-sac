@@ -30,6 +30,10 @@ public class TenantHeader extends CommonInfo {
 		super();
 	}
 
+	/**
+	 * TenantId를 구한다.
+	 * @return TenantId
+	 */
 	public String getTenantId() {
 		return this.tenantId;
 	}

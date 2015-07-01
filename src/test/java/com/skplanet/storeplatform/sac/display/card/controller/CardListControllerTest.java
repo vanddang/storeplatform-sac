@@ -22,7 +22,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.PrintingResultHandler;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.skplanet.storeplatform.sac.client.display.vo.card.CardListInPanelReq;
@@ -63,6 +65,7 @@ public class CardListControllerTest {
 		segmentReq.setNewEntryYn( "N" );
 		segmentReq.setMnoClsfCd( "US001201" );
 		segmentReq.setCategoryBest( Arrays.asList( "DP30" ) );
+		segmentReq.setTestMdnYn( "N" );
 
 		CardListInPanelReq req = new CardListInPanelReq();
 
@@ -74,18 +77,41 @@ public class CardListControllerTest {
 
 		String postBody = new ObjectMapper().writeValueAsString( req );
 
+		ResponseGreper responseGreper = new ResponseGreper();
+
 		this.mvc.perform(
-			post( "/display/card/listInPanel/v1" )
-				.contentType( MediaType.APPLICATION_JSON )
-				.content( postBody )
-				.header( "x-sac-tenant-id", "S01" )
-				.header( "x-sac-system-id", "S01-01014" )
+				post("/display/card/listInPanel/v1")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(postBody)
+						.header("x-sac-tenant-id", "S01")
+						.header("x-sac-system-id", "S01-01014")
 		)
-		.andDo(print())
+		.andDo( responseGreper )
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("application/json;charset=UTF-8"))
 		.andExpect(header().string("x-sac-result-code", "SUCC"))
 		;
+	}
+
+	/** An {@link PrintingResultHandler} that writes to the "standard" output stream */
+	private static class ResponseGreper extends PrintingResultHandler {
+
+		public ResponseGreper() {
+			super(new ResultValuePrinter() {
+
+				public void printHeading(String heading) {
+					System.out.println();
+					System.out.println(String.format("%20s:", heading));
+				}
+
+				public void printValue(String label, Object value) {
+					if (value != null && value.getClass().isArray()) {
+						value = CollectionUtils.arrayToList(value);
+					}
+					System.out.println(String.format("%20s = %s", label, value));
+				}
+			});
+		}
 	}
 
 	@Test
@@ -135,12 +161,12 @@ public class CardListControllerTest {
 				.content( postBody )
 				.header( "x-sac-tenant-id", "S01" )
 				.header( "x-sac-system-id", "S01-01014" )
-				)
-				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(content().contentType("application/json;charset=UTF-8"))
-				.andExpect(header().string("x-sac-result-code", "SUCC"))
-				;
+		)
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(content().contentType("application/json;charset=UTF-8"))
+		.andExpect(header().string("x-sac-result-code", "SUCC"))
+		;
 	}
 
 }
