@@ -151,13 +151,25 @@ public class EpubServiceImpl implements EpubService {
             //코믹의 경우 ScreenShot 제공
             List<ProductImage> screenshotList = this.getScreenshotList(epubDetail.getTopMenuId(), req.getChannelId(), req.getLangCd());
 
-			this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
-
-			//채널정보에 대표가격 추가
+			// 채널정보에 대표가격 추가
 			Price channelPrice = new Price();
-			if(epubDetail.getStoreProdAmt() != null && epubDetail.getStoreProdAmt() > 0) channelPrice.setUnlmtAmt(epubDetail.getStoreProdAmt());
-			if(epubDetail.getPlayProdAmt() != null && epubDetail.getPlayProdAmt() > 0) channelPrice.setPeriodAmt(epubDetail.getPlayProdAmt());
+			if (epubDetail.getStoreProdAmt() != null && epubDetail.getStoreProdAmt() > 0)
+				channelPrice.setUnlmtAmt(epubDetail.getStoreProdAmt());
+			if (epubDetail.getPlayProdAmt() != null && epubDetail.getPlayProdAmt() > 0)
+				channelPrice.setPeriodAmt(epubDetail.getPlayProdAmt());
 			product.setPrice(channelPrice);
+
+			// 채널 상품의 이용정책 set을 위하여 에피소드 상품 중 마지막 chapter의 이용 정책이 내려가도록 조회 추가(2015.07.01)
+			param.put("searchUsePolicyBookTypeCd", DisplayConstants.DP_BOOK_BOOK); // BookTypeCd가 Null이면 단행본(DP004301)을
+																				   // 조회하도록
+			EpubDetail usePolicyInfo = getProdUsePolicyInfo(param);
+
+			if (usePolicyInfo != null) {
+				// 조회된 이용정책 set update by
+				epubDetail = this.setUsePolicyInfo(epubDetail, usePolicyInfo);
+			}
+
+			this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
 
 			//좋아요 여부
 			product.setLikeYn(epubDetail.getLikeYn());
@@ -231,7 +243,7 @@ public class EpubServiceImpl implements EpubService {
         param.put("userKey", userKey);
         param.put("deviceKey", deviceKey);
         
-        final EpubDetail epubDetail = this.getEpubChannel(param);
+        EpubDetail epubDetail = this.getEpubChannel(param);
 
         if(epubDetail != null) {
             String sMetaClsCd = epubDetail.getMetaClsfCd();
@@ -246,13 +258,28 @@ public class EpubServiceImpl implements EpubService {
             List<ProductImage> screenshotList = null;
             screenshotList = this.getScreenshotList(epubDetail.getTopMenuId(), req.getChannelId(), req.getLangCd());
 
-            this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
-            
-			//채널정보에 대표가격 추가
+			// 채널정보에 대표가격 추가
 			Price channelPrice = new Price();
-			if(epubDetail.getStoreProdAmt() != null && epubDetail.getStoreProdAmt() > 0) channelPrice.setUnlmtAmt(epubDetail.getStoreProdAmt());
-			if(epubDetail.getPlayProdAmt() != null && epubDetail.getPlayProdAmt() > 0) channelPrice.setPeriodAmt(epubDetail.getPlayProdAmt());
+			if (epubDetail.getStoreProdAmt() != null && epubDetail.getStoreProdAmt() > 0)
+				channelPrice.setUnlmtAmt(epubDetail.getStoreProdAmt());
+			if (epubDetail.getPlayProdAmt() != null && epubDetail.getPlayProdAmt() > 0)
+				channelPrice.setPeriodAmt(epubDetail.getPlayProdAmt());
 			product.setPrice(channelPrice);
+
+			// 채널 상품의 이용정책 set을 위하여 에피소드 상품 중 마지막 chapter의 이용 정책이 내려가도록 조회 추가(BookTypeCd가 Null이면 단행본(DP004301)을 조회하도록)
+			if (req.getBookTypeCd() == null) {
+				param.put("searchUsePolicyBookTypeCd", DisplayConstants.DP_BOOK_BOOK);
+			} else {
+				param.put("searchUsePolicyBookTypeCd", req.getBookTypeCd());
+			}
+			EpubDetail usePolicyInfo = this.getProdUsePolicyInfo(param);
+
+			if (usePolicyInfo != null) {
+				// 조회된 이용정책 set
+				epubDetail = this.setUsePolicyInfo(epubDetail, usePolicyInfo);
+			}
+            
+            this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
 
             //orderedBy=noPayment 기구매 체크.
             ExistenceListRes existenceListRes = null;
@@ -407,6 +434,17 @@ public class EpubServiceImpl implements EpubService {
         }
         return res;
     }
+    
+	/**
+	 * 채널의 상품 이용정책 조회 (가장 최신 Chapter의 Episode 이용정책 조회)
+	 * 
+	 * @param param
+	 * @return
+	 */
+	private EpubDetail getProdUsePolicyInfo(Map<String, Object> param) {
+		logger.debug("param={}", param);
+		return this.commonDAO.queryForObject("EpubDetail.getProdUsePolicyInfo", param, EpubDetail.class);
+	}    
 
     /**
 	 * Mapping Product
@@ -821,6 +859,9 @@ public class EpubServiceImpl implements EpubService {
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
 		supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
+		if(mapperVO.getPlayDlStrmCd()!= null && !"".equals(mapperVO.getPlayDlStrmCd())){
+			supportList.add(this.mapSupport(DisplayConstants.DP_DL_STRM_NM, mapperVO.getPlayDlStrmCd()));
+		}
 		play.setSupportList(supportList);
 
 		play.setPrice(this.mapPrice(mapperVO.getPlayProdAmt(), mapperVO.getPlayProdNetAmt()));
@@ -863,6 +904,10 @@ public class EpubServiceImpl implements EpubService {
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
 		supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
+		if(mapperVO.getStoreDlStrmCd()!= null && !"".equals(mapperVO.getStoreDlStrmCd())){
+			supportList.add(this.mapSupport(DisplayConstants.DP_DL_STRM_NM, mapperVO.getStoreDlStrmCd()));
+		}
+		
 		store.setSupportList(supportList);
 
 		//가격
@@ -1007,4 +1052,30 @@ public class EpubServiceImpl implements EpubService {
         }
         return salesStatus;
     }
+    
+	/**
+	 * 이용정책 set (최신 Chapter Episode의 이용정책)
+	 * 
+	 * @param epubDetail
+	 * @param usePolicyInfo
+	 * @return EpubDetail
+	 */
+	private EpubDetail setUsePolicyInfo(EpubDetail epubDetail, EpubDetail usePolicyInfo) {
+
+		epubDetail.setStoreProdId(usePolicyInfo.getStoreProdId());
+		epubDetail.setStoreDrmYn(usePolicyInfo.getStoreDrmYn());
+		epubDetail.setStoreProdAmt(usePolicyInfo.getStoreProdAmt());
+		epubDetail.setStoreProdStatusCd(usePolicyInfo.getStoreProdStatusCd());
+		epubDetail.setStoreDlStrmCd(usePolicyInfo.getStoreDlStrmCd());
+
+		epubDetail.setPlayProdId(usePolicyInfo.getPlayProdId());
+		epubDetail.setPlayDrmYn(usePolicyInfo.getPlayDrmYn());
+		epubDetail.setPlayProdAmt(usePolicyInfo.getPlayProdAmt());
+		epubDetail.setPlayUsePeriod(usePolicyInfo.getPlayUsePeriod());
+		epubDetail.setPlayUsePeriodUnitCdNm(usePolicyInfo.getPlayUsePeriodUnitCdNm());
+		epubDetail.setPlayProdStatusCd(usePolicyInfo.getPlayProdStatusCd());
+		epubDetail.setPlayDlStrmCd(usePolicyInfo.getPlayDlStrmCd());
+
+		return epubDetail;
+	}    
 }

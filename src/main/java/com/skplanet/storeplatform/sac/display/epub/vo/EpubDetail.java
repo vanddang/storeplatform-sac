@@ -196,6 +196,9 @@ public class EpubDetail extends CommonInfo {
 	// 좋아요 선택 여부
 	private String likeYn;
 	
+	private String storeDlStrmCd; // 소장 다운로드 스트리밍 값
+	private String playDlStrmCd;  // 대여 다운로드 스트리밍 값
+	
 	public String getTopMenuId() {
 		return this.topMenuId;
 	}
@@ -1098,4 +1101,31 @@ public class EpubDetail extends CommonInfo {
 		this.badgeOptText = badgeOptText;
 	}
 
+	/**
+	 * @return the storeDlStrmCd
+	 */
+	public String getStoreDlStrmCd() {
+		return storeDlStrmCd;
+	}
+
+	/**
+	 * @param storeDlStrmCd the storeDlStrmCd to set
+	 */
+	public void setStoreDlStrmCd(String storeDlStrmCd) {
+		this.storeDlStrmCd = storeDlStrmCd;
+	}
+
+	/**
+	 * @return the playDlStrmCd
+	 */
+	public String getPlayDlStrmCd() {
+		return playDlStrmCd;
+	}
+
+	/**
+	 * @param playDlStrmCd the playDlStrmCd to set
+	 */
+	public void setPlayDlStrmCd(String playDlStrmCd) {
+		this.playDlStrmCd = playDlStrmCd;
+	}
 }

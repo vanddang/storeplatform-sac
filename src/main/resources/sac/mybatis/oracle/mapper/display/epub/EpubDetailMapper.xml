@@ -399,5 +399,123 @@
 			  AND T.MENU_ID = MCD.MENU_ID AND MCD.LANG_CD = T.LANG_CD
 			  AND T.PROD_ID = PI.PROD_ID(+) AND T.LANG_CD = PI.LANG_CD(+) AND PI.EXPO_ORD(+) = 1 AND PI.IMG_CD(+) = #{representImgCd}
 	</select>
+	
+	<select id="getProdUsePolicyInfo" parameterType="map" resultType="EpubDetail">
+		SELECT /* DownloadMapper.getProdUsePolicyInfo, Epub 상품 이용정책 조회, 이석희/I-S Plus, 2015-07-14 */
+		       T4.*
+		     , ( CASE WHEN T4.STORE_PROD_ID IS NOT NULL THEN 'Y' ELSE 'N' END ) AS SUPPORT_STORE
+		     , ( CASE WHEN PLAY_PROD_ID IS NOT NULL THEN 'Y' ELSE 'N' END ) AS SUPPORT_PLAY
+		     , (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM
+		          FROM TB_CM_CD
+		         WHERE CD_ID = T4.STORE_USE_PERIOD_UNIT_CD
+		           AND LANG_CD = #{langCd}) AS STORE_USE_PERIOD_UNIT_CD_NM
+		     , (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM
+		          FROM TB_CM_CD
+		         WHERE CD_ID = T4.PLAY_USE_PERIOD_UNIT_CD
+		           AND LANG_CD = #{langCd}) AS PLAY_USE_PERIOD_UNIT_CD_NM
+             , (CASE WHEN STORE_DWLD_STRM='DP010501' THEN 'dl'
+                     WHEN STORE_DWLD_STRM='DP010502' THEN 'strm'
+                     WHEN STORE_DWLD_STRM='DP010503' THEN 'both' END
+                ) AS STORE_DL_STRM_CD
+             , (CASE WHEN PLAY_DWLD_STRM='DP010501' THEN 'dl'
+                     WHEN PLAY_DWLD_STRM='DP010502' THEN 'strm'
+                     WHEN PLAY_DWLD_STRM='DP010503' THEN 'both' END
+                ) AS PLAY_DL_STRM_CD	          
+		  FROM 
+		       (
+		        SELECT T3.*
+		             , ROWNUM AS RNUM
+		          FROM 
+		               (
+		                SELECT T2.CID
+		                     , T2.CHAPTER
+		                     , T2.SAMPL_URL 
+		                     , MAX(T2.PROD_ID) AS PROD_ID
+		                     , MAX(T2.TENANT_ID) AS TENANT_ID
+		                     , MAX(T2.CHNL_PROD_ID) AS CHNL_PROD_ID
+		                     , MAX(T2.META_CLSF_CD) AS META_CLSF_CD
+		                     , MAX(T2.COMPT_YN) AS COMPT_YN
+		                     , MAX(T2.BOOK_CLSF_CD) AS BOOK_CLSF_CD
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', T2.PROD_ID)) AS STORE_PROD_ID
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.PROD_ID)) AS PLAY_PROD_ID
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', T2.DRM_YN)) AS STORE_DRM_YN
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.DRM_YN)) AS PLAY_DRM_YN 
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', T2.USE_PERIOD)) AS STORE_USE_PERIOD
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.USE_PERIOD)) AS PLAY_USE_PERIOD
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', T2.USE_PERIOD_UNIT_CD)) AS STORE_USE_PERIOD_UNIT_CD
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', T2.PROD_AMT)) AS STORE_PROD_AMT
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.PROD_AMT)) AS PLAY_PROD_AMT
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', T2.PROD_NET_AMT)) AS STORE_PROD_NET_AMT
+		                     , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.PROD_NET_AMT)) AS PLAY_PROD_NET_AMT
+                             , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', T2.DWLD_STRM_CLSF_CD)) AS STORE_DWLD_STRM
+                             , MAX(DECODE(T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.DWLD_STRM_CLSF_CD)) AS PLAY_DWLD_STRM		                     		                     
+		                  FROM  
+		                       (
+		                        SELECT T1.*
+		                          FROM
+		                               (
+		                                SELECT  TP.TENANT_ID
+		                                      , PR.PROD_ID AS CHNL_PROD_ID
+		                                      , PD.PROD_ID
+		                                      , PD.CID
+		                                      , PD.META_CLSF_CD 
+		                                      , UP.USE_PERIOD
+		                                      , UP.USE_PERIOD_UNIT_CD
+		                                      , UP.POSS_LEND_CLSF_CD
+		                                      , UP.DWLD_STRM_CLSF_CD
+		                                      , PD.DRM_YN 
+		                                      , MP.BOOK_CLSF_CD
+		                                      , MP.COMPT_YN
+		                                      , MP.CHAPTER 
+		                                      , MP.SAMPL_URL
+                                              , PRC.PROD_AMT
+                                              , PRC.PROD_NET_AMT  
+		                                      , ROW_NUMBER() OVER ( PARTITION BY PD.PROD_ID ORDER BY SC.PROD_VER DESC ) AS RN
+		                                  FROM  TB_DP_PROD_RSHP PR 
+		                                      , TB_DP_PROD PD
+		                                      , TB_DP_USE_POLICY UP
+		                                      , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
+		                                      , TB_DP_MENU_CATEGORY MC 
+		                                      , TB_DP_SUB_CONTENTS SC 
+		                                      , TB_DP_TENANT_PROD TP 
+		                                      , TB_DP_EBOOK_PROD MP 
+		                                      , TB_DP_SPRT_DEVICE SD 
+		                                      , TB_CM_DEVICE DV
+		                                      , TB_DP_TENANT_PROD_PRICE PRC
+		                                  WHERE PR.PROD_ID = #{channelId}
+		                                    AND PR.PART_PROD_ID = PD.PROD_ID
+		                                    AND TP.PROD_ID = PD.PROD_ID
+		                                    AND PRC.PROD_ID = PD.PROD_ID
+		                                    AND PRC.TENANT_ID = TP.TENANT_ID  		                                    
+		                                    AND PD.USE_POLICY_ID = UP.USE_POLICY_ID(+)
+		                                    AND MP.PROD_ID = PD.PROD_ID
+		                                    AND TP.TENANT_ID = #{tenantId}
+		                                    AND TP.EXPO_YN = 'Y'
+		                                    AND TP.PROD_STATUS_CD = 'PD000403'
+		                                    AND PD.PROD_ID = CPM.PROD_ID
+		                                    AND CPM.MENU_ID = MC.MENU_ID
+		                                    AND MC.USE_YN = 'Y'
+		                                    AND PD.PROD_ID = SD.PROD_ID
+		                                    AND (SD.DEVICE_MODEL_CD = #{deviceModel} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+		                                    AND DV.DEVICE_MODEL_CD = #{deviceModel}
+		                                    AND DV.USE_YN = 'Y'
+		                                    AND PD.SVC_GRP_CD = 'DP000203'
+		                                    AND PD.CONTENTS_TYPE_CD = 'PD002502'
+		                                    AND PD.SVC_TYPE_CD = 'DP001116'
+		                                    AND SC.PROD_ID = PD.PROD_ID
+		                                    AND SC.SALE_YN ='Y'
+                                            AND MP.BOOK_CLSF_CD = #{searchUsePolicyBookTypeCd}
+                                            AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
+		                               ) T1
+		                         WHERE  RN = 1               
+		                       ) T2             
+		                  GROUP BY T2.CID, T2.CHAPTER, T2.SAMPL_URL
+		                  ORDER BY T2.CHAPTER DESC 
+		               ) T3
+		         WHERE 1=1       
+		       ) T4
+		  WHERE T4.RNUM = 1
+    </select>
     
 </mapper>
