@@ -1,10 +1,9 @@
 package com.skplanet.storeplatform.sac.display.banner.controller;
 
-import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerProdMapgSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.banner.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.banner.service.BannerService;
+import com.skplanet.storeplatform.sac.display.banner.vo.BannerListParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,4 +54,16 @@ public class BannerController {
 
         return this.bannerService.searchBannerProdMapgList(header, bannerProdMapgReq);
     }
+
+	@RequestMapping(value = "/list/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public BannerListSacRes getBannerList(SacRequestHeader header, @Validated BannerListSacReq req) {
+
+		String tenantId = header.getTenantHeader().getTenantId();
+		String deviceModelCd = header.getDeviceHeader().getModel();
+		String langCd = header.getTenantHeader().getLangCd();
+
+		BannerListParam param = new BannerListParam(req, tenantId, deviceModelCd, langCd);
+		return this.bannerService.searchBannerListV2(header, param);
+	}
 }

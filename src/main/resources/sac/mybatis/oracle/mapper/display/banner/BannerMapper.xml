@@ -464,4 +464,104 @@
             </if>
     </select>
 
+	<select id="searchBannerListV2" parameterType="com.skplanet.storeplatform.sac.display.banner.vo.BannerListParam" resultType="BannerDefault">
+		SELECT /* Banner.searchBannerListV2, BannerMapper.xml, SAC, haeyup.yang 2015-07-01 */
+			T.*
+		FROM
+		(
+			SELECT
+				BNR.BNR_MENU_ID,
+				BNR.BNR_SEQ,
+				BNR.BNR_INFO_TYPE_CD,
+				BNR.BNR_INFO,
+				TO_CHAR(BNR.REG_DT, 'YYYYMMDDHH24MISS')                             AS REG_DT,
+				BE.BNR_EXPO_MENU_ID,
+				(BE.BNR_MENU_ID || '.' || BE.BNR_EXPO_MENU_ID || '.' || BE.BNR_SEQ) AS BANNER_ID,
+				BE.EXPO_ORD,
+				BE.EXPO_ORD_SUB,
+				CASE WHEN BNR.BNR_INFO_TYPE_CD = 'DP010303' /* product banner */
+					 	THEN (SELECT  TOP_MENU_ID FROM  TB_DP_PROD PR WHERE PR.PROD_ID = BNR.BNR_INFO)
+					 ELSE null
+				END AS TOP_MENU_ID,
+				CASE WHEN BNR.BNR_INFO_TYPE_CD = 'DP010303' /* product banner */
+						THEN (SELECT PROD_NM FROM TB_DP_PROD_DESC WHERE PROD_ID = BNR.BNR_INFO AND LANG_CD = #{langCd})
+					 ELSE BE.BNR_NM
+				END AS BNR_NM,
+				BE.BNR_DESC,
+				BE.EXPO_STATUS_CD,
+				BI.IMG_PATH
+			FROM TB_DP_BNR BNR
+				INNER JOIN TB_DP_BNR_EXPO BE
+					ON BNR.TENANT_ID = BE.TENANT_ID AND BNR.BNR_MENU_ID = BE.BNR_MENU_ID AND
+					   BNR.BNR_SEQ = BE.BNR_SEQ
+				INNER JOIN TB_DP_BNR_IMG BI
+					ON BNR.TENANT_ID = BI.TENANT_ID AND BNR.BNR_MENU_ID = BI.BNR_MENU_ID AND
+					   BNR.BNR_SEQ = BI.BNR_SEQ
+				/* 이북,코믹,이북 보관함 이벤트 */
+				<if test='bnrMenuId=="DP010920" or bnrMenuId=="DP010921" or bnrMenuId=="DP010928"'>
+				INNER JOIN TB_DP_BNR_DVC BD
+					ON BNR.TENANT_ID = BD.TENANT_ID AND BNR.BNR_MENU_ID = BD.BNR_MENU_ID AND
+					   BNR.BNR_SEQ = BD.BNR_SEQ
+				INNER JOIN TB_CM_DEVICE DVC
+					ON BD.DEVICE_MODEL_CD = DVC.DEVICE_MODEL_CD
+				</if>
+			WHERE 1 = 1
+				  AND BNR.TENANT_ID = #{tenantId}
+				  AND BNR.BNR_MENU_ID = #{bnrMenuId}
+				  AND BE.BNR_EXPO_MENU_ID = #{bnrExpoMenuId}
+				  AND BE.EXPO_YN = 'Y'
+				  AND BE.USE_YN = 'Y'
+				  AND BE.EXPO_STATUS_CD IN ('DP010201', 'DP010202')
+				  AND SYSDATE BETWEEN DECODE(BE.EXPO_STATUS_CD, 'DP010202', SYSDATE, BE.EXPO_START_DT)
+				  AND DECODE(BE.EXPO_STATUS_CD, 'DP010202', SYSDATE, NVL(BE.EXPO_END_DT, SYSDATE))
+				  AND BI.IMG_SIZE_CD = #{imgSizeCd}
+				  AND (
+					  (BE.EXPO_ORD = #{lastExpoOrd,javaType=Integer,jdbcType=NUMERIC} AND
+					   BE.EXPO_ORD_SUB &gt; #{lastExpoOrdSub,javaType=Integer,jdbcType=NUMERIC})
+					  OR BE.EXPO_ORD &gt; #{lastExpoOrd,javaType=Integer,jdbcType=NUMERIC}
+				  )
+				  /* 이북,코믹,이북 보관함 이벤트 */
+				  <if test='bnrMenuId=="DP010920" or bnrMenuId=="DP010921" or bnrMenuId=="DP010928"'>
+				  AND BD.DEVICE_MODEL_CD = #{deviceModelCd}
+				  AND DVC.USE_YN = 'Y'
+				  AND (CASE WHEN (BNR.BNR_INFO_TYPE_CD = 'DP010306' AND SUBSTR(BNR.BNR_INFO, 1, 4 ) = 'DP13') THEN DECODE(DVC.EBOOK_SPRT_YN, 'Y', 1, 0)
+						    WHEN (BNR.BNR_INFO_TYPE_CD = 'DP010306' AND SUBSTR(BNR.BNR_INFO, 1, 4 ) = 'DP14') THEN DECODE(DVC.COMIC_SPRT_YN, 'Y', 1, 0)
+						    WHEN (BNR.BNR_INFO_TYPE_CD = 'DP010306' AND SUBSTR(BNR.BNR_INFO, 1, 4 ) = 'DP28') THEN DECODE(DVC.SCL_SHPG_SPRT_YN, 'Y', 1, 0)
+					   ELSE 1 END) = 1
+				  </if>
+			ORDER BY BE.EXPO_ORD, BE.EXPO_ORD_SUB
+		) T
+		WHERE ROWNUM &lt;= #{maxBnrCount,javaType=Integer,jdbcType=NUMERIC}
+	</select>
+
+
+	<select id="getListProvisioning" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT /* Banner.getListProvisioning, BannerMapper.xml, SAC, haeyup.yang 2015-07-01 */
+			COUNT(1) AS EXIST
+		FROM TB_DP_LIST L
+			INNER JOIN TB_CM_DEVICE CD ON CD.DEVICE_MODEL_CD = #{deviceModelCd}
+		WHERE 1 = 1
+			AND L.TENANT_ID = #{tenantId}
+			AND L.EXPO_YN = 'Y'
+			AND L.LIST_ID = #{listId}
+			AND EXISTS (
+                        SELECT 1
+                            FROM TB_DP_LIST_PROD LP
+                        WHERE 1=1
+                            AND LP.TENANT_ID = L.TENANT_ID
+                            AND LP.LIST_ID = L.LIST_ID
+                            AND LP.EXPO_YN = 'Y'
+                            AND LP.STD_DT = (SELECT MAX(STD_DT)
+                                              FROM TB_DP_BATCH_COMPT
+                                              WHERE TENANT_ID = L.TENANT_ID AND BATCH_ID = L.LIST_ID)
+                            AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+                        )
+            <if test='bnrMenuId == "DP010920" or bnrMenuId == "DP010928"'>
+			AND CD.EBOOK_SPRT_YN    = 'Y'
+		    </if>
+		    <if test='bnrMenuId == "DP010921" or bnrMenuId == "DP010928"'>
+			AND CD.COMIC_SPRT_YN    = 'Y'
+		    </if>
+	</select>
+
 </mapper>

@@ -1,10 +1,12 @@
 package com.skplanet.storeplatform.sac.display.banner.service;
 
+import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerProdMapgSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.banner.vo.BannerDefault;
+import com.skplanet.storeplatform.sac.display.banner.vo.BannerListParam;
 
 import java.util.List;
 
@@ -25,7 +27,9 @@ public interface BannerService {
 	 *            bannerReq
 	 * @return BannerSacRes
 	 */
-	public BannerSacRes searchBannerList(SacRequestHeader header, BannerSacReq bannerReq, List<BannerDefault> tempList);
+	BannerSacRes searchBannerList(SacRequestHeader header, BannerSacReq bannerReq, List<BannerDefault> tempList);
 
-    public BannerSacRes searchBannerProdMapgList(SacRequestHeader header, BannerProdMapgSacReq bannerProdMapgReq);
+    BannerSacRes searchBannerProdMapgList(SacRequestHeader header, BannerProdMapgSacReq bannerProdMapgReq);
+
+	BannerListSacRes searchBannerListV2(SacRequestHeader header, BannerListParam param);
 }

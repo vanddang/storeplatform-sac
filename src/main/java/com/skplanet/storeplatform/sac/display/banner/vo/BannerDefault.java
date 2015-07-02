@@ -37,6 +37,8 @@ public class BannerDefault {
 	private String sampleUrlHq;
 	private String prodCaseCd;
 	private String situRecommYn;
+	private String expoOrd;
+	private String expoOrdSub;
 
 	/**
 	 * @return the totalCount
@@ -366,5 +368,21 @@ public class BannerDefault {
 	 */
 	public void setSituRecommYn(String situRecommYn) {
 		this.situRecommYn = situRecommYn;
+	}
+
+	public String getExpoOrd() {
+		return expoOrd;
+	}
+
+	public void setExpoOrd(String expoOrd) {
+		this.expoOrd = expoOrd;
+	}
+
+	public String getExpoOrdSub() {
+		return expoOrdSub;
+	}
+
+	public void setExpoOrdSub(String expoOrdSub) {
+		this.expoOrdSub = expoOrdSub;
 	}
 }
