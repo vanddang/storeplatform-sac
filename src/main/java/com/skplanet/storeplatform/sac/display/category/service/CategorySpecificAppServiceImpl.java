@@ -77,19 +77,19 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
                 "CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
 
         if (productBasicInfoList != null) {
+
             Map<String, Object> paramMap = new HashMap<String, Object>();
-            paramMap.put("tenantHeader", header.getTenantHeader());
-            paramMap.put("deviceHeader", header.getDeviceHeader());
-            paramMap.put("lang", "ko");
+            paramMap.put("tenantId", header.getTenantHeader().getTenantId());
+            paramMap.put("langCd", header.getTenantHeader().getLangCd());
+            paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+            paramMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
             paramMap.put("deviceModelCd", Strings.nullToEmpty(req.getIgnoreProvisionYn()).equals("N") ?
                                             header.getDeviceHeader().getModel() : DisplayConstants.DP_ANY_PHONE_4APP);
 
             for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-                String topMenuId = productBasicInfo.getTopMenuId();
                 String svcGrpCd = productBasicInfo.getSvcGrpCd();
-                paramMap.put("productBasicInfo", productBasicInfo);
+                paramMap.put("prodId", productBasicInfo.getProdId());
 
-                this.log.debug("##### Top Menu Id : {}", topMenuId);
                 this.log.debug("##### Service Group Cd : {}", svcGrpCd);
 
                 // 상품 SVC_GRP_CD 조회
@@ -102,19 +102,13 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
                 // APP 상품의 경우
                 if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
                     if(productBasicInfo.getPartParentClsfCd() == null || productBasicInfo.getPartParentClsfCd().equals("PD012301")) {
-                        paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-                        // metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
 
+                        // metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
                         metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo", paramMap,
                                 MetaInfo.class);
                     }
                     else if(productBasicInfo.getPartParentClsfCd().equals("PD012302")) {
-                        Map<String, Object> param = new HashMap<String, Object>();
-                        param.put("langCd", header.getTenantHeader().getLangCd());
-                        param.put("tenantId", header.getTenantHeader().getTenantId());
-                        param.put("prodId", productBasicInfo.getProdId());
-
-                        metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getInAppMetaInfo", param, MetaInfo.class);
+                        metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getInAppMetaInfo", paramMap, MetaInfo.class);
                     }
 
                     if (metaInfo != null) {
