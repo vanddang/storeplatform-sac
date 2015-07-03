@@ -150,7 +150,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		this.log.info("----------------------------------------------------------------");
 		
 		if(req.getEpisodeProdStatusCdList().size() ==1){
-    		for(int kk =0; kk < req.getEpisodeProdStatusCdList().size() ; kk++){
+    		for(int kk =0; kk < 1 ; kk++){
     			if(StringUtils.isEmpty(req.getEpisodeProdStatusCdList().get(kk))){
     				req.setEpisodeProdStatusCdList(null);
     			}
@@ -235,7 +235,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		this.log.info("----------------------------------------------------------------");
 		
 		if(req.getEpisodeProdStatusCdList().size() ==1){
-    		for(int kk =0; kk < req.getEpisodeProdStatusCdList().size() ; kk++){
+    		for(int kk =0; kk < 1 ; kk++){
     			if(StringUtils.isEmpty(req.getEpisodeProdStatusCdList().get(kk))){
     				req.setEpisodeProdStatusCdList(null);
     			}
