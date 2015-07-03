@@ -149,10 +149,12 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		this.log.info("episodeProdStatusCdList : " + req.getEpisodeProdStatusCdList().toString());
 		this.log.info("----------------------------------------------------------------");
 		
-		for(int kk =0; kk < 1 ; kk++){
-			if(StringUtils.isEmpty(req.getEpisodeProdStatusCdList().get(kk).toString())){
-				req.setEpisodeProdStatusCdList(null);
-			}
+		if(req.getEpisodeProdStatusCdList().size() ==1){
+    		for(int kk =0; kk < req.getEpisodeProdStatusCdList().size() ; kk++){
+    			if(StringUtils.isEmpty(req.getEpisodeProdStatusCdList().get(kk))){
+    				req.setEpisodeProdStatusCdList(null);
+    			}
+    		}
 		}
 		
 		// / 단말 지원 정보 조회
@@ -232,11 +234,13 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		this.log.info("episodeProdStatusCdList : " + req.getEpisodeProdStatusCdList().toString());
 		this.log.info("----------------------------------------------------------------");
 		
-		for(int kk =0; kk < 1 ; kk++){
-			if(StringUtils.isEmpty(req.getEpisodeProdStatusCdList().get(kk).toString())){
-				req.setEpisodeProdStatusCdList(null);
-			}
-		}		
+		if(req.getEpisodeProdStatusCdList().size() ==1){
+    		for(int kk =0; kk < req.getEpisodeProdStatusCdList().size() ; kk++){
+    			if(StringUtils.isEmpty(req.getEpisodeProdStatusCdList().get(kk))){
+    				req.setEpisodeProdStatusCdList(null);
+    			}
+    		}
+		}	
 		
 		CmpxProductInfo cmpxProductInfo = null;
 		cmpxProductInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxProductInfo", req, CmpxProductInfo.class);
