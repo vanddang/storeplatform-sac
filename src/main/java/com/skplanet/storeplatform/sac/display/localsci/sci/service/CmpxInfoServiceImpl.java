@@ -146,7 +146,9 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		this.log.info("possLendClsfCd : " + req.getPossLendClsfCd());
 		this.log.info("deviceModelCd : " + req.getDeviceModelCd());
 		this.log.info("langCd : " + req.getLangCd());
-		this.log.info("episodeProdStatusCdList : " + req.getEpisodeProdStatusCdList().toString());
+		if(req.getEpisodeProdStatusCdList().size() >=1){
+			this.log.info("episodeProdStatusCdList : " + req.getEpisodeProdStatusCdList().toString());
+		}
 		this.log.info("----------------------------------------------------------------");
 		
 		if(req.getEpisodeProdStatusCdList().size() ==1){
@@ -231,7 +233,9 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		this.log.info("prodId : " + req.getProdId());
 		this.log.info("episodeProdId : " + req.getEpisodeProdId());
 		this.log.info("chapter : " + req.getChapter());
-		this.log.info("episodeProdStatusCdList : " + req.getEpisodeProdStatusCdList().toString());
+		if(req.getEpisodeProdStatusCdList().size() >=1){
+			this.log.info("episodeProdStatusCdList : " + req.getEpisodeProdStatusCdList().toString());
+		}
 		this.log.info("----------------------------------------------------------------");
 		
 		if(req.getEpisodeProdStatusCdList().size() ==1){
