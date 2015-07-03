@@ -1232,7 +1232,16 @@ public class FeedbackServiceImpl implements FeedbackService {
 		String regId = this.getMaskRegId(prodNoti.getRegId());
 
 		LOGGER.info("@@@@ obj {}", obj);
-		if (obj != null) {
+		if (obj == null) {
+
+			if (StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
+				LOGGER.info("@@@ MbrTelno : {}", prodNoti.getMbrTelno());
+				regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), "");
+			} else {
+				regId = "비회원";
+			}
+
+		} else {
 
 			if (obj instanceof SearchSapUserSacRes) {
 
@@ -1261,6 +1270,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 						}
 					}
 				}
+
 			} else {
 
 				SearchUserSacRes searchUserSacRes = (SearchUserSacRes) obj;
@@ -1288,7 +1298,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 						}
 					}
 				}
-			}
+			} // instanceof check end.
 
 		} // obj null check end.
 
