@@ -6,11 +6,14 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.MusicQualityCode;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetail;
 import com.skplanet.storeplatform.sac.display.music.vo.RelatedProduct;
 import com.skplanet.storeplatform.sac.display.music.vo.SubContent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -20,6 +23,7 @@ import java.util.*;
  */
 @org.springframework.stereotype.Component
 public class MusicDetailBinderImpl implements MusicDetailBinder {
+    protected Logger logger = LoggerFactory.getLogger(MusicDetailBinderImpl.class);
 
     private static Map<String, String> META_CLS_TO_PROD_TYPE;
     static {
@@ -28,6 +32,17 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         META_CLS_TO_PROD_TYPE.put("CT31", "colorRing/long");
         META_CLS_TO_PROD_TYPE.put("CT32", "liveBell/sq");
         META_CLS_TO_PROD_TYPE.put("CT33", "liveBell/hq");
+    }
+
+    private String getMusicQualityType(String dpPgQultCd) {
+        String ret = null;
+        try {
+            ret = MusicQualityCode.valueOf(dpPgQultCd).getType();
+        } catch (Exception e) {
+            logger.warn("Invalid Quality code.");
+            // 실패하는 경우 그냥 무시하고 null이 리턴 되도록 한다.
+        }
+        return ret;
     }
 
     @Override
@@ -39,11 +54,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         for (SubContent sc : contentList) {
             Source src = new Source();
             src.setSize(sc.getFileSize());
-            if("PD009711".equals(sc.getDpPgQultCd()))
-                src.setType(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192);
-            else if("PD009712".equals(sc.getDpPgQultCd()))
-                src.setType(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128);
-
+            src.setType(getMusicQualityType(sc.getDpPgQultCd()));
             music.getSourceList().add(src);
         }
 

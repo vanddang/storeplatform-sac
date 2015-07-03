@@ -974,13 +974,13 @@
     <select id="getDownloadMusicInfo" parameterType="DownloadMusicSacReq" resultType="MetaInfo">
         SELECT  /* DownloadMapper.getDownloadMusicInfo, 상품정보요청(for download) Music , 이석희/아이에스플러스, 2014-02-07 */
                 TA.PROD_ID
-              , TA.MUSIC_ID
               , TA.OUTSD_CONTENTS_ID
               , TA.PROD_NM
               , TA.PROD_GRD_CD
               , TA.ARTIST1_NM
               , TA.ARTIST2_NM
               , TA.ARTIST3_NM
+              , TA.FILE_SIZE_HH
               , TA.FILE_SIZE_H
               , TA.FILE_SIZE
               , TA.CHNL_PROD_ID
@@ -1015,10 +1015,10 @@
                      , MAX(Q.ARTIST1_NM ) AS ARTIST1_NM
                      , MAX(Q.ARTIST2_NM ) AS ARTIST2_NM
                      , MAX(Q.ARTIST3_NM ) AS ARTIST3_NM
+                     , MAX(DECODE( M.DP_PG_QULT_CD, 'PD009713', M.FILE_SIZE ) ) AS FILE_SIZE_HH
                      , MAX(DECODE( M.DP_PG_QULT_CD, 'PD009711', M.FILE_SIZE ) ) AS FILE_SIZE_H
                      , MAX(DECODE( M.DP_PG_QULT_CD, 'PD009712', M.FILE_SIZE ) ) AS FILE_SIZE                  
                      , MAX(Q.PROD_NM) AS PROD_NM
-                     , MAX(R.MUSIC_ID) AS MUSIC_ID
                      , MAX(O.PROD_AMT) AS PROD_AMT
                   FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
                      , TB_DP_MENU_CATEGORY           B
@@ -1033,7 +1033,6 @@
                      , TB_DP_TENANT_PROD_PRICE       O
                      , TB_DP_MUSIC_PROD              P
                      , TB_DP_PROD_DESC               Q
-                     , TB_DP_CHART_PROD_MAPG         R
                  WHERE A.MENU_ID = B.MENU_ID
                    AND A.PROD_ID = D.PROD_ID
                    AND D.PROD_ID = G.PROD_ID                                                                              
@@ -1047,7 +1046,6 @@
                    AND N.TENANT_ID = O.TENANT_ID                                         
                    AND J.PROD_ID = P.PROD_ID
                    AND J.PROD_ID = Q.PROD_ID 
-                   AND J.PROD_ID = R.PROD_ID                                    
                    --AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                    AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                    AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */

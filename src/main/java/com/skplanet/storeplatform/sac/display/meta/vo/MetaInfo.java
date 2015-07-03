@@ -224,13 +224,13 @@ public class MetaInfo extends CommonInfo {
 	private Date updDt;
 
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
-	private String musicId;
 	private String rankChgCnt;
 	private String mp3SprtYn;
 	private String bellSprtYn;
 	private String colorringSprtYn;
 	private String outsdContentsId;
 	private Long fileSizeH;
+    private Long fileSizeHH;
 	private String artistId;
 	private String artistNm;
 	private String debutDay;
@@ -2700,21 +2700,6 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the musicId
-	 */
-	public String getMusicId() {
-		return this.musicId;
-	}
-
-	/**
-	 * @param musicId
-	 *            the musicId to set
-	 */
-	public void setMusicId(String musicId) {
-		this.musicId = musicId;
-	}
-
-	/**
 	 * @return the rankChgCnt
 	 */
 	public String getRankChgCnt() {
@@ -2804,7 +2789,15 @@ public class MetaInfo extends CommonInfo {
 		this.fileSizeH = fileSizeH;
 	}
 
-	/**
+    public Long getFileSizeHH() {
+        return fileSizeHH;
+    }
+
+    public void setFileSizeHH(Long fileSizeHH) {
+        this.fileSizeHH = fileSizeHH;
+    }
+
+    /**
 	 * @return the artistId
 	 */
 	public String getArtistId() {

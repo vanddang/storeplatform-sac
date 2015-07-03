@@ -229,7 +229,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		product.setSourceList(commonGenerator.generateSourceList(metaInfo));
 		product.setMenuList(commonGenerator.generateMenuList(metaInfo));
 		product.setContributor(musicInfoGenerator.generateContributor(metaInfo));
-		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_SONG_IDENTIFIER_CD,metaInfo.getMusicId()));
+		identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_SONG_IDENTIFIER_CD,metaInfo.getOutsdContentsId()));
 		music.setIdentifierList(identifierList);
 		List<Source> musicSourceList = new ArrayList<Source>();
         if(metaInfo.getFileSize() != null) {
@@ -237,6 +237,9 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         }
         if(metaInfo.getFileSizeH() != null) {
             musicSourceList.add(commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192, null, metaInfo.getFileSizeH()));
+        }
+        if(metaInfo.getFileSizeHH() != null) {
+            musicSourceList.add(commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_320, null, metaInfo.getFileSizeHH()));
         }
 
 		music.setSourceList(musicSourceList);

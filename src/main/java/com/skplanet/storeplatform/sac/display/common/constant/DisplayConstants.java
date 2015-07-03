@@ -345,6 +345,8 @@ public class DisplayConstants {
 	/** 미리보기. */
 	public static final String DP_SOURCE_TYPE_PREVIEW = "preview";
 
+    /** 음악 mp3-320. */
+    public static final String DP_SOURCE_TYPE_AUDIO_MP3_320 = "audio/mp3-320";
 	/** 음악 mp3-192. */
 	public static final String DP_SOURCE_TYPE_AUDIO_MP3_192 = "audio/mp3-192";
 	/** 음악 mp3-128. */
