@@ -87,6 +87,11 @@ public class HistorySacV2 extends CommonInfo implements Serializable {
 
 	private String giftMsg;
 
+	private String usePeriodSetCd;
+	private String usePeriodRedateCd;
+	private String usePeriodUnitCd;
+	private String usePeriod;
+
 	private HashMap<String, Object> productInfo;
 
 	/**
@@ -1152,6 +1157,66 @@ public class HistorySacV2 extends CommonInfo implements Serializable {
 	 */
 	public void setCpnUseStatusCd(String cpnUseStatusCd) {
 		this.cpnUseStatusCd = cpnUseStatusCd;
+	}
+
+	/**
+	 * @return the usePeriodSetCd
+	 */
+	public String getUsePeriodSetCd() {
+		return this.usePeriodSetCd;
+	}
+
+	/**
+	 * @param usePeriodSetCd
+	 *            the usePeriodSetCd to set
+	 */
+	public void setUsePeriodSetCd(String usePeriodSetCd) {
+		this.usePeriodSetCd = usePeriodSetCd;
+	}
+
+	/**
+	 * @return the usePeriodRedateCd
+	 */
+	public String getUsePeriodRedateCd() {
+		return this.usePeriodRedateCd;
+	}
+
+	/**
+	 * @param usePeriodRedateCd
+	 *            the usePeriodRedateCd to set
+	 */
+	public void setUsePeriodRedateCd(String usePeriodRedateCd) {
+		this.usePeriodRedateCd = usePeriodRedateCd;
+	}
+
+	/**
+	 * @return the usePeriodUnitCd
+	 */
+	public String getUsePeriodUnitCd() {
+		return this.usePeriodUnitCd;
+	}
+
+	/**
+	 * @param usePeriodUnitCd
+	 *            the usePeriodUnitCd to set
+	 */
+	public void setUsePeriodUnitCd(String usePeriodUnitCd) {
+		this.usePeriodUnitCd = usePeriodUnitCd;
+	}
+
+	/**
+	 * @return the usePeriod
+	 */
+	public String getUsePeriod() {
+		return this.usePeriod;
+	}
+
+	/**
+	 * @param usePeriod
+	 *            the usePeriod to set
+	 */
+	public void setUsePeriod(String usePeriod) {
+		this.usePeriod = usePeriod;
 	}
 
 }
