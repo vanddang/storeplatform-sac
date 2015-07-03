@@ -103,7 +103,8 @@
 	                         WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013402' THEN PM.DWLD_STRM_CLSF_CD
 	                    END
 	               ELSE ''
-	               END)  AS downStrmClsfCd  	            
+	               END)  AS downStrmClsfCd  
+	            , TP.PROD_STATUS_CD AS episodeProdStatusCd	            
 	        FROM 
 	              TB_DP_PROD PD
 	            , TB_DP_PROD_DESC DC
@@ -163,6 +164,7 @@
 	                 AND B.PROD_RSHP_CD =#{prodRshpCd}
 	                 AND A.PROD_ID =#{prodId}
 	                 AND C.FREE_PASS_CLSF_CD =#{cmpxProdClsfCd}
+	                 
 	             )PM             
 	        WHERE PD.PROD_ID = PM.PART_PROD_ID
 	        AND PD.PROD_ID = DC.PROD_ID
@@ -187,6 +189,13 @@
 		            </if>    
 	            </if>        
             </if>
+            <if test="episodeProdStatusCdList != null">
+            AND TP.PROD_STATUS_CD  IN
+                         <foreach collection="episodeProdStatusCdList" item="prodGradeCd" separator="," open="(" close=")">
+                           #{prodGradeCd}
+                         </foreach>                        
+            </if>                
+            
 	        AND DC.LANG_CD = #{langCd} 
 	        AND TP.TENANT_ID = #{tenantId}
 	        AND TP.TENANT_ID = PR.TENANT_ID 
@@ -223,7 +232,8 @@
             , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN PM.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD    
             , CM.FREE_PASS_CLSF_CD AS cmpxProdClsfCd
             , PD.TOP_MENU_ID      
-            , TP.PROD_STATUS_CD      
+            , TP.PROD_STATUS_CD     
+            , PM.episodeProdStatusCd
         FROM 
               TB_DP_PROD PD
             , TB_DP_CMPX_PROD CM
@@ -241,7 +251,8 @@
                      , D.USE_PERIOD_UNIT_CD 
                      , D.USE_PERIOD 
                      , AA.DRM_YN AS FREE_PASS_DRM_YN
-                     , C.DRM_YN            
+                     , C.DRM_YN           
+                     , E.PROD_STATUS_CD AS episodeProdStatusCd 
                 FROM  
                       TB_DP_PROD AA
                      ,TB_DP_USE_POLICY BB 
@@ -249,7 +260,8 @@
                      ,TB_DP_FIXRATE_PROD_MAPG A
                      ,TB_DP_PROD_RSHP B
                      ,TB_DP_PROD C
-                     ,TB_DP_USE_POLICY D      
+                     ,TB_DP_USE_POLICY D     
+                     ,TB_DP_TENANT_PROD E 
                      ,TB_DP_EBOOK_PROD I      
                      ,TB_DP_VOD_PROD H                     
                WHERE AA.PROD_ID= A.PROD_ID
@@ -258,13 +270,23 @@
                  AND A.PART_PROD_ID = B.PROD_ID
                  AND B.PROD_RSHP_CD ='DP010802'
                  AND B.PART_PROD_ID = C.PROD_ID
-                 AND C.USE_POLICY_ID =D.USE_POLICY_ID   
+                 AND C.USE_POLICY_ID =D.USE_POLICY_ID
+                 AND C.PROD_ID = E.PROD_ID   
+                 AND E.TENANT_ID = #{tenantId}
                  AND C.PROD_ID  = I.PROD_ID(+)               
                  AND C.PROD_ID  = H.PROD_ID(+)
                  AND B.PART_PROD_ID=#{episodeProdId}
                  <if test="chapter != null">
                  AND (CASE WHEN C.TOP_MENU_ID IN ('DP17','DP18') THEN H.CHAPTER ELSE I.CHAPTER END) = #{chapter}                     
-                 </if>                  
+                 </if>              
+                     
+                 <if test="episodeProdStatusCdList != null">
+                 AND E.PROD_STATUS_CD  IN
+                              <foreach collection="episodeProdStatusCdList" item="prodGradeCd" separator="," open="(" close=")">
+                                #{prodGradeCd}
+                              </foreach>                        
+                 </if>                   
+                 
              )PM             
         WHERE PD.PROD_ID = #{prodId}
         AND PD.PROD_ID = CM.PROD_ID

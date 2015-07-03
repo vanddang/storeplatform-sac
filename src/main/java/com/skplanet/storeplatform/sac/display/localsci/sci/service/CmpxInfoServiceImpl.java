@@ -136,6 +136,8 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		}else{
 			req.setSeriesBookClsfCd(null);
 		}
+		
+
 
 		this.log.info("----------------------------------------------------------------");
 		this.log.info("tenantId : " + req.getTenantId());
@@ -144,8 +146,14 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		this.log.info("possLendClsfCd : " + req.getPossLendClsfCd());
 		this.log.info("deviceModelCd : " + req.getDeviceModelCd());
 		this.log.info("langCd : " + req.getLangCd());
+		this.log.info("episodeProdStatusCdList : " + req.getEpisodeProdStatusCdList().toString());
 		this.log.info("----------------------------------------------------------------");
 		
+		for(int kk =0; kk < 1 ; kk++){
+			if(StringUtils.isEmpty(req.getEpisodeProdStatusCdList().get(kk).toString())){
+				req.setEpisodeProdStatusCdList(null);
+			}
+		}
 		
 		// / 단말 지원 정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
@@ -169,6 +177,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		paramMap.put("seriesBookClsfCd", req.getSeriesBookClsfCd());
 		paramMap.put("possLendClsfCd", req.getPossLendClsfCd());
 		paramMap.put("cmpxProdClsfCd", req.getCmpxProdClsfCd());
+		paramMap.put("episodeProdStatusCdList", req.getEpisodeProdStatusCdList());
 		paramMap.put("supportDevice", supportDevice);
 		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
@@ -213,14 +222,21 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if (StringUtils.isEmpty(req.getChapter())) {
 			req.setChapter(null);
 		}
-		
+
 		this.log.info("----------------------------------------------------------------");
 		this.log.info("tenantId : " + req.getTenantId());
 		this.log.info("langCd : " + req.getLangCd());
 		this.log.info("prodId : " + req.getProdId());
 		this.log.info("episodeProdId : " + req.getEpisodeProdId());
 		this.log.info("chapter : " + req.getChapter());
+		this.log.info("episodeProdStatusCdList : " + req.getEpisodeProdStatusCdList().toString());
 		this.log.info("----------------------------------------------------------------");
+		
+		for(int kk =0; kk < 1 ; kk++){
+			if(StringUtils.isEmpty(req.getEpisodeProdStatusCdList().get(kk).toString())){
+				req.setEpisodeProdStatusCdList(null);
+			}
+		}		
 		
 		CmpxProductInfo cmpxProductInfo = null;
 		cmpxProductInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxProductInfo", req, CmpxProductInfo.class);
