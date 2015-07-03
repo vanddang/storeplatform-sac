@@ -379,7 +379,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		userKeyList.clear();
 		userKeyList.add(res.getMbrNo());
 		searchUserSacReq.setUserKeyList(userKeyList);
-		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		searchUserSacReq.setTenantId(res.getTenantId());
 		SearchUserSacRes searchUserSacRes = null;
 
 		// 회원 조회.
@@ -478,7 +478,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		userKeyList.clear();
 		userKeyList.add(res.getMbrNo());
 		searchUserSacReq.setUserKeyList(userKeyList);
-		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		searchUserSacReq.setTenantId(res.getTenantId());
 		SearchUserSacRes searchUserSacRes = null;
 
 		// 회원 조회.
