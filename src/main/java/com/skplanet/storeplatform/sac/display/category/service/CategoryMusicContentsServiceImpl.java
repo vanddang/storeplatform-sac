@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -116,26 +117,26 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 			requestVO.setListId("RNK000000025");
 		}
 
-		// 웹 랭킹 음원일 경우 stdDt 넘어옴
-		String stdDt = requestVO.getStdDt();
-		if (StringUtils.isEmpty(stdDt)) {
-			// 배치완료 기준일시 조회
-			stdDt = this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(),
-					requestVO.getBatchId());
+        // 배치완료 기준일시 조회
+        String stdDt = this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(),
+                requestVO.getBatchId());
 
-			// 기준일시 체크
-			if (StringUtils.isEmpty(stdDt)) {
-				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
-			} else {
-				if (!filteredBy.equals("mainTop")) {
-					// 뮤직 챠트 배치일자는 년월일만 필요
-					requestVO.setStdDt(stdDt.substring(0, 8));
-				} else {
-					// 메인TOP 의 경우는 stdDt 전체 필요
-					requestVO.setStdDt(stdDt);
-				}
-			}
-		}
+        // 기준일시 체크
+        if (StringUtils.isEmpty(stdDt)) {
+            throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+        } else {
+            if (!filteredBy.equals("mainTop")) {
+                // 뮤직 챠트 배치일자는 년월일만 필요
+                stdDt = stdDt.substring(0, 8);
+            }
+        }
+
+        // 데이터 정보가 전달 되는 경우는, 해당 날짜가 가장 최근 날짜보다 전인 경우에만 사용.
+        if (StringUtils.isEmpty(requestVO.getStdDt())
+                || DateUtils.parseDate(requestVO.getStdDt()).after(DateUtils.parseDate(stdDt))) {
+            requestVO.setStdDt(stdDt);
+        }
+
 
 		// prodGradeCd 배열로 변경
 		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
