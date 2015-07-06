@@ -39,6 +39,8 @@ public class Music extends CommonInfo implements Serializable {
     private List<Identifier> relatedProductList;
     private String albumType;   // 앨범 유형
     private String cid;
+    private Integer trackNumber;
+    private Integer discNumber;
 
     public String getCid() {
         return cid;
@@ -152,5 +154,21 @@ public class Music extends CommonInfo implements Serializable {
 
     public void setRelatedProductList(List<Identifier> relatedProductList) {
         this.relatedProductList = relatedProductList;
+    }
+
+    public Integer getTrackNumber() {
+        return trackNumber;
+    }
+
+    public void setTrackNumber(Integer trackNumber) {
+        this.trackNumber = trackNumber;
+    }
+
+    public Integer getDiscNumber() {
+        return discNumber;
+    }
+
+    public void setDiscNumber(Integer discNumber) {
+        this.discNumber = discNumber;
     }
 }
