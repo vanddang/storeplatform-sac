@@ -1242,10 +1242,79 @@ public class UserModifyServiceImpl implements UserModifyService {
 		searchUserRequest.setCommonRequest(commonRequest);
 		DetailReq detailReq = new DetailReq();
 		detailReq.setUserKey(req.getUserKey());
-		detailReq.setSearchExtent(new SearchExtentReq());
-		this.userSearchService.detailV2(header, detailReq);
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+		DetailV2Res detailRes = this.userSearchService.detailV2(header, detailReq);
 
-		// 2.부가속성 등록/수정
+		List<MbrMangItemPtcr> remPtcrList = null;
+		List<UserExtraInfo> userExtraInfos = null;
+		MbrMangItemPtcr mbrMangItemPtcr = null;
+
+		if (detailRes.getUserInfo() != null && detailRes.getUserInfo().getUserExtraInfoList() != null) {
+			userExtraInfos = detailRes.getUserInfo().getUserExtraInfoList();
+			remPtcrList = new ArrayList<MbrMangItemPtcr>();
+			for (UserExtraInfo userExtraInfo : userExtraInfos) {
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_ID, userExtraInfo.getExtraProfile())) {
+					if (StringUtils.isBlank(req.getSocialAcctId())) {
+						mbrMangItemPtcr = new MbrMangItemPtcr();
+						mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_ID);
+						remPtcrList.add(mbrMangItemPtcr);
+					}
+				}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, userExtraInfo.getExtraProfile())) {
+					if (StringUtils.isBlank(req.getSocialAcctIntId())) {
+						mbrMangItemPtcr = new MbrMangItemPtcr();
+						mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID);
+						remPtcrList.add(mbrMangItemPtcr);
+					}
+				}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TOKEN, userExtraInfo.getExtraProfile())) {
+					if (StringUtils.isBlank(req.getSocialAcctToken())) {
+						mbrMangItemPtcr = new MbrMangItemPtcr();
+						mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TOKEN);
+						remPtcrList.add(mbrMangItemPtcr);
+					}
+				}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, userExtraInfo.getExtraProfile())) {
+					if (StringUtils.isBlank(req.getSocialAcctType())) {
+						mbrMangItemPtcr = new MbrMangItemPtcr();
+						mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE);
+						remPtcrList.add(mbrMangItemPtcr);
+					}
+				}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_EMAIL, userExtraInfo.getExtraProfile())) {
+					if (StringUtils.isBlank(req.getSocialEmail())) {
+						mbrMangItemPtcr = new MbrMangItemPtcr();
+						mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_EMAIL);
+						remPtcrList.add(mbrMangItemPtcr);
+					}
+				}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_EXPIRED_TIME, userExtraInfo.getExtraProfile())) {
+					if (StringUtils.isBlank(req.getSocialExpiredTime())) {
+						mbrMangItemPtcr = new MbrMangItemPtcr();
+						mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_EXPIRED_TIME);
+						remPtcrList.add(mbrMangItemPtcr);
+					}
+				}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_REF_TOKEN, userExtraInfo.getExtraProfile())) {
+					if (StringUtils.isBlank(req.getSocialRefToken())) {
+						mbrMangItemPtcr = new MbrMangItemPtcr();
+						mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_REF_TOKEN);
+						remPtcrList.add(mbrMangItemPtcr);
+					}
+				}
+			}
+		}
+
+		// 2. 회원 부가속성 삭제 (토큰,아이디 삭제)
+		RemoveManagementRequest removeManagementRequest = new RemoveManagementRequest();
+		removeManagementRequest.setCommonRequest(commonRequest);
+		removeManagementRequest.setUserKey(req.getUserKey());
+		removeManagementRequest.setMbrMangItemPtcr(remPtcrList);
+		this.userSCI.removeManagement(removeManagementRequest);
+
+		// 3.부가속성 등록/수정
 		UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
 		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 		MbrMangItemPtcr ptcr = null;
@@ -1292,7 +1361,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		updateManagementRequest.setCommonRequest(commonRequest);
 		this.userSCI.updateManagement(updateManagementRequest);
 
-		// 3.소셜이력 등록
+		// 4.소셜이력 등록
 		CreateSocialAccountRequest createSocialAccountRequest = new CreateSocialAccountRequest();
 		createSocialAccountRequest.setCommonRequest(commonRequest);
 		createSocialAccountRequest.setSocialAcctIntId(req.getSocialAcctIntId());
@@ -1302,7 +1371,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		CreateSocialAccountResponse createSocialAccountResponse = this.userSCI
 				.createSocialAccount(createSocialAccountRequest);
 
-		// 4. 응답값 셋팅
+		// 5. 응답값 셋팅
 		CreateSocialAccountSacRes res = new CreateSocialAccountSacRes();
 		res.setUserKey(createSocialAccountResponse.getUserKey());
 
