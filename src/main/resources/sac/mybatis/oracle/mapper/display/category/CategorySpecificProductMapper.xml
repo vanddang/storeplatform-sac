@@ -306,7 +306,7 @@
               , LA.MENU_DESC
               , LA.META_CLSF_CD
               , LA.COMPT_YN
-              , #{productBasicInfo.contentsTypeCd} as CONTENTS_TYPE_CD
+              , #{contentsTypeCd} as CONTENTS_TYPE_CD
               , LA.PROD_ID
               , LA.PART_PROD_ID
               , LA.PROD_NM
@@ -326,19 +326,19 @@
               , LA.EXPO_SELLER_EMAIL
               , LA.EXPO_SELLER_NM
               , LA.EXPO_SELLER_TELNO
-              <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+              <if test='contentsTypeCd == "PD002501"'>
               , ( CASE WHEN LA.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
               , ( CASE WHEN LA.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
               </if>
-              <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+              <if test='contentsTypeCd == "PD002502"'>
               , ( CASE WHEN LA.POSS_LEND_CLSF_CD = 'DP010601' THEN 'Y' END ) AS SUPPORT_STORE
               , ( CASE WHEN LA.POSS_LEND_CLSF_CD != 'DP010601' THEN 'Y' END ) AS SUPPORT_PLAY
               </if>   
-            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+            <if test='contentsTypeCd == "PD002501"'>
               , CASE WHEN (LA.CHNL_PERIOD_AMT >= 0  AND LA.STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
                      ELSE NVL(LA.CHNL_UNLMT_AMT, 0) END AS PROD_AMT -- 채널 대표 가격
             </if>
-            <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+            <if test='contentsTypeCd == "PD002502"'>
               , NVL(LA.PROD_AMT, 0) AS PROD_AMT -- 에피소드 가격
             </if>
               , LA.PROD_NET_AMT
@@ -354,7 +354,7 @@
               , (SELECT MENU_NM
                    FROM TB_DP_MENU_CATEGORY_DESC
                   WHERE MENU_ID = LA.TOP_MENU_ID
-                    AND LANG_CD = #{tenantHeader.langCd}
+                    AND LANG_CD = #{langCd}
                     AND ROWNUM = 1) AS TOP_MENU_NM
               , LA.FILE_SIZE
               , LA.PROD_DTL_DESC
@@ -364,7 +364,7 @@
               , LA.EPSD_CID
               , LA.SVC_GRP_CD
               , LA.SVC_GRP_NM
-              , FC_GET_CM_CD_NM(LA.BRDC_COMP_CD, #{tenantHeader.langCd}) AS BRDC_COMP_NM         
+              , FC_GET_CM_CD_NM(LA.BRDC_COMP_CD, #{langCd}) AS BRDC_COMP_NM
               , LA.GENRE_CD
               , TO_CHAR(LA.REG_DT,'YYYYMMDDHH24MISS') REG_DT
               , LA.DWLD_AREA_LIMT_YN
@@ -481,22 +481,22 @@
                                     END
                                 FROM TB_CM_CD Y
                                   WHERE CH_PF.BADGE_CD = Y.CD_ID(+)
-                                  AND Y.LANG_CD(+) = #{tenantHeader.langCd}
+                                  AND Y.LANG_CD(+) = #{langCd}
                             ) AS BADGE_OPT_TEXT
-                         <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+                         <if test='contentsTypeCd == "PD002501"'>
                            , D.CID
                            , D.PROD_GRD_CD   /* 채널 상품 ID 조회 */
                            , E.ISSUE_DAY
                            , E.DWLD_AREA_LIMT_YN
                          </if>
-                         <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                         <if test='contentsTypeCd == "PD002502"'>
                            , J.CID   /* 에피소드 상품 ID 조회 */
                            , J.PROD_GRD_CD  /* 에피소드 상품 ID 조회 */
                            , L.ISSUE_DAY
                            , L.DWLD_AREA_LIMT_YN
                          </if>
                            , D.SVC_GRP_CD
-                           , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM   
+                           , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{langCd}) AS SVC_GRP_NM
                            , E.BRDC_COMP_CD          
                            , E.GENRE_CD
                            , D.REG_DT
@@ -541,10 +541,10 @@
 			             AND D.USE_POLICY_ID = Q.USE_POLICY_ID(+)
                          AND A.USE_YN = 'Y'
                          AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-                         AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
+                         AND C.LANG_CD = #{langCd}    /* ko : 한국어 */
                          AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                          AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
-                         AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
+                         AND F.LANG_CD = #{langCd}    /* ko : 한국어 */
                          <if test="prodStatusCd != null and prodStatusCd != ''">
                          AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
                          </if>
@@ -554,19 +554,19 @@
                          AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
                          AND M.IMG_CD = #{imageCd}                 /* 이미지코드 */
                          AND M.EXPO_ORD = 1                        /* 노출순서 */
-                         AND M.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */  
+                         AND M.LANG_CD = #{langCd}    /* ko : 한국어 */
                          AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT          
                          -----------------------------------------------------------------------------
                          -- INPUT PARAMETER
                          ----------------------------------------------------------------------------- 
-                         <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-                              AND I.PROD_ID = #{productBasicInfo.prodId}      -- 채널 상품 ID 조회
+                         <if test='contentsTypeCd == "PD002501"'>
+                              AND I.PROD_ID = #{prodId}      -- 채널 상품 ID 조회
                               AND P.PROD_STATUS_CD = 'PD000403'
                          </if>
-                         <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-                              AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
+                         <if test='contentsTypeCd == "PD002502"'>
+                              AND I.PART_PROD_ID = #{prodId}   -- 에피소드 상품 ID 조회
                          </if>
-                         AND G.TENANT_ID = #{tenantHeader.tenantId} /* 테넌트ID */
+                         AND G.TENANT_ID = #{tenantId} /* 테넌트ID */
                          ORDER BY L.CHAPTER DESC
                      ) JA 
                      WHERE ROWNUM = 1

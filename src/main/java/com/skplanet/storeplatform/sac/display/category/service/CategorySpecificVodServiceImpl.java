@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
+
 /**
  * 특정 상품 Vod 조회 Service 구현체
  * 
@@ -83,14 +85,18 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 
         if (productBasicInfoList != null) {
             Map<String, Object> paramMap = new HashMap<String, Object>();
-            paramMap.put("tenantHeader", header.getTenantHeader());
-            paramMap.put("deviceHeader", header.getDeviceHeader());
-            paramMap.put("lang", langCd);
+
+            paramMap.put("langCd", langCd);
+            paramMap.put("tenantId", tenantId);
+            paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 
             for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
                 String topMenuId = productBasicInfo.getTopMenuId();
                 String svcGrpCd = productBasicInfo.getSvcGrpCd();
-                paramMap.put("productBasicInfo", productBasicInfo);
+                String contentsTypeCd = productBasicInfo.getContentsTypeCd();
+                String prodId = contentsTypeCd.equals(DP_CHANNEL_CONTENT_TYPE_CD) ? productBasicInfo.getProdId() : productBasicInfo.getPartProdId();
+                paramMap.put("prodId", prodId);
+                paramMap.put("contentsTypeCd", productBasicInfo.getContentsTypeCd());
 
                 this.log.debug("##### Top Menu Id : {}", topMenuId);
                 this.log.debug("##### Service Group Cd : {}", svcGrpCd);
@@ -105,7 +111,7 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
                 // vod 상품의 경우
                 if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
                     // 영화/방송 상품의 경우
-                    paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+
                     if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
                             || DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
                         this.log.debug("##### Search for Vod specific product");
