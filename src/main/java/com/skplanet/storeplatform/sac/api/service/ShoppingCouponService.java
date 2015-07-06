@@ -1,6 +1,5 @@
 package com.skplanet.storeplatform.sac.api.service;
 
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 
@@ -34,15 +33,6 @@ public interface ShoppingCouponService {
 	 */
 	public boolean insertCatalogInfo(DpCatalogInfo dpCatalogInfo);
 
-	/**
-	 * <pre>
-	 * 이미지 재처리.
-	 * </pre>
-	 * 
-	 * @param couponReq
-	 *            couponReq
-	 * @return boolean
-	 */
-	public boolean couponRetryImg(CouponReq couponReq);
+
 
 }

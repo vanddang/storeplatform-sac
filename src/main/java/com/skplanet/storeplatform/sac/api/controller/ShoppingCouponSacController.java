@@ -9,9 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.api.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,6 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.ErrorData;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 
 /**
  * 쇼핑 컨트롤러
@@ -80,16 +77,8 @@ public class ShoppingCouponSacController {
 		this.log.debug("apiCouponInterface Controller started!!");
 		this.log.debug("----------------------------------------------------------------");
 		CouponRes couponRes = new CouponRes();
-
 		try {
-			if (couponReq.getTxType().equals("ig")) {
-				this.log.info("----------------------이미지 재처리 Start----------------------------");
-				if (this.shoppingCouponService.couponRetryImg(couponReq)) {
-					couponRes.setFlag(true);
-				}
-			} else {
-				couponRes = this.dePloy(couponReq, couponRes);
-			}
+			couponRes = this.dePloy(couponReq, couponRes);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
