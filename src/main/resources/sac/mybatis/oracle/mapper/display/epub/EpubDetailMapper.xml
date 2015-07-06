@@ -492,7 +492,14 @@
 		                                    AND MP.PROD_ID = PD.PROD_ID
 		                                    AND TP.TENANT_ID = #{tenantId}
 		                                    AND TP.EXPO_YN = 'Y'
-		                                    AND TP.PROD_STATUS_CD = 'PD000403'
+				                            <choose>
+				                            <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
+				                            AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
+				                            </when>
+				                            <otherwise>
+				                            AND TP.PROD_STATUS_CD = 'PD000403'
+				                            </otherwise>
+				                            </choose>
 		                                    AND PD.PROD_ID = CPM.PROD_ID
 		                                    AND CPM.MENU_ID = MC.MENU_ID
 		                                    AND MC.USE_YN = 'Y'
