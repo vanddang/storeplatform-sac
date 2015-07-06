@@ -9,16 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.category.vo.CategoryVodBox;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +21,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.category.vo.CategoryVodBox;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
 
 /**
  * Category Vod Box Service 인터페이스(CoreStoreBusiness) 구현체
@@ -105,6 +122,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		List<VideoInfo> videoInfoList;
 		Contributor contributor;
 		Play play;
+		Source source;
 		List<Date> dateList;
 
 		// VOD 보관함 조회
@@ -193,9 +211,13 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					supportList = new ArrayList<Support>();
 					supportList.add(this.commonMetaInfo.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
 							categoryVodBox.getPlayDrmYn()));
+					supportList.add(this.commonMetaInfo.generateSupport(DisplayConstants.DP_DL_STRM_NM,
+							categoryVodBox.getPlayDlStrmCd()));
 					play.setSupportList(supportList);
-					play.setDate(this.commonMetaInfo.generateDateString(DisplayConstants.DP_DATE_USAGE_PERIOD,
-							categoryVodBox.getUsePeriod() + categoryVodBox.getUsePeriodUnitNm()));
+
+					play.setDate(this.commonMetaInfo.generateDateUsagePeriod(categoryVodBox.getUsePeriodUnitCd(),
+							categoryVodBox.getUsePeriod(), categoryVodBox.getUsePeriodUnitNm()));
+
 					play.setPrice(this.commonMetaInfo.generatePrice(categoryVodBox.getPlayProdAmt(),
 							categoryVodBox.getPlayProdNetAmt()));
 					identifierList = new ArrayList<Identifier>();
@@ -206,6 +228,16 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					// play.setPlayProductStatusCode("restrict"); // "사용중" 상태가 아닐경우에 "restrict" 노출(항상 사용중)
 					sourceList = new ArrayList<Source>();
 					sourceList.add(this.commonMetaInfo.generateSource(categoryVodBox.getFilePath()));
+
+					// 에피소드 이미지
+					if (StringUtils.isNotEmpty(categoryVodBox.getEpisodeFilePath())) {
+						source = new Source();
+						String path = categoryVodBox.getEpisodeFilePath();
+						source.setType(DisplayConstants.DP_EPISODE_THUMNAIL_SOURCE);
+						source.setMediaType(DisplayCommonUtil.getMimeType(path));
+						source.setUrl(path);
+						sourceList.add(source);
+					}
 					play.setSourceList(sourceList);
 					rights.setPlay(play);
 				}
@@ -214,6 +246,8 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					supportList = new ArrayList<Support>();
 					supportList.add(this.commonMetaInfo.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
 							categoryVodBox.getStoreDrmYn()));
+					supportList.add(this.commonMetaInfo.generateSupport(DisplayConstants.DP_DL_STRM_NM,
+							categoryVodBox.getStoreDlStrmCd()));
 					store.setSupportList(supportList);
 					store.setPrice(this.commonMetaInfo.generatePrice(categoryVodBox.getStoreProdAmt(),
 							categoryVodBox.getStoreProdNetAmt()));
@@ -225,6 +259,17 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					// store.setStoreProductStatusCode("restrict"); // "사용중" 상태가 아닐경우에 "restrict" 노출(항상 사용중)
 					sourceList = new ArrayList<Source>();
 					sourceList.add(this.commonMetaInfo.generateSource(categoryVodBox.getFilePath()));
+
+					// 에피소드 이미지
+					if (StringUtils.isNotEmpty(categoryVodBox.getEpisodeFilePath())) {
+						source = new Source();
+						String path = categoryVodBox.getEpisodeFilePath();
+						source.setType(DisplayConstants.DP_EPISODE_THUMNAIL_SOURCE);
+						source.setMediaType(DisplayCommonUtil.getMimeType(path));
+						source.setUrl(path);
+						sourceList.add(source);
+					}
+
 					store.setSourceList(sourceList);
 					rights.setStore(store);
 				}
@@ -267,42 +312,34 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					videoInfoList.add(videoInfo);
 				}
 
-				//D화질 추가
+				// D화질 추가
 				/*
-		        if (StringUtils.isNotEmpty(categoryVodBox.getHihdSubContentsId())) {
-		        	//HIHD (D화질)
-		        	videoInfo = new VideoInfo();
-		        	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
-		            videoInfo.setPictureSize(categoryVodBox.getHihdDpPgRatioNm());
-		            videoInfo.setPixel(categoryVodBox.getHihdRsltnNm());
-		            videoInfo.setScid(categoryVodBox.getHihdSubContentsId());
-		            videoInfo.setSize(categoryVodBox.getHihdFileSize());
-		            videoInfo.setVersion(categoryVodBox.getHihdProdVer());
-		            videoInfoList.add(videoInfo);
-		        } else if (StringUtils.isNotEmpty(categoryVodBox.getHdSubContentsId())) {
-		        	//HD (C화질)
-		        	videoInfo = new VideoInfo();
-		        	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
-		            videoInfo.setPictureSize(categoryVodBox.getHdDpPgRatioNm());
-		            videoInfo.setPixel(categoryVodBox.getHdRsltnNm());
-		            videoInfo.setScid(categoryVodBox.getHdSubContentsId());
-		            videoInfo.setSize(categoryVodBox.getHdFileSize());
-		            videoInfo.setVersion(categoryVodBox.getHdProdVer());
-		            videoInfoList.add(videoInfo);
-		        }
-		        */
+				 * if (StringUtils.isNotEmpty(categoryVodBox.getHihdSubContentsId())) { //HIHD (D화질) videoInfo = new
+				 * VideoInfo(); videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
+				 * videoInfo.setPictureSize(categoryVodBox.getHihdDpPgRatioNm());
+				 * videoInfo.setPixel(categoryVodBox.getHihdRsltnNm());
+				 * videoInfo.setScid(categoryVodBox.getHihdSubContentsId());
+				 * videoInfo.setSize(categoryVodBox.getHihdFileSize());
+				 * videoInfo.setVersion(categoryVodBox.getHihdProdVer()); videoInfoList.add(videoInfo); } else if
+				 * (StringUtils.isNotEmpty(categoryVodBox.getHdSubContentsId())) { //HD (C화질) videoInfo = new
+				 * VideoInfo(); videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
+				 * videoInfo.setPictureSize(categoryVodBox.getHdDpPgRatioNm());
+				 * videoInfo.setPixel(categoryVodBox.getHdRsltnNm());
+				 * videoInfo.setScid(categoryVodBox.getHdSubContentsId());
+				 * videoInfo.setSize(categoryVodBox.getHdFileSize());
+				 * videoInfo.setVersion(categoryVodBox.getHdProdVer()); videoInfoList.add(videoInfo); }
+				 */
 				if (StringUtils.isNotEmpty(categoryVodBox.getHdSubContentsId())) {
-		        	//HD (C화질)
-		        	videoInfo = new VideoInfo();
-		        	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
-		            videoInfo.setPictureSize(categoryVodBox.getHdDpPgRatioNm());
-		            videoInfo.setPixel(categoryVodBox.getHdRsltnNm());
-		            videoInfo.setScid(categoryVodBox.getHdSubContentsId());
-		            videoInfo.setSize(categoryVodBox.getHdFileSize());
-		            videoInfo.setVersion(categoryVodBox.getHdProdVer());
-		            videoInfoList.add(videoInfo);
-		        }
-
+					// HD (C화질)
+					videoInfo = new VideoInfo();
+					videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
+					videoInfo.setPictureSize(categoryVodBox.getHdDpPgRatioNm());
+					videoInfo.setPixel(categoryVodBox.getHdRsltnNm());
+					videoInfo.setScid(categoryVodBox.getHdSubContentsId());
+					videoInfo.setSize(categoryVodBox.getHdFileSize());
+					videoInfo.setVersion(categoryVodBox.getHdProdVer());
+					videoInfoList.add(videoInfo);
+				}
 
 				vod.setVideoInfoList(videoInfoList);
 				product.setVod(vod);

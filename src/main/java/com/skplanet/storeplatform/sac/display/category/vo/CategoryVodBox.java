@@ -80,6 +80,12 @@ public class CategoryVodBox {
 	private String agencyNm;
 	private String regDt;
 	private String filePath;
+	private String episodeFilePath;
+
+	/** 대여 다운로드/스트리밍 */
+	private String playDlStrmCd;
+	/** 소장 다운로드/스트리밍 */
+	private String storeDlStrmCd;
 
 	/**
 	 * 
@@ -1535,8 +1541,34 @@ public class CategoryVodBox {
 		this.filePath = filePath;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 에피소드 이미지 경로.
+	 * </pre>
+	 * 
+	 * @param filePath
+	 *            String
+	 */
+	public String getEpisodeFilePath() {
+		return this.episodeFilePath;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 에피소드 이미지 경로.
+	 * </pre>
+	 * 
+	 * @param filePath
+	 *            String
+	 */
+	public void setEpisodeFilePath(String episodeFilePath) {
+		this.episodeFilePath = episodeFilePath;
+	}
+
 	public String getHihdSubContentsId() {
-		return hihdSubContentsId;
+		return this.hihdSubContentsId;
 	}
 
 	public void setHihdSubContentsId(String hihdSubContentsId) {
@@ -1544,7 +1576,7 @@ public class CategoryVodBox {
 	}
 
 	public String getHihdProdVer() {
-		return hihdProdVer;
+		return this.hihdProdVer;
 	}
 
 	public void setHihdProdVer(String hihdProdVer) {
@@ -1552,7 +1584,7 @@ public class CategoryVodBox {
 	}
 
 	public String getHihdFileSize() {
-		return hihdFileSize;
+		return this.hihdFileSize;
 	}
 
 	public void setHihdFileSize(String hihdFileSize) {
@@ -1560,7 +1592,7 @@ public class CategoryVodBox {
 	}
 
 	public String getHihdRsltnNm() {
-		return hihdRsltnNm;
+		return this.hihdRsltnNm;
 	}
 
 	public void setHihdRsltnNm(String hihdRsltnNm) {
@@ -1568,7 +1600,7 @@ public class CategoryVodBox {
 	}
 
 	public String getHihdDpPgRatioCd() {
-		return hihdDpPgRatioCd;
+		return this.hihdDpPgRatioCd;
 	}
 
 	public void setHihdDpPgRatioCd(String hihdDpPgRatioCd) {
@@ -1576,11 +1608,27 @@ public class CategoryVodBox {
 	}
 
 	public String getHihdDpPgRatioNm() {
-		return hihdDpPgRatioNm;
+		return this.hihdDpPgRatioNm;
 	}
 
 	public void setHihdDpPgRatioNm(String hihdDpPgRatioNm) {
 		this.hihdDpPgRatioNm = hihdDpPgRatioNm;
 	}
-	
+
+	public String getPlayDlStrmCd() {
+		return this.playDlStrmCd;
+	}
+
+	public void setPlayDlStrmCd(String playDlStrmCd) {
+		this.playDlStrmCd = playDlStrmCd;
+	}
+
+	public String getStoreDlStrmCd() {
+		return this.storeDlStrmCd;
+	}
+
+	public void setStoreDlStrmCd(String storeDlStrmCd) {
+		this.storeDlStrmCd = storeDlStrmCd;
+	}
+
 }

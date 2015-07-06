@@ -9,10 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.google.common.collect.Collections2;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -395,7 +399,9 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		return sourceList;
 	}
 
-    private static final Set<String> SET_EBOOK_COMIC = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("DP13", "DP14")));
+	private static final Set<String> SET_EBOOK_COMIC = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
+			"DP13", "DP14")));
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -430,29 +436,28 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		rights.setGrade(metaInfo.getProdGrdCd());
 		rights.setPlus19Yn(metaInfo.getPlus19Yn());
 
-        // NOTICE
-        // MM 상품 & 에피소드 상품이면 => 기간, 가격
-        // rights.play.price
-        // rights.store.price
-        if(StringUtils.isEmpty(metaInfo.getStoreProdId()) &&
-                StringUtils.isEmpty(metaInfo.getPlayProdId()) &&
-                SET_EBOOK_COMIC.contains(metaInfo.getTopMenuId()) &&
-                DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd())) {
+		// NOTICE
+		// MM 상품 & 에피소드 상품이면 => 기간, 가격
+		// rights.play.price
+		// rights.store.price
+		if (StringUtils.isEmpty(metaInfo.getStoreProdId()) && StringUtils.isEmpty(metaInfo.getPlayProdId())
+				&& SET_EBOOK_COMIC.contains(metaInfo.getTopMenuId())
+				&& DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd())) {
 
-            if (metaInfo.getUnlmtAmt() != null) {
-                Price storePrice = new Price(metaInfo.getUnlmtAmt());
-                Store store = new Store(null, storePrice, null);
-                store.setUsePeriodUnitCd(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE);
-                rights.setStore(store);
-            }
-            if (metaInfo.getPeriodAmt() != null) {
-                Price playPrice = new Price(metaInfo.getPeriodAmt());
-                Play play = new Play(null, playPrice,
-                        DisplayCommonUtil.makeDateUsagePeriod(metaInfo.getUsePeriodUnitCd(), metaInfo.getUsePeriodInt(), metaInfo.getUsePeriodNm()));
-                play.setUsePeriodUnitCd(metaInfo.getUsePeriodUnitCd());
-                rights.setPlay(play);
-            }
-        }
+			if (metaInfo.getUnlmtAmt() != null) {
+				Price storePrice = new Price(metaInfo.getUnlmtAmt());
+				Store store = new Store(null, storePrice, null);
+				store.setUsePeriodUnitCd(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE);
+				rights.setStore(store);
+			}
+			if (metaInfo.getPeriodAmt() != null) {
+				Price playPrice = new Price(metaInfo.getPeriodAmt());
+				Play play = new Play(null, playPrice, DisplayCommonUtil.makeDateUsagePeriod(
+						metaInfo.getUsePeriodUnitCd(), metaInfo.getUsePeriodInt(), metaInfo.getUsePeriodNm()));
+				play.setUsePeriodUnitCd(metaInfo.getUsePeriodUnitCd());
+				rights.setPlay(play);
+			}
+		}
 
 		// 소장 정보
 		if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {
@@ -632,7 +637,41 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		return date;
 	}
 
-    @Override
+	@Override
+	public Date generateDateUsagePeriod(String tp, String period, String unit) {
+		if (tp == null || tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) {
+			return null;
+		}
+
+		String unitName;
+
+		if (tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MINUTE)) {
+			unitName = "minute";
+		} else if (tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) {
+			unitName = "hour";
+		} else if (tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) {
+			unitName = "day";
+		} else if (tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) {
+			unitName = "month";
+		} else if (tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) {
+			unitName = "year";
+		} else if (tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) {
+			unitName = "limit/day";
+		} else if (tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) {
+			unitName = "limit/month";
+		} else if (tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) {
+			unitName = "limit/year";
+		} else if (tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) {
+			unitName = "calendar";
+		} else if (tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) {
+			return new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, "unlimit");
+		} else
+			return null;
+
+		return new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, unitName + "/" + period, unit);
+	}
+
+	@Override
 	public Store generateStore(MetaInfo metaInfo) {
 		Store store = new Store();
 
