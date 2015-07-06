@@ -1231,6 +1231,16 @@ public class LoginServiceImpl implements LoginService {
 			simpleLoginRequest.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
 		}
 
+		String model = requestHeader.getDeviceHeader().getModel();
+		simpleLoginRequest.setDeviceModelNm(model);
+
+		String os = requestHeader.getDeviceHeader().getOs();
+
+		if (StringUtils.isNotBlank(os)) {
+			simpleLoginRequest.setDeviceOsNm(os.substring(0, os.lastIndexOf("/")));
+			simpleLoginRequest.setDeviceOsVersion(os.substring(os.lastIndexOf("/") + 1, os.length()));
+		}
+
 		SimpleLoginResponse simpleLoginResponse = this.userSCI.simpleLogin(simpleLoginRequest);
 
 		AuthorizeSimpleByMdnRes res = new AuthorizeSimpleByMdnRes();
@@ -2952,6 +2962,16 @@ public class LoginServiceImpl implements LoginService {
 		}
 		loginReq.setIpAddress(ipAddress);
 		loginReq.setIsUpdLastLoginDt(isUpdLastLoginDt);
+
+		String model = requestHeader.getDeviceHeader().getModel();
+		loginReq.setDeviceModelNm(model);
+
+		String os = requestHeader.getDeviceHeader().getOs();
+
+		if (StringUtils.isNotBlank(os)) {
+			loginReq.setDeviceOsNm(os.substring(0, os.lastIndexOf("/")));
+			loginReq.setDeviceOsVersion(os.substring(os.lastIndexOf("/") + 1, os.length()));
+		}
 
 		return this.userSCI.updateLoginUser(loginReq);
 	}
