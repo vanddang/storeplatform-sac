@@ -1234,12 +1234,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		LOGGER.info("@@@@ obj {}", obj);
 		if (obj == null) {
 
-			if (StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
-				LOGGER.info("@@@ MbrTelno : {}", prodNoti.getMbrTelno());
-				regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), "");
-			} else {
-				regId = "비회원";
-			}
+			regId = this.nonUser(prodNoti.getMbrTelno());
 
 		} else {
 
@@ -1268,6 +1263,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 							regId = this.getMaskRegId(userInfoSac.getUserId());
 
 						}
+					} else {
+						regId = this.nonUser(prodNoti.getMbrTelno());
 					}
 				}
 
@@ -1296,6 +1293,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 							regId = this.getMaskRegId(userInfoSac.getUserId());
 
 						}
+					} else {
+						regId = this.nonUser(prodNoti.getMbrTelno());
 					}
 				}
 			} // instanceof check end.
@@ -1596,6 +1595,29 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 
 		return resultValue;
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원연동후 회원 정보가 없을 경우 비회원 처리.
+	 * </pre>
+	 * 
+	 * @param mbrTelno
+	 * @return
+	 */
+	private String nonUser(String mbrTelno) {
+
+		LOGGER.info("@@@ MbrTelno : {}", mbrTelno);
+
+		String nonUser = null;
+		if (StringUtils.isNotBlank(mbrTelno)) {
+			nonUser = this.getMaskTelNoOrDefaultRegId(mbrTelno, "");
+		} else {
+			nonUser = "비회원";
+		}
+
+		return nonUser;
 
 	}
 
