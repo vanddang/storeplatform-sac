@@ -27,6 +27,8 @@
              , G.CHNL_COMP_NM
              , G.AGENCY_NM
              , G.ISSUE_DAY
+             , G.CHAPTER AS TRACK_NO
+             , G.DISC_NO
              , 'Y' AS MP3_SPRT_YN
              , NVL(G.BELL_SPRT_YN, 'N') AS BELL_SPRT_YN
              , NVL(G.COLORRING_SPRT_YN, 'N') AS COLORRING_SPRT_YN

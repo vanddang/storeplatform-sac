@@ -237,6 +237,8 @@ public class MetaInfo extends CommonInfo {
 	private String debutMusicNm;
 	private String country;
 	private String rankChgClsfCd; // 순위변동코드
+    private Integer trackNo;
+    private Integer discNo;
 
 	// ////////////////////////// 쇼핑 상품 변수 ////////////////////////////
 	private Double dcRate;
@@ -2872,7 +2874,23 @@ public class MetaInfo extends CommonInfo {
 		this.country = country;
 	}
 
-	/**
+    public Integer getTrackNo() {
+        return trackNo;
+    }
+
+    public void setTrackNo(Integer trackNo) {
+        this.trackNo = trackNo;
+    }
+
+    public Integer getDiscNo() {
+        return discNo;
+    }
+
+    public void setDiscNo(Integer discNo) {
+        this.discNo = discNo;
+    }
+
+    /**
 	 * @return the dcRate
 	 */
 	public Double getDcRate() {

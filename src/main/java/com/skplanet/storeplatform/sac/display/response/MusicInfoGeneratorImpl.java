@@ -85,6 +85,8 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 	public Music generateMusic(MetaInfo metaInfo) {
 		Music music = new Music();
 		music.setServiceList(this.generateServiceList(metaInfo));
+        music.setDiscNumber(metaInfo.getDiscNo());
+        music.setTrackNumber(metaInfo.getTrackNo());
 		return music;
 	}
 
