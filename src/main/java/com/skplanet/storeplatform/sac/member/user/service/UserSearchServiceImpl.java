@@ -2070,16 +2070,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 			SearchManagementResponse searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
 
 			for (MbrMangItemPtcr itemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, itemPtcr.getExtraProfile())
-						&& StringUtils.equals(req.getSocialAcctType(), itemPtcr.getExtraProfileValue())) {
-					for (MbrMangItemPtcr itemPtcr2 : searchManagementResponse.getMbrMangItemPtcrList()) {
-						if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID,
-								itemPtcr2.getExtraProfile())
-								&& StringUtils.equals(req.getSocialAcctIntId(), itemPtcr2.getExtraProfileValue())) {
-							socialMemberCnt++;
-							break;
-						}
-					}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, itemPtcr.getExtraProfile())
+						&& StringUtils.equals(req.getSocialAcctIntId(), itemPtcr.getExtraProfileValue())) {
+					socialMemberCnt++;
 				}
 			}
 
