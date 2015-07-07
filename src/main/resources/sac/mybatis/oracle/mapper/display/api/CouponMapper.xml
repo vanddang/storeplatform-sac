@@ -668,7 +668,8 @@
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
                                                    ) 
                                                AND SP1.EXPO_YN = 'Y'  
-                                               AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT                                                  
+                                               AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT      
+                                               AND SP1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가                                           
                                                AND ROWNUM =1     
                                           )                                   
                                   ELSE #{prodId}
@@ -704,7 +705,8 @@
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
                                                    ) 
                                                AND SP1.EXPO_YN = 'Y'   
-                                               AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT                                                 
+                                               AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT
+                                               AND SP1.SPRC_TYPE_CD IN ('DP007503','DP007504')                                                   
                                                AND ROWNUM =1     
                                           )                                   
                                   ELSE #{prodId}
