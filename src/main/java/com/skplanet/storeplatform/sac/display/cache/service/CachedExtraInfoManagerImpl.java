@@ -109,9 +109,8 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             c.del(SacRedisKeys.pkg2prod(pkg));
         }
     }
-
-    @Override
 /*
+    @Override
     public ProductBaseInfo getProductBaseInfo(GetProductBaseInfoParam param) {
         return RedisSimpleAction.getOrLoad(param.getProdId(),
                 new RedisSimpleGetOrLoadHandler<String, ProductBaseInfo>() {
