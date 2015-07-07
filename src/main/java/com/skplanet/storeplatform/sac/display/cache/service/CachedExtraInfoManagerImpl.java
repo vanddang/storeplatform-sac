@@ -13,14 +13,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Strings;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleAction;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleGetOrLoadHandler;
 import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
 import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
+import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
-import com.skplanet.storeplatform.sac.display.other.vo.GetVersionInfoByPkgParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
@@ -107,4 +109,55 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             c.del(SacRedisKeys.pkg2prod(pkg));
         }
     }
+
+    @Override
+    public ProductBaseInfo getProductBaseInfo(GetProductBaseInfoParam param) {
+        return RedisSimpleAction.getOrLoad(param.getProdId(),
+                new RedisSimpleGetOrLoadHandler<String, ProductBaseInfo>() {
+                    @Override
+                    public ProductBaseInfo load(String prodId, Plandasj redis) {
+                        Map<String, String> data = redis.hgetAll(SacRedisKeys.prodBase(prodId));
+                        if(data.isEmpty())
+                            return null;
+
+                        ProductBaseInfo info = new ProductBaseInfo();
+                        info.setTopMenuId(data.get("topMenuId"));
+                        info.setChnlId(data.get("chnlId"));
+                        info.setMetaClsfCd(data.get("metaClsfCd"));
+                        info.setSvcGrpCd(data.get("svcGrpCd"));
+                        info.setSvcTpCd(data.get("svcTpCd"));
+                        info.setContentsTypeCd(data.get("contentsTypeCd"));
+                        info.setPartParentClsfCd(data.get("partParentClsfCd"));
+                        info.setMenuId(data.get("menuId"));
+
+                        return info;
+                    }
+
+                    @Override
+                    public void store(String prodId, ProductBaseInfo value, Plandasj redis) {
+                        String key = SacRedisKeys.prodBase(prodId);
+                        redis.hset(key, "svcGrpCd", value.getSvcGrpCd());
+                        redis.hset(key, "contentsTypeCd", value.getContentsTypeCd());
+                        redis.hset(key, "topMenuId", value.getTopMenuId());
+                        redis.hset(key, "chnlId", value.getChnlId());
+
+                        if(!Strings.isNullOrEmpty(value.getSvcTpCd()))
+                            redis.hset(key, "svcTpCd", value.getSvcTpCd());
+                        if(!Strings.isNullOrEmpty(value.getMetaClsfCd()))
+                            redis.hset(key, "metaClsfCd", value.getMetaClsfCd());
+                        if(!Strings.isNullOrEmpty(value.getPartParentClsfCd()))
+                            redis.hset(key, "partParentClsfCd", value.getPartParentClsfCd());
+                        if(!Strings.isNullOrEmpty(value.getMenuId()))   // FIXME 제거 대상일수 있다.
+                            redis.hset(key, "menuId", value.getMenuId());
+                    }
+
+                    @Override
+                    public ProductBaseInfo makeValue(String prodId) {
+                        HashMap<String, Object> req = new HashMap<String, Object>();
+                        req.put("prodId", prodId);
+                        return commonDAO.queryForObject("CachedExtraInfoManager.getProductBaseInfo", req, ProductBaseInfo.class);
+                    }
+                });
+    }
+
 }

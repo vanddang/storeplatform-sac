@@ -25,7 +25,7 @@ public interface CacheEvictHelperComponent {
      * @param prodType
      * @param prodIdList
      */
-    void evictProductMeta(ProductType prodType, List<String> prodIdList);
+    List<String> evictProductMeta(ProductType prodType, List<String> prodIdList);
 
     /**
      * 상품 메타 Evict

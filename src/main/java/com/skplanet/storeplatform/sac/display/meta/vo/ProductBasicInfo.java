@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
  * 상품 기본 정보 조회 Info
@@ -336,4 +337,8 @@ public class ProductBasicInfo extends CommonInfo {
 	public void setPlus19Yn(String plus19Yn) {
 		this.plus19Yn = plus19Yn;
 	}
+
+    public String getReqProdId() {
+        return DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd) ? prodId : partProdId;
+    }
 }

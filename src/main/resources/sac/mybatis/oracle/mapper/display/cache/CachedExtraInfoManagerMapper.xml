@@ -115,5 +115,45 @@
         )
         WHERE ROWNUM = 1
     </select>
+
+    <select id="getProductBaseInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo">
+        SELECT
+            P.PROD_ID,
+            P.SVC_GRP_CD,
+            P.SVC_TYPE_CD AS SVC_TP_CD,
+            P.CONTENTS_TYPE_CD,
+            P.META_CLSF_CD,
+            P.TOP_MENU_ID,
+            APP.PART_PARENT_CLSF_CD,
+            NVL(RSHP.PROD_ID, P.PROD_ID) AS CHNL_ID,
+            0 AS RNUM
+        FROM TB_DP_PROD P
+            LEFT OUTER JOIN TB_DP_PROD_RSHP RSHP
+                ON RSHP.PART_PROD_ID = P.PROD_ID AND RSHP.PROD_RSHP_CD='DP010802'
+            LEFT OUTER JOIN TB_DP_APP_PROD APP
+                ON APP.PROD_ID = P.PROD_ID
+        WHERE P.PROD_ID = #{prodId, jdbcType=VARCHAR}
+        UNION ALL
+        SELECT R.*
+        FROM (
+            SELECT
+                CM.CATALOG_ID AS PROD_ID,
+                P.SVC_GRP_CD,
+                P.SVC_TYPE_CD AS SVC_TP_CD,
+                P.CONTENTS_TYPE_CD,
+                P.META_CLSF_CD,
+                P.TOP_MENU_ID,
+                '' as PART_PARENT_CLSF_CD,
+                '' as CHNL_ID,
+                ROW_NUMBER() OVER ( PARTITION BY CM.CATALOG_ID ORDER BY P.PROD_ID) AS RNUM
+            FROM TB_DP_PROD_CATALOG_MAPG CM
+                INNER JOIN TB_DP_PROD P
+                    ON P.PROD_ID = CM.PROD_ID
+            WHERE CM.CATALOG_ID = #{prodId, jdbcType=VARCHAR}
+                  AND CM.BASE_YN = 'Y'
+                  AND CM.USE_YN = 'Y'
+        ) R
+        WHERE R.RNUM = 1
+    </select>
     
 </mapper>

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,27 +50,35 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
     private String SERVICE_LANG;
 
     @Override
-    public void evictProductMeta(ProductType prodType, List<String> prodIdList) {
+    public List<String> evictProductMeta(ProductType prodType, List<String> prodIdList) {
         String[] langList = SERVICE_LANG.split(",");
         List<String> supportDeviceList = null;
         List<String> menuList = null;
-
-        if(prodType == null)
-            throw new IllegalStateException("prodType cannot be null.");
+        List<String> executedProd = new ArrayList<String>(prodIdList.size());
+        Plandasj c = connectionFactory.getConnectionPool().getClient();
 
         for(String _prodId : prodIdList) {
-            if(prodType == App) {
+            ProductBaseInfo productBaseInfo = cachedExtraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(_prodId));
+            if(productBaseInfo == null)
+                continue;
+
+            ProductType prodTp = productBaseInfo.getProductType();
+
+            if(prodTp == App) {
                 supportDeviceList = cacheSupportService.getSupportDeviceList(_prodId);
                 menuList = cacheSupportService.getMenuList(_prodId);
 
-                Plandasj c = connectionFactory.getConnectionPool().getClient();
                 cachedExtraInfoManager.evictPkgsInProd(_prodId);
                 c.del(SacRedisKeys.pkgsInProd(_prodId));
                 c.del(SacRedisKeys.sprtdev(_prodId));
             }
+
+            // del productBaseInfo
+            c.del(SacRedisKeys.prodBase(_prodId));
+
             for(String tenant : ServicePropertyManager.getSupportTenantList()) {
                 for(String langCd : langList) {
-                    if(prodType == App) {
+                    if(prodTp == App) {
                         this.cacheEvictManager.evictAppMeta(new AppMetaParam(_prodId, langCd, tenant));
 
                         if(supportDeviceList != null) {
@@ -84,31 +93,36 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
                             }
                         }
                     }
-                    else if(prodType == Music) {
+                    else if(prodTp == Music) {
                         this.cacheEvictManager.evictMusicMeta(new MusicMetaParam(tenant, langCd, _prodId));
                     }
-                    else if(prodType == Shopping) {
+                    else if(prodTp == Shopping) {
                         this.cacheEvictManager.evictShoppingMeta(new ShoppingMetaParam(_prodId, langCd, tenant));
                     }
-                    else if(prodType == Freepass) {
+                    else if(prodTp == Freepass) {
                         this.cacheEvictManager.evictFreepassMeta(new FreepassMetaParam(_prodId, langCd, tenant));
                     }
-                    else if(prodType == Vod) {
+                    else if(prodTp == Vod || prodTp == VodTv || prodTp == VodMovie) {
                         this.cacheEvictManager.evictVodMeta(new VodMetaParam(_prodId, langCd, tenant));
                     }
-                    else if(prodType == EbookComic) {
+                    else if(prodTp == EbookComic || prodTp == Ebook || prodTp == Comic) {
                         this.cacheEvictManager.evictEbookComicMeta(new EbookComicMetaParam(_prodId, langCd, tenant));
                     }
-                    else if(prodType == Webtoon) {
+                    else if(prodTp == Webtoon) {
                         this.cacheEvictManager.evictWebtoonMeta(new WebtoonMetaParam(_prodId, langCd, tenant));
                     }
-                    else if(prodType == Voucher) {
+                    else if(prodTp == Voucher) {
                         this.cacheEvictManager.evictVoucherMeta(new VoucherMetaParam(_prodId, langCd, tenant));
                     }
                 }
             }
+
             this.cacheEvictManager.evictProductStats(new ProductStatsParam(_prodId));
+
+            executedProd.add(_prodId);
         }
+
+        return executedProd;
     }
 
     @Override
@@ -122,6 +136,8 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
         if(prodType == null)
             throw new IllegalStateException("prodType cannot be null.");
 
+        /* 전체 Evict시 동일한 종류의 캐시 이름을 가지는 Ebook, Comic, VodTv, VodMovie는 처리하지 않음. */
+        // FIXME all evict 처리시 productBasicInfo 의 evict가 처리되어야 함
         if(prodType == App) {
             cacheEvictManager.evictAllAppMeta();
         }

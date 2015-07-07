@@ -9,13 +9,18 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
  * Time: AM 10:24
  */
 public enum ProductType {
+
     App("app"),
     Music("music"),
     Album("album"),
     Shopping("shopping"),
     Freepass("freepass"),
     Vod("vod"),
+    VodTv("tv"),
+    VodMovie("movie"),
     EbookComic("ebookcomic"),
+    Ebook("ebook"),
+    Comic("comic"),
     Webtoon("webtoon"),
     RingBell("ringbell"),
     Voucher("voucher");

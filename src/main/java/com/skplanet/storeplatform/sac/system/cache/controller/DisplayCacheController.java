@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.system.cache.controller;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
@@ -46,26 +47,24 @@ public class DisplayCacheController {
 
     @RequestMapping(value = "/evictProductMeta", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, String> evictProductMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
+    public Map<String, Object> evictProductMeta(String prodType, @RequestParam(required = true) String prodId) {
+        List<String> execProdIds = null;
         if(prodId.equals("all")) {
-            this.cacheEvictHelperComponent.evictProductMetaAll(ProductType.forName(prodType));
+            cacheEvictHelperComponent.evictProductMetaAll(ProductType.forName(prodType));
         }
         else {
-            String[] prodIdList = prodId.split(" ");
+            String[] prodIdList = prodId.split(" ");    // TODO 구분자 변경
 
-            ProductType productType;
             try {
-                productType = ProductType.forName(prodType);
-                this.cacheEvictHelperComponent.evictProductMeta(productType, Arrays.asList(prodIdList));
+                execProdIds = cacheEvictHelperComponent.evictProductMeta(null, Arrays.asList(prodIdList));
             }
             catch(IllegalStateException e) {
                 //throw new StorePlatformException("");
             }
         }
 
-        Map<String, String> res = new HashMap<String, String>();
-        res.put("prodType", prodType);
-        res.put("prodId", prodId);
+        Map<String, Object> res = new HashMap<String, Object>();
+        res.put("prodId", execProdIds);
         return res;
     }
 
