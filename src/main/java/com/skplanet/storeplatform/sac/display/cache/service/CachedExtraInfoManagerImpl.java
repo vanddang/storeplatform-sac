@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleAction;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleGetOrLoadHandler;
 import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
 import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
-import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
+//import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
