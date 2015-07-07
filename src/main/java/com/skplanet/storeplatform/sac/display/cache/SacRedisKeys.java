@@ -21,6 +21,7 @@ public class SacRedisKeys {
     private static final String PREFIX_PKG_2_PROD = "pkg2prod:";
     private static final String PREFIX_PKGS_IN_PROD = "pkgsInProd:";
     private static final String PREFIX_SPRT_DEV = "sprtdev:";
+    private static final String PREFIX_PRODUCT_BASE = "prodBase:";
 
     public static String pkg2prod(String pkgNm) {
         return PREFIX_PKG_2_PROD + pkgNm;
@@ -32,6 +33,10 @@ public class SacRedisKeys {
 
     public static String sprtdev(String prodId) {
         return PREFIX_SPRT_DEV + prodId;
+    }
+
+    public static String prodBase(String prodId) {
+        return PREFIX_PRODUCT_BASE + prodId;
     }
 
 }
