@@ -45,5 +45,5 @@ public interface CachedExtraInfoManager {
      * </pre>
      * @return
      */
-    ProductBaseInfo getProductBaseInfo(GetProductBaseInfoParam param);
+//    ProductBaseInfo getProductBaseInfo(GetProductBaseInfoParam param);
 }

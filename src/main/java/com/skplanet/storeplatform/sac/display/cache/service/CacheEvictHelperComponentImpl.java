@@ -58,11 +58,13 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
         Plandasj c = connectionFactory.getConnectionPool().getClient();
 
         for(String _prodId : prodIdList) {
+/*
             ProductBaseInfo productBaseInfo = cachedExtraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(_prodId));
             if(productBaseInfo == null)
                 continue;
-
-            ProductType prodTp = productBaseInfo.getProductType();
+*/
+            //ProductType prodTp = productBaseInfo.getProductType();
+            ProductType prodTp = null;
 
             if(prodTp == App) {
                 supportDeviceList = cacheSupportService.getSupportDeviceList(_prodId);

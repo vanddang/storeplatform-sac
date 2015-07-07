@@ -111,6 +111,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     }
 
     @Override
+/*
     public ProductBaseInfo getProductBaseInfo(GetProductBaseInfoParam param) {
         return RedisSimpleAction.getOrLoad(param.getProdId(),
                 new RedisSimpleGetOrLoadHandler<String, ProductBaseInfo>() {
@@ -159,5 +160,6 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
                     }
                 });
     }
+*/
 
 }
