@@ -235,7 +235,7 @@ public class LoginController {
 	 *            AuthorizeForInAppSacReq
 	 * @return AuthorizeForInAppSacRes
 	 */
-	@RequestMapping(value = "/member/user/authorizeForInApp/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/member/user/authorizeForInApp/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeForInAppSacRes authorizeForInApp(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForInAppSacReq req) {
@@ -272,7 +272,7 @@ public class LoginController {
 	 *            AuthorizeForInAppSacReq
 	 * @return AuthorizeForInAppSacRes
 	 */
-	@RequestMapping(value = "/member/user/authorizeForInApp/v2", method = RequestMethod.POST)
+	// @RequestMapping(value = "/member/user/authorizeForInApp/v2", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeForInAppSacRes authorizeForInAppV2(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForInAppSacReq req) {
@@ -347,7 +347,7 @@ public class LoginController {
 	 *            AuthorizeSacReq
 	 * @return AuthorizeSacRes
 	 */
-	@RequestMapping(value = "/member/user/authorize/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/member/user/authorize/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeSacRes authorize(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSacReq req) {
 
