@@ -82,14 +82,16 @@ public class CategorySpecificWebtoonServiceImpl implements CategorySpecificWebto
 
         if (productBasicInfoList != null) {
             Map<String, Object> paramMap = new HashMap<String, Object>();
-            paramMap.put("tenantHeader", header.getTenantHeader());
-            paramMap.put("deviceHeader", header.getDeviceHeader());
-            paramMap.put("lang", "ko");
+            paramMap.put("tenantId", header.getTenantHeader().getTenantId());
+            paramMap.put("langCd", header.getTenantHeader().getLangCd());
+            paramMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
 
             for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
                 String topMenuId = productBasicInfo.getTopMenuId();
                 String svcGrpCd = productBasicInfo.getSvcGrpCd();
-                paramMap.put("productBasicInfo", productBasicInfo);
+                paramMap.put("contentsTypeCd", productBasicInfo.getContentsTypeCd());
+                paramMap.put("prodId",
+                        productBasicInfo.getContentsTypeCd().equals(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD) ? productBasicInfo.getProdId() : productBasicInfo.getPartProdId());
 
                 this.log.debug("##### Top Menu Id : {}", topMenuId);
                 this.log.debug("##### Service Group Cd : {}", svcGrpCd);
@@ -105,7 +107,6 @@ public class CategorySpecificWebtoonServiceImpl implements CategorySpecificWebto
                 if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
                     if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // Webtoon 상품의 경우
 
-                        paramMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
                         metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getWebtoonMetaInfo",
                                 paramMap, MetaInfo.class);
                         // metaInfo = this.metaInfoService.getWebtoonMetaInfo(paramMap);
