@@ -92,17 +92,14 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 
         if (productBasicInfoList != null) {
             Map<String, Object> paramMap = new HashMap<String, Object>();
-            paramMap.put("tenantHeader", header.getTenantHeader());
-            paramMap.put("deviceHeader", header.getDeviceHeader());
-            paramMap.put("lang", langCd);
+            paramMap.put("tenantId", tenantId);
+            paramMap.put("langCd", langCd);
+            paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
             for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
                 String topMenuId = productBasicInfo.getTopMenuId();
-                String svcGrpCd = productBasicInfo.getSvcGrpCd();
-                paramMap.put("productBasicInfo", productBasicInfo);
-
-                this.log.debug("##### Top Menu Id : {}", topMenuId);
-                this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+                paramMap.put("contentsTypeCd", productBasicInfo.getContentsTypeCd());
+                paramMap.put("prodId", productBasicInfo.getReqProdId());
 
                 // 상품 SVC_GRP_CD 조회
                 // DP000203 : 멀티미디어
@@ -112,22 +109,20 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
                 // DP000201 : 애플리캐이션
 
                 // ebook/코믹 상품의 경우
-                if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-                    if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-                            || DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
-                        // Ebook / Comic 상품의 경우
+                if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+                        || DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
+                    // Ebook / Comic 상품의 경우
 
-                        paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-                        metaInfo = this.metaInfoService.getEbookComicMeta(paramMap);
-                        if(metaInfo == null)
-                            continue;
+                    metaInfo = this.metaInfoService.getEbookComicMeta(paramMap);
+                    if(metaInfo == null)
+                        continue;
 
-                        CidPrice cidPrice = productSubInfoManager.getCidPrice(langCd, tenantId, metaInfo.getEpsdCid());
-                        if (cidPrice != null) {
-                            metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
-                            metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());
-                        }
-                        
+                    CidPrice cidPrice = productSubInfoManager.getCidPrice(langCd, tenantId, metaInfo.getEpsdCid());
+                    if (cidPrice != null) {
+                        metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
+                        metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());
+                    }
+
                         /*
                         if(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(productBasicInfo.getContentsTypeCd())) {
 	                        //[CPS] 이북/코믹 메타 추가
@@ -143,17 +138,16 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
                         }
                         */
 
-                        // Tstore멤버십 적립율 정보
-                        metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+                    // Tstore멤버십 적립율 정보
+                    metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
 
-                        if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-                            product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
-                        } else {
-                            product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
-                        }
-
-                        productList.add(product);
+                    if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+                        product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
+                    } else {
+                        product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
                     }
+
+                    productList.add(product);
                 }
             }
         }
