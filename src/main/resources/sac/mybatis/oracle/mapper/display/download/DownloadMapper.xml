@@ -332,6 +332,8 @@
                  , TB.FILE_NM AS IMAGE_NM
                  , TB.FILE_SIZE AS IMAGE_SIZE
                  , TA.FILE_PATH
+                 , ( CASE WHEN TA.STORE_PROD_ID is not null THEN 'Y' ELSE 'N' END ) AS SUPPORT_STORE
+                 , ( CASE WHEN TA.PLAY_PROD_ID is not null THEN 'Y' ELSE 'N' END ) AS SUPPORT_PLAY
             FROM
                  (
                    SELECT  ROWNUM AS RNUM
