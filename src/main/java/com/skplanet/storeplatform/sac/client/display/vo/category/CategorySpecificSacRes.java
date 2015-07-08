@@ -15,7 +15,14 @@ public class CategorySpecificSacRes extends CommonInfo {
 	private CommonResponse commonResponse;
 	private List<Product> productList;
 
-	public CommonResponse getCommonResponse() {
+    public CategorySpecificSacRes() {}
+
+    public CategorySpecificSacRes(CommonResponse commonResponse, List<Product> productList) {
+        this.commonResponse = commonResponse;
+        this.productList = productList;
+    }
+
+    public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 

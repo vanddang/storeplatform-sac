@@ -9,11 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common;
 
-import java.io.Serializable;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * Interface Message CommonResponse Value Object.
@@ -21,12 +18,17 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class CommonResponse extends CommonInfo implements Serializable {
+public class CommonResponse extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String lang; // Language
 	private String baseUrl; // Base URL
 	private int totalCount; // 총 건수
+
+    public CommonResponse() {}
+    public CommonResponse(int totalCount) {
+        this.totalCount = totalCount;
+    }
 
 	public String getLang() {
 		return this.lang;
@@ -34,10 +36,6 @@ public class CommonResponse extends CommonInfo implements Serializable {
 
 	public void setLang(String lang) {
 		this.lang = lang;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	public String getBaseUrl() {
