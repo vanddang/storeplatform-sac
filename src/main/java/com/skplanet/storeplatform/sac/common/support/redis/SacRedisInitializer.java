@@ -13,7 +13,7 @@ import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 
 /**
  * <p>
- * DESC
+ * SacRedisInitializer
  * </p>
  * Updated on : 2015. 05. 13 Updated by : 정희원, SK 플래닛.
  */

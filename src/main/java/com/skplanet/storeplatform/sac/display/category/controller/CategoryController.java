@@ -9,6 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.category.controller;
 
+import com.google.common.base.Strings;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.display.category.service.*;
+import com.skplanet.storeplatform.sac.display.category.vo.SearchProductListParam;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,20 +43,9 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoon
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.category.service.CategoryAppService;
-import com.skplanet.storeplatform.sac.display.category.service.CategoryEbookComicService;
-import com.skplanet.storeplatform.sac.display.category.service.CategoryMusicContentsService;
-import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificAppService;
-import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificEbookService;
-import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificMusicService;
-import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificShoppingService;
-import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificSongService;
-import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificVodService;
-import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificVoucherService;
-import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificWebtoonService;
-import com.skplanet.storeplatform.sac.display.category.service.CategoryVodBoxService;
-import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonSeriesService;
-import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 일반 카테고리 Controller
@@ -103,7 +98,12 @@ public class CategoryController {
 
 	@Autowired
 	private CategorySpecificVoucherService categorySpecificVoucherService;
-	/**
+
+    @Autowired
+    private CategorySpecificProductService categorySpecificProductService;
+
+
+    /**
 	 * <pre>
 	 * 일반 카테고리 앱 상품 조회.
 	 * </pre>
@@ -407,4 +407,23 @@ public class CategoryController {
 		return this.categorySpecificVoucherService.searchSpecificVoucherDetail(header, req);
 
 	}
+
+    @RequestMapping(value = "/specific/product/list/v1", method = RequestMethod.GET)
+    @ResponseBody
+    public CategorySpecificSacRes searchSpecificProductList(SacRequestHeader header, @Validated CategorySpecificSacReq req) {
+
+        String tenantId = header.getTenantHeader().getTenantId();
+        String langCd = header.getTenantHeader().getLangCd();
+        String deviceModelCd = Strings.nullToEmpty(req.getIgnoreProvisionYn()).equals("N") ?
+                header.getDeviceHeader().getModel() : DisplayConstants.DP_ANY_PHONE_4APP;
+
+        List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
+        if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
+            throw new StorePlatformException("SAC_DSP_0004", "list",
+                    DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
+        }
+
+        return categorySpecificProductService.searchProductList(
+                new SearchProductListParam(tenantId, langCd, deviceModelCd, prodIdList));
+    }
 }
