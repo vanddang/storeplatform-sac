@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.category.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -30,5 +31,13 @@ public interface CategorySpecificMusicService {
 	 *            header
 	 * @return CategorySpecificSacRes
 	 */
-	public CategorySpecificSacRes getSpecificMusicList(CategorySpecificSacReq req, SacRequestHeader header);
+	CategorySpecificSacRes getSpecificMusicList(CategorySpecificSacReq req, SacRequestHeader header);
+
+    /**
+     * Music에 관련 링벨 상품을 매핑한다.
+     * @param tenantId
+     * @param chnlId
+     * @param music 매핑 대상
+     */
+    void mapgRingbell(String tenantId, String chnlId, Music music);
 }

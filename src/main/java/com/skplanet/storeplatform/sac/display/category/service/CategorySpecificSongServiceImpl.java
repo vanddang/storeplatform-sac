@@ -51,10 +51,10 @@ public class CategorySpecificSongServiceImpl implements CategorySpecificSongServ
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	@Autowired
-	private MusicInfoGenerator musicGenerator;
-	
-	@Autowired
     private MemberBenefitService memberBenefitService;
+
+    @Autowired
+    private CategorySpecificMusicService musicService;
 
 	/*
 	 * (non-Javadoc)
@@ -68,10 +68,7 @@ public class CategorySpecificSongServiceImpl implements CategorySpecificSongServ
 
 		CategorySpecificSacRes res = new CategorySpecificSacRes();
 		CommonResponse commonResponse = new CommonResponse();
-		Product product = null;
-		MetaInfo metaInfo = null;
 		List<Product> productList = new ArrayList<Product>();
-		CategorySpecificProduct categorySpecificProduct = null;
 
         List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
         if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
@@ -84,17 +81,15 @@ public class CategorySpecificSongServiceImpl implements CategorySpecificSongServ
 
         if (productBasicInfoList != null) {
             Map<String, Object> paramMap = new HashMap<String, Object>();
-            paramMap.put("tenantHeader", header.getTenantHeader());
-            paramMap.put("deviceHeader", header.getDeviceHeader());
-            paramMap.put("lang", "ko");
+            paramMap.put("langCd", header.getTenantHeader().getLangCd());
+            paramMap.put("tenantId", header.getTenantHeader().getTenantId());
+            paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
             for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
                 String topMenuId = productBasicInfo.getTopMenuId();
-                String svcGrpCd = productBasicInfo.getSvcGrpCd();
-                paramMap.put("productBasicInfo", productBasicInfo);
-
-                this.log.debug("##### Top Menu Id : {}", topMenuId);
-                this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+                paramMap.put("contentsTypeCd", productBasicInfo.getContentsTypeCd());
+                paramMap.put("prodId", productBasicInfo.getReqProdId());
+                paramMap.put("topMenuId", productBasicInfo.getTopMenuId());
 
                 // 상품 SVC_GRP_CD 조회
                 // DP000203 : 멀티미디어
@@ -106,40 +101,22 @@ public class CategorySpecificSongServiceImpl implements CategorySpecificSongServ
                 // 음원 상품의 경우
                 if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
                     // 배치완료 기준일시 조회
-                    productBasicInfo.setMenuId("DP004901");
-                    paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+                    productBasicInfo.setMenuId("DP004901"); // FIXME hardcording
 
                     // metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
-                    metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", paramMap,
+                    MetaInfo metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", paramMap,
                             MetaInfo.class);
-                    if (metaInfo != null) {
-                        // Tstore멤버십 적립율 정보
-                        metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
 
-                        paramMap.put("outsdContentsId", metaInfo.getOutsdContentsId());
-                        product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
-                        paramMap.put("prodId", metaInfo.getProdId());
-                        Music music = new Music();
-                        product.setMusic(this.musicGenerator.generateMusic(metaInfo));
-                        List<CategorySpecificProduct> metaList = this.commonDAO.queryForList(
-                                "CategorySpecificProduct.selectMusicMetaList", paramMap,
-                                CategorySpecificProduct.class);
-                        if (metaList != null) {
+                    if (metaInfo == null)
+                        continue;
 
-                            List<BellService> bellServiceList = new ArrayList<BellService>();
-                            BellService bellService = null;
-                            for (int i = 0; i < metaList.size(); i++) {
-                                categorySpecificProduct = metaList.get(i);
-                                bellService = new BellService();
-                                bellService.setName(categorySpecificProduct.getMetaClsfCd());
-                                bellService.setType(categorySpecificProduct.getProdId());
-                                bellServiceList.add(bellService);
-                            }
-                            music.setBellServiceList(bellServiceList);
-                        }
-                        product.setMusic(music);
-                        productList.add(product);
-                    }
+                    // Tstore멤버십 적립율 정보
+                    metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+
+                    Product product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
+                    productList.add(product);
+
+                    musicService.mapgRingbell(header.getTenantHeader().getTenantId(), productBasicInfo.getProdId(), product.getMusic());
                 }
             }
         }

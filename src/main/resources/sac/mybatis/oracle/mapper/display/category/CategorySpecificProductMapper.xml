@@ -594,10 +594,10 @@
             , PD.ARTIST2_NM
             , PD.ARTIST3_NM
             , TPP.PROD_AMT
-          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
+          <if test='contentsTypeCd == "PD002501"'>
             , P2.PROD_GRD_CD   -- 채널 상품 ID 조회       
           </if>
-          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+          <if test='contentsTypeCd == "PD002502"'>
             , P.PROD_GRD_CD   -- 에피소드 상품 ID 조회
           </if>    
             , P.META_CLSF_CD
@@ -627,14 +627,14 @@
                     END)
                  , 0) AS AVG_EVLU_SCORE
             ]]>  
-         <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+         <if test='contentsTypeCd == "PD002501"'>
             , P2.CID     -- 채널 상품 ID 조회
          </if>
-         <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+         <if test='contentsTypeCd == "PD002502"'>
             , P.CID   -- 에피소드 상품 ID 조회
          </if>         
             , P.SVC_GRP_CD      
-            , FC_GET_CM_CD_NM(P.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM    
+            , FC_GET_CM_CD_NM(P.SVC_GRP_CD,#{langCd}) AS SVC_GRP_NM
             , P.EXPO_SELLER_NM
             , P.EXPO_SELLER_TELNO
             , P.EXPO_SELLER_EMAIL
@@ -682,20 +682,20 @@
        -----------------------------------------------------------------------------
        -- INPUT PARAMETER
        ----------------------------------------------------------------------------- 
-          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-            AND CP.PROD_ID = #{productBasicInfo.prodId}
+          <if test='contentsTypeCd == "PD002501"'>
+            AND CP.PROD_ID = #{prodId}
             AND P.SVC_GRP_CD = 'DP000203' -- MP3
           </if>
-          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-            AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
+          <if test='contentsTypeCd == "PD002502"'>
+            AND CP.PART_PROD_ID = #{prodId}
           </if>
-          AND P2.TOP_MENU_ID = #{productBasicInfo.topMenuId}
+          AND P2.TOP_MENU_ID = #{topMenuId} -- NOTICE
           AND PI.IMG_CD = #{imageCd}
           AND PI.EXPO_ORD = 1                        /* 노출순서 */
-          AND PI.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */  
-          AND TP.TENANT_ID = #{tenantHeader.tenantId}
-          AND PD.LANG_CD = #{tenantHeader.langCd}
-          AND CD.LANG_CD = #{tenantHeader.langCd}
+          AND PI.LANG_CD = #{langCd}    /* ko : 한국어 */
+          AND TP.TENANT_ID = #{tenantId}
+          AND PD.LANG_CD = #{langCd}
+          AND CD.LANG_CD = #{langCd}
           AND TP2.PROD_ID = PS.PROD_ID(+)
           AND TP2.TENANT_ID = PS.TENANT_ID(+)
           AND ROWNUM = 1
@@ -709,10 +709,10 @@
             , TB_DP_PROD B
             , TB_DP_TENANT_PROD C
         WHERE 1=1
-        AND A.PROD_ID = #{prodId}
+        AND A.PROD_ID = #{chnlId}
         AND A.PART_PROD_ID = B.PROD_ID
         AND A.PART_PROD_ID = C.PROD_ID
-        AND C.TENANT_ID = #{tenantHeader.tenantId}
+        AND C.TENANT_ID = #{tenantId}
         AND C.PROD_STATUS_CD = 'PD000403'
         AND C.EXPO_YN = 'Y'
         AND B.META_CLSF_CD IN ('CT30','CT31','CT32','CT33')

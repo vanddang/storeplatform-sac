@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -89,17 +91,15 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 
         if (productBasicInfoList != null) {
             Map<String, Object> paramMap = new HashMap<String, Object>();
-            paramMap.put("tenantHeader", header.getTenantHeader());
-            paramMap.put("deviceHeader", header.getDeviceHeader());
-            paramMap.put("lang", "ko");
+            paramMap.put("langCd", header.getTenantHeader().getLangCd());
+            paramMap.put("tenantId", header.getTenantHeader().getTenantId());
+            paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
             for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
                 String topMenuId = productBasicInfo.getTopMenuId();
-                String svcGrpCd = productBasicInfo.getSvcGrpCd();
-                paramMap.put("productBasicInfo", productBasicInfo);
-
-                this.log.debug("##### Top Menu Id : {}", topMenuId);
-                this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+                paramMap.put("contentsTypeCd", productBasicInfo.getContentsTypeCd());
+                paramMap.put("prodId", productBasicInfo.getReqProdId());
+                paramMap.put("topMenuId", productBasicInfo.getTopMenuId());
 
                 // 상품 SVC_GRP_CD 조회
                 // DP000203 : 멀티미디어
@@ -115,8 +115,8 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
                     // topMenuId 뮤직으로 설정
                     productBasicInfo.setTopMenuId(DisplayConstants.DP_MUSIC_TOP_MENU_ID);
                     // 배치완료 기준일시 조회
-                    productBasicInfo.setMenuId("DP004901");
-                    paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+                    productBasicInfo.setMenuId("DP004901"); // FIXME hardcording
+
 
                     // metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
                     metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", paramMap,
@@ -125,32 +125,15 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
                     if (metaInfo != null) {
                         product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
                         // if (metaInfo.getOutsdContentsId() != null) {
-                        paramMap.put("outsdContentsId", metaInfo.getOutsdContentsId());
+                        //paramMap.put("outsdContentsId", metaInfo.getOutsdContentsId()); // FIXME !!
                         paramMap.put("prodId", metaInfo.getProdId());
-                        Music music = new Music();
-                        product.setMusic(this.musicGenerator.generateMusic(metaInfo));
-                        List<CategorySpecificProduct> metaList = this.commonDAO.queryForList(
-                                "CategorySpecificProduct.selectMusicMetaList", paramMap,
-                                CategorySpecificProduct.class);
-                        if (metaList != null) {
 
-                            List<BellService> bellServiceList = new ArrayList<BellService>();
-                            BellService bellService = null;
-                            for (int i = 0; i < metaList.size(); i++) {
-                                categorySpecificProduct = metaList.get(i);
-                                bellService = new BellService();
-                                bellService.setName(categorySpecificProduct.getMetaClsfCd());
-                                bellService.setType(categorySpecificProduct.getProdId());
-                                bellServiceList.add(bellService);
-                            }
-                            music.setBellServiceList(bellServiceList);
-                            // }
-                            // Tstore멤버십 적립율 정보
-                            List<Point> mileage = commonGenerator.generateMileage(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
-                            product.setPointList(mileage);
+                        mapgRingbell(header.getTenantHeader().getTenantId(), productBasicInfo.getProdId(), product.getMusic());
 
-                            product.setMusic(music);
-                        }
+                        // Tstore멤버십 적립율 정보
+                        List<Point> mileage = commonGenerator.generateMileage(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+                        product.setPointList(mileage);
+
                         productList.add(product);
                     }
                 }
@@ -162,4 +145,30 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
         return res;
 	}
 
+    @Override
+    public void mapgRingbell(String tenantId, String chnlId, Music music) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("tenantId", tenantId);
+        req.put("chnlId", chnlId);
+
+        List<CategorySpecificProduct> metaList = commonDAO.queryForList("CategorySpecificProduct.selectMusicMetaList",
+                req, CategorySpecificProduct.class);
+
+        if(metaList.size() == 0)
+            return;
+
+        Collection<BellService> bellServiceList =
+                Collections2.transform(metaList, new Function<CategorySpecificProduct, BellService>() {
+                    @Override
+                    public BellService apply(CategorySpecificProduct input) {
+                        BellService bs = new BellService();
+                        bs.setName(input.getMetaClsfCd());
+                        bs.setType(input.getProdId());
+
+                        return bs;
+                    }
+                });
+
+        music.setBellServiceList(new ArrayList<BellService>(bellServiceList));
+    }
 }
