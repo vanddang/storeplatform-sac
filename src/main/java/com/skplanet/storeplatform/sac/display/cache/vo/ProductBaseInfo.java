@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 //import com.skplanet.storeplatform.sac.common.support.redis.OptionalField;
+import com.skplanet.storeplatform.sac.common.support.redis.OptionalField;
 import com.skplanet.storeplatform.sac.display.common.EbookComicType;
 import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
@@ -36,13 +37,13 @@ public class ProductBaseInfo {
     private String contentsTypeCd;
     private String chnlId;
 
-//    @OptionalField
+    @OptionalField
     private String metaClsfCd;
-//    @OptionalField
+    @OptionalField
     private String svcTpCd;
-//    @OptionalField
+    @OptionalField
     private String partParentClsfCd;
-//    @OptionalField
+    @OptionalField
     private String menuId;
 
     public String getChnlId() {

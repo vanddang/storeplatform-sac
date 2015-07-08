@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-//import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
@@ -45,5 +45,5 @@ public interface CachedExtraInfoManager {
      * </pre>
      * @return
      */
-//    ProductBaseInfo getProductBaseInfo(GetProductBaseInfoParam param);
+    ProductBaseInfo getProductBaseInfo(GetProductBaseInfoParam param);
 }
