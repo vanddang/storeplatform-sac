@@ -2150,23 +2150,21 @@ public class UserSearchServiceImpl implements UserSearchService {
 		List<MbrMangItemPtcr> mbrMangItemPtcr = new ArrayList<MbrMangItemPtcr>();
 		MbrMangItemPtcr itemPtcr = null;
 		String socialAcctIntId = "";
-		String socialAcctType = "";
 		if (searchManagementListResponse.getMbrMangItemPtcrList() != null
 				&& searchManagementListResponse.getMbrMangItemPtcrList().size() > 0) {
 			for (MbrMangItemPtcr mangItemPtcr : searchManagementListResponse.getMbrMangItemPtcrList()) {
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())) {
+					itemPtcr = new MbrMangItemPtcr();
+					itemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE);
+					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
+					mbrMangItemPtcr.add(itemPtcr);
+				}
 				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, mangItemPtcr.getExtraProfile())) {
 					itemPtcr = new MbrMangItemPtcr();
 					itemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID);
 					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
 					mbrMangItemPtcr.add(itemPtcr);
 					socialAcctIntId = mangItemPtcr.getExtraProfileValue();
-				}
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())) {
-					itemPtcr = new MbrMangItemPtcr();
-					itemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE);
-					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
-					mbrMangItemPtcr.add(itemPtcr);
-					socialAcctType = mangItemPtcr.getExtraProfileValue();
 				}
 			}
 		}
@@ -2183,31 +2181,22 @@ public class UserSearchServiceImpl implements UserSearchService {
 				&& searchManagementResponse.getMbrMangItemPtcrList().size() > 0) {
 			searchSapUserInfoList = new ArrayList<SearchMbrSapUserInfo>();
 			for (MbrMangItemPtcr mangItemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())
-						&& StringUtils.equals(socialAcctType, mangItemPtcr.getExtraProfileValue())) {
-					for (MbrMangItemPtcr itemPtcr2 : searchManagementResponse.getMbrMangItemPtcrList()) {
-						if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID,
-								itemPtcr2.getExtraProfile())
-								&& StringUtils.equals(socialAcctIntId, itemPtcr2.getExtraProfileValue())) {
-							if (StringUtils.equals(mangItemPtcr.getUserKey(), itemPtcr2.getUserKey())) {
-								searchSapUserInfo = new SearchMbrSapUserInfo();
-								searchSapUserInfo.setUserKey(itemPtcr2.getUserKey());
-								searchSapUserInfo.setTenantId(itemPtcr2.getTenantID());
-								searchSapUserInfoList.add(searchSapUserInfo);
-								break;
-							}
-						}
-					}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, mangItemPtcr.getExtraProfile())
+						&& StringUtils.equals(socialAcctIntId, mangItemPtcr.getExtraProfileValue())) {
+					searchSapUserInfo = new SearchMbrSapUserInfo();
+					searchSapUserInfo.setUserKey(mangItemPtcr.getUserKey());
+					searchSapUserInfo.setTenantId(mangItemPtcr.getTenantID());
+					searchSapUserInfoList.add(searchSapUserInfo);
 				}
 			}
 		}
-		// 2. 테넌트 별로 회원 조회
+		// 3. 테넌트 별로 회원 조회
 		SearchMbrSapUserRequest searchMbrSapUserRequest = new SearchMbrSapUserRequest();
 		searchMbrSapUserRequest.setUserKeyList(searchSapUserInfoList);
 		searchMbrSapUserRequest.setCommonRequest(commonRequest);
 		SearchMbrSapUserResponse searchMbrSapUserResponse = this.userSCI.searchMbrSapUser(searchMbrSapUserRequest);
 
-		// 3. 회원 정보 조회 결과 값 응답 설정
+		// 4. 회원 정보 조회 결과 값 응답 설정
 		Map<String, UserMbrStatus> userInfoMap = searchMbrSapUserResponse.getUserMbrStatusMap();
 
 		// 응답값 설정을 위한 객체 선언.
@@ -2261,11 +2250,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 		}
 
-		// 회원정보 없는 경우 SC 회원에서 Exception 처리함.
+		// 5. 응답 설정
 		SearchSocialAccountSacRes searchSocialAccountSacRes = new SearchSocialAccountSacRes();
 		searchSocialAccountSacRes.setUserList(socialAccountInfos);
 
-		// 4. 응답 값 설정
 		return searchSocialAccountSacRes;
 	}
 }
