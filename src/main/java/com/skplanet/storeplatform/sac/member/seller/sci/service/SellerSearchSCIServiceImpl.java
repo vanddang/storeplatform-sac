@@ -147,7 +147,7 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 					sellerMbrSac.setSellerKey(sellerMbr.getSellerKey());
 					sellerMbrSac.setSellerId(sellerMbr.getSellerID());
 					sellerMbrSac.setSellerClass(sellerMbr.getSellerClass());
-					sellerMbrSac.setCharger(sellerMbr.getCharger());
+					sellerMbrSac.setCharger(StringUtils.replace(sellerMbr.getCharger(), "|", " "));
 					sellerMbrSac.setSellerCompany(sellerMbr.getSellerCompany());
 					sellerMbrSac.setSellerNickName(sellerMbr.getSellerNickName());
 					sellerMbrSac.setSellerBizNumber(sellerMbr.getSellerBizNumber());
@@ -312,9 +312,10 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 
 						// first:sellerNickName, second:sellerCompany, third:sellerName, default:""
 						compNmLower = StringUtils.isNotBlank(sellerMbrs.get(0).getSellerNickName()) ? sellerMbrs.get(0)
-								.getSellerNickName() : StringUtils.defaultString(StringUtils.isNotBlank(sellerMbrs.get(
-								0).getSellerCompany()) ? sellerMbrs.get(0).getSellerCompany() : sellerMbrs.get(0)
-								.getSellerName(), "");
+								.getSellerNickName() : StringUtils.defaultString(
+								StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()) ? sellerMbrs.get(0)
+										.getSellerCompany() : StringUtils.replace(sellerMbrs.get(0).getSellerName(),
+										"|", " "), "");
 					}
 				}
 

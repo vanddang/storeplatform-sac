@@ -344,7 +344,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, sellerMbrs.get(0)
 					.getSellerClass())) {
 				// first:sellerName, second:sellerCompany, default:""
-				// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-22).
+				// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-28).
 				nameLower = StringUtils
 						.defaultString(
 								StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? StringUtils.replace(
@@ -358,10 +358,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 							.getSellerClass())) {
 
 				// first:sellerNickName, second:sellerCompany, third:sellerName, default:""
+				// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-28).
 				compNmLower = StringUtils.isNotBlank(sellerMbrs.get(0).getSellerNickName()) ? sellerMbrs.get(0)
 						.getSellerNickName() : StringUtils.defaultString(
 						StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()) ? sellerMbrs.get(0)
-								.getSellerCompany() : sellerMbrs.get(0).getSellerName(), "");
+								.getSellerCompany() : StringUtils.replace(sellerMbrs.get(0).getSellerName(), "|", " "),
+						"");
 			}
 		}
 
@@ -879,12 +881,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			// sellerMbrRes.setSellerName(sellerMbr.getSellerName());
 			// sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
 			// }
-			// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-22).
+			// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-28).
 			sellerMbrRes.setSellerName(StringUtils.replace(sellerMbr.getSellerName(), "|", " "));
 			sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
 			sellerMbrRes.setSellerSSNumber(sellerMbr.getSellerSSNumber());
 			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
-			sellerMbrRes.setCharger(sellerMbr.getCharger());
+			// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-28).
+			sellerMbrRes.setCharger(StringUtils.replace(sellerMbr.getCharger(), "|", " "));
 			sellerMbrRes.setCustomerEmail(sellerMbr.getCustomerEmail());
 			sellerMbrRes.setSellerPhone(sellerMbr.getSellerPhone());
 			sellerMbrRes.setSellerPhoneCountry(sellerMbr.getSellerPhoneCountry());
