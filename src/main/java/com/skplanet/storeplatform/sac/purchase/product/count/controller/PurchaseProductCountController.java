@@ -27,7 +27,8 @@ import com.skplanet.storeplatform.sac.purchase.product.count.vo.PurchaseProductC
 
 /**
  * 구매 상품 건수 처리 Controller.
- * 
+ * - 삭제된 규격 : 2015-07-08 확인
+ *
  * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
  */
 @Controller
