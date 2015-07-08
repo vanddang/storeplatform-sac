@@ -2070,9 +2070,18 @@ public class UserSearchServiceImpl implements UserSearchService {
 			SearchManagementResponse searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
 
 			for (MbrMangItemPtcr itemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, itemPtcr.getExtraProfile())
-						&& StringUtils.equals(req.getSocialAcctIntId(), itemPtcr.getExtraProfileValue())) {
-					socialMemberCnt++;
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, itemPtcr.getExtraProfile())
+						&& StringUtils.equals(req.getSocialAcctType(), itemPtcr.getExtraProfileValue())) {
+					for (MbrMangItemPtcr itemPtcr2 : searchManagementResponse.getMbrMangItemPtcrList()) {
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID,
+								itemPtcr2.getExtraProfile())
+								&& StringUtils.equals(req.getSocialAcctIntId(), itemPtcr2.getExtraProfileValue())) {
+							if (StringUtils.equals(itemPtcr.getUserKey(), itemPtcr2.getUserKey())) {
+								socialMemberCnt++;
+								break;
+							}
+						}
+					}
 				}
 			}
 
@@ -2150,21 +2159,23 @@ public class UserSearchServiceImpl implements UserSearchService {
 		List<MbrMangItemPtcr> mbrMangItemPtcr = new ArrayList<MbrMangItemPtcr>();
 		MbrMangItemPtcr itemPtcr = null;
 		String socialAcctIntId = "";
+		String socialAcctType = "";
 		if (searchManagementListResponse.getMbrMangItemPtcrList() != null
 				&& searchManagementListResponse.getMbrMangItemPtcrList().size() > 0) {
 			for (MbrMangItemPtcr mangItemPtcr : searchManagementListResponse.getMbrMangItemPtcrList()) {
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())) {
-					itemPtcr = new MbrMangItemPtcr();
-					itemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE);
-					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
-					mbrMangItemPtcr.add(itemPtcr);
-				}
 				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, mangItemPtcr.getExtraProfile())) {
 					itemPtcr = new MbrMangItemPtcr();
 					itemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID);
 					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
 					mbrMangItemPtcr.add(itemPtcr);
 					socialAcctIntId = mangItemPtcr.getExtraProfileValue();
+				}
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())) {
+					itemPtcr = new MbrMangItemPtcr();
+					itemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE);
+					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
+					mbrMangItemPtcr.add(itemPtcr);
+					socialAcctType = mangItemPtcr.getExtraProfileValue();
 				}
 			}
 		}
@@ -2181,12 +2192,21 @@ public class UserSearchServiceImpl implements UserSearchService {
 				&& searchManagementResponse.getMbrMangItemPtcrList().size() > 0) {
 			searchSapUserInfoList = new ArrayList<SearchMbrSapUserInfo>();
 			for (MbrMangItemPtcr mangItemPtcr : searchManagementResponse.getMbrMangItemPtcrList()) {
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, mangItemPtcr.getExtraProfile())
-						&& StringUtils.equals(socialAcctIntId, mangItemPtcr.getExtraProfileValue())) {
-					searchSapUserInfo = new SearchMbrSapUserInfo();
-					searchSapUserInfo.setUserKey(mangItemPtcr.getUserKey());
-					searchSapUserInfo.setTenantId(mangItemPtcr.getTenantID());
-					searchSapUserInfoList.add(searchSapUserInfo);
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())
+						&& StringUtils.equals(socialAcctType, mangItemPtcr.getExtraProfileValue())) {
+					for (MbrMangItemPtcr itemPtcr2 : searchManagementResponse.getMbrMangItemPtcrList()) {
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID,
+								itemPtcr2.getExtraProfile())
+								&& StringUtils.equals(socialAcctIntId, itemPtcr2.getExtraProfileValue())) {
+							if (StringUtils.equals(mangItemPtcr.getUserKey(), itemPtcr2.getUserKey())) {
+								searchSapUserInfo = new SearchMbrSapUserInfo();
+								searchSapUserInfo.setUserKey(itemPtcr2.getUserKey());
+								searchSapUserInfo.setTenantId(itemPtcr2.getTenantID());
+								searchSapUserInfoList.add(searchSapUserInfo);
+								break;
+							}
+						}
+					}
 				}
 			}
 		}
