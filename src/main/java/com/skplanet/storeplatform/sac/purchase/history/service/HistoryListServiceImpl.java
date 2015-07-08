@@ -9,51 +9,31 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
 import com.skplanet.storeplatform.purchase.client.history.sci.HistorySCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountScRes;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScRes;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistorySc;
-import com.skplanet.storeplatform.purchase.client.history.vo.ProductCountSc;
+import com.skplanet.storeplatform.purchase.client.history.vo.*;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.CmpxInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ProductInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxBasicInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxBasicInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxBasicInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacV2Req;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacV2Res;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistorySac;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistorySacV2;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductCountSac;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.*;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 구매내역 Implements
@@ -247,6 +227,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setCpnAddinfo(obj.getCpnAddinfo()); // 쇼핑쿠폰_추가정보
 			historySac.setCpnBizProdSeq(obj.getCpnBizProdSeq()); // 쇼핑쿠폰_biz상품_순번
 			historySac.setCpnBizOrderNo(obj.getCpnBizOrderNo()); // 쇼핑쿠폰_biz상품_주문번호
+			historySac.setUsePeriodSetCd(obj.getUsePeriodSetCd()); // 이용기간 설정 구분 코드
+			historySac.setUsePeriodRedateCd(obj.getUsePeriodRedateCd()); // 이용기간 재산정처리 코드
+			historySac.setUsePeriodUnitCd(obj.getUsePeriodUnitCd()); // 이용기간 단위 코드
+			historySac.setUsePeriod(obj.getUsePeriod()); // 이용기간
 
 			historySac.setResvCol01(obj.getResvCol01());
 			historySac.setResvCol02(obj.getResvCol02());
@@ -722,6 +706,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 				historySac.setCpnBizProdSeq(obj.getCpnBizProdSeq()); // 쇼핑쿠폰_biz상품_순번
 				historySac.setCpnBizOrderNo(obj.getCpnBizOrderNo()); // 쇼핑쿠폰_biz상품_주문번호
 				historySac.setCpnUseStatusCd(obj.getCpnUseStatusCd()); // 쇼핑쿠폰_사용여부상태코드
+				historySac.setUsePeriodSetCd(obj.getUsePeriodSetCd()); // 이용기간 설정 구분 코드
+				historySac.setUsePeriodRedateCd(obj.getUsePeriodRedateCd()); // 이용기간 재산정처리 코드
+				historySac.setUsePeriodUnitCd(obj.getUsePeriodUnitCd()); // 이용기간 단위 코드
+				historySac.setUsePeriod(obj.getUsePeriod()); // 이용기간
 
 				historySac.setResvCol01(obj.getResvCol01());
 				historySac.setResvCol02(obj.getResvCol02());
