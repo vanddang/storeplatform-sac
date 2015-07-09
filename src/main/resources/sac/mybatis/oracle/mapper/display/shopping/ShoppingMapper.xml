@@ -3890,8 +3890,8 @@
               
     <!-- 카테고리 쇼핑 상세 조회-->
     <select id="searchSpecificShoppingDetail" parameterType="Map" resultType="MetaInfo">
-       /* ShoppingMapper.xml.searchSpecificShoppingDetail,카테고리 쇼핑 상세 조회, 김형식/SK플래닛  , 2014-12-07 */
-     SELECT * FROM (
+     SELECT /* ShoppingMapper.xml.searchSpecificShoppingDetail,카테고리 쇼핑 상세 조회, 김형식/SK플래닛  , 2014-12-07 */
+         * FROM (
          SELECT 
                 PP.* 
                 ,ROW_NUMBER() OVER(PARTITION BY PROD_ID ORDER BY SOLDOUT ASC) AS NO1
@@ -3923,7 +3923,7 @@
                                ,(SELECT MENU_NM
                                    FROM TB_DP_MENU_CATEGORY_DESC
                                   WHERE MENU_ID = J.TOP_MENU_ID
-                                    AND LANG_CD = #{lang}
+                                    AND LANG_CD = #{langCd}
                                     AND ROWNUM = 1
                                 ) AS TOP_MENU_NM  
                                 ,J.META_CLSF_CD                                   
@@ -3961,7 +3961,7 @@
                                 ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID 
                                                    ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC 
                                                   ,DECODE(I.PROD_CASE_CD ,'DP006303'
-                                                            ,(SELECT 1 FROM TB_DP_TENANT_PROD WHERE TENANT_ID =#{tenantHeader.tenantId} AND PROD_ID = H.PART_PROD_ID AND PROD_STATUS_CD='PD000403')
+                                                            ,(SELECT 1 FROM TB_DP_TENANT_PROD WHERE TENANT_ID =#{tenantId} AND PROD_ID = H.PART_PROD_ID AND PROD_STATUS_CD='PD000403')
                                                             ,ROUND(DBMS_RANDOM.VALUE(1, 100), 0)
                                                           )
                                                    ) as NO 
@@ -3972,7 +3972,7 @@
                                 ,PI.FILE_SIZE   
                                 ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT
                                 ,(CASE WHEN (SELECT EPSD_CNT FROM TB_DP_SHPG_PROD WHERE PROD_ID = H.PROD_ID)>0 
-                                        THEN (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE TENANT_ID=#{tenantHeader.tenantId} AND PROD_ID=H.PROD_ID) 
+                                        THEN (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE TENANT_ID=#{tenantId} AND PROD_ID=H.PROD_ID)
                                   ELSE 'PD000404' END
                                   ) PROD_STATUS_CD                                                                  
                           FROM 
@@ -3992,7 +3992,7 @@
                                  ,(SELECT  PROD_ID
                                           ,PRCHS_CNT
                                      FROM TB_DP_TENANT_PROD_STATS 
-                                    WHERE TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
+                                    WHERE TENANT_ID = #{tenantId}    /* INPUT 테넌트ID */
                                    ) M                                 
                                  ,TB_DP_PROD_DESC O
                                  ,(SELECT /*+ ORDERED */
@@ -4014,8 +4014,8 @@
                                         ,TB_DP_SPRC_PROD B1
                                    WHERE 1=1
                                      AND A1.PART_PROD_ID = B1.PROD_ID
-                                    <if test="req.specialProdId != null">
-                                     AND B1.PROD_ID  = #{req.specialProdId}
+                                    <if test="specialProdId != null">
+                                     AND B1.PROD_ID = #{specialProdId}
                                     </if>
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
@@ -4040,27 +4040,27 @@
                         AND C.CATALOG_ID = M.PROD_ID(+) 
                         AND PI.IMG_CD(+) = #{imageCd}                        
                         AND I.PROD_ID = N.PROD_ID(+)
-                        AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
-                        <if test="req.includeProdStopStatus != null ">
+                        AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/
+                        <if test="sellingOnly">
                         AND NVL(B.CHNL_CNT, 0) <![CDATA[> ]]> 0
                         AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */       
                         </if>                         
-                        AND C.LANG_CD= #{lang}          /* ko : 한국어 */
-                        AND F.LANG_CD= #{lang}          /* ko : 한국어 */
-                        AND O.LANG_CD= #{lang}          /* ko : 한국어 */
+                        AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
+                        AND F.LANG_CD= #{langCd}          /* ko : 한국어 */
+                        AND O.LANG_CD= #{langCd}          /* ko : 한국어 */
                         AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        <if test="req.saleDtUseYn == null">
+                        <if test="filterApplyDt">
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         </if>
-                        AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
-                        AND B.CATALOG_ID = #{req.productId}
-                        <if test="req.specialProdId != null">
-                        AND I.PROD_ID = #{req.specialProdId}
+                        AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
+                        AND B.CATALOG_ID = #{productId}
+                        <if test="specialProdId != null">
+                        AND I.PROD_ID = #{specialProdId}
                         </if>
                    ) KK
                 )PP

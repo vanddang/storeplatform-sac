@@ -9,9 +9,21 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.common.base.Strings;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryShoppingSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryShoppingSacRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,25 +31,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryShoppingSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryShoppingSacRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
-import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
-import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * WebtoonList Service 인터페이스(CoreStoreBusiness) 구현체
+ * CategorySpecificShopping Service 인터페이스(CoreStoreBusiness) 구현체
  * 
  * Updated on : 2014. 12. 07. Updated by : 김형식, SK 플래닛.
  */
@@ -49,9 +47,6 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-
-	@Autowired
-	private MetaInfoService metaInfoService;
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
@@ -75,95 +70,71 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 	 */
 	@Override
 	public CategoryShoppingSacRes searchSpecificShoppingDetail(SacRequestHeader header, CategoryShoppingSacReq req) {
+
 		// 공통 응답 변수 선언
-		CategoryShoppingSacRes res = new CategoryShoppingSacRes();
-		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
 
-		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
+        if (!Strings.isNullOrEmpty(req.getSaleDtUseYn()) &&
+                !"Y".equals(req.getSaleDtUseYn()) && !"N".equals(req.getSaleDtUseYn())) {
+            throw new StorePlatformException("SAC_DSP_0003", "saleDtUseYn", req.getSaleDtUseYn());
+        }
 
-		if (StringUtils.isEmpty(req.getSpecialProdId())) {
-			req.setSpecialProdId(null);
-		}
-
-		if (StringUtils.isNotEmpty(req.getSaleDtUseYn())) {
-			if (!"Y".equals(req.getSaleDtUseYn()) && !"N".equals(req.getSaleDtUseYn())) {
-				throw new StorePlatformException("SAC_DSP_0003", "saleDtUseYn", req.getSaleDtUseYn());
-			}
-			if ("N".equals(req.getSaleDtUseYn())) {
-				req.setSaleDtUseYn(null);
-			}
-		}
-		if (StringUtils.isEmpty(req.getSaleDtUseYn())) {
-			req.setSaleDtUseYn(null);
-		}
-		if (StringUtils.isNotEmpty(req.getIncludeProdStopStatus())) {
-			if (!"Y".equals(req.getIncludeProdStopStatus()) && !"N".equals(req.getIncludeProdStopStatus())) {
-				throw new StorePlatformException("SAC_DSP_0003", "includeProdStopStatus",
-						req.getIncludeProdStopStatus());
-			}
-			if ("Y".equals(req.getIncludeProdStopStatus())) {
-				req.setIncludeProdStopStatus(null);
-			}
-		}
-
-		if (StringUtils.isEmpty(req.getIncludeProdStopStatus())) {
-			req.setIncludeProdStopStatus(null);
-		}		
+        if (!Strings.isNullOrEmpty(req.getIncludeProdStopStatus()) &&
+                !"Y".equals(req.getIncludeProdStopStatus()) && !"N".equals(req.getIncludeProdStopStatus())) {
+            throw new StorePlatformException("SAC_DSP_0003", "includeProdStopStatus", req.getIncludeProdStopStatus());
+        }
 
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("req", req);
-		reqMap.put("tenantHeader", tenantHeader);
-		reqMap.put("deviceHeader", deviceHeader);
-		reqMap.put("lang", tenantHeader.getLangCd());
 
-		reqMap.put("imageCd", req.getImageCd());
+		reqMap.put("tenantId", tenantHeader.getTenantId());
+		reqMap.put("langCd", tenantHeader.getLangCd());
+        reqMap.put("productId", req.getProductId());
+        reqMap.put("specialProdId", Strings.emptyToNull(req.getSpecialProdId()));
+
+        reqMap.put("filterApplyDt", StringUtils.defaultString(req.getSaleDtUseYn(), "N").equals("N"));
+        reqMap.put("sellingOnly", StringUtils.defaultString(req.getIncludeProdStopStatus(), "Y").equals("N"));
+
+		reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		reqMap.put("channelContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-		
 
-		if (!this.commonSupportDeviceShopping(header)) {
-			// 조회 결과 없음
-			Product product = new Product();
-			res.setProduct(product);
-			commonResponse.setTotalCount(0);
-			res.setCommonResponse(commonResponse);
-			return res;
-		}
+		if (!this.commonSupportDeviceShopping(header))
+            return makeEmptyResponse();
 
 		// ID list 조회
 		MetaInfo retMetaInfo =  this.commonDAO.queryForObject("Shopping.searchSpecificShoppingDetail", reqMap, MetaInfo.class);
-		if (retMetaInfo != null) {
-			
-			retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
+        if (retMetaInfo == null)
+            return makeEmptyResponse();
 
-			// 쇼핑 Response Generate
-			Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
-			if (StringUtils.isNotEmpty(req.getSpecialProdId())) {
-				product.setSpecialCouponId(retMetaInfo.getSpecialCouponId());
-				product.setSpecialProdYn(retMetaInfo.getSpecialSale());
-				product.setSpecialTypeCd(retMetaInfo.getSpecialTypeCd());
-			}
-			res.setProduct(product);
-			commonResponse.setTotalCount(1);
-			res.setCommonResponse(commonResponse);
-		}else{
-			// 조회 결과 없음
-			Product product = new Product();
-			res.setProduct(product);
-			commonResponse.setTotalCount(0);
-		    res.setCommonResponse(commonResponse);
-			return res;			
-		}
+        CategoryShoppingSacRes res = new CategoryShoppingSacRes();
+
+        retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
+
+        // 쇼핑 Response Generate
+        Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+        if (StringUtils.isNotEmpty(req.getSpecialProdId())) {
+            product.setSpecialCouponId(retMetaInfo.getSpecialCouponId());
+            product.setSpecialProdYn(retMetaInfo.getSpecialSale());
+            product.setSpecialTypeCd(retMetaInfo.getSpecialTypeCd());
+        }
+        res.setProduct(product);
+        res.setCommonResponse(new CommonResponse(1));
+
 		return res;
 	}
-	/**
+
+    private CategoryShoppingSacRes makeEmptyResponse() {
+        CategoryShoppingSacRes res = new CategoryShoppingSacRes();
+        res.setProduct(new Product());
+        res.setCommonResponse(new CommonResponse(0));
+        return res;
+    }
+
+    /**
 	 * 쇼핑 지원 여부 .
 	 * 
 	 * @param header
@@ -171,25 +142,18 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 	 * @return boolean
 	 */
 	private boolean commonSupportDeviceShopping(SacRequestHeader header) {
-		boolean result = true;
-		
-		if(StringUtils.isEmpty(header.getDeviceHeader().getModel())){
+
+        String deviceModelCd = header.getDeviceHeader().getModel();
+        if(StringUtils.isEmpty(deviceModelCd)){
 			throw new StorePlatformException("SAC_DSP_0029");
 		}
+
 		// 단말 지원정보 조회
-		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
-				.getModel());
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(deviceModelCd);
 		if(supportDevice == null){
-			throw new StorePlatformException("SAC_DSP_0012", header.getDeviceHeader()
-					.getModel());
+			throw new StorePlatformException("SAC_DSP_0012", deviceModelCd);
 		}
-		
-		if (!supportDevice.getSclShpgSprtYn().equals("Y")) {
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("[shopping] supportDevice is empty!");
-			this.log.debug("----------------------------------------------------------------");
-			result = false;
-		}
-		return result;
-	}	
+
+        return "Y".equals(supportDevice.getSclShpgSprtYn());
+	}
 }
