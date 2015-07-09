@@ -27,15 +27,14 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CategoryShoppingSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+
 	@NotNull
 	@NotBlank
 	private String productId; // 상품 ID (카탈로그)
 	private String specialProdId; // 특가상품 ID
 	private String saleDtUseYn; // 판매 기간이 넘어갈 경우 조회시
 	private String includeProdStopStatus;// 판매 상태 여부
-	private String imageCd; // 이미지코드
-	private String virtualDeviceModelNo; // android_standard2
-	
+
 	/**
 	 * @return the productId
 	 */
@@ -84,31 +83,5 @@ public class CategoryShoppingSacReq extends CommonInfo {
 	public void setIncludeProdStopStatus(String includeProdStopStatus) {
 		this.includeProdStopStatus = includeProdStopStatus;
 	}
-	/**
-	 * @return the imageCd
-	 */
-	public String getImageCd() {
-		return imageCd;
-	}
-	/**
-	 * @param imageCd the imageCd to set
-	 */
-	public void setImageCd(String imageCd) {
-		this.imageCd = imageCd;
-	}
-	/**
-	 * @return the virtualDeviceModelNo
-	 */
-	public String getVirtualDeviceModelNo() {
-		return virtualDeviceModelNo;
-	}
-	/**
-	 * @param virtualDeviceModelNo the virtualDeviceModelNo to set
-	 */
-	public void setVirtualDeviceModelNo(String virtualDeviceModelNo) {
-		this.virtualDeviceModelNo = virtualDeviceModelNo;
-	}
-
-
 
 }
