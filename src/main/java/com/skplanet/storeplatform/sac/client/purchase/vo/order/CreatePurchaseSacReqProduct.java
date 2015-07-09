@@ -9,15 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateFreePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchase;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 /**
  * 
@@ -56,6 +55,7 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	private String timbreSctn; // 음질 구간
 	@Null(groups = { GroupCreatePurchase.class, GroupCreateBizPurchase.class })
 	private String useExprDt; // 이용종료일
+	private String dwldExprDt; // 다운로드 종료일
 	private String resvCol01; // 예비컬럼01
 	private String resvCol02; // 예비컬럼02
 	private String resvCol03; // 예비컬럼03
@@ -360,4 +360,22 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 		this.resvCol05 = resvCol05;
 	}
 
+	/**
+	 * Gets dwld expr dt.
+	 *
+	 * @return the dwld expr dt
+	 */
+	public String getDwldExprDt() {
+		return dwldExprDt;
+	}
+
+	/**
+	 * Sets dwld expr dt.
+	 *
+	 * @param dwldExprDt
+	 *            the dwld expr dt
+	 */
+	public void setDwldExprDt(String dwldExprDt) {
+		this.dwldExprDt = dwldExprDt;
+	}
 }
