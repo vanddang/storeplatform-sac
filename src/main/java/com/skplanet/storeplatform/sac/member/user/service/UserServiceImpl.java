@@ -11,6 +11,7 @@ import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcReq;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
+import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.MoveUserInfoRequest;
@@ -199,9 +200,8 @@ public class UserServiceImpl implements UserService {
 		// Constant.USERMBR_MOVE_TYPE_ACTIVATE(정상 처리), Constant.USERMBR_MOVE_TYPE_DORMANT(휴면 처리)
 		moveUserInfoRequest.setMoveType(moveUserInfoSacReq.getMoveType());
 
-		// Test API에서는 IDP 조회 하지 않으므로 "N"으로 셋팅
-		// moveUserInfoRequest.setIdpResultYn(Constant.TYPE_YN_N);
-		moveUserInfoRequest.setIdpResultYn("N");
+		// Test API에서는 IDP 조회 하지 않으므로 "Y"으로 셋팅
+		moveUserInfoRequest.setIdpResultYn(Constant.TYPE_YN_Y);
 		MoveUserInfoResponse moveUserInfoResponse = this.userSCI.executeMoveUserMbr(moveUserInfoRequest);
 
 		MoveUserInfoSacRes moveUserInfoSacRes = new MoveUserInfoSacRes();
