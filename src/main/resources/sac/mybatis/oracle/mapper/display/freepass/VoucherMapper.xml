@@ -301,12 +301,15 @@
                 AND MP.MENU_ID = CT.MENU_ID
                 AND MP.BASE_YN = 'Y'
                 AND CT.USE_YN = 'Y'
-                 <if test="arrayProdGradeCd != null">
+                <if test="arrayProdGradeCd != null">
                 AND PD.PROD_GRD_CD  IN
                               <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
                                 #{prodGradeCd}
                               </foreach>                        
-                 </if>                  
+                </if>              
+                <if test='plus19Yn == "N"'>
+                    AND (PD.PLUS19_YN = 'N' OR PD.PLUS19_YN IS NULL)
+                </if>    
                 AND TP.PROD_STATUS_CD = 'PD000403'
                 AND EXISTS (
                     SELECT 'X'
