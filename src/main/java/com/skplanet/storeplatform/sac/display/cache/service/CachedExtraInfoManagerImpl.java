@@ -128,7 +128,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
                         info.setSvcTpCd(data.get("svcTpCd"));
                         info.setContentsTypeCd(data.get("contentsTypeCd"));
                         info.setPartParentClsfCd(data.get("partParentClsfCd"));
-                        info.setMenuId(data.get("menuId"));
+                        info.setCatId(data.get("catId"));
 
                         return info;
                     }
@@ -147,8 +147,8 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
                             redis.hset(key, "metaClsfCd", value.getMetaClsfCd());
                         if(!Strings.isNullOrEmpty(value.getPartParentClsfCd()))
                             redis.hset(key, "partParentClsfCd", value.getPartParentClsfCd());
-                        if(!Strings.isNullOrEmpty(value.getMenuId()))   // FIXME 제거 대상일수 있다.
-                            redis.hset(key, "menuId", value.getMenuId());
+                        if(!Strings.isNullOrEmpty(value.getCatId()))
+                            redis.hset(key, "catId", value.getCatId());
                     }
 
                     @Override

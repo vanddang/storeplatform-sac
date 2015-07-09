@@ -31,7 +31,6 @@ import static com.skplanet.storeplatform.sac.display.common.constant.DisplayCons
  */
 public class ProductBaseInfo {
 
-    private String prodId;
     private String topMenuId;
     private String svcGrpCd;
     private String contentsTypeCd;
@@ -44,7 +43,7 @@ public class ProductBaseInfo {
     @OptionalField
     private String partParentClsfCd;
     @OptionalField
-    private String menuId;
+    private String catId;
 
     public String getChnlId() {
         return chnlId;
@@ -52,14 +51,6 @@ public class ProductBaseInfo {
 
     public void setChnlId(String chnlId) {
         this.chnlId = chnlId;
-    }
-
-    public String getProdId() {
-        return prodId;
-    }
-
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
     }
 
     public String getTopMenuId() {
@@ -110,12 +101,12 @@ public class ProductBaseInfo {
         this.svcTpCd = svcTpCd;
     }
 
-    public String getMenuId() {
-        return menuId;
+    public String getCatId() {
+        return catId;
     }
 
-    public void setMenuId(String menuId) {
-        this.menuId = menuId;
+    public void setCatId(String catId) {
+        this.catId = catId;
     }
 
     /**
@@ -147,7 +138,7 @@ public class ProductBaseInfo {
         String q = StringUtils.join(new String[]{svcGrpCd, svcTpCd, metaClsfCd}, ".");
 
         if (q.startsWith("DP000201")) {
-            return ProductType.App;
+            return DP_PART_CHILD_CLSF_CD.equals(partParentClsfCd) ? ProductType.InApp : ProductType.App;
         } else if (q.startsWith("DP000203.DP001111")) {
             return ProductType.Music;
         } else if (q.startsWith("DP000208")) {

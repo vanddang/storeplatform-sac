@@ -18,12 +18,10 @@ import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManag
 import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
 import com.skplanet.storeplatform.sac.display.category.vo.SearchProductListParam;
-import com.skplanet.storeplatform.sac.display.common.EbookComicType;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
-import com.skplanet.storeplatform.sac.display.common.VodType;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
-import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.service.ProductSubInfoManager;
 import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -35,7 +33,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.skplanet.storeplatform.sac.display.common.ProductType.*;
+import static com.skplanet.storeplatform.sac.display.common.ProductType.EbookComic;
+import static com.skplanet.storeplatform.sac.display.common.ProductType.Vod;
 import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
 
 /**
@@ -78,8 +77,10 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("deviceModelCd", param.getDeviceModelCd());  // App만 쓰임
         //reqMap.put("prodStatusCd", "PD000403");   // FIXME
+        SpecificProductServiceContext ctx = new SpecificProductServiceContext(param.getDeviceModelCd());
 
         for (String prodId : param.getProdIdList()) {
+
             ProductBaseInfo baseInfo = extraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(prodId));
 
             if(baseInfo == null)
@@ -92,37 +93,51 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
             reqMap.put("contentsTypeCd", baseInfo.getContentsTypeCd());
             reqMap.put("topMenuId", baseInfo.getTopMenuId());
 
-            ProductTypeInfo prodTp = displayCommonService.getProductTypeInfo(baseInfo.getSvcGrpCd(), baseInfo.getSvcTpCd(), baseInfo.getMetaClsfCd(), baseInfo.getTopMenuId());
-            ProductType type = prodTp.getProductType();
+            ProductType type = baseInfo.getProductType();
 
-            if(type == App) {
-                reqMap.put("imageCd", DP_APP_REPRESENT_IMAGE_CD);
-                if (!baseInfo.isIapProduct()) {
+            switch (type) {
+                case App:
+                    reqMap.put("imageCd", DP_APP_REPRESENT_IMAGE_CD);
                     metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo", reqMap, MetaInfo.class);
-                }
-                else {
+                    break;
+                case InApp:
+                    reqMap.put("imageCd", DP_APP_REPRESENT_IMAGE_CD);
                     metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getInAppMetaInfo", reqMap, MetaInfo.class);
-                }
+                    break;
+                case Vod: case VodTv: case VodMovie:
+                    reqMap.put("imageCd", DP_VOD_REPRESENT_IMAGE_CD);
+                    metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo", reqMap, MetaInfo.class);
+                    break;
+                case EbookComic: case Ebook: case Comic:
+                    reqMap.put("imageCd", DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+                    metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo", reqMap, MetaInfo.class);
+                    break;
+                case Webtoon:
+                    reqMap.put("imageCd", DP_WEBTOON_REPRESENT_IMAGE_CD);
+                    metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getWebtoonMetaInfo", reqMap, MetaInfo.class);
+                    break;
+                case Music:
+                    reqMap.put("imageCd", DP_MUSIC_REPRESENT_IMAGE_CD);
+                    metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", reqMap, MetaInfo.class);
+                    break;
+                case Shopping:
+                    if(!ctx.isShoppingAvailable())
+                        continue;
 
+                    reqMap.put("imageCd", DP_SHOPPING_REPRESENT_IMAGE_CD);
+                    reqMap.put("catalogId", baseInfo.getCatId());
+                    reqMap.put("sellingOnly", false);
+                    reqMap.put("filterApplyDt", true);
+
+                    // 특가상품으로 요청한 경우 처리
+                    if(baseInfo.getContentsTypeCd().equals(DP_EPISODE_CONTENT_TYPE_CD))
+                        reqMap.put("specialProdId", prodId);
+
+                    metaInfo = commonDAO.queryForObject("Shopping.searchSpecificShoppingDetail", reqMap, MetaInfo.class);
+                    break;
+                default:
+                    throw new StorePlatformException("SAC_DSP_0032", prodId);
             }
-            else if(type == Vod) {
-                reqMap.put("imageCd", DP_VOD_REPRESENT_IMAGE_CD);
-                metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo", reqMap, MetaInfo.class);
-            }
-            else if(type == EbookComic) {
-                reqMap.put("imageCd", DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-                metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo", reqMap, MetaInfo.class);
-            }
-            else if(type == Webtoon) {
-                reqMap.put("imageCd", DP_WEBTOON_REPRESENT_IMAGE_CD);
-                metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getWebtoonMetaInfo", reqMap, MetaInfo.class);
-            }
-            else if(type == Music) {
-                reqMap.put("imageCd", DP_MUSIC_REPRESENT_IMAGE_CD);
-                metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", reqMap, MetaInfo.class);
-            }
-            else
-                throw new StorePlatformException("SAC_DSP_0032", prodId);
 
             if(metaInfo == null)
                 continue;
@@ -142,19 +157,16 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
             switch(type) {
                 case App:
+                case InApp:
                     prodList.add(responseGen.generateSpecificAppProduct(metaInfo)); break;
-                case Vod:
-                    if(prodTp.getVodType() == VodType.Movie)
-                        prodList.add(responseGen.generateSpecificMovieProduct(metaInfo));
-                    else
-                        prodList.add(responseGen.generateSpecificBroadcastProduct(metaInfo));
-                    break;
-                case EbookComic:
-                    if(prodTp.getEbookComicType() == EbookComicType.Ebook)
-                        prodList.add(responseGen.generateSpecificEbookProduct(metaInfo));
-                    else
-                        prodList.add(responseGen.generateSpecificComicProduct(metaInfo));
-                    break;
+                case VodMovie:
+                    prodList.add(responseGen.generateSpecificMovieProduct(metaInfo)); break;
+                case VodTv:
+                    prodList.add(responseGen.generateSpecificBroadcastProduct(metaInfo)); break;
+                case Ebook:
+                    prodList.add(responseGen.generateSpecificEbookProduct(metaInfo)); break;
+                case Comic:
+                    prodList.add(responseGen.generateSpecificComicProduct(metaInfo)); break;
                 case Webtoon:
                     prodList.add(responseGen.generateSpecificWebtoonProduct(metaInfo)); break;
                 case Music:
@@ -162,11 +174,43 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
                     specificMusicService.mapgRingbell(param.getTenantId(), baseInfo.getChnlId(), product.getMusic());
                     prodList.add(product);
                     break;
+                case Shopping:
+                    Product shopProd = responseGen.generateSpecificShoppingProduct(metaInfo);
+                    // 특가 상품으로 조회시 처리
+                    if(baseInfo.getContentsTypeCd().equals(DP_EPISODE_CONTENT_TYPE_CD)) {
+                        shopProd.setSpecialCouponId(metaInfo.getSpecialCouponId());
+                        shopProd.setSpecialProdYn(metaInfo.getSpecialSale());
+                        shopProd.setSpecialTypeCd(metaInfo.getSpecialTypeCd());
+                    }
+                    prodList.add(shopProd);
+                    break;
                 default:
                     throw new RuntimeException("아직 구현되지 않았습니다.");
             }
         }
 
         return new CategorySpecificSacRes(new CommonResponse(prodList.size()), prodList);
+    }
+
+    private class SpecificProductServiceContext {
+
+        private Boolean shoppingAvailable = null;
+        private String deviceModelCd;
+
+        public SpecificProductServiceContext(String deviceModelCd) {
+            this.deviceModelCd = deviceModelCd;
+        }
+
+        public Boolean isShoppingAvailable() {
+            if(shoppingAvailable == null) {
+                SupportDevice supportDevice = displayCommonService.getSupportDeviceInfo(deviceModelCd);
+                if(supportDevice == null)
+                    shoppingAvailable = false;
+                else
+                    shoppingAvailable = "Y".equals(supportDevice.getSclShpgSprtYn());
+            }
+
+            return shoppingAvailable;
+        }
     }
 }

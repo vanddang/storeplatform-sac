@@ -1220,11 +1220,11 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateSpecificShoppingProduct(com
 	 * .skplanet.storeplatform.sac.display.meta.vo.MetaInfo)
 	 */
+    // 로직은 generateShoppingProduct와 동일함
 	@Override
 	public Product generateSpecificShoppingProduct(MetaInfo metaInfo) {
 		Product product = new Product();
 
-		// Identifier 설정
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
 		product.setPrice(this.shoppingGenerator.generatePrice(metaInfo));
@@ -1234,10 +1234,11 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(this.shoppingGenerator.generateRights(metaInfo));
 		product.setContributor(this.shoppingGenerator.generateContributor(metaInfo));
 		product.setSalesOption(this.shoppingGenerator.generateSalesOption(metaInfo));
-		// product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
-		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
-		return product;
+
+        appendMileageInfo(metaInfo, product);
+
+        return product;
 	}
 
 	/*

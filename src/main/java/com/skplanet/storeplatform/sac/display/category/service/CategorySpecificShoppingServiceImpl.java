@@ -89,18 +89,14 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 
 		reqMap.put("tenantId", tenantHeader.getTenantId());
 		reqMap.put("langCd", tenantHeader.getLangCd());
-        reqMap.put("productId", req.getProductId());
+        reqMap.put("catalogId", req.getProductId());
         reqMap.put("specialProdId", Strings.emptyToNull(req.getSpecialProdId()));
 
         reqMap.put("filterApplyDt", StringUtils.defaultString(req.getSaleDtUseYn(), "N").equals("N"));
         reqMap.put("sellingOnly", StringUtils.defaultString(req.getIncludeProdStopStatus(), "Y").equals("N"));
 
 		reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
-		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		reqMap.put("channelContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
 		if (!this.commonSupportDeviceShopping(header))
             return makeEmptyResponse();
@@ -115,7 +111,7 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
         retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
 
         // 쇼핑 Response Generate
-        Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+        Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
         if (StringUtils.isNotEmpty(req.getSpecialProdId())) {
             product.setSpecialCouponId(retMetaInfo.getSpecialCouponId());
             product.setSpecialProdYn(retMetaInfo.getSpecialSale());
