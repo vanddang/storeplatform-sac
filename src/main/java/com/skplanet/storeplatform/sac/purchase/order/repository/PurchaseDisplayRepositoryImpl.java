@@ -9,11 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.*;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -22,30 +22,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.CmpxInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.IapProductInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PossLendProductInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdateSpecialPriceSoldOutSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdateSpecialPurchaseCountSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoList;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductListRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.SpecialPriceSoldOutReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.SpecialPurchaseCountSacReq;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -197,6 +177,11 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	 */
 	@Override
 	public List<CmpxProductInfoList> searchCmpxProductList(CmpxProductSacReq cmpxProductSacReq) {
+		// SAC에서는 구매시 판매중인 상품만 조회한다
+		List<String> episodeProdStatusCdList = new ArrayList<String>();
+		episodeProdStatusCdList.add(PurchaseConstants.PRODUCT_STATUS_SALE);
+		cmpxProductSacReq.setEpisodeProdStatusCdList(episodeProdStatusCdList);
+
 		CmpxProductListRes cmpxProductListRes = this.cmpxInfoSCI.searchCmpxProductList(cmpxProductSacReq);
 		List<CmpxProductInfoList> cmpxProductInfoList = cmpxProductListRes.getCmpxProductInfoList();
 		if (cmpxProductInfoList == null) {
