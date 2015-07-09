@@ -228,17 +228,32 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 						prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE);
 					}
 
-					// 비과금 구매요청 시 - 종료일자가 있는 경우와 T프리미엄인 경우 이용일자 재산정 안함
 					if (purchaseOrderInfo.isFreeChargeReq()) {
-						if (StringUtils.isNotBlank(product.getUseExprDt())) {
-							prchsDtlMore
-									.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
+						// 비과금 구매요청 시 - 종료일자가 있는 경우와 T프리미엄인 경우 이용일자 재산정 안함
+						if (StringUtil.equals(purchaseOrderInfo.getPrchsReqPathCd(),
+								PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM)
+								|| StringUtils.isNotBlank(product.getUseExprDt())
+								|| StringUtils.isNotBlank(product.getDwldExprDt())) {
+							prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE);
+						}
+
+						if (StringUtils.isNotBlank(product.getUseExprDt()) // 이용 종료기간, 다운로드 종료기간이 모두 있는 경우
+								&& StringUtils.isNotBlank(product.getDwldExprDt())) {
+							prchsDtlMore.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
 											.getUseExprDt() + "235959");
+							prchsDtlMore.setDwldExprDt(
+									product.getDwldExprDt().length() == 14 ? product.getDwldExprDt() :
+											product.getDwldExprDt() + "235959");
+						} else if (StringUtils.isNotBlank(product.getUseExprDt()) // 이용 종료기간만 있는 경우
+								&& StringUtils.isBlank(product.getDwldExprDt())) {
+							prchsDtlMore.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
+									.getUseExprDt() + "235959");
 							prchsDtlMore.setDwldExprDt(prchsDtlMore.getUseExprDt());
-							prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE);
-						} else if (StringUtil.equals(purchaseOrderInfo.getPrchsReqPathCd(),
-								PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM)) {
-							prchsDtlMore.setUsePeriodRedateCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE);
+						} else if (StringUtils.isBlank(product.getUseExprDt()) // 다운로드 종료기간만 있는 경우
+								&& StringUtils.isNotBlank(product.getDwldExprDt())) {
+							prchsDtlMore.setDwldExprDt(product.getDwldExprDt().length() == 14 ? product.getDwldExprDt() : product
+									.getDwldExprDt() + "235959");
+							prchsDtlMore.setUseExprDt(prchsDtlMore.getDwldExprDt());
 						}
 					}
 

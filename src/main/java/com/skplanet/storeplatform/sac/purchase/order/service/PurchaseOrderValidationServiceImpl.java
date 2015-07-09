@@ -653,6 +653,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// 비과금 구매요청 경우, 이용종료일시 세팅
 			if (purchaseOrderInfo.isFreeChargeReq()) {
 				purchaseProduct.setUseExprDt(reqProduct.getUseExprDt());
+				purchaseProduct.setDwldExprDt(reqProduct.getDwldExprDt());
 			}
 
 			// 쇼핑특가 쿠폰 정보 저장
