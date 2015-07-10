@@ -74,8 +74,8 @@
                     <if test='plus19Yn == "N"'> /* 19+ 상품포함하여 조회하지 않음 */
                        AND (PD.PLUS19_YN IS NULL OR PD.PLUS19_YN  = 'N') 
                     </if>
-                    <if test='plus19Yn == "Y"'> /* 19+ 상품 포함하여 조회 */
-                       AND (PD.PLUS19_YN IS NULL OR PD.PLUS19_YN  = 'Y')
+                    <if test='plus19Yn == "Y"'> /* 19+ 상품만 조회 */
+                       AND PD.PLUS19_YN  = 'Y'
                     </if>       
 					AND TP.EXPO_YN = 'Y'
 					<if test='kind != null and kind != ""'>
@@ -307,6 +307,9 @@
                                 #{prodGradeCd}
                               </foreach>                        
                 </if>              
+                <if test='plus19Yn == "Y"'>
+                    AND PD.PLUS19_YN = 'Y'
+                </if>    
                 <if test='plus19Yn == "N"'>
                     AND (PD.PLUS19_YN = 'N' OR PD.PLUS19_YN IS NULL)
                 </if>    
