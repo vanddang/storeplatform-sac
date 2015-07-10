@@ -246,6 +246,9 @@
 				    #{cmpxProdGradeCd}
 				</foreach>
             </if>    
+            <if test='plus19Yn == "Y"'>
+            AND PD.PLUS19_YN = 'Y'
+            </if>
             <if test='plus19Yn == "N"'>
             AND (PD.PLUS19_YN = 'N' OR PD.PLUS19_YN IS NULL)
             </if>
