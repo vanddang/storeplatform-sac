@@ -92,12 +92,13 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
                     }
 
                     @Override
+                    @SuppressWarnings("unchecked")
                     public void store(SprtDevParam param, SprtDev value, Plandasj redis) {
                         JSONObject o = new JSONObject();
                         o.put("scId", value.getScId());
                         o.put("osVer", value.getOsVer());
                         o.put("ver", value.getVer());
-                        o.put("verCd", new Integer(value.getVerCd()));
+                        o.put("verCd", value.getVerCd());
 
                         redis.hset(SacRedisKeys.sprtdev(param.getProdId()), param.getDeviceModelCd(), o.toJSONString());
 

@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -79,8 +80,6 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 		CommonResponse commonResponse = new CommonResponse();
 
 		List<Product> productList = new ArrayList<Product>();
-
-		Product product = null;
 
 		String stdDt = this.commonService.getBatchStandardDateString(tenantHeader.getTenantId(),
 				downloadBestSacReq.getListId());
@@ -131,10 +130,8 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 			DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
 					.detailInformation(detailInformationSacReq);
 
-			Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
-			// sellerMbrSac = new SellerMbrSac();
-			while (it.hasNext()) {
-				String key = it.next();
+			Map<String, List<SellerMbrSac>> sellerMap = detailInformationSacRes.getSellerMbrListMap();
+			for (String key : sellerMap.keySet()) {
 				List<SellerMbrSac> sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
 				arraySellerKey = new String[sellerMbrs.size()];
 				for (int i = 0; i < sellerMbrs.size(); i++) {
@@ -151,21 +148,14 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 		this.log.info("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformation takes {} ms",
 				(end - start));
 
-		List<MetaInfo> downloadBestList = null;
 		// OpenApi 다운로드 Best 상품 조회
-		downloadBestList = this.commonDAO.queryForList("OpenApi.searchDownloadBestList", downloadBestSacReq,
+		List<MetaInfo> downloadBestList = this.commonDAO.queryForList("OpenApi.searchDownloadBestList", downloadBestSacReq,
 				MetaInfo.class);
 
 		if (downloadBestList.size() != 0) {
 
-			Iterator<MetaInfo> iterator = downloadBestList.iterator();
-			List<Identifier> identifierList = new ArrayList<Identifier>();
-			while (iterator.hasNext()) {
-
-				MetaInfo metaInfo = iterator.next();
-
-				product = new Product();
-
+			for (MetaInfo metaInfo : downloadBestList) {
+				Product product = new Product();
 				product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo)); // 상품 ID
 
 				/*

@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 03. 05 Updated by : 정희원, SK 플래닛.
  */
 public class AppMetaParam extends CommonInfo {
-    private static long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; // add final reserved word to solve Sonar Qube critical problem by namkyu.park@sk.com
 
     private String langCd;
     private String channelId;

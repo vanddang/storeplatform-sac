@@ -95,7 +95,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         // 현재일시 및 요청만료일시 조회
 		MetaInfo dateInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
-		String sysDate = dateInfo.getSysDate();
 		String reqExpireDate = dateInfo.getExpiredDate();
 
 		String idType = ebookReq.getIdType();

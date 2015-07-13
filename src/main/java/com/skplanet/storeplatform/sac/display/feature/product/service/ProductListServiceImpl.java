@@ -146,9 +146,8 @@ public class ProductListServiceImpl implements ProductListService{
 
 		ListProduct lastProd = prodListFromDB.get( prodListFromDB.size() - 1 );
 
-		lpCriteria.setLastExpoOrd(    new Integer(lastProd.getExpoOrd()   ) );
-		lpCriteria.setLastExpoOrdSub( new Integer(lastProd.getExpoOrdSub()) );
-
+		lpCriteria.setLastExpoOrd(    Integer.valueOf(lastProd.getExpoOrd()) );
+		lpCriteria.setLastExpoOrdSub( Integer.valueOf(lastProd.getExpoOrdSub()) );
 	}
 
 	private void removeRedundantLastItem(ProductListSacRes response, ProductListSacReq requestedCount) {
@@ -215,8 +214,8 @@ public class ProductListServiceImpl implements ProductListService{
 		String topMenuId=listProd.getTopMenuId();
 		String svcGrpCd=listProd.getSvcGrpCd();
 
-		MetaInfo metaInfo = null; // 메타정보 VO
-		AlbumMeta albumMeta = null; // 메타정보 VO
+		MetaInfo metaInfo; // 메타정보 VO
+		AlbumMeta albumMeta; // 메타정보 VO
 		ProductBasicInfo productInfo = new ProductBasicInfo(); // 메타정보 조회용 상품 파라미터
 		Map<String, Object> paramMap = new HashMap<String, Object>(); // 메타정보 조회용 파라미터
 

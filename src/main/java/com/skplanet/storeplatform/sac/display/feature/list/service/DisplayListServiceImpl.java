@@ -83,7 +83,6 @@ public class DisplayListServiceImpl implements DisplayListService{
 		if (StringUtils.isNotEmpty(path)) {
 			List<Source> sl = new ArrayList<Source>();
 			Source source = new Source();
-			source = new Source();
 			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 			source.setMediaType(DisplayCommonUtil.getMimeType(path));
 			source.setUrl(listParam.getImgPath());
