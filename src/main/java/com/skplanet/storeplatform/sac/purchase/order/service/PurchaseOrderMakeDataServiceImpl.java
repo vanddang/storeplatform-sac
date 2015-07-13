@@ -590,6 +590,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		membershipReserve.setProcStatusCd(mileageSubInfo.getProcStatusCd()); // 처리상태코드
 		membershipReserve.setRegId(prchsDtlMore.getSystemId());
 		membershipReserve.setUpdId(prchsDtlMore.getSystemId());
+		membershipReserve.setPromId(mileageSubInfo.getPromId()); // 프로모션 ID
 
 		membershipReserveList.add(membershipReserve);
 
@@ -819,7 +820,10 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append("&prodCaseCd=").append(StringUtils.defaultString(product.getProdCaseCd()))
 							.append("&s2sAutoYn=").append(StringUtils.defaultString(product.getS2sAutoPrchsYn()))
 							.append("&s2sYn=").append(StringUtils.isNotBlank(product.getSearchPriceUrl()) ? "Y" : "N")
-							.append("&svcGrpCd=").append(StringUtils.defaultString(product.getSvcGrpCd()));
+							.append("&svcGrpCd=").append(StringUtils.defaultString(product.getSvcGrpCd()))
+							.append("&").append(PurchaseConstants.IF_DISPLAY_PROM_ID).append("=").append(StringUtils.defaultString(product.getPromId())) // 이벤트 프로모션 ID
+							.append("&").append(PurchaseConstants.IF_DISPLAY_ACLMETHOD_CD).append("=").append(StringUtils.defaultString(product.getAcmlMethodCd())) // 프로모션 적립 방법
+							.append("&").append(PurchaseConstants.IF_DISPLAY_ACML_DT).append("=").append(StringUtils.defaultString(product.getAcmlDt())); // 프로모션 적립 방법
 
 					// 대여정보: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1

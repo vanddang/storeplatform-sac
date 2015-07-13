@@ -326,4 +326,9 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** TSTORE 고객센터 전화번호 */
 	public static final String TSTORE_CALL_CENTER_MDN = "16006573";
 
+	/** 연동 데이터 관리 **/
+	/** 전시 응답 규격 **/
+	public static final String IF_DISPLAY_PROM_ID = "promId";
+	public static final String IF_DISPLAY_ACLMETHOD_CD = "acmlMethodCd";
+	public static final String IF_DISPLAY_ACML_DT = "acmlDt";
 }

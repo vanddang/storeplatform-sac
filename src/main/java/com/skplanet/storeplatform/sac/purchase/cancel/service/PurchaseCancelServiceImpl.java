@@ -9,17 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.sap.sci.SapPurchaseSCI;
 import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiEcReq;
@@ -55,19 +44,23 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.Coupo
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.repository.PurchaseCancelRepository;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacResult;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.*;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 구매 취소 Service Implements.
@@ -678,7 +671,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		/** 마일리지 적립 정보 조회. */
 		MembershipReserve membershipReserveReq = new MembershipReserve();
 		membershipReserveReq.setTenantId(prchsDtlSacParam.getTenantId());
-		membershipReserveReq.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_TMEMBERSHIP);
+		membershipReserveReq.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_CASH);
 		membershipReserveReq.setPrchsId(prchsDtlSacParam.getPrchsId());
 		membershipReserveReq.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 		MembershipReserve membershipReserveRes = this.membershipReserveSCI.getSaveInfo(membershipReserveReq);

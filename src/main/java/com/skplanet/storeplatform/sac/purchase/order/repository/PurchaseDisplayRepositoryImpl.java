@@ -94,11 +94,17 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 
 			purchaseProduct = new PurchaseProduct(displayInfo);
 
+			/**
+			 * 청소년 이용불가 상품의 연령정보 validation
+			 */
 			if (StringUtils.equals(purchaseProduct.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19)
 					&& (purchaseProduct.getAgeAllowedFrom() == null || purchaseProduct.getAgeAllowedFrom() < 18)) {
 				throw new StorePlatformException("SAC_PUR_5119", purchaseProduct.getAgeAllowedFrom());
 			}
 
+			/**
+			 * 이용기간 정보 validation
+			 */
 			if (StringUtils.isBlank(purchaseProduct.getUsePeriodUnitCd())
 					|| ((StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
 							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) == false) && StringUtils
@@ -107,6 +113,9 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 						purchaseProduct.getUsePeriodUnitCd(), purchaseProduct.getUsePeriod());
 			}
 
+			/**
+			 * 자동 결제 상품의 이용기간 validation
+			 */
 			if (StringUtils.equals(purchaseProduct.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
 				if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
 						PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) {
