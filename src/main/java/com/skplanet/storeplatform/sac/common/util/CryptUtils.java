@@ -196,7 +196,7 @@ public class CryptUtils {
 			return null;
 		}
 		int length = digits.length();
-		if (length % 2 == 1) {
+		if (length < 1 || length % 2 == 1) {
 			throw new IllegalArgumentException("For input string: \"" + digits + "\"");
 		}
 		length = length / 2;
