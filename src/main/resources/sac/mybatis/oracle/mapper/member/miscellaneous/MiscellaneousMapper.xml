@@ -249,7 +249,6 @@
           COUNT(1) AS resultCnt
      FROM tb_cm_svc_auth
     WHERE tenant_id = #{tenantId}
-      AND system_id = #{systemId}
       AND auth_type_cd = #{authTypeCd}
       AND auth_compt_yn = 'Y'
       AND auth_mdn = #{authMdn}
