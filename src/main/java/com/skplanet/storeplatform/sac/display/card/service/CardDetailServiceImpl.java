@@ -335,9 +335,8 @@ public class CardDetailServiceImpl implements CardDetailService {
 
 		Map<String, String> mapValue = injtVarObj.getValue();
 		if (mapValue != null) {
-			for (String key : mapValue.keySet()) {
-				String value = mapValue.get(key);
-				urlParam.put(key, value);
+			for (Map.Entry<String, String> entry : mapValue.entrySet()) {
+				urlParam.put(entry.getKey(), entry.getValue());
 			}
 		}
 	}
