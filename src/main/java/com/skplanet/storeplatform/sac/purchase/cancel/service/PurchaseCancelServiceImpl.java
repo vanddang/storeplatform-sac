@@ -671,7 +671,6 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		/** 마일리지 적립 정보 조회. */
 		MembershipReserve membershipReserveReq = new MembershipReserve();
 		membershipReserveReq.setTenantId(prchsDtlSacParam.getTenantId());
-		membershipReserveReq.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_CASH);
 		membershipReserveReq.setPrchsId(prchsDtlSacParam.getPrchsId());
 		membershipReserveReq.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 		MembershipReserve membershipReserveRes = this.membershipReserveSCI.getSaveInfo(membershipReserveReq);

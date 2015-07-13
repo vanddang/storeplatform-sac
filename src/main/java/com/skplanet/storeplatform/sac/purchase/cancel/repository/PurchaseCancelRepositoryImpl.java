@@ -1025,7 +1025,6 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	public MembershipReserve getMembershipReserve(PrchsSacParam prchsSacParam) {
 		MembershipReserve membershipReserveReq = new MembershipReserve();
 		membershipReserveReq.setTenantId(prchsSacParam.getTenantId());
-		membershipReserveReq.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_CASH);
 		membershipReserveReq.setPrchsId(prchsSacParam.getPrchsId());
 		membershipReserveReq.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 
