@@ -591,6 +591,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		membershipReserve.setRegId(prchsDtlMore.getSystemId());
 		membershipReserve.setUpdId(prchsDtlMore.getSystemId());
 		membershipReserve.setPromId(mileageSubInfo.getPromId()); // 프로모션 ID
+		membershipReserve.setSaveDt(mileageSubInfo.getSaveDt());
 
 		membershipReserveList.add(membershipReserve);
 
