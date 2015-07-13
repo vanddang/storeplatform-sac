@@ -15,7 +15,7 @@ public class MileageSubInfo extends CommonInfo {
 	private String saveTypeCd; // 처리타입코드
 	private String procStatusCd; // 처리상태코드
 	private String prodNm; // 상품명
-	private String promId; // 프로모션 ID
+	private Integer promId; // 프로모션 ID
 	private String saveDt; // 적립예정일 - 전시 acmlDt매핑
 
 	/**
@@ -169,25 +169,6 @@ public class MileageSubInfo extends CommonInfo {
 	}
 
 	/**
-	 * Gets prom id.
-	 *
-	 * @return the prom id
-	 */
-	public String getPromId() {
-		return promId;
-	}
-
-	/**
-	 * Sets prom id.
-	 *
-	 * @param promId
-	 *            the prom id
-	 */
-	public void setPromId(String promId) {
-		this.promId = promId;
-	}
-
-	/**
 	 * Gets save dt.
 	 *
 	 * @return the save dt
@@ -204,5 +185,24 @@ public class MileageSubInfo extends CommonInfo {
 	 */
 	public void setSaveDt(String saveDt) {
 		this.saveDt = saveDt;
+	}
+
+	/**
+	 * Gets prom id.
+	 *
+	 * @return the prom id
+	 */
+	public Integer getPromId() {
+		return promId;
+	}
+
+	/**
+	 * Sets prom id.
+	 *
+	 * @param promId
+	 *            the prom id
+	 */
+	public void setPromId(Integer promId) {
+		this.promId = promId;
 	}
 }

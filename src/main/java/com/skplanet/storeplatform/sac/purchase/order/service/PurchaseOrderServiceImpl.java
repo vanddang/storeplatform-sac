@@ -1255,7 +1255,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			MileageSubInfo mileageSubInfo = new MileageSubInfo();
 			mileageSubInfo.setTypeCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_ACLMETHOD_CD)); // 프로모션 적립방법 - 캐시, 게임 캐시
-			mileageSubInfo.setPromId(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_PROM_ID)); // 이벤트 프로모션 ID
+			mileageSubInfo.setPromId(Integer.parseInt(StringUtils.defaultIfBlank(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_PROM_ID), "0"))); // 이벤트 프로모션 ID
 			mileageSubInfo.setSaveDt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_ACML_DT)); // 적립일
 			mileageSubInfo.setUserGrdCd(userGrade);
 			mileageSubInfo.setProdSaveRate(rateMap.get(userGrade));

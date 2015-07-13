@@ -152,8 +152,11 @@ public class PurchaseProduct extends PaymentInfo {
 		this.setBnsCashAmt(displayInfo.getBnsCashAmt());
 		this.setBnsUsePeriodUnitCd(displayInfo.getBnsUsePeriodUnitCd());
 		this.setBnsUsePeriod(displayInfo.getBnsUsePeriod() == null ? 0 : displayInfo.getBnsUsePeriod());
-		// T멤버쉽 적립율
+		// 멤버쉽
 		this.setMileageRateMap(displayInfo.getMileageRateMap());
+		this.setAcmlDt(displayInfo.getAcmlDt());
+		this.setAcmlMethodCd(displayInfo.getAcmlMethodCd());
+		this.setPromId(displayInfo.getPromId());
 		// S2S
 		this.setSearchPriceUrl(displayInfo.getSearchPriceUrl());
 

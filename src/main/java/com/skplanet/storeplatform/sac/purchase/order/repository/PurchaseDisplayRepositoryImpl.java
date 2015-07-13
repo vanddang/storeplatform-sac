@@ -79,6 +79,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 		req.setDeviceModelCd(deviceModelCd);
 		req.setProdIdList(prodIdList);
 
+		/** 전시 연동 **/
 		PaymentInfoSacRes res = this.purchaseProductSCI.searchPaymentInfo(req);
 		List<PaymentInfo> purchaseProductList = res.getPaymentInfoList();
 		if (purchaseProductList.size() < 1) {
