@@ -1236,7 +1236,7 @@ public class LoginServiceImpl implements LoginService {
 
 		String os = requestHeader.getDeviceHeader().getOs();
 
-		if (StringUtils.isNotBlank(os)) {
+		if (StringUtils.isNotBlank(os) && os.contains("/")) {
 			simpleLoginRequest.setDeviceOsNm(os.substring(0, os.lastIndexOf("/")));
 			simpleLoginRequest.setDeviceOsVersion(os.substring(os.lastIndexOf("/") + 1, os.length()));
 		}
@@ -2968,7 +2968,7 @@ public class LoginServiceImpl implements LoginService {
 
 		String os = requestHeader.getDeviceHeader().getOs();
 
-		if (StringUtils.isNotBlank(os)) {
+		if (StringUtils.isNotBlank(os) && os.contains("/")) {
 			loginReq.setDeviceOsNm(os.substring(0, os.lastIndexOf("/")));
 			loginReq.setDeviceOsVersion(os.substring(os.lastIndexOf("/") + 1, os.length()));
 		}
