@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.system.cache;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -23,7 +25,8 @@ public class EvictProductMetaSacRes extends CommonInfo {
 
     private String prodType;
 
-    private String prodId;
+    
+    private List<String> prodId;
 
     public String getProdType() {
         return prodType;
@@ -33,11 +36,19 @@ public class EvictProductMetaSacRes extends CommonInfo {
         this.prodType = prodType;
     }
 
-    public String getProdId() {
-        return prodId;
-    }
+	/**
+	 * @return the prodId
+	 */
+	public List<String> getProdId() {
+		return prodId;
+	}
 
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
-    }
+	/**
+	 * @param prodId the prodId to set
+	 */
+	public void setProdId(List<String> prodId) {
+		this.prodId = prodId;
+	}
+
+ 
 }
