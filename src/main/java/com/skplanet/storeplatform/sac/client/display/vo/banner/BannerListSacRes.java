@@ -24,8 +24,8 @@ public class BannerListSacRes extends CommonInfo {
 
     private String startKey;
     private String hasNext; // Y/N
+	private Integer count;
 
-    private CommonResponse commonResponse;
     private List<Banner> bannerList;
 
     public String getStartKey() {
@@ -44,15 +44,15 @@ public class BannerListSacRes extends CommonInfo {
         this.hasNext = hasNext;
     }
 
-    public CommonResponse getCommonResponse() {
-        return commonResponse;
-    }
+	public Integer getCount() {
+		return count;
+	}
 
-    public void setCommonResponse(CommonResponse commonResponse) {
-        this.commonResponse = commonResponse;
-    }
+	public void setCount(Integer count) {
+		this.count = count;
+	}
 
-    public List<Banner> getBannerList() {
+	public List<Banner> getBannerList() {
         return bannerList;
     }
 
