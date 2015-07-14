@@ -239,20 +239,23 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 						if (StringUtils.isNotBlank(product.getUseExprDt()) // 이용 종료기간, 다운로드 종료기간이 모두 있는 경우
 								&& StringUtils.isNotBlank(product.getDwldExprDt())) {
-							prchsDtlMore.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
+							prchsDtlMore
+									.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
 											.getUseExprDt() + "235959");
-							prchsDtlMore.setDwldExprDt(
-									product.getDwldExprDt().length() == 14 ? product.getDwldExprDt() :
+							prchsDtlMore
+									.setDwldExprDt(product.getDwldExprDt().length() == 14 ? product.getDwldExprDt() :
 											product.getDwldExprDt() + "235959");
 						} else if (StringUtils.isNotBlank(product.getUseExprDt()) // 이용 종료기간만 있는 경우
 								&& StringUtils.isBlank(product.getDwldExprDt())) {
-							prchsDtlMore.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
-									.getUseExprDt() + "235959");
+							prchsDtlMore
+									.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
+											.getUseExprDt() + "235959");
 							prchsDtlMore.setDwldExprDt(prchsDtlMore.getUseExprDt());
 						} else if (StringUtils.isBlank(product.getUseExprDt()) // 다운로드 종료기간만 있는 경우
 								&& StringUtils.isNotBlank(product.getDwldExprDt())) {
-							prchsDtlMore.setDwldExprDt(product.getDwldExprDt().length() == 14 ? product.getDwldExprDt() : product
-									.getDwldExprDt() + "235959");
+							prchsDtlMore
+									.setDwldExprDt(product.getDwldExprDt().length() == 14 ? product.getDwldExprDt() : product
+											.getDwldExprDt() + "235959");
 							prchsDtlMore.setUseExprDt(prchsDtlMore.getDwldExprDt());
 						}
 					}
@@ -822,9 +825,10 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append("&s2sAutoYn=").append(StringUtils.defaultString(product.getS2sAutoPrchsYn()))
 							.append("&s2sYn=").append(StringUtils.isNotBlank(product.getSearchPriceUrl()) ? "Y" : "N")
 							.append("&svcGrpCd=").append(StringUtils.defaultString(product.getSvcGrpCd()))
-							.append("&").append(PurchaseConstants.IF_DISPLAY_PROM_ID).append("=").append(product.getPromId()) // 이벤트 프로모션 ID
-							.append("&").append(PurchaseConstants.IF_DISPLAY_ACLMETHOD_CD).append("=").append(StringUtils.defaultString(product.getAcmlMethodCd())) // 프로모션 적립 방법
-							.append("&").append(PurchaseConstants.IF_DISPLAY_ACML_DT).append("=").append(StringUtils.defaultString(product.getAcmlDt())); // 프로모션 적립 방법
+							.append(appendResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID,
+									product.getPromId() == null ? "0" : String.valueOf(product.getPromId()))) // 이벤트 프로모션 ID
+							.append(appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,product.getAcmlMethodCd())) // 프로모션 적립 방법
+							.append(appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT, product.getAcmlDt())); // 프로모션 적립 방법
 
 					// 대여정보: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1
@@ -866,10 +870,18 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 								.append(StringUtils.defaultString(product.getCmpxProdBookClsfCd()));
 					}
 
+					// 부정결제 참조용 데이터 추가
+					sbReserveData.append(appendResvData(PurchaseConstants.IF_PUR_ORDER_REQ_FLAG,purchaseOrderInfo.getFlag()));
 					prchsDtlMoreList.get(idx++).setPrchsResvDesc(sbReserveData.toString());
 				}
 			}
 		}
+	}
+
+	private String appendResvData(String key, String value){
+		StringBuffer sb = new StringBuffer("&");
+		sb.append(key).append("=").append(StringUtils.defaultString(value));
+		return sb.toString();
 	}
 
 	/**

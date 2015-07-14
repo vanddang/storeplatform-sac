@@ -45,12 +45,13 @@ public class MembershipReserveServiceImpl implements MembershipReserveService {
 	 * @return 마일리지 적립 예상 총 금액
 	 */
 	@Override
-	public int searchSaveExpectTotalAmt(String tenantId, String insdUsermbrNo, String targetDt, String saveDt) {
+	public int searchSaveExpectTotalAmt(String tenantId, String insdUsermbrNo, String targetDt, String saveDt, int promId) {
 		SearchSaveExpectTotalAmtScReq searchSaveExpectTotalAmtScReq = new SearchSaveExpectTotalAmtScReq();
 		searchSaveExpectTotalAmtScReq.setTenantId(tenantId);
 		searchSaveExpectTotalAmtScReq.setInsdUsermbrNo(insdUsermbrNo);
 		searchSaveExpectTotalAmtScReq.setTargetDt(targetDt);
 		searchSaveExpectTotalAmtScReq.setSaveDt(saveDt);
+		searchSaveExpectTotalAmtScReq.setPromId(promId);
 
 		SearchSaveExpectTotalAmtScRes searchSaveExpectTotalAmtScRes = this.membershipReserveSCI
 				.searchSaveExpectTotalAmt(searchSaveExpectTotalAmtScReq);

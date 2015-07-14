@@ -698,6 +698,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		final String purchase_inflow_channel = prchsDtlMore.getPrchsCaseCd();
 		final String mbr_id = reservedDataMap.get("userId");
 		final String device_id = reservedDataMap.get("deviceId");
+		final int promId = Integer.parseInt(StringUtils.defaultIfBlank(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID), "0"));
 		final String purchase_id = prchsDtlMore.getPrchsId();
 
 		new TLogUtil().set(new ShuttleSetter() {
@@ -837,8 +838,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// (이번회) T마일리지 적립예정 금액
 		String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 
-		int reserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(), payUserKey,
-				targetDt, null);
+		int reserveAmt =0;
+		if(promId>0)
+			reserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(), payUserKey,
+				targetDt, null, promId);
 		res.settMileageReserveAmt(reserveAmt);
 
 		// ------------------------------------------------------------------------------------------------
@@ -975,6 +978,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 특가 상품 여부
 		boolean bSpecialProd = StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"));
+
+		final int promId = Integer.parseInt(StringUtils.defaultIfBlank(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID), "0"));
 
 		String currentDate = this.purchaseOrderSCService.selectCurrentDate();
 
@@ -1254,9 +1259,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			String userGrade = this.purchaseMemberRepository.searchUserGrade(payUserKey); // 등급
 
 			MileageSubInfo mileageSubInfo = new MileageSubInfo();
-			mileageSubInfo.setTypeCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_ACLMETHOD_CD)); // 프로모션 적립방법 - 캐시, 게임 캐시
-//			mileageSubInfo.setPromId(Integer.parseInt(StringUtils.defaultIfBlank(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_PROM_ID), "0"))); // 이벤트 프로모션 ID
-			mileageSubInfo.setSaveDt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_ACML_DT)); // 적립일
+			mileageSubInfo.setTypeCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD)); // 프로모션 적립방법 - 캐시, 게임 캐시
+			mileageSubInfo.setPromId(Integer.parseInt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID))); // 이벤트 프로모션 ID
+			mileageSubInfo.setSaveDt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_ACML_DT)); // 적립일
 			mileageSubInfo.setUserGrdCd(userGrade);
 			mileageSubInfo.setProdSaveRate(rateMap.get(userGrade));
 			mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
@@ -1313,7 +1318,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					// 적립예정 이력 총 금액
 					String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 					int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(
-							prchsDtlMore.getTenantId(), payUserKey, targetDt, null);
+							prchsDtlMore.getTenantId(), payUserKey, targetDt, null, promId);
 
 					int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
 							prchsDtlMore.getTenantProdGrpCd());
@@ -1338,6 +1343,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					ReflectionToStringBuilder.toString(mileageSubInfo, ToStringStyle.SHORT_PREFIX_STYLE));
 
 			List<MembershipReserve> membershipReserveList = null;
+
 			if (mileageSubInfo.getTargetPaymentAmt() > 0 && mileageSubInfo.getProdSaveRate() > 0) {
 				membershipReserveList = this.purchaseOrderMakeDataService.makeMembershipReserveList(prchsDtlMoreList,
 						mileageSubInfo);
@@ -1713,8 +1719,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 				// 적립예정 이력 총 금액
 				String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
-				int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
-						userKey, targetDt, null);
+				int preReserveAmt = 0;
+				if(purchaseProduct.getPromId() !=null &&  purchaseProduct.getPromId() > 0)
+					preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
+						userKey, targetDt, null, purchaseProduct.getPromId());
 
 				int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
 						prchsDtlMore.getTenantProdGrpCd());
