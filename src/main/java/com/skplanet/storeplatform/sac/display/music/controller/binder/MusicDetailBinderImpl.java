@@ -115,6 +115,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
 
         product.setIdentifierList(newIdentifierList(musicDetail));
         product.setProductExplain(musicDetail.getProdBaseDesc());
+        product.setProductDetailExplain(musicDetail.getProdDtlDesc());
         product.setTitle(newTitle(musicDetail));
         product.setPrice(newPrice(musicDetail));
         product.setAccrual(newAccrual(musicDetail));

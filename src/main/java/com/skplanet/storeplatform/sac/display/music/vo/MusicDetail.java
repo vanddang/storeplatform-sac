@@ -40,6 +40,7 @@ public class MusicDetail extends CommonInfo {
     private String prodStatusCd;
     private String issueDay;
     private String prodBaseDesc;
+    private String prodDtlDesc;
     private String albumTypeNm;
     private String cid;
     private String deviceModelCd;
@@ -94,6 +95,14 @@ public class MusicDetail extends CommonInfo {
 
     public void setProdBaseDesc(String prodBaseDesc) {
         this.prodBaseDesc = prodBaseDesc;
+    }
+
+    public String getProdDtlDesc() {
+        return prodDtlDesc;
+    }
+
+    public void setProdDtlDesc(String prodDtlDesc) {
+        this.prodDtlDesc = prodDtlDesc;
     }
 
     public String getProdStatusCd() {

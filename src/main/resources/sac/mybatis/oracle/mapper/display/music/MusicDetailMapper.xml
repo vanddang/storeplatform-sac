@@ -32,6 +32,7 @@
             ARTIST.IMG_FILE_PATH AS ARTIST_THM_PATH,
             TP.PROD_STATUS_CD,
             PDESC.PROD_BASE_DESC,
+            PDESC.PROD_DTL_DESC,
             EPD.CID,
             MM.ALBUM_TYPE_NM,
             SD.DEVICE_MODEL_CD,
