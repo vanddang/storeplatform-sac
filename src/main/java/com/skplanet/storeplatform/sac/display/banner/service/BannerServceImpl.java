@@ -1047,9 +1047,8 @@ public class BannerServceImpl implements BannerService {
 
 		setHasNext(response, param.getCount(), resultList);
 		setStartKeyIntoResponse(response, resultList);
-
+		response.setCount(resultList.size());
 		response.setBannerList(generateBannerList(resultList));
-		response.setCommonResponse(generateCommonResponse(resultList));
 
 		return response;
 	}
