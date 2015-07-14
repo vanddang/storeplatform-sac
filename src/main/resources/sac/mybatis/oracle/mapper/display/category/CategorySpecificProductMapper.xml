@@ -689,7 +689,7 @@
           <if test='contentsTypeCd == "PD002502"'>
             AND CP.PART_PROD_ID = #{prodId}
           </if>
-          AND P2.TOP_MENU_ID = #{topMenuId} -- NOTICE
+          AND CP.PROD_RSHP_CD = 'DP010802'  -- 채널,에피소드 관계
           AND PI.IMG_CD = #{imageCd}
           AND PI.EXPO_ORD = 1                        /* 노출순서 */
           AND PI.LANG_CD = #{langCd}    /* ko : 한국어 */
