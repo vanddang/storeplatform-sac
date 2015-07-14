@@ -39,8 +39,6 @@ public class ResponseExtractor {
 
 	public static <T> T extractData(HttpResponse response, Class<T> responseType) {
 		String json = extractJson(response);
-//		json = json.replace("[", "");
-//		json = json.replace("]", "");
 		if (hasError(response)) {
 			SacRestClientError errorInfo = SacRestConvertingUtils.convertToData(json, SacRestClientError.class);
 			throw new SacRestClientException(errorInfo);
