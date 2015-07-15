@@ -639,7 +639,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_S2S_UNIT; // S2S 단품: TC09
 
 			} else if (bAutoPrchs
-					&& StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)
+					&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
 					&& StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
 				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
 
