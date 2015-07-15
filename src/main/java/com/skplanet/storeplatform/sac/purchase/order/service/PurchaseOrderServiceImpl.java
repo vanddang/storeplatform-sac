@@ -928,6 +928,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setUsePeriodCnt(StringUtils.defaultIfBlank(reservedDataMap.get("usePeriodCnt"), "")); // 이용기간(일)
 
 		res.setProdKind(reservedDataMap.get("prodCaseCd")); // 쇼핑상품 종류
+		res.setSpecialTypeCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD));
 
 		// IAP P/P 정보 세팅
 		if (StringUtils.equals("Y", reservedDataMap.get("iapYn"))) {

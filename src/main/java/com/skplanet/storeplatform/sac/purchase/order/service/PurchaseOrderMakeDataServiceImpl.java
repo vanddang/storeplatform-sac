@@ -828,7 +828,9 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append(appendResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID,
 									product.getPromId() == null ? "0" : String.valueOf(product.getPromId()))) // 이벤트 프로모션 ID
 							.append(appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,product.getAcmlMethodCd())) // 프로모션 적립 방법
-							.append(appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT, product.getAcmlDt())); // 프로모션 적립 방법
+							.append(appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT, product.getAcmlDt())) // 프로모션 적립 방법
+							.append(appendResvData(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD, product.getSpecialTypeCd())); // 특가상품 유형코드, 팅요금제 상품 유형 코드
+
 
 					// 대여정보: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1

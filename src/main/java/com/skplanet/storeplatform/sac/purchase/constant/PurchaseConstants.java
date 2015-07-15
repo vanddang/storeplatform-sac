@@ -331,6 +331,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String IF_DISPLAY_RES_PROM_ID = "promId";
 	public static final String IF_DISPLAY_RES_ACLMETHOD_CD = "acmlMethodCd";
 	public static final String IF_DISPLAY_RES_ACML_DT = "acmlDt";
+	public static final String IF_DISPLAY_RES_SPECIALTYPE_CD = "specialTypeCd";
 
 	/** 구매 요청 규격 **/
 	public static final String IF_PUR_ORDER_REQ_FLAG = "flag";
