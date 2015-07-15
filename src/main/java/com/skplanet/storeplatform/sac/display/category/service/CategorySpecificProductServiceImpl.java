@@ -33,8 +33,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.skplanet.storeplatform.sac.display.common.ProductType.EbookComic;
-import static com.skplanet.storeplatform.sac.display.common.ProductType.Vod;
+import static com.skplanet.storeplatform.sac.display.common.ProductType.*;
 import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
 
 /**
@@ -72,11 +71,13 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
     public CategorySpecificSacRes searchProductList(SearchProductListParam param) {
 
         ArrayList<Product> prodList = new ArrayList<Product>();
+
+        // 파라메터 작성. 특정 상품 조회는 판매상태를 참조하지 않음
         HashMap<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("tenantId", param.getTenantId());
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("deviceModelCd", param.getDeviceModelCd());  // App만 쓰임
-        //reqMap.put("prodStatusCd", "PD000403");   // FIXME
+
         SpecificProductServiceContext ctx = new SpecificProductServiceContext(param.getDeviceModelCd());
 
         for (String prodId : param.getProdIdList()) {
@@ -86,7 +87,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
             if(baseInfo == null)
                 continue;
 
-            MetaInfo metaInfo = null;
+            MetaInfo metaInfo;
 
             reqMap.put("svcGrpCd", baseInfo.getSvcGrpCd());
             reqMap.put("prodId", prodId);
@@ -143,7 +144,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
                 continue;
 
             // 멀티미디어 상품의 가격 처리
-            if(type == Vod || type == EbookComic) {
+            if(type == Vod || type == VodTv || type == VodMovie|| type == EbookComic || type == Ebook || type == Comic) {
                 CidPrice cidPrice = subInfoManager.getCidPrice(param.getLangCd(), param.getTenantId(), metaInfo.getEpsdCid());
                 if (cidPrice != null) {
                     metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
@@ -152,8 +153,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
             }
 
             // 마일리지 조회시 항상 channel 기준이어야 함
-            // FIXME 멀티미디어 중 cidPrice 검색 결과로 응답해야 하는 경우 마일리지 정보 반영이 늦게 되어야 함
-            metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(param.getTenantId(), baseInfo.getTopMenuId(), baseInfo.getChnlId(), metaInfo.getProdAmt()));
+            metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(param.getTenantId(), baseInfo.getTopMenuId(), baseInfo.getChnlId(), null));
 
             switch(type) {
                 case App:
