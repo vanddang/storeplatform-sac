@@ -33,5 +33,5 @@ public interface MembershipReserveService {
 	 *            적립예정일
 	 * @return 마일리지 적립 예상 총 금액
 	 */
-	public int searchSaveExpectTotalAmt(String tenantId, String insdUsermbrNo, String targetDt, String saveDt, int promId);
+	public int searchSaveExpectTotalAmt(String tenantId, String insdUsermbrNo, int promId);
 }

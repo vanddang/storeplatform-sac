@@ -840,8 +840,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		int reserveAmt =0;
 		if(promId>0)
-			reserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(), payUserKey,
-				targetDt, null, promId);
+			reserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(), payUserKey, promId);
 		res.settMileageReserveAmt(reserveAmt);
 
 		// ------------------------------------------------------------------------------------------------
@@ -1318,7 +1317,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					// 적립예정 이력 총 금액
 					String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 					int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(
-							prchsDtlMore.getTenantId(), payUserKey, targetDt, null, promId);
+							prchsDtlMore.getTenantId(), payUserKey, promId);
 
 					int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
 							prchsDtlMore.getTenantProdGrpCd());
@@ -1722,7 +1721,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				int preReserveAmt = 0;
 				if(purchaseProduct.getPromId() !=null &&  purchaseProduct.getPromId() > 0)
 					preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
-						userKey, targetDt, null, purchaseProduct.getPromId());
+						userKey, purchaseProduct.getPromId());
 
 				int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
 						prchsDtlMore.getTenantProdGrpCd());
