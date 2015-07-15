@@ -292,7 +292,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
         if (StringUtils.isNotEmpty(drmYn)) {
             metaInfo.setDrmYn(drmYn);
             if (drmYn.equals("Y")
-					&& supportService.isTfreemiumPurchase(historySacIn.getPrchsReqPathCd())) {
+					&& !supportService.isTfreemiumPurchase(historySacIn.getPrchsReqPathCd())) {
 				// 구매 경로가 Tfreemium 제외하고 호출되도록 수정한다.
 				supportService.mapPurchaseDrmInfo(metaInfo);
 			}
