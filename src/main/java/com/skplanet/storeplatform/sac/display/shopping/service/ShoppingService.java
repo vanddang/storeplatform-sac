@@ -187,11 +187,13 @@ public interface ShoppingService {
 	/**
 	 * 구매내역 필요한 정보.
 	 * 
-	 * @param req
-	 *            req
-	 * @return PaymentInfoSacReq
-	 */
-	public List<PaymentInfo> getShoppingforPayment(PaymentInfoSacReq req);
+	 *  @param tenantId
+     * @param langCd
+     * @param deviceModelCd
+     * @param prodId @return PaymentInfoSacReq
+     * */
+    @Deprecated
+	public PaymentInfo getShoppingforPayment(String tenantId, String langCd, String deviceModelCd, String prodId);
 
 	/**
 	 * 특가 상품 리스트 조회 (V2버전).

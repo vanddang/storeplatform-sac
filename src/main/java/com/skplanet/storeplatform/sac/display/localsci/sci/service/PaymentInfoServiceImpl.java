@@ -1,13 +1,16 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
 import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.EXINFO_S2S_INFO;
-import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.SET_SERIES_META;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
+import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
+import com.skplanet.storeplatform.sac.display.localsci.sci.vo.PaymentInfoContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,27 +22,19 @@ import com.google.common.base.Strings;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
-import com.skplanet.storeplatform.sac.display.common.VodType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.service.ProductExtraInfoService;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
-import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
-import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
-import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 
 /**
- *
- *
  * 결제 시 필요한 상품 메타 정보 조회 서비스 구현체.
  *
  * Updated on : 2014. 2. 27. Updated by : 홍지호, 엔텔스
+ * Updated on : 2015. 7. 13. Updated by : 정희원, SKP
  */
 @Service
 public class PaymentInfoServiceImpl implements PaymentInfoService {
@@ -50,45 +45,258 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     private CommonDAO commonDAO;
 
     @Autowired
-    private ShoppingService shoppingService;
-
-    @Autowired
-    private FreepassService freepassService;
-
-    @Autowired
     private DisplayCommonService displayCommonService;
 
     @Autowired
     private MemberBenefitService benefitService;
 
     @Autowired
-    private ProductExtraInfoService extraInfoService;
+    private ProductExtraInfoService productExtraInfoService;
+
+    @Autowired
+    private CachedExtraInfoManager extraInfoManager;
 
     /**
      * <pre>
      * 결제 시 필요한 상품 메타 정보 조회.
      * </pre>
      *
-     * @param req
-     *            파라미터
-     * @return PaymentInfoSacRes 상품 메타 정보 리스트
+     * @param req 파라미터
+     * @return 상품 메타 정보 리스트
      */
     @Override
     public PaymentInfoSacRes searchPaymentInfo(PaymentInfoSacReq req) {
-        PaymentInfoSacRes res = new PaymentInfoSacRes();
-        List<PaymentInfo> paymentInfoList;
+
         List<String> prodIdList = req.getProdIdList();
         String tenantId = req.getTenantId();
-        String langCd = req.getLangCd();
-        String deviceModelCd = req.getDeviceModelCd();
 
         this.log.debug("##### prodIdList size : {}", prodIdList.size());
 
         // 파라미터 존재 여부 체크
+        parameterCheck(req);
+
+        SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
+        PaymentInfoContext ctx = new PaymentInfoContext(req.getTenantId(), req.getLangCd(), req.getDeviceModelCd(), supportDevice);
+
+        List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>(prodIdList.size());
+
+        for (String prodId : prodIdList) {
+
+            // 상품 기본정보 조회
+            ProductBaseInfo baseInfo = extraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(prodId));
+
+            // TODO 에피소드 유형의 요청만 가능. 확정후 적용
+            if(baseInfo.getContentsTypeCd().equals(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD))
+                log.warn("{} is not episode type.", prodId);
+//                throw new StorePlatformException("SAC_DSP_0033", prodId);
+
+            ProductType prodTp = baseInfo.getProductType();
+            PaymentInfo paymentInfo;
+
+            switch (prodTp) {
+                case Shopping:
+                    paymentInfo = getShoppingPaymentMeta(ctx, prodId);
+                    break;
+                case Freepass:
+                    paymentInfo = getFreepassPaymentMeta(ctx, prodId);
+                    break;
+                default:
+                    paymentInfo = getAppAndMultimediaPaymentMeta(ctx, prodId, baseInfo);
+            }
+
+            if(paymentInfo == null)
+                continue;
+
+            // 멤버십 프로모션 정보 매핑
+            mapgPromotion(tenantId, paymentInfo);
+
+            // 허용 연령 정보
+            paymentInfo.setAgeAllowedFrom(displayCommonService.getAllowedAge(paymentInfo.getTopMenuId(), paymentInfo.getProdGrdCd()));
+
+            // FIXME 이용 기간 설정 구분
+            paymentInfo.setUsePeriodSetCd(displayCommonService.getUsePeriodSetCd(paymentInfo.getTopMenuId(), paymentInfo.getProdId(), paymentInfo.getDrmYn(),paymentInfo.getSvcGrpCd()));
+
+            paymentInfoList.add(paymentInfo);
+        }
+
+        return new PaymentInfoSacRes(paymentInfoList);
+    }
+
+    /**
+     * 쇼핑 상품의 결제 처리용 메타데이터 조회
+     * @param ctx
+     * @param prodId
+     * @return
+     */
+    private PaymentInfo getShoppingPaymentMeta(PaymentInfoContext ctx, String prodId) {
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+
+        paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+        paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+        paramMap.put("deviceModelCd", ctx.getDeviceModelCd());   // TODO why?
+        paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
+        paramMap.put("sclShpgSprtYn", ctx.getSclShpgSprtYn());
+        paramMap.put("langCd", ctx.getLangCd());
+        paramMap.put("tenantId", ctx.getTenantId());
+        paramMap.put("prodId", prodId);
+
+        return this.commonDAO.queryForObject("PaymentInfo.getShoppingMetaInfo", paramMap, PaymentInfo.class);
+    }
+    /**
+     * 정액권의 결제 처리용 메타데이터 조회
+     * @param ctx
+     * @param prodId
+     * @return
+     */
+    private PaymentInfo getFreepassPaymentMeta(PaymentInfoContext ctx, String prodId) {
+
+        List<String> exclusiveFixrateProdIdList = new ArrayList<String>();
+
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("langCd", ctx.getLangCd());
+        paramMap.put("tenantId", ctx.getTenantId());
+        paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+        paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+        paramMap.put("deviceModelCd", ctx.getDeviceModelCd());
+        paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
+        paramMap.put("vodFixisttSprtYn", ctx.getVodFixisttSprtYn());
+        paramMap.put("ebookSprtYn", ctx.getEbookSprtYn());
+        paramMap.put("comicSprtYn", ctx.getComicSprtYn());
+        paramMap.put("prodId", prodId);
+
+        PaymentInfo paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getFreePassMetaInfo", paramMap, PaymentInfo.class);
+
+        if(paymentInfo == null)
+            throw new StorePlatformException("SAC_DSP_0009", "[정액권 상품 조회]" + prodId);
+
+        List<ExclusiveFreePass> exclusiveTypeInfoList = this.commonDAO.queryForList("PaymentInfo.getExclusiveTypeInfoList", prodId,
+                ExclusiveFreePass.class);
+
+        for (ExclusiveFreePass info : exclusiveTypeInfoList) {
+
+            if (info.getDupPrchsLimtTypeCd().equals("PD013403")) {
+                paramMap.put("dupPrchsLimtProdId", info.getDupPrchsLimtProdId());
+                exclusiveFixrateProdIdList.addAll(this.commonDAO.queryForList(
+                        "PaymentInfo.getExclusiveTypeInfoList", prodId, String.class));
+            } else {
+                exclusiveFixrateProdIdList.add(info.getDupPrchsLimtProdId());
+            }
+        }
+
+        paymentInfo.setExclusiveFixrateProdIdList(exclusiveFixrateProdIdList);
+
+        return paymentInfo;
+    }
+
+    /**
+     * 앱, 멀티미디어 상품의 결제 처리용 메타데이터 조회
+     * @param ctx
+     * @param prodId
+     * @param baseInfo
+     * @return
+     */
+    private PaymentInfo getAppAndMultimediaPaymentMeta(PaymentInfoContext ctx, String prodId, ProductBaseInfo baseInfo) {
+
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("deviceModelCd", StringUtils.defaultString(ctx.getDeviceModelCd(), "NULL"));
+        reqMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
+        reqMap.put("ebookSprtYn", ctx.getEbookSprtYn());
+        reqMap.put("comicSprtYn", ctx.getComicSprtYn());
+        reqMap.put("musicSprtYn", ctx.getMusicSprtYn());
+        reqMap.put("videoDrmSprtYn", ctx.getVideoDrmSprtYn());
+        reqMap.put("sdVideoSprtYn", ctx.getSdVideoSprtYn());
+        reqMap.put("tenantId", ctx.getTenantId());
+        reqMap.put("langCd", ctx.getLangCd());
+        reqMap.put("prodId", prodId);
+
+        PaymentInfo paymentInfo = this.commonDAO.queryForObject("PaymentInfo.searchPaymentInfo", reqMap, PaymentInfo.class);
+
+        if (paymentInfo == null) {
+            throw new StorePlatformException("SAC_DSP_0005", "[일반상품 조회]" + prodId);
+        }
+
+        paymentInfo.setTopMenuId(baseInfo.getTopMenuId());
+        paymentInfo.setSvcGrpCd(baseInfo.getSvcGrpCd());
+        paymentInfo.setInAppYn(baseInfo.isIapProduct() ? "Y" : "N"); // In-App 여부
+        paymentInfo.setSeriesYn(baseInfo.isSeries() ? "Y" : "N"); // 시리즈 여부 세팅
+
+        // 상품 유형별 추가 작업
+        ProductType prodTp = baseInfo.getProductType();
+        switch (prodTp) {
+            case VodTv:
+                if (StringUtils.isNotEmpty(paymentInfo.getChapter())) {
+                    paymentInfo.setChapterText(paymentInfo.getChapter());
+                    paymentInfo.setChapterUnit(this.displayCommonService.getVodChapterUnit());
+                    paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
+                }
+                break;
+            case Ebook:
+            case Comic:
+                if (StringUtils.isNotEmpty(paymentInfo.getChapter())
+                        && StringUtils.isNotEmpty(paymentInfo.getBookClsfCd())) {
+                    paymentInfo.setChapterText(paymentInfo.getChapter());
+                    paymentInfo.setChapterUnit(this.displayCommonService.getEpubChapterUnit(paymentInfo.getBookClsfCd()));
+                    paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
+                }
+                break;
+            case InApp:
+                bindS2SInfo(prodId, paymentInfo);
+            case App:
+                // 앱상품의 경우 사용정책 값을 무제한으로 지정
+                paymentInfo.setUsePeriod("0");
+                paymentInfo.setUsePeriodUnitCd(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE);
+                break;
+        }
+
+        if (baseInfo.isSeries()) {
+            StringBuilder sb = new StringBuilder(paymentInfo.getChnlProdNm());
+            if (!Strings.isNullOrEmpty(paymentInfo.getChapterText())) {
+                sb.append(" ")
+                        .append(paymentInfo.getChapterText())
+                        .append(paymentInfo.getChapterUnit());
+            }
+            paymentInfo.setProdNm(sb.toString());
+        }
+
+        // 이용가능한 정액권목록 제공
+        List<FreePass> availableFixrateInfoList = getAvailableFixrateInfoList(ctx, prodId);
+        Collection<String> availableFixrateProdList = Collections2.transform(availableFixrateInfoList, new Function<FreePass, String>() {
+            @Override
+            public String apply(FreePass input) {
+                return input.getProdId();
+            }
+        });
+        paymentInfo.setAvailableFixrateProdIdList(new ArrayList<String>(availableFixrateProdList));
+        paymentInfo.setAvailableFixrateInfoList(availableFixrateInfoList);
+
+        return paymentInfo;
+    }
+
+    private List<FreePass> getAvailableFixrateInfoList(PaymentInfoContext ctx, String prodId) {
+
+        List<FreePass> availableFixrateInfoList = null;
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("langCd", ctx.getLangCd());
+        paramMap.put("tenantId", ctx.getTenantId());
+        paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+        paramMap.put("prodId", prodId);
+        availableFixrateInfoList = this.commonDAO.queryForList("PaymentInfo.getAvailableFixrateInfoList", paramMap,
+                FreePass.class);
+
+        return availableFixrateInfoList;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * 파라메터 유효성 검증
+     * @param req
+     */
+    private void parameterCheck(PaymentInfoSacReq req) {
+        List<String> prodIdList = req.getProdIdList();
+        String tenantId = req.getTenantId();
+        String langCd = req.getLangCd();
+
         if (CollectionUtils.isEmpty(prodIdList)) {
-            this.log.debug(
-                    "searchPaymentInfo[prodIdList is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
-                    prodIdList, tenantId, langCd, deviceModelCd);
             throw new StorePlatformException("SAC_DSP_0002", "prodIdList", prodIdList.toString());
         }
         if (prodIdList.size() > DisplayConstants.DP_PAYMENT_INFO_PARAMETER_LIMIT) {
@@ -96,151 +304,39 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                     DisplayConstants.DP_PAYMENT_INFO_PARAMETER_LIMIT);
         }
         if (StringUtils.isEmpty(tenantId)) {
-            this.log.debug(
-                    "searchPaymentInfo[tenantId is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
-                    prodIdList, tenantId, langCd, deviceModelCd);
             throw new StorePlatformException("SAC_DSP_0002", "tenantId", tenantId);
         }
         if (StringUtils.isEmpty(langCd)) {
-            this.log.debug(
-                    "searchPaymentInfo[langCd is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
-                    prodIdList, tenantId, langCd, deviceModelCd);
             throw new StorePlatformException("SAC_DSP_0002", "langCd", langCd);
         }
-        if (StringUtils.isEmpty(deviceModelCd)) {
-            this.log.debug(
-                    "searchPaymentInfo[deviceModelCd is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
-                    prodIdList, tenantId, langCd, deviceModelCd);
-            req.setDeviceModelCd("NULL");
-        }
-
-        // 단말 지원정보 조회
-        SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
-        if (supportDevice == null) {
-            req.setEbookSprtYn("Y");
-            req.setComicSprtYn("Y");
-            req.setMusicSprtYn("Y");
-            req.setVideoDrmSprtYn("Y");
-            req.setSdVideoSprtYn("Y");
-        } else {
-            req.setEbookSprtYn(supportDevice.getEbookSprtYn());
-            req.setComicSprtYn(supportDevice.getComicSprtYn());
-            req.setMusicSprtYn(supportDevice.getMusicSprtYn());
-            req.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
-            req.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
-        }
-        req.setDpAnyPhone4mm(DisplayConstants.DP_ANY_PHONE_4MM);
-
-
-        // 상품 군 조회 (VOD는 VOD끼리만, 이북/코믹은 이북/코믹끼리만 요청이 오므로, 1번만 조회)
-        ProductInfo prodInfo = displayCommonService.getProductInfo(prodIdList.get(0));
-        // FIXME channelId인 경우 예외 발생시킴
-
-        if (prodInfo.getProductType() == ProductType.Shopping) { // 쇼핑 상품
-            paymentInfoList = this.shoppingService.getShoppingforPayment(req);
-        } else if (prodInfo.getProductType() == ProductType.Freepass) { // 정액권_상품
-            paymentInfoList = this.freepassService.getFreePassforPayment(req);
-        } else {
-            paymentInfoList = getAppNMmProductInfo(req, prodIdList, prodInfo);
-        }
-
-        for (PaymentInfo paymentInfo : paymentInfoList) {
-            Map<String, Integer> milMap = new HashMap<String, Integer>();
-            MileageInfo mileageInfo;
-
-            Integer prodAmt = paymentInfo.getProdAmt() != null ? paymentInfo.getProdAmt().intValue() : null;
-
-            if("Y".equals(paymentInfo.getInAppYn())) {
-                mileageInfo = benefitService.getMileageInfo(tenantId, paymentInfo.getTopMenuId(), paymentInfo.getParentProdId(), prodAmt);
-            }
-            else
-                mileageInfo = benefitService.getMileageInfo(tenantId, paymentInfo.getTopMenuId(), paymentInfo.getProdId(), prodAmt);
-
-            // Tstore 멤버십 - 방어코드 추가
-            if(mileageInfo == null) mileageInfo = new MileageInfo();
-            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, mileageInfo.getRateLv1());
-            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV2, mileageInfo.getRateLv2());
-            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV3, mileageInfo.getRateLv3());
-            paymentInfo.setMileageRateMap(milMap);
-
-            // 허용 연령 정보
-            paymentInfo.setAgeAllowedFrom(displayCommonService.getAllowedAge(paymentInfo.getTopMenuId(), paymentInfo.getProdGrdCd()));
-            
-            //이용 기간 설정 구분
-            paymentInfo.setUsePeriodSetCd(displayCommonService.getUsePeriodSetCd(paymentInfo.getTopMenuId(), paymentInfo.getProdId(), paymentInfo.getDrmYn(),paymentInfo.getSvcGrpCd()));
-        }
-
-        res.setPaymentInfoList(paymentInfoList);
-        return res;
     }
 
-    private List<PaymentInfo> getAppNMmProductInfo(PaymentInfoSacReq req, List<String> prodIds, ProductInfo prodInfo) {
-        List<PaymentInfo> res = new ArrayList<PaymentInfo>();
+    private void mapgPromotion(String tenantId, PaymentInfo paymentInfo) {
 
-        for (String prodId : prodIds) {
-            req.setProdId(prodId);
+        Map<String, Integer> milMap = new HashMap<String, Integer>();
+        MileageInfo mileageInfo;
 
-            PaymentInfo paymentInfo = this.commonDAO.queryForObject("PaymentInfo.searchPaymentInfo", req,
-                    PaymentInfo.class);
+        Integer prodAmt = paymentInfo.getProdAmt() != null ? paymentInfo.getProdAmt().intValue() : null;
 
-            if (paymentInfo == null) {
-                throw new StorePlatformException("SAC_DSP_0005", "[일반상품 조회]" + prodId);
-            }
-
-            paymentInfo.setTopMenuId(prodInfo.getTopMenuId());
-            paymentInfo.setSvcGrpCd(prodInfo.getSvcGrpCd());
-            paymentInfo.setInAppYn(prodInfo.isIap() ? "Y" : "N"); // In-App 여부
-
-            // 인앱 상품의 경우 S2S 정보 조회
-            if (paymentInfo.getInAppYn().equals("Y")) {
-                bindS2SInfo(prodId, paymentInfo);
-            }
-
-            // Chapter 및 채널명 셋팅
-            if (prodInfo.getProductType() == ProductType.Vod && prodInfo.getVodType() == VodType.Tv) { // TV
-                if (StringUtils.isNotEmpty(paymentInfo.getChapter())) {
-                    paymentInfo.setChapterText(paymentInfo.getChapter());
-                    paymentInfo.setChapterUnit(this.displayCommonService.getVodChapterUnit());
-                    paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
-                }
-            } else if (prodInfo.getProductType() == ProductType.EbookComic) { // 이북,코믹
-                if (StringUtils.isNotEmpty(paymentInfo.getChapter())
-                        && StringUtils.isNotEmpty(paymentInfo.getBookClsfCd())) {
-                    paymentInfo.setChapterText(paymentInfo.getChapter());
-                    paymentInfo.setChapterUnit(this.displayCommonService.getEpubChapterUnit(paymentInfo.getBookClsfCd()));
-                    paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
-                }
-            }
-            else if (prodInfo.getProductType() == ProductType.App) {
-                // 앱상품의 경우 사용정책 값을 무제한으로 지정
-                paymentInfo.setUsePeriod("0");
-                paymentInfo.setUsePeriodUnitCd(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE);
-            }
-
-            // 시리즈 여부 세팅
-            paymentInfo.setSeriesYn(SET_SERIES_META.contains(paymentInfo.getMetaClsfCd()) ? "Y" : "N");
-
-            if (paymentInfo.getSeriesYn().equals("Y")) {
-                StringBuilder sb = new StringBuilder(paymentInfo.getChnlProdNm());
-                if (!Strings.isNullOrEmpty(paymentInfo.getChapterText())) {
-                    sb.append(" ")
-                      .append(paymentInfo.getChapterText())
-                      .append(paymentInfo.getChapterUnit());
-                }
-                paymentInfo.setProdNm(sb.toString());
-            }
-
-            // 이용가능한 정액권목록 제공
-            paymentInfo.setAvailableFixrateProdIdList(this.freepassService.getAvailableFixrateProdIdList(req));
-            paymentInfo.setAvailableFixrateInfoList(this.freepassService.getAvailableFixrateInfoList(req));
-            res.add(paymentInfo);
+        // IAP상품은 부모 상품으로 조회한다.
+        if("Y".equals(paymentInfo.getInAppYn())) {
+            mileageInfo = benefitService.getMileageInfo(tenantId, paymentInfo.getTopMenuId(), paymentInfo.getParentProdId(), prodAmt);
         }
+        else
+            mileageInfo = benefitService.getMileageInfo(tenantId, paymentInfo.getTopMenuId(), paymentInfo.getProdId(), prodAmt);
 
-        return res;
+        // Tstore 멤버십 - 방어코드 추가
+        if(mileageInfo == null)
+            mileageInfo = new MileageInfo();
+
+        milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, mileageInfo.getRateLv1());
+        milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV2, mileageInfo.getRateLv2());
+        milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV3, mileageInfo.getRateLv3());
+        paymentInfo.setMileageRateMap(milMap);
     }
 
     private void bindS2SInfo(String prodId, PaymentInfo paymentInfo) {
-        Map infoMap = extraInfoService.getInfoAsJSON(prodId, EXINFO_S2S_INFO);
+        Map infoMap = productExtraInfoService.getInfoAsJSON(prodId, EXINFO_S2S_INFO);
         if(infoMap == null)
             return;
 
@@ -250,6 +346,6 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             if(infoMap.containsKey("searchPriceUrl"))
                 paymentInfo.setSearchPriceUrl("" + infoMap.get("searchPriceUrl"));
         }
-
     }
+
 }

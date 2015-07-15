@@ -22,7 +22,7 @@
         AND    A.PROD_ID = #{prodId}
     </select>
     
-    <select id="searchPaymentInfo" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
+    <select id="searchPaymentInfo" parameterType="map" resultType="PaymentInfo">
         SELECT /* PaymentInfoMapper.xml, searchPaymentInfo, SAC 전시, 2014-06-12 */
             A.PROD_ID,
             A.META_CLSF_CD,
@@ -154,7 +154,7 @@
                                       FROM TB_DP_SPRT_DEVICE 
                                      WHERE PROD_ID = I.PROD_ID 
                                        AND (DEVICE_MODEL_CD = #{deviceModelCd} or DEVICE_MODEL_CD = #{dpAnyPhone4mm} )
-                                       AND 'Y' = #{supportDevice.sclShpgSprtYn}
+                                       AND 'Y' = #{sclShpgSprtYn}
                                     ) > 0
                                THEN 'Y'
                                ELSE 'N'
@@ -246,10 +246,10 @@
                 AND PI.IMG_CD(+) = #{imageCd}
                 AND PI.EXPO_ORD ='1'           
                 AND I.PROD_ID = N.PROD_ID(+)    
-                AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
-                AND C.LANG_CD= #{lang}          /* ko : 한국어 */
-                AND F.LANG_CD= #{lang}          /* ko : 한국어 */
-                AND M.LANG_CD =#{lang}          /* ko : 한국어 */
+                AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/
+                AND C.LANG_CD = #{langCd}          /* ko : 한국어 */
+                AND F.LANG_CD = #{langCd}          /* ko : 한국어 */
+                AND M.LANG_CD = #{langCd}          /* ko : 한국어 */
                 AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
                 AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
@@ -262,9 +262,8 @@
            ) KK
     </select>    
     
-  <select id="getAvailableFixrateProdIdList" parameterType="Map" resultType="String">
-          /* PaymentInfoMapper.xml, getAvailableFixrateProdIdList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
-            SELECT  
+  <select id="getAvailableFixrateProdIdList" parameterType="map" resultType="String">
+            SELECT /* PaymentInfoMapper.xml, getAvailableFixrateProdIdList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
                 IV.*
             FROM (
                 SELECT  
@@ -280,24 +279,23 @@
                         FROM TB_DP_FIXRATE_PROD_MAPG A
                              ,TB_DP_PROD_RSHP B
                        WHERE A.PART_PROD_ID = B.PROD_ID
-                         AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
-                         AND B.PART_PROD_ID= #{prodId}
+                         AND B.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/
+                         AND B.PART_PROD_ID = #{prodId}
                      )PM                    
                 WHERE  PD.PROD_ID = CM.PROD_ID
                 AND PD.PROD_ID = DC.PROD_ID
                 AND PD.PROD_ID = TP.PROD_ID
                 AND PD.PROD_ID = PR.PROD_ID
                 AND PD.PROD_ID = PM.PROD_ID
-                AND DC.LANG_CD = #{lang}
+                AND DC.LANG_CD = #{langCd}
                 AND TP.TENANT_ID = #{tenantId} 
                 AND TP.TENANT_ID = PR.TENANT_ID
                 AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
             ) IV 
     </select>     
     
- <select id="getAvailableFixrateInfoList " parameterType="Map" resultType="FreePass">
-          /* PaymentInfoMapper.xml, getAvailableFixrateInfoList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-12-27 */
-            SELECT  
+ <select id="getAvailableFixrateInfoList" parameterType="map" resultType="FreePass">
+            SELECT /* PaymentInfoMapper.xml, getAvailableFixrateInfoList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-12-27 */
                 IV.*
             FROM (
                 SELECT  
@@ -321,15 +319,15 @@
                         FROM TB_DP_FIXRATE_PROD_MAPG A
                              ,TB_DP_PROD_RSHP B
                        WHERE A.PART_PROD_ID = B.PROD_ID
-                         AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
-                         AND B.PART_PROD_ID= #{prodId}
+                         AND B.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/
+                         AND B.PART_PROD_ID = #{prodId}
                      )PM                    
                 WHERE  PD.PROD_ID = CM.PROD_ID
                 AND PD.PROD_ID = DC.PROD_ID
                 AND PD.PROD_ID = TP.PROD_ID
                 AND PD.PROD_ID = PR.PROD_ID
                 AND PD.PROD_ID = PM.PROD_ID
-                AND DC.LANG_CD = #{lang}
+                AND DC.LANG_CD = #{langCd}
                 AND TP.TENANT_ID = #{tenantId} 
                 AND TP.TENANT_ID = PR.TENANT_ID
                 AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
@@ -337,8 +335,7 @@
     </select>        
     
     <select id="getFreePassMetaInfo" parameterType="Map" resultType="PaymentInfo">
-         /* PaymentInfoMapper.xml, getFreePassMetaInfo,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
-            SELECT  
+            SELECT /* PaymentInfoMapper.xml, getFreePassMetaInfo,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
                 IV.*
             FROM (
                 SELECT  
@@ -354,10 +351,10 @@
                                 WHERE  1=1
                                   AND  SP.PROD_ID = PD.PROD_ID 
                                   AND  'Y' = CASE 
-                                       WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN #{supportDevice.vodFixisttSprtYn} /* DP17 :영화 ,DP18: 방송 */
+                                       WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN #{vodFixisttSprtYn} /* DP17 :영화 ,DP18: 방송 */
                                        WHEN PD.TOP_MENU_ID IN ('DP13','DP14') THEN  /* DP13 :이북 ,DP14: 코믹 */
-                                            CASE WHEN PD.TOP_MENU_ID='DP13' THEN #{supportDevice.ebookSprtYn}
-                                                 WHEN PD.TOP_MENU_ID='DP14' THEN #{supportDevice.comicSprtYn}
+                                            CASE WHEN PD.TOP_MENU_ID='DP13' THEN #{ebookSprtYn}
+                                                 WHEN PD.TOP_MENU_ID='DP14' THEN #{comicSprtYn}
                                             ELSE 'Y' END
                                        ELSE 'Y' END
                                   AND (SP.DEVICE_MODEL_CD = #{deviceModelCd} or SP.DEVICE_MODEL_CD = #{dpAnyPhone4mm})
@@ -441,26 +438,25 @@
                 AND PD.PROD_ID = PR.PROD_ID
                 AND PD.USE_POLICY_ID = UP.USE_POLICY_ID
                 AND PD.PROD_ID = #{prodId}
-                AND DC.LANG_CD = #{lang}
+                AND DC.LANG_CD = #{langCd}
                 AND TP.TENANT_ID = #{tenantId} 
                 AND TP.TENANT_ID = PR.TENANT_ID
                 AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
             ) IV 
     </select>     
     
-    <select id="getExclusiveTypeInfoList" parameterType="Map" resultType="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ExclusiveFreePass">
-          /* PaymentInfoMapper.xml, getExclusiveTypeInfoList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
-            SELECT 
+    <select id="getExclusiveTypeInfoList" parameterType="String" resultType="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ExclusiveFreePass">
+            SELECT /* PaymentInfoMapper.xml, getExclusiveTypeInfoList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
                     DUP_PRCHS_LIMT_PROD_ID 
                    ,DUP_PRCHS_LIMT_TYPE_CD
               FROM TB_DP_DUP_PRCHS_LIMT
-             WHERE PROD_ID =#{productId} 
+             WHERE PROD_ID = #{id}
     </select>  
 
 
     <select id="getExclusiveGroupProdIdList" parameterType="Map" resultType="String">
-          /* PaymentInfoMapper.xml, getExclusiveGroupProdIdList,결제시 복합상품 그룹코드로 상품 리스트 조회(정액권), 김형식/SK플래닛, 2015-05-11 */
-			SELECT PROD_ID 
+			SELECT /* PaymentInfoMapper.xml, getExclusiveGroupProdIdList,결제시 복합상품 그룹코드로 상품 리스트 조회(정액권), 김형식/SK플래닛, 2015-05-11 */
+                PROD_ID
 			  FROM TB_DP_CMPX_PROD       
 			WHERE CMPX_PROD_GRP_CD =#{dupPrchsLimtProdId}
     </select>

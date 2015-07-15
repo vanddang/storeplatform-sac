@@ -43,7 +43,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSubReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
@@ -2462,40 +2461,27 @@ public class ShoppingServiceImpl implements ShoppingService {
 	/**
 	 * 쇼핑 구매 연동.
 	 * 
-	 * @param req
-	 *            req
-	 * @return PaymentInfo
-	 */
+	 *  @param tenantId
+     * @param langCd
+     * @param deviceModelCd
+     * @param prodId @return PaymentInfo
+     * */
 	@Override
-	public List<PaymentInfo> getShoppingforPayment(PaymentInfoSacReq req) {
-		List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>();
-		List<String> prodIdList = req.getProdIdList();
+	public PaymentInfo getShoppingforPayment(String tenantId, String langCd, String deviceModelCd, String prodId) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		// / 단말 지원 정보 조회
-		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
-		paramMap.put("lang", req.getLangCd());
-		paramMap.put("tenantId", req.getTenantId());
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(deviceModelCd);
+
+		paramMap.put("lang", langCd);
+		paramMap.put("tenantId", tenantId);
 		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-		paramMap.put("deviceModelCd", req.getDeviceModelCd());
+		paramMap.put("deviceModelCd", deviceModelCd);   // TODO why?
 		paramMap.put("supportDevice", supportDevice);
 		paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
-		PaymentInfo paymentInfo = null;
-		for (int i = 0; i < prodIdList.size(); i++) {
-			paramMap.put("prodId", prodIdList.get(i));
-			paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getShoppingMetaInfo", paramMap, PaymentInfo.class);
-			if (paymentInfo == null) {
-				throw new StorePlatformException("SAC_DSP_0005", "[쇼핑상품 조회]" + prodIdList.get(0));
-			}
+        paramMap.put("prodId", prodId);
 
-			this.log.info("################################################################");
-			this.log.info("ProdId : "+paymentInfo.getProdId());
-			this.log.info("SpecialCouponId : "+paymentInfo.getSpecialSaleCouponId());
-			this.log.info("################################################################");				
-			paymentInfoList.add(paymentInfo);
-		}
-
-		return paymentInfoList;
+		return this.commonDAO.queryForObject("PaymentInfo.getShoppingMetaInfo", paramMap, PaymentInfo.class);
 	}
 
 	/**

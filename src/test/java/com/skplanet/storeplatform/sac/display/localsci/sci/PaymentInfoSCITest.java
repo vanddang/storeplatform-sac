@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -37,15 +38,26 @@ public class PaymentInfoSCITest {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-
-
-
     @Test
     public void integratedTest() {
-        String[] prodIds = new String[]{"H000044182"};
+//        List<String> prodIds = Arrays.asList("0000414210","0000131401","H000046599","S900002648","H102832823");
+        List<String> prodIds = Arrays.asList("H000046599");
         for (String prodId : prodIds) {
             invokeApi(prodId);
         }
+    }
+
+    @Test
+    public void test2() {
+        PaymentInfoSacReq req = new PaymentInfoSacReq();
+        req.setProdIdList(Arrays.asList("0000414210","0000131401","S900002648","H102832823"));
+        req.setTenantId("S01");
+        req.setLangCd("ko");
+        req.setDeviceModelCd("SHW-M100S");
+
+        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
+        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
+        printResult(paymentInfoList);
     }
 
     private void invokeApi(String prodId) {

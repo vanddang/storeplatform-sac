@@ -97,29 +97,34 @@ public interface FreepassService {
 	/**
 	 * 이용가능한 정액권목록 구매내역 필요한 정보.
 	 * 
-	 * @param req
-	 *            req
-	 * @return List<String>
+	 *
+     * @param tenantId
+     * @param langCd
+     *@param prodId @return List<String>
 	 */
-	public List<String> getAvailableFixrateProdIdList(PaymentInfoSacReq req);
+	public List<String> getAvailableFixrateProdIdList(String tenantId, String langCd, String prodId);
 	
 	/**
 	 * 이용가능한 정액권목록 구매내역 필요한 정보.
 	 * 
-	 * @param req
-	 *            req
-	 * @return List<String>
+	 *
+     * @param tenantId
+     * @param langCd
+     *@param prodId @return List<String>
 	 */
-	public List<FreePass> getAvailableFixrateInfoList (PaymentInfoSacReq req);	
+	public List<FreePass> getAvailableFixrateInfoList(String tenantId, String langCd, String prodId);
 
 	/**
 	 * 구매내역 필요한 정보.
 	 * 
-	 * @param req
-	 *            req
-	 * @return List<PaymentInfo>
+	 *
+     * @param tenantId
+     * @param langCd
+     *@param deviceModelCd
+     * @param prodId @return List<PaymentInfo>
 	 */
-	public List<PaymentInfo> getFreePassforPayment(PaymentInfoSacReq req);
+    @Deprecated
+	public PaymentInfo getFreePassforPayment(String tenantId, String langCd, String deviceModelCd, String prodId);
 
 	/**
 	 * <pre>
