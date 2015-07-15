@@ -62,6 +62,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	// 전시 정보
 	private String svcGrpCd; // 서비스 그룹 코드
 	private String prodCaseCd; // 쇼핑 상품 유형 코드
+	private String specialTypeCd; // 특가상품 유형 코드,팅요금제 상품 유형 코드(특가상품-상품권/교환권:DP007501,특가상품-배송상품:DP007502,팅요금제-상품권/교환권:DP007503)
 
 	private VerifyOrderIapInfoSac iapProdInfo; // IAP상품 정보
 	private List<VerifyOrderPromotionInfoSac> promotionList; // 프로모션 정보
@@ -692,5 +693,25 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setProdCaseCd(String prodCaseCd) {
 		this.prodCaseCd = prodCaseCd;
+	}
+
+	/**
+	 * Gets special type cd.
+	 * 특가상품 유형 코드,팅요금제 상품 유형 코드
+	 * (특가상품-상품권/교환권:DP007501,특가상품-배송상품:DP007502,팅요금제-상품권/교환권:DP007503)
+	 *
+	 * @return the special type cd
+	 */
+	public String getSpecialTypeCd() {
+		return specialTypeCd;
+	}
+
+	/**
+	 * Sets special type cd.
+	 *
+	 * @param specialTypeCd the special type cd
+	 */
+	public void setSpecialTypeCd(String specialTypeCd) {
+		this.specialTypeCd = specialTypeCd;
 	}
 }
