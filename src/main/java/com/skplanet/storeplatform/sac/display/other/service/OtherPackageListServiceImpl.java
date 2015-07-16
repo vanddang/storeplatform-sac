@@ -15,7 +15,7 @@ import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class OtherPackageListServiceImpl implements OtherPackageListService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	private CommonMetaInfoGeneratorImpl commonGenerator;
+	private CommonMetaInfoGenerator commonGenerator;
 
 	@Autowired
 	private AppInfoGenerator appGenerator;

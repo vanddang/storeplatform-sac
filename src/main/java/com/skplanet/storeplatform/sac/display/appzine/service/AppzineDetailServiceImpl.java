@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.appzine.vo.AppzineDetail;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	CommonMetaInfoGeneratorImpl commonMetaInfo;
+    private CommonMetaInfoGenerator commonMetaInfo;
 
 	@Autowired
 	private DisplayCommonService commonService;
