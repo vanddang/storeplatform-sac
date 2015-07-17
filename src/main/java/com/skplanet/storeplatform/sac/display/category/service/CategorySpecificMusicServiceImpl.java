@@ -128,7 +128,9 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
                         //paramMap.put("outsdContentsId", metaInfo.getOutsdContentsId()); // FIXME !!
                         paramMap.put("prodId", metaInfo.getProdId());
 
-                        mapgRingbell(header.getTenantHeader().getTenantId(), productBasicInfo.getProdId(), product.getMusic());
+                        // productBasicInfo.getProdId()의 경우 episode id인 경우도 있음.
+                        // meatInfo.getProdId()를 사용하는 이유는 해당 값은 항상 channel id이기 때문.
+                        mapgRingbell(header.getTenantHeader().getTenantId(), metaInfo.getProdId(), product.getMusic());
 
                         // Tstore멤버십 적립율 정보
                         List<Point> mileage = commonGenerator.generateMileage(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
