@@ -286,8 +286,11 @@ public class IdpServiceImpl implements IdpService {
 			if (StringUtils.isNotBlank(map.get("user_name")))
 				userMbr.setUserName(map.get("user_name")); // 사용자 이름
 
-			if (StringUtils.isNotBlank(map.get("user_sex")))
-				userMbr.setUserSex(map.get("user_sex")); // 사용자 성별
+			if (StringUtils.isNotBlank(map.get("user_sex"))) {
+				if (this.checkValidateUserSexValue(map.get("user_sex"))) {
+					userMbr.setUserSex(map.get("user_sex")); // 사용자 성별
+				}
+			}
 
 			if (StringUtils.isNotBlank(map.get("user_birthday")))
 				userMbr.setUserBirthDay(map.get("user_birthday")); // 사용자 생년월일
@@ -608,8 +611,12 @@ public class IdpServiceImpl implements IdpService {
 		if (StringUtils.isNotBlank(hashMap.get("user_birthday")))
 			setMbrAuth.setBirthDay(hashMap.get("user_birthday")); // BIRTHDAY
 
-		if (StringUtils.isNotBlank(hashMap.get("user_sex")))
-			setMbrAuth.setSex(hashMap.get("user_sex")); // SEX 성별
+		// SEX 성별
+		if (StringUtils.isNotBlank(hashMap.get("user_sex"))) {
+			if (this.checkValidateUserSexValue(hashMap.get("user_sex"))) {
+				setMbrAuth.setSex(hashMap.get("user_sex")); // SEX 성별
+			}
+		}
 
 		if (StringUtils.isNotBlank(hashMap.get("user_name")))
 			setMbrAuth.setName(hashMap.get("user_name")); // MBR_NM 회원명
@@ -706,8 +713,13 @@ public class IdpServiceImpl implements IdpService {
 			getUserMbr.setUserName(hashMap.get("user_name")); // 사용자 이름
 		}
 
-		if (StringUtils.isNotBlank(hashMap.get("user_sex")))
-			getUserMbr.setUserSex(hashMap.get("user_sex")); // 사용자 성별
+		// 사용자 성별
+		if (StringUtils.isNotBlank(hashMap.get("user_sex"))) {
+			if (this.checkValidateUserSexValue(hashMap.get("user_sex"))) {
+				getUserMbr.setUserSex(hashMap.get("user_sex"));
+			}
+		}
+
 		if (StringUtils.isNotBlank(hashMap.get("user_birthday")))
 			getUserMbr.setUserBirthDay(hashMap.get("user_birthday")); // 사용자 생년월일
 		if (StringUtils.isNotBlank(hashMap.get("user_nation_code")))
@@ -1205,8 +1217,12 @@ public class IdpServiceImpl implements IdpService {
 					if (map.get("user_birthday") != null) {
 						userMbr.setUserBirthDay(map.get("user_birthday"));
 					}
-					if (map.get("user_sex") != null) {
-						userMbr.setUserSex(map.get("user_sex"));
+
+					// 사용자 성별
+					if (StringUtils.isNotBlank(map.get("user_sex"))) {
+						if (this.checkValidateUserSexValue(map.get("user_sex"))) {
+							userMbr.setUserSex(map.get("user_sex"));
+						}
 					}
 
 					updateUserRequest.setUserMbr(userMbr);
@@ -1271,8 +1287,12 @@ public class IdpServiceImpl implements IdpService {
 						mbrAuth.setMemberCategory(searchUserRespnse.getMbrAuth().getMemberCategory());
 						mbrAuth.setTelecom(searchUserRespnse.getMbrAuth().getTelecom());
 						mbrAuth.setPhone(searchUserRespnse.getMbrAuth().getPhone());
+
+						// 사용자 성별
 						if (StringUtils.isNotBlank(map.get("user_sex"))) {
-							mbrAuth.setSex(map.get("user_sex"));
+							if (this.checkValidateUserSexValue(map.get("user_sex"))) {
+								mbrAuth.setSex(map.get("user_sex"));
+							}
 						}
 
 						if (StringUtils.isNotBlank(map.get("user_name"))) {
@@ -2817,8 +2837,12 @@ public class IdpServiceImpl implements IdpService {
 							if (StringUtils.isNotBlank(map.get("user_name")))
 								userMbr.setUserName(map.get("user_name")); // 사용자 이름
 
-							if (StringUtils.isNotBlank(map.get("user_sex")))
-								userMbr.setUserSex(map.get("user_sex")); // 사용자 성별
+							// 사용자 성별
+							if (StringUtils.isNotBlank(map.get("user_sex"))) {
+								if (this.checkValidateUserSexValue(map.get("user_sex"))) {
+									userMbr.setUserSex(map.get("user_sex"));
+								}
+							}
 
 							if (StringUtils.isNotBlank(map.get("user_birthday")))
 								userMbr.setUserBirthDay(map.get("user_birthday")); // 사용자 생년월일
@@ -3433,4 +3457,20 @@ public class IdpServiceImpl implements IdpService {
 
 		return setMbrClauseAgreeList;
 	}
+
+	/**
+	 * <pre>
+	 * user_sex 값이 유효한 값인지 체크.
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	private boolean checkValidateUserSexValue(String userSex) {
+		if (IdpConstants.IM_IDP_USERSEX_MALE.equals(userSex) || IdpConstants.IM_IDP_USERSEX_FEMALE.equals(userSex)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

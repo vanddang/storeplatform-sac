@@ -53,4 +53,8 @@ public final class IdpConstants {
 	public static final String LOGIN_STATUS_RELEASE = "10"; // 로그인 가능
 	public static final String LOGIN_STATUS_LOCK = "20"; // 로그인 제한
 
+	/** IDP 성별(user_sex) 필드 코드. */
+	public static final String IM_IDP_USERSEX_MALE = "M"; // 남
+	public static final String IM_IDP_USERSEX_FEMALE = "F"; // 여
+
 }
