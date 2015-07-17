@@ -344,7 +344,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, sellerMbrs.get(0)
 					.getSellerClass())) {
 				// first:sellerName, second:sellerCompany, default:""
-				// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-28).
 				nameLower = StringUtils
 						.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
 								.getSellerName() : sellerMbrs.get(0).getSellerCompany(), "");
@@ -354,6 +353,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 					.getSellerClass())
 					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS, sellerMbrs.get(0)
 							.getSellerClass())) {
+
+				// 2015.07.28 추가
+				// first:sellerName, second:sellerCompany, default:""
+				nameLower = StringUtils
+						.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
+								.getSellerName() : sellerMbrs.get(0).getSellerCompany(), "");
 
 				// first:sellerNickName, second:sellerCompany, third:sellerName, default:""
 				// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-28).

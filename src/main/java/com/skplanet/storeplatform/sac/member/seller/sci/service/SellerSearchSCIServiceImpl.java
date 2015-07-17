@@ -310,6 +310,12 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 							|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS,
 									sellerMbrs.get(0).getSellerClass())) {
 
+						// first:sellerName, second:sellerCompany, default:""
+						nameLower = StringUtils.defaultString(
+								StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? StringUtils.replace(
+										sellerMbrs.get(0).getSellerName(), "|", " ") : sellerMbrs.get(0)
+										.getSellerCompany(), "");
+
 						// first:sellerNickName, second:sellerCompany, third:sellerName, default:""
 						compNmLower = StringUtils.isNotBlank(sellerMbrs.get(0).getSellerNickName()) ? sellerMbrs.get(0)
 								.getSellerNickName() : StringUtils.defaultString(
