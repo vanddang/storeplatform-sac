@@ -994,7 +994,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			if (schUserRes.getMbrAuth().getSex() != null) {
 				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
 			} else {
-				userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
+				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
 			}
 
 		} else if (schUserRes.getMbrAuth().getIsRealName().equals("N")) {
@@ -1776,7 +1776,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			if (schUserRes.getMbrAuth().getSex() != null) {
 				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
 			} else {
-				userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
+				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
 			}
 
 		} else if (StringUtils.equals(MemberConstants.USE_N, schUserRes.getMbrAuth().getIsRealName())) {
