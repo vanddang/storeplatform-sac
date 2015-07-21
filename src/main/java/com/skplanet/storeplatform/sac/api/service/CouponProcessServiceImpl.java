@@ -1195,6 +1195,158 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		}
 		return true;
 	} // End processForCouponStatus
+	
+	
+	/**
+	 * 팅/특가 쿠폰 ID 조회 한다.
+	 * 
+	 * @param couponCodes
+	 *            couponCodes
+	 * @return List<CouponRes>
+	 */
+	@Override
+	public String getSpecialProductCouponId(CouponReq couponReq) {
+		this.log.info("<<<<< CouponContentService >>>>> getSpecialProductCouponId...");
+		String couponCode = couponReq.getCouponCode();
+		String coupnStatus = couponReq.getCoupnStatus();
+		String itemCode = couponReq.getItemCode();
+		String upType = couponReq.getUpType(); // 0=상품상태변경, 1=단품상태변경, 2=상품+단품상태 모두 변경
+
+		this.log.debug("===========================\n" + "couponCode : " + couponCode + "/n" + "itemCode : "
+				+ itemCode + "/n" + "upType : " + upType + "/n" + "coupnStatus : " + coupnStatus + "/n"
+				+ "===========================");
+
+		// 1. Validation Check
+		// 쿠폰상태 값 유효성 검증
+		if (!(StringUtils.equalsIgnoreCase(upType, "0") || StringUtils.equalsIgnoreCase(upType, "1") || StringUtils
+				.equalsIgnoreCase(upType, "2"))) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쿠폰상태 값이 유효하지 않습니다.",
+					coupnStatus);
+		}		
+		
+		// 기등록된 컨텐트 존재여부 확인 old쿠폰ID,아이템ID로 new쿠폰ID,아이템ID 가져오기 조회
+		String newCouponCode = this.couponItemService.getCouponGenerateId(couponCode);
+
+		if (StringUtils.isBlank(newCouponCode)) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_COUPONID, null, null);
+		}
+		
+		
+		if ((StringUtils.equalsIgnoreCase(upType, "1"))) { // 1=단품상태변경 item 값은 필수
+			itemCode = this.couponItemService.getItemGenerateId(itemCode);
+			if (StringUtils.isBlank(itemCode)) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_ITEMID, null, null);
+			}
+		}
+		String result;
+		try {
+			String prodCaseCode = this.couponItemService.getCouponProdCaseCode(couponCode);
+			String episodeId = "";
+			if (prodCaseCode.equals("DP006301") || prodCaseCode.equals("DP006302")) { // 상품권, 교환권
+				episodeId = this.couponItemService.getItemGenerateId(couponCode);
+			} else { // 배송상품 일경우
+				if (StringUtils.isBlank(itemCode)) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_ITEMID, null, null);
+				}
+				episodeId = this.couponItemService.getItemGenerateId(itemCode);
+			}
+			if(!coupnStatus.equals("4")){
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쿠폰 상태값이 판매중지인 경우만 가능합니다.",
+						coupnStatus);
+			}
+			
+			result = this.couponItemService.getSpecialProductCouponId(episodeId);
+			
+			if (StringUtils.isBlank(result)) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_COUPON_ID, null, null);
+			}
+
+		} catch (CouponException e) {
+			throw e;
+		}
+		return result;
+	}	
+	
+	/**
+	 * 팅/특가 상품 상태 변경 한다.
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return boolean
+	 */
+	@Override
+	public boolean updateForSpecialCouponStatus(CouponReq couponReq) {
+		// 호출
+		this.log.info("■■■■■ updateForSpecialCouponStatus ■■■■■");
+		if (couponReq != null && StringUtils.isNotBlank(couponReq.getCouponCode())
+				&& StringUtils.isNotBlank(couponReq.getCoupnStatus())) {
+
+			String couponCode = couponReq.getCouponCode();
+			String coupnStatus = couponReq.getCoupnStatus();
+			String itemCode = couponReq.getItemCode();
+			String upType = couponReq.getUpType(); // 0=상품상태변경, 1=단품상태변경, 2=상품+단품상태 모두 변경
+
+			this.log.debug("===========================\n" + "couponCode : " + couponCode + "/n" + "itemCode : "
+					+ itemCode + "/n" + "upType : " + upType + "/n" + "coupnStatus : " + coupnStatus + "/n"
+					+ "===========================");
+
+			String dpStatusCode = "";
+
+
+			// 기등록된 컨텐트 존재여부 확인 old쿠폰ID,아이템ID로 new쿠폰ID,아이템ID 가져오기 조회
+			String newCouponCode = this.couponItemService.getCouponGenerateId(couponCode);
+
+			if ((StringUtils.equalsIgnoreCase(upType, "1"))) { // 1=단품상태변경 item 값은 필수
+				itemCode = this.couponItemService.getItemGenerateId(itemCode);
+				if (StringUtils.isBlank(itemCode)) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_ITEMID, null, null);
+				}
+			}
+
+			
+			String prodCaseCode = this.couponItemService.getCouponProdCaseCode(couponCode);
+			String episodeId = "";
+			if(prodCaseCode.equals("DP006301") || prodCaseCode.equals("DP006302")){  // 상품권, 교환권
+				episodeId = this.couponItemService.getItemGenerateId(couponCode);
+			}else{	// 배송상품 일경우 
+				if (StringUtils.isBlank(itemCode)) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_ITEMID, null, null);
+				}
+				episodeId = this.couponItemService.getItemGenerateId(itemCode);
+			}
+			
+			int ssCnt = this.couponItemService.getSpecialProdCnt(episodeId) ;
+			
+			if(ssCnt <=0){
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_SPECIAL, "특가(팅) 상품이 아닙니다.", episodeId);
+			}
+			
+			
+			// 쿠폰상태 코드 -> 전시 코드로 변환
+			dpStatusCode = this.getDPStatusCode(coupnStatus);
+
+			// 2. DB Update
+			try {
+				// TB_DP_TENANT_PROD 상태 처리
+				this.couponItemService.updateCouponStatusForSpecialProd(newCouponCode, dpStatusCode, upType, itemCode ,episodeId);
+
+			} catch (CouponException e) {
+				throw new CouponException(e.getErrCode(), e.getErrorData().getErrorMsg(), null);
+			} catch (Exception e) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
+			} finally {
+				this.log.info("■■■■■ DB Transaction END ■■■■■");
+			}
+
+			// 검색 서버를 위한 MQ 연동
+			this.setShoppingCatalogIdByChannelIdForMq(newCouponCode);
+
+		} else {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponReq is NULL!!", null);
+		}
+		return true;
+	} // End processForCouponStatus
+	
 
 	/**
 	 * 쿠폰 상태코드별 전시상태코드를 반환한다.

@@ -91,6 +91,30 @@ public interface CouponItemService {
 
 	/**
 	 * <pre>
+	 * 쿠폰코드 ID 를 이용 상품유명코드 조회 한다.
+	 * </pre>
+	 * 
+	 * @param couponCode
+	 *            couponCode
+	 * @return String
+	 */	
+	public String getCouponProdCaseCode(String couponCode);	
+	
+	/**
+	 * <pre>
+	 * 에피소드id를 이용해 특가 여부 조회 한다.
+	 * </pre>
+	 * 
+	 * @param episodeId
+	 *            episodeId
+	 * @return int
+	 */	
+	public int getSpecialProdCnt(String episodeId);	
+	
+	
+	
+	/**
+	 * <pre>
 	 * TB_DP_PROD 테이블 입력및 수정한다.
 	 * </pre>
 	 * 
@@ -219,6 +243,36 @@ public interface CouponItemService {
 	 */
 	public void updateCouponStatus(String newCouponCode, String dpStatusCode, String upType, String itemCode);
 
+	
+	/**
+	 * <pre>
+	 * 팅/특가 쿠폰 ID 조회 한다.
+	 * </pre>
+	 * 
+	 * @param episodeId
+	 *            episodeId
+	 * @return String
+	 */
+	public String getSpecialProductCouponId(String episodeId);
+	
+	/**
+	 * <pre>
+	 * 상태값을 변경 한다.
+	 * </pre>
+	 * 
+	 * @param newCouponCode
+	 *            newCouponCode
+	 * @param dpStatusCode
+	 *            dpStatusCode
+	 * @param upType
+	 *            upType
+	 * @param itemCode
+	 *            itemCode
+	 */
+	public void updateCouponStatusForSpecialProd(String newCouponCode, String dpStatusCode, String upType, String itemCode, String episodeId);
+
+	
+	
 	/**
 	 * <pre>
 	 * 특가 상품 목록 조회 한다.
@@ -283,5 +337,7 @@ public interface CouponItemService {
 	 * @return String
 	 */
 	public String getShoppingCatalogIdByChannelId(String channelId);	
+	
+
 
 }

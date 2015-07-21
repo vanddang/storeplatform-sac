@@ -38,6 +38,30 @@ public interface CouponProcessService {
 
 	/**
 	 * <pre>
+	 * 팅/특가 쿠폰 ID 조회 한다.
+	 * </pre>
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return String
+	 */
+	public String getSpecialProductCouponId(CouponReq couponReq);
+	
+	
+	/**
+	 * <pre>
+	 * 팅/특가 상품 상태 변경 한다.
+	 * </pre>
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return boolean
+	 */
+	public boolean updateForSpecialCouponStatus(CouponReq couponReq);
+	
+	
+	/**
+	 * <pre>
 	 * 특가 상품 목록 조회 한다.
 	 * </pre>
 	 * 

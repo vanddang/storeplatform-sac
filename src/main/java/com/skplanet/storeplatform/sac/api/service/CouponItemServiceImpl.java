@@ -151,7 +151,45 @@ public class CouponItemServiceImpl implements CouponItemService {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
 		}
 	}
+	
+	/**
+	 * <pre>
+	 * 쿠폰코드 ID 를 이용 상품유명코드 조회.
+	 * </pre>
+	 * 
+	 * @param couponCode
+	 *            couponCode
+	 * @return String
+	 */
+	@Override
+	public String getCouponProdCaseCode(String couponCode) {
+		try {
+			return (String) this.commonDAO.queryForObject("Coupon.getCouponProdCaseCode", couponCode);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
+		}
+	}
 
+	/**
+	 * <pre>
+	 * 에피소드id를 이용해 특가 여부 조회.
+	 * </pre>
+	 * 
+	 * @param episodeId
+	 *            episodeId
+	 * @return String
+	 */
+	@Override
+	public int getSpecialProdCnt(String episodeId) {
+		try {
+			return (Integer) this.commonDAO.queryForObject("Coupon.getSpecialProdCnt", episodeId);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
+		}
+	}
+
+
+	
 	/**
 	 * <pre>
 	 * TB_DP_PROD 테이블 입력및 수정한다.
@@ -737,4 +775,76 @@ public class CouponItemServiceImpl implements CouponItemService {
 		return catalogId;
 	}
 
+	/**
+	 * <pre>
+	 * 특가(팅) 상품에 상태값을 변경 한다(판매중지 전용).
+	 * </pre>
+	 * 
+	 * @param couponCode
+	 *            couponCode
+	 * @param dpStatusCode
+	 *            dpStatusCode
+	 * @param upType
+	 *            upType
+	 * @param itemCode
+	 *            itemCode
+	 * @param episodeId
+	 *            episodeId            
+	 */
+	@Override
+	public void updateCouponStatusForSpecialProd(String newCouponCode, String dpStatusCode, String upType,
+			String itemCode,String episodeId) {
+		try {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("prodId", newCouponCode);
+			map.put("dpStatusCode", dpStatusCode);
+			map.put("upType", upType);
+			map.put("itemCode", itemCode);
+			map.put("tenentId", CouponConstants.TENANT_ID);
+			map.put("episodeId", episodeId);
+			if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+						"Coupon.updateDPCouponStatus 실패", null);
+			}
+			if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", map) <= 0) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+						"Coupon.updateDPcouponItemCNT 실패", null);
+			}
+			if (this.commonDAO.update("Coupon.updateDPCouponCNT", map) <= 0) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateDPcouponCNT 실패",
+						null);
+			}
+			if (!StringUtils.equalsIgnoreCase(upType, "0")) {
+				this.commonDAO.update("Coupon.updateDPYNStatus", map);
+			}
+			
+			if (this.commonDAO.update("Coupon.updateSpecialProdStop", map) <= 0) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateSpecialProdStop 실패",
+						null);
+			}			
+
+		} catch (CouponException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
+		}
+
+		
+	}
+
+	/**
+	 * <pre>
+	 * 팅/특가 쿠폰 ID 조회 한다.
+	 * </pre>
+	 * 
+	 * @param couponCode
+	 *            couponCode
+	 * @return CouponRes
+	 */
+
+	@Override
+	public String getSpecialProductCouponId(String episodeId) {
+		String couponId = (String) this.commonDAO.queryForObject("Coupon.getSpecialProductCouponId", episodeId);
+		return couponId;
+	}
 }

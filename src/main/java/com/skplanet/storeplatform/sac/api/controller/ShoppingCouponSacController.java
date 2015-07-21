@@ -230,6 +230,30 @@ public class ShoppingCouponSacController {
 					}
 
 					break;
+				case SS:
+					// 특가 쿠폰 상태 변경 호출한다 ( // 1:쿠폰ID 가져오기, 3 : 특가상품 및 상품 중지 처리 )
+					if(couponReq.getSpecialCouponStep().equals("1")){
+						String couponId = this.getSpecialProductCouponId(couponReq);
+						if(StringUtils.isNotBlank(couponId)){
+							success = true;
+							couponRes.setCouponId(couponId);
+						}
+					}else{
+						success = this.updateForSpecialCouponStatus(couponReq);	
+					}
+					
+					if (success) {
+						couponRes.setFlag(true);
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+						map.put("ERROR_MSG", errorData.getErrorMsg());
+					} else {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
+						map.put("ERROR_MSG", errorData.getErrorMsg());
+					}
+
+					break;					
 				default:
 					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_MISS);
@@ -325,6 +349,33 @@ public class ShoppingCouponSacController {
 		return result;
 
 	}
+	
+	/**
+	 * 팅/특가 쿠폰 ID 조회 한다.
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return String
+	 */
+	private String getSpecialProductCouponId(CouponReq couponReq) {
+		String result = this.couponProcessService.getSpecialProductCouponId(couponReq);
+		return result;
+
+	}	
+	
+	/**
+	 * 팅/특가 상품 상태 변경 한다.
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return boolean
+	 */
+	private boolean updateForSpecialCouponStatus(CouponReq couponReq) {
+		boolean result = this.couponProcessService.updateForSpecialCouponStatus(couponReq);
+		return result;
+
+	}
+		
 
 	/**
 	 * 특가 상품 목록 조회 한다.
@@ -689,6 +740,8 @@ public class ShoppingCouponSacController {
 				break;
 			case DT:
 				break;
+			case SS:
+				break;				
 			default:
 				break;
 			}
