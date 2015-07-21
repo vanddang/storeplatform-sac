@@ -51,8 +51,9 @@ public class RelatedProductServiceImpl implements RelatedProductService {
         String[] prodIds = relatedProduct.getProdIdListAsArray();
         List<Product> productList = new ArrayList<Product>();
         boolean hasNext = false;
-        int nextOffset = 0;
+        int nextStartKey = 0;
         int count = 0;
+        int startKey = Integer.valueOf(requestVO.getStartKey());
         for(String prodId : prodIds){
             log.debug("add prodId={}",prodId);
             ListProduct lp = newListProduct(prodId);
@@ -61,8 +62,8 @@ public class RelatedProductServiceImpl implements RelatedProductService {
                 continue;
             }
 
-            if (nextOffset < requestVO.getOffset()) {
-                nextOffset++;
+            if (nextStartKey < startKey) {
+                nextStartKey++;
                 continue;
             }
 
@@ -73,12 +74,12 @@ public class RelatedProductServiceImpl implements RelatedProductService {
 
             productList.add(p);
             count++;
-            nextOffset++;
+            nextStartKey++;
         }
 
         RelatedProductSacRes relatedProductSacRes = new RelatedProductSacRes();
         relatedProductSacRes.setHasNext(hasNext ? "Y" : "N");
-        relatedProductSacRes.setNextOffset(hasNext ? nextOffset : null);
+        relatedProductSacRes.setStartKey(hasNext ? String.valueOf(nextStartKey) : null);
         relatedProductSacRes.setCount(count);
         relatedProductSacRes.setProductList(productList);
         return relatedProductSacRes;
