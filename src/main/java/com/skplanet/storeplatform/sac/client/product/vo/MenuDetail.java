@@ -52,6 +52,9 @@ public class MenuDetail extends CommonInfo {
     /** PIN 인증여부 (Y/N) */
     private String plus19Yn;
 
+    /** 카테고리 이용등급 */
+    private String useGrdCd;
+
     /** 주입 변수 */
     @JsonRawValue
     private Object urlParam;
@@ -134,5 +137,13 @@ public class MenuDetail extends CommonInfo {
 
 	public void setPlus19Yn( String plus19Yn ) {
 	    this.plus19Yn = plus19Yn;
+    }
+
+    public String getUseGrdCd() {
+        return useGrdCd;
+    }
+
+    public void setUseGrdCd(String useGrdCd) {
+        this.useGrdCd = useGrdCd;
     }
 }
