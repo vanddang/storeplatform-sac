@@ -8,7 +8,7 @@ import java.util.List;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class RelatedProductSacRes {
     private String hasNext;
-    private Integer nextOffset;
+    private String startKey;
     private Integer count;
     private List<Product> productList;
 
@@ -20,12 +20,12 @@ public class RelatedProductSacRes {
         this.hasNext = hasNext;
     }
 
-    public Integer getNextOffset() {
-        return nextOffset;
+    public String getStartKey() {
+        return startKey;
     }
 
-    public void setNextOffset(Integer nextOffset) {
-        this.nextOffset = nextOffset;
+    public void setStartKey(String startKey) {
+        this.startKey = startKey;
     }
 
     public Integer getCount() {

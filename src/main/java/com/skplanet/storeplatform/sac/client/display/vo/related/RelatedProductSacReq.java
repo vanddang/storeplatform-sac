@@ -16,14 +16,14 @@ public class RelatedProductSacReq {
 
     private String prodGradeCd;
 
-    @Min(0)
-    private Integer offset;
+    @Pattern(regexp = "[0-9]+")
+    private String startKey;
 
     @Min(1)
     private Integer count;
 
     public RelatedProductSacReq() {
-        this.offset = 0;
+        this.startKey = "0";
         this.count = 20;
     }
 
@@ -51,12 +51,12 @@ public class RelatedProductSacReq {
         this.prodGradeCd = prodGradeCd;
     }
 
-    public Integer getOffset() {
-        return offset;
+    public String getStartKey() {
+        return startKey;
     }
 
-    public void setOffset(Integer offset) {
-        this.offset = offset;
+    public void setStartKey(String startKey) {
+        this.startKey = startKey;
     }
 
     public Integer getCount() {
