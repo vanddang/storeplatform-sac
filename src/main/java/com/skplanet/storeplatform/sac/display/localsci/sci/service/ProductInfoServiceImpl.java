@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -50,6 +51,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
 	@Autowired
 	private SellerSearchSCI sellerSearchSCI;
+
+	@Value("#{propertiesForSac['plus19.list.img.url']}")
+	private String plus19ImgUrl;
 
 	/*
 	 * (non-Javadoc)
@@ -240,11 +244,11 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 		// 19+ 상품이면
 		if ("Y".equals(product.getPlus19Yn())) {
 			// filePath
-			product.setFilePath("/data7/SMILE_DATA7/IMG/SEARCH19/19plus.png");
+			product.setFilePath(this.plus19ImgUrl);
 
 			// vod epsdImgPath
 			if ("DP000127".equals(imageCd)) {
-				product.setEpsdImgPath("/data7/SMILE_DATA7/IMG/SEARCH19/19plus.png");
+				product.setEpsdImgPath(this.plus19ImgUrl);
 			}
 		}
 	}
