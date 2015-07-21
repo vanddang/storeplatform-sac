@@ -49,6 +49,16 @@ public interface DownloadSupportService {
      * @return
      */
     Encryption generateEncryption(MetaInfo metaInfo, String prchProdId, boolean supportFhdVideo);
+    
+	/**
+	 * Encryption을 생성한다. CJ E&M 요건 8월 패치시 삭제 (for Vod) Tstore 4.0 FHD 지원 여부 추가
+	 * 
+	 * @param metaInfo
+	 * @param prchProdId
+	 * @param supportFhdVideo
+	 * @return
+	 */
+	Encryption generateEncryptionV2(MetaInfo metaInfo, String prchProdId, boolean supportFhdVideo, boolean unlimitedDrmExpireDt);
 
     void createUserDownloadInfo(String mdn, String aid, String tenantId, String prodId);
 

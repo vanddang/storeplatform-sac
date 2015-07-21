@@ -32,4 +32,18 @@ public interface EncryptionGenerator {
      * @return EncryptionContents
      */
 	public EncryptionContents generateEncryptionContents(MetaInfo metaInfo, boolean supportFhdVideo);
+	
+	/**
+	 * <pre>
+	 * 상품 정보 조회 (for download) 전용 Encryption Contents 생성. CJ E&M 추가 요건 8월 패치시 삭제
+	 * (for Vod) Tstore 4.0 FHD 지원 여부 추가
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @param supportFhdVideo
+	 *            FHD 화질 지원 여부
+	 * @return EncryptionContents
+	 */
+	public EncryptionContents generateEncryptionContentsV2(MetaInfo metaInfo, boolean supportFhdVideo, boolean unlimitedDrmExpireDt);
 }

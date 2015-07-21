@@ -21,11 +21,13 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftC
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -184,8 +186,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					if (deviceRes == null || !"Y".equals(deviceRes.getAuthYn()))
 						break;
 
+					boolean unlimitedDrmExpireDt = (StringUtils.isNotEmpty(historySacIn.getUseFixrateProdId()) && "Y".equals(historySacIn.getDrmYn()) && StringUtils.isNotEmpty(metaInfo.getStoreProdId()));
 					setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes);
-					Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
+//					String getUseExprDate = "";
+//					if(unlimitedDrmExpireDt){
+//						getUseExprDate =  (String) commonDAO.queryForObject("Download.getUseExprDate", historySacIn.getProdId());
+//						metaInfo.setUseExprDt(getUseExprDate);
+//					}
+					Encryption encryption = supportService.generateEncryptionV2(metaInfo, historySacIn.getProdId(), supportFhdVideo, unlimitedDrmExpireDt);
+//					Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
 					encryptionList.add(encryption);
 					loggingEncResult(encryption);
 

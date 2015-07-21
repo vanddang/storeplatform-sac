@@ -103,11 +103,39 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
         encryption.setKeyIndex(String.valueOf(keyIdx));
         encryption.setToken(encryptString);
-
+        
         log.debug("Encryption={}", ReflectionToStringBuilder.reflectionToString(encryption));
 
         return encryption;
     }
+    
+	@Override
+	public Encryption generateEncryptionV2(MetaInfo metaInfo, String prchProdId, boolean supportFhdVideo,
+			boolean unlimitedDrmExpireDt) {
+		EncryptionContents contents = this.encryptionGenerator.generateEncryptionContentsV2(metaInfo, supportFhdVideo,
+				unlimitedDrmExpireDt);
+		JSONObject jsonObject = new JSONObject(contents);
+		byte[] jsonData = jsonObject.toString().getBytes(Charset.forName("UTF-8"));
+
+		// JSON 암호화
+		int keyIdx = this.downloadAES128Helper.getRandomKeyIndex();
+
+		byte[] encryptByte = this.downloadAES128Helper.encryption(keyIdx, jsonData);
+
+		String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+		// 암호화 정보 (AES-128)
+		Encryption encryption = new Encryption();
+		encryption.setProductId(prchProdId);
+		byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
+		encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
+		encryption.setKeyIndex(String.valueOf(keyIdx));
+		encryption.setToken(encryptString);
+
+		log.debug("Encryption={}", ReflectionToStringBuilder.reflectionToString(encryption));
+
+		return encryption;
+	}    
 
     @Override
     public void createUserDownloadInfo(String mdn, String aid, String tenantId, String prodId) {

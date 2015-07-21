@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -34,6 +36,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 @Component
 public class EncrytionGeneratorImpl implements EncryptionGenerator {
 
+	private static final Logger log = LoggerFactory.getLogger(EncrytionGeneratorImpl.class);
     @Override
 		public EncryptionContents generateEncryptionContents(MetaInfo metaInfo, boolean supportFhdVideo) {
         EncryptionContents contents = new EncryptionContents();
@@ -140,6 +143,128 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
         contents.setData(data);
         return contents;
     }
+    
+	@Override
+	public EncryptionContents generateEncryptionContentsV2(MetaInfo metaInfo,
+			boolean supportFhdVideo, boolean unlimitedDrmExpireDt) {
+		EncryptionContents contents = new EncryptionContents();
+		EncryptionData data = new EncryptionData();
+		EncryptionUsagePolicy usagePolicy = new EncryptionUsagePolicy();
+		EncryptionDeviceKey deviceKey = new EncryptionDeviceKey();
+		Date date = new Date();
+		EncryptionStatus status = new EncryptionStatus();
+
+		List<EncryptionSubContents> subContentsList = new ArrayList<EncryptionSubContents>();
+
+		// 요청 만료 정보
+		date.setTextUtc(DateUtils.parseDate(metaInfo.getExpiredDate()));
+		contents.setExpired(date.getText());
+
+		// 상품 및 구매 정보
+		data.setTitle(metaInfo.getProdNm());
+		data.setTopCatCd(metaInfo.getTopMenuId());
+		data.setCatCd(metaInfo.getMenuId());
+		data.setPacketFee(StringUtils.defaultString(metaInfo.getProdClsfCd()));
+		data.setProductFee(metaInfo.getProdChrg());
+		data.setProductId(metaInfo.getPurchaseProdId());
+		data.setPurchaseId(metaInfo.getPurchaseId());
+		data.setUserKey(metaInfo.getUserKey());
+		data.setPurchasePrice(metaInfo.getPurchasePrice());
+		data.setSystemId(metaInfo.getSystemId());
+		data.setTenantId(metaInfo.getTenantId());
+
+		date = new Date();
+		date.setTextUtc(DateUtils.parseDate(metaInfo.getPurchaseDt()));
+		data.setPurchaseDate(date.getText());
+
+		if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
+				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+
+			// 서브 컨텐츠 정보
+			if (StringUtils.isNotEmpty(metaInfo.getNmSubContsId())) {
+				EncryptionSubContents nmSc = this.getEncryptionNmSubContents(metaInfo);
+				subContentsList.add(nmSc);
+			}
+			if (StringUtils.isNotEmpty(metaInfo.getSdSubContsId())) {
+				EncryptionSubContents sdSc = this.getEncryptionSdSubContents(metaInfo);
+				subContentsList.add(sdSc);
+			}
+			// HD2 (D화질) 정보 우선, 없으면 HD 정보를 내려줌
+			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+				EncryptionSubContents hdSc = this.getEncryptionHdSubContents(metaInfo);
+				subContentsList.add(hdSc);
+			}
+			// FHD
+			if (supportFhdVideo	&& StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
+				EncryptionSubContents fhdSc = this.getEncryptionFhdSubContents(metaInfo);
+				subContentsList.add(fhdSc);
+			}
+		} else {
+			EncryptionSubContents sc = new EncryptionSubContents();
+			if (StringUtils.isNotBlank(metaInfo.getDeltaType())) {
+				sc.setType(metaInfo.getDeltaType());
+				sc.setDeltaPath(metaInfo.getDeltaFilePath());
+				sc.setDeltaSize(metaInfo.getDeltaFileSize());
+			} else {
+				sc.setType("");
+				sc.setDeltaPath("");
+				sc.setDeltaSize(0L);
+			}
+			sc.setSize(metaInfo.getFileSize());
+			sc.setScid(metaInfo.getSubContentsId());
+			sc.setPath(metaInfo.getFilePath());
+			subContentsList.add(sc);
+
+		}
+		data.setSubContents(subContentsList);
+
+		// 사용 정책
+		usagePolicy.setApplyDrm(metaInfo.getDrmYn());
+		// 소장 상품이고, 구매내역의 DRM이 Y 이고, 정액권으로 구매한 상품일때 무제한으로 내려준다.
+		if (unlimitedDrmExpireDt) {
+			date = new Date();
+			date.setTextUtc(DateUtils.parseDate("99991231235959"));
+			usagePolicy.setExpirationDate(date.getText());
+		} else {
+			if (StringUtils.isNotEmpty(metaInfo.getUseExprDt())) {
+				date = new Date();
+				date.setTextUtc(DateUtils.parseDate(metaInfo.getUseExprDt()));
+				usagePolicy.setExpirationDate(date.getText());
+			} else {
+				usagePolicy.setExpirationDate("");
+			}
+		}
+		
+		log.info("----------------------------------------------------------------");
+		log.info("[DownloadVod EncrytionGeneratorImpl] PurchaseProdId : {} ", data.getProductId());
+		log.info("[DownloadVod EncrytionGeneratorImpl] unlimitedDrmExpireDt : {} ", unlimitedDrmExpireDt);
+		log.info("[DownloadVod EncrytionGeneratorImpl] exprirationDate : {} ", usagePolicy.getExpirationDate());
+		log.info("----------------------------------------------------------------");
+
+		String dlStrmCd = this.getDlStrmCd(metaInfo);
+		usagePolicy.setDlStrmCd(dlStrmCd);
+		data.setUsagePolicy(usagePolicy);
+
+		// 기기 정보
+		deviceKey.setKey(metaInfo.getDeviceKey());
+		deviceKey.setType(metaInfo.getDeviceType());
+		deviceKey.setSubKey(metaInfo.getDeviceSubKey());
+		data.setDeviceKey(deviceKey);
+
+		// 구매내역 숨김 여부
+		if (StringUtils.isNotEmpty(metaInfo.getPurchaseHide())) {
+			status.setPurchaseHide(metaInfo.getPurchaseHide());
+		}
+		// 업데이트 알람 수신 여부
+		status.setUpdateAlarm(metaInfo.getUpdateAlarm());
+		data.setStatus(status);
+
+		// extra : 값의 형식은 "key=value;key2=value2;"로 구성된다. 추후 정의하여 사용.
+		data.setExtra(this.makeExtra(metaInfo));
+
+		contents.setData(data);
+		return contents;
+	}
 
 	private String getDlStrmCd(MetaInfo metaInfo) {
 		String dlStrmCdStore=metaInfo.getStoreDlStrmCd();
