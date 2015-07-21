@@ -1245,10 +1245,14 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			if (prodCaseCode.equals("DP006301") || prodCaseCode.equals("DP006302")) { // 상품권, 교환권
 				episodeId = this.couponItemService.getItemGenerateId(couponCode);
 			} else { // 배송상품 일경우
-				if (StringUtils.isBlank(itemCode)) {
-					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_ITEMID, null, null);
+				if (!(StringUtils.equalsIgnoreCase(upType, "0"))) { // 배송상품일 경우 상품상태변경이면 안됩니다. (1 or 2)
+    				if (StringUtils.isBlank(itemCode)) {
+    					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_ITEMID, null, null);
+    				}
+    				episodeId = this.couponItemService.getItemGenerateId(itemCode);
+				}else{
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DELIVERY_ITEM_CODE, null, null);
 				}
-				episodeId = this.couponItemService.getItemGenerateId(itemCode);
 			}
 			if(!coupnStatus.equals("4")){
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쿠폰 상태값이 판매중지인 경우만 가능합니다.",
@@ -1309,10 +1313,14 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			if(prodCaseCode.equals("DP006301") || prodCaseCode.equals("DP006302")){  // 상품권, 교환권
 				episodeId = this.couponItemService.getItemGenerateId(couponCode);
 			}else{	// 배송상품 일경우 
-				if (StringUtils.isBlank(itemCode)) {
-					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_ITEMID, null, null);
+				if (!(StringUtils.equalsIgnoreCase(upType, "0"))) { // 배송상품일 경우 상품상태변경이면 안됩니다. (1 or 2)
+    				if (StringUtils.isBlank(itemCode)) {
+    					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_ITEMID, null, null);
+    				}
+    				episodeId = this.couponItemService.getItemGenerateId(itemCode);
+				}else{
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DELIVERY_ITEM_CODE, null, null);
 				}
-				episodeId = this.couponItemService.getItemGenerateId(itemCode);
 			}
 			
 			int ssCnt = this.couponItemService.getSpecialProdCnt(episodeId) ;
