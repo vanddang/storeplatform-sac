@@ -902,6 +902,7 @@ public class VodServiceImpl implements VodService {
 
 				// 이용 기간 기준(대여)
 				if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
+					// default 값 설정 "DP013002" : 구매시
 					String playUsagePeriod = this.displayCommonService.getUsePeriodSetCd(mapperVO.getTopMenuId(),
 							mapperVO.getPlayProdId(), mapperVO.getPlayDrmYn(), mapperVO.getSvcGrpCd());
 					if (StringUtils.isNotEmpty(playUsagePeriod)) {
@@ -914,10 +915,13 @@ public class VodServiceImpl implements VodService {
 				}
 				// 이용 기간 기준(소장)
 				if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
+					// default 값 설정 "DP013002" : 구매시
 					String storeUsagePeriod = this.displayCommonService.getUsePeriodSetCd(mapperVO.getTopMenuId(),
 							mapperVO.getStoreProdId(), mapperVO.getStoreDrmYn(), mapperVO.getSvcGrpCd());
 					if (StringUtils.isNotEmpty(storeUsagePeriod)) {
-						if ("DP013002".equals(storeUsagePeriod)) {
+						if ("DP013001".equals(storeUsagePeriod)) {
+							rights.getStore().setUsagePeriod("purchase");
+						} else if ("DP013002".equals(storeUsagePeriod)) {
 							rights.getStore().setUsagePeriod("download");
 						}
 					}
