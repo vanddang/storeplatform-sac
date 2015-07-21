@@ -79,6 +79,7 @@
 		 FROM TB_DP_SPRC_PROD
 		WHERE PROD_ID =#{episodeId}
 		  AND EXPO_YN = 'Y' 
+		  AND CPN_ID IS NOT NULL
 		  AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
     </select>      
     
@@ -677,6 +678,7 @@
         WHERE 1=1 
           AND PROD_ID =#{episodeId}
           AND EXPO_YN = 'Y' 
+          AND CPN_ID IS NOT NULL
           AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
     </update>            
         
@@ -899,6 +901,7 @@
          FROM TB_DP_SPRC_PROD
         WHERE PROD_ID =#{episodeId}
           AND EXPO_YN = 'Y' 
+          AND CPN_ID IS NOT NULL
           AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
     </select>           
     
