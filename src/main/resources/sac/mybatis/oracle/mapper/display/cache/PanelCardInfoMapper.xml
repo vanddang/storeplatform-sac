@@ -60,7 +60,8 @@
             MENU_NM,
             INJT_VAR,
             KEY_TYPE,
-            PLUS19_YN
+            PLUS19_YN,
+            USE_GRD_CD
         FROM TB_DP_MENU_LIST_CATEGORY
         WHERE 1=1
             AND TENANT_ID   = #{tenantId,  jdbcType=VARCHAR}

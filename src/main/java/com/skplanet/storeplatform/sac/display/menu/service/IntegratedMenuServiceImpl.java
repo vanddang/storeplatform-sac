@@ -56,6 +56,7 @@ public class IntegratedMenuServiceImpl implements IntegratedMenuService {
             md.setMenuName(mc.getMenuNm());
             md.setUrlParam(mc.getInjtVar());
             md.setPlus19Yn(mc.getPlus19Yn());
+            md.setUseGrdCd(mc.getUseGrdCd());
 
             if(MENU_TP_MENU.equals(mc.getKeyType()))
                 categoryMenuList.add(md);

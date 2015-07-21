@@ -29,6 +29,7 @@ public class MenuListCat {
     private String injtVar;
     private String keyType;
     private String plus19Yn;
+    private String useGrdCd;
 
     public String getTenantId() {
         return tenantId;
@@ -124,5 +125,13 @@ public class MenuListCat {
 
 	public void setPlus19Yn( String plus19Yn ) {
 	    this.plus19Yn = plus19Yn;
+    }
+
+    public String getUseGrdCd() {
+        return useGrdCd;
+    }
+
+    public void setUseGrdCd(String useGrdCd) {
+        this.useGrdCd = useGrdCd;
     }
 }
