@@ -1224,6 +1224,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 					coupnStatus);
 		}		
 		
+		
+		
 		// 기등록된 컨텐트 존재여부 확인 old쿠폰ID,아이템ID로 new쿠폰ID,아이템ID 가져오기 조회
 		String newCouponCode = this.couponItemService.getCouponGenerateId(couponCode);
 
@@ -1258,6 +1260,13 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쿠폰 상태값이 판매중지인 경우만 가능합니다.",
 						coupnStatus);
 			}
+			
+			
+			int ssCnt = this.couponItemService.getSpecialProdCnt(episodeId) ;
+			
+			if(ssCnt <=0){
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_SPECIAL, "특가(팅) 상품이 아닙니다.", episodeId);
+			}			
 			
 			result = this.couponItemService.getSpecialProductCouponId(episodeId);
 			
