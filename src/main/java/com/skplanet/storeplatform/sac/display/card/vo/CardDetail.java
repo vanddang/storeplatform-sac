@@ -48,6 +48,7 @@ public class CardDetail extends CommonInfo {
 	private String likeYn = "N";
 	private String shareUrl;
 	private String lndPlus19Yn;
+	private String cardUseGrdCd;
 	/**
 	 * CARD_ETC_ATTR
 	 */
@@ -497,4 +498,11 @@ public class CardDetail extends CommonInfo {
 	    this.lndPlus19Yn = lndPlus19Yn;
     }
 
+	public String getCardUseGrdCd() {
+		return cardUseGrdCd;
+	}
+
+	public void setCardUseGrdCd(String cardUseGrdCd) {
+		this.cardUseGrdCd = cardUseGrdCd;
+	}
 }
