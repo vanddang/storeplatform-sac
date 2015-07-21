@@ -57,7 +57,7 @@ public class RelatedProductServiceImpl implements RelatedProductService {
             log.debug("add prodId={}",prodId);
             ListProduct lp = newListProduct(prodId);
             Product p = productListService.getProduct(requestHeader, lp);
-            if (p == null || !p.isValidToDisplay(requestVO.getProdGradeCd())) {
+            if (!isValidToDisplay(p, requestVO.getProdGradeCd())) {
                 continue;
             }
 
@@ -77,7 +77,7 @@ public class RelatedProductServiceImpl implements RelatedProductService {
         }
 
         RelatedProductSacRes relatedProductSacRes = new RelatedProductSacRes();
-        relatedProductSacRes.setHasNext(hasNext);
+        relatedProductSacRes.setHasNext(hasNext ? "Y" : "N");
         relatedProductSacRes.setNextOffset(hasNext ? nextOffset : null);
         relatedProductSacRes.setCount(count);
         relatedProductSacRes.setProductList(productList);
@@ -106,6 +106,51 @@ public class RelatedProductServiceImpl implements RelatedProductService {
         return reqMap;
     }
 
+    private boolean isValidToDisplay(Product product, String gradesSplitedByPlusSign) {
+        if (product == null) {
+            return false;
+        }
+
+        if (!product.getSalesStatus().equals("PD000403")) {
+            return false;
+        }
+
+        if (gradesSplitedByPlusSign == null) {
+            return true;
+        }
+
+        String[] prodGradeCds = parseProdGradeCd(gradesSplitedByPlusSign);
+        validateProdGradeCd(prodGradeCds);
+        for(String gradeCd : prodGradeCds) {
+            if (product.getRights() != null && product.getRights().getGrade().equals(gradeCd))
+                return true;
+        }
+
+        return false;
+    }
+
+    private String[] parseProdGradeCd(String prodGradeCd) {
+        if (prodGradeCd == null) {
+            return new String[]{};
+        }
+        String[] prodGradeCds = prodGradeCd.split("\\+");
+        validateProdGradeCd(prodGradeCds);
+        return prodGradeCds;
+    }
+
+    private void validateProdGradeCd(String[] prodGradeCds) {
+        for (int i = 0; i < prodGradeCds.length; i++) {
+            if (!"PD004401".equals(prodGradeCds[i]) && !"PD004402".equals(prodGradeCds[i])
+                    && !"PD004403".equals(prodGradeCds[i]) && !"PD004404".equals(prodGradeCds[i])) {
+                log.debug("----------------------------------------------------------------");
+                log.debug("유효하지않은 상품 등급 코드 : " + prodGradeCds[i]);
+                log.debug("----------------------------------------------------------------");
+
+                throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+                        prodGradeCds[i]);
+            }
+        }
+    }
 
 
 
