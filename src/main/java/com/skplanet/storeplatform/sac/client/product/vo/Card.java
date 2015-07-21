@@ -86,6 +86,9 @@ public class Card extends CommonInfo {
     /** 랜딩 핀 인증여부 */
     private String lndPlus19Yn;
 
+    /** 카드 이용등급 **/
+    private String cardUseGrdCd;
+
     /**
      * 메뉴 카테고리
      */
@@ -288,4 +291,11 @@ public class Card extends CommonInfo {
     }
 
 
+    public String getCardUseGrdCd() {
+        return cardUseGrdCd;
+    }
+
+    public void setCardUseGrdCd( String cardUseGrdCd ) {
+        this.cardUseGrdCd = cardUseGrdCd;
+    }
 }
