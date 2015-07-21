@@ -50,16 +50,36 @@ public class RelatedProductServiceImpl implements RelatedProductService {
 
         String[] prodIds = relatedProduct.getProdIdListAsArray();
         List<Product> productList = new ArrayList<Product>();
+        boolean hasNext = false;
+        int nextOffset = 0;
+        int count = 0;
         for(String prodId : prodIds){
             log.debug("add prodId={}",prodId);
             ListProduct lp = newListProduct(prodId);
             Product p = productListService.getProduct(requestHeader, lp);
-            if(p!=null && onSale(p) && requestedGrade(p,parseProdGradeCd(requestVO.getProdGradeCd()))) {
-                productList.add(p);
+            if (p == null || !p.isValidToDisplay(requestVO.getProdGradeCd())) {
+                continue;
             }
+
+            if (nextOffset < requestVO.getOffset()) {
+                nextOffset++;
+                continue;
+            }
+
+            if (count >= requestVO.getCount()) {
+                hasNext = true;
+                break;
+            }
+
+            productList.add(p);
+            count++;
+            nextOffset++;
         }
 
         RelatedProductSacRes relatedProductSacRes = new RelatedProductSacRes();
+        relatedProductSacRes.setHasNext(hasNext);
+        relatedProductSacRes.setNextOffset(hasNext ? nextOffset : null);
+        relatedProductSacRes.setCount(count);
         relatedProductSacRes.setProductList(productList);
         return relatedProductSacRes;
     }
@@ -76,18 +96,7 @@ public class RelatedProductServiceImpl implements RelatedProductService {
         return lp;
     }
 
-    private boolean requestedGrade(Product p, String[] prodGradeCds) {
-        if(prodGradeCds==null)
-            return true;
-        for(String gradeCd:prodGradeCds)
-            if(p.getRights()!=null && p.getRights().getGrade().equals(gradeCd))
-                return true;
-        return false;
-    }
 
-    private boolean onSale(Product product) {
-        return product.getSalesStatus().equals(DisplayConstants.DP_SALE_STAT_ING);
-    }
 
     private Map<String, Object> getRequestMapForRelatedProduct(RelatedProductSacReq requestVO, SacRequestHeader requestHeader) {
         Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -98,27 +107,6 @@ public class RelatedProductServiceImpl implements RelatedProductService {
     }
 
 
-    private String[] parseProdGradeCd(String prodGradeCd) {
-        if (prodGradeCd == null) {
-            return null;
-        }
-        String[] prodGradeCds = prodGradeCd.split("\\+");
-        validateProdGradeCd(prodGradeCds);
-        return prodGradeCds;
-    }
 
-    private void validateProdGradeCd(String[] prodGradeCds) {
-        for (int i = 0; i < prodGradeCds.length; i++) {
-            if (!"PD004401".equals(prodGradeCds[i]) && !"PD004402".equals(prodGradeCds[i])
-                    && !"PD004403".equals(prodGradeCds[i]) && !"PD004404".equals(prodGradeCds[i])) {
-                log.debug("----------------------------------------------------------------");
-                log.debug("유효하지않은 상품 등급 코드 : " + prodGradeCds[i]);
-                log.debug("----------------------------------------------------------------");
-
-                throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
-                        prodGradeCds[i]);
-            }
-        }
-    }
 
 }
