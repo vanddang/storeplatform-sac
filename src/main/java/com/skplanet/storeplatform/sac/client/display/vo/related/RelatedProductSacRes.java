@@ -7,16 +7,16 @@ import java.util.List;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class RelatedProductSacRes {
-    private Boolean hasNext;
+    private String hasNext;
     private Integer nextOffset;
     private Integer count;
     private List<Product> productList;
 
-    public Boolean getHasNext() {
+    public String getHasNext() {
         return hasNext;
     }
 
-    public void setHasNext(Boolean hasNext) {
+    public void setHasNext(String hasNext) {
         this.hasNext = hasNext;
     }
 

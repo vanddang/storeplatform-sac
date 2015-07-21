@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 import java.util.List;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonRawValue;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -25,8 +24,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Interface Message Product Value Object.
@@ -36,7 +33,6 @@ import org.slf4j.LoggerFactory;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Product extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * 상품 ID.
@@ -391,56 +387,6 @@ public class Product extends CommonInfo implements Serializable {
 
 	private List<TenantProduct> tenantProductList;
 
-    //--------------------- Public Methods ---------------------//
-    public boolean isOnSale() {
-        return getSalesStatus().equals("PD000403");
-    }
-
-    public boolean isValidUnderGivenGrades(String gradesSplitedByPlusSign) {
-        if (gradesSplitedByPlusSign == null) {
-            return true;
-        }
-        String[] prodGradeCds = parseProdGradeCd(gradesSplitedByPlusSign);
-        validateProdGradeCd(prodGradeCds);
-        for(String gradeCd : prodGradeCds) {
-            if (getRights() != null && getRights().getGrade().equals(gradeCd))
-                return true;
-        }
-        return false;
-    }
-
-    public boolean isValidToDisplay(String gradesSplitedByPlusSign) {
-        return isOnSale() && isValidUnderGivenGrades(gradesSplitedByPlusSign);
-    }
-
-    //--------------------- Private Methods ---------------------//
-
-    private String[] parseProdGradeCd(String prodGradeCd) {
-        if (prodGradeCd == null) {
-            return new String[]{};
-        }
-        String[] prodGradeCds = prodGradeCd.split("\\+");
-        validateProdGradeCd(prodGradeCds);
-        return prodGradeCds;
-    }
-
-    private void validateProdGradeCd(String[] prodGradeCds) {
-        for (int i = 0; i < prodGradeCds.length; i++) {
-            if (!"PD004401".equals(prodGradeCds[i]) && !"PD004402".equals(prodGradeCds[i])
-                    && !"PD004403".equals(prodGradeCds[i]) && !"PD004404".equals(prodGradeCds[i])) {
-                log.debug("----------------------------------------------------------------");
-                log.debug("유효하지않은 상품 등급 코드 : " + prodGradeCds[i]);
-                log.debug("----------------------------------------------------------------");
-
-                throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
-                        prodGradeCds[i]);
-            }
-        }
-    }
-
-
-
-    //-------------------- Getters and Setters --------------------//
 	public List<TenantProduct> getTenantProductList() {
 		return this.tenantProductList;
 	}
