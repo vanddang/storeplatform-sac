@@ -90,6 +90,9 @@ public class VodServiceImpl implements VodService {
 	@Autowired
 	private CommonMetaInfoGenerator metaInfoGenerator;
 
+	@Autowired
+	private DisplayCommonService displayCommonService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -509,14 +512,6 @@ public class VodServiceImpl implements VodService {
 			// 판매상태
 			store.setSalesStatus(mapperVO.getStoreProdStatusCd());
 
-			// 사용자 구매 가능 상태
-			if (existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId())
-					&& StringUtils.isNotBlank(req.getUserKey()) && StringUtils.isNotBlank(req.getDeviceKey())) {
-				String userPurStatus = this.getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
-				if (userPurStatus != null)
-					store.setUserPurStatus(userPurStatus);
-			}
-
 		}
 		return store;
 	}
@@ -864,7 +859,6 @@ public class VodServiceImpl implements VodService {
 
 			for (VodDetail mapperVO : vodDetailList) {
 				Product subProduct = new Product();
-
 				// List<ProductImage> screenshotList = getScreenshotList(mapperVO.getProdId(), req.getLangCd());
 
 				List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -905,6 +899,29 @@ public class VodServiceImpl implements VodService {
 
 				// rights
 				Rights rights = this.mapRights(mapperVO, req, existenceMap);
+
+				// 이용 기간 기준(대여)
+				if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
+					String playUsagePeriod = this.displayCommonService.getUsePeriodSetCd(mapperVO.getTopMenuId(),
+							mapperVO.getPlayProdId(), mapperVO.getPlayDrmYn(), mapperVO.getSvcGrpCd());
+					if (StringUtils.isNotEmpty(playUsagePeriod)) {
+						if ("DP013001".equals(playUsagePeriod)) {
+							rights.getPlay().setUsagePeriod("purchase");
+						} else if ("DP013002".equals(playUsagePeriod)) {
+							rights.getPlay().setUsagePeriod("download");
+						}
+					}
+				}
+				// 이용 기간 기준(소장)
+				if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
+					String storeUsagePeriod = this.displayCommonService.getUsePeriodSetCd(mapperVO.getTopMenuId(),
+							mapperVO.getStoreProdId(), mapperVO.getStoreDrmYn(), mapperVO.getSvcGrpCd());
+					if (StringUtils.isNotEmpty(storeUsagePeriod)) {
+						if ("DP013002".equals(storeUsagePeriod)) {
+							rights.getStore().setUsagePeriod("download");
+						}
+					}
+				}
 				subProduct.setRights(rights);
 
 				// VOD

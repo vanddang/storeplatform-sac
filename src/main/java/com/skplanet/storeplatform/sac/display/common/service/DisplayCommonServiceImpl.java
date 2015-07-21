@@ -259,7 +259,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
 	 */
-    // TODO Cache 적재
+	// TODO Cache 적재
 	@Override
 	public SupportDevice getSupportDeviceInfo(String deviceModelCd) {
 		if (StringUtils.isEmpty(deviceModelCd)) {
@@ -435,7 +435,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		String defaultUpSetCd = "DP013002";
 
 		// 이용권일 경우 예외 처리
-		if (svcGrpCd.equals("DP000207")) {
+		if ("DP000207".equals(svcGrpCd)) {
 			return defaultUpSetCd;
 		}
 
@@ -443,12 +443,12 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		if (menuId == null) {
 			menuId = "";
 		}
-		if(topMenuId == null){
-		   topMenuId="";
+		if (topMenuId == null) {
+			topMenuId = "";
 		}
-		if(drmYn == null){
-		   drmYn="";
-		}		
+		if (drmYn == null) {
+			drmYn = "";
+		}
 		reqMap.put("topMenuId", topMenuId);
 		reqMap.put("prodId", prodId);
 		reqMap.put("menuId", menuId);
