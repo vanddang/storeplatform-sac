@@ -56,7 +56,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 /**
  * 
  * 구매 서비스 구현
@@ -718,6 +717,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				verifyOrderInfo.getSystemId(), verifyOrderInfo.getMarketDeviceKey(),
 				verifyOrderInfo.getDeviceKeyAuth(), reservedDataMap);
 
+		if (checkPaymentPolicyResult == null) {
+			checkPaymentPolicyResult = new CheckPaymentPolicyResult();
+		}
+
 		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)
 				&& StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) == false) {
 			;
@@ -838,9 +841,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// (이번회) T마일리지 적립예정 금액
 		String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 
-		int reserveAmt =0;
-		if(promId>0)
-			reserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(), payUserKey, promId);
+		int reserveAmt = 0;
+		if (promId > 0)
+			reserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(), payUserKey,	promId);
 		res.settMileageReserveAmt(reserveAmt);
 
 		// ------------------------------------------------------------------------------------------------
@@ -1720,9 +1723,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				// 적립예정 이력 총 금액
 				String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 				int preReserveAmt = 0;
-				if(purchaseProduct.getPromId() !=null &&  purchaseProduct.getPromId() > 0)
+				if (purchaseProduct.getPromId() != null && purchaseProduct.getPromId() > 0)
 					preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
-						userKey, purchaseProduct.getPromId());
+							userKey, purchaseProduct.getPromId());
 
 				int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
 						prchsDtlMore.getTenantProdGrpCd());
