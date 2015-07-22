@@ -398,7 +398,7 @@
                         , TB_DP_TENANT_PROD TP
                         , TB_DP_TENANT_PROD_PRICE PR
                         , TB_DP_USE_POLICY UP
-                        ,(SELECT /*+ no_merge */ DISTINCT A.PROD_ID , C.PLUS19_YN
+                        ,(SELECT /*+ no_merge */ DISTINCT A.PROD_ID , NVL(C.PLUS19_YN,'N') AS PLUS19_YN
                             FROM TB_DP_FIXRATE_PROD_MAPG A
                                  ,TB_DP_PROD_RSHP B
                                  ,TB_DP_PROD C
