@@ -228,4 +228,10 @@ public class OtherController {
 		return new OtherAppVersionRes(versionInfo.getProdId(), versionInfo.getVersionCode(), versionInfo.getVersion());
 	}
 
+    @RequestMapping(value = "/promotion/sync/v1", method = RequestMethod.GET)
+    @ResponseBody
+    public OtherPromotionSyncRes promotionSync() {
+        return new OtherPromotionSyncRes(1);
+    }
+
 }
