@@ -676,7 +676,7 @@
             , UPD_ID = 'shopping_cms'
             , UPD_DT = SYSDATE
         WHERE 1=1 
-          AND PROD_ID =#{episodeId}
+          AND PROD_ID =#{itemCode}
           AND EXPO_YN = 'Y' 
           AND CPN_ID IS NOT NULL
           AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
