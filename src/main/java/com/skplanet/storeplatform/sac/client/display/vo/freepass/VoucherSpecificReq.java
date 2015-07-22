@@ -42,6 +42,8 @@ public class VoucherSpecificReq extends CommonInfo {
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
 	private String prodGradeCd; // 상품등급코드
 
+	// 19+상품여부
+	private String plus19Yn;
 	/**
 	 * @return the kind
 	 */
@@ -317,6 +319,20 @@ public class VoucherSpecificReq extends CommonInfo {
 	 */
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
+	}
+
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return plus19Yn;
+	}
+
+	/**
+	 * @param plus19Yn the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
 	}
 
 }
