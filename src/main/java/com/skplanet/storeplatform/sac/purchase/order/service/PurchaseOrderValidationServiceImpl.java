@@ -410,6 +410,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		PurchaseProduct purchaseProduct = null;
 		for (CreatePurchaseSacReqProduct reqProduct : reqProdList) {
 			purchaseProduct = purchaseProductMap.get(reqProduct.getProdId());
+			purchaseProduct.setTenantProdGrpCd(purchaseOrderInfo.getTenantProdGrpCd());
 
 			// 상품정보 조회 실패
 			if (purchaseProduct == null) {
