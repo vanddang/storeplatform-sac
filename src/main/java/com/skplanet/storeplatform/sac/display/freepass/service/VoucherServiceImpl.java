@@ -527,6 +527,16 @@ public class VoucherServiceImpl implements VoucherService {
 			req.setKind("");
 		}
 
+		// CMPX_PROD_GRP_CD, Plus19Yn 알아오기
+		MetaInfo beforeInfo = (MetaInfo) this.commonDAO.queryForObject("Voucher.selectChannelPlusYn",
+				req.getProductId());
+		if (null != beforeInfo) {
+			req.setPlus19Yn(beforeInfo.getPlus19Yn());
+		}else{
+			req.setPlus19Yn("N");
+		}
+		
+		
 		productBasicInfoList = this.commonDAO
 				.queryForList("Voucher.searchVoucherSpecific", req, ProductBasicInfo.class);
 		int totalCnt = 0;
