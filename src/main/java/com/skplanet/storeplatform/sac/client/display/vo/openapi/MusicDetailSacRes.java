@@ -1,22 +1,39 @@
 package com.skplanet.storeplatform.sac.client.display.vo.openapi;
 
+
 public class MusicDetailSacRes {
-    private String prodId;
-    private String prodStatusCd;
+    public class Product {
+        private String prodId;
+        private String prodStatusCd;
 
-    public String getProdId() {
-        return prodId;
+        public String getProdId() {
+            return prodId;
+        }
+
+        public void setProdId(String prodId) {
+            this.prodId = prodId;
+        }
+
+        public String getProdStatusCd() {
+            return prodStatusCd;
+        }
+
+        public void setProdStatusCd(String prodStatusCd) {
+            this.prodStatusCd = prodStatusCd;
+        }
     }
 
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
+    private Product channel;
+
+    public MusicDetailSacRes() {
+        this.channel = new Product();
     }
 
-    public String getProdStatusCd() {
-        return prodStatusCd;
+    public Product getChannel() {
+        return channel;
     }
 
-    public void setProdStatusCd(String prodStatusCd) {
-        this.prodStatusCd = prodStatusCd;
+    public void setChannel(Product channel) {
+        this.channel = channel;
     }
 }
