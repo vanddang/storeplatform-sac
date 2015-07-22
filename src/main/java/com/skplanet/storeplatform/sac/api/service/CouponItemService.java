@@ -269,7 +269,7 @@ public interface CouponItemService {
 	 * @param itemCode
 	 *            itemCode
 	 */
-	public void updateCouponStatusForSpecialProd(String newCouponCode, String dpStatusCode, String upType, String itemCode, String episodeId);
+	public void updateCouponStatusForSpecialProd(String newCouponCode, String dpStatusCode, String upType, String itemCodes );
 
 	
 	

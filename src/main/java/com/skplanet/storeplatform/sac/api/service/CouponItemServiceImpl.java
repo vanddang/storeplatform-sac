@@ -793,15 +793,15 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 	@Override
 	public void updateCouponStatusForSpecialProd(String newCouponCode, String dpStatusCode, String upType,
-			String itemCode,String episodeId) {
+			String itemCodes) {
 		try {
+			
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("prodId", newCouponCode);
 			map.put("dpStatusCode", dpStatusCode);
 			map.put("upType", upType);
-			map.put("itemCode", itemCode);
+		
 			map.put("tenentId", CouponConstants.TENANT_ID);
-			map.put("episodeId", episodeId);
 			if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 						"Coupon.updateDPCouponStatus 실패", null);
@@ -818,10 +818,15 @@ public class CouponItemServiceImpl implements CouponItemService {
 				this.commonDAO.update("Coupon.updateDPYNStatus", map);
 			}
 			
-			if (this.commonDAO.update("Coupon.updateSpecialProdStop", map) <= 0) {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateSpecialProdStop 실패",
-						null);
-			}			
+			String[] episodeIds = itemCodes.split(",");
+			for (String episodeId : episodeIds) {
+				map.put("itemCode", episodeId);
+				
+				if (this.commonDAO.update("Coupon.updateSpecialProdStop", map) <= 0) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+							"Coupon.updateSpecialProdStop 실패", null);
+				}
+			}
 
 		} catch (CouponException e) {
 			throw e;
