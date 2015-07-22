@@ -353,7 +353,14 @@
         ORDER BY OV.RNUM
     </select>
     
-    
+     <!-- 채널 또는 에피소드 19+ 가져오기 -->
+    <select id="selectChannelPlusYn" parameterType="String" resultType="metaInfo">
+        SELECT 
+               NVL(A.PLUS19_YN ,'N') as PLUS19_YN
+        FROM  TB_DP_PROD A
+        WHERE 1=1
+          AND A.PROD_ID = #{productId}
+    </select>
     
     <!-- 특정 상품이 적용된 이용권 조회-->
     <select id="searchVoucherSpecific" parameterType="VoucherSpecificReq" resultType="ProductBasicInfo">
@@ -444,9 +451,12 @@
                 #{kind}
                 </foreach>
             </if>
-            AND (PD.PLUS19_YN IS NULL OR PD.PLUS19_YN = PM.PLUS19_YN)
-
-
+            <if test='plus19Yn == "Y"'>
+            AND PD.PLUS19_YN = 'Y'
+            </if>
+            <if test='plus19Yn == "N"'>
+            AND (PD.PLUS19_YN = 'N' OR PD.PLUS19_YN IS NULL)
+            </if>
                 ORDER BY TP.EXPO_ORD, PD.REG_DT DESC
               ) IV
             ) OV
