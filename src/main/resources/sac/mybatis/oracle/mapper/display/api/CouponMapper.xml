@@ -791,6 +791,39 @@
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
           AND ROWNUM =1
     </select>    
+    
+    <!--특가 상품 상세 조회-->
+    <select id="GET_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE" resultType="com.skplanet.storeplatform.external.client.shopping.vo.EventInfo" parameterType="HashMap">
+       /* CouponMapper.xml, GET_SPECIAL_PRODUCT_DETAIL, 특가 상품 상세 조회, 김형식/SK플래닛  , 2014-01-08 */
+        SELECT 
+               (
+                SELECT SRC_CONTENT_ID 
+                  FROM TB_DP_SHPG_PROD A1 
+                      ,TB_DP_PROD_RSHP B1
+                 WHERE A1.PROD_ID = B1.PROD_ID
+                   AND B1.PROD_RSHP_CD ='DP010802'
+                   AND B1.PART_PROD_ID = A.PROD_ID
+                   AND ROWNUM =1
+                ) as couponCode
+              ,C.SRC_CONTENT_ID as itemCode
+              ,B.PROD_NM  as eventName
+              ,(CASE WHEN A.SPRC_TYPE_CD='DP007501' OR A.SPRC_TYPE_CD='DP007502' THEN 'SL' 
+                     WHEN A.SPRC_TYPE_CD='DP007503' OR A.SPRC_TYPE_CD='DP007504' THEN 'TG' 
+                END) AS eventType             
+              ,TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  as eventStartDate
+              ,TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')    as eventEndDate
+        FROM   TB_DP_SPRC_PROD A
+              ,TB_DP_PROD_DESC B
+              ,TB_DP_SHPG_PROD C
+        WHERE A.PROD_ID = B.PROD_ID
+          AND A.PROD_ID = C.PROD_ID
+          AND A.EXPO_YN = 'Y' 
+          AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
+          AND (#{startDate} BETWEEN TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  AND TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')
+              OR
+               #{endDate}   BETWEEN TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  AND TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')
+              )
+    </select>       
         
     <!--  쿠폰 판매상태 여부 상태값  -->
     <select id="SELECT_COUPON_VALID_STATUS" resultType="String" parameterType="com.skplanet.storeplatform.external.client.shopping.vo.CouponReq">
