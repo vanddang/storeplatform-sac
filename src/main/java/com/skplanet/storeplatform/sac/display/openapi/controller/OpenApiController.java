@@ -11,9 +11,11 @@ package com.skplanet.storeplatform.sac.display.openapi.controller;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.openapi.service.*;
-import com.skplanet.storeplatform.sac.display.openapi.vo.MusicProd;
+import com.skplanet.storeplatform.sac.display.openapi.vo.MusicDetail;
+import com.skplanet.storeplatform.sac.display.openapi.vo.MusicDetailParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -408,15 +410,12 @@ public class OpenApiController {
     public MusicDetailSacRes getMusicDetail(
             SacRequestHeader sacRequestHeader, @Validated MusicDetailSacReq musicDetailSacReq) {
 
-        String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
-        String outsdContentsId = musicDetailSacReq.getSongId();
-        MusicProd musicProd = musicService.getDetailBySongId(tenantId, outsdContentsId);
-        if(musicProd == null)
+        MusicDetailParam musicDetailParam = new MusicDetailParam(sacRequestHeader, musicDetailSacReq);
+        MusicDetail musicDetail = musicService.getMusicDetail(musicDetailParam);
+        MusicDetailSacRes musicDetailSacRes = musicDetail.toMusicDetailSacRes();
+        if(musicDetailSacRes == null)
             throw new StorePlatformException("SAC_DSP_0009");
 
-        MusicDetailSacRes musicDetailSacRes = new MusicDetailSacRes();
-        musicDetailSacRes.setProdId(musicProd.getProdId());
-        musicDetailSacRes.setProdStatusCd(musicProd.getProdStatusCd());
         return musicDetailSacRes;
     }
 

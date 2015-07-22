@@ -1,7 +1,8 @@
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
-import com.skplanet.storeplatform.sac.display.openapi.vo.MusicProd;
+import com.skplanet.storeplatform.sac.display.openapi.vo.MusicDetail;
+import com.skplanet.storeplatform.sac.display.openapi.vo.MusicDetailParam;
 
 public interface MusicService {
-    public MusicProd getDetailBySongId(String tenantId, String outsdContentsId);
+    public MusicDetail getMusicDetail(MusicDetailParam musicDetailParam);
 }

@@ -1,6 +1,8 @@
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.display.openapi.vo.MusicDetail;
+import com.skplanet.storeplatform.sac.display.openapi.vo.MusicDetailParam;
 import com.skplanet.storeplatform.sac.display.openapi.vo.MusicProd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +22,17 @@ public class MusicServiceImpl implements MusicService {
     private CommonDAO commonDAO;
 
     @Override
-    public MusicProd getDetailBySongId(String tenantId, String outsdContentsId) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("tenantId", tenantId);
-        params.put("outsdContentsId", outsdContentsId);
+    public MusicDetail getMusicDetail(MusicDetailParam musicDetailParam) {
+        MusicProd channelProd = null;
 
-        return commonDAO.queryForObject("OpenApi.musicDetailBySongId", params, MusicProd.class);
+        if (musicDetailParam.isIdType("songId")) {
+            channelProd = commonDAO.queryForObject("OpenApi.musicProdBySongId", musicDetailParam, MusicProd.class);
+        }
+        else if (musicDetailParam.isIdType("tumsSongId")) {
+            channelProd = commonDAO.queryForObject("OpenApi.musicProdByTumsSongId", musicDetailParam, MusicProd.class);
+        }
+        MusicDetail musicDetail = new MusicDetail();
+        musicDetail.setChannel(channelProd);
+        return musicDetail;
     }
 }
