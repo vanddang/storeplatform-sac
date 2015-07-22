@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserExtraInfoService;
 import com.skplanet.storeplatform.sac.member.user.service.UserService;
@@ -71,6 +73,15 @@ public class UserExtraInfoController {
 			if (extraProfile.equals("") || extraProfilValue.equals("")) {
 				throw new StorePlatformException("SAC_MEM_0001", "extraProfile, extraProfileValue");
 			}
+			if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_ID, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_EMAIL, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TOKEN, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_REF_TOKEN, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_EXPIRED_TIME, infoReq.getExtraProfile())) {
+				throw new StorePlatformException("SAC_MEM_1403");
+			}
 
 		}
 
@@ -97,6 +108,15 @@ public class UserExtraInfoController {
 
 			if (extraProfile.equals("")) {
 				throw new StorePlatformException("SAC_MEM_0001", "extraProfile");
+			}
+			if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_ID, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_INT_ID, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_EMAIL, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TOKEN, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_REF_TOKEN, infoReq.getExtraProfile())
+					|| StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_EXPIRED_TIME, infoReq.getExtraProfile())) {
+				throw new StorePlatformException("SAC_MEM_1403");
 			}
 		}
 
