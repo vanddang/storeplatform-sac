@@ -337,7 +337,16 @@ public interface CouponItemService {
 	 * @return String
 	 */
 	public String getShoppingCatalogIdByChannelId(String channelId);	
-	
+	/**
+	 * <pre>
+	 * 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+	 * </pre>
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return CouponRes
+	 */
+	public CouponRes getSpecialProductDetailForDate(CouponReq couponReq);
 
 
 }

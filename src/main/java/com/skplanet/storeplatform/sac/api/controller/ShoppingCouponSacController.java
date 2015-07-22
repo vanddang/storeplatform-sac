@@ -253,6 +253,18 @@ public class ShoppingCouponSacController {
 						map.put("ERROR_MSG", errorData.getErrorMsg());
 					}
 
+					break;	
+				case AS:
+					// 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+					couponRes = this.getSpecialProductDetailForDate(couponReq);
+					if (couponRes.getRCode().equals("")) {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+					} else {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+						map.put("ERROR_CODE", couponRes.getRCode());
+					}
+
 					break;					
 				default:
 					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
@@ -399,6 +411,19 @@ public class ShoppingCouponSacController {
 	 */
 	private CouponRes getSpecialProductDetail(String couponCode ,String[] itemsCodes) {
 		CouponRes result = this.couponProcessService.getSpecialProductDetail(couponCode ,itemsCodes);
+		return result;
+
+	}
+	
+	/**
+	 * 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+	 * 
+	 * @param couponCode
+	 *            couponCode
+	 * @return CouponRes
+	 */
+	private CouponRes getSpecialProductDetailForDate(CouponReq couponReq) {
+		CouponRes result = this.couponProcessService.getSpecialProductDetailForDate(couponReq);
 		return result;
 
 	}

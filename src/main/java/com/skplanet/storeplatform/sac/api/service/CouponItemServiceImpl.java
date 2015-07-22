@@ -681,6 +681,41 @@ public class CouponItemServiceImpl implements CouponItemService {
 	}
 
 	/**
+	 * <pre>
+	 * 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+	 * </pre>
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return CouponRes
+	 */
+	@Override
+	public CouponRes getSpecialProductDetailForDate(CouponReq couponReq) {
+
+		CouponRes info = new CouponRes();
+		
+		List<EventInfo> eventInfoList = new ArrayList<EventInfo>();
+
+		try {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("startDate", couponReq.getStartDate());
+			map.put("endDate", couponReq.getEndDate());
+			
+			eventInfoList = (List<EventInfo>) this.commonDAO.queryForList("Coupon.GET_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE", map);
+		
+		} catch (CouponException e) {
+			throw e;
+		} catch (Exception e) {
+			this.log.error("COUPON.GET_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE", e);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
+		}
+		
+
+		info.setEventInfoList(eventInfoList);
+		return info;
+	}
+
+	/**
 	 * 쿠폰(아이템) 판매상태 변경.
 	 * 
 	 * @param couponList

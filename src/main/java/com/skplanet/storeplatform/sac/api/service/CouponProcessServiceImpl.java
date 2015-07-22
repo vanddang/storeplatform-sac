@@ -1359,7 +1359,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		}
 		return list;
 	}
-
+	
 	/**
 	 * 특가 상품 상세 조회 한다.
 	 * 
@@ -1379,6 +1379,35 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		}
 		return info;
 	}
+	
+	/**
+	 * <pre>
+	 * 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+	 * </pre>
+	 * 
+	 * @param couponReq
+	 *            couponReq
+	 * @return CouponRes
+	 */
+	@Override
+	public CouponRes getSpecialProductDetailForDate(CouponReq couponReq) {
+		this.log.info("<<<<< CouponContentService >>>>> getSpecialProductDetailForDate...");
+		if (StringUtils.isBlank(couponReq.getStartDate())) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "startDate 값이 없습니다.", null);
+		}	
+		if (StringUtils.isBlank(couponReq.getEndDate())) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "endDate 값이 없습니다.", null);
+		}		
+		CouponRes info = null;
+		try {
+			info = this.couponItemService.getSpecialProductDetailForDate(couponReq);
+		} catch (CouponException e) {
+			throw e;
+
+		}
+		return info;
+	}
+
 
 	/**
 	 * 카탈로그 및 메뉴ID 조회 한다.
