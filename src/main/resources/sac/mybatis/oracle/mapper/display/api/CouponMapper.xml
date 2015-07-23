@@ -806,6 +806,7 @@
                    AND ROWNUM =1
                 ) as couponCode
               ,C.SRC_CONTENT_ID as itemCode
+              ,A.SEQ AS eventSeq
               ,B.PROD_NM  as eventName
               ,(CASE WHEN A.SPRC_TYPE_CD='DP007501' OR A.SPRC_TYPE_CD='DP007502' THEN 'SL' 
                      WHEN A.SPRC_TYPE_CD='DP007503' OR A.SPRC_TYPE_CD='DP007504' THEN 'TG' 
