@@ -154,8 +154,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					product = this.commonDAO.queryForObject("ProductInfo.getFreePassMetaInfo", paramMap,
 							ProductInfo.class);
 					List<MapgProdMeta> mapgProdIdList = null;
-					mapgProdIdList = this.commonDAO.queryForList("ProductInfo.getMapgProdIdList", paramMap,
-							MapgProdMeta.class);
+					if(product.getKind().equals("seriesFreepass")){  // 시리즈 패스일 경우만 나오게 수정
+						mapgProdIdList = this.commonDAO.queryForList("ProductInfo.getMapgProdIdList", paramMap,	MapgProdMeta.class);
+					}
 					if (product != null) {
 						if (mapgProdIdList != null) {
 							if (mapgProdIdList.size() > 0) {
