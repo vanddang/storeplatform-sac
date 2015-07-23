@@ -937,7 +937,8 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	}
 
 	/**
-	 * 회원 등급별 마일리지 객체 생성
+	 * 회원 등급별 마일리지 객체 생성.
+     * 상세조회 API에서 사용중
 	 * 
 	 * @param mileageInfo
 	 * @param userGrade
