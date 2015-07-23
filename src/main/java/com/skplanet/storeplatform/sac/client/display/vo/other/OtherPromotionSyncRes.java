@@ -23,6 +23,8 @@ public class OtherPromotionSyncRes extends CommonInfo {
 
     private Integer updtCnt;
 
+    public OtherPromotionSyncRes() {}
+
     public OtherPromotionSyncRes(Integer updtCnt) {
         this.updtCnt = updtCnt;
     }
