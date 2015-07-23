@@ -887,4 +887,22 @@ public class CouponItemServiceImpl implements CouponItemService {
 		String couponId = (String) this.commonDAO.queryForObject("Coupon.getSpecialProductCouponId", episodeId);
 		return couponId;
 	}
+
+	/**
+	 * <pre>
+	 * 쿠폰코드를 이용 아이템 코드값을 가져온다.
+	 * </pre>
+	 * 
+	 * @param channelId
+	 *            channelId
+	 * @return ArrayList<String>
+	 */
+	@Override
+	public ArrayList<String> getCouponCompareItemCode(String channelId) {
+		List<String> itemList = (List<String>) this.commonDAO.queryForList("Coupon.getCouponCompareItemCode", channelId);
+		return (ArrayList<String>) itemList;
+	}
+	
+	
+	
 }

@@ -1223,6 +1223,30 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		if (StringUtils.isBlank(newCouponCode)) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_COUPONID, null, null);
 		}
+		
+		List<String> itemList = this.couponItemService.getCouponCompareItemCode(newCouponCode);
+		
+		boolean compareFlag = false;
+		for (int kk=0 ; kk< itemCodes.length; kk++){
+			for (String val : itemList) {
+    			if(val.equals(itemCodes[kk])){
+    				compareFlag = true;
+    			}
+			}
+			if(compareFlag){
+    			if(kk != itemCodes.length-1){
+    				compareFlag = false;
+    			}
+			}else{
+				break;
+			}
+		}
+		if(!compareFlag){
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponCode 에 매핑되어 있는 itemCodes 값이 아닙니다.", null);
+		}
+		
+		
+		
 		StringBuffer couponIdBuff = new StringBuffer();
 		String result="";
 		try {

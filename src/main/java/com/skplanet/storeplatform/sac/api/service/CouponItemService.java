@@ -347,6 +347,17 @@ public interface CouponItemService {
 	 * @return CouponRes
 	 */
 	public CouponRes getSpecialProductDetailForDate(CouponReq couponReq);
+	
+	/**
+	 * <pre>
+	 * 쿠폰코드를 이용 아이템 코드값을 가져온다.
+	 * </pre>
+	 * 
+	 * @param channelId
+	 *            channelId
+	 * @return ArrayList<String>
+	 */
+	public ArrayList<String> getCouponCompareItemCode(String channelId);
 
 
 }
