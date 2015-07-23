@@ -113,7 +113,8 @@
                    AND Z1.PART_PROD_ID = A.PROD_ID
                    AND ROWNUM = 1
             )                   AS CHNL_PROD_NM /* 채널상품명 */,
-            (SELECT RSHP.PROD_ID FROM TB_DP_PROD_RSHP RSHP WHERE RSHP.PART_PROD_ID = A.PROD_ID AND RSHP.PROD_RSHP_CD = 'DP010801') AS PARENT_PROD_ID
+            (SELECT RSHP.PROD_ID FROM TB_DP_PROD_RSHP RSHP WHERE RSHP.PART_PROD_ID = A.PROD_ID AND RSHP.PROD_RSHP_CD = 'DP010801') AS PARENT_PROD_ID,
+            MCPM.MENU_ID
         FROM TB_DP_PROD A
             , TB_DP_PROD_DESC B
             , TB_DP_TENANT_PROD C
@@ -123,6 +124,7 @@
             , TB_DP_VOD_PROD VO
             , TB_DP_MUSIC_PROD MU
             , TB_DP_USE_POLICY UP
+            , TB_DP_MENU_CATEGORY_PROD_MAPG MCPM
         WHERE A.PROD_ID = B.PROD_ID
           AND B.LANG_CD = #{langCd}
           AND A.PROD_ID = C.PROD_ID
@@ -134,6 +136,8 @@
           AND A.PROD_ID = VO.PROD_ID (+)
           AND A.PROD_ID = MU.PROD_ID (+)
           AND A.USE_POLICY_ID = UP.USE_POLICY_ID(+)
+          AND MCPM.PROD_ID = A.PROD_ID
+          AND MCPM.BASE_YN = 'Y'
           AND A.PROD_ID = #{prodId}
     </select>
     

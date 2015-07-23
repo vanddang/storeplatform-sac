@@ -9,7 +9,9 @@ import com.google.common.collect.Collections2;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.GetPromotionEventParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
+import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.PaymentInfoContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -313,25 +315,26 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
     private void mapgPromotion(String tenantId, PaymentInfo paymentInfo) {
 
-        Map<String, Integer> milMap = new HashMap<String, Integer>();
-        MileageInfo mileageInfo;
-
-        Integer prodAmt = paymentInfo.getProdAmt() != null ? paymentInfo.getProdAmt().intValue() : null;
-
         // IAP상품은 부모 상품으로 조회한다.
-        if("Y".equals(paymentInfo.getInAppYn())) {
-            mileageInfo = benefitService.getMileageInfo(tenantId, paymentInfo.getTopMenuId(), paymentInfo.getParentProdId(), prodAmt);
+        String prodId = "Y".equals(paymentInfo.getInAppYn()) ? paymentInfo.getParentProdId() : paymentInfo.getProdId();
+
+        PromotionEvent event = extraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, paymentInfo.getMenuId(), prodId));
+        Map<String, Integer> milMap = new HashMap<String, Integer>();
+        if (event != null) {
+            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, event.getRateGrd1());
+            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV2, event.getRateGrd2());
+            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV3, event.getRateGrd3());
+
+            paymentInfo.setPromId(event.getPromId());
+            paymentInfo.setAcmlDt(event.getAcmlDt());
+            paymentInfo.setAcmlMethodCd(event.getAcmlMethodCd());
         }
-        else
-            mileageInfo = benefitService.getMileageInfo(tenantId, paymentInfo.getTopMenuId(), paymentInfo.getProdId(), prodAmt);
+        else {
+            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, 0);
+            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV2, 0);
+            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV3, 0);
+        }
 
-        // Tstore 멤버십 - 방어코드 추가
-        if(mileageInfo == null)
-            mileageInfo = new MileageInfo();
-
-        milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, mileageInfo.getRateLv1());
-        milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV2, mileageInfo.getRateLv2());
-        milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV3, mileageInfo.getRateLv3());
         paymentInfo.setMileageRateMap(milMap);
     }
 
