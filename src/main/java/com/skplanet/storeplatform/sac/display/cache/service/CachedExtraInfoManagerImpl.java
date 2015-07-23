@@ -262,6 +262,9 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             return event;
         }
 
+        if(Strings.isNullOrEmpty(param.getMenuId()))
+            return null;
+
         // 2Depth menuId or topMenuId로 조회
         event = getLivePromotionEvent(client, param.getTenantId(), param.getMenuId(), now);
 
@@ -270,7 +273,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             return event;
         }
 
-        if(param.getMenuId().length() == 4)
+        if(param.getMenuId().length() <= 4)
             return null;
 
         // topMenuId로 조회
