@@ -713,8 +713,8 @@ public class VodServiceImpl implements VodService {
 			sourceList.add(source);
 		}
 
-		// screenshot
-		if (screenshotList != null) {
+		// screenshot ( 19plus 상품일 경우 스크린샷 제외 )
+		if (screenshotList != null && !"Y".equals(mapperVO.getPlus19Yn())) {
 			for (ProductImage screenshotImage : screenshotList) {
 				String imagePath = screenshotImage.getFilePath() + screenshotImage.getFileNm();
 				source = new Source();
