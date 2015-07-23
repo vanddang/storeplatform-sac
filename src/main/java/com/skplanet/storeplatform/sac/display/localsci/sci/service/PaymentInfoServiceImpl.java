@@ -50,9 +50,6 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     private DisplayCommonService displayCommonService;
 
     @Autowired
-    private MemberBenefitService benefitService;
-
-    @Autowired
     private ProductExtraInfoService productExtraInfoService;
 
     @Autowired
@@ -318,7 +315,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         // IAP상품은 부모 상품으로 조회한다.
         String prodId = "Y".equals(paymentInfo.getInAppYn()) ? paymentInfo.getParentProdId() : paymentInfo.getProdId();
 
-        PromotionEvent event = extraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, paymentInfo.getMenuId(), prodId));
+        PromotionEvent event = extraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, paymentInfo.getTopMenuId(), prodId));
         Map<String, Integer> milMap = new HashMap<String, Integer>();
         if (event != null) {
             milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, event.getRateGrd1());

@@ -9,17 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.common.support.redis.DistributedLock;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Promotion;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleAction;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleGetOrLoadHandler;
 import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
@@ -50,6 +48,8 @@ import java.util.concurrent.TimeUnit;
 public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
     public static final String LOCK_KEY = "SyncPromotionEvent";
+    public static final String LIVE_EVENT_EXIST = "-";
+
     @Autowired
     @Qualifier("sac")
     private CommonDAO commonDAO;
@@ -180,6 +180,12 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
         Plandasj redis = connectionFactory.getConnectionPool().getClient();
 
+        /*
+         * promoEventSet - 등록된 모든 이벤트 키
+         * promoEvent - 진행중 또는 예정 이벤트 목록
+         * livePromoEvent - 진행중인 이벤트. 이 데이터 구조의 도입으로 Lock을 걸 필요가 없어짐.
+         */
+
         // 모든 적재된 데이터 제거
         Stopwatch stopwatch = Stopwatch.createStarted();
         Collection<String> promoEventSet = redis.smembers(SacRedisKeys.promoEventSet());
@@ -187,6 +193,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             redis.del(SacRedisKeys.promoEvent(promoEventKey));
         }
         redis.del(SacRedisKeys.promoEventSet());
+
         logger.debug("Exist events are removed - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
         // 이벤트 데이터 적재
@@ -198,27 +205,27 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
         logger.debug("Fetch events from db - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
         // 이벤트 등록
-        DistributedLock lock = new DistributedLock(LOCK_KEY);
-        lock.lock();    // TODO NOTICE callback형태로 처리하는건 어떨까? 문제가 생기면 그냥 빠져나오도록.
         int updtCnt = 0;
 
         for (Map.Entry<String, Collection<RawPromotionEvent>> events : eventMap.asMap().entrySet()) {
 
             for (RawPromotionEvent event : events.getValue()) {
+
                 String strEvent = convertRawPromotionEvent2Str(event);
                 redis.rpush(SacRedisKeys.promoEvent(events.getKey()),
                         event.getEventKey() + ":" + strEvent);
+
                 ++updtCnt;
             }
 
+            redis.hsetnx(SacRedisKeys.livePromoEvent(), events.getKey(), LIVE_EVENT_EXIST);
             redis.sadd(SacRedisKeys.promoEventSet(), events.getKey());
         }
         logger.debug("Regist events to redis - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
-        lock.unlock();
-
         stopwatch.stop();
         logger.debug("Event sync processing time = {}", stopwatch);
+
         // TODO 정상적으로 등록되었는지 검증. 갯수 카운팅
 
         return updtCnt;
@@ -245,133 +252,116 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
         Date now = param.getNowDt();
         if(now == null)
-            now = new Date(); // TODO DB에서 시간 조회
-
-        PromotionEvent event;
-
-        // TODO prodId -> 2Depth menu -> topMenu 순서로 조회하는데 이것을 한번에 찾도록 개선할 방법이 있는가?
-        // Hash에 가장 최근의 데이터를 넣어놓고 만료되면 다음 것을 찾아와 적재하도록 하면?
+            now = new Date();
 
         Plandasj client = connectionFactory.getConnectionPool().getClient();
 
-        // prodId로 조회
-        event = getLivePromotionEvent(client, param.getTenantId(), param.getProdId(), now);
+        // 조회할 대상들의 키를 생성한다.
+        String tenantId = param.getTenantId(),
+                menuOrTopMenuId = "",
+                topMenuId = "";
+        if(!Strings.isNullOrEmpty(param.getMenuId())) {
 
-        if(event != null) {
-            event.setTargetId(param.getProdId());
-            return event;
+            menuOrTopMenuId = param.getMenuId();
+            if(param.getMenuId().length() > 4) {
+                topMenuId = menuOrTopMenuId.substring(0, 4);
+            }
         }
 
-        if(Strings.isNullOrEmpty(param.getMenuId()))
-            return null;
+        final String[] keys = new String[]{param.getProdId(), menuOrTopMenuId, topMenuId};
 
-        // 2Depth menuId or topMenuId로 조회
-        event = getLivePromotionEvent(client, param.getTenantId(), param.getMenuId(), now);
+        List<String> liveEvents = client.hmget(SacRedisKeys.livePromoEvent(),
+                                                tenantId + ":" + keys[0],
+                                                tenantId + ":" + keys[1],
+                                                tenantId + ":" + keys[2]);
 
-        if(event != null) {
-            event.setTargetId(param.getMenuId());
-            return event;
-        }
+        // 조회된 liveEvent 순서대로 유효한 이벤트 정보를 찾아 응답한다.
+        for (int i = 0; i < liveEvents.size(); ++i) {
 
-        if(param.getMenuId().length() <= 4)
-            return null;
+            String str = liveEvents.get(i);
+            String key = keys[i];
 
-        // topMenuId로 조회
-        String topMenuId = param.getMenuId().substring(0, 4);
-        event = getLivePromotionEvent(client, param.getTenantId(), topMenuId, now);
+            // 해당하는 이벤트가 없는 경우
+            if(str == null)
+                continue;
 
-        if(event != null) {
-            event.setTargetId(topMenuId);
-            return event;
+            PromotionEventWrapper eventWrapper;
+
+            // 이벤트는 등록되었지만 liveEvent에 아직 적재되지 않은 경우
+            if(str.equals(LIVE_EVENT_EXIST)) {
+                eventWrapper = getNextEvent(client, tenantId, key, now);
+                if(eventWrapper == null)
+                    continue;
+
+                client.hset(SacRedisKeys.livePromoEvent(), tenantId + ":" + key, eventWrapper.getStr());
+            }
+            else {
+                eventWrapper = new PromotionEventWrapper(str);
+            }
+
+            if(eventWrapper.hasError()) {
+                PromotionEventWrapper incommingEvent = syncSpecificEvent(tenantId, key);
+                if(incommingEvent == null)
+                    continue;
+
+                eventWrapper = incommingEvent;
+            }
+
+            if (now.after(eventWrapper.getStartDt()) && now.before(eventWrapper.getEndDt())) {
+                return eventWrapper.getPromotionEvent();
+            } else {
+                eventWrapper = getNextEvent(client, tenantId, key, now);
+
+                if(eventWrapper != null) {
+                    client.hset(SacRedisKeys.livePromoEvent(), SacRedisKeys.promoEvent(tenantId, key), eventWrapper.getStr());
+                    return eventWrapper.getPromotionEvent();
+                }
+                else {
+                    client.hdel(SacRedisKeys.livePromoEvent(), key);
+                }
+            }
         }
 
         return null;
     }
 
-    private PromotionEvent getLivePromotionEvent(Plandasj redis, String tenantId, String key, Date now) {
+    /**
+     * 유효한 다음 이벤트를 조회한다.
+     * 만료된 이벤트는 그대로 남겨놓는다. (동기화 처리시 정리작업이 수행됨)
+     * @param client
+     * @param tenantId
+     * @param key
+     * @return 이벤트 래퍼 객체 응답. 유효한 이벤트를 찾을 수 없는 경우 null
+     */
+    private PromotionEventWrapper getNextEvent(Plandasj client, String tenantId, String key, Date now) {
 
-        Preconditions.checkNotNull(now);
-
-        String findKey = SacRedisKeys.promoEvent(tenantId, key);
-        PromotionEvent event = null;
-
-        List<String> data;
-        while(event == null && !(data = redis.lrange(findKey, 0, 0)).isEmpty())
-        {
-            String str = data.get(0);
-            String[] strPart = null;
-            Date startDt = null, endDt = null;
-
-            try {
-                strPart = StringUtils.split(str, ":");
-                Preconditions.checkArgument(strPart.length == 2, "Event message is wrong.");
-
-                String[] datePart = StringUtils.split(strPart[0], "_");
-                Preconditions.checkArgument(datePart.length == 2, "Event body date part is wrong.");
-
-                startDt = DATE_FORMAT.parse(datePart[0]);
-                endDt = DATE_FORMAT.parse(datePart[1]);
-            }
-            catch (ParseException e) {
-                logger.error("데이터 변환시 오류", e);
-                continue;
-            }
-            catch (RuntimeException e) {
-                logger.error("데이터 변환시 오류", e);
-                continue;
-                // TODO log. 컨버팅 에러시: 재적재? 좀 심플하게 가야는데...
-            }
-
-            if(now.after(startDt)) {
-                if(now.before(endDt)) {
-                    event = convertStr2PromtionEvent(startDt, endDt, strPart[1]);
-                }
-                else {
-                    // 지난 이벤트이면 제거하고 다음 이벤트를 조회한다.
-                    Long remCnt = redis.lrem(findKey, 0, str);
-                    if (remCnt != 1)
-                        logger.debug("다른 프로세스에 의해 이벤트가 정리되었습니다. (data:{})", str);
-                }
-            }
-            else
-                break;
+        List<String> allEvents = client.lrange(SacRedisKeys.promoEvent(tenantId, key), 0, -1);
+        if(allEvents.size() == 0) {
+            return null;
         }
 
-        return event;
+        for (String str : allEvents) {
+            PromotionEventWrapper eventWrapper = new PromotionEventWrapper(str);
+
+            if(eventWrapper.hasError())
+                continue;
+
+            if(now.after(eventWrapper.getStartDt()) && now.before(eventWrapper.getEndDt()))
+                return eventWrapper;
+        }
+
+        return null;
     }
 
-    private PromotionEvent convertStr2PromtionEvent(Date startDt, Date endDt, String bodyPart) {
 
-        String[] body = StringUtils.split(bodyPart);
-        Preconditions.checkArgument(body.length == 7, "Event body is wrong.");
-
-        PromotionEvent event = new PromotionEvent();
-
-        String hashHex;
-
-        try {
-            event.setStartDt(startDt);
-            event.setEndDt(endDt);
-
-            hashHex = body[0];
-
-            event.setPromId(Integer.parseInt(body[1]));
-            event.setRateGrd1(Integer.parseInt(body[2]));
-            event.setRateGrd2(Integer.parseInt(body[3]));
-            event.setRateGrd3(Integer.parseInt(body[4]));
-            event.setAcmlMethodCd(body[5]);
-            event.setAcmlDt(body[6]);
-
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (!hashHex.equals(Integer.toHexString(event.hashCode())))
-            throw new RuntimeException("해시 값이 다릅니다.");
-
-        return event;
+    /**
+     * 특정 이벤트를 동기화 처리하고 라이브 이벤트를 응답한다.
+     * @param tenantId 테넌트ID
+     * @param key 식별자
+     * @return 라이브 이벤트
+     */
+    private PromotionEventWrapper syncSpecificEvent(String tenantId, String key) {
+        return null;
     }
 
     @Override

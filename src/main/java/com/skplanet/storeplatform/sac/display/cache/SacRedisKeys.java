@@ -23,6 +23,7 @@ public class SacRedisKeys {
     private static final String PREFIX_SPRT_DEV = "sprtdev:";
     private static final String PREFIX_PRODUCT_BASE = "prodBase:";
     private static final String PREFIX_PROMOEVENT = "promoEvent:";
+    private static final String PREFIX_LIVE_PROMOEVENT = "livePromoEvent";
     private static final String SET_PROMOEVENT = "set:promoEvent";
 
     public static String pkg2prod(String pkgNm) {
@@ -51,6 +52,10 @@ public class SacRedisKeys {
 
     public static String promoEventSet() {
         return SET_PROMOEVENT;
+    }
+
+    public static String livePromoEvent() {
+        return PREFIX_LIVE_PROMOEVENT;
     }
 
 }
