@@ -79,6 +79,16 @@ public class PromotionEventWrapper {
         return this.endDt;
     }
 
+    /**
+     * 이벤트가 진행중인지 응답
+     * @param now 기준 시간
+     * @return 진행중인 경우 true
+     */
+    public boolean isLive(Date now) {
+        return !(this.startDt == null || this.endDt == null || now == null) &&
+                now.after(startDt) && now.before(endDt);
+    }
+
     public PromotionEvent getPromotionEvent() {
 
         if (event == null) {

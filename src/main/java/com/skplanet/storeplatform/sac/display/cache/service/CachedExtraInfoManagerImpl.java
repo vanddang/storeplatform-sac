@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
@@ -17,7 +16,6 @@ import com.google.common.collect.Multimap;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Promotion;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleAction;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleGetOrLoadHandler;
 import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
@@ -33,7 +31,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -307,14 +304,14 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
                 eventWrapper = incommingEvent;
             }
 
-            if (now.after(eventWrapper.getStartDt()) && now.before(eventWrapper.getEndDt())) {
-                return eventWrapper.getPromotionEvent();
+            if (now.before(eventWrapper.getEndDt())) {
+                return eventWrapper.isLive(now) ? eventWrapper.getPromotionEvent() : null;
             } else {
                 eventWrapper = getNextEvent(client, tenantId, key, now);
 
                 if(eventWrapper != null) {
-                    client.hset(SacRedisKeys.livePromoEvent(), SacRedisKeys.promoEvent(tenantId, key), eventWrapper.getStr());
-                    return eventWrapper.getPromotionEvent();
+                    client.hset(SacRedisKeys.livePromoEvent(), tenantId + ":" + key, eventWrapper.getStr());
+                    return eventWrapper.isLive(now) ? eventWrapper.getPromotionEvent() : null;
                 }
                 else {
                     client.hdel(SacRedisKeys.livePromoEvent(), key);
@@ -346,8 +343,11 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             if(eventWrapper.hasError())
                 continue;
 
-            if(now.after(eventWrapper.getStartDt()) && now.before(eventWrapper.getEndDt()))
-                return eventWrapper;
+            // 이벤트중이거나 예정인 것을 응답
+            if (now.after(eventWrapper.getEndDt()))
+                continue;
+
+            return eventWrapper;
         }
 
         return null;
