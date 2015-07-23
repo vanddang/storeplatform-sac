@@ -22,6 +22,8 @@ public class SacRedisKeys {
     private static final String PREFIX_PKGS_IN_PROD = "pkgsInProd:";
     private static final String PREFIX_SPRT_DEV = "sprtdev:";
     private static final String PREFIX_PRODUCT_BASE = "prodBase:";
+    private static final String PREFIX_PROMOEVENT = "promoEvent:";
+    private static final String SET_PROMOEVENT = "set:promoEvent";
 
     public static String pkg2prod(String pkgNm) {
         return PREFIX_PKG_2_PROD + pkgNm;
@@ -37,6 +39,18 @@ public class SacRedisKeys {
 
     public static String prodBase(String prodId) {
         return PREFIX_PRODUCT_BASE + prodId;
+    }
+
+    public static String promoEvent(String tenantId, String key) {
+        return PREFIX_PROMOEVENT + tenantId + ":" + key;
+    }
+
+    public static String promoEvent(String key) {
+        return PREFIX_PROMOEVENT + key;
+    }
+
+    public static String promoEventSet() {
+        return SET_PROMOEVENT;
     }
 
 }

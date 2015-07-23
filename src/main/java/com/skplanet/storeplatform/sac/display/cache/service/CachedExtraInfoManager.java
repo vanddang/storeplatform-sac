@@ -9,10 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
-import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct;
-import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.*;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -46,4 +45,24 @@ public interface CachedExtraInfoManager {
      * @return
      */
     ProductBaseInfo getProductBaseInfo(GetProductBaseInfoParam param);
+
+    /**
+     * DB와 프로모션 데이터를 동기화 합니다.
+     * @return 반영된 데이터 갯수
+     */
+    int syncPromotionEvent();
+
+    /**
+     * 프로모션 이벤트를 조회한다.
+     * @param param 파라메터
+     * @return 응답
+     */
+    PromotionEvent getPromotionEvent(GetPromotionEventParam param);
+
+    /**
+     * 현재 Redis에 등록되어 있는 모든 캐시 정보를 조회한다.
+     * @return key는 prodId 또는 menuId이다.
+     * @param liveOnly 현재 진행중인 것만 조회
+     */
+    Map<String, PromotionEvent> getPromotionEventMap(boolean liveOnly);
 }

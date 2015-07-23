@@ -9,9 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.display.common.service;
 
+import com.google.common.base.Stopwatch;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.GetPromotionEventParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.other.common.constant.OtherConstants;
@@ -19,12 +23,15 @@ import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceService
 import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceTypeService;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -44,6 +51,11 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
     
 	@Autowired
 	private SacServiceTypeService typeSvc;
+
+    @Autowired
+    private CachedExtraInfoManager cachedExtraInfoManager;
+
+    private static final Logger logger = LoggerFactory.getLogger(MemberBenefitServiceImpl.class);
     
     @Override
     public MileageInfo getMileageInfo(String tenantId, String topMenuId, String chnlId, Integer prodAmt) {
@@ -57,14 +69,30 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
         SacService rtnSacService = sacServiceDataService.getServiceActive(sacService);
         
         MileageInfo mileageInfo = null; 
-        if(rtnSacService != null && rtnSacService.isActive()) {
+//        if(rtnSacService != null && rtnSacService.isActive()) {
+        if(true) {
 	        req.put("tenantId", tenantId);
 	        req.put("topMenuId", topMenuId);
 	        req.put("chnlId", StringUtil.nvl(chnlId, ""));
-	
-	        mileageInfo = commonDAO.queryForObject("MemberBenefit.getMileageInfo", req, MileageInfo.class);
-	
-	        //노출 여부. ResponseInfoGenerateFacadeImpl.appendMileageInfo 에서 처리.
+
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            PromotionEvent event = cachedExtraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, topMenuId, chnlId));
+            long elapsedBefore = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+            logger.debug("Event fetch from redis - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            if (event != null) {
+                mileageInfo = new MileageInfo();
+                mileageInfo.setPolicyTargetCd(event.getTargetTp());
+                mileageInfo.setRateLv1(event.getRateGrd1());
+                mileageInfo.setRateLv2(event.getRateGrd2());
+                mileageInfo.setRateLv3(event.getRateGrd3());
+            }
+
+            // TODO for test
+            commonDAO.queryForObject("MemberBenefit.getMileageInfo", req, MileageInfo.class);
+            logger.debug("Event fetch from db - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS) - elapsedBefore);
+            stopwatch.stop();
+
+            //노출 여부. ResponseInfoGenerateFacadeImpl.appendMileageInfo 에서 처리.
 	        /*
 	        if(mileageInfo != null) {
 		        //Tstore멤버십 적립율 정보
@@ -85,9 +113,41 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
             return new MileageInfo();
     }
 
-	/* (non-Javadoc)
-	 * @see com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService#checkFreeProduct(com.skplanet.storeplatform.sac.display.common.vo.MileageInfo)
-	 */
+    @Override
+    public MileageInfo getMileageInfo(String tenantId, String menuId, String chnlId) {
+
+        if(StringUtil.isEmpty(tenantId) || StringUtil.isEmpty(menuId))
+            return null;
+
+        SacService sacService = new SacService();
+        sacService.setServiceCd(OtherConstants.SAC_SERVICE_MILEAGE);
+        SacService rtnSacService = sacServiceDataService.getServiceActive(sacService);
+
+        /* TODO
+        if(rtnSacService == null || !rtnSacService.isActive())
+            return new MileageInfo();
+        */
+
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        PromotionEvent event = cachedExtraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId));
+        logger.debug("Event fetch from redis - {}", stopwatch.stop());
+
+        if (event == null)
+            return new MileageInfo();
+
+        MileageInfo mileageInfo = new MileageInfo();
+        mileageInfo.setPolicyTargetCd(event.getTargetTp());
+        mileageInfo.setRateLv1(event.getRateGrd1());
+        mileageInfo.setRateLv2(event.getRateGrd2());
+        mileageInfo.setRateLv3(event.getRateGrd3());
+
+        return mileageInfo;
+    }
+
+    /* (non-Javadoc)
+         * @see com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService#checkFreeProduct(com.skplanet.storeplatform.sac.display.common.vo.MileageInfo)
+         * 상세 조회 API에서 참조
+         */
 	@Override
 	public MileageInfo checkFreeProduct(MileageInfo mileageInfo, Integer prodAmt) {
 		if(mileageInfo != null) {
