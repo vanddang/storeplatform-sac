@@ -1398,6 +1398,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		if (StringUtils.isBlank(couponReq.getEndDate())) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "endDate 값이 없습니다.", null);
 		}		
+		
+		if (couponReq.getStartDate().compareTo(couponReq.getEndDate()) == 1) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "startDate가 endDate 값보다 클수 없습니다.", null);
+		}
+		
 		CouponRes info = null;
 		try {
 			info = this.couponItemService.getSpecialProductDetailForDate(couponReq);
