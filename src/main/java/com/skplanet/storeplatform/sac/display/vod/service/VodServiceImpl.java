@@ -907,9 +907,9 @@ public class VodServiceImpl implements VodService {
 							mapperVO.getPlayProdId(), mapperVO.getPlayDrmYn(), mapperVO.getSvcGrpCd());
 					if (StringUtils.isNotEmpty(playUsagePeriod)) {
 						if ("DP013001".equals(playUsagePeriod)) {
-							rights.getPlay().setUsagePeriod("purchase");
-						} else if ("DP013002".equals(playUsagePeriod)) {
 							rights.getPlay().setUsagePeriod("download");
+						} else if ("DP013002".equals(playUsagePeriod)) {
+							rights.getPlay().setUsagePeriod("purchase");
 						}
 					}
 				}
@@ -920,9 +920,9 @@ public class VodServiceImpl implements VodService {
 							mapperVO.getStoreProdId(), mapperVO.getStoreDrmYn(), mapperVO.getSvcGrpCd());
 					if (StringUtils.isNotEmpty(storeUsagePeriod)) {
 						if ("DP013001".equals(storeUsagePeriod)) {
-							rights.getStore().setUsagePeriod("purchase");
-						} else if ("DP013002".equals(storeUsagePeriod)) {
 							rights.getStore().setUsagePeriod("download");
+						} else if ("DP013002".equals(storeUsagePeriod)) {
+							rights.getStore().setUsagePeriod("purchase");
 						}
 					}
 				}
