@@ -4,12 +4,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcReq;
+import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
+import com.skplanet.storeplatform.external.client.message.vo.EmailSendEcReq;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -55,7 +58,13 @@ public class UserServiceImpl implements UserService {
 	private UserSCI userSCI;
 
 	@Autowired
+	private MessageSCI messageSCI;
+
+	@Autowired
 	private UserSearchService userSearchService;
+
+	@Value("#{propertiesForSac['sac.member.mail.img.path']}")
+	private String mailImagePath;
 
 	private static CommonRequest commonRequest;
 
@@ -203,6 +212,46 @@ public class UserServiceImpl implements UserService {
 		// Test API에서는 IDP 조회 하지 않으므로 "Y"으로 셋팅
 		moveUserInfoRequest.setIdpResultYn(Constant.TYPE_YN_Y);
 		MoveUserInfoResponse moveUserInfoResponse = this.userSCI.executeMoveUserMbr(moveUserInfoRequest);
+
+		// 전환 처리가 SUCCESS && 휴면계정 상태 해제 && 메일 계정이 있을 경우 휴면계정 상태 해제 메일 발송
+		if (StringUtils.equals(moveUserInfoSacReq.getUserKey(), moveUserInfoResponse.getUserKey())) {
+			if (Constant.USERMBR_MOVE_TYPE_ACTIVATE.equals(moveUserInfoRequest.getMoveType())) {
+				if (StringUtils.isNotBlank(moveUserInfoResponse.getEmailAddr())
+						&& StringUtil.isEmail(moveUserInfoResponse.getEmailAddr())) {
+					String recvNm = "";
+
+					if (moveUserInfoResponse.getUserMbrDevice() != null) {
+						recvNm = StringUtil.cvtProdNoMask(moveUserInfoResponse.getUserMbrDevice().getDeviceID());
+					} else {
+						recvNm = moveUserInfoResponse.getMbrId();
+					}
+
+					EmailSendEcReq emailSendEcReq = new EmailSendEcReq();
+					emailSendEcReq.setTypeId(0); // 발송 타입
+					emailSendEcReq.setRecvId(null); // 수신자ID
+					emailSendEcReq.setRecvNm(recvNm + "(" + moveUserInfoResponse.getEmailAddr() + ")"); // 수신자이름
+					emailSendEcReq.setRecvMail(moveUserInfoResponse.getEmailAddr()); // 수신자메일
+					// sParam1 - image url , sParam2 - 수신자
+					emailSendEcReq.setsParam(new String[] { this.mailImagePath + "/restore_tpl", recvNm });
+					emailSendEcReq.setvParam(null);
+					emailSendEcReq.setSendNm("T store"); // 송신자이름
+					emailSendEcReq.setTitle("[T store] 휴면계정 상태가 해제되었습니다"); // 메일제목
+					emailSendEcReq.setSendId(null); // 송신자ID
+					emailSendEcReq.setSendMail("admin@tstore.co.kr"); // 송신자메일주소
+					emailSendEcReq.setContentType(3); // 컨텐츠 타입. 1 : WEB 2 : FILE 3 : TEMPLATEDB
+					emailSendEcReq.setTemplateId(1002); // 템플릿ID - 이케아에서 메일 발송 템플릿을 1002로 만듬
+					emailSendEcReq.setDocCd("100"); // 문서코드
+					emailSendEcReq.setContents(""); // 컨텐츠 내용
+					this.messageSCI.emailSend(emailSendEcReq);
+
+					LOGGER.info("Restore email send {} : {}", moveUserInfoResponse.getUserKey(), emailSendEcReq);
+				} else {
+					LOGGER.info("{} : Email is blank or not available", moveUserInfoResponse.getUserKey());
+				}
+			}
+		}
+
+		LOGGER.info("moveUserInfo : {}", moveUserInfoResponse.getUserKey());
 
 		MoveUserInfoSacRes moveUserInfoSacRes = new MoveUserInfoSacRes();
 		moveUserInfoSacRes.setUserKey(moveUserInfoResponse.getUserKey());
