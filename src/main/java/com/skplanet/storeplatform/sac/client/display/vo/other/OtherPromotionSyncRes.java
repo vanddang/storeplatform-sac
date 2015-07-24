@@ -31,13 +31,13 @@ public class OtherPromotionSyncRes extends CommonInfo {
     /**
      * 처리시 에러가 발생된 프로모션Id
      */
-    private List<Integer> errorPromId;
+    private List<Integer> errorPromIdList;
 
     public OtherPromotionSyncRes() {}
 
-    public OtherPromotionSyncRes(Integer updtCnt, List<Integer> errorPromId) {
+    public OtherPromotionSyncRes(Integer updtCnt, List<Integer> errorPromIdList) {
         this.updtCnt = updtCnt;
-        this.errorPromId = errorPromId;
+        this.errorPromIdList = errorPromIdList;
     }
 
     public Integer getUpdtCnt() {
@@ -48,11 +48,11 @@ public class OtherPromotionSyncRes extends CommonInfo {
         this.updtCnt = updtCnt;
     }
 
-    public List<Integer> getErrorPromId() {
-        return errorPromId;
+    public List<Integer> getErrorPromIdList() {
+        return errorPromIdList;
     }
 
-    public void setErrorPromId(List<Integer> errorPromId) {
-        this.errorPromId = errorPromId;
+    public void setErrorPromIdList(List<Integer> errorPromIdList) {
+        this.errorPromIdList = errorPromIdList;
     }
 }
