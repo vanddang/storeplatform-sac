@@ -44,6 +44,8 @@ public class PromotionEventWrapper {
         Preconditions.checkNotNull(rawEvent);
 
         this.datetimeKey = rawEvent.getDatetimeKey();
+        this.startDt = rawEvent.getStartDt();
+        this.endDt = rawEvent.getEndDt();
 
         Object[] v = new Object[]{Integer.toHexString(rawEvent.hashCode()),
                 rawEvent.getPromId(),
@@ -53,7 +55,8 @@ public class PromotionEventWrapper {
                 rawEvent.getAcmlMethodCd(),
                 rawEvent.getAcmlDt()};
 
-        str = rawEvent.getDatetimeKey() + ":" + StringUtils.join(v, " ");
+        bodyPart = StringUtils.join(v, " ");
+        str = rawEvent.getDatetimeKey() + ":" + bodyPart;
     }
 
     public PromotionEventWrapper(String str) {
@@ -154,7 +157,7 @@ public class PromotionEventWrapper {
 
         if (str == null) {
             // TODO PromotionEvent to str
-            throw new IllegalStateException("아직 구현되지 않았습니다.");
+            throw new IllegalStateException("글쎄요? 이럴리가 없는데.");
         }
 
         return this.str;

@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -18,31 +19,26 @@ import java.util.List;
  * Updated on : 2015. 07. 24 Updated by : 정희원, SK 플래닛.
  */
 public class SyncPromotionEventResult {
+
     private int updtCnt;
     private List<Integer> errorPromIdList;
+    private Map<String, PromotionEventWrapper> liveEventMap;
 
-    public SyncPromotionEventResult(int updtCnt) {
-        this.updtCnt = updtCnt;
-    }
-
-    public SyncPromotionEventResult(int updtCnt, List<Integer> errorPromIdList) {
+    public SyncPromotionEventResult(int updtCnt, List<Integer> errorPromIdList, Map<String, PromotionEventWrapper> liveEventMap) {
         this.updtCnt = updtCnt;
         this.errorPromIdList = errorPromIdList;
+        this.liveEventMap = liveEventMap;
     }
 
     public int getUpdtCnt() {
         return updtCnt;
     }
 
-    public void setUpdtCnt(int updtCnt) {
-        this.updtCnt = updtCnt;
-    }
-
     public List<Integer> getErrorPromIdList() {
         return errorPromIdList;
     }
 
-    public void setErrorPromIdList(List<Integer> errorPromIdList) {
-        this.errorPromIdList = errorPromIdList;
+    public Map<String, PromotionEventWrapper> getLiveEventMap() {
+        return liveEventMap;
     }
 }

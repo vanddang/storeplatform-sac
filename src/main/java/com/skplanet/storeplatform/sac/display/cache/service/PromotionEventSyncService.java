@@ -9,12 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEventWrapper;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
 
 /**
  * <p>
- * DESC
+ * PromotionEventSyncService
  * </p>
  * Updated on : 2015. 07. 24 Updated by : 정희원, SK 플래닛.
  */
@@ -22,16 +21,10 @@ public interface PromotionEventSyncService {
 
     /**
      * 모든 프로모션 이벤트들을 동기화 한다.
-     * @return
+     * @param tenantId 대상이 되는 테넌트ID
+     * @param key 동기화 대상이 되는 메뉴ID 또는 상품ID
+     * @return 결과 객체
      */
-    SyncPromotionEventResult syncAllPromotionEvent();
-
-    /**
-     * 특정 프로모션 이벤트를 동기화 한다.
-     * @param tenantId
-     * @param key
-     * @return
-     */
-    PromotionEventWrapper syncPromotionEvent(String tenantId, String key);
+    SyncPromotionEventResult syncPromotionEvent(String tenantId, String key);
 
 }

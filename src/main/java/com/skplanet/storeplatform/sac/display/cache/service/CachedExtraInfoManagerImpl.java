@@ -9,10 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -23,7 +20,6 @@ import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +27,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -225,11 +219,13 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             }
 
             if(eventWrapper.hasError()) {
-                PromotionEventWrapper incommingEvent = promotionEventSyncService.syncPromotionEvent(tenantId, key);
-                if(incommingEvent == null)
+                // TODO 테스트 필요함 but...
+                SyncPromotionEventResult eventResult = promotionEventSyncService.syncPromotionEvent(tenantId, key);
+                if(eventResult.getUpdtCnt() > 0) {
+                    eventWrapper = eventResult.getLiveEventMap().get(tenantId + ":" + key);
+                }
+                else
                     continue;
-
-                eventWrapper = incommingEvent;
             }
 
             if (now.before(eventWrapper.getEndDt())) {

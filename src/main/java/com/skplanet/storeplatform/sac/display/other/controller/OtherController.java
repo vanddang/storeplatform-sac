@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.display.other.controller;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.other.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.service.PromotionEventSyncService;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -237,9 +236,9 @@ public class OtherController {
 
     @RequestMapping(value = "/promotion/sync/v1", method = RequestMethod.GET)
     @ResponseBody
-    public OtherPromotionSyncRes promotionSync() {
-        SyncPromotionEventResult result = promotionEventSyncService.syncAllPromotionEvent();
-        return new OtherPromotionSyncRes(result.getUpdtCnt());
+    public OtherPromotionSyncRes promotionSync(@Validated OtherPromotionSyncReq req) {
+        SyncPromotionEventResult result = promotionEventSyncService.syncPromotionEvent(req.getTenantId(), req.getKey());
+        return new OtherPromotionSyncRes(result.getUpdtCnt(), result.getErrorPromIdList());
     }
 
 }

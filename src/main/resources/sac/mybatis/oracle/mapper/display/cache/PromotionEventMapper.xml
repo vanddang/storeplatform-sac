@@ -19,6 +19,8 @@
         FROM TB_DP_PROM_POLICY
         WHERE 1=1
           AND sysdate <![CDATA[<]]> END_DT
+          <if test="tenantId != null">AND TENANT_ID = #{tenantId}</if>
+          <if test="key != null">AND PROM_TYPE_VALUE = #{key}</if>
         ORDER BY TENANT_ID, PROM_TYPE_VALUE, START_DT
     </select>
     

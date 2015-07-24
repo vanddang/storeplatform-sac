@@ -10,8 +10,10 @@
 package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
@@ -20,17 +22,14 @@ import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEventWrapper;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,12 +53,12 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
     private PlandasjConnectionFactory connectionFactory;
 
     @Override
-    public SyncPromotionEventResult syncAllPromotionEvent() {
+    public SyncPromotionEventResult syncPromotionEvent(final String tenantId, final String key) {
 
         if(connectionFactory == null)
-            return new SyncPromotionEventResult(ERR_UPDT_CNT);
+            return new SyncPromotionEventResult(ERR_UPDT_CNT, null, new HashMap<String, PromotionEventWrapper>());
 
-        Plandasj redis = connectionFactory.getConnectionPool().getClient();
+        final Plandasj redis = connectionFactory.getConnectionPool().getClient();
 
         /*
          * promoEventSet - 등록된 모든 이벤트 키
@@ -67,31 +66,24 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
          * livePromoEvent - 진행중이거나 가장 최근에 시작할 이벤트. (이 데이터 구조의 도입으로 Lock을 걸 필요가 없어짐.)
          */
 
-        // 모든 적재된 데이터 제거
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        Collection<String> promoEventSet = redis.smembers(SacRedisKeys.promoEventSet());
-        for (String promoEventKey : promoEventSet) {
-            redis.del(SacRedisKeys.promoEvent(promoEventKey));
-        }
-        redis.del(SacRedisKeys.promoEventSet());
+        final Stopwatch stopwatch = Stopwatch.createStarted();
 
+        removeEventAndSet(redis, tenantId, key);
         logger.debug("Events in redis have removed. - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
-        // 이벤트 데이터 적재
-        List<RawPromotionEvent> promEventList = commonDAO.queryForList("PromotionEventMapper.getPromotionEventList", null, RawPromotionEvent.class);
-        Multimap<String, RawPromotionEvent> onlineEventMap = LinkedHashMultimap.create();
-        for (RawPromotionEvent e : promEventList) {
-            onlineEventMap.put(e.getTenantId() + ":" + e.getPromTypeValue(), e);
-        }
+        Multimap<String, RawPromotionEvent> fetchedEventMap = fetchEventDataFromDb(tenantId, key);
         logger.debug("Fetch events from db - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
         // 이벤트 등록
         int updtCnt = 0;
         List<Integer> errorPromId = Lists.newArrayList();
+        Map<String, PromotionEventWrapper> liveMap = Maps.newHashMap();
 
-        for (Map.Entry<String, Collection<RawPromotionEvent>> events : onlineEventMap.asMap().entrySet()) {
+        for (Map.Entry<String, Collection<RawPromotionEvent>> events : fetchedEventMap.asMap().entrySet()) {
 
             PromotionEventWrapper incommingEventWrapper = null;
+
+            ///// Inner loop start
             for (RawPromotionEvent rawEvent : events.getValue()) {
 
                 PromotionEventWrapper wrapper = new PromotionEventWrapper(rawEvent);
@@ -104,11 +96,14 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
                 if(incommingEventWrapper == null)
                     incommingEventWrapper = wrapper;
 
+                // TODO 프로세스가 동시에 진행되는 경우 데이터가 중복 등록될 수 있음. (서비스시 문제는 없어보임)
                 redis.rpush(SacRedisKeys.promoEvent(events.getKey()), wrapper.getStr());
 
                 ++updtCnt;
             }
+            ///// Inner loop end
 
+            // 유효한 event가 없는 경우
             if(incommingEventWrapper == null) {
                 redis.hdel(SacRedisKeys.livePromoEvent(), events.getKey());
                 continue; // for outer loop
@@ -132,16 +127,10 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
             }
 
             redis.sadd(SacRedisKeys.promoEventSet(), events.getKey());
+            liveMap.put(events.getKey(), incommingEventWrapper);
         }
 
-        int cntLiveRemoved = 0;
-        Set<String> liveKeySet = redis.hkeys(SacRedisKeys.livePromoEvent());
-        if(liveKeySet.removeAll(onlineEventMap.keySet())) {
-            for(String remKey : liveKeySet) {
-                redis.hdel(SacRedisKeys.livePromoEvent(), remKey);
-                ++cntLiveRemoved;
-            }
-        }
+        int cntLiveRemoved = removeDroppedEventFromLiveEvents(redis, fetchedEventMap.keySet());
         logger.debug("Unused or cancelled live events are removed. [{}]", cntLiveRemoved);
 
         logger.debug("Sync events to redis finished. - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
@@ -149,31 +138,93 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
         stopwatch.stop();
         logger.debug("Event sync processing time = {}", stopwatch);
 
-        // TODO 정상적으로 등록되었는지 검증. 갯수 카운팅
+        checkSyncedData();
 
-        return new SyncPromotionEventResult(updtCnt, errorPromId);
+        return new SyncPromotionEventResult(updtCnt, errorPromId, liveMap);
     }
 
     /**
-     * TODO Wrapper로 처리
-     * @param rawEvent
+     * Drop된 데이터들을 찾아 라이브 이벤트에서 제거한다.
+     * @param redis
+     * @param fetchedKeys
+     * @return 제거된 갯수
+     */
+    private int removeDroppedEventFromLiveEvents(Plandasj redis, Set<String> fetchedKeys) {
+
+        int cntLiveRemoved = 0;
+        Set<String> liveKeySet = redis.hkeys(SacRedisKeys.livePromoEvent());
+
+        if(liveKeySet.removeAll(fetchedKeys)) {
+            for(String remKey : liveKeySet) {
+                redis.hdel(SacRedisKeys.livePromoEvent(), remKey);
+                ++cntLiveRemoved;
+            }
+        }
+
+        return cntLiveRemoved;
+    }
+
+    /**
+     * DB에서 이벤트 데이터를 조회해온다.
+     * 응답은 Map형태인데, 키는 tenantId+key가 조합된 문자열이며, 값은 예정된 이벤트들(하나의 키에 여러 이벤트가 예약되어 있을수 있음)이다.
+     * @param tenantId
+     * @param key
      * @return
      */
-    private String convertRawPromotionEvent2Str(RawPromotionEvent rawEvent) {
+    private Multimap<String, RawPromotionEvent> fetchEventDataFromDb(String tenantId, String key) {
 
-        Object[] v = new Object[]{Integer.toHexString(rawEvent.hashCode()),
-                rawEvent.getPromId(),
-                rawEvent.getRateGrd1(),
-                rawEvent.getRateGrd2(),
-                rawEvent.getRateGrd3(),
-                rawEvent.getAcmlMethodCd(),
-                rawEvent.getAcmlDt()};
+        Map<String, Object> req = Maps.newHashMap();
+        if(!Strings.isNullOrEmpty(tenantId))
+            req.put("tenantId", tenantId);
+        if(!Strings.isNullOrEmpty(key))
+            req.put("key", key);
 
-        return StringUtils.join(v, " ");
+        List<RawPromotionEvent> promEventList = commonDAO.queryForList("PromotionEventMapper.getPromotionEventList", req, RawPromotionEvent.class);
+
+        Multimap<String, RawPromotionEvent> onlineEventMap = LinkedHashMultimap.create();
+        for (RawPromotionEvent e : promEventList) {
+            onlineEventMap.put(e.getTenantId() + ":" + e.getPromTypeValue(), e);
+        }
+
+        return onlineEventMap;
     }
 
-    @Override
-    public PromotionEventWrapper syncPromotionEvent(String tenantId, String key) {
-        return null;
+    /**
+     * 대상이 되는 promoEvent, promoEventSet을 지운다.
+     * @param redis
+     * @param tenantId 대상이 되는 tenantId
+     * @param key 대상이 되는 이벤트 키(메뉴 또는 상품)
+     */
+    private void removeEventAndSet(Plandasj redis, String tenantId, String key) {
+
+        String remTarget = StringUtils.defaultString(tenantId) + ":" + StringUtils.defaultString(key);
+
+        if (tenantId != null && key != null) {
+            redis.srem(SacRedisKeys.promoEventSet(), remTarget);
+            redis.del(SacRedisKeys.promoEvent(remTarget));
+        }
+        else {
+            // 전체 삭제
+            Collection<String> promoEventSet = redis.smembers(SacRedisKeys.promoEventSet());
+
+            boolean clearMode = (tenantId == null && key == null);
+            for (String promoEventKey : promoEventSet) {
+                if(promoEventKey.contains(remTarget)) {
+                    redis.del(SacRedisKeys.promoEvent(promoEventKey));
+
+                    if(!clearMode)
+                        redis.srem(SacRedisKeys.promoEventSet(), promoEventKey);
+                }
+            }
+
+            if(clearMode)
+                redis.del(SacRedisKeys.promoEventSet());
+        }
+
     }
+
+    /**
+     * TODO 동기화 처리된 데이터의 유효성 검증
+     */
+    private void checkSyncedData() {}
 }
