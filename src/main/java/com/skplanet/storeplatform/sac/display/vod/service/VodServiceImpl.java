@@ -145,6 +145,11 @@ public class VodServiceImpl implements VodService {
 		if (vodDetail != null) {
 			// Screenshots
 			List<ProductImage> screenshotList = this.getScreenshotList(req.getChannelId(), req.getLangCd());
+			VodDetail usePolicyInfo = getProdUsePolicyInfo(param);
+			if (usePolicyInfo != null) {
+				// 조회된 이용정책 set update by 이석희 2015.07.24
+				vodDetail = this.setUsePolicyInfo(vodDetail, usePolicyInfo);
+			}
 			this.mapProduct(req, product, vodDetail, screenshotList, supportFhdVideo);
 
 			// 좋아요 여부
@@ -1115,5 +1120,37 @@ public class VodServiceImpl implements VodService {
 
 		return badge;
 	}
+	
+	/**
+	 * 이용정책 set (최신 Chapter Episode의 이용정책)
+	 * 
+	 * @param epubDetail
+	 * @param usePolicyInfo
+	 * @return EpubDetail
+	 */
+	private VodDetail setUsePolicyInfo(VodDetail vodDetail, VodDetail usePolicyInfo) {
 
+		vodDetail.setStoreProdId(usePolicyInfo.getStoreProdId());
+		vodDetail.setStoreDrmYn(usePolicyInfo.getStoreDrmYn());
+		vodDetail.setStoreDlStrmCd(usePolicyInfo.getStoreDlStrmCd());
+
+		vodDetail.setPlayProdId(usePolicyInfo.getPlayProdId());
+		vodDetail.setPlayDrmYn(usePolicyInfo.getPlayDrmYn());
+		vodDetail.setPlayUsePeriod(usePolicyInfo.getPlayUsePeriod());
+		vodDetail.setPlayUsePeriodUnitCd(usePolicyInfo.getPlayUsePeriodUnitCd());
+		vodDetail.setPlayDlStrmCd(usePolicyInfo.getPlayDlStrmCd());
+
+		return vodDetail;
+	}    
+	
+	/**
+	 * 채널의 상품 이용정책 조회 (가장 최신 Chapter의 Episode 이용정책 조회)
+	 * 
+	 * @param param
+	 * @return
+	 */
+	private VodDetail getProdUsePolicyInfo(Map<String, Object> param) {
+		logger.debug("param={}", param);
+		return this.commonDAO.queryForObject("VodDetail.getProdUsePolicyInfo", param, VodDetail.class);
+	}    	
 }

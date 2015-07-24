@@ -511,5 +511,96 @@
 		AND T.PROD_ID = PIE.PROD_ID(+) AND PIE.IMG_CD(+) = 'DP000127'
 		AND T.CHNL_PROD_ID = STAT.PROD_ID(+) AND T.TENANT_ID = STAT.TENANT_ID(+)
     </select>
+
+    <select id="getProdUsePolicyInfo" parameterType="map" resultType="VodDetail">
+		SELECT /* VodDetailMapper.getProdUsePolicyInfo, VOD 상품 이용정책 조회, 이석희/I-S Plus, 2015-07-24 */
+		       T2.*
+		    , (CASE WHEN PLAY_DWLD_STRM='DP010501' THEN 'dl' WHEN PLAY_DWLD_STRM='DP010502' THEN 'strm' WHEN PLAY_DWLD_STRM='DP010503' THEN 'both' END) AS PLAY_DL_STRM_CD      
+            , (CASE WHEN STORE_DWLD_STRM='DP010501' THEN 'dl' WHEN STORE_DWLD_STRM='DP010502' THEN 'strm' WHEN STORE_DWLD_STRM='DP010503' THEN 'both' END) AS STORE_DL_STRM_CD
+		  FROM 
+		       (
+		        SELECT T1.CID
+		             , T1.CHAPTER
+		             , MAX(CHNL_PROD_ID) AS CHNL_PROD_ID
+		             , MAX(PROD_ID) AS PROD_ID
+		             , MAX(T1.LAST_DEPLOY_DT) AS LAST_DEPLOY_DT
+		             , MAX( T1.TENANT_ID ) AS TENANT_ID
+		             , MAX( T1.MENU_ID ) AS MENU_ID
+		             , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.PROD_ID ) ) AS STORE_PROD_ID
+		             , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.PROD_ID ) ) AS PLAY_PROD_ID
+		             , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.DRM_YN ) ) AS STORE_DRM_YN
+		             , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.DRM_YN ) ) AS PLAY_DRM_YN
+		             , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.DWLD_STRM_CLSF_CD ) ) AS STORE_DWLD_STRM
+		             , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.DWLD_STRM_CLSF_CD ) ) AS PLAY_DWLD_STRM
+		             , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.USE_PERIOD ) ) AS STORE_USE_PERIOD
+		             , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD ) ) AS PLAY_USE_PERIOD
+		             , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
+		             , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD
+		          FROM
+		               (
+		                SELECT PR.PROD_ID AS CHNL_PROD_ID
+		                     , PR.PART_PROD_ID AS PROD_ID
+		                     , PD.LAST_DEPLOY_DT
+		                     , PD.CID
+		                     , TP.TENANT_ID
+		                     , MP.CHAPTER
+		                     , MC.MENU_ID AS MENU_ID
+		                     , MP.POSS_LEND_CLSF_CD
+		                     , PD.DRM_YN
+		                     , UP.DWLD_STRM_CLSF_CD
+		                     , UP.USE_PERIOD_UNIT_CD
+		                     , UP.USE_PERIOD
+		                  FROM TB_DP_PROD_RSHP PR
+		                     , TB_DP_PROD PD
+		                     , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
+		                     , TB_DP_MENU_CATEGORY MC
+		                     , TB_DP_SUB_CONTENTS SC
+		                     , TB_DP_TENANT_PROD TP
+		                     , TB_DP_TENANT_PROD_PRICE PRC
+		                     , TB_DP_VOD_PROD MP
+		                     , TB_DP_SPRT_DEVICE SD
+		                     , TB_CM_DEVICE DV
+		                     , TB_DP_USE_POLICY UP 
+		                 WHERE PR.PROD_ID = #{channelId}
+		                   AND PR.PART_PROD_ID = PD.PROD_ID
+		                   AND TP.PROD_ID = PD.PROD_ID
+		                   AND PD.USE_POLICY_ID = UP.USE_POLICY_ID(+)
+		                   AND PRC.PROD_ID = PD.PROD_ID
+		                   AND PRC.TENANT_ID = TP.TENANT_ID
+		                   AND MP.PROD_ID = PD.PROD_ID
+		                   AND TP.TENANT_ID = #{tenantId}
+		                   AND TP.EXPO_YN = 'Y'
+                           <choose>
+                           <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
+                           AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
+                           </when>
+                           <otherwise>
+                           AND TP.PROD_STATUS_CD = 'PD000403'
+                           </otherwise>
+                           </choose>
+		                   AND PD.PROD_ID = CPM.PROD_ID
+		                   AND CPM.MENU_ID = MC.MENU_ID
+		                   AND MC.USE_YN = 'Y'
+		                   AND PD.PROD_ID = SD.PROD_ID
+                           AND (SD.DEVICE_MODEL_CD = #{deviceModel} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+                           AND DV.DEVICE_MODEL_CD = #{deviceModel} 
+                           AND DV.USE_YN = 'Y'
+		                   AND SC.PROD_ID = PD.PROD_ID
+		                   AND SC.SALE_YN ='Y'
+		                   AND ( CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' AND NVL(PD.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
+		                                                                                            ELSE 'SUPPORT'
+		                          END) = 'SUPPORT'
+		                   AND DECODE( DV.SD_VIDEO_SPRT_YN , 'Y' , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( DV.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1
+		                   AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
+		                   AND PD.SVC_GRP_CD = 'DP000203'
+		                   AND PD.CONTENTS_TYPE_CD = 'PD002502'
+		                   AND PD.SVC_TYPE_CD IN ('DP001112', 'DP001115') 
+		               ) T1
+		        GROUP BY T1.CID, T1.CHAPTER
+		        ORDER BY T1.CHAPTER DESC, LAST_DEPLOY_DT DESC 
+		       ) T2
+		  WHERE ROWNUM =1
+    </select>
     
 </mapper>
+
