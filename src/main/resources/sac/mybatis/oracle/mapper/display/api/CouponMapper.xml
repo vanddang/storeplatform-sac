@@ -792,9 +792,9 @@
           AND ROWNUM =1
     </select>    
     
-    <!--특가 상품 상세 조회-->
+    <!--특정 기간에 대한 특가 상품 상세 조회-->
     <select id="GET_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE" resultType="com.skplanet.storeplatform.external.client.shopping.vo.EventInfo" parameterType="HashMap">
-       /* CouponMapper.xml, GET_SPECIAL_PRODUCT_DETAIL, 특가 상품 상세 조회, 김형식/SK플래닛  , 2014-01-08 */
+       /* CouponMapper.xml, GET_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE, 특정 기간에 대한 특가 상품 상세 조회, 김형식/SK플래닛  , 2015-07-24 */
         SELECT 
                (
                 SELECT SRC_CONTENT_ID 
