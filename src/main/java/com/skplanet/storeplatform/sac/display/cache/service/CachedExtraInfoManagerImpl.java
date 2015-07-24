@@ -44,7 +44,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
-    public static final String LOCK_KEY = "SyncPromotionEvent";
     public static final String LIVE_EVENT_EXIST = "-";
 
     @Autowired
@@ -54,9 +53,10 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     @Autowired(required = false)
     private PlandasjConnectionFactory connectionFactory;
 
-    private static final Logger logger = LoggerFactory.getLogger(CachedExtraInfoManagerImpl.class);
+    @Autowired
+    private PromotionEventSyncService promotionEventSyncService;
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
+    private static final Logger logger = LoggerFactory.getLogger(CachedExtraInfoManagerImpl.class);
 
     @Override
     @Cacheable(value = "sac:display:updateProductInfo:v3", key = "#param.getCacheKey()")
@@ -170,78 +170,6 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     }
 
     @Override
-    public int syncPromotionEvent() {
-
-        if(connectionFactory == null)
-            return -1;
-
-        Plandasj redis = connectionFactory.getConnectionPool().getClient();
-
-        /*
-         * promoEventSet - 등록된 모든 이벤트 키
-         * promoEvent - 진행중 또는 예정 이벤트 목록
-         * livePromoEvent - 진행중인 이벤트. 이 데이터 구조의 도입으로 Lock을 걸 필요가 없어짐.
-         */
-
-        // 모든 적재된 데이터 제거
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        Collection<String> promoEventSet = redis.smembers(SacRedisKeys.promoEventSet());
-        for (String promoEventKey : promoEventSet) {
-            redis.del(SacRedisKeys.promoEvent(promoEventKey));
-        }
-        redis.del(SacRedisKeys.promoEventSet());
-
-        logger.debug("Exist events are removed - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
-
-        // 이벤트 데이터 적재
-        List<RawPromotionEvent> promEventList = commonDAO.queryForList("CachedExtraInfoManager.getPromotionEventList", null, RawPromotionEvent.class);
-        Multimap<String, RawPromotionEvent> eventMap = LinkedHashMultimap.create();
-        for (RawPromotionEvent e : promEventList) {
-            eventMap.put(e.getTenantId() + ":" + e.getPromTypeValue(), e);
-        }
-        logger.debug("Fetch events from db - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
-
-        // 이벤트 등록
-        int updtCnt = 0;
-
-        for (Map.Entry<String, Collection<RawPromotionEvent>> events : eventMap.asMap().entrySet()) {
-
-            for (RawPromotionEvent event : events.getValue()) {
-
-                String strEvent = convertRawPromotionEvent2Str(event);
-                redis.rpush(SacRedisKeys.promoEvent(events.getKey()),
-                        event.getEventKey() + ":" + strEvent);
-
-                ++updtCnt;
-            }
-
-            redis.hsetnx(SacRedisKeys.livePromoEvent(), events.getKey(), LIVE_EVENT_EXIST);
-            redis.sadd(SacRedisKeys.promoEventSet(), events.getKey());
-        }
-        logger.debug("Regist events to redis - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
-
-        stopwatch.stop();
-        logger.debug("Event sync processing time = {}", stopwatch);
-
-        // TODO 정상적으로 등록되었는지 검증. 갯수 카운팅
-
-        return updtCnt;
-    }
-
-    private String convertRawPromotionEvent2Str(RawPromotionEvent obj) {
-
-        Object[] v = new Object[]{Integer.toHexString(obj.hashCode()),
-                obj.getPromId(),
-                obj.getRateGrd1(),
-                obj.getRateGrd2(),
-                obj.getRateGrd3(),
-                obj.getAcmlMethodCd(),
-                obj.getAcmlDt()};
-
-        return StringUtils.join(v, " ");
-    }
-
-    @Override
     public PromotionEvent getPromotionEvent(GetPromotionEventParam param) {
 
         if(connectionFactory == null)
@@ -268,9 +196,9 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
         final String[] keys = new String[]{param.getProdId(), menuOrTopMenuId, topMenuId};
 
         List<String> liveEvents = client.hmget(SacRedisKeys.livePromoEvent(),
-                                                tenantId + ":" + keys[0],
-                                                tenantId + ":" + keys[1],
-                                                tenantId + ":" + keys[2]);
+                tenantId + ":" + keys[0],
+                tenantId + ":" + keys[1],
+                tenantId + ":" + keys[2]);
 
         // 조회된 liveEvent 순서대로 유효한 이벤트 정보를 찾아 응답한다.
         for (int i = 0; i < liveEvents.size(); ++i) {
@@ -297,7 +225,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             }
 
             if(eventWrapper.hasError()) {
-                PromotionEventWrapper incommingEvent = syncSpecificEvent(tenantId, key);
+                PromotionEventWrapper incommingEvent = promotionEventSyncService.syncPromotionEvent(tenantId, key);
                 if(incommingEvent == null)
                     continue;
 
@@ -349,27 +277,6 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
             return eventWrapper;
         }
-
-        return null;
-    }
-
-
-    /**
-     * 특정 이벤트를 동기화 처리하고 라이브 이벤트를 응답한다.
-     * @param tenantId 테넌트ID
-     * @param key 식별자
-     * @return 라이브 이벤트
-     */
-    private PromotionEventWrapper syncSpecificEvent(String tenantId, String key) {
-        return null;
-    }
-
-    @Override
-    public Map<String, PromotionEvent> getPromotionEventMap(boolean liveOnly) {
-        if(connectionFactory == null)
-            return null; // TODO Impl.
-
-        Plandasj redis = connectionFactory.getConnectionPool().getClient();
 
         return null;
     }

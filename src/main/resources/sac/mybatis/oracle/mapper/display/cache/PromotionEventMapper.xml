@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PromotionEventMapper">
+
+    <select id="getPromotionEventList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent">
+        SELECT /* CachedExtraInfoManager.getPromotionEventList, 정희원/SKP, 2015-07-17 */
+            TENANT_ID,
+            PROM_TYPE_CD,
+            PROM_TYPE_VALUE,
+            to_char(START_DT,'yyyyMMddHH24mm')||'_'||to_char(END_DT,'yyyyMMddHH24mm') as DATETIME_KEY,
+            PROM_ID,
+            ACML_METHOD_CD,
+            TO_CHAR(ACML_DATE, 'yyyyMMddHH24mm') as ACML_DT,
+            RATE_GRD_1,
+            RATE_GRD_2,
+            RATE_GRD_3,
+            START_DT,
+            END_DT
+        FROM TB_DP_PROM_POLICY
+        WHERE 1=1
+          AND sysdate <![CDATA[<]]> END_DT
+        ORDER BY TENANT_ID, PROM_TYPE_VALUE, START_DT
+    </select>
+    
+</mapper>

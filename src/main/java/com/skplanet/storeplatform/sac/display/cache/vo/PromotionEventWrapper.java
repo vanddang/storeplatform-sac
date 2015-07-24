@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import java.util.Date;
 /**
  * <p>
  * PromotionEventWrapper
+ * PromotionEvent, RawPromotionEvent, 직렬화된 전문간의 변환 처리를 담당한다.
  * </p>
  * Updated on : 2015. 07. 23 Updated by : 정희원, SK 플래닛.
  */
@@ -33,14 +35,33 @@ public class PromotionEventWrapper {
     private Date startDt;
     private Date endDt;
     private String str;
+    private String datetimeKey;
     private String bodyPart;
     private PromotionEvent event = null;
 
-    public PromotionEventWrapper(PromotionEvent event) {
-        this.event = event;
+    public PromotionEventWrapper(RawPromotionEvent rawEvent) {
+
+        Preconditions.checkNotNull(rawEvent);
+
+        this.datetimeKey = rawEvent.getDatetimeKey();
+
+        Object[] v = new Object[]{Integer.toHexString(rawEvent.hashCode()),
+                rawEvent.getPromId(),
+                rawEvent.getRateGrd1(),
+                rawEvent.getRateGrd2(),
+                rawEvent.getRateGrd3(),
+                rawEvent.getAcmlMethodCd(),
+                rawEvent.getAcmlDt()};
+
+        str = rawEvent.getDatetimeKey() + ":" + StringUtils.join(v, " ");
     }
 
     public PromotionEventWrapper(String str) {
+
+        if(Strings.isNullOrEmpty(str)) {
+            this.hasError = true;
+            return;
+        }
 
         this.str = str;
 
@@ -53,6 +74,7 @@ public class PromotionEventWrapper {
             String[] datePart = StringUtils.split(strPart[0], "_");
             Preconditions.checkArgument(datePart.length == 2, "Event body date part is wrong.");
 
+            this.datetimeKey = strPart[0];
             this.startDt = DATE_FORMAT.parse(datePart[0]);
             this.endDt = DATE_FORMAT.parse(datePart[1]);
 
@@ -91,6 +113,7 @@ public class PromotionEventWrapper {
 
     public PromotionEvent getPromotionEvent() {
 
+        // TODO 변환 오류에 대해 인지 및 처리 가능하도록 해야 함
         if (event == null) {
 
             String[] body = StringUtils.split(this.bodyPart);
@@ -135,5 +158,9 @@ public class PromotionEventWrapper {
         }
 
         return this.str;
+    }
+
+    public String getDatetimeKey() {
+        return this.datetimeKey;
     }
 }

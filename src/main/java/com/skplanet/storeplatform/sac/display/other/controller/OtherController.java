@@ -13,6 +13,8 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.sac.client.display.vo.other.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.service.PromotionEventSyncService;
+import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.other.service.*;
 import com.skplanet.storeplatform.sac.display.other.vo.GetVersionInfoByPkgParam;
@@ -66,7 +68,7 @@ public class OtherController {
 	private OtherAppVersionService appVersionService;
 
     @Autowired
-    private CachedExtraInfoManager cachedExtraInfoManager;
+    private PromotionEventSyncService promotionEventSyncService;
 
 
 	/**
@@ -236,8 +238,8 @@ public class OtherController {
     @RequestMapping(value = "/promotion/sync/v1", method = RequestMethod.GET)
     @ResponseBody
     public OtherPromotionSyncRes promotionSync() {
-        int updtCnt = cachedExtraInfoManager.syncPromotionEvent();
-        return new OtherPromotionSyncRes(updtCnt);
+        SyncPromotionEventResult result = promotionEventSyncService.syncAllPromotionEvent();
+        return new OtherPromotionSyncRes(result.getUpdtCnt());
     }
 
 }

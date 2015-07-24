@@ -24,7 +24,7 @@ public class RawPromotionEvent {
     private String tenantId;
     private String promTypeCd;
     private String promTypeValue;
-    private String eventKey;
+    private String datetimeKey;
 
     private Integer promId;
     private String acmlMethodCd;
@@ -60,12 +60,12 @@ public class RawPromotionEvent {
         this.promTypeValue = promTypeValue;
     }
 
-    public String getEventKey() {
-        return eventKey;
+    public String getDatetimeKey() {
+        return datetimeKey;
     }
 
-    public void setEventKey(String eventKey) {
-        this.eventKey = eventKey;
+    public void setDatetimeKey(String datetimeKey) {
+        this.datetimeKey = datetimeKey;
     }
 
     public Integer getPromId() {
@@ -139,7 +139,7 @@ public class RawPromotionEvent {
 
         RawPromotionEvent that = (RawPromotionEvent) o;
 
-        if (eventKey != null ? !eventKey.equals(that.eventKey) : that.eventKey != null) return false;
+        if (datetimeKey != null ? !datetimeKey.equals(that.datetimeKey) : that.datetimeKey != null) return false;
         if (promId != null ? !promId.equals(that.promId) : that.promId != null) return false;
         if (acmlMethodCd != null ? !acmlMethodCd.equals(that.acmlMethodCd) : that.acmlMethodCd != null) return false;
         if (acmlDt != null ? !acmlDt.equals(that.acmlDt) : that.acmlDt != null) return false;
