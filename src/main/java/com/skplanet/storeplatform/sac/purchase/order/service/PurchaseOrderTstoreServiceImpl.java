@@ -9,13 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
-import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCouponSCI;
-import com.skplanet.storeplatform.external.client.tstore.sci.TStoreNotiSCI;
-import com.skplanet.storeplatform.external.client.tstore.sci.TStorePurchaseSCI;
-import com.skplanet.storeplatform.external.client.tstore.vo.*;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -25,8 +21,38 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
+import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCouponSCI;
+import com.skplanet.storeplatform.external.client.tstore.sci.TStoreNotiSCI;
+import com.skplanet.storeplatform.external.client.tstore.sci.TStorePurchaseSCI;
+import com.skplanet.storeplatform.external.client.tstore.vo.Coupon;
+import com.skplanet.storeplatform.external.client.tstore.vo.ProdId;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeConfirmDetailEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeConfirmEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeConfirmEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanceDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanceEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanceEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreJoinOfferingEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreJoinOfferingEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiV2EcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiV2EcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListV2EcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListV2EcRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * 
@@ -69,81 +95,83 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 * 
 	 * @return T Store 쿠폰 목록
 	 */
-//	@Override
-//	public String searchTstoreOldCouponList(String userKey, String deviceId, List<String> prodIdList, int purchaseQty) {
-//		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-//		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
-//		// return "NULL";
-//		// }
-//
-//		List<ProdId> prodIdObjList = new ArrayList<ProdId>();
-//		ProdId prodIdObj = null;
-//		for (String prodId : prodIdList) {
-//			prodIdObj = new ProdId();
-//			prodIdObj.setProdId(prodId);
-//			prodIdObjList.add(prodIdObj);
-//		}
-//
-//		UserCouponListEcReq userCouponListEcReq = new UserCouponListEcReq();
-//		userCouponListEcReq.setUserKey(userKey);
-//		userCouponListEcReq.setMdn(deviceId);
-//		// userCouponListEcReq.setCouponType("");
-//		userCouponListEcReq.setProdIdList(prodIdObjList);
-//
-//		UserCouponListEcRes userCouponListEcRes = null;
-//		try {
-//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,REQ,{}",
-//					ReflectionToStringBuilder.toString(userCouponListEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
-//			userCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
-//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,RES,{}",
-//					ReflectionToStringBuilder.toString(userCouponListEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
-//		} catch (Exception e) {
-//			throw new StorePlatformException("SAC_PUR_7210", e);
-//		}
-//
-//		if (StringUtils.equals(userCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
-//			throw new StorePlatformException("SAC_PUR_7206", userCouponListEcRes.getResultCd(),
-//					userCouponListEcRes.getResultMsg());
-//		}
-//
-//		if (CollectionUtils.isNotEmpty(userCouponListEcRes.getCouponList())) {
-//			StringBuffer sbTstoreCoupon = new StringBuffer(256);
-//
-//			for (Coupon coupon : userCouponListEcRes.getCouponList()) {
-//				if (sbTstoreCoupon.length() > 0) {
-//					sbTstoreCoupon.append(";");
-//				}
-//				sbTstoreCoupon.append(coupon.getCouponId()).append(":")
-//						.append(StringUtils.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", ""))
-//						.append(":").append(coupon.getCouponAmt() * purchaseQty).append(":")
-//						.append(coupon.getMakeHost()).append(":").append(coupon.getCouponType());
-//			}
-//
-//			return sbTstoreCoupon.toString();
-//
-//		} else {
-//			return "NULL";
-//		}
-//	}
+	// @Override
+	// public String searchTstoreOldCouponList(String userKey, String deviceId, List<String> prodIdList, int
+	// purchaseQty) {
+	// // TAKTEST:: 상용 -> BMS 연동 불가로 Skip
+	// // if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+	// // return "NULL";
+	// // }
+	//
+	// List<ProdId> prodIdObjList = new ArrayList<ProdId>();
+	// ProdId prodIdObj = null;
+	// for (String prodId : prodIdList) {
+	// prodIdObj = new ProdId();
+	// prodIdObj.setProdId(prodId);
+	// prodIdObjList.add(prodIdObj);
+	// }
+	//
+	// UserCouponListEcReq userCouponListEcReq = new UserCouponListEcReq();
+	// userCouponListEcReq.setUserKey(userKey);
+	// userCouponListEcReq.setMdn(deviceId);
+	// // userCouponListEcReq.setCouponType("");
+	// userCouponListEcReq.setProdIdList(prodIdObjList);
+	//
+	// UserCouponListEcRes userCouponListEcRes = null;
+	// try {
+	// this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,REQ,{}",
+	// ReflectionToStringBuilder.toString(userCouponListEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+	// userCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
+	// this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,RES,{}",
+	// ReflectionToStringBuilder.toString(userCouponListEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+	// } catch (Exception e) {
+	// throw new StorePlatformException("SAC_PUR_7210", e);
+	// }
+	//
+	// if (StringUtils.equals(userCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) ==
+	// false) {
+	// throw new StorePlatformException("SAC_PUR_7206", userCouponListEcRes.getResultCd(),
+	// userCouponListEcRes.getResultMsg());
+	// }
+	//
+	// if (CollectionUtils.isNotEmpty(userCouponListEcRes.getCouponList())) {
+	// StringBuffer sbTstoreCoupon = new StringBuffer(256);
+	//
+	// for (Coupon coupon : userCouponListEcRes.getCouponList()) {
+	// if (sbTstoreCoupon.length() > 0) {
+	// sbTstoreCoupon.append(";");
+	// }
+	// sbTstoreCoupon.append(coupon.getCouponId()).append(":")
+	// .append(StringUtils.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", ""))
+	// .append(":").append(coupon.getCouponAmt() * purchaseQty).append(":")
+	// .append(coupon.getMakeHost()).append(":").append(coupon.getCouponType());
+	// }
+	//
+	// return sbTstoreCoupon.toString();
+	//
+	// } else {
+	// return "NULL";
+	// }
+	// }
 
 	/**
-	 *
+	 * 
 	 * <pre>
 	 * T Store 쿠폰 목록 조회.
 	 * </pre>
-	 *
+	 * 
 	 * @param userKey
 	 *            내부 회원 NO
-	 *
+	 * 
 	 * @param deviceId
 	 *            MDN
-	 *
+	 * 
 	 * @param prodIdList
 	 *            구매상품ID 목록
-	 *
+	 * 
 	 * @param purchaseQty
 	 *            구매 갯수
-	 *
+	 * 
 	 * @return T Store 쿠폰 목록
 	 */
 	@Override
@@ -689,7 +717,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 
 	/**
 	 * Join offering immediately.
-	 *
+	 * 
 	 * @param prchsId
 	 *            구매 ID
 	 * @param userKey
@@ -697,9 +725,12 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 * @return 오퍼링 즉시 참여 결과
 	 */
 	@Override
-	public TStoreJoinOfferingEcRes joinOfferingImmediately(String prchsId, String userKey, String prodId, String offeringId) {
+	public TStoreJoinOfferingEcRes joinOfferingImmediately(String prchsId, String userKey, String prodId,
+			String offeringId) {
 		TStoreJoinOfferingEcReq tStoreJoinOfferingEcReq = new TStoreJoinOfferingEcReq();
-		TStoreJoinOfferingEcRes tStoreJoinOfferingEcRes = new TStoreJoinOfferingEcRes();
+		// TStoreJoinOfferingEcRes tStoreJoinOfferingEcRes = new TStoreJoinOfferingEcRes();
+		// 2015.07.23 sonarQube 수정
+		TStoreJoinOfferingEcRes tStoreJoinOfferingEcRes = null;
 
 		tStoreJoinOfferingEcReq.setPrchsId(prchsId);
 		tStoreJoinOfferingEcReq.setUserKey(userKey);
@@ -716,9 +747,15 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,JOINOFFERING,ERROR,{},{}", prchsId, e.getMessage());
 			throw new StorePlatformException("SAC_PUR_7225", e);
 		}
-		if (StringUtils.equals(tStoreJoinOfferingEcRes.getResultCd(),
-				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
-			throw new StorePlatformException("SAC_PUR_7224", tStoreJoinOfferingEcRes.getResultCd(),tStoreJoinOfferingEcRes.getResultMsg());
+
+		// 2015.07.23 sonarQube 수정
+		if (tStoreJoinOfferingEcRes == null) {
+			tStoreJoinOfferingEcRes = new TStoreJoinOfferingEcRes();
+		}
+
+		if (StringUtils.equals(tStoreJoinOfferingEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+			throw new StorePlatformException("SAC_PUR_7224", tStoreJoinOfferingEcRes.getResultCd(),
+					tStoreJoinOfferingEcRes.getResultMsg());
 		}
 		return tStoreJoinOfferingEcRes;
 	}

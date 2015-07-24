@@ -55,12 +55,12 @@ public class HistoryProdClsiServiceImpl implements HistoryProdClsiService {
 
 		// SC request/response VO
 		HistoryProdClsiScReq scRequest = new HistoryProdClsiScReq();
-		HistoryProdClsiScRes scResponse = new HistoryProdClsiScRes();
+		HistoryProdClsiScRes scResponse;
 
 		// SAC Response VO
 		HistoryProdClsiSacRes response = new HistoryProdClsiSacRes();
 		List<HistoryProdClsiSac> sacHistoryList = new ArrayList<HistoryProdClsiSac>();
-		HistoryProdClsiSac historySac = new HistoryProdClsiSac();
+		HistoryProdClsiSac historySac;
 
 		/*************************************************
 		 * SC Request Setting Start

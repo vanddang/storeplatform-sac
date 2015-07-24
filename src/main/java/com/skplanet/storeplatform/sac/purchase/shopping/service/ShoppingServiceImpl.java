@@ -117,8 +117,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public CouponPublishAvailableSacV2Result getCouponPublishAvailableV2(
 			CouponPublishAvailableSacV2Param couponPublishAvailableSacV2Param) {
 
-		CouponPublishAvailableSacV2Result couponResult = new CouponPublishAvailableSacV2Result();
-		CouponPublishAvailableSacV2Result specialCouponResult = new CouponPublishAvailableSacV2Result();
+		CouponPublishAvailableSacV2Result specialCouponResult = null;
 
 		CouponPublishAvailableSacParam couponPublishAvailableSacParam = new CouponPublishAvailableSacParam();
 
@@ -198,7 +197,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 
 		// 쿠폰CMS 연동
-		couponResult = this.shoppingRepository.getCouponPublishAvailableV2(couponPublishAvailableSacV2Param);
+		CouponPublishAvailableSacV2Result couponResult = this.shoppingRepository
+				.getCouponPublishAvailableV2(couponPublishAvailableSacV2Param);
 
 		this.logger.info("getCouponPublishAvailableV2 couponResult : {}" + couponResult);
 

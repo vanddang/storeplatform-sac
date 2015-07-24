@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -174,19 +175,35 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// 정책 체크
 		IndividualPolicyInfoSac individualPolicyInfoSac = null;
 
-		for (String key : policyResMap.keySet()) {
-			if (policyCodeList.contains(key) == false) {
+		// for (String key : policyResMap.keySet()) {
+		// if (policyCodeList.contains(key) == false) {
+		// continue;
+		// }
+		//
+		// individualPolicyInfoSac = policyResMap.get(key);
+		//
+		// if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+		// this.logger.info("PRCHS,ORDER,SAC,POLICY,BLOCK,{}", deviceId);
+		// return true;
+		// }
+		//
+		// policyResMap.remove(key);
+		// }
+
+		// 2015.07.23 sonarQube 수정
+		for (Entry<String, IndividualPolicyInfoSac> entry : policyResMap.entrySet()) {
+			if (policyCodeList.contains(entry.getKey()) == false) {
 				continue;
 			}
 
-			individualPolicyInfoSac = policyResMap.get(key);
+			individualPolicyInfoSac = entry.getValue();
 
 			if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
 				this.logger.info("PRCHS,ORDER,SAC,POLICY,BLOCK,{}", deviceId);
 				return true;
 			}
 
-			policyResMap.remove(key);
+			policyResMap.remove(entry.getKey());
 		}
 
 		return false;
@@ -233,12 +250,31 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// 정책 체크
 		IndividualPolicyInfoSac individualPolicyInfoSac = null;
 
-		for (String key : policyResMap.keySet()) {
-			if (policyCodeList.contains(key) == false) {
+		// for (String key : policyResMap.keySet()) {
+		// if (policyCodeList.contains(key) == false) {
+		// continue;
+		// }
+		//
+		// individualPolicyInfoSac = policyResMap.get(key);
+		//
+		// // if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)
+		// // && StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)) {
+		// if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+		// // 테스트폰 결제
+		// this.logger.info("PRCHS,ORDER,SAC,POLICY,TESTMDN,{}", deviceId);
+		// return true;
+		// }
+		//
+		// policyResMap.remove(key);
+		// }
+
+		// 2015.07.23 sonarQube 수정
+		for (Entry<String, IndividualPolicyInfoSac> entry : policyResMap.entrySet()) {
+			if (policyCodeList.contains(entry.getKey()) == false) {
 				continue;
 			}
 
-			individualPolicyInfoSac = policyResMap.get(key);
+			individualPolicyInfoSac = entry.getValue();
 
 			// if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)
 			// && StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)) {
@@ -248,7 +284,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				return true;
 			}
 
-			policyResMap.remove(key);
+			policyResMap.remove(entry.getKey());
 		}
 
 		return false;
