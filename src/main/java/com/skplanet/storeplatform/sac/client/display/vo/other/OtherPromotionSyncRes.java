@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.client.display.vo.other;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+import java.util.List;
+
 /**
  * <p>
  * OtherPromotionSyncRes
@@ -21,12 +23,21 @@ public class OtherPromotionSyncRes extends CommonInfo {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 반영된 데이터 갯수
+     */
     private Integer updtCnt;
+
+    /**
+     * 처리시 에러가 발생된 프로모션Id
+     */
+    private List<Integer> errorPromId;
 
     public OtherPromotionSyncRes() {}
 
-    public OtherPromotionSyncRes(Integer updtCnt) {
+    public OtherPromotionSyncRes(Integer updtCnt, List<Integer> errorPromId) {
         this.updtCnt = updtCnt;
+        this.errorPromId = errorPromId;
     }
 
     public Integer getUpdtCnt() {
@@ -35,5 +46,13 @@ public class OtherPromotionSyncRes extends CommonInfo {
 
     public void setUpdtCnt(Integer updtCnt) {
         this.updtCnt = updtCnt;
+    }
+
+    public List<Integer> getErrorPromId() {
+        return errorPromId;
+    }
+
+    public void setErrorPromId(List<Integer> errorPromId) {
+        this.errorPromId = errorPromId;
     }
 }
