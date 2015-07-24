@@ -216,9 +216,9 @@ public class EpubServiceImpl implements EpubService {
 		final String channelId = req.getChannelId();
 
 		// 1. Channel 정보 조회
-		final String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
+		final String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);		
 		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
-
+		
 		String userKey = StringUtils.defaultString(req.getUserKey());
 		String deviceKey = StringUtils.defaultString(req.getDeviceKey());
 
@@ -226,6 +226,9 @@ public class EpubServiceImpl implements EpubService {
 		//요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
 		String temp = StringUtils.defaultString(this.sc2xFadeOutDummyProductChannel);
 		if(temp.contains(channelId)) includeProdStopStatus = "Y";
+		
+		// #47384 판매중인 상품만 내려가도록 수정
+		includeProdStopStatus = "N";
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("includeProdStopStatus", includeProdStopStatus);
@@ -794,14 +797,29 @@ public class EpubServiceImpl implements EpubService {
 		rights.setPlus19Yn(mapperVO.getPlus19Yn());
 
 		rights.setGrade(mapperVO.getProdGrdCd());
-		// 소장 정보
-		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
-			rights.setStore(this.mapStore(mapperVO, param, existenceMap));
-		}
-		// 대여 정보
-		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
-			rights.setPlay(this.mapPlay(mapperVO, param, existenceMap));
-		}
+		
+		
+
+		System.out.println("@@@@@@@@@@ includeProdStopStatus >>> " + param.get("includeProdStopStatus"));
+		
+		/** #47384 판매중지, 판매불가 에피소드도 모두 노출되도록 **/
+	/*	if( param.get("includeProdStopStatus").equals("Y") ) {
+			
+		} else {
+*/
+			// 소장 정보
+			if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
+				rights.setStore(this.mapStore(mapperVO, param, existenceMap));
+			}
+			// 대여 정보
+			if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
+				rights.setPlay(this.mapPlay(mapperVO, param, existenceMap));
+			}
+		//}	
+		
+
+		
+		
 
 		// 미리보기
 		rights.setPreview(this.mappingSvc.mapPreview(mapperVO));
