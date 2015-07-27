@@ -55,4 +55,8 @@ public class OtherPromotionSyncRes extends CommonInfo {
     public void setErrorPromIdList(List<Integer> errorPromIdList) {
         this.errorPromIdList = errorPromIdList;
     }
+
+    public String getErrorYn() {
+        return (updtCnt == -1 || errorPromIdList.size() > 0) ? "Y" : "N";
+    }
 }
