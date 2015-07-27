@@ -189,10 +189,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
         final String[] keys = new String[]{param.getProdId(), menuOrTopMenuId, topMenuId};
 
-        List<String> liveEvents = client.hmget(SacRedisKeys.livePromoEvent(),
-                tenantId + ":" + keys[0],
-                tenantId + ":" + keys[1],
-                tenantId + ":" + keys[2]);
+        List<String> liveEvents = PromotionEventRedisHelper.getLiveEvents(client, tenantId, keys);
 
         // 조회된 liveEvent 순서대로 유효한 이벤트 정보를 찾아 응답한다.
         for (int i = 0; i < liveEvents.size(); ++i) {
@@ -207,12 +204,14 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             PromotionEventWrapper eventWrapper;
 
             // 이벤트는 등록되었지만 liveEvent에 아직 적재되지 않은 경우
+            // TODO 처음부터 아예 이벤트를 등록해주면 안됨?
+            String fullKey = tenantId + ":" + key;
             if(str.equals(LIVE_EVENT_EXIST)) {
-                eventWrapper = getNextEvent(client, tenantId, key, now);
+                eventWrapper = PromotionEventRedisHelper.getEventFromReserved(client, tenantId, key, now);
                 if(eventWrapper == null)
                     continue;
 
-                client.hset(SacRedisKeys.livePromoEvent(), tenantId + ":" + key, eventWrapper.getStr());
+                PromotionEventRedisHelper.saveLiveEvent(client, fullKey, eventWrapper);
             }
             else {
                 eventWrapper = new PromotionEventWrapper(str);
@@ -222,7 +221,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
                 // TODO 테스트 필요함 but...
                 SyncPromotionEventResult eventResult = promotionEventSyncService.syncPromotionEvent(tenantId, key);
                 if(eventResult.getUpdtCnt() > 0) {
-                    eventWrapper = eventResult.getLiveEventMap().get(tenantId + ":" + key);
+                    eventWrapper = eventResult.getLiveEventMap().get(fullKey);
                 }
                 else
                     continue;
@@ -231,47 +230,16 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             if (now.before(eventWrapper.getEndDt())) {
                 return eventWrapper.isLive(now) ? eventWrapper.getPromotionEvent() : null;
             } else {
-                eventWrapper = getNextEvent(client, tenantId, key, now);
+                eventWrapper = PromotionEventRedisHelper.getEventFromReserved(client, tenantId, key, now);
 
                 if(eventWrapper != null) {
-                    client.hset(SacRedisKeys.livePromoEvent(), tenantId + ":" + key, eventWrapper.getStr());
+                    PromotionEventRedisHelper.saveLiveEvent(client, fullKey, eventWrapper);
                     return eventWrapper.isLive(now) ? eventWrapper.getPromotionEvent() : null;
                 }
                 else {
-                    client.hdel(SacRedisKeys.livePromoEvent(), key);
+                    PromotionEventRedisHelper.removeLiveEvent(client, fullKey);
                 }
             }
-        }
-
-        return null;
-    }
-
-    /**
-     * 유효한 다음 이벤트를 조회한다.
-     * 만료된 이벤트는 그대로 남겨놓는다. (동기화 처리시 정리작업이 수행됨)
-     * @param client
-     * @param tenantId
-     * @param key
-     * @return 이벤트 래퍼 객체 응답. 유효한 이벤트를 찾을 수 없는 경우 null
-     */
-    private PromotionEventWrapper getNextEvent(Plandasj client, String tenantId, String key, Date now) {
-
-        List<String> allEvents = client.lrange(SacRedisKeys.promoEvent(tenantId, key), 0, -1);
-        if(allEvents.size() == 0) {
-            return null;
-        }
-
-        for (String str : allEvents) {
-            PromotionEventWrapper eventWrapper = new PromotionEventWrapper(str);
-
-            if(eventWrapper.hasError())
-                continue;
-
-            // 이벤트중이거나 예정인 것을 응답
-            if (now.after(eventWrapper.getEndDt()))
-                continue;
-
-            return eventWrapper;
         }
 
         return null;

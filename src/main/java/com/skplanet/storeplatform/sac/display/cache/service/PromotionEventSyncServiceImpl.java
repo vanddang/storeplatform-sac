@@ -22,7 +22,6 @@ import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEventWrapper;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
         if(connectionFactory == null)
             return new SyncPromotionEventResult(ERR_UPDT_CNT, null, new HashMap<String, PromotionEventWrapper>());
 
-        final Plandasj redis = connectionFactory.getConnectionPool().getClient();
+        final Plandasj client = connectionFactory.getConnectionPool().getClient();
 
         /*
          * promoEventSet - 등록된 모든 이벤트 키
@@ -68,7 +67,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
 
         final Stopwatch stopwatch = Stopwatch.createStarted();
 
-        removeEventAndSet(redis, tenantId, key);
+        PromotionEventRedisHelper.removeEventAndSet(client, tenantId, key);
         logger.debug("Events in redis have removed. - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
         Multimap<String, RawPromotionEvent> fetchedEventMap = fetchEventDataFromDb(tenantId, key);
@@ -96,8 +95,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
                 if(incommingEventWrapper == null)
                     incommingEventWrapper = wrapper;
 
-                // TODO 프로세스가 동시에 진행되는 경우 데이터가 중복 등록될 수 있음. (서비스시 문제는 없어보임)
-                redis.rpush(SacRedisKeys.promoEvent(events.getKey()), wrapper.getStr());
+                PromotionEventRedisHelper.addReservedEvent(client, events.getKey(), wrapper);
 
                 ++updtCnt;
             }
@@ -105,32 +103,32 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
 
             // 유효한 event가 없는 경우
             if(incommingEventWrapper == null) {
-                redis.hdel(SacRedisKeys.livePromoEvent(), events.getKey());
+                PromotionEventRedisHelper.removeLiveEvent(client, events.getKey());
                 continue; // for outer loop
             }
 
-            Long rtnSetLive = redis.hsetnx(SacRedisKeys.livePromoEvent(), events.getKey(), LIVE_EVENT_EXIST);
+            Long rtnSetLive = client.hsetnx(SacRedisKeys.livePromoEvent(), events.getKey(), LIVE_EVENT_EXIST);
+
             // 라이브에 기등록된 이벤트라면 incommingEvent와 비교한다
             if(rtnSetLive > 0) {
-                String liveEventStr = redis.hget(SacRedisKeys.livePromoEvent(), events.getKey());
-                PromotionEventWrapper currentEventWrapper = new PromotionEventWrapper(liveEventStr);
+                PromotionEventWrapper currentEventWrapper = PromotionEventRedisHelper.getLiveEvent(client, events.getKey());
 
                 if(currentEventWrapper.hasError()) {
-                    redis.hset(SacRedisKeys.livePromoEvent(), events.getKey(), incommingEventWrapper.getStr());
+                    PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEventWrapper);
                 }
                 else {
                     if(!(currentEventWrapper.getStartDt().equals(incommingEventWrapper.getStartDt()) ||
                             currentEventWrapper.getEndDt().equals(incommingEventWrapper.getEndDt()))) {
-                        redis.hset(SacRedisKeys.livePromoEvent(), events.getKey(), incommingEventWrapper.getStr());
+                        PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEventWrapper);
                     }
                 }
             }
 
-            redis.sadd(SacRedisKeys.promoEventSet(), events.getKey());
+            client.sadd(SacRedisKeys.promoEventSet(), events.getKey());
             liveMap.put(events.getKey(), incommingEventWrapper);
         }
 
-        int cntLiveRemoved = removeDroppedEventFromLiveEvents(redis, fetchedEventMap.keySet());
+        int cntLiveRemoved = PromotionEventRedisHelper.removeDroppedEventFromLiveEvents(client, tenantId, key, fetchedEventMap.keySet());
         logger.debug("Unused or cancelled live events are removed. [{}]", cntLiveRemoved);
 
         logger.debug("Sync events to redis finished. - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
@@ -141,27 +139,6 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
         checkSyncedData();
 
         return new SyncPromotionEventResult(updtCnt, errorPromId, liveMap);
-    }
-
-    /**
-     * Drop된 데이터들을 찾아 라이브 이벤트에서 제거한다.
-     * @param redis
-     * @param fetchedKeys
-     * @return 제거된 갯수
-     */
-    private int removeDroppedEventFromLiveEvents(Plandasj redis, Set<String> fetchedKeys) {
-
-        int cntLiveRemoved = 0;
-        Set<String> liveKeySet = redis.hkeys(SacRedisKeys.livePromoEvent());
-
-        if(liveKeySet.removeAll(fetchedKeys)) {
-            for(String remKey : liveKeySet) {
-                redis.hdel(SacRedisKeys.livePromoEvent(), remKey);
-                ++cntLiveRemoved;
-            }
-        }
-
-        return cntLiveRemoved;
     }
 
     /**
@@ -187,40 +164,6 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
         }
 
         return onlineEventMap;
-    }
-
-    /**
-     * 대상이 되는 promoEvent, promoEventSet을 지운다.
-     * @param redis
-     * @param tenantId 대상이 되는 tenantId
-     * @param key 대상이 되는 이벤트 키(메뉴 또는 상품)
-     */
-    private void removeEventAndSet(Plandasj redis, String tenantId, String key) {
-
-        String remTarget = StringUtils.defaultString(tenantId) + ":" + StringUtils.defaultString(key);
-
-        if (tenantId != null && key != null) {
-            redis.srem(SacRedisKeys.promoEventSet(), remTarget);
-            redis.del(SacRedisKeys.promoEvent(remTarget));
-        }
-        else {
-            // 전체 삭제
-            Collection<String> promoEventSet = redis.smembers(SacRedisKeys.promoEventSet());
-
-            boolean clearMode = (tenantId == null && key == null);
-            for (String promoEventKey : promoEventSet) {
-                if(promoEventKey.contains(remTarget)) {
-                    redis.del(SacRedisKeys.promoEvent(promoEventKey));
-
-                    if(!clearMode)
-                        redis.srem(SacRedisKeys.promoEventSet(), promoEventKey);
-                }
-            }
-
-            if(clearMode)
-                redis.del(SacRedisKeys.promoEventSet());
-        }
-
     }
 
     /**
