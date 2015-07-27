@@ -151,12 +151,11 @@ public class PromotionEventRedisHelper {
             }
         });
 
-        if (liveKeySet.removeAll(fetchedKeys)) {
+        liveKeySet.removeAll(fetchedKeys);
 
-            for (String remKey : liveKeySet) {
-                redis.hdel(SacRedisKeys.livePromoEvent(), remKey);
-                ++cntLiveRemoved;
-            }
+        for (String remKey : liveKeySet) {
+            redis.hdel(SacRedisKeys.livePromoEvent(), remKey);
+            ++cntLiveRemoved;
         }
 
         return cntLiveRemoved;
