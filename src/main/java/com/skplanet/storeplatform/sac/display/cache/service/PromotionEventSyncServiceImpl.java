@@ -40,7 +40,6 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class PromotionEventSyncServiceImpl implements PromotionEventSyncService {
 
-    private static final String LIVE_EVENT_EXIST = "-";
     private static final Logger logger = LoggerFactory.getLogger(PromotionEventSyncServiceImpl.class);
     private static final int ERR_UPDT_CNT = -1;
 
@@ -52,7 +51,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
     private PlandasjConnectionFactory connectionFactory;
 
     @Override
-    public SyncPromotionEventResult syncPromotionEvent(final String tenantId, final String key) {
+    public SyncPromotionEventResult syncPromotionEvent(final String tenantId, final String key, final boolean forceUpdate) {
 
         if(connectionFactory == null)
             return new SyncPromotionEventResult(ERR_UPDT_CNT, null, new HashMap<String, PromotionEventWrapper>());
@@ -107,10 +106,14 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
                 continue; // for outer loop
             }
 
-            Long rtnSetLive = client.hsetnx(SacRedisKeys.livePromoEvent(), events.getKey(), LIVE_EVENT_EXIST);
+            // 강제 업데이트 모드인 경우
+            if(forceUpdate) {
+                PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEventWrapper);
+                continue;
+            }
 
             // 라이브에 기등록된 이벤트라면 incommingEvent와 비교한다
-            if(rtnSetLive > 0) {
+            if(!PromotionEventRedisHelper.initLiveEvent(client, events.getKey(), incommingEventWrapper)) {
                 PromotionEventWrapper currentEventWrapper = PromotionEventRedisHelper.getLiveEvent(client, events.getKey());
 
                 if(currentEventWrapper.hasError()) {
@@ -164,6 +167,11 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
         }
 
         return onlineEventMap;
+    }
+
+    @Override
+    public SyncPromotionEventResult syncPromotionEvent(String tenantId, String key) {
+        return syncPromotionEvent(tenantId, key, false);
     }
 
     /**

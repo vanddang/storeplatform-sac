@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class PromotionEventRedisHelper {
 
-    public static List<String> getLiveEvents(Plandasj client, String tenantId, String[] keys) {
+    public static List<String> getLiveEventStrs(Plandasj client, String tenantId, String[] keys) {
 
         Preconditions.checkArgument(keys.length == 3);
 
@@ -44,6 +44,16 @@ public class PromotionEventRedisHelper {
 
         String liveEventStr = client.hget(SacRedisKeys.livePromoEvent(), fullKey);
         return new PromotionEventWrapper(liveEventStr);
+    }
+
+    /**
+     * 라이브 이벤트를 초기화 한다.
+     * @param client
+     * @param fullKey
+     * @return 신규로 등록하는 이벤트인 경우 true, 기존재하는 경우 false
+     */
+    public static boolean initLiveEvent(Plandasj client, String fullKey, PromotionEventWrapper wrapper) {
+        return client.hsetnx(SacRedisKeys.livePromoEvent(), fullKey, wrapper.getStr()) == 1;
     }
 
     public static void removeLiveEvent(Plandasj client, String fullKey) {

@@ -237,7 +237,7 @@ public class OtherController {
     @RequestMapping(value = "/promotion/sync/v1", method = RequestMethod.GET)
     @ResponseBody
     public OtherPromotionSyncRes promotionSync(@Validated OtherPromotionSyncReq req) {
-        SyncPromotionEventResult result = promotionEventSyncService.syncPromotionEvent(req.getTenantId(), req.getKey());
+        SyncPromotionEventResult result = promotionEventSyncService.syncPromotionEvent(req.getTenantId(), req.getKey(), "Y".equals(req.getForceUpdateYn()));
         return new OtherPromotionSyncRes(result.getUpdtCnt(), result.getErrorPromIdList(), result.hasError() ? "Y" : "N");
     }
 

@@ -23,8 +23,11 @@ public interface PromotionEventSyncService {
      * 모든 프로모션 이벤트들을 동기화 한다.
      * @param tenantId 대상이 되는 테넌트ID
      * @param key 동기화 대상이 되는 메뉴ID 또는 상품ID
+     * @param forceUpdate 강제로 업데이트 하는 경우 true
      * @return 결과 객체
      */
+    SyncPromotionEventResult syncPromotionEvent(String tenantId, String key, boolean forceUpdate);
+
     SyncPromotionEventResult syncPromotionEvent(String tenantId, String key);
 
 }
