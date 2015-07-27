@@ -33,11 +33,14 @@ public class OtherPromotionSyncRes extends CommonInfo {
      */
     private List<Integer> errorPromIdList;
 
+    private String errorYn;
+
     public OtherPromotionSyncRes() {}
 
-    public OtherPromotionSyncRes(Integer updtCnt, List<Integer> errorPromIdList) {
+    public OtherPromotionSyncRes(Integer updtCnt, List<Integer> errorPromIdList, String errorYn) {
         this.updtCnt = updtCnt;
         this.errorPromIdList = errorPromIdList;
+        this.errorYn = errorYn;
     }
 
     public Integer getUpdtCnt() {
@@ -57,6 +60,10 @@ public class OtherPromotionSyncRes extends CommonInfo {
     }
 
     public String getErrorYn() {
-        return (updtCnt == -1 || errorPromIdList.size() > 0) ? "Y" : "N";
+        return errorYn;
+    }
+
+    public void setErrorYn(String errorYn) {
+        this.errorYn = errorYn;
     }
 }
