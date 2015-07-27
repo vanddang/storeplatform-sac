@@ -41,4 +41,8 @@ public class SyncPromotionEventResult {
     public Map<String, PromotionEventWrapper> getLiveEventMap() {
         return liveEventMap;
     }
+
+    public boolean hasError() {
+        return updtCnt == -1 || errorPromIdList.size() > 0;
+    }
 }

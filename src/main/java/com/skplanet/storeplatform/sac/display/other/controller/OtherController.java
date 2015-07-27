@@ -238,7 +238,7 @@ public class OtherController {
     @ResponseBody
     public OtherPromotionSyncRes promotionSync(@Validated OtherPromotionSyncReq req) {
         SyncPromotionEventResult result = promotionEventSyncService.syncPromotionEvent(req.getTenantId(), req.getKey());
-        return new OtherPromotionSyncRes(result.getUpdtCnt(), result.getErrorPromIdList());
+        return new OtherPromotionSyncRes(result.getUpdtCnt(), result.getErrorPromIdList(), result.hasError() ? "Y" : "N");
     }
 
 }
