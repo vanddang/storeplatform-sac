@@ -25,6 +25,7 @@ public class OtherPromotionSyncReq extends CommonInfo {
     @NotEmpty
     private String tenantId;
     private String key;
+    private String forceUpdateYn;
 
     public OtherPromotionSyncReq() {}
 
@@ -47,5 +48,13 @@ public class OtherPromotionSyncReq extends CommonInfo {
 
     public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public String getForceUpdateYn() {
+        return forceUpdateYn;
+    }
+
+    public void setForceUpdateYn(String forceUpdateYn) {
+        this.forceUpdateYn = forceUpdateYn;
     }
 }
