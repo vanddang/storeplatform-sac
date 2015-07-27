@@ -33,6 +33,7 @@ public class PromotionEvent {
     private Date endDt;
 
     private String targetId;
+    private String targetTp;
 
     public Integer getPromId() {
         return promId;

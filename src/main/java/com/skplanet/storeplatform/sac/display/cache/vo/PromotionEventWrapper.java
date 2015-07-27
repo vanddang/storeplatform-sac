@@ -28,7 +28,7 @@ import java.util.Date;
  */
 public class PromotionEventWrapper {
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmm");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
     private static final Logger logger = LoggerFactory.getLogger(PromotionEventWrapper.class);
 
     private boolean hasError;
@@ -43,20 +43,9 @@ public class PromotionEventWrapper {
 
         Preconditions.checkNotNull(rawEvent);
 
-        this.datetimeKey = rawEvent.getDatetimeKey();
+        this.datetimeKey = DATE_FORMAT.format(rawEvent.getStartDt()) + "_" + DATE_FORMAT.format(rawEvent.getEndDt());
         this.startDt = rawEvent.getStartDt();
         this.endDt = rawEvent.getEndDt();
-
-        Object[] v = new Object[]{Integer.toHexString(rawEvent.hashCode()),
-                rawEvent.getPromId(),
-                rawEvent.getRateGrd1(),
-                rawEvent.getRateGrd2(),
-                rawEvent.getRateGrd3(),
-                rawEvent.getAcmlMethodCd(),
-                rawEvent.getAcmlDt()};
-
-        bodyPart = StringUtils.join(v, " ");
-        str = rawEvent.getDatetimeKey() + ":" + bodyPart;
 
         event = new PromotionEvent();
         event.setPromId(rawEvent.getPromId());
@@ -68,6 +57,17 @@ public class PromotionEventWrapper {
         event.setStartDt(rawEvent.getStartDt());
         event.setEndDt(rawEvent.getEndDt());
         event.setTargetId(rawEvent.getPromTypeValue());
+
+        Object[] v = new Object[]{Integer.toHexString(event.hashCode()),
+                rawEvent.getPromId(),
+                rawEvent.getRateGrd1(),
+                rawEvent.getRateGrd2(),
+                rawEvent.getRateGrd3(),
+                rawEvent.getAcmlMethodCd(),
+                rawEvent.getAcmlDt()};
+
+        bodyPart = StringUtils.join(v, " ");
+        str = this.datetimeKey + ":" + bodyPart;
 
         this.hasError = false;
     }
