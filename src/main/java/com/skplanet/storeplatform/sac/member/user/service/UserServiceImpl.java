@@ -229,7 +229,7 @@ public class UserServiceImpl implements UserService {
 					EmailSendEcReq emailSendEcReq = new EmailSendEcReq();
 					emailSendEcReq.setTypeId(0); // 발송 타입
 					emailSendEcReq.setRecvId(null); // 수신자ID
-					emailSendEcReq.setRecvNm(recvNm + "(" + moveUserInfoResponse.getEmailAddr() + ")"); // 수신자이름
+					emailSendEcReq.setRecvNm(recvNm); // 수신자이름
 					emailSendEcReq.setRecvMail(moveUserInfoResponse.getEmailAddr()); // 수신자메일
 					// sParam1 - image url , sParam2 - 수신자
 					emailSendEcReq.setsParam(new String[] { this.mailImagePath + "/restore_tpl", recvNm });
