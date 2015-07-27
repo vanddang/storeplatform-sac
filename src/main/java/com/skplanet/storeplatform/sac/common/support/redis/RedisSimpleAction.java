@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.common.support.redis;
 
 import com.skplanet.plandasj.Plandasj;
+import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 
 /**
  * <p>
@@ -20,7 +21,6 @@ import com.skplanet.plandasj.Plandasj;
  * Updated on : 2015. 05. 13 Updated by : 정희원, SK 플래닛.
  */
 public class RedisSimpleAction {
-    static Plandasj client = null;
 
     /**
      * 데이터를 조회한다.
@@ -33,9 +33,15 @@ public class RedisSimpleAction {
      * @param <V> 응답값 VO
      * @return 응답값
      */
-    public static <P,V> V getOrLoad(P param, RedisSimpleGetOrLoadHandler<P, V> handler) {
+    public static <P,V> V getOrLoad(final PlandasjConnectionFactory connFactory, P param, RedisSimpleGetOrLoadHandler<P, V> handler) {
+
         if(handler == null)
             throw new IllegalArgumentException();
+
+        if(connFactory == null)
+            return handler.makeValue(param);
+
+        Plandasj client = connFactory.getConnectionPool().getClient();
 
         if(client == null)
             return handler.makeValue(param);

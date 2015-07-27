@@ -24,10 +24,7 @@ public interface MetaInfoService {
 	 */
 	public MetaInfo getAppMetaInfo(Map<String, Object> paramMap);
 
-	public List<MetaInfo> getAppMetaInfoList(List<String> prodIdList, String langCd, String tenantId,
-			String deviceModelCd);
-
-	/**
+    /**
 	 * <pre>
 	 * 음원 Meta 정보 조회.
 	 * </pre>

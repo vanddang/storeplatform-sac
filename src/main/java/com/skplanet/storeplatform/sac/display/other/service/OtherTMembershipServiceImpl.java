@@ -73,7 +73,7 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 
 		appReq.setList(req.getProductId());
 
-		OtherServiceGroupSacRes appRes = new OtherServiceGroupSacRes();
+		OtherServiceGroupSacRes appRes;
 		try {
 			appRes = this.otherServiceGroupService.searchServiceGroupList(appReq, header);
 		} catch (StorePlatformException se) {

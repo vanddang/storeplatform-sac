@@ -44,8 +44,8 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
 
     private static final Logger logger = LoggerFactory.getLogger(OtherAppVersionServiceImpl.class);
 
-//    @Autowired(required = false)
-//    private PlandasjConnectionFactory connectionFactory;
+    @Autowired(required = false)
+    private PlandasjConnectionFactory connectionFactory;
 
     @Autowired
     @Qualifier("sac")
@@ -68,7 +68,7 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
         if (prodId == null)
             return null;
 
-        SprtDev sprtDev = RedisSimpleAction.getOrLoad(new SprtDevParam(prodId, param.getDeviceModelCd()),
+        SprtDev sprtDev = RedisSimpleAction.getOrLoad(connectionFactory, new SprtDevParam(prodId, param.getDeviceModelCd()),
                 new RedisSimpleGetOrLoadHandler<SprtDevParam, SprtDev>() {
                     @Override
                     public SprtDev load(SprtDevParam param, Plandasj redis) {

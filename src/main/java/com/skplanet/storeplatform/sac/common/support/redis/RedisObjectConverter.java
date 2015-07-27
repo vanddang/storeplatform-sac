@@ -38,6 +38,10 @@ public class RedisObjectConverter {
         Collection<Method> filteredMethods = Collections2.filter(methods, new Predicate<Method>() {
             @Override
             public boolean apply(Method input) {
+
+                if(input == null || input.getName() == null)
+                    return false;
+
                 return input.getName().startsWith("get");
             }
         });

@@ -108,9 +108,5 @@
           class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
           p:configLocation="classpath:sac/spring/ehcache.xml" />
 
-    <bean class="com.skplanet.storeplatform.sac.common.support.redis.SacRedisInitializer">
-        <constructor-arg name="plandasjConnectionFactory" ref="plandasjConnectionFactory"/>
-    </bean>
-
 <!--</beans>-->
 </beans>
