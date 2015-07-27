@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.best.service;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacReq;
@@ -22,15 +24,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
-import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
-import com.skplanet.storeplatform.sac.display.meta.util.MetaMapper;
-import com.skplanet.storeplatform.sac.display.meta.util.MetaResultGenerator;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaFetchParam;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -66,10 +63,6 @@ public class BestAppServiceImpl implements BestAppService {
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
-
-	@Autowired
-	private ProductInfoManager productInfoManager;
-
 
 	@Autowired
     private MemberBenefitService benefitService;
@@ -165,18 +158,13 @@ public class BestAppServiceImpl implements BestAppService {
         }
 
         if (!appList.isEmpty()) {
-            MetaFetchParam param = new MetaFetchParam();
-            param.setTenantId(tenantHeader.getTenantId());
-            param.setLangCd(tenantHeader.getLangCd());
-            param.setDeviceModelCd(deviceHeader.getModel());
 
-            // /// [임시로직] 캐쉬를 타지 않도록 요청한 경우 prodId목록으로 일괄조회.
-            productList = MetaResultGenerator.fetch(ProductType.App, param, appList, new MetaMapper() {
+            productList = Lists.transform(appList, new Function<ProductBasicInfo, Product>() {
                 @Override
-                public Product processRow(MetaInfo meta) {
-
+                public Product apply(ProductBasicInfo input) {
+                    MetaInfo meta = metaInfoService.getAppMetaInfo(null);   // TODO
                     //Tstore멤버십 적립율 정보
-                    MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), meta.getTopMenuId(), meta.getProdId(), meta.getProdAmt());
+                    MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), meta.getMenuId(), meta.getProdId(), meta.getProdAmt());
                     meta.setMileageInfo(mileageInfo);
 
                     return responseInfoGenerateFacade.generateAppProduct(meta);
