@@ -9,7 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
+import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
+
+import java.util.List;
 
 /**
  * <p>
@@ -29,5 +32,7 @@ public interface PromotionEventSyncService {
     SyncPromotionEventResult syncPromotionEvent(String tenantId, String key, boolean forceUpdate);
 
     SyncPromotionEventResult syncPromotionEvent(String tenantId, String key);
+
+    List<RawPromotionEvent> getRawEventList(String tenantId, List<String> keys, boolean liveOnly);
 
 }

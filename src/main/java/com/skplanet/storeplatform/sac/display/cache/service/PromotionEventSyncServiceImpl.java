@@ -157,13 +157,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
      */
     private Multimap<String, RawPromotionEvent> fetchEventDataFromDb(String tenantId, String key) {
 
-        Map<String, Object> req = Maps.newHashMap();
-        if(!Strings.isNullOrEmpty(tenantId))
-            req.put("tenantId", tenantId);
-        if(!Strings.isNullOrEmpty(key))
-            req.put("key", key);
-
-        List<RawPromotionEvent> promEventList = commonDAO.queryForList("PromotionEventMapper.getPromotionEventList", req, RawPromotionEvent.class);
+        List<RawPromotionEvent> promEventList = getRawEventList(tenantId, Arrays.asList(key), false);
 
         Multimap<String, RawPromotionEvent> onlineEventMap = LinkedHashMultimap.create();
         for (RawPromotionEvent e : promEventList) {
@@ -171,6 +165,19 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
         }
 
         return onlineEventMap;
+    }
+
+    @Override
+    public List<RawPromotionEvent> getRawEventList(String tenantId, List<String> keyList, boolean liveOnly) {
+
+        Map<String, Object> req = Maps.newHashMap();
+        if(!Strings.isNullOrEmpty(tenantId))
+            req.put("tenantId", tenantId);
+        if(keyList != null)
+            req.put("keyList", keyList);
+        req.put("liveOnly", liveOnly);
+
+        return commonDAO.queryForList("PromotionEventMapper.getPromotionEventList", req, RawPromotionEvent.class);
     }
 
     @Override

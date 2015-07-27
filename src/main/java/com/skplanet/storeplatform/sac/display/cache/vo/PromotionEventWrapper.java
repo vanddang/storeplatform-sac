@@ -57,6 +57,19 @@ public class PromotionEventWrapper {
 
         bodyPart = StringUtils.join(v, " ");
         str = rawEvent.getDatetimeKey() + ":" + bodyPart;
+
+        event = new PromotionEvent();
+        event.setPromId(rawEvent.getPromId());
+        event.setRateGrd1(rawEvent.getRateGrd1());
+        event.setRateGrd2(rawEvent.getRateGrd2());
+        event.setRateGrd3(rawEvent.getRateGrd3());
+        event.setAcmlMethodCd(rawEvent.getAcmlMethodCd());
+        event.setAcmlDt(rawEvent.getAcmlDt());
+        event.setStartDt(rawEvent.getStartDt());
+        event.setEndDt(rawEvent.getEndDt());
+        event.setTargetId(rawEvent.getPromTypeValue());
+
+        this.hasError = false;
     }
 
     public PromotionEventWrapper(String str) {
@@ -114,6 +127,7 @@ public class PromotionEventWrapper {
                 now.after(startDt) && now.before(endDt);
     }
 
+    // TODO makePromotionEvent와 통일시켜야 함
     public PromotionEvent getPromotionEvent() {
 
         // TODO 변환 오류에 대해 인지 및 처리 가능하도록 해야 함
@@ -151,6 +165,15 @@ public class PromotionEventWrapper {
             this.event = event;
         }
         return this.event;
+    }
+
+    public PromotionEvent makePromotionEvent(String key) {
+        PromotionEvent promotionEvent = getPromotionEvent();
+        if(promotionEvent == null)
+            return null;
+
+        promotionEvent.setTargetId(key);
+        return promotionEvent;
     }
 
     public String getStr() {

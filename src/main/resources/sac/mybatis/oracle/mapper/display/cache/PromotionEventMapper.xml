@@ -18,10 +18,11 @@
             END_DT
         FROM TB_DP_PROM_POLICY
         WHERE 1=1
-          AND sysdate <![CDATA[<]]> END_DT
+          <if test="liveOnly">AND sysdate between START_DT AND END_DT</if>
+          <if test="!liveOnly">AND sysdate <![CDATA[<]]> END_DT</if>
           <if test="tenantId != null">AND TENANT_ID = #{tenantId}</if>
-          <if test="key != null">AND PROM_TYPE_VALUE = #{key}</if>
-        ORDER BY TENANT_ID, PROM_TYPE_VALUE, START_DT
+          <if test="keyList != null">AND PROM_TYPE_VALUE IN <foreach collection="keyList" separator="," open="(" close=")" item="v">#{v}</foreach></if>
+        <if test="!liveOnly">ORDER BY TENANT_ID, PROM_TYPE_VALUE, START_DT</if>
     </select>
     
 </mapper>

@@ -164,15 +164,6 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     @Override
     public PromotionEvent getPromotionEvent(GetPromotionEventParam param) {
 
-        if(connectionFactory == null)
-            return getPromotionEventFromDb(param);
-
-        Date now = param.getNowDt();
-        if(now == null)
-            now = new Date();
-
-        Plandasj client = connectionFactory.getConnectionPool().getClient();
-
         // 조회할 대상들의 키를 생성한다.
         String tenantId = param.getTenantId(),
                 menuOrTopMenuId = "",
@@ -186,6 +177,15 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
         }
 
         final String[] keys = new String[]{param.getProdId(), menuOrTopMenuId, topMenuId};
+
+        if(connectionFactory == null)
+            return getPromotionEventFromDb(tenantId, keys);
+
+        Date now = param.getNowDt();
+        if(now == null)
+            now = new Date();
+
+        Plandasj client = connectionFactory.getConnectionPool().getClient();
 
         List<String> liveEvents = PromotionEventRedisHelper.getLiveEventStrs(client, tenantId, keys);
 
@@ -214,13 +214,13 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             }
 
             if (now.before(eventWrapper.getEndDt())) {
-                return eventWrapper.isLive(now) ? eventWrapper.getPromotionEvent() : null;
+                return eventWrapper.isLive(now) ? eventWrapper.makePromotionEvent(key) : null;
             } else {
                 eventWrapper = PromotionEventRedisHelper.getEventFromReserved(client, tenantId, key, now);
 
                 if(eventWrapper != null) {
                     PromotionEventRedisHelper.saveLiveEvent(client, fullKey, eventWrapper);
-                    return eventWrapper.isLive(now) ? eventWrapper.getPromotionEvent() : null;
+                    return eventWrapper.isLive(now) ? eventWrapper.makePromotionEvent(key) : null;
                 }
                 else {
                     PromotionEventRedisHelper.removeLiveEvent(client, fullKey);
@@ -233,10 +233,18 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
     /**
      * DB 에서 이벤트를 조회한다.
-     * @param param
+     * @param tenantId
+     * @param keys
      * @return
      */
-    private PromotionEvent getPromotionEventFromDb(GetPromotionEventParam param) {
-        throw new RuntimeException("아직 구현되지 않았습니다.");
+    private PromotionEvent getPromotionEventFromDb(String tenantId, String[] keys) {
+
+        List<RawPromotionEvent> rawEventList = promotionEventSyncService.getRawEventList(tenantId, Arrays.asList(keys), true);
+        if (rawEventList.size() == 0)
+            return null;
+
+        RawPromotionEvent livePromotionEvent = rawEventList.get(0);
+        PromotionEventWrapper promotionEventWrapper = new PromotionEventWrapper(livePromotionEvent);
+        return promotionEventWrapper.getPromotionEvent();
     }
 }

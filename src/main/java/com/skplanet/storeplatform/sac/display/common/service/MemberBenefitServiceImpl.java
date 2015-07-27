@@ -59,7 +59,7 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
     
     @Override
     public MileageInfo getMileageInfo(String tenantId, String topMenuId, String chnlId, Integer prodAmt) {
-        Map<String, Object> req = new HashMap<String, Object>();
+//        Map<String, Object> req = new HashMap<String, Object>();
         if(StringUtil.isEmpty(tenantId) || StringUtil.isEmpty(topMenuId)) return null;
 
         //Tstore멤버십 적립율 정보
@@ -69,15 +69,15 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
         SacService rtnSacService = sacServiceDataService.getServiceActive(sacService);
         
         MileageInfo mileageInfo = null; 
-//        if(rtnSacService != null && rtnSacService.isActive()) {
-        if(true) {
-	        req.put("tenantId", tenantId);
-	        req.put("topMenuId", topMenuId);
-	        req.put("chnlId", StringUtil.nvl(chnlId, ""));
+        if(rtnSacService != null && rtnSacService.isActive()) {
+//	        req.put("tenantId", tenantId);
+//	        req.put("topMenuId", topMenuId);
+//	        req.put("chnlId", StringUtil.nvl(chnlId, ""));
 
             Stopwatch stopwatch = Stopwatch.createStarted();
             PromotionEvent event = cachedExtraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, topMenuId, chnlId));
             logger.debug("Event fetch from redis - {}", stopwatch.stop());
+
             if (event != null) {
                 mileageInfo = new MileageInfo();
                 mileageInfo.setPolicyTargetCd(event.getTargetTp());
@@ -111,6 +111,7 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
             return new MileageInfo();
     }
 
+    // TODO Phase 2에서 사용 예정
     @Override
     public MileageInfo getMileageInfo(String tenantId, String menuId, String chnlId) {
 
