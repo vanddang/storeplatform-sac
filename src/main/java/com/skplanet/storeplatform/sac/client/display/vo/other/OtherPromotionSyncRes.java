@@ -29,6 +29,11 @@ public class OtherPromotionSyncRes extends CommonInfo {
     private Integer updtCnt;
 
     /**
+     * 삭제된 데이터 갯수
+     */
+    private Integer delCnt;
+
+    /**
      * 처리시 에러가 발생된 프로모션Id
      */
     private List<Integer> errorPromIdList;
@@ -37,8 +42,9 @@ public class OtherPromotionSyncRes extends CommonInfo {
 
     public OtherPromotionSyncRes() {}
 
-    public OtherPromotionSyncRes(Integer updtCnt, List<Integer> errorPromIdList, String errorYn) {
+    public OtherPromotionSyncRes(Integer updtCnt, Integer delCnt, List<Integer> errorPromIdList, String errorYn) {
         this.updtCnt = updtCnt;
+        this.delCnt = delCnt;
         this.errorPromIdList = errorPromIdList;
         this.errorYn = errorYn;
     }
@@ -65,5 +71,13 @@ public class OtherPromotionSyncRes extends CommonInfo {
 
     public void setErrorYn(String errorYn) {
         this.errorYn = errorYn;
+    }
+
+    public Integer getDelCnt() {
+        return delCnt;
+    }
+
+    public void setDelCnt(Integer delCnt) {
+        this.delCnt = delCnt;
     }
 }
