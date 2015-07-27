@@ -38,8 +38,6 @@ import java.util.*;
 @Service
 public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
-    public static final String LIVE_EVENT_EXIST = "-";
-
     @Autowired
     @Qualifier("sac")
     private CommonDAO commonDAO;
@@ -75,7 +73,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     @Override
     public String getProdIdByPkgNm(String pkgNm) {
 
-        return RedisSimpleAction.getOrLoad(pkgNm,
+        return RedisSimpleAction.getOrLoad(connectionFactory, pkgNm,
                 new RedisSimpleGetOrLoadHandler<String, String>() {
                     @Override
                     public String load(String pkgNm, Plandasj redis) {
@@ -115,7 +113,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
     @Override
     public ProductBaseInfo getProductBaseInfo(GetProductBaseInfoParam param) {
-        return RedisSimpleAction.getOrLoad(param.getProdId(),
+        return RedisSimpleAction.getOrLoad(connectionFactory, param.getProdId(),
                 new RedisSimpleGetOrLoadHandler<String, ProductBaseInfo>() {
                     @Override
                     public ProductBaseInfo load(String prodId, Plandasj redis) {
@@ -189,7 +187,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
         final String[] keys = new String[]{param.getProdId(), menuOrTopMenuId, topMenuId};
 
-        List<String> liveEvents = PromotionEventRedisHelper.getLiveEvents(client, tenantId, keys);
+        List<String> liveEvents = PromotionEventRedisHelper.getLiveEventStrs(client, tenantId, keys);
 
         // 조회된 liveEvent 순서대로 유효한 이벤트 정보를 찾아 응답한다.
         for (int i = 0; i < liveEvents.size(); ++i) {
@@ -201,24 +199,12 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             if(str == null)
                 continue;
 
-            PromotionEventWrapper eventWrapper;
-
             // 이벤트는 등록되었지만 liveEvent에 아직 적재되지 않은 경우
-            // TODO 처음부터 아예 이벤트를 등록해주면 안됨?
             String fullKey = tenantId + ":" + key;
-            if(str.equals(LIVE_EVENT_EXIST)) {
-                eventWrapper = PromotionEventRedisHelper.getEventFromReserved(client, tenantId, key, now);
-                if(eventWrapper == null)
-                    continue;
-
-                PromotionEventRedisHelper.saveLiveEvent(client, fullKey, eventWrapper);
-            }
-            else {
-                eventWrapper = new PromotionEventWrapper(str);
-            }
+            PromotionEventWrapper eventWrapper = new PromotionEventWrapper(str);
 
             if(eventWrapper.hasError()) {
-                // TODO 테스트 필요함 but...
+                // TODO 테스트 필요함 but, 배포 초기에는 발생할일이 거의 없음
                 SyncPromotionEventResult eventResult = promotionEventSyncService.syncPromotionEvent(tenantId, key);
                 if(eventResult.getUpdtCnt() > 0) {
                     eventWrapper = eventResult.getLiveEventMap().get(fullKey);
