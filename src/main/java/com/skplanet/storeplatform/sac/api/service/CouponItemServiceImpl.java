@@ -694,7 +694,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 		CouponRes info = new CouponRes();
 		
-		List<EventInfo> eventInfoList = new ArrayList<EventInfo>();
+		List<EventInfo> eventInfoList = null;
 
 		try {
 			Map<String, String> map = new HashMap<String, String>();
