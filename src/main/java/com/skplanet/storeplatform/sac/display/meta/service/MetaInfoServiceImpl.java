@@ -231,13 +231,22 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 				me.setProdAmt(meta.getChnlProdAmt());
 				me.setUnlmtAmt(meta.getChnlUnlmtAmt());
 				me.setPeriodAmt(meta.getChnlPeriodAmt());
+
+                me.setDrmYn(meta.getChnlDrmYn());
 			} else if (param.getContentType() == ContentType.Episode) {
 				me.setProdAmt(meta.getEpsdProdAmt());
 				me.setUnlmtAmt(meta.getEpsdUnlmtAmt());
 				me.setPeriodAmt(meta.getEpsdPeriodAmt());
+
+                // 에피소드의 drmYn 세팅. Rights를 생성하는 부분에서 소장이냐 대여냐에 따라 생성 로직이 분리되기 때문에 아래와 같이 처리해도 무방
+                me.setPlayDrmYn(meta.getEpsdDrmYn());
+                me.setStoreDrmYn(meta.getEpsdDrmYn());
 			}
-		} else
-			me = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
+		} else {
+            me = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
+
+            // TODO 에피소드의 drmYn 세팅
+        }
 
 		if (me != null)
 			this.commonHandler(me, tenantHeader.getTenantId(), me.getProdId());

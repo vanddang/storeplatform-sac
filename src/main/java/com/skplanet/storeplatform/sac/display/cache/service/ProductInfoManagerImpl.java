@@ -156,7 +156,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:product:vod:v5", key = "#param.getCacheKey()", unless = "#result == null")
+	@Cacheable(value = "sac:display:product:vod:v6", key = "#param.getCacheKey()", unless = "#result == null")
 	public VodMeta getVodMeta(VodMetaParam param) {
 		Map<String, Object> reqMap = new HashMap<String, Object>();
 		reqMap.put("prodId", param.getProdId());

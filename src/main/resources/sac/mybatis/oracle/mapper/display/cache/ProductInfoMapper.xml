@@ -410,6 +410,8 @@
                 FROM TB_CM_CD Y
                 WHERE Y.CD_ID(+) = R.BADGE_CD AND Y.LANG_CD(+) = R.LANG_CD
               ) AS BADGE_OPT_TEXT
+        , R.CHNL_DRM_YN
+        , R.EPSD_DRM_YN
         FROM
         (
             SELECT
@@ -465,6 +467,8 @@
             , CPP.BADGE_CD
             , CPP.BADGE_OPT_TEXT
             , CPDESC.LANG_CD
+            , CPROD.DRM_YN AS CHNL_DRM_YN
+            , EPROD.DRM_YN AS EPSD_DRM_YN
         FROM TB_DP_PROD_RSHP RSHP
           INNER JOIN TB_DP_TENANT_PROD CTPROD
             ON CTPROD.PROD_ID = RSHP.PROD_ID

@@ -23,7 +23,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  *  - add epsdUnlmtAmt, epsdPeriodAmt
  * Changes on v5:
  *  - add plus19Yn, badgeCd, badgeOptText, prefix
- *
+ * Changes on v6:
+ *  - add epsdDrmYn, chmlDrmYn
  * </p>
  * Updated on : 2014. 04. 15 Updated by : 정희원, SK 플래닛.
  */
@@ -79,6 +80,8 @@ public class VodMeta extends CommonInfo {
 	private String plus19Yn;
     private String badgeCd;
     private String badgeOptText;
+    private String chnlDrmYn;
+    private String epsdDrmYn;
 
 	public String getUpMenuId() {
 		return this.upMenuId;
@@ -470,5 +473,21 @@ public class VodMeta extends CommonInfo {
 
     public void setPrefixTitle(String prefixTitle) {
         this.prefixTitle = prefixTitle;
+    }
+
+    public String getChnlDrmYn() {
+        return chnlDrmYn;
+    }
+
+    public void setChnlDrmYn(String chnlDrmYn) {
+        this.chnlDrmYn = chnlDrmYn;
+    }
+
+    public String getEpsdDrmYn() {
+        return epsdDrmYn;
+    }
+
+    public void setEpsdDrmYn(String epsdDrmYn) {
+        this.epsdDrmYn = epsdDrmYn;
     }
 }

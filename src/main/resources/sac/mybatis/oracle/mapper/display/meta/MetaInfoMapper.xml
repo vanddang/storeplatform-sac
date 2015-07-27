@@ -199,7 +199,8 @@
                 END
                 FROM TB_CM_CD Y
                   WHERE Y.CD_ID(+) = A1.BADGE_CD AND Y.LANG_CD(+) = A1.LANG_CD
-                ) AS BADGE_OPT_TEXT
+                ) AS BADGE_OPT_TEXT,
+             , A1.DRM_YN
 		  FROM (SELECT A.PROD_ID
 		             , A.PART_PROD_ID
 		             , B.PROD_GRD_CD
@@ -251,6 +252,7 @@
                      , CPP.BADGE_CD
                      , CPP.BADGE_OPT_TEXT
                      , C.LANG_CD
+                     , I.DRM_YN
 		          FROM TB_DP_PROD_RSHP A
 		             , TB_DP_PROD B  /* 채널 */
 		             , TB_DP_PROD_DESC C  /* 채널 */

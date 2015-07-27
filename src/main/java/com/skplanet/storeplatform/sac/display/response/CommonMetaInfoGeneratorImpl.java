@@ -678,6 +678,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		ArrayList<Support> supportList = new ArrayList<Support>();
 		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
 		supportList.add(this.generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getStoreDlStrmCd()));
+		supportList.add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
 		store.setSupportList(supportList);
 
 		// 이용기간단위
@@ -708,6 +709,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		ArrayList<Support> supportList = new ArrayList<Support>();
 		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
 		supportList.add(this.generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getPlayDlStrmCd()));
+        supportList.add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
 		play.setSupportList(supportList);
 
 		// 이용기간단위

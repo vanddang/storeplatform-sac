@@ -77,8 +77,7 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
 
             Stopwatch stopwatch = Stopwatch.createStarted();
             PromotionEvent event = cachedExtraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, topMenuId, chnlId));
-            long elapsedBefore = stopwatch.elapsed(TimeUnit.MILLISECONDS);
-            logger.debug("Event fetch from redis - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            logger.debug("Event fetch from redis - {}", stopwatch.stop());
             if (event != null) {
                 mileageInfo = new MileageInfo();
                 mileageInfo.setPolicyTargetCd(event.getTargetTp());
@@ -87,10 +86,9 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
                 mileageInfo.setRateLv3(event.getRateGrd3());
             }
 
-            // TODO for test
-            commonDAO.queryForObject("MemberBenefit.getMileageInfo", req, MileageInfo.class);
-            logger.debug("Event fetch from db - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS) - elapsedBefore);
-            stopwatch.stop();
+//            commonDAO.queryForObject("MemberBenefit.getMileageInfo", req, MileageInfo.class);
+//            logger.debug("Event fetch from db - {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS) - elapsedBefore);
+//            stopwatch.stop();
 
             //노출 여부. ResponseInfoGenerateFacadeImpl.appendMileageInfo 에서 처리.
 	        /*
