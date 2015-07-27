@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.feature.best.service;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacReq;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -82,7 +84,7 @@ public class BestAppServiceImpl implements BestAppService {
 	@Override
 	public BestAppSacRes searchBestAppList(SacRequestHeader requestheader, BestAppSacReq bestAppReq) {
 		final TenantHeader tenantHeader = requestheader.getTenantHeader();
-		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+		final DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
 		this.log.debug("########################################################");
 		this.log.debug("tenantHeader.getTenantId()	:	" + tenantHeader.getTenantId());
@@ -161,8 +163,13 @@ public class BestAppServiceImpl implements BestAppService {
 
             productList = Lists.transform(appList, new Function<ProductBasicInfo, Product>() {
                 @Override
-                public Product apply(ProductBasicInfo input) {
-                    MetaInfo meta = metaInfoService.getAppMetaInfo(null);   // TODO
+                public Product apply(ProductBasicInfo prodBasicInfo) {
+                    Map<String, Object> req = Maps.newHashMap();
+                    req.put("productBasicInfo", prodBasicInfo);
+                    req.put("tenantHeader", tenantHeader);
+                    req.put("deviceHeader", deviceHeader);
+
+                    MetaInfo meta = metaInfoService.getAppMetaInfo(req);
                     //Tstore멤버십 적립율 정보
                     MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), meta.getMenuId(), meta.getProdId(), meta.getProdAmt());
                     meta.setMileageInfo(mileageInfo);
