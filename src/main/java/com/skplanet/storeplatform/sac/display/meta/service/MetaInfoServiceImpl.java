@@ -138,58 +138,11 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		return me;
 	}
 
-	@Override
-	public List<MetaInfo> getAppMetaInfoList(List<String> prodIdList, String langCd, String tenantId,
-			String deviceModelCd) {
-		List<AppMeta> appMetaList;
-
-		if (prodIdList.size() > 1000) {
-			appMetaList = new ArrayList<AppMeta>();
-			List<String> partitionList = new ArrayList<String>();
-			for (int i = 1; i <= prodIdList.size(); ++i) {
-				partitionList.add(prodIdList.get(i - 1));
-				if (i % 1000 == 0) {
-					appMetaList.addAll(this.productInfoManager.getAppMetaList(langCd, tenantId, partitionList,
-							deviceModelCd));
-					partitionList.clear();
-				}
-			}
-		} else {
-			appMetaList = this.productInfoManager.getAppMetaList(langCd, tenantId, prodIdList, deviceModelCd);
-		}
-
-		ArrayList<MetaInfo> metaList = new ArrayList<MetaInfo>();
-
-		Map<String, AppMeta> appMetaMap = new HashMap<String, AppMeta>();
-		for (AppMeta app : appMetaList) {
-			appMetaMap.put(app.getProdId(), app);
-		}
-
-		for (String prodId : prodIdList) {
-			AppMeta app = appMetaMap.get(prodId);
-			if (app == null) {
-				this.logger.warn("메타데이터를 읽을 수 없습니다 - App#{}", prodId);
-			} else {
-				MetaInfo me = new MetaInfo();
-				MetaBeanUtils.setProperties(app, me);
-
-				if (app.getPartParentClsfCd() != null) {
-					me.setPartParentClsfCd("PD012301".equals(app.getPartParentClsfCd()) ? "Y" : "N");
-				}
-				me.setSubContentsId(null);
-
-				metaList.add(me);
-			}
-		}
-
-		return metaList;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getMusicMetaInfo(java.util.Map)
-	 */
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getMusicMetaInfo(java.util.Map)
+     */
 	@Override
 	public MetaInfo getMusicMetaInfo(Map<String, Object> paramMap) {
 		MetaInfo me;
