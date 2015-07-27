@@ -177,10 +177,8 @@ public class OtherController {
 	 * 상품 ID 조회(by AID)
 	 * </pre>
 	 * 
-	 * @param OtherAIDListReq
-	 *            req
-	 * @param SacRequestHeader
-	 *            header
+	 * @param req
+	 * @param header
 	 * @return OtherAIDListRes
 	 */
 	@RequestMapping(value = "/aid/list/v1", method = RequestMethod.GET)
@@ -238,7 +236,7 @@ public class OtherController {
     @ResponseBody
     public OtherPromotionSyncRes promotionSync(@Validated OtherPromotionSyncReq req) {
         SyncPromotionEventResult result = promotionEventSyncService.syncPromotionEvent(req.getTenantId(), req.getKey(), "Y".equals(req.getForceUpdateYn()));
-        return new OtherPromotionSyncRes(result.getUpdtCnt(), result.getErrorPromIdList(), result.hasError() ? "Y" : "N");
+        return new OtherPromotionSyncRes(result.getUpdtCnt(), result.getDelCnt(), result.getErrorPromIdList(), result.hasError() ? "Y" : "N");
     }
 
 }

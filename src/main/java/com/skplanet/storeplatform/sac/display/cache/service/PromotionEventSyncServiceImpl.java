@@ -54,7 +54,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
     public SyncPromotionEventResult syncPromotionEvent(final String tenantId, final String key, final boolean forceUpdate) {
 
         if(connectionFactory == null)
-            return new SyncPromotionEventResult(ERR_UPDT_CNT, null, new HashMap<String, PromotionEventWrapper>());
+            return new SyncPromotionEventResult(ERR_UPDT_CNT, 0, null, new HashMap<String, PromotionEventWrapper>());
 
         final Plandasj client = connectionFactory.getConnectionPool().getClient();
 
@@ -141,7 +141,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
 
         checkSyncedData();
 
-        return new SyncPromotionEventResult(updtCnt, errorPromId, liveMap);
+        return new SyncPromotionEventResult(updtCnt, cntLiveRemoved, errorPromId, liveMap);
     }
 
     /**

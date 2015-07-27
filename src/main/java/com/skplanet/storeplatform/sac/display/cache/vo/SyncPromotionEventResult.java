@@ -23,9 +23,11 @@ public class SyncPromotionEventResult {
     private int updtCnt;
     private List<Integer> errorPromIdList;
     private Map<String, PromotionEventWrapper> liveEventMap;
+    private int delCnt;
 
-    public SyncPromotionEventResult(int updtCnt, List<Integer> errorPromIdList, Map<String, PromotionEventWrapper> liveEventMap) {
+    public SyncPromotionEventResult(int updtCnt, int delCnt, List<Integer> errorPromIdList, Map<String, PromotionEventWrapper> liveEventMap) {
         this.updtCnt = updtCnt;
+        this.delCnt = delCnt;
         this.errorPromIdList = errorPromIdList;
         this.liveEventMap = liveEventMap;
     }
@@ -44,5 +46,9 @@ public class SyncPromotionEventResult {
 
     public boolean hasError() {
         return updtCnt == -1 || errorPromIdList.size() > 0;
+    }
+
+    public int getDelCnt() {
+        return delCnt;
     }
 }
