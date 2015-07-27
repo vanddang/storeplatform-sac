@@ -1778,7 +1778,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				int expectAmt = (int) (availPayAmt * rateMap.get(userGrade) * 0.01);
 
 				// 적립예정 이력 총 금액
-				String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
+				// 2015.07.23 sonarQube 수정(안쓰는 변수 주석처리)
+				// String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 				int preReserveAmt = 0;
 				if (purchaseProduct.getPromId() != null && purchaseProduct.getPromId() > 0)
 					preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
