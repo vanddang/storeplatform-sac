@@ -120,8 +120,12 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
                     PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEventWrapper);
                 }
                 else {
-                    if(!(currentEventWrapper.getStartDt().equals(incommingEventWrapper.getStartDt()) ||
-                            currentEventWrapper.getEndDt().equals(incommingEventWrapper.getEndDt()))) {
+                    // TODO hashCode가 지금 로직으로는 유효하게 작동하지 않는 문제가 있다.
+                    try {
+                        if(currentEventWrapper.getPromotionEvent().hashCode() != incommingEventWrapper.getPromotionEvent().hashCode())
+                            PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEventWrapper);
+                    }
+                    catch (RuntimeException e) {
                         PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEventWrapper);
                     }
                 }

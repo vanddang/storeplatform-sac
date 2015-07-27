@@ -151,6 +151,6 @@ public class RawPromotionEvent {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(promId, rateGrd1, rateGrd2, rateGrd3, acmlMethodCd, acmlDt);
+        return Objects.hashCode(startDt, endDt, promId, rateGrd1, rateGrd2, rateGrd3, acmlMethodCd, acmlDt);
     }
 }

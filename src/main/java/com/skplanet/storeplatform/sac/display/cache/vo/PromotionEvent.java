@@ -111,9 +111,8 @@ public class PromotionEvent {
         return StringUtils.defaultString(targetId).startsWith("DP") ? "DP01160102" : "DP01160101";
     }
 
-    // TODO RawPromotionEvent와 코드 중복 제거
     @Override
     public int hashCode() {
-        return Objects.hashCode(promId, rateGrd1, rateGrd2, rateGrd3, acmlMethodCd, acmlDt);
+        return Objects.hashCode(startDt, endDt, promId, rateGrd1, rateGrd2, rateGrd3, acmlMethodCd, acmlDt);
     }
 }
