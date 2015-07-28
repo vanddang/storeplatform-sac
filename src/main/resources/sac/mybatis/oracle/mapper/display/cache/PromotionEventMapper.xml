@@ -10,7 +10,7 @@
             to_char(START_DT,'yyyyMMddHH24miss')||'_'||to_char(END_DT,'yyyyMMddHH24miss') as DATETIME_KEY,
             PROM_ID,
             ACML_METHOD_CD,
-            TO_CHAR(ACML_DATE, 'yyyyMMddHH24mi') as ACML_DT,
+            TO_CHAR(ACML_DATE, 'yyyyMMddHH24miss') as ACML_DT,
             RATE_GRD_1,
             RATE_GRD_2,
             RATE_GRD_3,
