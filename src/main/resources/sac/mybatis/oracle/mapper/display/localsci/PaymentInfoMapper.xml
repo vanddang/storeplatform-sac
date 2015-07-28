@@ -136,8 +136,8 @@
           AND A.PROD_ID = VO.PROD_ID (+)
           AND A.PROD_ID = MU.PROD_ID (+)
           AND A.USE_POLICY_ID = UP.USE_POLICY_ID(+)
-          AND MCPM.PROD_ID = A.PROD_ID
-          AND MCPM.BASE_YN = 'Y'
+          AND MCPM.PROD_ID(+) = A.PROD_ID
+          AND MCPM.BASE_YN(+) = 'Y'
           AND A.PROD_ID = #{prodId}
     </select>
     
