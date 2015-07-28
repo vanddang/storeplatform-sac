@@ -116,7 +116,9 @@ public class CategorySpecificSongServiceImpl implements CategorySpecificSongServ
                     Product product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
                     productList.add(product);
 
-                    musicService.mapgRingbell(header.getTenantHeader().getTenantId(), productBasicInfo.getProdId(), product.getMusic());
+                    // productBasicInfo.getProdId()의 경우 항상 episode id.
+                    // meatInfo.getProdId()를 사용하는 이유는 해당 값은 항상 channel id이기 때문.
+                    musicService.mapgRingbell(header.getTenantHeader().getTenantId(), metaInfo.getProdId(), product.getMusic());
                 }
             }
         }
