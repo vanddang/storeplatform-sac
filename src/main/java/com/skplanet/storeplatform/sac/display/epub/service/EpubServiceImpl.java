@@ -797,29 +797,15 @@ public class EpubServiceImpl implements EpubService {
 		rights.setPlus19Yn(mapperVO.getPlus19Yn());
 
 		rights.setGrade(mapperVO.getProdGrdCd());
-		
-		
-
-		System.out.println("@@@@@@@@@@ includeProdStopStatus >>> " + param.get("includeProdStopStatus"));
-		
-		/** #47384 판매중지, 판매불가 에피소드도 모두 노출되도록 **/
-	/*	if( param.get("includeProdStopStatus").equals("Y") ) {
-			
-		} else {
-*/
-			// 소장 정보
-			if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
-				rights.setStore(this.mapStore(mapperVO, param, existenceMap));
-			}
-			// 대여 정보
-			if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
-				rights.setPlay(this.mapPlay(mapperVO, param, existenceMap));
-			}
-		//}	
-		
-
-		
-		
+	
+		// 소장 정보
+		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
+			rights.setStore(this.mapStore(mapperVO, param, existenceMap));
+		}
+		// 대여 정보
+		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
+			rights.setPlay(this.mapPlay(mapperVO, param, existenceMap));
+		}
 
 		// 미리보기
 		rights.setPreview(this.mappingSvc.mapPreview(mapperVO));
