@@ -14,7 +14,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalI
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.EmailSendEcReq;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
-import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.MoveUserInfoRequest;
@@ -209,13 +208,21 @@ public class UserServiceImpl implements UserService {
 		// Constant.USERMBR_MOVE_TYPE_ACTIVATE(정상 처리), Constant.USERMBR_MOVE_TYPE_DORMANT(휴면 처리)
 		moveUserInfoRequest.setMoveType(moveUserInfoSacReq.getMoveType());
 
-		// Test API에서는 IDP 조회 하지 않으므로 "Y"으로 셋팅
-		moveUserInfoRequest.setIdpResultYn(Constant.TYPE_YN_Y);
+		moveUserInfoRequest.setIdpResultYn(moveUserInfoSacReq.getIdpResultYn());
+		moveUserInfoRequest.setIdpErrCd(moveUserInfoSacReq.getIdpErrCd());
 		MoveUserInfoResponse moveUserInfoResponse = this.userSCI.executeMoveUserMbr(moveUserInfoRequest);
+
+		// IDP 결과값이 N일 경우 이력만 저장하고 return.
+		if (StringUtils.equals(moveUserInfoSacReq.getIdpResultYn(), MemberConstants.USE_N)) {
+			MoveUserInfoSacRes moveUserInfoSacRes = new MoveUserInfoSacRes();
+			moveUserInfoSacRes.setUserKey(moveUserInfoResponse.getUserKey());
+
+			return moveUserInfoSacRes;
+		}
 
 		// 전환 처리가 SUCCESS && 휴면계정 상태 해제 && 메일 계정이 있을 경우 휴면계정 상태 해제 메일 발송
 		if (StringUtils.equals(moveUserInfoSacReq.getUserKey(), moveUserInfoResponse.getUserKey())) {
-			if (Constant.USERMBR_MOVE_TYPE_ACTIVATE.equals(moveUserInfoRequest.getMoveType())) {
+			if (MemberConstants.USER_MOVE_TYPE_ACTIVATE.equals(moveUserInfoRequest.getMoveType())) {
 				if (StringUtils.isNotBlank(moveUserInfoResponse.getEmailAddr())
 						&& StringUtil.isEmail(moveUserInfoResponse.getEmailAddr())) {
 					String recvNm = "";
@@ -244,9 +251,10 @@ public class UserServiceImpl implements UserService {
 					emailSendEcReq.setContents(""); // 컨텐츠 내용
 					this.messageSCI.emailSend(emailSendEcReq);
 
-					LOGGER.info("Restore email send {} : {}", moveUserInfoResponse.getUserKey(), emailSendEcReq);
+					LOGGER.info("Sleep member restore email sent {} : {}", moveUserInfoResponse.getUserKey(),
+							emailSendEcReq);
 				} else {
-					LOGGER.info("{} : Email is blank or not available", moveUserInfoResponse.getUserKey());
+					LOGGER.info("{} : Email value is blank or not validate", moveUserInfoResponse.getUserKey());
 				}
 			}
 		}
