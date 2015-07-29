@@ -19,6 +19,12 @@ public class MoveUserInfoSacReq extends CommonInfo {
 	@NotBlank
 	private String moveType;
 
+	/** IDP 연동 결과. */
+	private String idpResultYn;
+
+	/** IDP 에러 코드. */
+	private String idpErrCd;
+
 	/**
 	 * @return the userKey
 	 */
@@ -47,6 +53,36 @@ public class MoveUserInfoSacReq extends CommonInfo {
 	 */
 	public void setMoveType(String moveType) {
 		this.moveType = moveType;
+	}
+
+	/**
+	 * @return the idpResultYn
+	 */
+	public String getIdpResultYn() {
+		return this.idpResultYn;
+	}
+
+	/**
+	 * @param idpResultYn
+	 *            the idpResultYn to set
+	 */
+	public void setIdpResultYn(String idpResultYn) {
+		this.idpResultYn = idpResultYn;
+	}
+
+	/**
+	 * @return the idpErrCd
+	 */
+	public String getIdpErrCd() {
+		return this.idpErrCd;
+	}
+
+	/**
+	 * @param idpErrCd
+	 *            the idpErrCd to set
+	 */
+	public void setIdpErrCd(String idpErrCd) {
+		this.idpErrCd = idpErrCd;
 	}
 
 }
