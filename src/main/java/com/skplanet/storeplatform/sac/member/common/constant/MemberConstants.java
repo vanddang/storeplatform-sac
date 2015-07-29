@@ -33,6 +33,7 @@ public final class MemberConstants {
 	public static final String SC_ERROR_NO_USERKEY = "SC_MEM_9995"; // 회원키 없음
 	public static final String SC_ERROR_DUPLICATED_DEVICE_ID = "SC_MEM_9985"; // 디바이스크 중복
 	public static final String SC_ERROR_EDIT_INPUT_ITEM_NOT_FOUND = "SC_MEM_9994"; // 수정 또는 추가할 항목이 없음
+	public static final String SC_ERROR_INSERT_OR_UPDATE = "SC_MEM_9984"; // insert or update 오류
 
 	/** SAC회원 결과 코드. */
 	public static final String SAC_ERROR_NO_ONEID = "SAC_MEM_1302"; // OneID 회원이 아님
@@ -360,6 +361,11 @@ public final class MemberConstants {
 	public static final String SMS_SENDER_TENANT_ID_TSTORE = "US012201"; // 티스토어
 	public static final String SMS_SENDER_TENANT_ID_UPLUS_STORE = "US012202"; // U+ 스토어
 	public static final String SMS_SENDER_TENANT_ID_OLLEH_MARKET = "US012203"; // 올레마켓
+
+	/** 회원 상태 정상 처리 코드. */
+	public static final String USER_MOVE_TYPE_ACTIVATE = "US012301";
+	/** 회원 상태 휴면 처리 코드. */
+	public static final String USER_MOVE_TYPE_DORMANT = "US012302";
 
 	/**
 	 * 판매자 회원 상수들.
