@@ -143,6 +143,11 @@ public class DeviceInfo extends CommonInfo {
 	private String authenticationDate;
 
 	/**
+	 * 휴면계정유무.
+	 */
+	private String isDormant;
+
+	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회.
 	 */
 	private List<DeviceExtraInfo> deviceExtraInfoList;
@@ -589,4 +594,20 @@ public class DeviceInfo extends CommonInfo {
 	public void setIsSCUpdate(String isSCUpdate) {
 		this.isSCUpdate = isSCUpdate;
 	}
+
+	/**
+	 * @return isDormant
+	 */
+	public String getIsDormant() {
+		return this.isDormant;
+	}
+
+	/**
+	 * @param isDormant
+	 *            String
+	 */
+	public void setIsDormant(String isDormant) {
+		this.isDormant = isDormant;
+	}
+
 }

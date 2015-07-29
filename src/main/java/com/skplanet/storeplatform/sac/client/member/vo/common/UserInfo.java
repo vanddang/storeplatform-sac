@@ -223,6 +223,11 @@ public class UserInfo extends CommonInfo {
 	 */
 	private String userUpdEmail;
 
+	/**
+	 * 휴면계정유무.
+	 */
+	private String isDormant;
+
 	/* 사용자 부가정보 */
 	private List<UserExtraInfo> userExtraInfoList;
 
@@ -869,6 +874,21 @@ public class UserInfo extends CommonInfo {
 	 */
 	public void setUserUpdEmail(String userUpdEmail) {
 		this.userUpdEmail = userUpdEmail;
+	}
+
+	/**
+	 * @return isDormant
+	 */
+	public String getIsDormant() {
+		return this.isDormant;
+	}
+
+	/**
+	 * @param isDormant
+	 *            String
+	 */
+	public void setIsDormant(String isDormant) {
+		this.isDormant = isDormant;
 	}
 
 }
