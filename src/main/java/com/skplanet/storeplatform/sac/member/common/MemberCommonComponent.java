@@ -62,8 +62,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -1259,30 +1257,4 @@ public class MemberCommonComponent {
 		}
 		return userStatusText;
 	}
-
-	/**
-	 * <pre>
-	 * 휴면계정 복구.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            SacRequestHeader
-	 * @param userKey
-	 *            String
-	 * @param idpResultYn
-	 *            IDP 휴면계정 복구 성공유무
-	 * @param idpResultErrorCode
-	 *            IDP 휴면계정 복구 에러발생시 에러코드
-	 * @return MoveUserInfoSacRes
-	 */
-	public MoveUserInfoSacRes recoveryDormantUser(SacRequestHeader sacHeader, String userKey, String idpResultYn,
-			String idpResultErrorCode) {
-		MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
-		moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
-		moveUserInfoSacReq.setUserKey(userKey);
-		moveUserInfoSacReq.setIdpResultYn(idpResultYn);
-		moveUserInfoSacReq.setIdpErrCd(idpResultErrorCode);
-		return this.userService.moveUserInfo(sacHeader, moveUserInfoSacReq);
-	}
-
 }

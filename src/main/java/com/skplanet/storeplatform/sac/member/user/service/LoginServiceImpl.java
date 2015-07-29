@@ -129,6 +129,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -257,8 +258,12 @@ public class LoginServiceImpl implements LoginService {
 				idpResultErrorCode = e.getErrorInfo().getCode();
 				throw e;
 			} finally {
-				this.commService.recoveryDormantUser(requestHeader, chkDupRes.getUserMbr().getUserKey(), idpResultYn,
-						idpResultErrorCode);
+				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+				moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+				moveUserInfoSacReq.setIdpResultYn(idpResultYn);
+				moveUserInfoSacReq.setIdpErrCd(idpResultErrorCode);
+				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 			}
 		}
 
@@ -478,8 +483,12 @@ public class LoginServiceImpl implements LoginService {
 				idpResultErrorCode = e.getErrorInfo().getCode();
 				throw e;
 			} finally {
-				this.commService.recoveryDormantUser(requestHeader, chkDupRes.getUserMbr().getUserKey(), idpResultYn,
-						idpResultErrorCode);
+				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+				moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+				moveUserInfoSacReq.setIdpResultYn(idpResultYn);
+				moveUserInfoSacReq.setIdpErrCd(idpResultErrorCode);
+				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 			}
 		}
 
@@ -1045,7 +1054,12 @@ public class LoginServiceImpl implements LoginService {
 
 					if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
 						LOGGER.info("{} 휴면 원아이디 회원복구", req.getUserId());
-						this.commService.recoveryDormantUser(requestHeader, userKey, MemberConstants.USE_Y, null);
+						MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+						moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+						moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+						moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
+						moveUserInfoSacReq.setIdpErrCd(null);
+						this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 					}
 					userAuthKey = authForIdEcRes.getUserAuthKey();
 
@@ -1205,7 +1219,12 @@ public class LoginServiceImpl implements LoginService {
 				userAuthKey = authForIdEcRes.getUserAuthKey();
 				if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
 					LOGGER.info("{} 휴면 IDP아이디 회원복구", req.getUserId());
-					this.commService.recoveryDormantUser(requestHeader, userKey, MemberConstants.USE_Y, null);
+					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+					moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+					moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
+					moveUserInfoSacReq.setIdpErrCd(null);
+					this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 				}
 				/* 단말정보 update */
 				// this.modDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
