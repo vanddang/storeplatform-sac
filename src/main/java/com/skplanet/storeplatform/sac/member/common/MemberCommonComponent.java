@@ -71,7 +71,6 @@ import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
-import com.skplanet.storeplatform.sac.member.user.service.UserService;
 
 /**
  * 공통 기능을 임시로 정의해서 사용한다.
@@ -97,9 +96,6 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private SellerSCI sellerSCI;
-
-	@Autowired
-	private UserService userService;
 
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	public String fixedMobileUserAuthKey;
