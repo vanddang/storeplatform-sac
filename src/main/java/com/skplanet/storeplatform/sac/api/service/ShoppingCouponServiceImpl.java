@@ -474,11 +474,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 			int oWidth = img.getWidth(null); // 이미지 가로사이즈
 			int oHeight = img.getHeight(null); // 이미지 세로사이즈
-
 			int nHeightSize = oHeight * 684 / oWidth;
-
 			// 파일 생성 크기
-			int[][] imageSizeForDrivedDtl = { { 684, nHeightSize } };
+			int[][] imageSizeForDrivedDtl = { { oWidth, nHeightSize } };
 
 			// 카탈로그 대표이미지 리사이즈
 			for (int i = 0; i < drivedFileNameForDrivedTop.length; i++) {
@@ -541,7 +539,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 					// 이미지를 1170사이즈까지 잘라서 저장
 					for (seq = 1; nHeightSize < height; seq++) {
 
-						String resizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
+						String resizetargetFileName1 = tmpFileName1 + "_"+oWidth+"xy" + seq + "." + fileExt1;
 
 						if (!imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
 								width, 1170)) {
@@ -569,7 +567,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 							this.log.info("■■■■■이미지 마지막 1170보다 작은 이미지 생성■■■■■");
 							seq = seq + 1;
 
-							resizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
+							resizetargetFileName1 = tmpFileName1 + "_"+oWidth+"xy" + seq + "." + fileExt1;
 							this.log.info("■■■■■resizetargetFileName1■■■■■ :" + resizetargetFileName1 + "을 생성 하였습니다.");
 
 							if (!imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0,
