@@ -141,6 +141,7 @@ public class DeviceUtil {
 		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
 		// deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
 		deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
+		deviceInfo.setIsDormant(userMbrDevice.getIsDormant());
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 
 		return deviceInfo;

@@ -130,7 +130,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				 **********************************************/
 				LOGGER.info("[OneId ID 회원 Case] id:{}, type:{}", userInfo.getUserId(), userInfo.getUserType());
 				this.discardUser(userInfo.getImSvcNo(), req.getUserAuthKey());
-				this.rem(requestHeader, userInfo.getUserKey());
+				this.rem(requestHeader, userInfo.getUserKey(), userInfo.getIsDormant());
 
 			} else {
 
@@ -139,7 +139,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				 **********************************************/
 				LOGGER.info("[IDP ID 회원 Case] id:{}, type:{}", userInfo.getUserId(), userInfo.getUserType());
 				this.secedeUser(req.getUserId(), req.getUserAuthKey());
-				this.rem(requestHeader, userInfo.getUserKey());
+				this.rem(requestHeader, userInfo.getUserKey(), userInfo.getIsDormant());
 
 			}
 
@@ -206,8 +206,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
 						req.getDeviceId(), userInfo.getUserKey());
 
-				LOGGER.info("[OneId ID 회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
-				this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId());
+				LOGGER.info("[OneId ID 회원 Case] deviceId:{}, type:{}, 휴면회원유무:{}", req.getDeviceId(),
+						userInfo.getUserType(), userInfo.getIsDormant());
+				this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId(), userInfo.getIsDormant());
 				this.userService.modAdditionalInfoForNonLogin(requestHeader, userInfo.getUserKey(),
 						userInfo.getImSvcNo());
 
@@ -234,9 +235,12 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					/**********************************************
 					 * 무선 회원 Case.
 					 **********************************************/
-					LOGGER.info("[무선회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
+					LOGGER.info("[무선회원 Case] deviceId:{}, type:{}, 휴면유무:{}", req.getDeviceId(), userInfo.getUserType(),
+							userInfo.getIsDormant());
+
 					this.secedeForWap(req.getDeviceId());
-					this.rem(requestHeader, userInfo.getUserKey());
+
+					this.rem(requestHeader, userInfo.getUserKey(), userInfo.getIsDormant());
 
 					/**
 					 * MQ 연동(회원 탈퇴).
@@ -273,9 +277,12 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader,
 							MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userInfo.getUserKey());
 
-					LOGGER.info("[IDP ID 회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
+					LOGGER.info("[IDP ID 회원 Case] deviceId:{}, type:{}, 휴면회원유무:{}", req.getDeviceId(),
+							userInfo.getUserType(), userInfo.getIsDormant());
+
 					this.secedeForWap(req.getDeviceId());
-					this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId());
+					this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId(),
+							userInfo.getIsDormant());
 
 					/** MQ 연동(휴대기기 삭제) */
 					RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
@@ -342,7 +349,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 			if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-				this.rem(requestHeader, detailRes.getUserInfo().getUserKey());
+				this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), MemberConstants.USE_N);
 
 				/**
 				 * MQ 연동(회원 탈퇴).
@@ -466,8 +473,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 *            SAC 공통 헤더
 	 * @param userKey
 	 *            사용자 Key
+	 * @param isDormant
+	 *            휴면계정 유무
 	 */
-	public void rem(SacRequestHeader requestHeader, String userKey) {
+	public void rem(SacRequestHeader requestHeader, String userKey, String isDormant) {
 
 		LOGGER.info("SC 탈퇴 요청 userKey:{}", userKey);
 		RemoveUserRequest scReq = new RemoveUserRequest();
@@ -475,6 +484,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		scReq.setUserKey(userKey);
 		scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
 		scReq.setSecedeReasonMessage("");
+		scReq.setIsDormant(isDormant);
 		this.userSCI.remove(scReq);
 
 	}
@@ -490,8 +500,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 *            사용자 Key
 	 * @param deviceId
 	 *            기기 ID
+	 * @param isDormant
+	 *            휴면계정유무
 	 */
-	public void deviceIdInvalid(SacRequestHeader requestHeader, String userKey, String deviceId) {
+	public void deviceIdInvalid(SacRequestHeader requestHeader, String userKey, String deviceId, String isDormant) {
 
 		/**
 		 * SC 휴대기기 단건 조회.
@@ -510,7 +522,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		removeDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(requestHeader));
 		removeDeviceRequest.setUserKey(userKey);
 		removeDeviceRequest.setDeviceKey(removeKeyList);
-
+		removeDeviceRequest.setIsDormant(isDormant);
 		this.deviceSCI.removeDevice(removeDeviceRequest);
 
 	}

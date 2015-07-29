@@ -9,15 +9,21 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.DeactivateUserEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.DeactivateUserEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcReq;
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.EmailSendEcReq;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.MoveUserInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.MoveUserInfoResponse;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
@@ -29,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 
 /**
@@ -265,5 +272,75 @@ public class UserServiceImpl implements UserService {
 		moveUserInfoSacRes.setUserKey(moveUserInfoResponse.getUserKey());
 
 		return moveUserInfoSacRes;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.UserService#moveUserInfoForIDP(com.skplanet.storeplatform.
+	 * sac.common.header.vo.SacRequestHeader, com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq)
+	 */
+	@Override
+	public void moveUserInfoForIDP(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq) {
+		// 회원정보조회
+		DetailReq detailReq = new DetailReq();
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		detailReq.setUserKey(moveUserInfoSacReq.getUserKey());
+		detailReq.setSearchExtent(searchExtent);
+
+		DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
+		if (StringUtils.equals(detailRes.getUserInfo().getIsDormant(), MemberConstants.USE_N)) {
+			if (StringUtils.equals(moveUserInfoSacReq.getMoveType(), MemberConstants.USER_MOVE_TYPE_ACTIVATE)) {
+				throw new StorePlatformException("정상회원 상태입니다.");
+			}
+		} else {
+			if (StringUtils.equals(moveUserInfoSacReq.getMoveType(), MemberConstants.USER_MOVE_TYPE_DORMANT)) {
+				throw new StorePlatformException("휴면회원 상태입니다.");
+			}
+		}
+
+		String keyType = null;
+		String key = null;
+		String reqDate = DateUtil.getToday();
+		String reason = null;
+
+		// 회원 타입별 IDP 연동값 셋팅
+		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+			keyType = "3";
+			key = detailRes.getUserInfo().getImMbrNo();
+		} else if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_IDPID)) {
+			keyType = "2";
+			key = detailRes.getUserInfo().getImMbrNo();
+		} else if (StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
+			keyType = "1";
+			key = detailRes.getUserInfo().getImSvcNo();
+		} else {
+			throw new StorePlatformException("SAC_MEM_0001", "mbr_clas_cd");
+		}
+
+		// IDP 분리보관 및 분리보관 해지 요청
+		if (StringUtils.equals(moveUserInfoSacReq.getMoveType(), MemberConstants.USER_MOVE_TYPE_ACTIVATE)) {
+			ActivateUserEcReq activateUserEcReq = new ActivateUserEcReq();
+			activateUserEcReq.setKeyType(keyType);
+			activateUserEcReq.setKey(key);
+			activateUserEcReq.setReqDate(reqDate);
+			activateUserEcReq.setReason(reason);
+			LOGGER.info("activateUserEcReq : ", ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
+			ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
+			LOGGER.info("activateUserEcRes : ", ConvertMapperUtils.convertObjectToJson(activateUserEcRes));
+		} else if (StringUtils.equals(moveUserInfoSacReq.getMoveType(), MemberConstants.USER_MOVE_TYPE_DORMANT)) {
+			DeactivateUserEcReq deactivateUserEcReq = new DeactivateUserEcReq();
+			deactivateUserEcReq.setKeyType(keyType);
+			deactivateUserEcReq.setKey(key);
+			deactivateUserEcReq.setReqDate(reqDate);
+			deactivateUserEcReq.setReason(reason);
+			LOGGER.info("deactivateUserEcReq : ", ConvertMapperUtils.convertObjectToJson(deactivateUserEcReq));
+			DeactivateUserEcRes deactivateUserEcRes = this.idpSCI.deactivateUser(deactivateUserEcReq);
+			LOGGER.info("deactivateUserEcRes : ", ConvertMapperUtils.convertObjectToJson(deactivateUserEcRes));
+		} else {
+			throw new StorePlatformException("SAC_MEM_0001", "moveType");
+		}
 	}
 }

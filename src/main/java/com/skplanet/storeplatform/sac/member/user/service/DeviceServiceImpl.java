@@ -248,6 +248,7 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
 		schDeviceListReq.setUserKey(userKey);
 		schDeviceListReq.setIsMainDevice(req.getIsMainDevice()); // 대표기기만 조회(Y), 모든기기 조회(N)
+
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 
@@ -394,13 +395,53 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String regDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) {
 
+		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(systemId);
 		commonRequest.setTenantID(tenantId);
 
+		// 기등록된 회원이 휴면아이디에 붙은 MDN인지 체크
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+		keySchUserKey.setKeyString(deviceInfo.getDeviceId());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		searchExtentUserRequest.setCommonRequest(commonRequest);
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+		searchExtentUserRequest.setUserInfoYn("Y");
+		SearchExtentUserResponse schUserRes = null;
+		String idpResultYn = null;
+		String idpResultErrorCode = null;
+		try {
+			schUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
+
+			if (StringUtils.equals(schUserRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)
+					&& !StringUtils.equals(schUserRes.getUserKey(), userKey)
+					&& !StringUtils.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+				LOGGER.info("{} 휴면 아이디회원 IDP 복구", deviceInfo.getDeviceId());
+				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+				authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
+				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
+				this.idpSCI.authForWap(authForWapEcReq);
+				idpResultYn = MemberConstants.USE_Y;
+			}
+		} catch (StorePlatformException e) {
+			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				if (StringUtils.indexOf(e.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE) > -1) {
+					idpResultYn = MemberConstants.USE_N;
+					idpResultErrorCode = e.getErrorInfo().getCode();
+					createDeviceReq.setIdpResultErrorCode(idpResultErrorCode);
+				} else {
+					throw e;
+				}
+			}
+		}
+		createDeviceReq.setIdpResultYn(idpResultYn); // 휴면아이디 IDP 복구 성공유무
+
 		/* 1. 휴대기기 정보 등록 요청 */
-		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 		createDeviceReq.setCommonRequest(commonRequest);
 		createDeviceReq.setIsNew("Y");
 		createDeviceReq.setUserKey(userKey);
@@ -424,12 +465,13 @@ public class DeviceServiceImpl implements DeviceService {
 		String previousDeviceKey = createDeviceRes.getPreviousDeviceKey();
 		String deviceKey = createDeviceRes.getDeviceKey();
 		String previousUserId = createDeviceRes.getPreviousUserID();
-
+		String previousIsDormant = createDeviceRes.getPreviousIsDormant(); // 기등록된 회원의 휴면계정유무
+		String isDormant = createDeviceRes.getIsDormant(); // 등록회원의 휴면계정유무
 		if (StringUtils.isNotBlank(previousUserKey) && StringUtils.isNotBlank(previousDeviceKey)) {
 
 			LOGGER.info(
-					"기등록된 모바일 회원 이관처리 deviceId : {}, PreviousDeviceKey : {}, nowDeviceKey : {}, PreviousUserKey : {}, NowUserKey : {}",
-					deviceInfo.getDeviceId(), previousDeviceKey, deviceKey, previousUserKey, userKey);
+					"기등록된 모바일 회원 이관처리 deviceId : {}, PreviousDeviceKey : {}, nowDeviceKey : {}, PreviousUserKey : {}, NowUserKey : {}, PreviousIsDormant : {}",
+					deviceInfo.getDeviceId(), previousDeviceKey, deviceKey, previousUserKey, userKey, previousIsDormant);
 
 			/* 3. 전시/기타, 구매 파트 키 변경 */
 			this.mcic.excuteInternalMethod(true, systemId, tenantId, userKey, previousUserKey, deviceKey,
@@ -439,9 +481,11 @@ public class DeviceServiceImpl implements DeviceService {
 			SearchRealNameRequest schRealNameReq = new SearchRealNameRequest();
 			schRealNameReq.setCommonRequest(commonRequest);
 			schRealNameReq.setUserKey(previousUserKey);
+			schRealNameReq.setIsDormant(previousIsDormant);
 			SearchRealNameResponse preSchRealNameRes = this.userSCI.searchRealName(schRealNameReq);
 
 			schRealNameReq.setUserKey(userKey);
+			schRealNameReq.setIsDormant(isDormant);
 			SearchRealNameResponse schRealNameRes = this.userSCI.searchRealName(schRealNameReq);
 
 			if (preSchRealNameRes.getMbrAuth() != null
@@ -457,6 +501,7 @@ public class DeviceServiceImpl implements DeviceService {
 					updateRealNameRequest.setIsRealName(MemberConstants.USE_Y);
 					updateRealNameRequest.setUserKey(userKey);
 					updateRealNameRequest.setUserMbrAuth(preSchRealNameRes.getMbrAuth());
+					updateRealNameRequest.setIsDormant(isDormant);
 					UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
 					if (StringUtils.isBlank(updateRealNameResponse.getUserKey())) {
 						throw new StorePlatformException("SAC_MEM_0002", "userKey");
@@ -480,6 +525,7 @@ public class DeviceServiceImpl implements DeviceService {
 						mbrAuth.setCi(" ");
 						mbrAuth.setIsRealName("N");
 						updRealNameReq.setUserMbrAuth(mbrAuth);
+						updRealNameReq.setIsDormant(isDormant);
 						this.userSCI.updateRealName(updRealNameReq);
 					}
 				}
@@ -512,6 +558,15 @@ public class DeviceServiceImpl implements DeviceService {
 				LOGGER.error("MQ process fail {}", mqInfo);
 			}
 
+			// 기등록된 모바일회원이 휴면 계정이였을 경우 IDP 복구 요청
+			if (StringUtils.equals(previousIsDormant, MemberConstants.USE_Y)) {
+				LOGGER.info("{} 휴면 회원 IDP 복구", deviceInfo.getDeviceId());
+				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+				authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
+				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
+				this.idpSCI.authForWap(authForWapEcReq);
+			}
+
 		}
 
 		// 휴대기기 PIN 정보 이관 로직 추가 (2014-11-20)
@@ -523,23 +578,24 @@ public class DeviceServiceImpl implements DeviceService {
 			transferDeviceSetInfoRequest.setCommonRequest(commonRequest);
 			transferDeviceSetInfoRequest.setUserKey(userKey);
 			transferDeviceSetInfoRequest.setDeviceKey(deviceKey);
+			transferDeviceSetInfoRequest.setIsDormant(isDormant);
 			transferDeviceSetInfoRequest.setPreUserKey(preUserKey);
 			transferDeviceSetInfoRequest.setPreDeviceKey(preDeviceKey);
-
+			transferDeviceSetInfoRequest.setPreIsDormant(previousIsDormant);
 			this.deviceSetSCI.transferDeviceSetInfo(transferDeviceSetInfoRequest);
 		}
 
 		/* 5. 통합회원에 휴대기기 등록시 무선회원 해지 */
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
+		keySearchList = new ArrayList<KeySearch>();
+		keySchUserKey = new KeySearch();
 		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
 		keySchUserKey.setKeyString(userKey);
 		keySearchList.add(keySchUserKey);
-		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		searchExtentUserRequest = new SearchExtentUserRequest();
 		searchExtentUserRequest.setCommonRequest(commonRequest);
 		searchExtentUserRequest.setKeySearchList(keySearchList);
 		searchExtentUserRequest.setUserInfoYn("Y");
-		SearchExtentUserResponse schUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
+		schUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
 
 		if (StringUtils.isNotBlank(schUserRes.getUserMbr().getImSvcNo())) {
 

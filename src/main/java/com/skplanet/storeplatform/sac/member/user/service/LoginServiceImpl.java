@@ -241,6 +241,27 @@ public class LoginServiceImpl implements LoginService {
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
+		/* 휴면계정인 경우 복구처리 */
+		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+			LOGGER.info("{} 휴면회원 복구", req.getDeviceId());
+			String idpResultYn = null;
+			String idpResultErrorCode = null;
+			try {
+				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+				authForWapEcReq.setUserMdn(req.getDeviceId());
+				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
+				this.idpSCI.authForWap(authForWapEcReq);
+				idpResultYn = MemberConstants.USE_Y;
+			} catch (StorePlatformException e) {
+				idpResultYn = MemberConstants.USE_N;
+				idpResultErrorCode = e.getErrorInfo().getCode();
+				throw e;
+			} finally {
+				this.commService.recoveryDormantUser(requestHeader, chkDupRes.getUserMbr().getUserKey(), idpResultYn,
+						idpResultErrorCode);
+			}
+		}
+
 		/* 회원 존재유무 확인 */
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
 
@@ -440,6 +461,27 @@ public class LoginServiceImpl implements LoginService {
 		/* 회원정보 조회 */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+
+		/* 휴면계정인 경우 복구처리 */
+		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+			LOGGER.info("{} 휴면회원 복구", req.getDeviceId());
+			String idpResultYn = null;
+			String idpResultErrorCode = null;
+			try {
+				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+				authForWapEcReq.setUserMdn(req.getDeviceId());
+				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
+				this.idpSCI.authForWap(authForWapEcReq);
+				idpResultYn = MemberConstants.USE_Y;
+			} catch (StorePlatformException e) {
+				idpResultYn = MemberConstants.USE_N;
+				idpResultErrorCode = e.getErrorInfo().getCode();
+				throw e;
+			} finally {
+				this.commService.recoveryDormantUser(requestHeader, chkDupRes.getUserMbr().getUserKey(), idpResultYn,
+						idpResultErrorCode);
+			}
+		}
 
 		/* 회원 존재유무 확인 */
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
@@ -683,6 +725,7 @@ public class LoginServiceImpl implements LoginService {
 		/* mdn 회원유무 조회 */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		LOGGER.info("{} 휴면계정유무 : {}", oDeviceId, chkDupRes.getUserMbr().getIsDormant());
 
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
 
@@ -802,6 +845,21 @@ public class LoginServiceImpl implements LoginService {
 
 				LOGGER.info("{} 추가인증수단 없음, 탈퇴처리", req.getDeviceId());
 
+				/* SC회원탈퇴 */
+				RemoveUserRequest removeUserReq = new RemoveUserRequest();
+				removeUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+				removeUserReq.setUserKey(userKey);
+				removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+				removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
+				removeUserReq.setSecedeReasonMessage("변동성인증수단없음");
+				removeUserReq.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
+				this.userSCI.remove(removeUserReq);
+
+				/* IDP 탈퇴 */
+				SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+				ecReq.setUserMdn(req.getDeviceId());
+				this.idpSCI.secedeForWap(ecReq);
+
 				/* MQ 연동(회원 탈퇴) */
 				DetailReq detailReq = new DetailReq();
 				SearchExtentReq searchExtent = new SearchExtentReq();
@@ -830,20 +888,6 @@ public class LoginServiceImpl implements LoginService {
 				} catch (AmqpException ex) {
 					LOGGER.error("MQ process fail {}", mqInfo);
 				}
-
-				/* SC회원탈퇴 */
-				RemoveUserRequest removeUserReq = new RemoveUserRequest();
-				removeUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-				removeUserReq.setUserKey(userKey);
-				removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
-				removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
-				removeUserReq.setSecedeReasonMessage("변동성인증수단없음");
-				this.userSCI.remove(removeUserReq);
-
-				/* IDP 탈퇴 */
-				SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-				ecReq.setUserMdn(req.getDeviceId());
-				this.idpSCI.secedeForWap(ecReq);
 
 				/* 회원 정보가 존재 하지 않습니다. */
 				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
@@ -882,6 +926,7 @@ public class LoginServiceImpl implements LoginService {
 		String userSubStatus = null;
 		String loginStatusCode = null;
 		String stopStatusCode = null;
+		String isDormant = null;
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
 		/* 회원정보 조회 */
@@ -965,6 +1010,7 @@ public class LoginServiceImpl implements LoginService {
 		userSubStatus = chkDupRes.getUserMbr().getUserSubStatus();
 		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
 		stopStatusCode = chkDupRes.getUserMbr().getStopStatusCode();
+		isDormant = chkDupRes.getUserMbr().getIsDormant();
 
 		/* 회원 인증 요청 */
 		if (StringUtils.isNotBlank(chkDupRes.getUserMbr().getImSvcNo())) { // 원아이디인 경우
@@ -982,9 +1028,9 @@ public class LoginServiceImpl implements LoginService {
 					this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
 
 					/* 로그인 상태코드 정상처리 */
-					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId,
+					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
-					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(),
+					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), isDormant,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
@@ -997,6 +1043,10 @@ public class LoginServiceImpl implements LoginService {
 
 				if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_OK)) {
 
+					if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
+						LOGGER.info("{} 휴면 원아이디 회원복구", req.getUserId());
+						this.commService.recoveryDormantUser(requestHeader, userKey, MemberConstants.USE_Y, null);
+					}
 					userAuthKey = authForIdEcRes.getUserAuthKey();
 
 				} else if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(),
@@ -1021,9 +1071,9 @@ public class LoginServiceImpl implements LoginService {
 				if (!StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_NOMAL)) {
 					LOGGER.info("{} 직권중지코드가 상이하여 업데이트(stopStatusCode : {} -> {})", userId, stopStatusCode,
 							MemberConstants.USER_STOP_STATUS_NOMAL);
-					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null,
+					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USE_N, null,
 							MemberConstants.USER_STOP_STATUS_NOMAL, null, null);
-					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), null,
+					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USE_N, null,
 							MemberConstants.USER_STOP_STATUS_NOMAL);
 					stopStatusCode = MemberConstants.USER_STOP_STATUS_NOMAL;
 				}
@@ -1032,9 +1082,9 @@ public class LoginServiceImpl implements LoginService {
 				if (!StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
 					LOGGER.info("{} 로그인제한상태코드가 상이하여 업데이트(loginStatusCode : {} -> {})", userId, loginStatusCode,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL);
-					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId,
+					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USE_N,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
-					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(),
+					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USE_N,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
@@ -1073,9 +1123,9 @@ public class LoginServiceImpl implements LoginService {
 																									   // 직권중지상태로 업데이트
 						LOGGER.info("{} 직권중지상태코드가 상이하여 업데이트(stopStatusCode : {} -> {})", userId, stopStatusCode,
 								MemberConstants.USER_STOP_STATUS_PAUSE);
-						this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null,
+						this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant, null,
 								MemberConstants.USER_STOP_STATUS_PAUSE, null, null);
-						this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), null,
+						this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), isDormant, null,
 								MemberConstants.USER_STOP_STATUS_PAUSE);
 						stopStatusCode = MemberConstants.USER_STOP_STATUS_PAUSE;
 					}
@@ -1089,9 +1139,9 @@ public class LoginServiceImpl implements LoginService {
 																										 // 제한상태로 업데이트
 						LOGGER.info("{} 로그인제한상태코드가 상이하여 업데이트(loginStatusCode : {} -> {})", userId, loginStatusCode,
 								MemberConstants.USER_LOGIN_STATUS_PAUSE);
-						this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId,
+						this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant,
 								MemberConstants.USER_LOGIN_STATUS_PAUSE, null, null, null);
-						this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(),
+						this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), isDormant,
 								MemberConstants.USER_LOGIN_STATUS_PAUSE, null);
 						loginStatusCode = MemberConstants.USER_LOGIN_STATUS_PAUSE;
 					}
@@ -1125,7 +1175,7 @@ public class LoginServiceImpl implements LoginService {
 				if (StringUtils.equals(req.getReleaseLock(), "Y")
 						&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 					/* 로그인 상태코드 정상처리 */
-					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId,
+					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
@@ -1153,7 +1203,10 @@ public class LoginServiceImpl implements LoginService {
 						.authForId(authForIdEcReq);
 
 				userAuthKey = authForIdEcRes.getUserAuthKey();
-
+				if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
+					LOGGER.info("{} 휴면 IDP아이디 회원복구", req.getUserId());
+					this.commService.recoveryDormantUser(requestHeader, userKey, MemberConstants.USE_Y, null);
+				}
 				/* 단말정보 update */
 				// this.modDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
@@ -1437,8 +1490,9 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			/* 가가입 상태인 mac 회원정보를 정상상태로 */
-			this.modStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null, null,
-					MemberConstants.MAIN_STATUS_NORMAL, MemberConstants.SUB_STATUS_NORMAL);
+			this.modStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(),
+					MemberConstants.USE_N, null, null, MemberConstants.MAIN_STATUS_NORMAL,
+					MemberConstants.SUB_STATUS_NORMAL);
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
 			LOGGER.info("{} -> {} deviceId 변경", req.getMacAddress(), req.getDeviceId());
@@ -2987,6 +3041,8 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @param keyString
 	 *            String
+	 * @param isDormant
+	 *            휴면계정유무
 	 * @param loginStatusCode
 	 *            로그인 상태코드
 	 * @param stopStatusCode
@@ -2996,8 +3052,8 @@ public class LoginServiceImpl implements LoginService {
 	 * @param userSubStatus
 	 *            서브메인 상태코드
 	 */
-	private void modStatus(SacRequestHeader requestHeader, String keyType, String keyString, String loginStatusCode,
-			String stopStatusCode, String userMainStatus, String userSubStatus) {
+	private void modStatus(SacRequestHeader requestHeader, String keyType, String keyString, String isDormant,
+			String loginStatusCode, String stopStatusCode, String userMainStatus, String userSubStatus) {
 
 		UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
@@ -3024,7 +3080,7 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtils.isNotBlank(userSubStatus)) {
 			updStatusUserReq.setUserSubStatus(userSubStatus);
 		}
-
+		updStatusUserReq.setIsDormant(isDormant);
 		this.userSCI.updateStatus(updStatusUserReq);
 
 	}
@@ -3038,12 +3094,15 @@ public class LoginServiceImpl implements LoginService {
 	 *            공통 헤더
 	 * @param imSvcNo
 	 *            OneID 통합서비스 관리번호
+	 * @param isDormant
+	 *            휴면계정유무
 	 * @param loginStatusCode
 	 *            로그인 상태코드
 	 * @param stopStatusCode
 	 *            직권중지 상태코드
 	 */
-	private void modOneIdInfo(SacRequestHeader sacHeader, String imSvcNo, String loginStatusCode, String stopStatusCode) {
+	private void modOneIdInfo(SacRequestHeader sacHeader, String imSvcNo, String isDormant, String loginStatusCode,
+			String stopStatusCode) {
 
 		UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
 		updateMbrOneIDRequest.setCommonRequest(this.commService.getSCCommonRequest(sacHeader));
@@ -3054,6 +3113,7 @@ public class LoginServiceImpl implements LoginService {
 		mbrOneID.setUpdateDate(DateUtil.getToday("yyyyMMddHHmmss"));
 
 		updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+		updateMbrOneIDRequest.setIsDormant(isDormant);
 		this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 	}
@@ -3132,6 +3192,7 @@ public class LoginServiceImpl implements LoginService {
 		} else {
 			userAuthMethod.setIsRealName("N");
 		}
+
 		return userAuthMethod;
 	}
 

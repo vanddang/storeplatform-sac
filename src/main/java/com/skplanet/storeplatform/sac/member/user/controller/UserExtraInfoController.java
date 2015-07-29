@@ -194,10 +194,10 @@ public class UserExtraInfoController {
 		if ("2".equals(req.getMoveType()))
 			req.setMoveType(Constant.USERMBR_MOVE_TYPE_DORMANT);
 
-		// IDP 연동은 Y로 테스트.
-		req.setIdpResultYn(MemberConstants.USE_Y);
-		// req.setIdpResultYn(MemberConstants.USE_N);
+		// IDP 휴면계정 연동
+		this.userService.moveUserInfoForIDP(sacHeader, req);
 
+		req.setIdpResultYn(MemberConstants.USE_Y);
 		MoveUserInfoSacRes res = this.userService.moveUserInfo(sacHeader, req);
 
 		LOGGER.info("Response : {}", res);

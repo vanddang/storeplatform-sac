@@ -972,6 +972,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
 		userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
 		userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
+		userInfo.setIsDormant(schUserRes.getUserMbr().getIsDormant());
 
 		// 실명인증이 되어 있으면 실명인증 데이터가 내려간다.
 		// 실명인증이 되어 있지만 이름, 성명, 생년월일 데이터가 없으면 회원정보 데이터가 내려간다.
@@ -1754,6 +1755,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
 		userInfo.setEntryStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getEntryStatusCode()));
 		userInfo.setUserUpdEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserUpdEmail()));
+		userInfo.setIsDormant(schUserRes.getUserMbr().getIsDormant());
 
 		// 실명인증이 되어 있으면 실명인증 데이터가 내려간다.
 		// 실명인증이 되어 있지만 이름, 성명, 생년월일 데이터가 없으면 회원정보 데이터가 내려간다.

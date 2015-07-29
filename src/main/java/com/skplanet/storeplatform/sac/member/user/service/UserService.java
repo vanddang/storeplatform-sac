@@ -52,8 +52,22 @@ public interface UserService {
 	 * </pre>
 	 * 
 	 * @param sacHeader
+	 *            SacRequestHeader
 	 * @param moveUserInfoSacReq
-	 * @return MoveUserInfoSacRes
+	 *            moveUserInfoSacReq
+	 * @return MoveUserInfoSacRes MoveUserInfoSacRes
 	 */
 	public MoveUserInfoSacRes moveUserInfo(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq);
+
+	/**
+	 * <pre>
+	 * IDP 휴면계정 처리(분리보관 / 분리보관해지 요청).
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param moveUserInfoSacReq
+	 *            moveUserInfoSacReq
+	 */
+	public void moveUserInfoForIDP(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq);
 }
