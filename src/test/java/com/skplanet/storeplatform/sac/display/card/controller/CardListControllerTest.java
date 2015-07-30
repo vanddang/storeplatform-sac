@@ -66,11 +66,12 @@ public class CardListControllerTest {
 		segmentReq.setMnoClsfCd( "US001201" );
 		segmentReq.setCategoryBest( Arrays.asList( "DP30" ) );
 		segmentReq.setTestMdnYn( "N" );
+		segmentReq.setTingYn( "N" );
 
 		CardListInPanelReq req = new CardListInPanelReq();
 
 		req.setUserKey( "Merong" );
-		req.setPanelId( "PN00002"   );
+		req.setPanelId( "PN28002"   );
 //		req.setUseGrdCd( "PD004401" );
 		req.setSegment( segmentReq );
 
