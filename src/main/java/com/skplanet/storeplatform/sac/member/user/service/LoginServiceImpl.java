@@ -256,7 +256,8 @@ public class LoginServiceImpl implements LoginService {
 				idpResultYn = MemberConstants.USE_Y;
 			} catch (StorePlatformException e) {
 				idpResultYn = MemberConstants.USE_N;
-				idpResultErrorCode = e.getErrorInfo().getCode();
+				idpResultErrorCode = StringUtils.substringAfter(e.getErrorInfo().getCode(),
+						MemberConstants.EC_IDP_ERROR_CODE_TYPE);
 				throw e;
 			} finally {
 				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
@@ -482,7 +483,8 @@ public class LoginServiceImpl implements LoginService {
 				idpResultYn = MemberConstants.USE_Y;
 			} catch (StorePlatformException e) {
 				idpResultYn = MemberConstants.USE_N;
-				idpResultErrorCode = e.getErrorInfo().getCode();
+				idpResultErrorCode = StringUtils.substringAfter(e.getErrorInfo().getCode(),
+						MemberConstants.EC_IDP_ERROR_CODE_TYPE);
 				throw e;
 			} finally {
 				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
