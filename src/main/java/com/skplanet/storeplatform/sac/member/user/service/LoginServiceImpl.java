@@ -734,7 +734,9 @@ public class LoginServiceImpl implements LoginService {
 		/* mdn 회원유무 조회 */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
-		LOGGER.info("{} 휴면계정유무 : {}", oDeviceId, chkDupRes.getUserMbr().getIsDormant());
+		if (chkDupRes.getUserMbr() != null) {
+			LOGGER.info("{} 휴면계정유무 : {}", oDeviceId, chkDupRes.getUserMbr().getIsDormant());
+		}
 
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
 
