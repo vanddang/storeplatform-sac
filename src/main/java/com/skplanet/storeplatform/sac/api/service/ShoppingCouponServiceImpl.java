@@ -300,14 +300,14 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				String catalogID = this.brandCatalogService.searchCreateCatalogId();
 
 				if (StringUtils.isBlank(catalogID)) {
-					message = "[COUPON_catalogId]를 생성하지 못했습니다.";
+					message = "[catalogId]를 생성하지 못했습니다.";
 					return false;
 				}
 
 				dpCatalogInfo.setCreateCatalogId(catalogID);
 				String brandId = this.getCreateBrandId(dpCatalogInfo.getBrandId());
 				if (StringUtils.isBlank(brandId)) {
-					message = "[COUPON_brandId]를 가져오지 못했습니다.";
+					message = "[brandId]를 가져오지 못했습니다.";
 					return false;
 				}
 				this.log.info("brandId = " + brandId);
@@ -408,7 +408,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName);
 				this.brandCatalogProdImgInfo.setSeq(seq);
 				seq++;
-				// TB_DP_PROD_IMG 테이블에 INSERT/UPDATE
+				// TB_DP_PROD_IMG 테이블에 INSERT
 				this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
 			}
 
@@ -492,7 +492,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName);
 				this.brandCatalogProdImgInfo.setSeq(seq);
 
-				// TB_DP_PROD_IMG 테이블에 INSERT/UPDATE
+				// TB_DP_PROD_IMG 테이블에 INSERT
 				this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
 			}
 
@@ -553,7 +553,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 						this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
 						this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
 
-						// TB_DP_PROD_IMG 테이블에 INSERT/UPDATE
+						// TB_DP_PROD_IMG 테이블에 INSERT
 						this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
 
 						// 이미지 마지막 1170보다 작은 이미지 생성및 DB처리
