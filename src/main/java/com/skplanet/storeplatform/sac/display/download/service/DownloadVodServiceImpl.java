@@ -104,8 +104,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		String idType = downloadVodSacReq.getIdType();
 		String productId = downloadVodSacReq.getProductId();
 		// ID유형 유효값 체크
-		if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)
-				&& !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
+		if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType) && !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
 			throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
 		}
 
@@ -139,7 +138,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				purchaseFlag = false;
 				log.debug("[DownloadVodServiceImpl] Purchase History Search Exception : {}");
 				log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-				// throw new StorePlatformException("SAC_DSP_2001", ex);
 			}
 
 			log.debug("---------------------------------------------------------------------");

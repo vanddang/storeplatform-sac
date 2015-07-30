@@ -54,8 +54,7 @@ public class VodGeneratorImpl implements VodGenerator {
 		Contributor contributor = new Contributor();
 		contributor.setArtist(metaInfo.getArtist1Nm()); // 출연자
 		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
-			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE,
-					metaInfo.getIssueDay()));
+			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE, metaInfo.getIssueDay()));
 		}
 
 		contributor.setDirector(metaInfo.getArtist2Nm()); // 감독
@@ -79,8 +78,7 @@ public class VodGeneratorImpl implements VodGenerator {
 		contributor.setDirector(metaInfo.getArtist2Nm()); // 제작자
 		contributor.setArtist(metaInfo.getArtist1Nm()); // 출연자
 		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
-			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE,
-					metaInfo.getIssueDay()));
+			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE, metaInfo.getIssueDay()));
 		}
 		contributor.setCompany(metaInfo.getChnlCompNm()); // 제공업체
 		contributor.setAgency(metaInfo.getAgencyNm()); // 기획사
@@ -117,8 +115,7 @@ public class VodGeneratorImpl implements VodGenerator {
 		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
 			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
 		}
-		if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd())
-				&& !DisplayConstants.DP_VOD_SHORT_STORY_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+		if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd()) && !DisplayConstants.DP_VOD_SHORT_STORY_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
 			vod.setChapter(chapter);
 		}
 		vod.setRunningTime(time);
@@ -168,8 +165,8 @@ public class VodGeneratorImpl implements VodGenerator {
 		List<Support> supportList = new ArrayList<Support>();
 		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM, metaInfo.getHdvYn()));
 		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM, metaInfo.getDolbySprtYn()));
-        if(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd()))
-            supportList.add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getDrmYn()));
+		if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd()))
+			supportList.add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getDrmYn()));
 
 		return supportList;
 	}
@@ -241,19 +238,37 @@ public class VodGeneratorImpl implements VodGenerator {
 		}
 
 		/*
-		 * HD 고화질 정보
+		 * 4.x I/F 일때
 		 */
-		if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId()) || StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
-			videoInfo = this.getHdVideoInfo(metaInfo);
-			videoInfoList.add(videoInfo);
-		}
 
 		if (supportFhdVideo) {
-			if (StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
-				videoInfo = this.getFhdVideoInfo(metaInfo);
+			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
+				videoInfo = this.getHdVideoInfoV2(metaInfo);
+				videoInfoList.add(videoInfo);
+			}
+
+			if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+				videoInfo = this.getHiHdVideoInfo(metaInfo);
+				videoInfoList.add(videoInfo);
+			}
+
+		} else {
+			/*
+			 * 고화질 정보(3.x I/F 일때) HD 화질 정보와 HIHD 화질정보 동시에 존재 할때에는 HIHD 화질이 우선적으로 내려가도록
+			 */
+			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+				videoInfo = this.getHdVideoInfo(metaInfo);
 				videoInfoList.add(videoInfo);
 			}
 		}
+
+		// FHD 정보는 조회하고 있으나 규격에 내려주지 않음 update by 2015.07.30 이석희
+		// if (supportFhdVideo) {
+		// if (StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
+		// videoInfo = this.getFhdVideoInfo(metaInfo);
+		// videoInfoList.add(videoInfo);
+		// }
+		// }
 
 		return videoInfoList;
 	}
@@ -336,5 +351,44 @@ public class VodGeneratorImpl implements VodGenerator {
 		price.setUnlmtAmt(metaInfo.getUnlmtAmt());
 		price.setPeriodAmt(metaInfo.getPeriodAmt());
 		return price;
+	}
+
+	/**
+	 * HD 고화질 정보(4.x I/F)
+	 * 
+	 * @param metaInfo
+	 */
+	@Override
+	public VideoInfo getHdVideoInfoV2(MetaInfo metaInfo) {
+		VideoInfo videoInfo = new VideoInfo();
+
+		videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
+		videoInfo.setPictureSize(metaInfo.getHihdDpPicRatio());
+		videoInfo.setPixel(metaInfo.getHihdDpPixel());
+		videoInfo.setScid(metaInfo.getHihdSubContsId());
+		videoInfo.setSize(metaInfo.getHihdFileSize());
+		videoInfo.setVersion(metaInfo.getHihdProdVer());
+		videoInfo.setFilePath(metaInfo.getHihdFilePath());
+
+		return videoInfo;
+	}
+
+	/**
+	 * HIHD 고화질 정보(4.x I/F)
+	 * 
+	 * @param metaInfo
+	 */
+	@Override
+	public VideoInfo getHiHdVideoInfo(MetaInfo metaInfo) {
+		VideoInfo videoInfo = new VideoInfo();
+
+		videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
+		videoInfo.setPictureSize(metaInfo.getHihdDpPicRatio());
+		videoInfo.setPixel(metaInfo.getHihdDpPixel());
+		videoInfo.setScid(metaInfo.getHihdSubContsId());
+		videoInfo.setSize(metaInfo.getHihdFileSize());
+		videoInfo.setVersion(metaInfo.getHihdProdVer());
+		videoInfo.setFilePath(metaInfo.getHihdFilePath());
+		return videoInfo;
 	}
 }

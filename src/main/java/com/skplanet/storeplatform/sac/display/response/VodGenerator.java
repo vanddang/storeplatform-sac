@@ -9,12 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-
 import java.util.List;
+
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
  * VOD 상품 전용 정보 Generator
@@ -51,18 +54,19 @@ public interface VodGenerator {
 	 * 
 	 * @param metaInfo
 	 *            metaInfo
-     *
+	 * 
 	 * @return Vod
 	 */
 	public Vod generateVod(MetaInfo metaInfo);
 
-    /**
-     * VOD 상품 전용 Vod 객체 생성.
-     * FHD 지원 여부 파라미터 추가
-     * @param metaInfo
-     * @param supportFhdVideo FHD 지원 여부
-     * @return
-     */
+	/**
+	 * VOD 상품 전용 Vod 객체 생성. FHD 지원 여부 파라미터 추가
+	 * 
+	 * @param metaInfo
+	 * @param supportFhdVideo
+	 *            FHD 지원 여부
+	 * @return
+	 */
 	public Vod generateVod(MetaInfo metaInfo, boolean supportFhdVideo);
 
 	/**
@@ -98,36 +102,64 @@ public interface VodGenerator {
 	 */
 	public List<VideoInfo> generateVideoInfoList(MetaInfo metaInfo);
 
+	/**
+	 * 일반 화질 VideoInfo 객체 생성
+	 * 
+	 * @param metaInfo
+	 * @return
+	 */
+	public VideoInfo getNmVideoInfo(MetaInfo metaInfo);
 
-    /**
-     * 일반 화질 VideoInfo 객체 생성
-     * @param metaInfo
-     * @return
-     */
-    public VideoInfo getNmVideoInfo(MetaInfo metaInfo);
-    /**
-     * SD 화질 VideoInfo 객체 생성
-     * @param metaInfo
-     * @return
-     */
-    public VideoInfo getSdVideoInfo(MetaInfo metaInfo);
-    /**
-     * HD 화질 VideoInfo 객체 생성
-     * @param metaInfo
-     * @return
-     */
-    public VideoInfo getHdVideoInfo(MetaInfo metaInfo);
-    /**
-     * FHD 화질 VideoInfo 객체 생성
-     * @param metaInfo
-     * @return
-     */
-    public VideoInfo getFhdVideoInfo(MetaInfo metaInfo);
+	/**
+	 * SD 화질 VideoInfo 객체 생성
+	 * 
+	 * @param metaInfo
+	 * @return
+	 */
+	public VideoInfo getSdVideoInfo(MetaInfo metaInfo);
 
-    /**
-     * VOD 가격
-     * @param metaInfo
-     * @return
-     */
+	/**
+	 * HD 화질 VideoInfo 객체 생성
+	 * 
+	 * @param metaInfo
+	 * @return
+	 */
+	public VideoInfo getHdVideoInfo(MetaInfo metaInfo);
+
+	/**
+	 * FHD 화질 VideoInfo 객체 생성
+	 * 
+	 * @param metaInfo
+	 * @return
+	 */
+	public VideoInfo getFhdVideoInfo(MetaInfo metaInfo);
+
+	/**
+	 * VOD 가격
+	 * 
+	 * @param metaInfo
+	 * @return
+	 */
 	public Price generateVodPrice(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * HD 화질 VideoInfo 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 * @return
+	 */
+	VideoInfo getHdVideoInfoV2(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * HIHD 화질 VideoInfo 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 * @return
+	 */
+	VideoInfo getHiHdVideoInfo(MetaInfo metaInfo);
+
 }
