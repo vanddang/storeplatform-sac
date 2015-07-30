@@ -659,7 +659,7 @@ public class ShoppingCouponSacController {
 			couponProdId = this.couponItemService.getCouponGenerateId(couponInfo.getCouponCode()); // 기존 쿠폰 가져오기
 		}
 		if (StringUtils.isBlank(couponProdId)) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "[COUPON_PRODUCT_ID]를 생성하지 못했습니다.",
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "[couponProdId]를 생성하지 못했습니다.",
 					"");
 		}
 		couponInfo.setProdId(couponProdId);
@@ -674,7 +674,7 @@ public class ShoppingCouponSacController {
 			}
 			if (StringUtils.isBlank(itemProdId)) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-						"[ITEM_PRODUCT_ID]를 생성하지 못했습니다.", "");
+						"[itemProdId]를 생성하지 못했습니다.", "");
 			}
 		}
 
