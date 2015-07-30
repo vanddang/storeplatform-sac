@@ -2516,7 +2516,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 
 		if (StringUtils.isEmpty(req.getSpecialTypeCd())) {
-			req.setSpecialTypeCd("DP007501+DP007502");
+			req.setSpecialTypeCd("DP007501+DP007502");//default 쇼핑 특가 상품
 		}
 
 		if (StringUtils.isNotEmpty(req.getSpecialTypeCd())) {
@@ -3123,10 +3123,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 
 		} else {
-			menuBrandList = this.commonDAO.queryForList("Shopping.getShoppingBrandMenuListV2", req, MetaInfo.class);
+			menuBrandList = this.commonDAO.queryForList("Shopping.getShoppingBrandMenuListV2", req, MetaInfo.class); //브랜드샵 - 메인 메뉴 리스트 조회
 			for (int kk = 0; kk < menuBrandList.size(); kk++) {
 				req.setMenuId(menuBrandList.get(kk).getMenuId());
-				resultList = this.commonDAO.queryForList("Shopping.getBrandshopCategoryList", req, MetaInfo.class);
+				resultList = this.commonDAO.queryForList("Shopping.getBrandshopCategoryList", req, MetaInfo.class); //브랜드샵 – 카테고리별 브랜드샵 조회
 				if (resultList.size() > 0) {
 					groupLayout = new GroupLayout();
 					productList = new ArrayList<Product>();
@@ -3291,7 +3291,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 
 		// 브랜드샵 정보 가져오기
-		resultList = this.commonDAO.queryForList("Shopping.getBrandshopCategoryList", req, MetaInfo.class);
+		resultList = this.commonDAO.queryForList("Shopping.getBrandshopCategoryList", req, MetaInfo.class); //브랜드샵 – 카테고리별 브랜드샵 조회
 
 		if (resultList != null) {
 //			shopping = new MetaInfo();
@@ -3340,7 +3340,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					return res;
 				}
 				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-						"Shopping.getBrandshopProductListV2", reqMap, ProductBasicInfo.class);
+						"Shopping.getBrandshopProductListV2", reqMap, ProductBasicInfo.class); //특정 브랜드샵 상품 리스트 조회
 				if (productBasicInfoList != null) {
 					if (productBasicInfoList.size() > 0) {
 						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -3501,7 +3501,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-				"Shopping.getCatagoryAnotherProductListV2", reqMap, ProductBasicInfo.class);
+				"Shopping.getCatagoryAnotherProductListV2", reqMap, ProductBasicInfo.class); //특정 카탈로그에 대한 다른 상품 리스트 조회
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -3657,7 +3657,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-				"Shopping.getBrandAnotherProductListV2", reqMap, ProductBasicInfo.class);
+				"Shopping.getBrandAnotherProductListV2", reqMap, ProductBasicInfo.class); //특정 브랜드에 대한 다른 상품 리스트
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -3718,7 +3718,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getSpecialProdId())) { // 특가 상품이 아닌경우
 			if (DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(req.getType())) {
 				MetaInfo channelByEpisode = this.commonDAO.queryForObject("Shopping.getChannelByepisodeV2", req,
-						MetaInfo.class);
+						MetaInfo.class); //쇼핑상세(에피소드로 카탈로그 가져오기) 조회
 				if (channelByEpisode != null) {
 					req.setSpecialProdId(req.getProductId());
 					req.setProductId(channelByEpisode.getCatalogId());
@@ -3734,7 +3734,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 
 		// 팅요금제 여부 확인 쿼리
-		String tingPaidQuery = this.commonDAO.queryForObject("Shopping.getTingPaidQueryV2", req, String.class);
+		String tingPaidQuery = this.commonDAO.queryForObject("Shopping.getTingPaidQueryV2", req, String.class); //쇼핑상세(팅요금제 조회 여부)
 
 		// 특가 기본 default
 		if (StringUtils.isEmpty(tingPaidQuery)) {
@@ -3819,7 +3819,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		// ID list 조회
 		List<MetaInfo> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetailV2", reqMap,
-				MetaInfo.class);
+				MetaInfo.class); //쇼핑상세(채널) 조회, 김형식/SK플래닛
 
 		if (resultChannelList == null) {
 			throw new StorePlatformException("SAC_DSP_0009");
@@ -3894,7 +3894,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 						}
 						reqMap.put("cutDetailImageCd", detailImgCd);
 						List<MetaInfo> resultImgDetailList = this.commonDAO.queryForList(
-								"Shopping.getShoppingImgDetailListV2", reqMap, MetaInfo.class);
+								"Shopping.getShoppingImgDetailListV2", reqMap, MetaInfo.class); //쇼핑상세(이미지) 조회
 						for (int pp = 0; pp < resultImgDetailList.size(); pp++) {
 							if (qq == 0) {
 								source = this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_ORIGINAL,
@@ -3926,7 +3926,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 					// 에피소드 list 조회
 					List<MetaInfo> resultEpisodeList = this.commonDAO.queryForList(
-							"Shopping.getShoppingEpisodeDetailV2", reqMap, MetaInfo.class);
+							"Shopping.getShoppingEpisodeDetailV2", reqMap, MetaInfo.class); //쇼핑상세(에피소드) 조회
 					if (resultEpisodeList != null) {
 						for (int kk = 0; kk < resultEpisodeList.size(); kk++) {
 							MetaInfo episodeShopping = resultEpisodeList.get(kk);
@@ -3985,7 +3985,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 									}else{		// 배송상품인 경우 에피소드 별로 조회
 										reqMap.put("chnlProdId", episodeShopping.getProdId());
 										// 에피소드 list 조회
-										List<MetaInfo> purchaseEpisodeList = this.commonDAO.queryForList("Shopping.getShoppingEpisodeV2", reqMap, MetaInfo.class);
+										List<MetaInfo> purchaseEpisodeList = this.commonDAO.queryForList("Shopping.getShoppingEpisodeV2", reqMap, MetaInfo.class);//쇼핑상세(배송 상품 조회시 에피소드) 조회
 
 										for(MetaInfo purchasePartProdId : purchaseEpisodeList){
 											productListSacIn = new ProductListSacIn();
@@ -4132,7 +4132,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 								reqMap.put("chnlProdId", episodeShopping.getProdId());
 								// 에피소드 list 조회
 								List<MetaInfo> resultOptionList = this.commonDAO.queryForList(
-										"Shopping.getShoppingOptionV2", reqMap, MetaInfo.class);
+										"Shopping.getShoppingOptionV2", reqMap, MetaInfo.class); //쇼핑상세(옵션) 조회
 								if (resultOptionList != null) {
 									for (int mm = 0; mm < resultOptionList.size(); mm++) {
 										MetaInfo optionShopping = resultOptionList.get(mm);
