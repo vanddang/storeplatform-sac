@@ -1137,8 +1137,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	public boolean updateForCouponStatus(CouponReq couponReq) {
 		// 호출
 		this.log.info("■■■■■ processForCouponStatus ■■■■■");
-		if (couponReq != null && StringUtils.isNotBlank(couponReq.getCouponCode())
-				&& StringUtils.isNotBlank(couponReq.getCoupnStatus())) {
+		if (couponReq != null && StringUtils.isNotBlank(couponReq.getCouponCode())) {
 
 			String couponCode = couponReq.getCouponCode();
 			String coupnStatus = couponReq.getCoupnStatus();
@@ -1153,6 +1152,17 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// 1. Validation Check
 			// 쿠폰상태 값 유효성 검증
+
+			if(StringUtils.isBlank(coupnStatus)){
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (coupnStatus)",
+						coupnStatus);			
+			}			
+			
+			if(StringUtils.isBlank(upType)){
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (upType)",
+						coupnStatus);			
+			}
+			
 			if (!(StringUtils.equalsIgnoreCase(upType, "0") || StringUtils.equalsIgnoreCase(upType, "1") || StringUtils
 					.equalsIgnoreCase(upType, "2"))) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쿠폰상태 값이 유효하지 않습니다.",
@@ -1210,11 +1220,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		String couponCode = couponReq.getCouponCode();
 		
 		if (StringUtils.isBlank(couponReq.getCouponCode())) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponCode 값이 없습니다.", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (couponCode)", null);
 		}		
 		
 		if (StringUtils.isBlank(couponReq.getItemCodes())) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "itemCodes 값이 없습니다.", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemCodes)", null);
 		}		
 		String[] itemCodes = couponReq.getItemCodes().split(",");
 		// 기등록된 컨텐트 존재여부 확인 old쿠폰ID,아이템ID로 new쿠폰ID,아이템ID 가져오기 조회
@@ -1423,10 +1433,10 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	public CouponRes getSpecialProductDetailForDate(CouponReq couponReq) {
 		this.log.info("<<<<< CouponContentService >>>>> getSpecialProductDetailForDate...");
 		if (StringUtils.isBlank(couponReq.getStartDate())) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "startDate 값이 없습니다.", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (startDate)", null);
 		}	
 		if (StringUtils.isBlank(couponReq.getEndDate())) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "endDate 값이 없습니다.", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (endDate)", null);
 		}		
 		
 		if (couponReq.getStartDate().compareTo(couponReq.getEndDate()) == 1) {

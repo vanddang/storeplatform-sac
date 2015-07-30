@@ -429,32 +429,35 @@ public class ShoppingCouponSacController {
 	 */
 	private boolean doValidParameter1(CouponReq couponReq, ErrorData errorData) {
 		this.log.info("<CouponControl> doValidParameter1...");
-		StringBuffer sb = new StringBuffer();
+		String message = "";
 		boolean result = true;
 
 		try {
 
 			if (couponReq == null) {
 				result = false;
-				sb.append("Parameter정보가 없습니다.");
-			} else if (!couponReq.checkTxId()) {
+				message="Parameter정보가 없습니다.\n";
+			}else if(StringUtils.isBlank(couponReq.getTxId())){
 				result = false;
-				sb.append("TX_ID 형식에 맞지 않습니다. [22자리]\n");
+				message="필수 파라미터 값이 없습니다. (txId)\n";
+			}else if (!couponReq.checkTxId()) {
+				result = false;
+				message="txId 형식에 맞지 않습니다. [22자리]\n";
 			} else if (!couponReq.checkTxType()) {
 				result = false;
-				sb.append("TX_TYPE 형식에 맞지 않습니다. [2자리]\n");
+				message="txType 형식에 맞지 않습니다. [2자리]\n";
 			}
 
 			if (!result) {
-				errorData.setErrorMsg(sb.toString());
+				errorData.setErrorMsg(message);
 				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_TYPE);
 			}
 			return result;
 
 		} catch (Exception e) {
 			this.log.error("doValidParameter 작업중 예외 발생", e);
-			sb.append(e.getMessage() + "\n");
-			errorData.setErrorMsg(sb.toString());
+			message= e.getMessage() + "\n";
+			errorData.setErrorMsg(message);
 			errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
 			result = false;
 			return result;
@@ -476,7 +479,7 @@ public class ShoppingCouponSacController {
 	 */
 	private boolean doValidParameterBD(CouponReq couponReq, DpBrandInfo brandInfo, ErrorData errorData) {
 		this.log.info("<CouponControl> doValidParameterBD...");
-		StringBuffer sb = new StringBuffer();
+		String message = "";
 		boolean result = true;
 		try {
 			brandInfo.setBrandNm(couponReq.getBrandName());
@@ -490,41 +493,41 @@ public class ShoppingCouponSacController {
 			
 			if (couponReq.getCudType().equals("") || couponReq.getCudType() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (cudType)");
+				message="필수 파라미터 값이 없습니다. (cudType)\n";
 			}else if (!couponReq.getCudType().equals("C") && !couponReq.getCudType().equals("U")) {
-				sb.append("cudType 값은 C or U 로만 가능합니다.");
+				message="cudType 값은 C or U 로만 가능합니다.\n";
 				result = false;
 			}
 			if (brandInfo.getBrandId().equals("") || brandInfo.getBrandId() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (brandId)");
+				message="필수 파라미터 값이 없습니다. (brandCode)\n";
 			}
 			if (brandInfo.getDpCatNo().equals("") || brandInfo.getDpCatNo() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (dpCatNo)");
+				message="필수 파라미터 값이 없습니다. (brandCategory)\n";
 			}
 			if (brandInfo.getBrandNm().equals("") || brandInfo.getBrandNm() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (brandNm)");
+				message="필수 파라미터 값이 없습니다. (brandName)\n";
 			} else if (brandInfo.getBrandNm().length() > 50) {
 				result = false;
-				sb.append("brandNm은 length 50을 가질수 없습니다.");
+				message="brandName은 length 50을 가질수 없습니다.\n";
 			}
 			if (brandInfo.getBrandImgPath().equals("") || brandInfo.getBrandImgPath() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (brandImgPath)");
+				message="필수 파라미터 값이 없습니다. (brandImage)\n";
 			}
 			if (!result) {
-				errorData.setErrorMsg(sb.toString());
+				errorData.setErrorMsg(message);
 				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
 			}
 			return result;
 
 		} catch (Exception e) {
 			this.log.error("doValidParameter 작업중 예외 발생", e);
-			sb.append(e.getMessage() + "\n");
+			message = e.getMessage() + "\n";
 			result = false;
-			errorData.setErrorMsg(sb.toString());
+			errorData.setErrorMsg(message);
 			errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
 			return result;
 		}
@@ -544,7 +547,7 @@ public class ShoppingCouponSacController {
 	 */
 	private boolean doValidParameterCT(CouponReq couponReq, DpCatalogInfo catalogInfo, ErrorData errorData) {
 		this.log.info("<CouponControl> doValidParameterCT...");
-		StringBuffer sb = new StringBuffer();
+		String message = "";
 		boolean result = true;
 		try {
 			catalogInfo.setCudType(couponReq.getCudType());
@@ -562,58 +565,58 @@ public class ShoppingCouponSacController {
 
 			if (couponReq.getCudType().equals("") || couponReq.getCudType() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (cudType)");
+				message ="필수 파라미터 값이 없습니다. (cudType)\n";
 			}else if (!couponReq.getCudType().equals("C") && !couponReq.getCudType().equals("U")) {
-				sb.append("cudType 값은 C or U 로만 가능합니다.");
+				message ="cudType 값은 C or U 로만 가능합니다.\n";
 				result = false;
 			}
 			
 			if (catalogInfo.getCatalogId().equals("") || catalogInfo.getCatalogId() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (catalogId)");
+				message ="필수 파라미터 값이 없습니다. (catalogCode)\n";
 			}
 			if (catalogInfo.getCatalogNm().equals("") || catalogInfo.getCatalogNm() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (catalogNm)");
+				message ="필수 파라미터 값이 없습니다. (catalogName)\n";
 			} else if (catalogInfo.getCatalogNm().length() > 100) {
 				result = false;
-				sb.append("catalogNm은 length 100을 가질수 없습니다.");
+				message ="catalogName은 length 100을 가질수 없습니다.";
 			}
 			if (catalogInfo.getDpCatNo().equals("") || catalogInfo.getDpCatNo() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (dpCatNo)");
+				message ="필수 파라미터 값이 없습니다. (catalogCategory)\n";
 			}
 
 			if (catalogInfo.getCatalogDesc().equals("") || catalogInfo.getCatalogDesc() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (catalogDesc)");
+				message ="필수 파라미터 값이 없습니다. (catalogDescription)\n";
 			} else if (catalogInfo.getCatalogDesc().length() > 4000) {
 				result = false;
-				sb.append("catalogDesc은 length 4000 가질수 없습니다.");
+				message ="catalogDescription은 length 4000 가질수 없습니다.\n";
 			}
 
 			if (catalogInfo.getTopImgPath().equals("") || catalogInfo.getTopImgPath() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (topImgPath)");
+				message ="필수 파라미터 값이 없습니다. (catalogImage1)\n";
 			}
 			if (catalogInfo.getDtlImgPath().equals("") || catalogInfo.getDtlImgPath() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (dtlImgPath)");
+				message ="필수 파라미터 값이 없습니다. (catalogImage2)\n";
 			}
 			if (catalogInfo.getBrandId().equals("") || catalogInfo.getBrandId() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (brandId)");
+				message ="필수 파라미터 값이 없습니다. (brandCode)\n";
 			}
 			if (catalogInfo.getIntroText().equals("") || catalogInfo.getIntroText() == null) {
 				result = false;
-				sb.append("필수 파라미터 값이 없습니다. (introText)");
+				message ="필수 파라미터 값이 없습니다. (intro_text)\n";
 			} else if (catalogInfo.getIntroText().length() > 150) {
 				result = false;
-				sb.append("introText는 length 150을 가질수 없습니다.");
+				message ="intro_text는 length 150을 가질수 없습니다.\n";
 			}
 
 			if (!result) {
-				errorData.setErrorMsg(sb.toString());
+				errorData.setErrorMsg(message);
 				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
 			}
 
@@ -621,9 +624,9 @@ public class ShoppingCouponSacController {
 
 		} catch (Exception e) {
 			this.log.error("doValidParameter 작업중 예외 발생", e);
-			sb.append(e.getMessage() + "\n");
+			message=e.getMessage() + "\n";
 			result = false;
-			errorData.setErrorMsg(sb.toString());
+			errorData.setErrorMsg(message);
 			errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
 			return result;
 		}
@@ -796,88 +799,88 @@ public class ShoppingCouponSacController {
 
 		try {
 			if (couponInfo.getProdId().equals("")) {
-				message = "유효성 검사 실패 [prodId : 상품ID] 이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [couponCode : 상품코드] 이 XML에 존재하지 않습니다.\n";
 				result = false;
 			}
 			if (couponInfo.getCouponName().equals("")) {
-				message = "유효성 검사 실패 [couponName : 쿠폰명] 이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [couponName : 쿠폰명] 이 XML에 존재하지 않습니다.\n";
 				result = false;
 			}
 			if (couponInfo.getCouponName().length() > 100) {
-				message = "유효성 검사 실패 [couponName : 쿠폰명:" + couponInfo.getCouponName() + "]";
+				message = "유효성 검사 실패 [couponName : 쿠폰명:" + couponInfo.getCouponName() + "]\n";
 				result = false;
 			}
 			if (couponInfo.getIssueSDate().equals("")) {
-				message = "유효성 검사 실패 [issueSDate : 발급시작일시] 이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [issueSDate : 발급시작일시] 이 XML에 존재하지 않습니다.\n";
 				result = false;
 			}
 			if (!couponInfo.getIssueSDate().equals("")) {
 				if (couponInfo.getIssueSDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getIssueSDate())) {
-					message = "유효성 검사 실패 [issueSDate : 발급시작일시:" + couponInfo.getIssueSDate() + "]";
+					message = "유효성 검사 실패 [issueSDate : 발급시작일시:" + couponInfo.getIssueSDate() + "]\n";
 					result = false;
 				}
 			}
 			if (couponInfo.getIssueEDate().equals("")) {
-				message = "유효성 검사 실패 [issueEDate : 발급종료일시] 이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [issueEDate : 발급종료일시] 이 XML에 존재하지 않습니다.\n";
 				result = false;
 			}
 			if (!couponInfo.getIssueEDate().equals("")) {
 				if (couponInfo.getIssueEDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getIssueEDate())) {
-					message = "유효성 검사 실패 [issueEDate : 발급종료일시:" + couponInfo.getIssueEDate() + "]";
+					message = "유효성 검사 실패 [issueEDate : 발급종료일시:" + couponInfo.getIssueEDate() + "]\n";
 					result = false;
 				}
 			}
 			if (couponInfo.getValidSDate().equals("")) {
-				message = "유효성 검사 실패 [validSDate : 유효시작일시] 이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [validSDate : 유효시작일시] 이 XML에 존재하지 않습니다.\n";
 				result = false;
 			}
 			if (!couponInfo.getValidSDate().equals("")) {
 				if (couponInfo.getValidSDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getValidSDate())) {
-					message = "유효성 검사 실패 [validSDate : 유효시작일시:" + couponInfo.getValidSDate() + "]";
+					message = "유효성 검사 실패 [validSDate : 유효시작일시:" + couponInfo.getValidSDate() + "]\n";
 					result = false;
 				}
 			}
 			if (couponInfo.getValidEDate().equals("")) {
-				message = "유효성 검사 실패 [validEDate : 유효종료일시] 이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [validEDate : 유효종료일시] 이 XML에 존재하지 않습니다.\n";
 				result = false;
 			}
 			if (!couponInfo.getValidEDate().equals("")) {
 				if (couponInfo.getValidEDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getValidEDate())) {
-					message = "유효성 검사 실패 [validEDate : 유효종료일시:" + couponInfo.getValidEDate() + "]";
+					message = "유효성 검사 실패 [validEDate : 유효종료일시:" + couponInfo.getValidEDate() + "]\n";
 					result = false;
 				}
 			}
 			if (couponInfo.getValidUntil().equals("")) {
-				message = "유효성 검사 실패 [validUntil : 유효일수] 이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [validUntil : 유효일수] 이 XML에 존재하지 않습니다.\n";
 				result = false;
 			}
 			if (!couponInfo.getValidUntil().equals("")) {
 				if (!StringUtils.isNumeric(couponInfo.getValidUntil())) {
-					message = "유효성 검사 실패 [validUntil : 유효일수:" + couponInfo.getValidUntil() + "]";
+					message = "유효성 검사 실패 [validUntil : 유효일수:" + couponInfo.getValidUntil() + "]\n";
 					result = false;
 				}
 			}
 			if (!couponInfo.getDescription().equals("")) {
 				if (couponInfo.getDescription().length() > 4000) {
-					message = "유효성 검사 실패 [description : 쿠폰설명:" + couponInfo.getDescription() + "]";
+					message = "유효성 검사 실패 [description : 쿠폰설명:" + couponInfo.getDescription() + "]\n";
 					result = false;
 				}
 			}
 			if (!couponInfo.getDirection().equals("")) {
 				if (couponInfo.getDirection().length() > 4000) {
-					message = "유효성 검사 실패 [direction : 사용장소:" + couponInfo.getDirection() + "]";
+					message = "유효성 검사 실패 [direction : 사용장소:" + couponInfo.getDirection() + "]\n";
 					result = false;
 				}
 			}
 			if (!couponInfo.getUseCondition().equals("")) {
 				if (couponInfo.getUseCondition().length() > 4000) {
-					message = "유효성 검사 실패 [useCondition : 사용제한:" + couponInfo.getUseCondition() + "]";
+					message = "유효성 검사 실패 [useCondition : 사용제한:" + couponInfo.getUseCondition() + "]\n";
 					result = false;
 				}
 			}
 			if (!couponInfo.getAddtionalInfo().equals("")) {
 				if (couponInfo.getAddtionalInfo().length() > 1000) {
-					message = "유효성 검사 실패 [addtionalInfo : 주의사항:" + couponInfo.getAddtionalInfo() + "]";
+					message = "유효성 검사 실패 [addtionalInfo : 주의사항:" + couponInfo.getAddtionalInfo() + "]\n";
 					result = false;
 				}
 			}
@@ -911,12 +914,12 @@ public class ShoppingCouponSacController {
 				result = false;
 			}
 			if (couponInfo.getAccountingRate().equals("")) {
-				message = "유효성 검사 실패 [accountingRate : 정산율 번호] 이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [accountingRate : 정산율] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 			if (!couponInfo.getAccountingRate().equals("")) {
 				if (!StringUtils.isNumeric(couponInfo.getAccountingRate())) {
-					message = "유효성 검사 실패 [accountingRate : 정산율 번호:" + couponInfo.getAccountingRate() + "]";
+					message = "유효성 검사 실패 [accountingRate : 정산율:" + couponInfo.getAccountingRate() + "]";
 					result = false;
 				}
 			}
@@ -932,11 +935,11 @@ public class ShoppingCouponSacController {
 			}
 
 			if (!couponInfo.getSendMsgType().equals("LMS") && !couponInfo.getSendMsgType().equals("MMS")) {
-				message = "유효성 검사 실패 [sendMsgType : 문자발송유형:" + couponInfo.getSendMsgType() + "]";
+				message = "유효성 검사 실패 [sendMsgType : 문자 전송 유형:" + couponInfo.getSendMsgType() + "]";
 				result = false;
 			}
 			if (couponInfo.getSendMsgType().equals("")) {
-				message = "유효성 검사 실패 [sendMsgType : 문자발송유형] 이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [sendMsgType : 문자 전송 유형] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 
