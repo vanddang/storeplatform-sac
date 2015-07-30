@@ -31,7 +31,9 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceItemSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReqV2;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacResV2;
 import com.skplanet.storeplatform.sac.common.header.vo.NetworkHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -53,7 +55,7 @@ public class ExistenceController {
 	private ExistenceSacService existenceSacService;
 
 	/**
-	 * 기구매 체크 SAC.
+	 * 기구매 체크 SAC. V1
 	 * 
 	 * @param existenceSacReq
 	 *            요청정보
@@ -76,6 +78,34 @@ public class ExistenceController {
 				this.reqConvert(existenceSacReq, tenantHeader), networkHeader.getType())));
 		this.logger.info("PRCHS,ExistenceController,SAC,existenceListSacRes,{}", existenceListSacRes);
 		return existenceListSacRes;
+	}
+
+	/**
+	 * 기구매 체크 SAC. V2
+	 * 
+	 * @param existenceSacReq
+	 *            요청정보
+	 * @param requestHeader
+	 *            헤더정보
+	 * @return ExistenceListSacRes 응답정보
+	 */
+	@RequestMapping(value = "/history/existence/search/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public ExistenceSacResV2 searchExistenceListV2(@RequestBody @Validated ExistenceSacReqV2 existenceSacReqV2,
+			SacRequestHeader requestHeader) {
+
+		TenantHeader tenantHeader = requestHeader.getTenantHeader();
+		NetworkHeader networkHeader = requestHeader.getNetworkHeader();
+
+		this.logger.info("PRCHS,ExistenceController V2,SAC,REQ,{},{}", existenceSacReqV2, requestHeader);
+
+		existenceSacReqV2.setSystemId(tenantHeader.getSystemId());
+		existenceSacReqV2.setTenantId(tenantHeader.getTenantId());
+		ExistenceSacResV2 existenceSacResV2 = this.existenceSacService.searchExistenceListV2(existenceSacReqV2,
+				networkHeader.getType());
+
+		this.logger.info("PRCHS,ExistenceController,SAC,existenceListSacRes,{}", existenceSacResV2);
+		return existenceSacResV2;
 	}
 
 	/**
@@ -133,6 +163,52 @@ public class ExistenceController {
 	}
 
 	/**
+	 * reqConvert.
+	 * 
+	 * @param existenceSacReq
+	 *            요청정보
+	 * @param header
+	 *            테넌트 헤더정보
+	 * @return ExistenceScReq
+	 */
+	// private ExistenceSacReqV2 reqConvertV2(ExistenceSacReqV2 existenceSacReqV2, TenantHeader header) {
+	//
+	// this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+	// this.logger.debug("@@@@@@ Start reqConvert @@@@@@");
+	// this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+	//
+	// for (ExistenceSacReq userList : existenceSacReqV2.getUserList()) {
+	//
+	// if (StringUtils.isBlank(userList.getPrchsId())) {
+	// if (StringUtils.isBlank(userList.getUserKey())) {
+	// throw new StorePlatformException("SAC_PUR_0001", "UserKey");
+	// }
+	// if (StringUtils.isBlank(userList.getDeviceKey())) {
+	// throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
+	// }
+	// if (userList.getProductList() == null) {
+	// throw new StorePlatformException("SAC_PUR_0001", "ProductList");
+	// } else if (userList.getProductList().size() < 1) {
+	// throw new StorePlatformException("SAC_PUR_0001", "ProdId");
+	// }
+	// }
+	// existenceSacReqV2.setTenantId(header.getTenantId());
+	// existenceSacReqV2.setSystemId(header.getSystemId());
+	//
+	// // 상품리스트가 없을시 제외
+	// if (userList.getProductList() != null) {
+	// for (ExistenceItemSac existenceItemSac : userList.getProductList()) {
+	// if (StringUtils.isBlank(existenceItemSac.getProdId())) {
+	// throw new StorePlatformException("SAC_PUR_0001", "ProdId");
+	// }
+	// }
+	// }
+	// }
+	//
+	// return existenceSacReqV2;
+	// }
+
+	/**
 	 * resConvert.
 	 * 
 	 * @param existenceListScRes
@@ -157,4 +233,54 @@ public class ExistenceController {
 		return res;
 	}
 
+	/**
+	 * resConvert.
+	 * 
+	 * @param existenceListScRes
+	 *            요청정보
+	 * @return List<ExistenceSacRes>
+	 */
+	// private List<ExistenceSacRes> resConvertV2(List<ExistenceScRes> existenceListScRes) {
+	//
+	// this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+	// this.logger.debug("@@@@@@ Start resConvert @@@@@@");
+	// this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+	//
+	// List<ExistenceSacRes> res = new ArrayList<ExistenceSacRes>();
+	// for (ExistenceScRes existenceScRes : existenceListScRes) {
+	// ExistenceSacRes existenceSacRes = new ExistenceSacRes();
+	// existenceSacRes.setPrchsId(existenceScRes.getPrchsId());
+	// existenceSacRes.setProdId(existenceScRes.getProdId());
+	//
+	// res.add(existenceSacRes);
+	// }
+	// // this.logger.info("PRCHS,ExistenceController,SAC,RES,{}", res);
+	// return res;
+	// }
+
+	/**
+	 * 기구매 체크 SAC. V2
+	 * 
+	 * @param existenceSacReq
+	 *            요청정보
+	 * @param requestHeader
+	 *            헤더정보
+	 * @return ExistenceListSacRes 응답정보
+	 */
+	// @RequestMapping(value = "/history/existence/search/v2", method = RequestMethod.POST)
+	// @ResponseBody
+	// public ExistenceSacResV2 searchExistenceListV2(@RequestBody @Validated ExistenceSacReqV2 existenceSacReqV2,
+	// SacRequestHeader requestHeader) {
+	//
+	// TenantHeader tenantHeader = requestHeader.getTenantHeader();
+	// NetworkHeader networkHeader = requestHeader.getNetworkHeader();
+	// this.logger.info("PRCHS,ExistenceController V2,SAC,REQ,{},{}", existenceSacReqV2, requestHeader);
+	//
+	// existenceSacReqV2 = this.reqConvertV2(existenceSacReqV2, tenantHeader);
+	// ExistenceSacResV2 existenceSacResV2 = this.existenceSacService.searchExistenceListV2(existenceSacReqV2,
+	// networkHeader.getType());
+	//
+	// this.logger.info("PRCHS,ExistenceController,SAC,existenceListSacRes,{}", existenceSacResV2);
+	// return existenceSacResV2;
+	// }
 }

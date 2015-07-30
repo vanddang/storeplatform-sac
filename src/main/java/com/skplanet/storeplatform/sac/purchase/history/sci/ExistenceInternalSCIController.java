@@ -18,15 +18,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceInV2Req;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceInV2Res;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListInV2Res;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceUserInfoInV2;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceInfoSac;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListSacResV2;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReqV2;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacResV2;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceUserInfoSacV2;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 
 /**
@@ -81,6 +92,67 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		existenceListRes.setExistenceListRes(res);
 
 		return existenceListRes;
+	}
+
+	/**
+	 * 기구매 체크 SAC. V2
+	 * 
+	 * @param existenceReq
+	 *            요청정보
+	 * @return ExistenceListRes 응답정보
+	 */
+	@Override
+	@ResponseBody
+	public ExistenceInV2Res searchExistenceListV2(ExistenceInV2Req existenceInV2Req) {
+
+		this.logger.debug("PRCHS,ExistenceInternalSCIController,SAC,REQ,V2{}", existenceInV2Req);
+
+		ExistenceSacReqV2 sacRequest = this.reqConvertV2(existenceInV2Req);
+		ExistenceSacResV2 sacResponse = this.existenceSacService.searchExistenceListV2(sacRequest, "");
+
+		List<ExistenceListInV2Res> userList = new ArrayList<ExistenceListInV2Res>();
+		ExistenceListInV2Res userItem = new ExistenceListInV2Res();
+		List<ExistenceRes> prodList;
+		ExistenceRes prodItem;
+
+		for (ExistenceUserInfoInV2 reqUserItem : existenceInV2Req.getUserList()) {
+
+			for (String device : reqUserItem.getDeviceList()) {
+
+				userItem = new ExistenceListInV2Res();
+				prodList = new ArrayList<ExistenceRes>();
+
+				for (ExistenceListSacResV2 item : sacResponse.getUserList()) {
+
+					if (StringUtil.equals(reqUserItem.getUserKey(), item.getUserKey())
+							&& StringUtil.equals(device, item.getDeviceKey())) {
+
+						prodItem = new ExistenceRes();
+
+						userItem.setUserKey(item.getUserKey());
+						userItem.setDeviceKey(item.getDeviceKey());
+
+						for (ExistenceSacRes prodInfo : item.getExistenceList()) {
+							prodItem.setPrchsId(prodInfo.getPrchsId());
+							prodItem.setProdId(prodInfo.getProdId());
+							prodList.add(prodItem);
+						}
+					}
+				}
+
+				// 데이터가 존재하면 셋팅한다.
+				if (prodList != null && prodList.size() > 0) {
+					userItem.setExistenceList(prodList);
+					userList.add(userItem);
+				}
+			}
+		}
+
+		ExistenceInV2Res existenceInV2Res = new ExistenceInV2Res();
+		existenceInV2Res.setUserList(userList);
+
+		this.logger.info("PRCHS,ExistenceController,SAC,existenceInV2Res,{}", sacResponse);
+		return existenceInV2Res;
 	}
 
 	/**
@@ -147,4 +219,48 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		return res;
 	}
 
+	private ExistenceSacReqV2 reqConvertV2(ExistenceInV2Req existenceInV2Req) {
+
+		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		this.logger.debug("@@@@@@ Start reqConvert @@@@@@");
+		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+		ExistenceSacReqV2 sacReqyest = new ExistenceSacReqV2();
+		ExistenceUserInfoSacV2 sacUserItem;
+		List<ExistenceUserInfoSacV2> sacUserList = new ArrayList<ExistenceUserInfoSacV2>();
+
+		List<ExistenceInfoSac> deviceList = new ArrayList<ExistenceInfoSac>();
+		List<ExistenceInfoSac> prodList = new ArrayList<ExistenceInfoSac>();
+		ExistenceInfoSac deviceInfo = new ExistenceInfoSac();
+		ExistenceInfoSac prodInfo = new ExistenceInfoSac();
+
+		/********** SC Request Setting Start **********/
+		for (ExistenceUserInfoInV2 reqUserItem : existenceInV2Req.getUserList()) {
+
+			sacUserItem = new ExistenceUserInfoSacV2();
+			sacUserItem.setUserKey(reqUserItem.getUserKey());
+			sacUserItem.setTenantId(reqUserItem.getTenantId());
+
+			for (String device : reqUserItem.getDeviceList()) {
+				deviceInfo = new ExistenceInfoSac();
+				deviceInfo.setDeviceKey(device);
+				deviceList.add(deviceInfo);
+			}
+
+			sacUserItem.setDeviceList(deviceList);
+			sacUserList.add(sacUserItem);
+		}
+
+		for (String prod : existenceInV2Req.getProdList()) {
+			prodInfo = new ExistenceInfoSac();
+			prodInfo.setProdId(prod);
+			prodList.add(prodInfo);
+		}
+
+		sacReqyest.setUserList(sacUserList);
+		sacReqyest.setProdList(prodList);
+		/********** SC Request Setting End **********/
+
+		return sacReqyest;
+	}
 }

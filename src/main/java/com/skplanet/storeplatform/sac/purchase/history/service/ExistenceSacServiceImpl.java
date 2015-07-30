@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
@@ -26,6 +27,14 @@ import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScV2Req;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceUserInfoScV2;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceInfoSac;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListSacResV2;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReqV2;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacResV2;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceUserInfoSacV2;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
@@ -76,13 +85,19 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 
 					// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
 					if (existenceScRes.getTenantProdGrpCd() != null) {
+
+						this.logger.info("############### existenceScRes.getTenantProdGrpCd() != null");
+
 						flag = this.checkMdn(existenceScReq, existenceScRes, purchaseTenantPolicyList, flag);
-						this.logger.debug("리턴 FLAG : {}", flag);
+						this.logger.info("리턴 FLAG : {}", flag);
 						// flag가 ID 이거나 MDN일 경우에만 기구매셋팅
 						if (flag.equals("ID") || flag.equals("MDN")) {
 							existenceListScRes.add(existenceScRes);
 						}
 					} else {
+
+						this.logger.info("############### existenceScRes.getTenantProdGrpCd() == null");
+
 						// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
 						existenceListScRes.add(existenceScRes);
 					}
@@ -135,6 +150,222 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 		}
 		return existenceListScRes;
 	}
+
+	/**
+	 * 기구매 체크 SAC Service.
+	 * 
+	 * @param existenceScReq
+	 *            요청
+	 * @param inputValue
+	 *            내외부 사용구분 내부 true 요청정보
+	 * @return List<ExistenceScRes>
+	 */
+	@Override
+	public ExistenceSacResV2 searchExistenceListV2(final ExistenceSacReqV2 existenceSacReqV2, final String networkType) {
+
+		ExistenceScV2Req scReqyest = new ExistenceScV2Req();
+		ExistenceUserInfoScV2 scUserItem;
+
+		List<ExistenceUserInfoScV2> scUserList = new ArrayList<ExistenceUserInfoScV2>();
+
+		List<String> scDeviceList;
+		List<String> scProdList = new ArrayList<String>();
+
+		/********** SC Request Setting Start **********/
+		for (ExistenceUserInfoSacV2 reqUserItem : existenceSacReqV2.getUserList()) {
+
+			scDeviceList = new ArrayList<String>();
+			scUserItem = new ExistenceUserInfoScV2();
+			scUserItem.setTenantId(reqUserItem.getTenantId());
+			scUserItem.setUserKey(reqUserItem.getUserKey());
+
+			for (ExistenceInfoSac existenceInfoSac : reqUserItem.getDeviceList()) {
+				scDeviceList.add(existenceInfoSac.getDeviceKey());
+			}
+
+			scUserItem.setDeviceList(scDeviceList);
+			scUserList.add(scUserItem);
+		}
+
+		for (ExistenceInfoSac existenceInfoSac : existenceSacReqV2.getProdList()) {
+			scProdList.add(existenceInfoSac.getProdId());
+		}
+
+		scReqyest.setUserList(scUserList);
+		scReqyest.setProdList(scProdList);
+		/********** SC Request Setting End **********/
+
+		// 기구매 목록조회
+		List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceListV2(scReqyest);
+
+		ExistenceSacRes prodItem = null;
+		List<ExistenceSacRes> prodList = null;
+		ExistenceListSacResV2 userItem = null;
+		List<ExistenceListSacResV2> userList = new ArrayList<ExistenceListSacResV2>();
+		ExistenceSacResV2 response = new ExistenceSacResV2();
+
+		for (ExistenceUserInfoSacV2 reqUserItem : existenceSacReqV2.getUserList()) {
+
+			for (ExistenceInfoSac existenceInfoSac : reqUserItem.getDeviceList()) {
+
+				userItem = new ExistenceListSacResV2();
+				prodItem = new ExistenceSacRes();
+				prodList = new ArrayList<ExistenceSacRes>();
+
+				final List<String> tLogProdId = new ArrayList<String>();
+				final List<Long> tLogProdAmt = new ArrayList<Long>();
+
+				for (final ExistenceScRes item : resultList) {
+
+					if (StringUtil.equals(reqUserItem.getUserKey(), item.getUseInsdUsermbrNo())
+							&& StringUtil.equals(existenceInfoSac.getDeviceKey(), item.getUseInsdDeviceId())) {
+
+						try {
+
+							prodItem = new ExistenceSacRes();
+
+							userItem.setUserKey(item.getUseInsdUsermbrNo());
+							userItem.setDeviceKey(item.getUseInsdDeviceId());
+
+							prodItem.setPrchsId(item.getPrchsId());
+							prodItem.setProdId(item.getProdId());
+							prodList.add(prodItem);
+
+							tLogProdId.add(item.getProdId());
+							tLogProdAmt.add((long) item.getProdAmt());
+
+							new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
+
+								@Override
+								public void customize(TLogSentinelShuttle shuttle) {
+									shuttle.log_id("TL_SAC_PUR_0002").system_id(existenceSacReqV2.getSystemId())
+											.insd_device_id(item.getUseInsdUsermbrNo())
+											.insd_usermbr_no(item.getUseInsdDeviceId())
+											.purchase_channel(item.getPrchsReqPathCd())
+											.purchase_inflow_channel(item.getPrchsCaseCd()).network_type(networkType)
+											.product_id(tLogProdId).product_price(tLogProdAmt).result_code("SUCC");
+								}
+							});
+
+						} catch (StorePlatformException e) {
+							ErrorInfo errorInfo = e.getErrorInfo();
+							final String resultCode = errorInfo.getCode();
+							final String resultMessage = errorInfo.getMessage();
+
+							new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
+
+								@Override
+								public void customize(TLogSentinelShuttle shuttle) {
+									shuttle.log_id("TL_SAC_PUR_0002").system_id(existenceSacReqV2.getSystemId())
+											.insd_device_id(item.getUseInsdUsermbrNo())
+											.insd_usermbr_no(item.getUseInsdDeviceId())
+											.purchase_channel(item.getPrchsReqPathCd())
+											.purchase_inflow_channel(item.getPrchsCaseCd()).network_type(networkType)
+											.product_id(tLogProdId).product_price(tLogProdAmt).result_code(resultCode)
+											.result_message(resultMessage);
+								}
+							});
+
+							throw e;
+						}
+
+					}
+				}
+
+				// 데이터가 존재하면 셋팅한다.
+				if (prodList != null && prodList.size() > 0) {
+					userItem.setExistenceList(prodList);
+					userList.add(userItem);
+				}
+			}
+		}
+
+		response.setUserList(userList);
+
+		return response;
+	}
+
+	/**
+	 * 기구매 체크 SAC Service.
+	 * 
+	 * @param existenceScReq
+	 *            요청
+	 * @param inputValue
+	 *            내외부 사용구분 내부 true 요청정보
+	 * @return List<ExistenceScRes>
+	 */
+	// @Override
+	// public ExistenceSacResV2 searchExistenceListV2(ExistenceSacReqV2 existenceSacReqV2, final String networkType) {
+	//
+	// ExistenceScReq existenceScReq = null;
+	// List<ExistenceItemSc> productList = null;
+	// List<ExistenceScReq> userScList = new ArrayList<ExistenceScReq>();
+	// ExistenceScV2Req scRequest = new ExistenceScV2Req();
+	//
+	// /******************** SC request Data Set Start ********************/
+	// for (ExistenceSacReq existenceSacReq : existenceSacReqV2.getUserList()) {
+	//
+	// existenceScReq = new ExistenceScReq();
+	// productList = new ArrayList<ExistenceItemSc>();
+	//
+	// existenceScReq.setTenantId(existenceSacReqV2.getTenantId());
+	// existenceScReq.setSystemId(existenceSacReqV2.getSystemId());
+	// existenceScReq.setUserKey(existenceSacReq.getUserKey());
+	// existenceScReq.setDeviceKey(existenceSacReq.getDeviceKey());
+	// existenceScReq.setPrchsId(existenceSacReq.getPrchsId());
+	// existenceScReq.setCheckValue(false);
+	//
+	// // 상품리스트가 없을시 제외
+	// if (existenceSacReq.getProductList() != null) {
+	// for (ExistenceItemSac existenceItemSac : existenceSacReq.getProductList()) {
+	// ExistenceItemSc existenceItemSc = new ExistenceItemSc();
+	// existenceItemSc.setProdId(existenceItemSac.getProdId());
+	// existenceItemSc.setTenantProdGrpCd(existenceItemSac.getTenantProdGrpCd());
+	// productList.add(existenceItemSc);
+	// }
+	// }
+	//
+	// existenceScReq.setProductList(productList);
+	// userScList.add(existenceScReq);
+	// }
+	// scRequest.setUserList(userScList);
+	// /******************** SC request Data Set End ********************/
+	//
+	// // 기구매 목록조회
+	// List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceListV2(scRequest);
+	//
+	// ExistenceSacRes prodItem = null;
+	// List<ExistenceSacRes> prodList = null;
+	// ExistenceListSacResV2 userItem = null;
+	// List<ExistenceListSacResV2> userList = new ArrayList<ExistenceListSacResV2>();
+	// ExistenceSacResV2 response = new ExistenceSacResV2();
+	//
+	// for (ExistenceSacReq existenceSacReq : existenceSacReqV2.getUserList()) {
+	// userItem = new ExistenceListSacResV2();
+	// prodItem = new ExistenceSacRes();
+	// prodList = new ArrayList<ExistenceSacRes>();
+	// for (ExistenceScRes item : resultList) {
+	//
+	// if (StringUtil.equals(existenceSacReq.getUserKey(), item.getUseInsdUsermbrNo())) {
+	//
+	// prodItem = new ExistenceSacRes();
+	//
+	// userItem.setUserKey(item.getUseInsdUsermbrNo());
+	// userItem.setDeviceKey(item.getUseInsdDeviceId());
+	//
+	// prodItem.setPrchsId(item.getPrchsId());
+	// prodItem.setProdId(item.getProdId());
+	// prodList.add(prodItem);
+	// }
+	// }
+	// userItem.setExistenceList(prodList);
+	// userList.add(userItem);
+	// }
+	//
+	// response.setUserList(userList);
+	//
+	// return response;
+	// }
 
 	/**
 	 * <pre>
