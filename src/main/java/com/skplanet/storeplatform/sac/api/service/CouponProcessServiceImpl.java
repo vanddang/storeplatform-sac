@@ -200,7 +200,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			this.log.info("■■■■■ cacheEvictShoppingMeta 완료 ■■■■■");
 
 		} else {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponReq is NULL!!", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다.", null);
 		}
 		this.log.info("◆◆◆ to TimeString... 전체 처리 완료:  ◆◆◆");
 		return result;
@@ -286,7 +286,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dp.setUpdId(couponInfo.getBpId());
 			dp.setCudType(cudType);
 			tblDpProdList.add(dp);
-			IcmsJobPrint.printTblDpProd(dp, "TBL_DP_PROD - COUPON");
+			IcmsJobPrint.printTblDpProd(dp, "TB_DP_PROD - COUPON");
 			// ////////////////// Coupon 정보 E////////////////////////////
 
 			// ////////////////// Item 정보 S////////////////////////////
@@ -322,7 +322,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dp.setUpdId(couponInfo.getBpId());
 				dp.setCudType(itemInfo.getCudType());
 				tblDpProdList.add(dp);
-				IcmsJobPrint.printTblDpProd(dp, "TBL_DP_PROD - ITEM::" + i);
+				IcmsJobPrint.printTblDpProd(dp, "TB_DP_PROD - ITEM::" + i);
 			}
 			// ////////////////// Item 정보 E////////////////////////////
 
@@ -336,9 +336,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// 세팅 값 확인
 			this.log.info("■■■■■ setTbDpProdInfoValue End ■■■■■");
 		} catch (CouponException e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TBL_DP_PROD VO 셋팅 실패", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD VO 셋팅 실패", null);
 		} catch (Exception e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TBL_DP_PROD VO 셋팅 실패", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD VO 셋팅 실패", null);
 		}
 		return true;
 	} // End setTbDpProdInfoValue
@@ -922,7 +922,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		try {
 			this.log.info("■■■■■ setTbDpProdTagListValue Start ■■■■■");
 			// ////////////////// Coupon 정보 S////////////////////////////
-			ArrayList<DpCatalogTagInfo> tagList = new ArrayList<DpCatalogTagInfo>(); // TBL_DP_TAG_INFO 정보
+			ArrayList<DpCatalogTagInfo> tagList = new ArrayList<DpCatalogTagInfo>(); // TB_DP_PROD_TAG 정보
 			if (StringUtils.isNotEmpty(couponInfo.getTag())) {
 				String[] tags = couponInfo.getTag().split(",");
 
@@ -942,9 +942,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 			this.log.info("■■■■■ setTbDpProdTagListValue End ■■■■■");
 		} catch (CouponException e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TBL_DP_TAG_INFO VO 셋팅 실패", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_TAG VO 셋팅 실패", null);
 		} catch (Exception e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TBL_DP_TAG_INFO VO 셋팅 실패", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_TAG VO 셋팅 실패", null);
 		}
 		return true;
 	} // End setTbDpTenantProdPrice
@@ -1191,7 +1191,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			this.setShoppingCatalogIdByChannelIdForMq(newCouponCode);
 
 		} else {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponReq is NULL!!", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (couponCode)", null);
 		}
 		return true;
 	} // End processForCouponStatus
@@ -1375,7 +1375,13 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		this.log.info("<<<<< CouponContentService >>>>> getSpecialProductList...");
 		List<CouponRes> list = null;
 		try {
+			for (String couponCode : couponCodes) {
+				if (StringUtils.isBlank(couponCode)) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (couponCode)", null);
+				}
+			}
 			list = this.couponItemService.getSpecialProductList(couponCodes);
+			
 
 		} catch (CouponException e) {
 			throw e;

@@ -255,7 +255,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		} catch (Exception e) {
 			// 정보변경 실패 알림 페이지
 			e.printStackTrace();
-			this.log.error("브랜드,카탈로그 파일 정보 가져오기 실패", e);
+			this.log.error("브랜드 or 카탈로그 파일 정보 가져오기 실패", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, message, null);
 		}
 		return true;
@@ -360,7 +360,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	}
 
 	/**
-	 * 브랜드 이미지파일 리사이즈 처리.
+	 * 브랜드 이미지파일 처리.
 	 * 
 	 * @param dpBrandInfo
 	 *            dpBrandInfo
@@ -421,7 +421,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	}
 
 	/**
-	 * 카탈로그 이미지파일 리사이즈 처리.
+	 * 카탈로그 이미지파일 처리.
 	 * 
 	 * @param dpCatalogInfo
 	 *            dpCatalogInfo
@@ -506,7 +506,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				String cutOutFile = uploadDir1 + targetFileName1;
 
-				this.log.info("■■■■■CatalogImgResize■■■■■ : " + targetFileName1 + "을 생성 하였습니다.");
+				this.log.info("■■■■■CatalogImg■■■■■ : " + targetFileName1 + "을 생성 하였습니다.");
 
 				File outputfile = new File(cutOutFile);
 				long fileSize = outputfile.length();
@@ -519,7 +519,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName1);
 				this.brandCatalogProdImgInfo.setSeq(seq);
 
-				// 카탈로그이미지 2013.06.24 이미지 추가 
 				this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
 
 				this.brandCatalogProdImgInfo.setImgCls(imgClsCodeDtl[i]);
@@ -527,7 +526,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				// 이미지 세로길이가 1170보다 클경우
 				if (nHeightSize > 1170) {
 					this.log.info("■■■■■이미지 세로길이가 1170보다 클경우■■■■■");
-					int cY = 0; // 이미지 컷처리 시작지
+					int cY = 0; // 이미지 컷처리 시작
 
 					nHeightSize = 1170;
 
@@ -542,7 +541,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 									null);
 						}
 						this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
-						this.log.info("■■■■■catalogImgResize■■■■■ : " + resizetargetFileName1 + "을 생성 하였습니다.");
+						this.log.info("■■■■■catalogImg■■■■■ : " + resizetargetFileName1 + "을 생성 하였습니다.");
 
 						cY = nHeightSize;
 						nHeightSize = nHeightSize + 1170;
@@ -594,7 +593,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 		} catch (CouponException e) {
 			this.log.info("■■■■■이미지 생성 오류■■■■■ ");
-			this.log.error("<brandImgResize> brandResize : ", e);
+			this.log.error("catalogImgResize> catalogResize : ", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "카탈로그 이미지 Resize 실패", null);
 		}
 
@@ -602,7 +601,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	}
 
 	/**
-	 * TBL_TAG_INFO 정보를 설정.
+	 * TB_DP_PROD_TAG 정보를 설정.
 	 * 
 	 * @param dpCatalogInfo
 	 *            dpCatalogInfo
@@ -611,7 +610,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	public boolean catalogTagList(DpCatalogInfo dpCatalogInfo) {
 
 		try {
-			ArrayList<DpCatalogTagInfo> tagList = new ArrayList<DpCatalogTagInfo>(); // TBL_DP_TAG_INFO 정보
+			ArrayList<DpCatalogTagInfo> tagList = new ArrayList<DpCatalogTagInfo>(); // TB_DP_PROD_TAG 정보
 			if (StringUtils.isNotBlank(dpCatalogInfo.getCatalogTag())) {
 				String[] tags = dpCatalogInfo.getCatalogTag().split(",");
 

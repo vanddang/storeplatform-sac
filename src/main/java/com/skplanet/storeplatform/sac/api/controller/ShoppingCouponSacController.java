@@ -111,16 +111,6 @@ public class ShoppingCouponSacController {
 		List<CouponRes> couponList = new ArrayList<CouponRes>();
 		try {
 
-			// 01.log delete
-			// 02.Validation
-			// 03.writeLog
-			// 04.이력저장
-			// 05.업무처리:return값 있음
-			// 06.응답 및 처리결과이력 update
-			// this.log.debug("<CouponControl> dePloy...txID = " + couponReq.getTxId());
-			// this.log.debug("<CouponControl> dePloy...txTYPE = " + couponReq.getTxType());
-			// this.log.debug("<CouponControl> dePloy...XML = " + couponReq.getRData());
-
 			map = new HashMap<String, String>();
 			map.put("TX_ID", couponReq.getTxId());
 
@@ -497,25 +487,32 @@ public class ShoppingCouponSacController {
 			brandInfo.setTxType(couponReq.getTxType());
 			brandInfo.setFileNameList(couponReq.getFileNameList());
 			brandInfo.setIsList(couponReq.getIsList());
-
+			
+			if (couponReq.getCudType().equals("") || couponReq.getCudType() == null) {
+				result = false;
+				sb.append("필수 파라미터 값이 없습니다. (cudType)");
+			}else if (!couponReq.getCudType().equals("C") && !couponReq.getCudType().equals("U")) {
+				sb.append("cudType 값은 C or U 로만 가능합니다.");
+				result = false;
+			}
 			if (brandInfo.getBrandId().equals("") || brandInfo.getBrandId() == null) {
 				result = false;
-				sb.append("브랜드 ID는 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (brandId)");
 			}
 			if (brandInfo.getDpCatNo().equals("") || brandInfo.getDpCatNo() == null) {
 				result = false;
-				sb.append("브랜드 카탈로그는 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (dpCatNo)");
 			}
 			if (brandInfo.getBrandNm().equals("") || brandInfo.getBrandNm() == null) {
 				result = false;
-				sb.append("브랜드명은 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (brandNm)");
 			} else if (brandInfo.getBrandNm().length() > 50) {
 				result = false;
-				sb.append("브랜드명은 length 50을 가질수 없습니다.");
+				sb.append("brandNm은 length 50을 가질수 없습니다.");
 			}
 			if (brandInfo.getBrandImgPath().equals("") || brandInfo.getBrandImgPath() == null) {
 				result = false;
-				sb.append("브랜드 이미지 은 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (brandImgPath)");
 			}
 			if (!result) {
 				errorData.setErrorMsg(sb.toString());
@@ -563,48 +560,56 @@ public class ShoppingCouponSacController {
 			catalogInfo.setFileNameList(couponReq.getFileNameList());
 			catalogInfo.setIsList(couponReq.getIsList());
 
+			if (couponReq.getCudType().equals("") || couponReq.getCudType() == null) {
+				result = false;
+				sb.append("필수 파라미터 값이 없습니다. (cudType)");
+			}else if (!couponReq.getCudType().equals("C") && !couponReq.getCudType().equals("U")) {
+				sb.append("cudType 값은 C or U 로만 가능합니다.");
+				result = false;
+			}
+			
 			if (catalogInfo.getCatalogId().equals("") || catalogInfo.getCatalogId() == null) {
 				result = false;
-				sb.append("카탈로그 ID는 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (catalogId)");
 			}
 			if (catalogInfo.getCatalogNm().equals("") || catalogInfo.getCatalogNm() == null) {
 				result = false;
-				sb.append("카탈로그명은 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (catalogNm)");
 			} else if (catalogInfo.getCatalogNm().length() > 100) {
 				result = false;
-				sb.append("카탈로그명은 length 100을 가질수 없습니다.");
+				sb.append("catalogNm은 length 100을 가질수 없습니다.");
 			}
 			if (catalogInfo.getDpCatNo().equals("") || catalogInfo.getDpCatNo() == null) {
 				result = false;
-				sb.append("카탈로그 카테고리은 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (dpCatNo)");
 			}
 
 			if (catalogInfo.getCatalogDesc().equals("") || catalogInfo.getCatalogDesc() == null) {
 				result = false;
-				sb.append("카탈로그 상세설명은 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (catalogDesc)");
 			} else if (catalogInfo.getCatalogDesc().length() > 4000) {
 				result = false;
-				sb.append("카탈로그 상세설명은 length 4000 가질수 없습니다.");
+				sb.append("catalogDesc은 length 4000 가질수 없습니다.");
 			}
 
 			if (catalogInfo.getTopImgPath().equals("") || catalogInfo.getTopImgPath() == null) {
 				result = false;
-				sb.append("카탈로그 탑이미지 은 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (topImgPath)");
 			}
 			if (catalogInfo.getDtlImgPath().equals("") || catalogInfo.getDtlImgPath() == null) {
 				result = false;
-				sb.append("카탈로그 탑이미지 은 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (dtlImgPath)");
 			}
 			if (catalogInfo.getBrandId().equals("") || catalogInfo.getBrandId() == null) {
 				result = false;
-				sb.append("카탈로그 브랜드코드 은 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (brandId)");
 			}
 			if (catalogInfo.getIntroText().equals("") || catalogInfo.getIntroText() == null) {
 				result = false;
-				sb.append("카탈로그 한줄소개는 null을가질수 없습니다.");
+				sb.append("필수 파라미터 값이 없습니다. (introText)");
 			} else if (catalogInfo.getIntroText().length() > 150) {
 				result = false;
-				sb.append("카탈로그 한줄소개는 length 150을 가질수 없습니다.");
+				sb.append("introText는 length 150을 가질수 없습니다.");
 			}
 
 			if (!result) {
@@ -689,7 +694,7 @@ public class ShoppingCouponSacController {
 	}
 
 	/**
-	 * 쇼핑쿠폰 API 응답은 XML 으로 전송한다.
+	 * 쇼핑쿠폰 API 응답은 VO로 셋팅한다.
 	 * 
 	 * @param couponReq
 	 *            couponReq
@@ -791,7 +796,7 @@ public class ShoppingCouponSacController {
 
 		try {
 			if (couponInfo.getProdId().equals("")) {
-				message = "유효성 검사 실패 [couponName : 상품코드] 이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [prodId : 상품ID] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 			if (couponInfo.getCouponName().equals("")) {
@@ -976,7 +981,7 @@ public class ShoppingCouponSacController {
 		String message = "";
 		try {
 			if (itemInfo.getItemCode().equals("")) {
-				message = "유효성 검사 실패 [itemName : 단품코드 :이 XML에 존재하지 않습니다.";
+				message = "유효성 검사 실패 [itemCode : 단품코드 :이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 			if (itemInfo.getStoreLicenseCode().equals("")) {
@@ -1142,6 +1147,14 @@ public class ShoppingCouponSacController {
 	 */
 	private void couponItemchangeCud(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, CouponReq couponReq) {
 
+		if (couponReq.getCudType().equals("") || couponReq.getCudType() == null) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+					"cudType는 null을가질수 없습니다.", "");
+		}else if (!couponReq.getCudType().equals("C") && !couponReq.getCudType().equals("U")) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+					"cudType 값은 C or U 로만 가능합니다.", "");
+		}
+		
 		if (StringUtils.equalsIgnoreCase("C", couponReq.getCudType())) {
 			if (this.couponItemService.getCouponCountCudType(couponInfo.getCouponCode()) > 0) {
 				couponReq.setCudType("U");

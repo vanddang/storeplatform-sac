@@ -73,9 +73,7 @@ public class CouponConstants {
 	public static final String COUPON_IF_ERROR_CODE_DATA_ERR = "4021"; // Data 오류 [xxxx]
 	public static final String COUPON_IF_ERROR_CODE_DB_ERR = "4031"; // DB 장애 오류 [xxxx]
 
-	public static final String COUPON_IF_ERROR_CODE_DB_ETC = "4091"; // 기타 error MSG 직접입력 (쇼핑쿠폰 ERROR 메세지 전송과
-																	 // TBL_BP_COUPON_HIST ERROR_MSG 저장내역이 동일)
-
+	public static final String COUPON_IF_ERROR_CODE_DB_ETC = "4091"; // 기타 error MSG 직접입력 
 	// COUPON IF TX_STATUS
 	public static final String COUPON_IF_TX_STATUS_SUCCESS = "01"; // 정상
 	public static final String COUPON_IF_TX_STATUS_ERROR = "02"; // ERROR

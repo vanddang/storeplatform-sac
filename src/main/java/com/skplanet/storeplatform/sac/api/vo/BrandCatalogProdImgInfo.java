@@ -30,7 +30,7 @@ public class BrandCatalogProdImgInfo extends CommonInfo {
 	private String filePos;
 	private String fileNm;
 	private String langCd;
-	private int seq = 1; // TBL_DP_PROD_IMG.DP_ORDER
+	private int seq = 1; // TB_DP_PROD_IMG.DP_ORDER
 
 	/**
 	 * @return the prodId

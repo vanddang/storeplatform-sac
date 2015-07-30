@@ -457,7 +457,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
-	 * TBL_TAG_INFO 테이블 입력및 수정한다.
+	 * TB_DP_PROD_TAG 테이블 입력및 수정한다.
 	 * </pre>
 	 * 
 	 * @param tagList
@@ -637,11 +637,18 @@ public class CouponItemServiceImpl implements CouponItemService {
 		boolean specialFlag = false;		// 특가 상품인지 확인 flag
 		boolean itemFlag = false; 			// 정상적인 아이템인지 확인 flag
 
-
+		if (StringUtils.isBlank(couponCode)) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (couponCode)", null);
+		}
+		for (String strItem : itemsCodes) {
+			if (StringUtils.isBlank(strItem)) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemsCodes)", null);
+			}
+		}
 		
 		int cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_COUPON_INFO", couponCode);
 		if (cnt <=0) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_COUPONCODE, "잘못된 쿠폰ID", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쇼핑 상품에 대한 쿠폰ID가 아닙니다.", null);
 		}		
 		
 		for (String strItem : itemsCodes) {
@@ -669,7 +676,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 		}
 		
 		if(!itemFlag){
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_ITEMCODE, "잘못된 아이템ID", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쇼핑 상품에 대한 아이템ID가 아닙니다.", null);
 		}				
 
 		if(!specialFlag){

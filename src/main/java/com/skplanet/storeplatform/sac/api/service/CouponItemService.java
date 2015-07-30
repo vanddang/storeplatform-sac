@@ -209,7 +209,7 @@ public interface CouponItemService {
 
 	/**
 	 * <pre>
-	 * TBL_TAG_INFO 테이블 입력및 수정한다.
+	 * TB_DP_PROD_TAG 테이블 입력및 수정한다.
 	 * </pre>
 	 * 
 	 * @param tagList

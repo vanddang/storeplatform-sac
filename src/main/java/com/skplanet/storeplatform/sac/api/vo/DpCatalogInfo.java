@@ -21,15 +21,15 @@ import java.util.List;
  */
 public class DpCatalogInfo extends BrandCatalogProdImgInfo {
 	private static final long serialVersionUID = 1L;
-	// TBL_DP_CATALOG_INFO
+	// TB_DP_SHPG_CATALOG
 	private String catalogId; // INSERT_TB_DP_SHPG_CATALOG.CATALOG_ID
 	private String dpCatNo; // INSERT_TB_DP_SHPG_CATALOG.DP_CAT_NO
 	private String brandId; // INSERT_TB_DP_SHPG_CATALOG.BRAND_ID
 	private String catalogDesc; // INSERT_TB_DP_SHPG_CATALOG_DESC.CATALOG_DESC
 	private String catalogNm; // INSERT_TB_DP_SHPG_CATALOG_DESC.CATALOG_NM
 	// private String catalogStatCd;
-	private String topImgPath; // TBL_DP_CATALOG_INFO.TOP_IMG_PATH
-	private String dtlImgPath; // TBL_DP_CATALOG_INFO.DTL_IMG_PATH
+	private String topImgPath; // TB_DP_SHPG_CATALOG_DESC.TOP_IMG_PATH
+	private String dtlImgPath; // TB_DP_SHPG_CATALOG_DESC.DTL_IMG_PATH
 	private String txType; // 상품구분 브랜드 : bd, 카탈로그 : ct
 	private String cudType; // CUD
 	private String introText; // 한줄설명 INSERT_TB_DP_SHPG_CATALOG_DESC.
