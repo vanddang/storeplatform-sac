@@ -173,7 +173,7 @@ public class CategoryController {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * VOD보관함
 	 * </pre>
 	 * 
 	 * @param requestVO
