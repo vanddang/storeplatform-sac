@@ -243,7 +243,8 @@ public class LoginServiceImpl implements LoginService {
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		/* 휴면계정인 경우 복구처리 */
-		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+		if (chkDupRes.getUserMbr() != null
+				&& StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
 			LOGGER.info("{} 휴면회원 복구", req.getDeviceId());
 			String idpResultYn = null;
 			String idpResultErrorCode = null;
@@ -468,7 +469,8 @@ public class LoginServiceImpl implements LoginService {
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		/* 휴면계정인 경우 복구처리 */
-		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+		if (chkDupRes.getUserMbr() != null
+				&& StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
 			LOGGER.info("{} 휴면회원 복구", req.getDeviceId());
 			String idpResultYn = null;
 			String idpResultErrorCode = null;
