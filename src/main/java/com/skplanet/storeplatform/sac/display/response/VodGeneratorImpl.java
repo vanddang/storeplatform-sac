@@ -54,7 +54,8 @@ public class VodGeneratorImpl implements VodGenerator {
 		Contributor contributor = new Contributor();
 		contributor.setArtist(metaInfo.getArtist1Nm()); // 출연자
 		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
-			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE, metaInfo.getIssueDay()));
+			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE,
+					metaInfo.getIssueDay()));
 		}
 
 		contributor.setDirector(metaInfo.getArtist2Nm()); // 감독
@@ -78,7 +79,8 @@ public class VodGeneratorImpl implements VodGenerator {
 		contributor.setDirector(metaInfo.getArtist2Nm()); // 제작자
 		contributor.setArtist(metaInfo.getArtist1Nm()); // 출연자
 		if (StringUtils.isNotEmpty(metaInfo.getIssueDay())) {
-			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE, metaInfo.getIssueDay()));
+			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE,
+					metaInfo.getIssueDay()));
 		}
 		contributor.setCompany(metaInfo.getChnlCompNm()); // 제공업체
 		contributor.setAgency(metaInfo.getAgencyNm()); // 기획사
@@ -115,7 +117,8 @@ public class VodGeneratorImpl implements VodGenerator {
 		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
 			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
 		}
-		if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd()) && !DisplayConstants.DP_VOD_SHORT_STORY_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+		if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd())
+				&& !DisplayConstants.DP_VOD_SHORT_STORY_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
 			vod.setChapter(chapter);
 		}
 		vod.setRunningTime(time);
@@ -163,8 +166,10 @@ public class VodGeneratorImpl implements VodGenerator {
 	@Override
 	public List<Support> generateSupportList(MetaInfo metaInfo) {
 		List<Support> supportList = new ArrayList<Support>();
-		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM, metaInfo.getHdvYn()));
-		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM, metaInfo.getDolbySprtYn()));
+		supportList
+				.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM, metaInfo.getHdvYn()));
+		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM,
+				metaInfo.getDolbySprtYn()));
 		if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd()))
 			supportList.add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getDrmYn()));
 
@@ -256,7 +261,8 @@ public class VodGeneratorImpl implements VodGenerator {
 			/*
 			 * 고화질 정보(3.x I/F 일때) HD 화질 정보와 HIHD 화질정보 동시에 존재 할때에는 HIHD 화질이 우선적으로 내려가도록
 			 */
-			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())
+					|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
 				videoInfo = this.getHdVideoInfo(metaInfo);
 				videoInfoList.add(videoInfo);
 			}
@@ -363,12 +369,12 @@ public class VodGeneratorImpl implements VodGenerator {
 		VideoInfo videoInfo = new VideoInfo();
 
 		videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
-		videoInfo.setPictureSize(metaInfo.getHihdDpPicRatio());
-		videoInfo.setPixel(metaInfo.getHihdDpPixel());
-		videoInfo.setScid(metaInfo.getHihdSubContsId());
-		videoInfo.setSize(metaInfo.getHihdFileSize());
-		videoInfo.setVersion(metaInfo.getHihdProdVer());
-		videoInfo.setFilePath(metaInfo.getHihdFilePath());
+		videoInfo.setPictureSize(metaInfo.getHdDpPicRatio());
+		videoInfo.setPixel(metaInfo.getHdDpPixel());
+		videoInfo.setScid(metaInfo.getHdSubContsId());
+		videoInfo.setSize(metaInfo.getHdFileSize());
+		videoInfo.setVersion(metaInfo.getHdProdVer());
+		videoInfo.setFilePath(metaInfo.getHiFilePath());
 
 		return videoInfo;
 	}
