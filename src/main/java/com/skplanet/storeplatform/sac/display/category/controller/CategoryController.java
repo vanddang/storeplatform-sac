@@ -9,12 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.category.controller;
 
-import com.google.common.base.Strings;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.display.category.service.*;
-import com.skplanet.storeplatform.sac.display.category.vo.SearchProductListParam;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import java.util.Arrays;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.common.base.Strings;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacReq;
@@ -43,9 +43,23 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoon
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-
-import java.util.Arrays;
-import java.util.List;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryAppService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryEbookComicService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryMusicContentsService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificAppService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificEbookService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificMusicService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificShoppingService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificSongService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificVodService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificVoucherService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificWebtoonService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryVodBoxService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonSeriesService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
+import com.skplanet.storeplatform.sac.display.category.vo.SearchProductListParam;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
  * 일반 카테고리 Controller
@@ -92,18 +106,17 @@ public class CategoryController {
 
 	@Autowired
 	private CategorySpecificSongService categorySpecificSongService;
-	
+
 	@Autowired
 	private CategorySpecificShoppingService categorySpecificShoppingService;
 
 	@Autowired
 	private CategorySpecificVoucherService categorySpecificVoucherService;
 
-    @Autowired
-    private CategorySpecificProductService categorySpecificProductService;
+	@Autowired
+	private CategorySpecificProductService categorySpecificProductService;
 
-
-    /**
+	/**
 	 * <pre>
 	 * 일반 카테고리 앱 상품 조회.
 	 * </pre>
@@ -173,7 +186,7 @@ public class CategoryController {
 
 	/**
 	 * <pre>
-	 * VOD보관함
+	 * VOD보관함(Vod Box)
 	 * </pre>
 	 * 
 	 * @param requestVO
@@ -365,7 +378,7 @@ public class CategoryController {
 		return this.categorySpecificSongService.getSpecificSongList(req, header);
 
 	}
-	
+
 	/**
 	 * <pre>
 	 * [I03000055] 2.4.1.7 특정 상품 Shopping 조회.
@@ -379,14 +392,15 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/specific/shopping/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryShoppingSacRes searchSpecificShoppingDetail(SacRequestHeader header, @Validated CategoryShoppingSacReq req) {
+	public CategoryShoppingSacRes searchSpecificShoppingDetail(SacRequestHeader header,
+			@Validated CategoryShoppingSacReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificShoppingDetail Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
 		return this.categorySpecificShoppingService.searchSpecificShoppingDetail(header, req);
 
 	}
-	
+
 	/**
 	 * <pre>
 	 * [I03000055] 2.4.1.8 특정 상품 이용권 조회.
@@ -400,7 +414,8 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/specific/voucher/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryVoucherSacRes searchSpecificVoucherDetail(SacRequestHeader header, @Validated CategoryVoucherSacReq req) {
+	public CategoryVoucherSacRes searchSpecificVoucherDetail(SacRequestHeader header,
+			@Validated CategoryVoucherSacReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificVoucherDetail Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -408,22 +423,23 @@ public class CategoryController {
 
 	}
 
-    @RequestMapping(value = "/specific/product/list/v1", method = RequestMethod.GET)
-    @ResponseBody
-    public CategorySpecificSacRes searchSpecificProductList(SacRequestHeader header, @Validated CategorySpecificSacReq req) {
+	@RequestMapping(value = "/specific/product/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public CategorySpecificSacRes searchSpecificProductList(SacRequestHeader header,
+			@Validated CategorySpecificSacReq req) {
 
-        String tenantId = header.getTenantHeader().getTenantId();
-        String langCd = header.getTenantHeader().getLangCd();
-        String deviceModelCd = Strings.nullToEmpty(req.getIgnoreProvisionYn()).equals("N") ?
-                header.getDeviceHeader().getModel() : DisplayConstants.DP_ANY_PHONE_4APP;
+		String tenantId = header.getTenantHeader().getTenantId();
+		String langCd = header.getTenantHeader().getLangCd();
+		String deviceModelCd = Strings.nullToEmpty(req.getIgnoreProvisionYn()).equals("N") ? header.getDeviceHeader()
+				.getModel() : DisplayConstants.DP_ANY_PHONE_4APP;
 
-        List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
-        if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
-            throw new StorePlatformException("SAC_DSP_0004", "list",
-                    DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
-        }
+		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
+		if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
+			throw new StorePlatformException("SAC_DSP_0004", "list",
+					DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
+		}
 
-        return categorySpecificProductService.searchProductList(
-                new SearchProductListParam(tenantId, langCd, deviceModelCd, prodIdList));
-    }
+		return this.categorySpecificProductService.searchProductList(new SearchProductListParam(tenantId, langCd,
+				deviceModelCd, prodIdList));
+	}
 }
