@@ -820,10 +820,10 @@
           AND A.PROD_ID = C.PROD_ID
           AND A.EXPO_YN = 'Y' 
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
-          AND (#{startDate} BETWEEN TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  AND TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')
-              OR
-               #{endDate}   BETWEEN TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  AND TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')
-              )
+		  AND (TO_CHAR(A.SPRC_APPLY_START_DT, 'YYYYMMDDHH24MISS') BETWEEN #{startDate} AND #{endDate} 
+		       OR 
+		       TO_CHAR(A.SPRC_APPLY_END_DT, 'yyyyMMddHH24miss') between #{startDate} and #{endDate} 
+		      ) 
     </select>       
         
     <!--  쿠폰 판매상태 여부 상태값  -->
