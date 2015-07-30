@@ -269,7 +269,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							policyRequest.setCommonRequest(commonRequest);
 							policyRequest.setLimitPolicyKey(mdn);
 							policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
-							policyRequest.setIsDormant(isDormant);
 							SearchPolicyResponse policyResponse = null;
 
 							try {
@@ -355,14 +354,12 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				updPolicyKeyReq.setCommonRequest(commonRequest);
 				updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
 				updPolicyKeyReq.setNewLimitPolicyKey(mdn);
-				updPolicyKeyReq.setIsDormant(isDormant);
 				UpdatePolicyKeyResponse updPolicyKeyRes = this.userSCI.updatePolicyKey(updPolicyKeyReq);
 
 				UpdatePolicyValueRequest updPolicyValueReq = new UpdatePolicyValueRequest();
 				updPolicyValueReq.setCommonRequest(commonRequest);
 				updPolicyValueReq.setOldApplyValue(beMdn);
 				updPolicyValueReq.setNewApplyValue(mdn);
-				updPolicyValueReq.setIsDormant(isDormant);
 				UpdatePolicyValueResponse updPolicyValueRes = this.userSCI.updatePolicyValue(updPolicyValueReq);
 
 				LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 policyKey : {},  policyValue : {}",
@@ -557,7 +554,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					policyRequest.setCommonRequest(commonRequest);
 					policyRequest.setLimitPolicyKey(mdn);
 					policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
-					policyRequest.setIsDormant(isDormant);
 					SearchPolicyResponse policyResponse = null;
 
 					try {

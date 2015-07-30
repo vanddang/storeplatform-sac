@@ -436,7 +436,7 @@ public class IdpServiceImpl implements IdpService {
 				}
 
 			} else if (!userId.equals(oldId)) { // 변경가입, 변경전환
-				LOGGER.info("[변경가입, 변경전환] userId : {}, oldId : {}, 휴면계정유무 : {}", userId, oldId, isDormant);
+				LOGGER.info("[변경가입, 변경전환] userId : {}, oldId : {}", userId, oldId);
 				SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 				KeySearch keySearch = new KeySearch();
@@ -937,8 +937,6 @@ public class IdpServiceImpl implements IdpService {
 	@Override
 	public ImResult rXSetLoginConditionIDP(HashMap<String, String> map) {
 
-		String isDormant = null;
-
 		// 공통 헤더 세팅
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(map.get("systemID"));
@@ -962,13 +960,12 @@ public class IdpServiceImpl implements IdpService {
 			searchUserRequest.setCommonRequest(commonRequest);
 			searchUserRequest.setKeySearchList(keySearchList);
 			SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
-			isDormant = searchUserResponse.getUserMbr().getIsDormant();
 
 			UpdateStatusUserRequest updateUserVo = new UpdateStatusUserRequest();
 			updateUserVo.setCommonRequest(commonRequest);
 			updateUserVo.setKeySearchList(keySearchList);
 			updateUserVo.setLoginStatusCode(loginStatusCode);
-			updateUserVo.setIsDormant(isDormant);
+			updateUserVo.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
 			this.userSCI.updateStatus(updateUserVo);
 
 			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
@@ -977,7 +974,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrOneID.setLoginStatusCode(loginStatusCode);
 			mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-			updateMbrOneIDRequest.setIsDormant(isDormant);
+			updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
 			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 			idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
@@ -1119,8 +1116,6 @@ public class IdpServiceImpl implements IdpService {
 	@Override
 	public ImResult rXSetSuspendUserIdIDP(HashMap<String, String> map) {
 
-		String isDormant = null;
-
 		// 공통 헤더 세팅
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(map.get("systemID"));
@@ -1144,13 +1139,12 @@ public class IdpServiceImpl implements IdpService {
 			searchUserRequest.setCommonRequest(commonRequest);
 			searchUserRequest.setKeySearchList(keySearchList);
 			SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
-			isDormant = searchUserResponse.getUserMbr().getIsDormant();
 
 			UpdateStatusUserRequest updateUserVo = new UpdateStatusUserRequest();
 			updateUserVo.setCommonRequest(commonRequest);
 			updateUserVo.setKeySearchList(keySearchList);
 			updateUserVo.setStopStatusCode(susStatusCode);
-			updateUserVo.setIsDormant(isDormant);
+			updateUserVo.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
 			this.userSCI.updateStatus(updateUserVo);
 
 			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
@@ -1159,7 +1153,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrOneID.setStopStatusCode(susStatusCode);
 			mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-			updateMbrOneIDRequest.setIsDormant(isDormant);
+			updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
 			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 			idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
@@ -2068,6 +2062,7 @@ public class IdpServiceImpl implements IdpService {
 					removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
 					removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
 					removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
+					removeUserRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
 					this.userSCI.remove(removeUserRequest);
 
 					RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
@@ -2119,7 +2114,7 @@ public class IdpServiceImpl implements IdpService {
 					}
 					userMbr.setIsMemberPoint(ocbJoinCodeYn);
 					updateUserRequest.setUserMbr(userMbr);
-					updateUserRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
+					updateUserRequest.setIsDormant(userMbr.getIsDormant());
 					this.userSCI.updateUser(updateUserRequest);
 
 					UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
@@ -2137,7 +2132,7 @@ public class IdpServiceImpl implements IdpService {
 					}
 
 					updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-					updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
+					updateMbrOneIDRequest.setIsDormant(userMbr.getIsDormant());
 					this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 				}
@@ -3207,6 +3202,7 @@ public class IdpServiceImpl implements IdpService {
 								}
 
 								if (searchUserResponse != null) {
+									LOGGER.info("휴면계정 유무 : {}", searchUserResponse.getUserMbr().getIsDormant());
 									UpdateUserRequest updateUserRequest = this.getUpdateUserRequest(map,
 											searchUserResponse);
 									// JOIN_SST_LIST에 TAC001~TAC006이 있는경우 이용약관이 들어옴.
@@ -3255,6 +3251,7 @@ public class IdpServiceImpl implements IdpService {
 								}
 
 								if (searchUserResponse != null) {
+									LOGGER.info("휴면계정 유무 : {}", searchUserResponse.getUserMbr().getIsDormant());
 									prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
 
 									UpdateUserRequest updateUserRequest = this.getUpdateUserRequest(map,
