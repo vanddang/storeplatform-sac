@@ -114,9 +114,12 @@ public class VodServiceImpl implements VodService {
 		String userKey = StringUtils.defaultString(req.getUserKey());
 		String deviceKey = StringUtils.defaultString(req.getDeviceKey());
 
-		// 1. Channel 정보 조회
+		// OrderBy
 		final String orderedBy = StringUtils.defaultString(req.getOrderedBy(),
 				DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
+
+		// 판매 중지(다운로드 허용) 상품 포함 여부
+		// N (Default) : 판매중, Y : 판매중, 판매중지, 판매불가-다운허용
 		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
 
 		// [2.x fadeout] 상품 상세 요청 시 예외 처리
@@ -125,9 +128,10 @@ public class VodServiceImpl implements VodService {
 		if (temp.contains(channelId))
 			includeProdStopStatus = "Y";
 
+		// Parameter 셋팅
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("representImgCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-		param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
+		param.put("representImgCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD); // 이미지 코드
+		param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM); // 가상 프로비저닝 모델명 (멀티미디어).
 		param.put("deviceModel", req.getDeviceModel());
 		param.put("channelId", channelId);
 		param.put("langCd", req.getLangCd());
@@ -140,16 +144,25 @@ public class VodServiceImpl implements VodService {
 		param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
 		param.put("count", req.getCount() == null ? 20 : req.getCount());
 
+		// ###################################################################################
+		// 1. Channel 정보 조회
+		// ###################################################################################
 		VodDetail vodDetail = this.getVodChanndel(param);
+		// ###################################################################################
 
 		if (vodDetail != null) {
+
 			// Screenshots
 			List<ProductImage> screenshotList = this.getScreenshotList(req.getChannelId(), req.getLangCd());
-			VodDetail usePolicyInfo = getProdUsePolicyInfo(param);
+
+			// 채널의 상품 이용정책 조회 (가장 최신 Chapter의 Episode 이용정책 조회)
+			VodDetail usePolicyInfo = this.getProdUsePolicyInfo(param);
 			if (usePolicyInfo != null) {
-				// 조회된 이용정책 set update by 이석희 2015.07.24
+				// 조회된 이용정책 set (update by 이석희 2015.07.24)
 				vodDetail = this.setUsePolicyInfo(vodDetail, usePolicyInfo);
 			}
+
+			/* Channel Product Mapping */
 			this.mapProduct(req, product, vodDetail, screenshotList, supportFhdVideo);
 
 			// 좋아요 여부
@@ -160,6 +173,8 @@ public class VodServiceImpl implements VodService {
 			if (StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)
 					&& StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
 				List<String> episodeIdList = this.getEpisodeIdList(param);
+
+				// 상품 목록의 구매 내역 유무를 확인
 				existenceListRes = this.commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(),
 						req.getDeviceKey(), episodeIdList);
 				if (existenceListRes == null) {
@@ -179,14 +194,19 @@ public class VodServiceImpl implements VodService {
 				param.put("paymentContentIdList", paymentContentIdList);
 			}
 
+			// ###################################################################################
 			// 2. subProjectList
+			// ###################################################################################
 			List<VodDetail> subProductList = this.getSubProjectList(param);
+			// ###################################################################################
 
 			if (!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)
 					&& StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
 				// 정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
 				existenceListRes = this.getExistenceScReses(req, subProductList);
 			}
+
+			// Episode Product Mapping
 			this.mapSubProductList(req, product, subProductList, existenceListRes, supportFhdVideo);
 
 			res.setProduct(product);
@@ -430,7 +450,7 @@ public class VodServiceImpl implements VodService {
 	}
 
 	/**
-	 * Rights
+	 * Rights Mapping
 	 * 
 	 * @param mapperVO
 	 * @param req
@@ -477,7 +497,7 @@ public class VodServiceImpl implements VodService {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * Store Mapping
 	 * </pre>
 	 * 
 	 * @param mapperVO
@@ -523,7 +543,7 @@ public class VodServiceImpl implements VodService {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * Play Mapping
 	 * </pre>
 	 * 
 	 * @param mapperVO
@@ -933,8 +953,14 @@ public class VodServiceImpl implements VodService {
 				}
 				subProduct.setRights(rights);
 
-				// VOD
-				subProduct.setVod(this.mapVod(mapperVO, supportFhdVideo));
+				// VOD Mapping
+				if (supportFhdVideo) { // 4.0
+					// NM:일반화질 (A), SD 고화질 (B), HD 화질 (C), HIHD 화질 (D)
+					subProduct.setVod(this.mapVodV2(mapperVO, supportFhdVideo));
+				} else { // 3.0
+					// NM:일반화질 (A), SD 고화질 (B), HD(C)/HIHD(D) 화질(HIHD화질 우선)
+					subProduct.setVod(this.mapVod(mapperVO, supportFhdVideo));
+				}
 
 				// Accrual
 				Accrual accrual = this.mapAccrual(mapperVO);
@@ -953,7 +979,7 @@ public class VodServiceImpl implements VodService {
 	}
 
 	/**
-	 * VOD
+	 * VOD 3.0
 	 * 
 	 * @param mapperVO
 	 * @param supportFhdVideo
@@ -979,7 +1005,7 @@ public class VodServiceImpl implements VodService {
 
 		// -------------------------------------------------------------
 		// 화질 정보
-		// NM:일반화질 (A), SD:SD화질 (B), HI:고화질 (C), HD:HD화질 (D)
+		// NM:일반화질 (A), SD:SD화질 (B), HD화질(C), HIHD화질 (D)
 		// -------------------------------------------------------------
 		/** 일반화질 정보 */
 		if (StringUtils.isNotEmpty(mapperVO.getNmSubContsId())) {
@@ -992,7 +1018,7 @@ public class VodServiceImpl implements VodService {
 			videoInfoList.add(videoInfo);
 		}
 
-		// HD (D화질) 정보 우선, 없으며 HI 정보를 내려줌
+		// HIHD (D화질) 정보 우선, 없으며 HD 정보를 내려줌
 		if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId()) || StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
 			/** HD 화질 정보 */
 			videoInfo = this.getHdVideoInfo(mapperVO);
@@ -1005,6 +1031,63 @@ public class VodServiceImpl implements VodService {
 			videoInfo = this.getFhdVideoInfo(mapperVO);
 			videoInfoList.add(videoInfo);
 		}
+		if (videoInfoList.size() > 0)
+			vod.setVideoInfoList(videoInfoList);
+		return vod;
+	}
+
+	/**
+	 * VOD V2 4.0
+	 * 
+	 * @param mapperVO
+	 * @param supportFhdVideo
+	 * @return
+	 */
+	private Vod mapVodV2(VodDetail mapperVO, boolean supportFhdVideo) {
+		Vod vod = new Vod();
+		List<VideoInfo> videoInfoList = new ArrayList<VideoInfo>();
+		Chapter chapter = new Chapter();
+		VideoInfo videoInfo;
+
+		if (mapperVO.getEpsdPlayTm() != null) {
+			Time runningTime = new Time();
+			runningTime.setText(String.valueOf(mapperVO.getEpsdPlayTm()));
+			vod.setRunningTime(runningTime);
+		}
+
+		if (StringUtils.isNotEmpty(mapperVO.getChapter())) {
+			chapter.setUnit(this.commonService.getVodChapterUnit());
+			chapter.setText(Integer.parseInt(mapperVO.getChapter()));
+			vod.setChapter(chapter);
+		}
+
+		// -------------------------------------------------------------
+		// 화질 정보
+		// NM:일반화질 (A), SD 고화질 (B), HD 화질 (C), HIHD 화질 (D)
+		// -------------------------------------------------------------
+		/** 일반화질 정보 */
+		if (StringUtils.isNotEmpty(mapperVO.getNmSubContsId())) {
+			videoInfo = this.getNmVideoInfo(mapperVO);
+			videoInfoList.add(videoInfo);
+		}
+		/** SD 고화질 정보 */
+		if (StringUtils.isNotEmpty(mapperVO.getSdSubContsId())) {
+			videoInfo = this.getSdVideoInfo(mapperVO);
+			videoInfoList.add(videoInfo);
+		}
+
+		/** HD 화질 정보 */
+		if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId())) {
+			videoInfo = this.getHdVideoInfoV2(mapperVO);
+			videoInfoList.add(videoInfo);
+		}
+
+		/** HIHD 화질 정보 */
+		if (StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
+			videoInfo = this.getHiHdVideoInfo(mapperVO);
+			videoInfoList.add(videoInfo);
+		}
+
 		if (videoInfoList.size() > 0)
 			vod.setVideoInfoList(videoInfoList);
 		return vod;
@@ -1033,7 +1116,7 @@ public class VodServiceImpl implements VodService {
 	}
 
 	/**
-	 * HD
+	 * HD&HIHD
 	 * 
 	 * @param mapperVO
 	 * @return
@@ -1041,8 +1124,9 @@ public class VodServiceImpl implements VodService {
 	private VideoInfo getHdVideoInfo(VodDetail mapperVO) {
 		VideoInfo videoInfo = new VideoInfo();
 
+		// HIHD 화질 (D) 정보 우선, 없으며 HD화질 (C) 정보를 내려줌
 		if (StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
-			// HIHD (D화질)
+			// HIHD 화질 (D)
 			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
 			videoInfo.setPictureSize(mapperVO.getHihdDpPicRatio());
 			videoInfo.setPixel(mapperVO.getHihdDpPixel());
@@ -1050,7 +1134,7 @@ public class VodServiceImpl implements VodService {
 			videoInfo.setSize(mapperVO.getHihdFileSize().toString());
 			videoInfo.setVersion(mapperVO.getHihdProdVer());
 		} else {
-			// HD (C화질)
+			// HD 화질 (C)
 			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
 			videoInfo.setPictureSize(mapperVO.getHdDpPicRatio());
 			videoInfo.setPixel(mapperVO.getHdDpPixel());
@@ -1059,6 +1143,40 @@ public class VodServiceImpl implements VodService {
 			videoInfo.setVersion(mapperVO.getHdProdVer());
 		}
 
+		return videoInfo;
+	}
+
+	/**
+	 * HD (C화질) V2
+	 * 
+	 * @param mapperVO
+	 * @return
+	 */
+	private VideoInfo getHdVideoInfoV2(VodDetail mapperVO) {
+		VideoInfo videoInfo = new VideoInfo();
+		videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
+		videoInfo.setPictureSize(mapperVO.getHdDpPicRatio());
+		videoInfo.setPixel(mapperVO.getHdDpPixel());
+		videoInfo.setScid(mapperVO.getHdSubContsId());
+		videoInfo.setSize(mapperVO.getHdFileSize().toString());
+		videoInfo.setVersion(mapperVO.getHdProdVer());
+		return videoInfo;
+	}
+
+	/**
+	 * HIHD (D화질)
+	 * 
+	 * @param mapperVO
+	 * @return
+	 */
+	private VideoInfo getHiHdVideoInfo(VodDetail mapperVO) {
+		VideoInfo videoInfo = new VideoInfo();
+		videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
+		videoInfo.setPictureSize(mapperVO.getHihdDpPicRatio());
+		videoInfo.setPixel(mapperVO.getHihdDpPixel());
+		videoInfo.setScid(mapperVO.getHihdSubContsId());
+		videoInfo.setSize(mapperVO.getHihdFileSize().toString());
+		videoInfo.setVersion(mapperVO.getHihdProdVer());
 		return videoInfo;
 	}
 
@@ -1120,7 +1238,7 @@ public class VodServiceImpl implements VodService {
 
 		return badge;
 	}
-	
+
 	/**
 	 * 이용정책 set (최신 Chapter Episode의 이용정책)
 	 * 
@@ -1141,8 +1259,8 @@ public class VodServiceImpl implements VodService {
 		vodDetail.setPlayDlStrmCd(usePolicyInfo.getPlayDlStrmCd());
 
 		return vodDetail;
-	}    
-	
+	}
+
 	/**
 	 * 채널의 상품 이용정책 조회 (가장 최신 Chapter의 Episode 이용정책 조회)
 	 * 
@@ -1152,5 +1270,5 @@ public class VodServiceImpl implements VodService {
 	private VodDetail getProdUsePolicyInfo(Map<String, Object> param) {
 		logger.debug("param={}", param);
 		return this.commonDAO.queryForObject("VodDetail.getProdUsePolicyInfo", param, VodDetail.class);
-	}    	
+	}
 }
