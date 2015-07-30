@@ -1152,7 +1152,7 @@ public class ShoppingCouponSacController {
 
 		if (couponReq.getCudType().equals("") || couponReq.getCudType() == null) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-					"cudType는 null을가질수 없습니다.", "");
+					"필수 파라미터 값이 없습니다. (cudType)", "");
 		}else if (!couponReq.getCudType().equals("C") && !couponReq.getCudType().equals("U")) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 					"cudType 값은 C or U 로만 가능합니다.", "");
