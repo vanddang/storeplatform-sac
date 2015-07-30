@@ -400,6 +400,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			SearchAgreeSiteRequest scReq = new SearchAgreeSiteRequest();
 			scReq.setCommonRequest(commonRequest);
 			scReq.setImSvcNo(info.getImSvcNo());
+			scReq.setIsDormant(info.getIsDormant());
 			SearchAgreeSiteResponse scRes = this.userSCI.searchAgreeSite(scReq);
 
 			isCi = StringUtil.isNotBlank(scRes.getMbrOneID().getIsCi()) ? scRes.getMbrOneID().getIsCi() : "N";
