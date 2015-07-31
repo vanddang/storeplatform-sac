@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +92,9 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
     @Autowired
     private DownloadSupportService supportService;
+
+    @Autowired
+    private CachedExtraInfoManager cachedExtraInfoManager;
 
 	/*
 	 * (non-Javadoc)
@@ -297,16 +303,20 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 	private MetaInfo getMusicMetaInfo(DownloadMusicSacReq req) {
 		MetaInfo metaInfo;
-        ProductInfo info = commonService.getProductInfo(req.getProductId());
 
-        if (info.getProductType() == ProductType.Music)
+        ProductBaseInfo baseInfo = cachedExtraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(req.getProductId()));
+        ProductType prodTp = baseInfo.getProductType();
+
+        if (prodTp == ProductType.Music)
             metaInfo = commonDAO.queryForObject("Download.getDownloadMusicInfo", req, MetaInfo.class);
-        else if(info.getProductType() == ProductType.RingBell)
+        else if(prodTp == ProductType.RingBell)
             metaInfo = commonDAO.queryForObject("Download.getDownloadRingBellInfo", req, MetaInfo.class);
         else
-            throw new StorePlatformException("");
+            throw new StorePlatformException("SAC_DSP_0032", req.getProductId());
+
 		if (metaInfo == null)
 			throw new StorePlatformException("SAC_DSP_0009");
+
 		return metaInfo;
 	}
 

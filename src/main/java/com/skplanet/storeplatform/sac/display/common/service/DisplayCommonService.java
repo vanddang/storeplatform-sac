@@ -159,9 +159,11 @@ public interface DisplayCommonService {
 
     /**
      * prodId로 상품 유형을 조회한다.
+     * CachedExtraInfoManager.getProductBaseInfo() 이용
      * @param prodId
      * @return
      */
+    @Deprecated
     ProductInfo getProductInfo(String prodId);
 
     /**

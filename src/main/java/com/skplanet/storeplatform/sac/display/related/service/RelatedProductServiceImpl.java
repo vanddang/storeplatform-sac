@@ -6,9 +6,9 @@ import com.skplanet.storeplatform.sac.client.display.vo.related.RelatedProductSa
 import com.skplanet.storeplatform.sac.client.display.vo.related.RelatedProductSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
+import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
 import com.skplanet.storeplatform.sac.display.feature.product.service.ProductListService;
 import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProduct;
 import com.skplanet.storeplatform.sac.display.related.vo.RelatedProduct;
@@ -35,7 +35,7 @@ public class RelatedProductServiceImpl implements RelatedProductService {
     private ProductListService productListService;
 
     @Autowired
-    private DisplayCommonService displayCommonService;
+    private CachedExtraInfoManager cachedExtraInfoManager;
 
 
     @Override
@@ -86,14 +86,15 @@ public class RelatedProductServiceImpl implements RelatedProductService {
     }
 
     private ListProduct newListProduct(String prodId) {
-        ProductInfo pi = displayCommonService.getProductInfo(prodId);
-        if (pi == null) return null;
+        ProductBaseInfo baseInfo = cachedExtraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(prodId));
+        if (baseInfo == null)
+            return null;
 
         ListProduct lp = new ListProduct();
-        lp.setProdId(pi.getProdId());
-        lp.setTopMenuId(pi.getTopMenuId());
-        lp.setSvcGrpCd(pi.getSvcGrpCd());
-        lp.setContentsTypeCd(pi.getContentsTypeCd());
+        lp.setProdId(prodId);
+        lp.setTopMenuId(baseInfo.getTopMenuId());
+        lp.setSvcGrpCd(baseInfo.getSvcGrpCd());
+        lp.setContentsTypeCd(baseInfo.getContentsTypeCd());
         return lp;
     }
 

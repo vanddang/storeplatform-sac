@@ -370,7 +370,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		} else if (q.startsWith("DP000206")) {
 			info.setProductType(ProductType.Shopping);
 		} else if (q.startsWith("DP000207")) {
-			info.setProductType(ProductType.Freepass);
+			info.setProductType(ProductType.Voucher);
 		} else
 			throw new StorePlatformException("SAC_DSP_0025", svcGrp, svcTp, metaClsf);
 
