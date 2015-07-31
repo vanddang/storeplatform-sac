@@ -136,12 +136,14 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
                     @Override
                     public void store(String prodId, ProductBaseInfo value, Plandasj redis) {
+                        // FIXME 실행중 에러가 나면 원치 않는 동작을 할수도 있다.
                         String key = SacRedisKeys.prodBase(prodId);
                         redis.hset(key, "svcGrpCd", value.getSvcGrpCd());
-                        redis.hset(key, "contentsTypeCd", value.getContentsTypeCd());
                         redis.hset(key, "topMenuId", value.getTopMenuId());
                         redis.hset(key, "chnlId", value.getChnlId());
 
+                        if(!Strings.isNullOrEmpty(value.getContentsTypeCd()))
+                            redis.hset(key, "contentsTypeCd", value.getContentsTypeCd());
                         if(!Strings.isNullOrEmpty(value.getSvcTpCd()))
                             redis.hset(key, "svcTpCd", value.getSvcTpCd());
                         if(!Strings.isNullOrEmpty(value.getMetaClsfCd()))
