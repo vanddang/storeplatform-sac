@@ -610,7 +610,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 		} catch (CouponException e) {
 			throw e;
 		} catch (Exception e) {
-			this.log.error("COUPON.IF_META_SELECT_LIST FAILED", e);
+			this.log.error("Coupon.GET_SPECIAL_PRODUCT_INFO", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
 		}
 
@@ -670,7 +670,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			} catch (CouponException e) {
 				throw e;
 			} catch (Exception e) {
-				this.log.error("COUPON.GET_SPECIAL_PRODUCT_DETAIL", e);
+				this.log.error("Coupon.GET_COUPON_INFO", e);
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
 			}
 		}
@@ -713,7 +713,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 		} catch (CouponException e) {
 			throw e;
 		} catch (Exception e) {
-			this.log.error("COUPON.GET_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE", e);
+			this.log.error("Coupon.GET_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
 		}
 		
