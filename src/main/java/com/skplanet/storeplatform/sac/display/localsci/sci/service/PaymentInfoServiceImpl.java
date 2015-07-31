@@ -27,9 +27,7 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.service.ProductExtraInfoService;
-import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 
 /**
@@ -96,7 +94,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                 case Shopping:
                     paymentInfo = getShoppingPaymentMeta(ctx, prodId);
                     break;
-                case Freepass:
+                case Voucher:
                     paymentInfo = getFreepassPaymentMeta(ctx, prodId);
                     break;
                 default:

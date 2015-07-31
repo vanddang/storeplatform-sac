@@ -148,7 +148,7 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
         else if(prodType == Shopping) {
             cacheEvictManager.evictAllShoppingMeta();
         }
-        else if(prodType == Freepass) {
+        else if(prodType == Voucher) {
             cacheEvictManager.evictAllFreepassMeta();
         }
         else if(prodType == Vod) {

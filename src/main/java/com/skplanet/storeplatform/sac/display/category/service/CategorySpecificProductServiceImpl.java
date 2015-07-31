@@ -9,20 +9,25 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
+import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
+import com.skplanet.storeplatform.sac.display.cache.vo.VoucherMeta;
+import com.skplanet.storeplatform.sac.display.cache.vo.VoucherMetaParam;
 import com.skplanet.storeplatform.sac.display.category.vo.SearchProductListParam;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.service.ProductSubInfoManager;
+import com.skplanet.storeplatform.sac.display.meta.util.MetaBeanUtils;
 import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -67,10 +72,14 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
     @Autowired
     private CategorySpecificMusicService specificMusicService;
 
+    @Autowired
+    private ProductInfoManager productInfoManager;
+
     @Override
     public CategorySpecificSacRes searchProductList(SearchProductListParam param) {
 
-        ArrayList<Product> prodList = new ArrayList<Product>();
+        ArrayList<Object> prodList = Lists.newArrayList();
+        ArrayList<String> dataTypeList = Lists.newArrayList();
 
         // 파라메터 작성. 특정 상품 조회는 판매상태를 참조하지 않음
         HashMap<String, Object> reqMap = new HashMap<String, Object>();
@@ -84,7 +93,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
             ProductBaseInfo baseInfo = extraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(prodId));
 
-            if(baseInfo == null)
+            if (baseInfo == null)
                 continue;
 
             MetaInfo metaInfo;
@@ -105,11 +114,15 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
                     reqMap.put("imageCd", DP_APP_REPRESENT_IMAGE_CD);
                     metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getInAppMetaInfo", reqMap, MetaInfo.class);
                     break;
-                case Vod: case VodTv: case VodMovie:
+                case Vod:
+                case VodTv:
+                case VodMovie:
                     reqMap.put("imageCd", DP_VOD_REPRESENT_IMAGE_CD);
                     metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo", reqMap, MetaInfo.class);
                     break;
-                case EbookComic: case Ebook: case Comic:
+                case EbookComic:
+                case Ebook:
+                case Comic:
                     reqMap.put("imageCd", DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
                     metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo", reqMap, MetaInfo.class);
                     break;
@@ -122,29 +135,39 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
                     metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", reqMap, MetaInfo.class);
                     break;
                 case Shopping:
-                    if(!ctx.isShoppingAvailable())
+                    if (!ctx.isShoppingAvailable())
                         continue;
 
                     reqMap.put("imageCd", DP_SHOPPING_REPRESENT_IMAGE_CD);
                     reqMap.put("catalogId", baseInfo.getCatId());
                     reqMap.put("sellingOnly", false);
-                    reqMap.put("filterApplyDt", true);
+                    reqMap.put("filterApplyDt", false);
 
                     // 특가상품으로 요청한 경우 처리
-                    if(baseInfo.getContentsTypeCd().equals(DP_EPISODE_CONTENT_TYPE_CD))
+                    if (baseInfo.getContentsTypeCd().equals(DP_EPISODE_CONTENT_TYPE_CD))
                         reqMap.put("specialProdId", prodId);
 
                     metaInfo = commonDAO.queryForObject("Shopping.searchSpecificShoppingDetail", reqMap, MetaInfo.class);
+                    break;
+                case Voucher:
+                    VoucherMeta voucherMeta = productInfoManager.getVoucherMeta(new VoucherMetaParam(prodId, param.getLangCd(), param.getTenantId()));
+                    if (voucherMeta == null)
+                        metaInfo = null;
+                    else {
+                        metaInfo = new MetaInfo();
+                        MetaBeanUtils.setProperties(voucherMeta, metaInfo);
+                    }
                     break;
                 default:
                     throw new StorePlatformException("SAC_DSP_0032", prodId);
             }
 
-            if(metaInfo == null)
+            if (metaInfo == null)
                 continue;
 
             // 멀티미디어 상품의 가격 처리
-            if(type == Vod || type == VodTv || type == VodMovie|| type == EbookComic || type == Ebook || type == Comic) {
+            if (type == Vod || type == VodTv || type == VodMovie ||
+                    type == EbookComic || type == Ebook || type == Comic) {
                 CidPrice cidPrice = subInfoManager.getCidPrice(param.getLangCd(), param.getTenantId(), metaInfo.getEpsdCid());
                 if (cidPrice != null) {
                     metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
@@ -155,41 +178,52 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
             // 마일리지 조회시 항상 channel 기준이어야 함
             metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(param.getTenantId(), baseInfo.getTopMenuId(), baseInfo.getChnlId(), null));
 
-            switch(type) {
+            Object product; // Product or Coupon
+            switch (type) {
                 case App:
                 case InApp:
-                    prodList.add(responseGen.generateSpecificAppProduct(metaInfo)); break;
+                    product = responseGen.generateSpecificAppProduct(metaInfo);
+                    break;
                 case VodMovie:
-                    prodList.add(responseGen.generateSpecificMovieProduct(metaInfo)); break;
+                    product = responseGen.generateSpecificMovieProduct(metaInfo);
+                    break;
                 case VodTv:
-                    prodList.add(responseGen.generateSpecificBroadcastProduct(metaInfo)); break;
+                    product = responseGen.generateSpecificBroadcastProduct(metaInfo);
+                    break;
                 case Ebook:
-                    prodList.add(responseGen.generateSpecificEbookProduct(metaInfo)); break;
+                    product = responseGen.generateSpecificEbookProduct(metaInfo);
+                    break;
                 case Comic:
-                    prodList.add(responseGen.generateSpecificComicProduct(metaInfo)); break;
+                    product = responseGen.generateSpecificComicProduct(metaInfo);
+                    break;
                 case Webtoon:
-                    prodList.add(responseGen.generateSpecificWebtoonProduct(metaInfo)); break;
+                    product = responseGen.generateSpecificWebtoonProduct(metaInfo);
+                    break;
                 case Music:
-                    Product product = responseGen.generateSpecificMusicProduct(metaInfo);
-                    specificMusicService.mapgRingbell(param.getTenantId(), baseInfo.getChnlId(), product.getMusic());
-                    prodList.add(product);
+                    product = responseGen.generateSpecificMusicProduct(metaInfo);
+                    specificMusicService.mapgRingbell(param.getTenantId(), baseInfo.getChnlId(), ((Product) product).getMusic());
                     break;
                 case Shopping:
-                    Product shopProd = responseGen.generateSpecificShoppingProduct(metaInfo);
+                    product = responseGen.generateSpecificShoppingProduct(metaInfo);
                     // 특가 상품으로 조회시 처리
-                    if(baseInfo.getContentsTypeCd().equals(DP_EPISODE_CONTENT_TYPE_CD)) {
-                        shopProd.setSpecialCouponId(metaInfo.getSpecialCouponId());
-                        shopProd.setSpecialProdYn(metaInfo.getSpecialSale());
-                        shopProd.setSpecialTypeCd(metaInfo.getSpecialTypeCd());
+                    if (baseInfo.getContentsTypeCd().equals(DP_EPISODE_CONTENT_TYPE_CD)) {
+                        ((Product) product).setSpecialCouponId(metaInfo.getSpecialCouponId());
+                        ((Product) product).setSpecialProdYn(metaInfo.getSpecialSale());
+                        ((Product) product).setSpecialTypeCd(metaInfo.getSpecialTypeCd());
                     }
-                    prodList.add(shopProd);
+                    break;
+                case Voucher:
+                    product = responseGen.generateVoucherProduct(metaInfo);
                     break;
                 default:
                     throw new RuntimeException("아직 구현되지 않았습니다.");
             }
+
+            dataTypeList.add(type.getCode());
+            prodList.add(product);
         }
 
-        return new CategorySpecificSacRes(new CommonResponse(prodList.size()), prodList);
+        return new CategorySpecificSacRes(new CommonResponse(prodList.size()), prodList, dataTypeList);
     }
 
     private class SpecificProductServiceContext {

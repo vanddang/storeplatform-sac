@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * </p>
  * Updated on : 2014. 04. 10 Updated by : 정희원, SK 플래닛.
  */
+@Deprecated
 public class FreepassMetaParam extends CommonInfo {
     private static final long serialVersionUID = 1L;
 

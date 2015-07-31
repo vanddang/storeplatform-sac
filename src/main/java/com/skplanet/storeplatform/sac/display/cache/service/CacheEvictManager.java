@@ -41,6 +41,7 @@ public interface CacheEvictManager {
 
     void evictShoppingMeta(ShoppingMetaParam param);
 
+    @Deprecated
     void evictFreepassMeta(FreepassMetaParam param);
 
     void evictProductStats(ProductStatsParam param);

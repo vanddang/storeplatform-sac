@@ -148,7 +148,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 					product = this.commonDAO.queryForObject("ProductInfo.getShoppingMetaInfo", paramMap,
 							ProductInfo.class);
-				} else if (typeInfo.getProductType() == ProductType.Freepass) { // 정액 상품의 경우
+				} else if (typeInfo.getProductType() == ProductType.Voucher) { // 정액 상품의 경우
 					paramMap.put("imageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
 					paramMap.put("ebookImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 					product = this.commonDAO.queryForObject("ProductInfo.getFreePassMetaInfo", paramMap,

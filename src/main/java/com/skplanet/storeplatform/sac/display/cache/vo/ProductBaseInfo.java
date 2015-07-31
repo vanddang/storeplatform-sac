@@ -12,12 +12,8 @@ package com.skplanet.storeplatform.sac.display.cache.vo;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 //import com.skplanet.storeplatform.sac.common.support.redis.OptionalField;
 import com.skplanet.storeplatform.sac.common.support.redis.OptionalField;
-import com.skplanet.storeplatform.sac.display.common.EbookComicType;
-import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
-import com.skplanet.storeplatform.sac.display.common.VodType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
 import org.apache.commons.lang.StringUtils;
 
 import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
@@ -160,7 +156,7 @@ public class ProductBaseInfo {
         } else if (q.startsWith("DP000206")) {
             return ProductType.Shopping;
         } else if (q.startsWith("DP000207")) {
-            return ProductType.Freepass;
+            return ProductType.Voucher;
         }
 
         throw new StorePlatformException("SAC_DSP_0025", svcGrpCd, svcTpCd, metaClsfCd);
