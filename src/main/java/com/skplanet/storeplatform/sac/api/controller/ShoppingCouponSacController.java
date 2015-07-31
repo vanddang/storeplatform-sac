@@ -397,6 +397,8 @@ public class ShoppingCouponSacController {
 	 * 
 	 * @param couponCode
 	 *            couponCode
+	 * @param itemsCodes
+	 *            itemsCodes            
 	 * @return CouponRes
 	 */
 	private CouponRes getSpecialProductDetail(String couponCode ,String[] itemsCodes) {
@@ -408,8 +410,8 @@ public class ShoppingCouponSacController {
 	/**
 	 * 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
 	 * 
-	 * @param couponCode
-	 *            couponCode
+	 * @param couponReq
+	 *            couponReq
 	 * @return CouponRes
 	 */
 	private CouponRes getSpecialProductDetailForDate(CouponReq couponReq) {

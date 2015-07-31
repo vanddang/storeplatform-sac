@@ -291,6 +291,8 @@ public interface CouponItemService {
 	 * 
 	 * @param couponCode
 	 *            couponCode
+	 * @param itemsCodes
+	 *            itemsCodes
 	 * @return CouponRes
 	 */
 	public CouponRes getSpecialProductDetail(String couponCode ,String[] itemsCodes);

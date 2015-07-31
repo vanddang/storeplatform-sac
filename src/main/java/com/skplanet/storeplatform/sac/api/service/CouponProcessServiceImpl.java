@@ -1405,6 +1405,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * 
 	 * @param couponCode
 	 *            couponCode
+	 * @param itemsCodes
+	 *            itemsCodes
 	 * @return CouponRes
 	 */
 	@Override

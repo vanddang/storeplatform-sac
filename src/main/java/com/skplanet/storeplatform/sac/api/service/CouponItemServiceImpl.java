@@ -624,6 +624,8 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * 
 	 * @param couponCode
 	 *            couponCode
+	 * @param itemsCodes
+	 *            itemsCodes
 	 * @return CouponRes
 	 */
 
