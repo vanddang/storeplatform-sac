@@ -360,9 +360,9 @@ public class PurchaseCancelController {
 						purchaseCancelSacParam.getCancelReqPathCd())
 				|| StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_PAYMENT_ERROR_CANCEL,
 						purchaseCancelSacParam.getCancelReqPathCd())) {
-			purchaseCancelSacParam.setIgnorePayment(true);
+			purchaseCancelSacParam.setIgnorePayment(true); // 결제 취소 진행 안함
 		} else {
-			purchaseCancelSacParam.setIgnorePayment(false);
+			purchaseCancelSacParam.setIgnorePayment(false); // 결제 취소 진행함 (OR00400, OR00435)
 		}
 
 		// request admin type setting.
