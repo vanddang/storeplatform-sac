@@ -13,13 +13,15 @@ public class CategorySpecificSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private CommonResponse commonResponse;
-	private List<Product> productList;
+	private List<?> productList;
+    private List<String> dataTypeList;
 
     public CategorySpecificSacRes() {}
 
-    public CategorySpecificSacRes(CommonResponse commonResponse, List<Product> productList) {
+    public CategorySpecificSacRes(CommonResponse commonResponse, List<?> productList, List<String> dataTypeList) {
         this.commonResponse = commonResponse;
         this.productList = productList;
+        this.dataTypeList = dataTypeList;
     }
 
     public CommonResponse getCommonResponse() {
@@ -30,12 +32,19 @@ public class CategorySpecificSacRes extends CommonInfo {
 		this.commonResponse = commonResponse;
 	}
 
-	public List<Product> getProductList() {
+	public List<?> getProductList() {
 		return this.productList;
 	}
 
-	public void setProductList(List<Product> productList) {
+	public void setProductList(List<?> productList) {
 		this.productList = productList;
 	}
 
+    public List<String> getDataTypeList() {
+        return dataTypeList;
+    }
+
+    public void setDataTypeList(List<String> dataTypeList) {
+        this.dataTypeList = dataTypeList;
+    }
 }
