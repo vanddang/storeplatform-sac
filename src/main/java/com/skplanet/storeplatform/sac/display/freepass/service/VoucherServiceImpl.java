@@ -141,6 +141,7 @@ public class VoucherServiceImpl implements VoucherService {
 			}
 		}
 
+		// 19+ 파라미터가 없으면 "N"으로 기본 셋팅
 		if (StringUtils.isEmpty(req.getPlus19Yn())) {
 			req.setPlus19Yn("N");
 		}
@@ -149,7 +150,7 @@ public class VoucherServiceImpl implements VoucherService {
 			throw new StorePlatformException("SAC_DSP_0003", "plus19Yn", req.getPlus19Yn());
 		}
 
-		// '+'로 연결 된 이용등급코드를 배열로 전달
+		// 이용등급 코드 : '+'로 연결 된 이용등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getCmpxProdGradeCd())) {
 			try {
 				String[] arrayCmpxProdGradeCd = req.getCmpxProdGradeCd().split("\\+");
@@ -173,7 +174,11 @@ public class VoucherServiceImpl implements VoucherService {
 			}
 		}
 
+		// ###################################################################################
+		// 이용권 목록 조회
+		// ###################################################################################
 		productBasicInfoList = this.commonDAO.queryForList("Voucher.selectVoucherList", req, ProductBasicInfo.class);
+		// ###################################################################################
 
 		if (productBasicInfoList == null)
 			throw new StorePlatformException("SAC_DSP_0009");
@@ -226,7 +231,7 @@ public class VoucherServiceImpl implements VoucherService {
 		List<MetaInfo> retMetaInfoList = null;
 		int minusCount = 0;
 
-		// 이용권 상품 상세 조회
+		// 파라미터 셋팅
 		req.setTenantId(header.getTenantHeader().getTenantId());
 		req.setLangCd(header.getTenantHeader().getLangCd());
 		req.setDeviceModelCd(header.getDeviceHeader().getModel());
@@ -236,8 +241,7 @@ public class VoucherServiceImpl implements VoucherService {
 		req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
 		req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
-		// 파라미터 유효값 체크
-		// '+'로 연결 된 상품등급코드를 배열로 전달
+		// 상품등급코드 : '+'로 연결 된 상품등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
 			for (int i = 0; i < arrayProdGradeCd.length; i++) {
@@ -256,7 +260,7 @@ public class VoucherServiceImpl implements VoucherService {
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
 
-		// '+'로 연결 된 이용등급코드를 배열로 전달
+		// 이용등급코드 : '+'로 연결 된 이용등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getCmpxProdGradeCd())) {
 			try {
 				String[] arrayCmpxProdGradeCd = req.getCmpxProdGradeCd().split("\\+");
@@ -288,18 +292,21 @@ public class VoucherServiceImpl implements VoucherService {
 			req.setCount(20);
 		}
 
-		// CMPX_PROD_GRP_CD, Plus19Yn 알아오기
+		// CMPX_PROD_GRP_CD(복합상품 그룹코드), Plus19Yn 알아오기
 		MetaInfo beforeInfo = (MetaInfo) this.commonDAO.queryForObject("Voucher.selectCmpxProdGrpCd",
 				req.getProductId());
 		if (null != beforeInfo) {
 			req.setCmpxProdGrpCd(beforeInfo.getCmpxProdGrpCd());
 			req.setPlus19Yn(beforeInfo.getPlus19Yn());
-		}else{
+		} else {
 			req.setPlus19Yn("N");
 		}
 
-		// 정액제 상품 조회
+		// ###################################################################################
+		// 이용권 상세 조회 (복합상품 그룹코드가 있으면 그룹으로 조회)
+		// ###################################################################################
 		retMetaInfoList = this.commonDAO.queryForList("Voucher.selectVoucherDetail", req, MetaInfo.class);
+		// ###################################################################################
 
 		if (retMetaInfoList == null)
 			throw new StorePlatformException("SAC_DSP_0009", req.getProductId(), req.getProductId());
@@ -364,10 +371,15 @@ public class VoucherServiceImpl implements VoucherService {
 					coupon.setPointList(pointList);
 					couponList.add(coupon);
 
-					// 요청한 상품에 대해서만 상품을 조회한다.
+					// 요청한 이용권의 포함된 상품에 대해서만 상품을 조회한다.
 					if ("Y".equals(metaInfo.getRequestProduct())) {
+
+						// ###########################################################################
+						// 이용권의 포함된 상품
+						// ###########################################################################
 						mapList = this.commonDAO.queryForList("Voucher.selectVoucherMapProduct", req,
 								VoucherProdMap.class);
+						// ###########################################################################
 
 						reqMap.put("tenantHeader", header.getTenantHeader());
 						reqMap.put("deviceHeader", header.getDeviceHeader());
@@ -532,11 +544,10 @@ public class VoucherServiceImpl implements VoucherService {
 				req.getProductId());
 		if (null != beforeInfo) {
 			req.setPlus19Yn(beforeInfo.getPlus19Yn());
-		}else{
+		} else {
 			req.setPlus19Yn("N");
 		}
-		
-		
+
 		productBasicInfoList = this.commonDAO
 				.queryForList("Voucher.searchVoucherSpecific", req, ProductBasicInfo.class);
 		int totalCnt = 0;
