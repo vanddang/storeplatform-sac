@@ -31,7 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 /**
  * Category Vod Box Service 인터페이스(CoreStoreBusiness) 구현체
  * 
@@ -81,13 +80,23 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		this.log.debug("요청 값 세팅");
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 999999);
+
+		// 특정기간이내 ( 등록일 ~ 특정기간 이내 등록된 컨텐츠 )
 		requestVO.setDuration(requestVO.getDuration() != null ? requestVO.getDuration() : 30);
+
+		// 회차기준 ( 특정 회차(chapter)기준 이후 회차 컨텐츠 )
 		requestVO.setChapter(requestVO.getChapter() != null ? requestVO.getChapter() : 0);
+
+		// 등록일기준 ( 등록일 이후 등록된 컨텐츠 )
 		requestVO.setRegDate(requestVO.getRegDate() != null ? requestVO.getRegDate() : new SimpleDateFormat(
 				"yyyyMMddHHmmss").format(currentDate.getTime()));
+
+		// ChannelId +연결된거 짜르기
 		if (!StringUtils.isEmpty(requestVO.getChannelId())) {
 			requestVO.setArrayChannelId(StringUtils.split(requestVO.getChannelId(), "+"));
 		}
+
+		// VOD 이미지 코드
 		requestVO.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 
 		CategoryVodBoxSacRes categoryVodBoxSacRes = new CategoryVodBoxSacRes();
@@ -109,10 +118,12 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		Source source;
 		List<Date> dateList;
 
+		// #######################################################################################
 		// VOD 보관함 조회
 		this.log.debug("VOD 보관함 조회");
 		List<CategoryVodBox> categoryVodBoxList = this.commonDAO.queryForList("CategoryVodBox.selectCategoryVodBox",
 				requestVO, CategoryVodBox.class);
+		// #######################################################################################
 
 		if (!categoryVodBoxList.isEmpty()) {
 
@@ -190,6 +201,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				preview.setSourceList(sourceList);
 				rights.setPreview(preview);
 
+				/*
+				 * Play
+				 */
 				if (StringUtils.isNotEmpty(categoryVodBox.getPlayProdId())) { // 바로보기
 					play = new Play();
 					supportList = new ArrayList<Support>();
@@ -225,6 +239,10 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					play.setSourceList(sourceList);
 					rights.setPlay(play);
 				}
+
+				/*
+				 * Store
+				 */
 				if (StringUtils.isNotEmpty(categoryVodBox.getStoreProdId())) { // 다운로드
 					store = new Store();
 					supportList = new ArrayList<Support>();
@@ -259,9 +277,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				}
 				product.setRights(rights);
 
-				/*
-				 * VOD
-				 */
+				/* VOD */
 				vod = new Vod();
 				vod.setRunningTime(new Time(null, categoryVodBox.getEpsdPlayTm()));
 				vod.setChapter(new Chapter(this.commonService.getVodChapterUnit(), categoryVodBox.getChapter()));
@@ -274,6 +290,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 
 				videoInfoList = new ArrayList<VideoInfo>();
 
+				// 일반화질(A)
 				if (StringUtils.isNotEmpty(categoryVodBox.getNmSubContentsId())) {
 					videoInfo = new VideoInfo();
 					videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
@@ -285,6 +302,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					videoInfoList.add(videoInfo);
 				}
 
+				// SD화질(B)
 				if (StringUtils.isNotEmpty(categoryVodBox.getSdSubContentsId())) {
 					videoInfo = new VideoInfo();
 					videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_SD);
@@ -296,7 +314,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					videoInfoList.add(videoInfo);
 				}
 
-				// D화질 추가
+				// HIHD화질 (D)
 				/*
 				 * if (StringUtils.isNotEmpty(categoryVodBox.getHihdSubContentsId())) { //HIHD (D화질) videoInfo = new
 				 * VideoInfo(); videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
@@ -313,8 +331,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				 * videoInfo.setSize(categoryVodBox.getHdFileSize());
 				 * videoInfo.setVersion(categoryVodBox.getHdProdVer()); videoInfoList.add(videoInfo); }
 				 */
+
+				// HD화질 (C)
 				if (StringUtils.isNotEmpty(categoryVodBox.getHdSubContentsId())) {
-					// HD (C화질)
 					videoInfo = new VideoInfo();
 					videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
 					videoInfo.setPictureSize(categoryVodBox.getHdDpPgRatioNm());
