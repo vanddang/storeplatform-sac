@@ -1196,7 +1196,13 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			} finally {
 				this.log.info("■■■■■ DB Transaction END ■■■■■");
 			}
-
+			
+			// 캐쉬 삭제 로직 추가 (2015.07.31 Jade 추가)
+			String catalogId = this.couponItemService.getShoppingCatalogIdByChannelId(newCouponCode);
+			this.cacheEvictHelperComponent.evictProductMeta(Shopping, catalogId);
+			this.log.info("■■■■■■■■■■■■■■■■■■■■■■■■■");
+			this.log.info("■■■■■catalogId:■■■■■" +catalogId);
+			this.log.info("■■■■■■■■■■■■■■■■■■■■■■■■■");
 			// 검색 서버를 위한 MQ 연동
 			this.setShoppingCatalogIdByChannelIdForMq(newCouponCode);
 
