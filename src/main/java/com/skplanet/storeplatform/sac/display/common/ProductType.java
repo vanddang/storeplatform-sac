@@ -13,6 +13,8 @@ public enum ProductType {
     App("app", "DP013301"),
     InApp("iap", "DP013302"),
     Music("music", "DP013303"),
+    RingBell("ringbell", "DP013303"),
+    Album("album", null),
     Vod("vod", null),
     VodTv("tv", "DP013304"),
     VodMovie("movie", "DP013305"),
@@ -22,9 +24,8 @@ public enum ProductType {
     Webtoon("webtoon", "DP013308"),
     Shopping("shopping", "DP013309"),
     Voucher("voucher", "DP013310"),
-    @Deprecated Freepass("freepass", "DP013310"),
-    Album("album", null),
-    RingBell("ringbell", null);
+
+    @Deprecated Freepass("freepass", "DP013310");
 
     private String name;
     private String code;

@@ -131,6 +131,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
                     metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getWebtoonMetaInfo", reqMap, MetaInfo.class);
                     break;
                 case Music:
+                case RingBell:
                     reqMap.put("imageCd", DP_MUSIC_REPRESENT_IMAGE_CD);
                     metaInfo = commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", reqMap, MetaInfo.class);
                     break;
@@ -200,6 +201,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
                     product = responseGen.generateSpecificWebtoonProduct(metaInfo);
                     break;
                 case Music:
+                case RingBell:
                     product = responseGen.generateSpecificMusicProduct(metaInfo);
                     specificMusicService.mapgRingbell(param.getTenantId(), baseInfo.getChnlId(), ((Product) product).getMusic());
                     break;
