@@ -445,6 +445,9 @@ public class ShoppingCouponSacController {
 			}else if (!couponReq.checkTxId()) {
 				result = false;
 				message="txId 형식에 맞지 않습니다. [22자리]\n";
+			}else if(StringUtils.isBlank(couponReq.getTxType())){
+				result = false;
+				message="필수 파라미터 값이 없습니다. (txType)\n";
 			} else if (!couponReq.checkTxType()) {
 				result = false;
 				message="txType 형식에 맞지 않습니다. [2자리]\n";
