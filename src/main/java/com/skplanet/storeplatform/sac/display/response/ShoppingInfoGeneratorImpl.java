@@ -77,6 +77,9 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 				salesOption.setStatus(DisplayConstants.DP_CONTINUE);
 			}
 		}
+		if (StringUtils.isNotEmpty(metaInfo.getB2bProdYn())) {
+			salesOption.setBtob(metaInfo.getB2bProdYn());
+		}
 		return salesOption;
 	}
 
