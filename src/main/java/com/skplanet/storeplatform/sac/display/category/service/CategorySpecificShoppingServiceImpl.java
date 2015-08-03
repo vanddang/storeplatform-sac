@@ -113,7 +113,9 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 				break;
 			}
 		}
-		retMetaInfo= retMetaInfoList.get(selectInt);
+		if(retMetaInfoList.size()>0){
+			retMetaInfo= retMetaInfoList.get(selectInt);
+		}
         if (retMetaInfo == null)
             return makeEmptyResponse();
 
