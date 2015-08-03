@@ -1,10 +1,17 @@
 package com.skplanet.storeplatform.sac.client.display.vo.openapi;
 
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import java.util.List;
+
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class MusicDetailSacRes {
-    public class Product {
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    public static class Product {
         private String prodId;
         private String prodStatusCd;
+        private String prodType;
 
         public String getProdId() {
             return prodId;
@@ -21,13 +28,18 @@ public class MusicDetailSacRes {
         public void setProdStatusCd(String prodStatusCd) {
             this.prodStatusCd = prodStatusCd;
         }
+
+        public String getProdType() {
+            return prodType;
+        }
+
+        public void setProdType(String prodType) {
+            this.prodType = prodType;
+        }
     }
 
     private Product channel;
-
-    public MusicDetailSacRes() {
-        this.channel = new Product();
-    }
+    private List<Product> episodes;
 
     public Product getChannel() {
         return channel;
@@ -35,5 +47,13 @@ public class MusicDetailSacRes {
 
     public void setChannel(Product channel) {
         this.channel = channel;
+    }
+
+    public List<Product> getEpisodes() {
+        return episodes;
+    }
+
+    public void setEpisodes(List<Product> episodes) {
+        this.episodes = episodes;
     }
 }
