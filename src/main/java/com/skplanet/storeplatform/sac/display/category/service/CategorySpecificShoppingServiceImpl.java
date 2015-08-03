@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -102,7 +103,16 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
             return makeEmptyResponse();
 
 		// ID list 조회
-		MetaInfo retMetaInfo =  this.commonDAO.queryForObject("Shopping.searchSpecificShoppingDetail", reqMap, MetaInfo.class);
+		List<MetaInfo> retMetaInfoList =  this.commonDAO.queryForList("Shopping.searchSpecificShoppingDetail", reqMap, MetaInfo.class);
+		MetaInfo retMetaInfo = null;
+		int selectInt = 0;
+
+		for(int kk = 0 ;kk < retMetaInfoList.size(); kk++){
+			if(retMetaInfoList.get(kk).getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)){ // 판매중인것이 우선순위
+				selectInt = kk;
+			}
+		}
+		retMetaInfo= retMetaInfoList.get(selectInt);
         if (retMetaInfo == null)
             return makeEmptyResponse();
 
