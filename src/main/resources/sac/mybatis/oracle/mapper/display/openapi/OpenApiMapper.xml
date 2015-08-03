@@ -2370,7 +2370,7 @@
 		AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> #{partParentClsfCd} OR DAP.PART_PARENT_CLSF_CD IS NULL ) /* 부분유료화 모상품만 */      
     </select>
 
-    <select id="musicProdBySongId" parameterType="java.util.Map" resultType="com.skplanet.storeplatform.sac.display.openapi.vo.MusicProd">
+    <select id="musicChannelProdBySongId" parameterType="java.util.Map" resultType="com.skplanet.storeplatform.sac.display.openapi.vo.MusicProd">
         SELECT
           MP.PROD_ID
           , TP.PROD_STATUS_CD
@@ -2383,7 +2383,7 @@
         WHERE MP.OUTSD_CONTENTS_ID = #{id}
     </select>
 
-    <select id="musicProdByTumsSongId" parameterType="java.util.Map" resultType="com.skplanet.storeplatform.sac.display.openapi.vo.MusicProd">
+    <select id="musicChannelProdByTumsSongId" parameterType="java.util.Map" resultType="com.skplanet.storeplatform.sac.display.openapi.vo.MusicProd">
         SELECT
           P.PROD_ID
           , TP.PROD_STATUS_CD
@@ -2396,5 +2396,21 @@
         JOIN TB_DP_TENANT_PROD TP
         ON TP.PROD_ID = PR.PROD_ID AND TP.TENANT_ID = #{tenantId}
         WHERE CPM.TUMS_SONG_ID = #{id}
+    </select>
+
+    <select id="musicEpisodeProdsByChannelId" parameterType="java.util.Map" resultType="com.skplanet.storeplatform.sac.display.openapi.vo.MusicProd">
+        SELECT
+          P.PROD_ID
+          , TP.PROD_STATUS_CD
+          , P.META_CLSF_CD
+        FROM
+        TB_DP_PROD_RSHP PR
+        JOIN TB_DP_PROD P
+        ON P.PROD_ID = PR.PART_PROD_ID AND CONTENTS_TYPE_CD = 'PD002502' -- 에피소드 상품
+        JOIN TB_DP_TENANT_PROD TP
+        ON TP.PROD_ID = PR.PART_PROD_ID AND TP.TENANT_ID = #{tenantId}
+        WHERE 1=1
+        AND PR.PROD_ID = #{prodId}
+        AND PR.PROD_RSHP_CD = 'DP010802' -- 채널, 에피소드 관계
     </select>
 </mapper>

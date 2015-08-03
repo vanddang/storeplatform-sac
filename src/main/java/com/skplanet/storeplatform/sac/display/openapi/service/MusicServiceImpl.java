@@ -23,16 +23,23 @@ public class MusicServiceImpl implements MusicService {
 
     @Override
     public MusicDetail getMusicDetail(MusicDetailParam musicDetailParam) {
-        MusicProd channelProd = null;
+
+        MusicDetail musicDetail = new MusicDetail();
 
         if (musicDetailParam.isIdType("songId")) {
-            channelProd = commonDAO.queryForObject("OpenApi.musicProdBySongId", musicDetailParam, MusicProd.class);
+            musicDetail.setChannel(commonDAO.queryForObject("OpenApi.musicChannelProdBySongId", musicDetailParam, MusicProd.class));
         }
         else if (musicDetailParam.isIdType("tumsSongId")) {
-            channelProd = commonDAO.queryForObject("OpenApi.musicProdByTumsSongId", musicDetailParam, MusicProd.class);
+            musicDetail.setChannel(commonDAO.queryForObject("OpenApi.musicChannelProdByTumsSongId", musicDetailParam, MusicProd.class));
         }
-        MusicDetail musicDetail = new MusicDetail();
-        musicDetail.setChannel(channelProd);
+
+        if (musicDetail.getChannel() != null) {
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("tenantId", musicDetailParam.getTenantId());
+            params.put("prodId", musicDetail.getChannel().getProdId());
+            musicDetail.setEpisodes(commonDAO.queryForList("OpenApi.musicEpisodeProdsByChannelId", params, MusicProd.class));
+        }
+
         return musicDetail;
     }
 }
