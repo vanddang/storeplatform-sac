@@ -110,6 +110,7 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 		for(int kk = 0 ;kk < retMetaInfoList.size(); kk++){
 			if(retMetaInfoList.get(kk).getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)){ // 판매중인것이 우선순위
 				selectInt = kk;
+				break;
 			}
 		}
 		retMetaInfo= retMetaInfoList.get(selectInt);
