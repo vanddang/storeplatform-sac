@@ -3890,7 +3890,9 @@
               
     <!-- 카테고리 쇼핑 상세 조회-->
     <select id="searchSpecificShoppingDetail" parameterType="Map" resultType="MetaInfo">
-     SELECT /* ShoppingMapper.xml.searchSpecificShoppingDetail,카테고리 쇼핑 상세 조회, 김형식/SK플래닛  , 2014-12-07 */
+    SELECT * /* ShoppingMapper.xml.searchSpecificShoppingDetail,카테고리 쇼핑 상세 조회, 김형식/SK플래닛  , 2014-12-07 */ 
+    FROM (
+     SELECT 
          * FROM (
          SELECT 
                 PP.* 
@@ -3974,7 +3976,8 @@
                                 ,(CASE WHEN (SELECT EPSD_CNT FROM TB_DP_SHPG_PROD WHERE PROD_ID = H.PROD_ID)>0 
                                         THEN (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE TENANT_ID=#{tenantId} AND PROD_ID=H.PROD_ID)
                                   ELSE 'PD000404' END
-                                  ) PROD_STATUS_CD                                                                  
+                                  ) PROD_STATUS_CD         
+                                ,I.B2B_PROD_YN                  /* B2B_상품_여부 */                                                         
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -4066,6 +4069,8 @@
                 )PP
            )
            WHERE DECODE(SPECIALSALE,'Y',NO1,NO) <![CDATA[ <= ]]> 1
+           ORDER BY PROD_STATUS_CD
+      )WHERE ROWNUM =1
     </select>            
                   
               
