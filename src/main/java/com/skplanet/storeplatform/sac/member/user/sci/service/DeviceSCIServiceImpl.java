@@ -252,6 +252,7 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 		updateDeviceManagementRequest.setCommonRequest(commonRequest);
 		updateDeviceManagementRequest.setUserKey(req.getUserKey());
 		updateDeviceManagementRequest.setDeviceKey(req.getDeviceKey());
+		updateDeviceManagementRequest.setIsDormant(searchDeviceResponse.getUserMbrDevice().getIsDormant());
 
 		// 단말 부가속성 (한도요금제 저장값) 설정
 		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();

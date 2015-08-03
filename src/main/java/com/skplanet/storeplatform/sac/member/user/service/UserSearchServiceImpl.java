@@ -2155,14 +2155,22 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchManagementListRequest searchManagementListRequest = new SearchManagementListRequest();
 		searchManagementListRequest.setCommonRequest(commonRequest);
 		searchManagementListRequest.setUserKey(req.getUserKey());
-
-		SearchManagementListResponse searchManagementListResponse = this.userSCI
-				.searchManagementList(searchManagementListRequest);
+		SearchManagementListResponse searchManagementListResponse = null;
+		try {
+			searchManagementListResponse = this.userSCI.searchManagementList(searchManagementListRequest);
+		} catch (StorePlatformException e) {
+			if (e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw new StorePlatformException("SAC_MEM_0002", "social 계정");
+			} else {
+				throw e;
+			}
+		}
 
 		List<MbrMangItemPtcr> mbrMangItemPtcr = new ArrayList<MbrMangItemPtcr>();
 		MbrMangItemPtcr itemPtcr = null;
 		String socialAcctIntId = "";
 		String socialAcctType = "";
+		boolean isSocialData = false;
 		if (searchManagementListResponse.getMbrMangItemPtcrList() != null
 				&& searchManagementListResponse.getMbrMangItemPtcrList().size() > 0) {
 			for (MbrMangItemPtcr mangItemPtcr : searchManagementListResponse.getMbrMangItemPtcrList()) {
@@ -2172,6 +2180,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
 					mbrMangItemPtcr.add(itemPtcr);
 					socialAcctIntId = mangItemPtcr.getExtraProfileValue();
+					isSocialData = true;
 				}
 				if (StringUtils.equals(MemberConstants.USER_EXTRA_SOCIAL_ACCT_TYPE, mangItemPtcr.getExtraProfile())) {
 					itemPtcr = new MbrMangItemPtcr();
@@ -2179,8 +2188,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 					itemPtcr.setExtraProfileValue(mangItemPtcr.getExtraProfileValue());
 					mbrMangItemPtcr.add(itemPtcr);
 					socialAcctType = mangItemPtcr.getExtraProfileValue();
+					isSocialData = true;
 				}
 			}
+		}
+
+		if (!isSocialData) {
+			throw new StorePlatformException("SAC_MEM_0002", "social 계정");
 		}
 
 		// 2. extraProfile 회원키 조회
