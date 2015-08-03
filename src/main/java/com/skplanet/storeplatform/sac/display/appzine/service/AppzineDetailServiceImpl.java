@@ -9,6 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.display.appzine.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineDetailSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineDetailSacRes;
@@ -21,54 +28,40 @@ import com.skplanet.storeplatform.sac.display.appzine.vo.AppzineDetail;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * AppzineDetailService 인터페이스(CoreStoreBusiness) 구현체
+ * AppzineDetailService 인터페이스(CoreStoreBusiness) 구현체.
  * 
- * Updated on : 2014. 02. 10. Updated by : 유시혁.
+ * Updated on : 2015. 8. 3. Updated by : 이태희.
  */
 @Service
 public class AppzineDetailServiceImpl implements AppzineDetailService {
-
-	// private final Logger log = LoggerFactory.getLogger(this.getClass());
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
 	@Autowired
-    private CommonMetaInfoGenerator commonMetaInfo;
+	private CommonMetaInfoGenerator commonMetaInfo;
 
 	@Autowired
 	private DisplayCommonService commonService;
 
-	/**
-	 * <pre>
-	 * Appzine 회차별 목록 조회.
-	 * </pre>
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param requestVO
-	 *            AppzineDetailSacRes
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @return AppzineDetailSacRes
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.appzine.service.AppzineDetailService#searchAppzineDetail(com.skplanet.
+	 * storeplatform.sac.client.display.vo.appzine.AppzineDetailSacReq,
+	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
 	 */
 	@Override
 	public AppzineDetailSacRes searchAppzineDetail(AppzineDetailSacReq requestVO, SacRequestHeader requestHeader) {
-
 		// 헤더 값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 
 		CommonResponse commonResponse = new CommonResponse();
 		AppzineDetailSacRes appzineDetailSacRes = new AppzineDetailSacRes();
 		Appzine appzine = new Appzine();
-		Date date;
 		List<Date> dateList;
 		Title title;
 
@@ -77,28 +70,24 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 				AppzineDetail.class);
 
 		if (appzineDetail != null) {
-
+			// Appzine 번호
 			appzine.setAppzineNumber(appzineDetail.getAppznNo());
+
+			// Appzine 호수
 			appzine.setAppzineVol(appzineDetail.getAppznVol());
 
-			/*
-			 * DateList
-			 */
+			// Appzine 날짜정보
 			dateList = new ArrayList<Date>();
 			dateList.add(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_ISSUE, appzineDetail.getIssuday()));
 			dateList.add(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_REG, appzineDetail.getRegDt()));
 			appzine.setDateList(dateList);
 
-			/*
-			 * Title
-			 */
+			// Appzine 제목
 			title = new Title();
 			title.setText(appzineDetail.getTitle());
 			appzine.setTitle(title);
 
-			/*
-			 * ETC
-			 */
+			// Appzine 기타정보
 			appzine.setBackgroundImagePath(appzineDetail.getBgImgPath());
 			appzine.setThemeHtml(appzineDetail.getThemeHtml());
 			appzine.setThemeUpImage(appzineDetail.getThemeUpImg());
@@ -119,7 +108,6 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 		}
 
 		appzineDetailSacRes.setCommonResponse(commonResponse);
-
 		return appzineDetailSacRes;
 	}
 }

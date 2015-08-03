@@ -5,23 +5,21 @@ import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineDetailSac
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * AppzineDetailService 인터페이스(CoreStoreBusiness)
+ * AppzineDetail Service 인터페이스(CoreStoreBusiness).
  * 
- * Updated on : 2014. 02. 10. Updated by : 유시혁.
+ * Updated on : 2015. 8. 3. Updated by : 이태희.
  */
 public interface AppzineDetailService {
-
 	/**
 	 * <pre>
-	 * Appzine 회차별 목록 조회.
+	 * Appzine 상세정보 조회.
 	 * </pre>
 	 * 
 	 * @param requestVO
-	 *            AppzineDetailSacRes
+	 *            requestVO
 	 * @param requestHeader
-	 *            SacRequestHeader
+	 *            requestHeader
 	 * @return AppzineDetailSacRes
 	 */
 	public AppzineDetailSacRes searchAppzineDetail(AppzineDetailSacReq requestVO, SacRequestHeader requestHeader);
-
 }

@@ -9,6 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.display.appzine.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineVolListSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineVolListSacRes;
@@ -17,41 +24,28 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Appzine;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.appzine.vo.AppzineVolList;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * AppzineVolListService 인터페이스(CoreStoreBusiness) 구현체
+ * AppzineVolList Service 인터페이스(CoreStoreBusiness) 구현체.
  * 
- * Updated on : 2014. 02. 10. Updated by : 유시혁.
+ * Updated on : 2015. 8. 3. Updated by : 이태희.
  */
 @Service
 public class AppzineVolListServiceImpl implements AppzineVolListService {
-
-	// private final Logger log = LoggerFactory.getLogger(this.getClass());
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	/**
-	 * <pre>
-	 * Appzine 회차별 목록 조회.
-	 * </pre>
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param requestVO
-	 *            AppzineVolListSacRes
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @return AppzineVolListSacRes
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.appzine.service.AppzineVolListService#searchAppzineVolList(com.skplanet
+	 * .storeplatform.sac.client.display.vo.appzine.AppzineVolListSacReq,
+	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
 	 */
 	@Override
 	public AppzineVolListSacRes searchAppzineVolList(AppzineVolListSacReq requestVO, SacRequestHeader requestHeader) {
-
 		// 요청값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
@@ -59,37 +53,25 @@ public class AppzineVolListServiceImpl implements AppzineVolListService {
 
 		CommonResponse commonResponse = new CommonResponse();
 		AppzineVolListSacRes appzineVolListSacRes = new AppzineVolListSacRes();
-
-		Appzine appzine = null;
 		List<Appzine> appzineList = new ArrayList<Appzine>();
+		Appzine appzine = null;
 		Title title;
 
 		// Appzine 회차별 목록 조회
 		List<AppzineVolList> resultList = this.commonDAO.queryForList("AppzineVolList.selectAppzineVolList", requestVO,
 				AppzineVolList.class);
-		if (!resultList.isEmpty()) {
-
+		if (resultList != null && !resultList.isEmpty()) {
 			for (AppzineVolList appzineVolList : resultList) {
-
 				appzine = new Appzine();
 
-				/*
-				 * AppzineNumber
-				 */
+				// Appzine 번호
 				appzine.setAppzineNumber(appzineVolList.getAppznNo());
-
-				/*
-				 * AppzineVol
-				 */
+				// Appzine 호수
 				appzine.setAppzineVol(appzineVolList.getAppznVol());
-
-				/*
-				 * Title
-				 */
+				// Appzine 제목
 				title = new Title();
 				title.setText(appzineVolList.getTitle());
 				appzine.setTitle(title);
-
 				appzineList.add(appzine);
 			}
 			appzineVolListSacRes.setAppzineVolList(appzineList);
@@ -100,8 +82,6 @@ public class AppzineVolListServiceImpl implements AppzineVolListService {
 		}
 
 		appzineVolListSacRes.setCommonResponse(commonResponse);
-
 		return appzineVolListSacRes;
 	}
-
 }
