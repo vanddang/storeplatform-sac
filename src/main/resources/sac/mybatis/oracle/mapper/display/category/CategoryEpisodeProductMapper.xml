@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (c) 2013 SK planet.
+  ~ All right reserved.
+  ~
+  ~ This software is the confidential and proprietary information of SK planet.
+  ~ You shall not disclose such Confidential Information and
+  ~ shall use it only in accordance with the terms of the license agreement
+  ~ you entered into with SK planet.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CategoryEpisodeProduct">
+    <select id="getEpisodeProdList" parameterType="Map" resultType="com.skplanet.storeplatform.sac.display.category.vo.CategoryEpisodeProduct">
+        SELECT /* CategoryEpisodeProductMapper.xml, CategoryEpisodeProduct.getEpisodeProdList, SAC 전시, 양해엽, SK 플래닛, 2015-08-03 */
+			RSHP.PROD_ID AS CHANNEL_ID
+			, EP.PROD_ID AS EPISODE_ID
+			, EP.TOP_MENU_ID
+			, EP.META_CLSF_CD
+			, EP.SVC_GRP_CD
+			, EP.PROD_GRD_CD
+			, UP.POSS_LEND_CLSF_CD
+			, TP.PROD_STATUS_CD
+			, MP.OUTSD_CONTENTS_ID AS SONG_ID
+		FROM  TB_DP_PROD EP
+			INNER JOIN TB_DP_PROD_RSHP RSHP
+				ON EP.PROD_ID = RSHP.PART_PROD_ID AND RSHP.PROD_RSHP_CD = 'DP010802'
+			INNER JOIN TB_DP_TENANT_PROD TP
+				ON EP.PROD_ID = TP.PROD_ID AND TP.TENANT_ID = #{tenantId}
+			LEFT OUTER JOIN TB_DP_USE_POLICY UP
+				ON EP.USE_POLICY_ID = UP.USE_POLICY_ID
+			LEFT OUTER JOIN TB_DP_MUSIC_PROD MP
+				ON RSHP.PROD_ID = MP.PROD_ID
+		WHERE 1=1
+			AND RSHP.PROD_ID = #{channelId}
+    </select>
+
+
+</mapper>
