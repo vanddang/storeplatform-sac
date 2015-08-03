@@ -3890,9 +3890,7 @@
               
     <!-- 카테고리 쇼핑 상세 조회-->
     <select id="searchSpecificShoppingDetail" parameterType="Map" resultType="MetaInfo">
-    SELECT * /* ShoppingMapper.xml.searchSpecificShoppingDetail,카테고리 쇼핑 상세 조회, 김형식/SK플래닛  , 2014-12-07 */ 
-    FROM (
-     SELECT 
+     SELECT  /* ShoppingMapper.xml.searchSpecificShoppingDetail,카테고리 쇼핑 상세 조회, 김형식/SK플래닛  , 2014-12-07 */
          * FROM (
          SELECT 
                 PP.* 
@@ -4069,8 +4067,6 @@
                 )PP
            )
            WHERE DECODE(SPECIALSALE,'Y',NO1,NO) <![CDATA[ <= ]]> 1
-           ORDER BY PROD_STATUS_CD
-      )WHERE ROWNUM =1
     </select>            
                   
               
