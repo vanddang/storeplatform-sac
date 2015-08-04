@@ -432,19 +432,19 @@ public class DeviceServiceImpl implements DeviceService {
 					activateUserEcReq.setKeyType("1");
 					activateUserEcReq.setKey(schUserRes.getUserMbr().getImSvcNo());
 					activateUserEcReq.setReqDate(DateUtil.getToday("yyyyMMdd"));
-					LOGGER.info("{} idp request : {}", deviceInfo.getDeviceId(),
+					LOGGER.info("{} idp activateUser request : {}", deviceInfo.getDeviceId(),
 							ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
 					ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
-					LOGGER.info("{} idp response : {}", deviceInfo.getDeviceId(),
+					LOGGER.info("{} idp activateUser response : {}", deviceInfo.getDeviceId(),
 							ConvertMapperUtils.convertObjectToJson(activateUserEcRes));
 				} else {
 					AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
 					authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
 					authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
-					LOGGER.info("{} idp request : {}", deviceInfo.getDeviceId(),
+					LOGGER.info("{} idp authForWap request : {}", deviceInfo.getDeviceId(),
 							ConvertMapperUtils.convertObjectToJson(authForWapEcReq));
 					AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);
-					LOGGER.info("{} idp response : {}", deviceInfo.getDeviceId(),
+					LOGGER.info("{} idp authForWap response : {}", deviceInfo.getDeviceId(),
 							ConvertMapperUtils.convertObjectToJson(authForWapEcRes));
 				}
 				idpResultYn = MemberConstants.USE_Y;

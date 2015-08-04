@@ -4046,16 +4046,20 @@ public class LoginServiceImpl implements LoginService {
 				activateUserEcReq.setKeyType("1");
 				activateUserEcReq.setKey(userMbr.getImSvcNo());
 				activateUserEcReq.setReqDate(DateUtil.getToday("yyyyMMdd"));
-				LOGGER.info("{} idp request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
+				LOGGER.info("{} idp activateUser request : {}", deviceId,
+						ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
 				ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
-				LOGGER.info("{} idp response : {}", deviceId, ConvertMapperUtils.convertObjectToJson(activateUserEcRes));
+				LOGGER.info("{} idp activateUser response : {}", deviceId,
+						ConvertMapperUtils.convertObjectToJson(activateUserEcRes));
 			} else {
 				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
 				authForWapEcReq.setUserMdn(deviceId);
 				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
-				LOGGER.info("{} idp request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(authForWapEcReq));
+				LOGGER.info("{} idp authForWap request : {}", deviceId,
+						ConvertMapperUtils.convertObjectToJson(authForWapEcReq));
 				AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);
-				LOGGER.info("{} idp response : {}", deviceId, ConvertMapperUtils.convertObjectToJson(authForWapEcRes));
+				LOGGER.info("{} idp authForWap response : {}", deviceId,
+						ConvertMapperUtils.convertObjectToJson(authForWapEcRes));
 			}
 			idpResultYn = MemberConstants.USE_Y;
 		} catch (StorePlatformException e) {
