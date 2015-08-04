@@ -197,16 +197,14 @@ public class VodGeneratorImpl implements VodGenerator {
 			rights.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_DOMESTIC);
 		}
 
-        play.setSupport(commonGenerator.generateSupport(DisplayConstants.DP_RIGHTS_PLAY, StringUtils.defaultString(metaInfo.getSupportPlay(), "N")));
-		store.setSupport(commonGenerator.generateSupport(DisplayConstants.DP_RIGHTS_STORE, StringUtils.defaultString(metaInfo.getSupportStore(), "N")));
+        play.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_RIGHTS_PLAY, StringUtils.defaultString(metaInfo.getSupportPlay(), "N"))));
+        store.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_RIGHTS_STORE, StringUtils.defaultString(metaInfo.getSupportStore(), "N"))));
 
         if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd())) {
-            if (metaInfo.getPlayDrmYn() != null) {
-                play.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn())));
-            }
-            if (metaInfo.getStoreDrmYn() != null) {
-                store.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn())));
-            }
+            if (metaInfo.getPlayDrmYn() != null)
+                play.getSupportList().add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
+            if (metaInfo.getStoreDrmYn() != null)
+                store.getSupportList().add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
         }
 
 		rights.setPlay(play);
