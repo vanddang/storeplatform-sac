@@ -532,7 +532,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 					int cY = 0; // 이미지 컷처리 시작
 
 					nHeightSize = 1170;
-					this.log.info("■■■■■nHeightSize■■■■■" + nHeightSize);
+					this.log.info("■■■■■nHeightSize■■■■■::" + nHeightSize);
 					// 이미지를 1170사이즈까지 잘라서 저장
 					for (seq = 1; nHeightSize < height; seq++) {
 
