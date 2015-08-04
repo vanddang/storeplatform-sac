@@ -502,7 +502,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			// 카탈로그 상세이미지 리사이즈
 			for (int i = 0; i < 1; i++) {
 
-				targetFileName1 = tmpFileName1 + "." + fileExt;
+				targetFileName1 = tmpFileName1 + "." + fileExt1;
 				int width = imageSizeForDrivedDtl[i][0];
 				int height = imageSizeForDrivedDtl[i][1];
 				int seq = 1;
