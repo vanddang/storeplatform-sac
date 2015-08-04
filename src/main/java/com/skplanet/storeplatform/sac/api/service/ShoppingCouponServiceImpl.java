@@ -470,6 +470,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			int oWidth = img.getWidth(null); // 이미지 가로사이즈
 			int oHeight = img.getHeight(null); // 이미지 세로사이즈
 			int nHeightSize = oHeight;
+			this.log.info("■■■■■oWidth■■■■■ ::" + oWidth);
+			this.log.info("■■■■■oHeight■■■■■ :: " + oHeight);
+			
 			// 파일 생성 크기
 			int[][] imageSizeForDrivedDtl = { { oWidth, nHeightSize } };
 
