@@ -372,6 +372,9 @@
               , LA.PREFIX_TITLE
               , LA.BADGE_CD 
               , LA.BADGE_OPT_TEXT               
+              , LA.DRM_YN
+              , LA.STORE_DRM_YN
+              , LA.PLAY_DRM_YN
               , NVL(LA.PLUS19_YN, 'N') AS PLUS19_YN
           FROM (
                 SELECT 
@@ -429,6 +432,8 @@
                     , JA.BADGE_CD
                     , JA.BADGE_OPT_TEXT
                     , JA.PLUS19_YN
+                    , JA.STORE_DRM_YN
+                    , JA.PLAY_DRM_YN
                 FROM (SELECT G.TENANT_ID
                            , A.MENU_ID
                            , A.UP_MENU_ID
@@ -500,18 +505,20 @@
                            , E.BRDC_COMP_CD          
                            , E.GENRE_CD
                            , D.REG_DT
+                           , NVL(CASE WHEN L.POSS_LEND_CLSF_CD = 'DP010601' THEN J.DRM_YN END, 'N') AS STORE_DRM_YN
+                           , NVL(CASE WHEN L.POSS_LEND_CLSF_CD != 'DP010601' THEN J.DRM_YN END, 'N') AS PLAY_DRM_YN
                         FROM TB_DP_MENU_CATEGORY           A
                            , TB_DP_MENU_CATEGORY_PROD_MAPG B
                            , TB_DP_MENU_CATEGORY_DESC      C
-                           , TB_DP_PROD                    D
-                           , TB_DP_VOD_PROD                E
+                           , TB_DP_PROD                    D  -- C
+                           , TB_DP_VOD_PROD                E  -- C
                            , TB_DP_PROD_DESC               F
                            , TB_DP_TENANT_PROD             G
                            , TB_DP_TENANT_PROD_PRICE       H
                            , TB_DP_PROD_PREFIX             CH_PF
                            , TB_DP_PROD_RSHP               I
-                           , TB_DP_PROD                    J
-                           , TB_DP_VOD_PROD                L
+                           , TB_DP_PROD                    J  -- E
+                           , TB_DP_VOD_PROD                L  -- E
                            , TB_DP_PROD_IMG                M
                            , TB_DP_TENANT_PROD_STATS       N
                            , TB_DP_TENANT_PROD_PRICE       O

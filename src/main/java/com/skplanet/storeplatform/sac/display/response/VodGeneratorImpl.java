@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.display.response;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -170,7 +172,7 @@ public class VodGeneratorImpl implements VodGenerator {
 				.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM, metaInfo.getHdvYn()));
 		supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM,
 				metaInfo.getDolbySprtYn()));
-		if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd()))
+		if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd()) && !Strings.isNullOrEmpty(metaInfo.getDrmYn()))
 			supportList.add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getDrmYn()));
 
 		return supportList;
@@ -178,37 +180,34 @@ public class VodGeneratorImpl implements VodGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 * 특정상품 조회 응답 생성시에만 차조함
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateMultimediaRights(com.skplanet
 	 * .storeplatform.sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public Rights generateRights(MetaInfo metaInfo) {
+
 		Rights rights = new Rights();
 		Play play = new Play();
 		Store store = new Store();
-		Support support = new Support();
 
 		// 영화,TV방송에 대한 allow 설정
 		if (StringUtils.equals(metaInfo.getDwldAreaLimtYn(), "Y")) {
 			rights.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_DOMESTIC);
 		}
 
-		if ("Y".equals(metaInfo.getSupportPlay())) {
-			support = this.commonGenerator.generateSupport(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM, "Y");
-		} else {
-			support = this.commonGenerator.generateSupport(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM, "N");
-		}
-		play.setSupport(support);
+        play.setSupport(commonGenerator.generateSupport(DisplayConstants.DP_RIGHTS_PLAY, StringUtils.defaultString(metaInfo.getSupportPlay(), "N")));
+		store.setSupport(commonGenerator.generateSupport(DisplayConstants.DP_RIGHTS_STORE, StringUtils.defaultString(metaInfo.getSupportStore(), "N")));
 
-		support = new Support();
-		if ("Y".equals(metaInfo.getSupportStore())) {
-			support = this.commonGenerator.generateSupport(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM, "Y");
-		} else {
-			support = this.commonGenerator.generateSupport(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM, "N");
-		}
-		store.setSupport(support);
+        if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(metaInfo.getContentsTypeCd())) {
+            if (metaInfo.getPlayDrmYn() != null) {
+                play.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn())));
+            }
+            if (metaInfo.getStoreDrmYn() != null) {
+                store.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn())));
+            }
+        }
 
 		rights.setPlay(play);
 		rights.setStore(store);
