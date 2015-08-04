@@ -111,7 +111,7 @@ public class ImageUtil {
 	public boolean cutImage2(String srcFile, String destFile, int cX, int cY, int dW, int dH) {
 
 		ImageIcon img = new ImageIcon(srcFile);
-
+		log.info("++++++++srcFile++++++++++++"+ srcFile);
 		try {
 			log.info("++++++++width++++++++++++"+ img.getIconWidth());
 			log.info("++++++++height++++++++++++"+ img.getIconHeight());
