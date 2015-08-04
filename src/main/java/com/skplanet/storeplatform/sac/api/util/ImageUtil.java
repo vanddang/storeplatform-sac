@@ -111,10 +111,10 @@ public class ImageUtil {
 	public boolean cutImage2(String srcFile, String destFile, int cX, int cY, int dW, int dH) {
 
 		ImageIcon img = new ImageIcon(srcFile);
-		log.info("++++++++srcFile++++++++++++"+ srcFile);
+		log.info("============srcFile============"+ srcFile);
 		try {
-			log.info("++++++++width++++++++++++"+ img.getIconWidth());
-			log.info("++++++++height++++++++++++"+ img.getIconHeight());
+			log.info("============width============"+ img.getIconWidth());
+			log.info("============height============"+ img.getIconHeight());
 			BufferedImage bufImage = this.imageToBufferedImage(img.getImage(), img.getIconWidth(), img.getIconHeight());
 			BufferedImage bufImage2 = bufImage.getSubimage(cX, cY, dW, dH);
 			File file = new File(destFile); // 파일의 이름을 설정한다
