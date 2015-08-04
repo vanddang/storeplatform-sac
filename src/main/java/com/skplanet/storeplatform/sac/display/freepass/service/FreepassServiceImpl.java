@@ -309,8 +309,8 @@ public class FreepassServiceImpl implements FreepassService {
 				if (retMetaInfo == null) {
 					minusCount += 1;
 					continue;
-				} else
-					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+				} else 
+					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 			} else if ("DP18".equals(prodMap.getTopMenuId())) {
 				reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
@@ -318,7 +318,7 @@ public class FreepassServiceImpl implements FreepassService {
 					minusCount += 1;
 					continue;
 				} else
-					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 			}
 			product.setStatus(prodMap.getIconClsfCd());
 			productList.add(product);
@@ -418,17 +418,17 @@ public class FreepassServiceImpl implements FreepassService {
 				} else if ("DP17".equals(couponBasicInfo.getTopMenuId())) {
 					reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
-					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 				} else if ("DP18".equals(couponBasicInfo.getTopMenuId())) {
 					reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
-					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 				}
 				product.setCoupon(coupon);
 				productList.add(product);
 			}
 		}
-
+		
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(productList);
 
@@ -987,8 +987,8 @@ public class FreepassServiceImpl implements FreepassService {
 				if (retMetaInfo == null) {
 					minusCount += 1;
 					continue;
-				} else
-					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+				} else 
+					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 			} else if ("DP18".equals(prodMap.getTopMenuId())) {
 				reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
@@ -996,7 +996,7 @@ public class FreepassServiceImpl implements FreepassService {
 					minusCount += 1;
 					continue;
 				} else
-					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 			}
 			product.setStatus(prodMap.getIconClsfCd());
 			productList.add(product);
@@ -1119,11 +1119,11 @@ public class FreepassServiceImpl implements FreepassService {
 				} else if ("DP17".equals(couponBasicInfo.getTopMenuId())) {
 					reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
-					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 				} else if ("DP18".equals(couponBasicInfo.getTopMenuId())) {
 					reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
-					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 				}
 				product.setCoupon(coupon);
 				productList.add(product);
@@ -1134,7 +1134,7 @@ public class FreepassServiceImpl implements FreepassService {
 		responseVO.setProductList(productList);
 
 		return responseVO;
-
+		
 	}
 
 	/*
