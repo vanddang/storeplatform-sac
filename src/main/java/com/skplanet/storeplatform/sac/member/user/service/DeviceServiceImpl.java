@@ -426,12 +426,12 @@ public class DeviceServiceImpl implements DeviceService {
 					&& !StringUtils.equals(schUserRes.getUserKey(), userKey)
 					&& !StringUtils.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-				LOGGER.info("{} 휴면 아이디회원 IDP 복구", deviceInfo.getDeviceId());
 				if (StringUtils.isNotBlank(schUserRes.getUserMbr().getImSvcNo())) {
 					ActivateUserEcReq activateUserEcReq = new ActivateUserEcReq();
 					activateUserEcReq.setKeyType("1");
 					activateUserEcReq.setKey(schUserRes.getUserMbr().getImSvcNo());
 					activateUserEcReq.setReqDate(DateUtil.getToday("yyyyMMdd"));
+					LOGGER.info("{} 휴면 OneID IDP 복구", deviceInfo.getDeviceId());
 					LOGGER.info("{} idp activateUser request : {}", deviceInfo.getDeviceId(),
 							ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
 					ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
@@ -441,6 +441,7 @@ public class DeviceServiceImpl implements DeviceService {
 					AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
 					authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
 					authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
+					LOGGER.info("{} 휴면 IDP ID IDP 복구", deviceInfo.getDeviceId());
 					LOGGER.info("{} idp authForWap request : {}", deviceInfo.getDeviceId(),
 							ConvertMapperUtils.convertObjectToJson(authForWapEcReq));
 					AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);

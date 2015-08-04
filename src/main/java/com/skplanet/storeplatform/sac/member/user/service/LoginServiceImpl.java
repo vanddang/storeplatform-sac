@@ -1018,7 +1018,7 @@ public class LoginServiceImpl implements LoginService {
 				if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_OK)) {
 
 					if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
-						LOGGER.info("{} 휴면 원아이디 회원복구", req.getUserId());
+						LOGGER.info("{} 휴면 OneID 회원 복구", req.getUserId());
 						MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 						moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 						moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
@@ -1183,7 +1183,7 @@ public class LoginServiceImpl implements LoginService {
 
 				userAuthKey = authForIdEcRes.getUserAuthKey();
 				if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
-					LOGGER.info("{} 휴면 IDP아이디 회원복구", req.getUserId());
+					LOGGER.info("{} 휴면 IDP ID 회원 복구", req.getUserId());
 					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 					moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
@@ -4036,7 +4036,6 @@ public class LoginServiceImpl implements LoginService {
 	 *            UserMbr
 	 */
 	public void recorverySleepUser(SacRequestHeader requestHeader, String deviceId, UserMbr userMbr) {
-		LOGGER.info("{} 휴면회원 복구", deviceId);
 		String idpResultYn = null;
 		String idpResultErrorCode = null;
 		try {
@@ -4046,6 +4045,7 @@ public class LoginServiceImpl implements LoginService {
 				activateUserEcReq.setKeyType("1");
 				activateUserEcReq.setKey(userMbr.getImSvcNo());
 				activateUserEcReq.setReqDate(DateUtil.getToday("yyyyMMdd"));
+				LOGGER.info("{} 휴면 OneID 회원 복구", deviceId);
 				LOGGER.info("{} idp activateUser request : {}", deviceId,
 						ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
 				ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
@@ -4055,6 +4055,8 @@ public class LoginServiceImpl implements LoginService {
 				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
 				authForWapEcReq.setUserMdn(deviceId);
 				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
+				LOGGER.info("{} 휴면 {} 회원 복구", deviceId,
+						StringUtils.equals(userMbr.getUserType(), MemberConstants.USER_TYPE_MOBILE) ? "모바일" : "IDP ID");
 				LOGGER.info("{} idp authForWap request : {}", deviceId,
 						ConvertMapperUtils.convertObjectToJson(authForWapEcReq));
 				AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);
