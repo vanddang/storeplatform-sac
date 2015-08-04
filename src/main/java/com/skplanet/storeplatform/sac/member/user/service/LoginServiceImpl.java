@@ -450,17 +450,17 @@ public class LoginServiceImpl implements LoginService {
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
-		/* 휴면계정인 경우 복구처리 */
-		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
-			this.recorverySleepUser(requestHeader, req.getDeviceId(), chkDupRes.getUserMbr());
-		}
-
 		/* 회원 존재유무 확인 */
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
 
 			/* 회원 정보가 존재 하지 않습니다. */
 			throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
 
+		}
+
+		/* 휴면계정인 경우 복구처리 */
+		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+			this.recorverySleepUser(requestHeader, req.getDeviceId(), chkDupRes.getUserMbr());
 		}
 
 		/* SKT인경우 개인정보 3자 제공 동의약관 동의여부 체크 */
