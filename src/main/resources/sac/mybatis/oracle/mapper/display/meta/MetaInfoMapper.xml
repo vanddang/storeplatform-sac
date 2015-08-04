@@ -199,7 +199,7 @@
                 END
                 FROM TB_CM_CD Y
                   WHERE Y.CD_ID(+) = A1.BADGE_CD AND Y.LANG_CD(+) = A1.LANG_CD
-                ) AS BADGE_OPT_TEXT,
+                ) AS BADGE_OPT_TEXT
              , A1.DRM_YN
 		  FROM (SELECT A.PROD_ID
 		             , A.PART_PROD_ID
@@ -209,7 +209,6 @@
 		             , B.EXPO_SELLER_EMAIL
 		             , B.EXPO_SELLER_NM
 		             , B.EXPO_SELLER_TELNO
-		             , B.DRM_YN
 		             , C.PROD_NM
 		             , C.ARTIST1_NM
 		             , C.ARTIST2_NM
