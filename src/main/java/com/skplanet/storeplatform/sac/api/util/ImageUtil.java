@@ -113,14 +113,18 @@ public class ImageUtil {
 		ImageIcon img = new ImageIcon(srcFile);
 
 		try {
+			log.info("++++++++width++++++++++++"+ img.getIconWidth());
+			log.info("++++++++height++++++++++++"+ img.getIconHeight());
 			BufferedImage bufImage = this.imageToBufferedImage(img.getImage(), img.getIconWidth(), img.getIconHeight());
-
+			log.info("++++++++log1++++++++++++"+ img.getIconHeight());
 			BufferedImage bufImage2 = bufImage.getSubimage(cX, cY, dW, dH);
-
+			log.info("++++++++log2++++++++++++"+ img.getIconHeight());
 			File file = new File(destFile); // 파일의 이름을 설정한다
+			log.info("++++++++log3++++++++++++"+ img.getIconHeight());
 			FileOutputStream fos = new FileOutputStream(file);
+			log.info("++++++++log4++++++++++++"+ img.getIconHeight());
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-
+			log.info("++++++++log5++++++++++++"+ img.getIconHeight());
 			ImageIO.write(bufImage2, "jpg", output);
 			fos.write(output.toByteArray());
 			fos.close();
