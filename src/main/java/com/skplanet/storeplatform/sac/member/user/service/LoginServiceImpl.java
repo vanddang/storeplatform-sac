@@ -819,21 +819,6 @@ public class LoginServiceImpl implements LoginService {
 
 				LOGGER.info("{} 추가인증수단 없음, 탈퇴처리", req.getDeviceId());
 
-				/* SC회원탈퇴 */
-				RemoveUserRequest removeUserReq = new RemoveUserRequest();
-				removeUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-				removeUserReq.setUserKey(userKey);
-				removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
-				removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
-				removeUserReq.setSecedeReasonMessage("변동성인증수단없음");
-				removeUserReq.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
-				this.userSCI.remove(removeUserReq);
-
-				/* IDP 탈퇴 */
-				SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-				ecReq.setUserMdn(req.getDeviceId());
-				this.idpSCI.secedeForWap(ecReq);
-
 				/* MQ 연동(회원 탈퇴) */
 				DetailReq detailReq = new DetailReq();
 				SearchExtentReq searchExtent = new SearchExtentReq();
@@ -862,6 +847,21 @@ public class LoginServiceImpl implements LoginService {
 				} catch (AmqpException ex) {
 					LOGGER.error("MQ process fail {}", mqInfo);
 				}
+
+				/* SC회원탈퇴 */
+				RemoveUserRequest removeUserReq = new RemoveUserRequest();
+				removeUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+				removeUserReq.setUserKey(userKey);
+				removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+				removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
+				removeUserReq.setSecedeReasonMessage("변동성인증수단없음");
+				removeUserReq.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
+				this.userSCI.remove(removeUserReq);
+
+				/* IDP 탈퇴 */
+				SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+				ecReq.setUserMdn(req.getDeviceId());
+				this.idpSCI.secedeForWap(ecReq);
 
 				/* 회원 정보가 존재 하지 않습니다. */
 				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
