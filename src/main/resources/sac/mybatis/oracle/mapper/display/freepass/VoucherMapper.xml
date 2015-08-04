@@ -118,6 +118,10 @@
     <select id="selectVoucherDetail" parameterType="VoucherDetailSacReq" resultType="metaInfo">
 	    SELECT  /* VoucherMapper.VoucherDetail, 이용권 상품 상세 조회, SAC전시 이태균/I-S PLUS, 2015-05-11 */
 	        IV.*
+            , (CASE WHEN IV.CMPX_PROD_CLSF_CD !='OR004305' THEN UP.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD       
+            , (CASE WHEN IV.CMPX_PROD_CLSF_CD !='OR004305' THEN UP.DWLD_STRM_CLSF_CD ELSE '' END) AS DWLD_STRM_CLSF_CD
+            , UP.USE_PERIOD_UNIT_CD
+            , UP.USE_PERIOD            
 	        , NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
 	        , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
 	    FROM 
@@ -136,12 +140,11 @@
 	            , PD.MALL_CD
 	            , PD.FEE_CASE_CD
 	            , PD.FEE_UNIT_CD
-	            , UP.USE_PERIOD_UNIT_CD
-	            , UP.USE_PERIOD
 	            , PD.DRM_YN
 	            , PD.DRM_SET_CD
 	            , PD.DRM_SET_VALUE
 	            , PD.CONTENTS_TYPE_CD
+                , PD.USE_POLICY_ID	            
 	            , CM.FREE_PASS_CLSF_CD as CMPX_PROD_CLSF_CD
 	            , DC.PROD_INTR_DSCR
 	            , PR.PROD_AMT
@@ -177,12 +180,10 @@
 	            , DECODE(PD.PROD_ID, #{productId}, 'Y', 'N') AS REQUEST_PRODUCT
 	            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.CMPX_PROD_GRP_CD ELSE '' END) AS CMPX_PROD_GRP_CD
 	            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.SERIES_BOOK_CLSF_CD ELSE '' END) AS SERIES_BOOK_CLSF_CD
-	            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN UP.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD        
 	            , NVL(PD.PLUS19_YN, 'N') AS PLUS19_YN
 		        , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.DRM_ATTR_CLSF ELSE '' END)  as drmAttrCd
 		        , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.DWLD_STRM_ATTR_CLSF ELSE '' END)  as dlStrmAttrCd
 		        , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.USE_PERIOD_ATTR_CLSF ELSE '' END)  as usePeriodAttrCd
-	            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN UP.DWLD_STRM_CLSF_CD ELSE '' END)  as DWLD_STRM_CLSF_CD
 	        FROM 
 	            TB_DP_PROD PD
 	            <if test='cmpxProdGrpCd != null and cmpxProdGrpCd != ""'>
@@ -215,14 +216,12 @@
 	            , TB_DP_PROD_DESC DC
 	            , TB_DP_TENANT_PROD TP
 	            , TB_DP_TENANT_PROD_PRICE PR
-	            , TB_DP_USE_POLICY UP
 	        WHERE 
 	            PD.PROD_ID = CM.PROD_ID
 	            AND PD.PROD_ID = DC.PROD_ID
 	            AND PD.PROD_ID = TP.PROD_ID
 	            AND PD.PROD_ID = PR.PROD_ID
 	            AND PD.SVC_GRP_CD = 'DP000207'
-	            AND PD.USE_POLICY_ID = UP.USE_POLICY_ID
 	            AND DC.LANG_CD = #{langCd}
 	            AND TP.TENANT_ID = #{tenantId}
 	            AND TP.TENANT_ID = PR.TENANT_ID
@@ -262,7 +261,8 @@
 	            WHEN IV.TOP_MENU_ID IN ('DP13','DP14') THEN  #{ebookThumbnailImageCd}
 	            END
 	        )
-	    ORDER BY IV.USE_PERIOD ASC        
+	    INNER JOIN TB_DP_USE_POLICY UP ON IV.USE_POLICY_ID = UP.USE_POLICY_ID
+	    ORDER BY UP.USE_PERIOD ASC        
     </select>
     
         
@@ -290,6 +290,7 @@
                     , FM.STRM_DRM_YN
                     , PD.TOP_MENU_ID
                     , NVL(PD.PLUS19_YN, 'N') AS PLUS19_YN       
+                    , (SELECT AGENCY_NM FROM TB_DP_VOD_PROD MP WHERE MP.PROD_ID = FM.PART_PROD_ID) AS AGENCY_NM
                 FROM
                       TB_DP_FIXRATE_PROD_MAPG FM
                     , TB_DP_PROD PD

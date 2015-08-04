@@ -393,6 +393,7 @@ public class VoucherServiceImpl implements VoucherService {
 
 							commonResponse.setTotalCount(prodMap.getTotalCount());
 
+							// Ebook
 							if ("DP13".equals(prodMap.getTopMenuId())) {
 								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
@@ -401,6 +402,8 @@ public class VoucherServiceImpl implements VoucherService {
 									continue;
 								} else
 									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
+
+								// 코믹
 							} else if ("DP14".equals(prodMap.getTopMenuId())) {
 								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
@@ -409,6 +412,8 @@ public class VoucherServiceImpl implements VoucherService {
 									continue;
 								} else
 									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
+
+								// 영화
 							} else if ("DP17".equals(prodMap.getTopMenuId())) {
 								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
@@ -416,7 +421,9 @@ public class VoucherServiceImpl implements VoucherService {
 									minusCount += 1;
 									continue;
 								} else
-									product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
+
+								// TV 방송
 							} else if ("DP18".equals(prodMap.getTopMenuId())) {
 								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
@@ -424,7 +431,7 @@ public class VoucherServiceImpl implements VoucherService {
 									minusCount += 1;
 									continue;
 								} else
-									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
+									product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
 							}
 							product.setStatus(prodMap.getIconClsfCd());
 							// product.getRights().setPlus19Yn(prodMap.getPlus19Yn());
