@@ -25,7 +25,10 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -95,6 +98,7 @@ import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
@@ -421,11 +425,28 @@ public class DeviceServiceImpl implements DeviceService {
 			if (StringUtils.equals(schUserRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)
 					&& !StringUtils.equals(schUserRes.getUserKey(), userKey)
 					&& !StringUtils.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+
 				LOGGER.info("{} 휴면 아이디회원 IDP 복구", deviceInfo.getDeviceId());
-				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
-				authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
-				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
-				this.idpSCI.authForWap(authForWapEcReq);
+				if (StringUtils.isNotBlank(schUserRes.getUserMbr().getImSvcNo())) {
+					ActivateUserEcReq activateUserEcReq = new ActivateUserEcReq();
+					activateUserEcReq.setKeyType("1");
+					activateUserEcReq.setKey(schUserRes.getUserMbr().getImSvcNo());
+					activateUserEcReq.setReqDate(DateUtil.getToday("yyyyMMdd"));
+					LOGGER.info("{} idp request : {}", deviceInfo.getDeviceId(),
+							ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
+					ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
+					LOGGER.info("{} idp response : {}", deviceInfo.getDeviceId(),
+							ConvertMapperUtils.convertObjectToJson(activateUserEcRes));
+				} else {
+					AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+					authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
+					authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
+					LOGGER.info("{} idp request : {}", deviceInfo.getDeviceId(),
+							ConvertMapperUtils.convertObjectToJson(authForWapEcReq));
+					AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);
+					LOGGER.info("{} idp response : {}", deviceInfo.getDeviceId(),
+							ConvertMapperUtils.convertObjectToJson(authForWapEcRes));
+				}
 				idpResultYn = MemberConstants.USE_Y;
 			}
 		} catch (StorePlatformException e) {

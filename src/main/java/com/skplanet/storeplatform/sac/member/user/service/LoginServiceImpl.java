@@ -32,7 +32,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
@@ -242,39 +245,17 @@ public class LoginServiceImpl implements LoginService {
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
-		/* 휴면계정인 경우 복구처리 */
-		if (chkDupRes.getUserMbr() != null
-				&& StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
-			LOGGER.info("{} 휴면회원 복구", req.getDeviceId());
-			String idpResultYn = null;
-			String idpResultErrorCode = null;
-			try {
-				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
-				authForWapEcReq.setUserMdn(req.getDeviceId());
-				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
-				this.idpSCI.authForWap(authForWapEcReq);
-				idpResultYn = MemberConstants.USE_Y;
-			} catch (StorePlatformException e) {
-				idpResultYn = MemberConstants.USE_N;
-				idpResultErrorCode = StringUtils.substringAfter(e.getErrorInfo().getCode(),
-						MemberConstants.EC_IDP_ERROR_CODE_TYPE);
-				throw e;
-			} finally {
-				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
-				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
-				moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
-				moveUserInfoSacReq.setIdpResultYn(idpResultYn);
-				moveUserInfoSacReq.setIdpErrCd(idpResultErrorCode);
-				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
-			}
-		}
-
 		/* 회원 존재유무 확인 */
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
 
 			/* 회원 정보가 존재 하지 않습니다. */
 			throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
 
+		}
+
+		/* 휴면계정인 경우 복구처리 */
+		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+			this.recorverySleepUser(requestHeader, req.getDeviceId(), chkDupRes.getUserMbr());
 		}
 
 		/* 휴대기기 정보 조회 */
@@ -470,30 +451,8 @@ public class LoginServiceImpl implements LoginService {
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		/* 휴면계정인 경우 복구처리 */
-		if (chkDupRes.getUserMbr() != null
-				&& StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
-			LOGGER.info("{} 휴면회원 복구", req.getDeviceId());
-			String idpResultYn = null;
-			String idpResultErrorCode = null;
-			try {
-				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
-				authForWapEcReq.setUserMdn(req.getDeviceId());
-				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
-				this.idpSCI.authForWap(authForWapEcReq);
-				idpResultYn = MemberConstants.USE_Y;
-			} catch (StorePlatformException e) {
-				idpResultYn = MemberConstants.USE_N;
-				idpResultErrorCode = StringUtils.substringAfter(e.getErrorInfo().getCode(),
-						MemberConstants.EC_IDP_ERROR_CODE_TYPE);
-				throw e;
-			} finally {
-				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
-				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
-				moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
-				moveUserInfoSacReq.setIdpResultYn(idpResultYn);
-				moveUserInfoSacReq.setIdpErrCd(idpResultErrorCode);
-				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
-			}
+		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+			this.recorverySleepUser(requestHeader, req.getDeviceId(), chkDupRes.getUserMbr());
 		}
 
 		/* 회원 존재유무 확인 */
@@ -4064,4 +4023,53 @@ public class LoginServiceImpl implements LoginService {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 휴면계정 복구.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param deviceId
+	 *            String
+	 * @param userMbr
+	 *            UserMbr
+	 */
+	public void recorverySleepUser(SacRequestHeader requestHeader, String deviceId, UserMbr userMbr) {
+		LOGGER.info("{} 휴면회원 복구", deviceId);
+		String idpResultYn = null;
+		String idpResultErrorCode = null;
+		try {
+
+			if (StringUtils.isNotBlank(userMbr.getImSvcNo())) {
+				ActivateUserEcReq activateUserEcReq = new ActivateUserEcReq();
+				activateUserEcReq.setKeyType("1");
+				activateUserEcReq.setKey(userMbr.getImSvcNo());
+				activateUserEcReq.setReqDate(DateUtil.getToday("yyyyMMdd"));
+				LOGGER.info("{} idp request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
+				ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
+				LOGGER.info("{} idp response : {}", deviceId, ConvertMapperUtils.convertObjectToJson(activateUserEcRes));
+			} else {
+				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+				authForWapEcReq.setUserMdn(deviceId);
+				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
+				LOGGER.info("{} idp request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(authForWapEcReq));
+				AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);
+				LOGGER.info("{} idp response : {}", deviceId, ConvertMapperUtils.convertObjectToJson(authForWapEcRes));
+			}
+			idpResultYn = MemberConstants.USE_Y;
+		} catch (StorePlatformException e) {
+			idpResultYn = MemberConstants.USE_N;
+			idpResultErrorCode = StringUtils.substringAfter(e.getErrorInfo().getCode(),
+					MemberConstants.EC_IDP_ERROR_CODE_TYPE);
+			throw e;
+		} finally {
+			MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+			moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+			moveUserInfoSacReq.setUserKey(userMbr.getUserKey());
+			moveUserInfoSacReq.setIdpResultYn(idpResultYn);
+			moveUserInfoSacReq.setIdpErrCd(idpResultErrorCode);
+			this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+		}
+	}
 }
