@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.display.cache.vo.VoucherMeta;
 import com.skplanet.storeplatform.sac.display.cache.vo.VoucherMetaParam;
 import com.skplanet.storeplatform.sac.display.category.vo.SearchProductListParam;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.skplanet.storeplatform.sac.display.common.ProductType.*;
 import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
@@ -147,8 +149,20 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
                     // 특가상품으로 요청한 경우 처리
                     if (baseInfo.getContentsTypeCd().equals(DP_EPISODE_CONTENT_TYPE_CD))
                         reqMap.put("specialProdId", prodId);
+                    
+                    List<MetaInfo> retMetaInfoList =  this.commonDAO.queryForList("Shopping.searchSpecificShoppingDetail", reqMap, MetaInfo.class);
+                    int selectInt = 0;
 
-                    metaInfo = commonDAO.queryForObject("Shopping.searchSpecificShoppingDetail", reqMap, MetaInfo.class);
+            		for(int kk = 0 ;kk < retMetaInfoList.size(); kk++){
+            			if(retMetaInfoList.get(kk).getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)){ // 판매중인것이 우선순위
+            				selectInt = kk;
+            				break;
+            			}
+            		}          
+            		metaInfo = null;
+            		if(retMetaInfoList.size()>0){
+            			metaInfo= retMetaInfoList.get(selectInt);
+            		}
                     break;
                 case Voucher:
                     VoucherMeta voucherMeta = productInfoManager.getVoucherMeta(new VoucherMetaParam(prodId, param.getLangCd(), param.getTenantId()));
