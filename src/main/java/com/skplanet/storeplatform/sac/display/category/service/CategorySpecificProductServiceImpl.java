@@ -150,6 +150,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
                     if (baseInfo.getContentsTypeCd().equals(DP_EPISODE_CONTENT_TYPE_CD))
                         reqMap.put("specialProdId", prodId);
                     
+                    // 2015.08.04 Jade 수정 start (여러건이 나올수 있으므로 우선순위를 판매중으로 내려가고 하나인 경우 그냥 내려주기)
                     List<MetaInfo> retMetaInfoList =  this.commonDAO.queryForList("Shopping.searchSpecificShoppingDetail", reqMap, MetaInfo.class);
                     int selectInt = 0;
 
@@ -163,6 +164,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
             		if(retMetaInfoList.size()>0){
             			metaInfo= retMetaInfoList.get(selectInt);
             		}
+                    // 2015.08.04 Jade 수정 end
                     break;
                 case Voucher:
                     VoucherMeta voucherMeta = productInfoManager.getVoucherMeta(new VoucherMetaParam(prodId, param.getLangCd(), param.getTenantId()));
