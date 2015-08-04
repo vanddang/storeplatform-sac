@@ -532,12 +532,10 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 					int cY = 0; // 이미지 컷처리 시작
 
 					nHeightSize = 1170;
-					this.log.info("■■■■■nHeightSize■■■■■::" + nHeightSize);
 					// 이미지를 1170사이즈까지 잘라서 저장
 					for (seq = 1; nHeightSize < height; seq++) {
 
 						String resizetargetFileName1 = tmpFileName1 + "_"+oWidth+"xy" + seq + "." + fileExt1;
-						this.log.info("■■■■■targetFileName1■■■■■::" + targetFileName1);
 						if (!imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
 								width, 1170)) {
 							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ",
