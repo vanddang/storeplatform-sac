@@ -161,6 +161,8 @@
 		     , A1.EXPO_SELLER_TELNO
 		     , ( CASE WHEN A1.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
 		     , ( CASE WHEN A1.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
+             , ( CASE WHEN A1.EPSD_CNT > 0 THEN EPSD_DRM_YN END ) AS STORE_DRM_YN
+             , ( CASE WHEN A1.STRM_EPSD_CNT > 0 THEN EPSD_DRM_YN END ) AS PLAY_DRM_YN
 		     <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
 		     , CASE WHEN (A1.CHNL_PERIOD_AMT >= 0  AND A1.STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
 		            ELSE NVL(A1.CHNL_UNLMT_AMT, 0) 
@@ -252,7 +254,7 @@
                      , CPP.BADGE_CD
                      , CPP.BADGE_OPT_TEXT
                      , C.LANG_CD
-                     , I.DRM_YN
+                     , I.DRM_YN AS EPSD_DRM_YN
 		          FROM TB_DP_PROD_RSHP A
 		             , TB_DP_PROD B  /* 채널 */
 		             , TB_DP_PROD_DESC C  /* 채널 */
