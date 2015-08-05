@@ -38,7 +38,8 @@ public class App extends CommonInfo {
 	private List<Device> supportDeviceList;
 	private String isDeviceSupported; // 현재 단말기 지원 여부
     private String descriptionVideoUrl;    // 설명 Video URL
-    private String hasDiffPkgYn; // 테넌트명
+    private String hasDiffPkgYn; // 테넌트별 PKG명 차이 여부
+	private String apkSignedKeyHash; // APK signature hash 값
 
     public String getHasDiffPkgYn() {
         return hasDiffPkgYn;
@@ -344,4 +345,11 @@ public class App extends CommonInfo {
 		this.supportDeviceList = supportDeviceList;
 	}
 
+	public String getApkSignedKeyHash() {
+		return apkSignedKeyHash;
+	}
+
+	public void setApkSignedKeyHash(String apkSignedKeyHash) {
+		this.apkSignedKeyHash = apkSignedKeyHash;
+	}
 }
