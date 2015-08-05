@@ -9,21 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.DateUtils;
@@ -37,11 +22,17 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxPr
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
-import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseReservedData;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
+import com.skplanet.storeplatform.sac.purchase.order.vo.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * 
@@ -285,11 +276,11 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					prchsDtlMore.setContentsType(product.getContentsType()); // 컨텐츠_타입
 					prchsDtlMore.setPartChrgVer(product.getPartChrgVer()); // 부분_유료_버전
 					// <DB 컬럼 의미 확장>
-					// IAP 상품 경우-부분유료화 상품, 멀티 상품 경우-회차 정보
+					// IAP 상품 경우-부분유료화 상품, 정액 상품 경우-회차 정보
 					if (purchaseOrderInfo.isIap()) {
 						prchsDtlMore.setPartChrgProdNm(product.getPartChrgProdNm()); // 부분_유료_상품_명
 					} else if (purchaseOrderInfo.isFlat()) {
-						prchsDtlMore.setPartChrgProdNm(product.getChapter());
+						prchsDtlMore.setPartChrgProdNm(product.getChapterText()); // 이용권 회차 정보
 					}
 					/* Ring & Bell */
 					prchsDtlMore.setRnBillCd(product.getRnBillCd()); // RN_과금_코드
