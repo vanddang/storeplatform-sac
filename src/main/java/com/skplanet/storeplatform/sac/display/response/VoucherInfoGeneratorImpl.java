@@ -69,9 +69,11 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 	public AutoPay generateAutoPay(MetaInfo metaInfo) {
 		AutoPay autoPay = new AutoPay();
 
+		// 자동결제
 		if ("Y".equals(metaInfo.getAutoApprYn()))
 			autoPay.setType(DisplayConstants.DP_AUTOPAY_AUTO);
 		else
+			// 일반결제
 			autoPay.setType(DisplayConstants.DP_AUTOPAY_NORMAL);
 
 		return autoPay;
@@ -149,6 +151,7 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 		Date date = this.generateDate(metaInfo);
 		dateList.add(date);
 
+		// 사용기간 Date 변환.
 		date = this.generateUsePeriod(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, metaInfo.getUsePeriodUnitCd(),
 				metaInfo.getUsePeriod());
 		if (date != null)
@@ -219,6 +222,7 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 			cash.setCashRate(metaInfo.getBnsCashRatio());
 			Date date = null;
 
+			// 사용기간 Date 변환
 			date = this.generateUsePeriod(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, metaInfo.getBnsUsePeriodUnitCd(),
 					metaInfo.getBnsUsePeriod());
 
@@ -340,7 +344,11 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 		List<Support> supportList = new ArrayList<Support>();
 		Support support = null;
 		support = new Support();
+
+		/* Play */
 		support.setType("play");
+
+		// 대여, 소장/대여 경우
 		if (metaInfo.getPossLendClsfCd().equals("DP010602") || metaInfo.getPossLendClsfCd().equals("DP010603")) {
 			support.setText("Y");
 		} else {
@@ -348,8 +356,11 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 		}
 		supportList.add(support);
 
+		/* Store */
 		support = new Support();
 		support.setType("store");
+
+		// 소장, 소장/대여 경우
 		if (metaInfo.getPossLendClsfCd().equals("DP010601") || metaInfo.getPossLendClsfCd().equals("DP010603")) {
 			support.setText("Y");
 		} else {
@@ -368,10 +379,13 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 		support = new Support();
 		support.setType("dlStrmCd");
 		if (StringUtil.isNotEmpty(metaInfo.getDwldStrmClsfCd())) {
+			// 다운로드
 			if (metaInfo.getDwldStrmClsfCd().equals("DP010501")) {
 				support.setText("dl");
+				// 스트리밍
 			} else if (metaInfo.getDwldStrmClsfCd().equals("DP010502")) {
 				support.setText("strm");
+				// 다운로드&스트리밍
 			} else if (metaInfo.getDwldStrmClsfCd().equals("DP010503")) {
 				support.setText("both");
 			}
