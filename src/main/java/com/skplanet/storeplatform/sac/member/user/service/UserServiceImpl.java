@@ -11,6 +11,7 @@ import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.CommonRes;
 import com.skplanet.storeplatform.external.client.idp.vo.DeactivateUserEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.DeactivateUserEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
@@ -282,7 +283,7 @@ public class UserServiceImpl implements UserService {
 	 * sac.common.header.vo.SacRequestHeader, com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq)
 	 */
 	@Override
-	public void moveUserInfoForIDP(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq) {
+	public CommonRes moveUserInfoForIDP(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq) {
 		// 회원정보조회
 		DetailReq detailReq = new DetailReq();
 		SearchExtentReq searchExtent = new SearchExtentReq();
@@ -305,6 +306,7 @@ public class UserServiceImpl implements UserService {
 		String key = null;
 		String reqDate = DateUtil.getToday();
 		String reason = null;
+		CommonRes commonRes = new CommonRes();
 
 		// 회원 타입별 IDP 연동값 셋팅
 		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
@@ -330,6 +332,7 @@ public class UserServiceImpl implements UserService {
 			LOGGER.info("activateUserEcReq : ", ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
 			ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
 			LOGGER.info("activateUserEcRes : ", ConvertMapperUtils.convertObjectToJson(activateUserEcRes));
+			commonRes = activateUserEcRes.getCommonRes();
 		} else if (StringUtils.equals(moveUserInfoSacReq.getMoveType(), MemberConstants.USER_MOVE_TYPE_DORMANT)) {
 			DeactivateUserEcReq deactivateUserEcReq = new DeactivateUserEcReq();
 			deactivateUserEcReq.setKeyType(keyType);
@@ -339,8 +342,28 @@ public class UserServiceImpl implements UserService {
 			LOGGER.info("deactivateUserEcReq : ", ConvertMapperUtils.convertObjectToJson(deactivateUserEcReq));
 			DeactivateUserEcRes deactivateUserEcRes = this.idpSCI.deactivateUser(deactivateUserEcReq);
 			LOGGER.info("deactivateUserEcRes : ", ConvertMapperUtils.convertObjectToJson(deactivateUserEcRes));
+			commonRes = deactivateUserEcRes.getCommonRes();
 		} else {
 			throw new StorePlatformException("SAC_MEM_0001", "moveType");
 		}
+
+		return commonRes;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserService#updateActiveMoveUserLastLoginDt()
+	 */
+	@Override
+	public void updateActiveMoveUserLastLoginDt(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq) {
+		/* 헤더 정보 셋팅 */
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		MoveUserInfoRequest moveUserInfoRequest = new MoveUserInfoRequest();
+		moveUserInfoRequest.setCommonRequest(commonRequest);
+		moveUserInfoRequest.setUserKey(moveUserInfoSacReq.getUserKey());
+
+		this.userSCI.updateActiveMoveUserLastLoginDt(moveUserInfoRequest);
 	}
 }

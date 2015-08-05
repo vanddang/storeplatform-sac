@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.external.client.idp.vo.CommonRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
@@ -178,6 +179,7 @@ public class UserExtraInfoController {
 	public MoveUserInfoSacRes moveUserInfo(SacRequestHeader sacHeader, @RequestBody MoveUserInfoSacReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		MoveUserInfoSacRes sacRes = new MoveUserInfoSacRes();
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String moveType = StringUtil.nvl(req.getMoveType(), "");
@@ -194,14 +196,34 @@ public class UserExtraInfoController {
 		if ("2".equals(req.getMoveType()))
 			req.setMoveType(Constant.USERMBR_MOVE_TYPE_DORMANT);
 
-		// IDP 휴면계정 연동
-		this.userService.moveUserInfoForIDP(sacHeader, req);
+		try {
+			// IDP 휴면계정 연동
+			CommonRes res = this.userService.moveUserInfoForIDP(sacHeader, req);
 
-		req.setIdpResultYn(MemberConstants.USE_Y);
-		MoveUserInfoSacRes res = this.userService.moveUserInfo(sacHeader, req);
+			req.setIdpResultYn(MemberConstants.USE_Y);
+			req.setIdpErrCd(res.getResult());
 
-		LOGGER.info("Response : {}", res);
+			sacRes = this.userService.moveUserInfo(sacHeader, req);
 
-		return res;
+			// 휴면계정상태해제 계정의 TB_US_USERMBR 테이블의 LAST_LOGIN_DT를 업데이트 한다.
+			// 테스트 API에서 복구 처리시 휴면계정고지 배치 대상에 들어가지 않도록 하기 위함.
+			if ("1".equals(req.getMoveType())) {
+				this.userService.updateActiveMoveUserLastLoginDt(sacHeader, req);
+			}
+
+		} catch (StorePlatformException ex) {
+			// IDP result 가 1000X000, 1000이 아닌 경우 StorePlatformException이 발생한다.
+			// errorInfo의 code의 prefix가 'EC_IDP_' 인 경우만 체크한다.
+			if (ex.getCode() != null && ex.getCode().contains("EC_IDP_")) {
+				req.setIdpResultYn(MemberConstants.USE_N);
+				req.setIdpErrCd(ex.getCode().replace("EC_IDP_", ""));
+				sacRes = this.userService.moveUserInfo(sacHeader, req);
+			}
+			throw ex;
+		}
+
+		LOGGER.info("Response : {}", sacRes);
+
+		return sacRes;
 	}
 }

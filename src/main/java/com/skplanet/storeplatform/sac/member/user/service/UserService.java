@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.external.client.idp.vo.CommonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -69,5 +70,17 @@ public interface UserService {
 	 * @param moveUserInfoSacReq
 	 *            moveUserInfoSacReq
 	 */
-	public void moveUserInfoForIDP(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq);
+	public CommonRes moveUserInfoForIDP(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq);
+
+	/**
+	 * <pre>
+	 * 휴면상태해제 사용자의 최종접속일자 컬럼 업데이트.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param moveUserInfoSacReq
+	 *            moveUserInfoSacReq
+	 */
+	public void updateActiveMoveUserLastLoginDt(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq);
 }
