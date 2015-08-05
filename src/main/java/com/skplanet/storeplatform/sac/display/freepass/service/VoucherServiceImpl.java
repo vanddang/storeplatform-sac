@@ -183,7 +183,7 @@ public class VoucherServiceImpl implements VoucherService {
 		if (productBasicInfoList == null)
 			throw new StorePlatformException("SAC_DSP_0009");
 
-		// 정액제 상품 메타 조회
+		// 이용권 목록 Meta / Cache 조회
 		if (productBasicInfoList.size() > 0) {
 			reqMap.put("tenantHeader", header.getTenantHeader());
 			reqMap.put("deviceHeader", header.getDeviceHeader());
@@ -192,8 +192,16 @@ public class VoucherServiceImpl implements VoucherService {
 			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 				reqMap.put("productBasicInfo", productBasicInfo);
+
+				// #############################################################################
+				// 이용권 목록 Meta / Cache 조회
+				// #############################################################################
 				retMetaInfo = this.metaInfoService.getVoucherMetaInfo(reqMap);
+				// #############################################################################
+
+				// Generate
 				coupon = this.responseInfoGenerateFacade.generateVoucherProduct(retMetaInfo);
+
 				couponList.add(coupon);
 				commonResponse.setTotalCount(productBasicInfo.getTotalCount());
 			}

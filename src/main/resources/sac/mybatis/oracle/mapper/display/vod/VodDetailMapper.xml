@@ -92,7 +92,9 @@
               , NVL(P2.PLUS19_YN, 'N') AS PLUS19_YN
               , (CASE WHEN PLAY_DWLD_STRM='DP010501' THEN 'dl' WHEN PLAY_DWLD_STRM='DP010502' THEN 'strm' WHEN PLAY_DWLD_STRM='DP010503' THEN 'both' END) AS PLAY_DL_STRM_CD      
               , (CASE WHEN STORE_DWLD_STRM='DP010501' THEN 'dl' WHEN STORE_DWLD_STRM='DP010502' THEN 'strm' WHEN STORE_DWLD_STRM='DP010503' THEN 'both' END) AS STORE_DL_STRM_CD                     
-		  FROM (SELECT RSHP.PROD_ID AS CHNL_PROD_ID, 
+		  FROM 
+		  (
+		      SELECT RSHP.PROD_ID AS CHNL_PROD_ID, 
 		              G.TENANT_ID, 
 		              C.LANG_CD, 
 		              MAX(RSHP.PART_PROD_ID) AS PROD_ID, 
@@ -136,19 +138,20 @@
 		            AND D.PROD_ID = SC.PROD_ID AND SC.SALE_YN = 'Y'
 		            AND D.PROD_ID = K.PROD_ID AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 				   	AND L.DEVICE_MODEL_CD = #{deviceModel} AND L.USE_YN = 'Y'
-		          GROUP BY RSHP.PROD_ID, G.TENANT_ID, C.LANG_CD) P 
-		       , TB_DP_PROD P2 
-		       , TB_DP_VOD_PROD MP 
-		       , TB_DP_TENANT_PROD TP 
-		       , TB_DP_TENANT_PROD_PRICE TPP 
-		       , TB_DP_PROD_DESC PD 
-		       , TB_DP_PROD_IMG PI 
-		       , TB_DP_TENANT_PROD_STATS STAT
-				<if test="userKey != null">
-			   , TB_DP_SOCIAL_STATS_MBR_LIKE ML
-               	</if>
-               , TB_DP_PROD_PREFIX PREFIX
-		WHERE P.CHNL_PROD_ID = P2.PROD_ID
+		          GROUP BY RSHP.PROD_ID, G.TENANT_ID, C.LANG_CD
+            ) P 
+		    , TB_DP_PROD P2 
+            , TB_DP_VOD_PROD MP 
+            , TB_DP_TENANT_PROD TP 
+		    , TB_DP_TENANT_PROD_PRICE TPP 
+		    , TB_DP_PROD_DESC PD 
+		    , TB_DP_PROD_IMG PI 
+		    , TB_DP_TENANT_PROD_STATS STAT
+            <if test="userKey != null">
+			, TB_DP_SOCIAL_STATS_MBR_LIKE ML
+            </if>
+            , TB_DP_PROD_PREFIX PREFIX
+        WHERE P.CHNL_PROD_ID = P2.PROD_ID
 			AND P2.PROD_ID = MP.PROD_ID
 			AND P2.PROD_ID = TP.PROD_ID
 			AND P2.PROD_ID  = PREFIX.PROD_ID(+)  

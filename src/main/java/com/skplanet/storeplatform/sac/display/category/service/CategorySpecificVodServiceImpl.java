@@ -9,6 +9,20 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -17,22 +31,13 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecifi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.meta.service.ProductSubInfoManager;
-import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.meta.service.ProductSubInfoManager;
+import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-
-import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
 
 /**
  * 특정 상품 Vod 조회 Service 구현체
@@ -51,13 +56,13 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	@Autowired
-    private MemberBenefitService memberBenefitService;
+	private MemberBenefitService memberBenefitService;
 
-    @Autowired
-    private ProductSubInfoManager productSubInfoManager;
-	
+	@Autowired
+	private ProductSubInfoManager productSubInfoManager;
+
 	/*
-	 * (non-Javadoc)
+	 * 특정 상품 Vod 조회
 	 * 
 	 * @see com.skplanet.storeplatform.sac.display.category.service.CategorySpecificVodService#getSpecificVodList
 	 * (com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacReq,
@@ -65,86 +70,102 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 	 */
 	@Override
 	public CategorySpecificSacRes getSpecificVodList(CategorySpecificSacReq req, SacRequestHeader header) {
-        String tenantId = header.getTenantHeader().getTenantId();
-        String langCd = header.getTenantHeader().getLangCd();
+		String tenantId = header.getTenantHeader().getTenantId();
+		String langCd = header.getTenantHeader().getLangCd();
 		CategorySpecificSacRes res = new CategorySpecificSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Product product = null;
 		MetaInfo metaInfo = null;
 		List<Product> productList = new ArrayList<Product>();
 
-        List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
-        if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
-            throw new StorePlatformException("SAC_DSP_0004", "list",
-                    DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
-        }
+		// 상품ID +연결된거 짜르기
+		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
+		if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
+			throw new StorePlatformException("SAC_DSP_0004", "list",
+					DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
+		}
 
-        // 상품 기본 정보 List 조회
-        List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-                "CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
+		// ################################################################################
+		// 상품 기본 정보 List 조회
+		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+				"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
+		// ################################################################################
 
-        if (productBasicInfoList != null) {
-            Map<String, Object> paramMap = new HashMap<String, Object>();
+		if (productBasicInfoList != null) {
+			Map<String, Object> paramMap = new HashMap<String, Object>();
 
-            paramMap.put("langCd", langCd);
-            paramMap.put("tenantId", tenantId);
-            paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+			paramMap.put("langCd", langCd);
+			paramMap.put("tenantId", tenantId);
+			paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 
-            for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-                String topMenuId = productBasicInfo.getTopMenuId();
-                String svcGrpCd = productBasicInfo.getSvcGrpCd();
-                String contentsTypeCd = productBasicInfo.getContentsTypeCd();
-                String prodId = contentsTypeCd.equals(DP_CHANNEL_CONTENT_TYPE_CD) ? productBasicInfo.getProdId() : productBasicInfo.getPartProdId();
-                paramMap.put("prodId", prodId);
-                paramMap.put("contentsTypeCd", productBasicInfo.getContentsTypeCd());
+			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+				String topMenuId = productBasicInfo.getTopMenuId();
+				String svcGrpCd = productBasicInfo.getSvcGrpCd();
+				String contentsTypeCd = productBasicInfo.getContentsTypeCd();
+				String prodId = contentsTypeCd.equals(DP_CHANNEL_CONTENT_TYPE_CD) ? productBasicInfo.getProdId() : productBasicInfo
+						.getPartProdId();
+				paramMap.put("prodId", prodId);
+				paramMap.put("contentsTypeCd", productBasicInfo.getContentsTypeCd());
 
-                this.log.debug("##### Top Menu Id : {}", topMenuId);
-                this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+				this.log.debug("##### Top Menu Id : {}", topMenuId);
+				this.log.debug("##### Service Group Cd : {}", svcGrpCd);
 
-                // 상품 SVC_GRP_CD 조회
-                // DP000203 : 멀티미디어
-                // DP000206 : Tstore 쇼핑
-                // DP000205 : 소셜쇼핑
-                // DP000204 : 폰꾸미기
-                // DP000201 : 애플리캐이션
+				// 상품 SVC_GRP_CD 조회
+				// DP000203 : 멀티미디어
+				// DP000206 : Tstore 쇼핑
+				// DP000205 : 소셜쇼핑
+				// DP000204 : 폰꾸미기
+				// DP000201 : 애플리캐이션
 
-                // vod 상품의 경우
-                if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-                    // 영화/방송 상품의 경우
+				// vod 상품의 경우
+				if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 
-                    if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-                            || DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-                        this.log.debug("##### Search for Vod specific product");
-                        metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo",
-                                paramMap, MetaInfo.class);
-                        // metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+					// 영화/방송 상품의 경우
+					if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+							|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+						this.log.debug("##### Search for Vod specific product");
 
-                        if(metaInfo == null)
-                            continue;
+						// #############################################################################
+						// VOD 메타정보조회
+						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo", paramMap,
+								MetaInfo.class);
+						// metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+						// #############################################################################
 
-                        CidPrice cidPrice = productSubInfoManager.getCidPrice(langCd, tenantId, metaInfo.getEpsdCid());
-                        if (cidPrice != null) {
-                            metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
-                            metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());
-                        }
+						if (metaInfo == null)
+							continue;
 
-                        // Tstore멤버십 적립율 정보
-                        metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+						// #####################################################################
+						// CID를 이용하여 상품의 가격을 조회
+						CidPrice cidPrice = this.productSubInfoManager.getCidPrice(langCd, tenantId,
+								metaInfo.getEpsdCid());
+						// #####################################################################
+						if (cidPrice != null) {
+							metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
+							metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());
+						}
 
-                        if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-                            product = this.responseInfoGenerateFacade.generateSpecificMovieProduct(metaInfo);
-                        } else {
-                            product = this.responseInfoGenerateFacade.generateSpecificBroadcastProduct(metaInfo);
-                        }
-                        productList.add(product);
-                    }
-                }
-            }
-        }
-        commonResponse.setTotalCount(productList.size());
-        res.setCommonResponse(commonResponse);
-        res.setProductList(productList);
-        return res;
+						// Tstore멤버십 적립율 정보
+						metaInfo.setMileageInfo(this.memberBenefitService.getMileageInfo(header.getTenantHeader()
+								.getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+
+						// Generate
+						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+							// Movie 상품
+							product = this.responseInfoGenerateFacade.generateSpecificMovieProduct(metaInfo);
+						} else {
+							// 방송 상품
+							product = this.responseInfoGenerateFacade.generateSpecificBroadcastProduct(metaInfo);
+						}
+						productList.add(product);
+					}
+				}
+			}
+		}
+		commonResponse.setTotalCount(productList.size());
+		res.setCommonResponse(commonResponse);
+		res.setProductList(productList);
+		return res;
 	}
 
 }

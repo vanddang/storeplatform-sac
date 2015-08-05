@@ -1,11 +1,7 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +43,7 @@ import com.skplanet.storeplatform.sac.display.common.ContentType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.meta.util.MetaBeanUtils;
+import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 
@@ -69,8 +66,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	@Autowired
 	private MemberBenefitService memberBenefitService;
 
-    @Autowired
-    private ProductSubInfoManager subInfoManager;
+	@Autowired
+	private ProductSubInfoManager subInfoManager;
 
 	private void commonHandler(MetaInfo me, String tenantId, String prodKey) {
 		// 집계는 쇼핑의 경우 catalogId, 그 외에는 항상 채널 기준으로 노출하고 있음
@@ -138,11 +135,11 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		return me;
 	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getMusicMetaInfo(java.util.Map)
-     */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getMusicMetaInfo(java.util.Map)
+	 */
 	@Override
 	public MetaInfo getMusicMetaInfo(Map<String, Object> paramMap) {
 		MetaInfo me;
@@ -232,21 +229,21 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 				me.setUnlmtAmt(meta.getChnlUnlmtAmt());
 				me.setPeriodAmt(meta.getChnlPeriodAmt());
 
-                me.setDrmYn(meta.getChnlDrmYn());
+				me.setDrmYn(meta.getChnlDrmYn());
 			} else if (param.getContentType() == ContentType.Episode) {
 				me.setProdAmt(meta.getEpsdProdAmt());
 				me.setUnlmtAmt(meta.getEpsdUnlmtAmt());
 				me.setPeriodAmt(meta.getEpsdPeriodAmt());
 
-                // 에피소드의 drmYn 세팅. Rights를 생성하는 부분에서 소장이냐 대여냐에 따라 생성 로직이 분리되기 때문에 아래와 같이 처리해도 무방
-                me.setPlayDrmYn(meta.getEpsdDrmYn());
-                me.setStoreDrmYn(meta.getEpsdDrmYn());
+				// 에피소드의 drmYn 세팅. Rights를 생성하는 부분에서 소장이냐 대여냐에 따라 생성 로직이 분리되기 때문에 아래와 같이 처리해도 무방
+				me.setPlayDrmYn(meta.getEpsdDrmYn());
+				me.setStoreDrmYn(meta.getEpsdDrmYn());
 			}
 		} else {
-            me = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
+			me = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
 
-            // TODO 에피소드의 drmYn 세팅
-        }
+			// TODO 에피소드의 drmYn 세팅
+		}
 
 		if (me != null)
 			this.commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
@@ -264,10 +261,10 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 		MetaInfo me;
 		TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
-        ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
-        ContentType contentType = ContentType.forCode(basicInfo.getContentsTypeCd());
+		ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
+		ContentType contentType = ContentType.forCode(basicInfo.getContentsTypeCd());
 
-        if (this.isUseCache()) {
+		if (this.isUseCache()) {
 
 			EbookComicMetaParam param = new EbookComicMetaParam();
 			param.setTenantId(tenantHeader.getTenantId());
@@ -300,22 +297,23 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 				me.setProdNetAmt(meta.getEpsdProdNetAmt());
 				me.setUnlmtAmt(meta.getEpsdUnlmtAmt());
 				me.setPeriodAmt(meta.getEpsdPeriodAmt());
-                if(meta.getUsePeriod() != null)
-                    me.setUsePeriod(meta.getUsePeriod().toString());
+				if (meta.getUsePeriod() != null)
+					me.setUsePeriod(meta.getUsePeriod().toString());
 			}
 		} else {
-            me = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
-            if (me != null && contentType == ContentType.Episode) {
-                CidPrice cidPrice = subInfoManager.getCidPriceByEpsdId(tenantHeader.getLangCd(), tenantHeader.getTenantId(), basicInfo.getPartProdId());
-                if (cidPrice != null) {
-                    me.setUsePeriodUnitCd(cidPrice.getRentPeriodUnitCd());
-                    me.setUsePeriod(cidPrice.getRentPeriod() == null ? null : cidPrice.getRentPeriod().toString());
-                    me.setUsePeriodNm(cidPrice.getRentPeriodUnitNm());
-                    me.setUnlmtAmt(cidPrice.getProdAmt());
-                    me.setPeriodAmt(cidPrice.getRentProdAmt());
-                }
-            }
-        }
+			me = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
+			if (me != null && contentType == ContentType.Episode) {
+				CidPrice cidPrice = this.subInfoManager.getCidPriceByEpsdId(tenantHeader.getLangCd(),
+						tenantHeader.getTenantId(), basicInfo.getPartProdId());
+				if (cidPrice != null) {
+					me.setUsePeriodUnitCd(cidPrice.getRentPeriodUnitCd());
+					me.setUsePeriod(cidPrice.getRentPeriod() == null ? null : cidPrice.getRentPeriod().toString());
+					me.setUsePeriodNm(cidPrice.getRentPeriodUnitNm());
+					me.setUnlmtAmt(cidPrice.getProdAmt());
+					me.setPeriodAmt(cidPrice.getRentProdAmt());
+				}
+			}
+		}
 
 		if (me != null)
 			this.commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
@@ -461,6 +459,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getVoucherMetaInfo(Map<String, Object> paramMap) {
+
+		// 이용권 캐시조회
 		if (this.isUseCache()) {
 			VoucherMetaParam param = new VoucherMetaParam();
 			ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
@@ -470,9 +470,14 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 			param.setLangCd(tenantHeader.getLangCd());
 			param.setTenantId(tenantHeader.getTenantId());
 
+			// ##################################################################
+			// 이용권 캐시조회
+			// ##################################################################
 			VoucherMeta ffMeta = this.productInfoManager.getVoucherMeta(param);
+			// ##################################################################
+
 			if (ffMeta == null) {
-				this.logger.warn("메타데이터를 읽을 수 없습니다 - Voucher#{}", basicInfo.getProdId());
+				this.logger.warn("캐시 데이터를 읽을 수 없습니다 - Voucher#{}", basicInfo.getProdId());
 				return null;
 			}
 
@@ -481,6 +486,9 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 			return me;
 		} else
+			// ###########################################################################
+			// 이용권 메타조회
+			// ###########################################################################
 			return this.commonDAO.queryForObject("MetaInfo.getVoucherMetaInfo", paramMap, MetaInfo.class);
 	}
 
