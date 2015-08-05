@@ -335,6 +335,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			}
 
 		} else { // 외국인
+
+			String systemId = header.getTenantHeader().getSystemId();
+
 			// first:sellerNickName, second:sellerCompany, default:""
 			nameTop = StringUtils.defaultString(
 					StringUtils.isNotBlank(sellerMbrs.get(0).getSellerNickName()) ? sellerMbrs.get(0)
@@ -344,10 +347,20 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, sellerMbrs.get(0)
 					.getSellerClass())) {
 				// first:sellerName, second:sellerCompany, default:""
-				nameLower = StringUtils
-						.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
-								.getSellerName() : sellerMbrs.get(0).getSellerCompany(), "");
+				// 2015.08.26 추가
+				// 헤더에 요청한 system_id가 개발자 센터인 경우는 sellerName 구분자(|)를 포함해서 현재 처럼 내려주고
+				// 아닌 경우는 구분자('|')를 스페이스 공백으로 바꿔서 내려주도록 처리. 개발자 센터는 split해서 사용하고 있음.
+				if (MemberConstants.SYSTEM_ID_DEV_POC.equals(systemId)) {
+					nameLower = StringUtils.defaultString(
+							StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
+									.getSellerName() : sellerMbrs.get(0).getSellerCompany(), "");
+				} else {
+					nameLower = StringUtils.defaultString(
+							StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
+									.getSellerName().replace("|", " ") : sellerMbrs.get(0).getSellerCompany(), "");
+				}
 			}
+
 			// 개인 사업자, 법인 사업자 ( 상호명, 이메일 )
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, sellerMbrs.get(0)
 					.getSellerClass())
@@ -356,16 +369,35 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 				// 2015.07.28 추가
 				// first:sellerName, second:sellerCompany, default:""
-				nameLower = StringUtils
-						.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
-								.getSellerName() : sellerMbrs.get(0).getSellerCompany(), "");
+				// 2015.08.26 추가
+				// 헤더에 요청한 system_id가 개발자 센터인 경우는 sellerName 구분자(|)를 포함해서 현재 처럼 내려주고
+				// 아닌 경우는 구분자('|')를 스페이스 공백으로 바꿔서 내려주도록 처리. 개발자 센터는 split해서 사용하고 있음.
+				if (MemberConstants.SYSTEM_ID_DEV_POC.equals(systemId)) {
+					nameLower = StringUtils.defaultString(
+							StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
+									.getSellerName() : sellerMbrs.get(0).getSellerCompany(), "");
+				} else {
+					nameLower = StringUtils.defaultString(
+							StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
+									.getSellerName().replace("|", " ") : sellerMbrs.get(0).getSellerCompany(), "");
+				}
 
 				// first:sellerNickName, second:sellerCompany, third:sellerName, default:""
 				// 외국인 판매자명 [FirstName|FamilyName] => [FirstName FamilyName] (2015-07-28).
-				compNmLower = StringUtils.isNotBlank(sellerMbrs.get(0).getSellerNickName()) ? sellerMbrs.get(0)
-						.getSellerNickName() : StringUtils.defaultString(
-						StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()) ? sellerMbrs.get(0)
-								.getSellerCompany() : sellerMbrs.get(0).getSellerName(), "");
+				// 2015.08.26 추가
+				// 헤더에 요청한 system_id가 개발자 센터인 경우는 sellerName 구분자(|)를 포함해서 현재 처럼 내려주고
+				// 아닌 경우는 구분자('|')를 스페이스 공백으로 바꿔서 내려주도록 처리. 개발자 센터는 split해서 사용하고 있음.
+				if (MemberConstants.SYSTEM_ID_DEV_POC.equals(systemId)) {
+					compNmLower = StringUtils.isNotBlank(sellerMbrs.get(0).getSellerNickName()) ? sellerMbrs.get(0)
+							.getSellerNickName() : StringUtils.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0)
+							.getSellerCompany()) ? sellerMbrs.get(0).getSellerCompany() : sellerMbrs.get(0)
+							.getSellerName(), "");
+				} else {
+					compNmLower = StringUtils.isNotBlank(sellerMbrs.get(0).getSellerNickName()) ? sellerMbrs.get(0)
+							.getSellerNickName() : StringUtils.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0)
+							.getSellerCompany()) ? sellerMbrs.get(0).getSellerCompany() : sellerMbrs.get(0)
+							.getSellerName().replace("|", " "), "");
+				}
 			}
 		}
 
