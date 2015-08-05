@@ -262,7 +262,7 @@
 	            END
 	        )
 	    INNER JOIN TB_DP_USE_POLICY UP ON IV.USE_POLICY_ID = UP.USE_POLICY_ID
-	    ORDER BY UP.USE_PERIOD ASC        
+	    ORDER BY IV.EXPO_ORD ASC        
     </select>
     
         
