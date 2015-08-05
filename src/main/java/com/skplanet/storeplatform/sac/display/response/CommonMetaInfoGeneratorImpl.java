@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -467,6 +468,26 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		if (StringUtils.isNotEmpty(metaInfo.getPlayProdId())) {
 			rights.setPlay(this.generatePlay(metaInfo));
 		}
+
+        if("Y".equals(metaInfo.getSupportStore()) && StringUtils.isNotEmpty(metaInfo.getStoreDrmYn())) {
+            Store store = rights.getStore();
+            if(store == null) {
+                store = new Store();
+                rights.setStore(store);
+            }
+
+            store.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn())));
+        }
+
+        if("Y".equals(metaInfo.getSupportPlay()) && StringUtils.isNotEmpty(metaInfo.getPlayDrmYn())) {
+            Play play = rights.getPlay();
+            if(play == null) {
+                play = new Play();
+                rights.setPlay(play);
+            }
+
+            play.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn())));
+        }
 
 		return rights;
 	}

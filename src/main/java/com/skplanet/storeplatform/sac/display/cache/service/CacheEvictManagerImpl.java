@@ -47,7 +47,7 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = {"sac:display:product:vod:v4","sac:display:product:vod:v5"}, key = "#param.getCacheKey()")
+    @CacheEvict(value = {"sac:display:product:vod:v5","sac:display:product:vod:v6"}, key = "#param.getCacheKey()")
     public void evictVodMeta(VodMetaParam param) {
 
     }
