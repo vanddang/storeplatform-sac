@@ -68,8 +68,17 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 	 */
 	@Override
 	public App generateApp(MetaInfo metaInfo) {
-		return this.generateApp(metaInfo.getAid(), metaInfo.getApkPkgNm(), metaInfo.getApkVer(), metaInfo.getProdVer(),
-				metaInfo.getFileSize(), metaInfo.getSupportedOs(), metaInfo.getSubContentsId(), null);
+		App app = new App();
+		app.setAid(metaInfo.getAid());
+		app.setPackageName(metaInfo.getApkPkgNm());
+		app.setVersionCode(metaInfo.getApkVer());
+		app.setVersion(metaInfo.getProdVer());
+		app.setSize(metaInfo.getFileSize());
+		app.setSupportedOs(metaInfo.getSupportedOs());
+		app.setScid(metaInfo.getSubContentsId());
+		app.setApkSignedKeyHash(metaInfo.getApkSignedKeyHash());
+
+		return app;
 	}
 
 	@Override

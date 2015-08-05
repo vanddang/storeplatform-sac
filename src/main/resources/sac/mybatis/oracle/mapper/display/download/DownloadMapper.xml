@@ -160,6 +160,7 @@
                       , KB.SUB_CONTENTS_ID
                       , (PLAT_CLSF_CD_NM ||' '|| KB.VM_VER) AS SUPPORTED_OS
                       , KB.FILE_PATH AS FILE_PATH
+					  , KB.APK_SIGNED_KEY_HASH
                       , KC.FILE_PATH AS IMAGE_PATH
                       , KC.FILE_SIZE AS IMAGE_SIZE
                   FROM (

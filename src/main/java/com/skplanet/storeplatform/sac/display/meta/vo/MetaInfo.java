@@ -100,6 +100,7 @@ public class MetaInfo extends CommonInfo {
 	private String vmVer;
 	private String bnchProdId;
 	private String bnchDwldMsg;
+	private String apkSignedKeyHash;
 
 	// ////////////////////////// 멀티미디어 상품 변수 ////////////////////////////
 	private String vodTitlNm;
@@ -4284,6 +4285,14 @@ public class MetaInfo extends CommonInfo {
 
 	public void setBnchDwldMsg(String bnchDwldMsg) {
 		this.bnchDwldMsg = bnchDwldMsg;
+	}
+
+	public String getApkSignedKeyHash() {
+		return apkSignedKeyHash;
+	}
+
+	public void setApkSignedKeyHash(String apkSignedKeyHash) {
+		this.apkSignedKeyHash = apkSignedKeyHash;
 	}
 
 	public MileageInfo getMileageInfo() {
