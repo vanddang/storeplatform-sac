@@ -9,21 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.sap.sci.SapPurchaseSCI;
 import com.skplanet.storeplatform.external.client.sap.vo.CheckPurchasePolicyEcReq;
 import com.skplanet.storeplatform.external.client.sap.vo.CheckPurchasePolicyEcRes;
@@ -46,6 +31,20 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyResult;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymethodAdjustPolicyInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 
@@ -1332,7 +1331,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// 결제수단 별 가능 거래금액/비율 조정 정책 조회
 
 		TenantSalePolicy paymentPolicy = this.purchaseTenantPolicyService.searchPaymentPolicy(tenantId,
-				tenantProdGrpCd, prodKindCd, prodId, parentProdId);
+				StringUtils.isEmpty(cmpxProdClsfCd) ? tenantProdGrpCd : tenantProdGrpCd+cmpxProdClsfCd, prodKindCd, prodId, parentProdId);
 		if (paymentPolicy == null) {
 			throw new StorePlatformException("SAC_PUR_7103");
 		}
@@ -1488,9 +1487,10 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// 상품 별 또는 모상품 별 지정한 것들은 정책 그대로. 기본 카테고리 정책이면 상품 별 예외 하드코딩 정책 적용
 		if (StringUtils.equals(paymentPolicy.getPolicyId(), PurchaseConstants.POLICY_ID_PAYMETHOD_ADJUST)) {
 
-			// 시리즈 패스: PayPin 허용
-			if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+			// 정액권,시리즈 패스: PayPin 허용 (차후 필요 없을 것 같은 로직-영향도 파악후 제거 필요)
+			if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS) || StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
 				paymethodInfo = paymethodInfo.replaceAll("14:0:0;", "").replaceAll(";14:0:0", "");
+				paymethodInfo = paymethodInfo.replaceAll("14:0.0:0;", "").replaceAll(";14:0.0:0", "");
 			}
 
 			// 인앱 자동결제 상품의 경우(서버2서버 자동결제 포함), 휴대폰결제/신용카드만 노출되며 T멤버십은 호핀 앱에서만 노출한다.

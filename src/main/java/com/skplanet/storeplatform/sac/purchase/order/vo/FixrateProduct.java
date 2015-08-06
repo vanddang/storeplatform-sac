@@ -24,7 +24,7 @@ public class FixrateProduct extends CommonInfo {
 	private String drmYn; // DRM 여부 (에피소드 상품의 대여/소장 기준)
 	private String usePeriodUnitCd; // 이용기간 단위 (에피소드 상품의 대여/소장 기준)
 	private String usePeriod; // 이용기간 값 (에피소드 상품의 대여/소장 기준)
-	private String cmpxProdClsfCd; // 정액제 상품 분류 코드: OR004301-정액권, OR004302-시리즈패스, OR004303-전권소장, OR004304-전권대여
+	private String cmpxProdClsfCd; // 정액제 상품 분류 코드: OR004301-정액제 패스, OR004302-시리즈패스, OR004303-전권소장, OR004304-전권대여
 
 	/**
 	 * @return the fixrateProdId
