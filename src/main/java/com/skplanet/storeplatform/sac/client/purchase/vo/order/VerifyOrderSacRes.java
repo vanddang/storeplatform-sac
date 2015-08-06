@@ -36,6 +36,8 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String typeSktLimit; // SKT후불 결제수단 재정의 원인: L00~L09
 	private String cdMaxAmtRate; // 결제수단 별 가능 거래금액/비율 조정 정보
 	private String cdPriority; // 결제수단 정렬 재조정
+	private String purchaseSuspensionCd; // 시스템 점검중인 결제 수단
+	private String purchaseSuspensionMsg; // 시스템 점검중인 결제 수단 메시지
 	private String cdOcbSaveInfo; // OCB 적립코드
 	private String ocbAuthMtdCd; // OCB 인증수단 코드
 	private String noOcbCard; // OCB 카드번호
@@ -62,7 +64,8 @@ public class VerifyOrderSacRes extends CommonInfo {
 	// 전시 정보
 	private String svcGrpCd; // 서비스 그룹 코드
 	private String prodCaseCd; // 쇼핑 상품 유형 코드
-	private String specialTypeCd; // 특가상품 유형 코드,팅요금제 상품 유형 코드(특가상품-상품권/교환권:DP007501,특가상품-배송상품:DP007502,팅요금제-상품권/교환권:DP007503)
+	private String specialTypeCd; // 특가상품 유형 코드,팅요금제 상품 유형
+								  // 코드(특가상품-상품권/교환권:DP007501,특가상품-배송상품:DP007502,팅요금제-상품권/교환권:DP007503)
 
 	private VerifyOrderIapInfoSac iapProdInfo; // IAP상품 정보
 	private List<VerifyOrderPromotionInfoSac> promotionList; // 프로모션 정보
@@ -696,9 +699,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	}
 
 	/**
-	 * Gets special type cd.
-	 * 특가상품 유형 코드,팅요금제 상품 유형 코드
-	 * (특가상품-상품권/교환권:DP007501,특가상품-배송상품:DP007502,팅요금제-상품권/교환권:DP007503)
+	 * Gets special type cd. 특가상품 유형 코드,팅요금제 상품 유형 코드 (특가상품-상품권/교환권:DP007501,특가상품-배송상품:DP007502,팅요금제-상품권/교환권:DP007503)
 	 *
 	 * @return the special type cd
 	 */
@@ -709,9 +710,26 @@ public class VerifyOrderSacRes extends CommonInfo {
 	/**
 	 * Sets special type cd.
 	 *
-	 * @param specialTypeCd the special type cd
+	 * @param specialTypeCd
+	 *            the special type cd
 	 */
 	public void setSpecialTypeCd(String specialTypeCd) {
 		this.specialTypeCd = specialTypeCd;
+	}
+
+	public String getPurchaseSuspensionCd() {
+		return purchaseSuspensionCd;
+	}
+
+	public void setPurchaseSuspensionCd(String purchaseSuspensionCd) {
+		this.purchaseSuspensionCd = purchaseSuspensionCd;
+	}
+
+	public String getPurchaseSuspensionMsg() {
+		return purchaseSuspensionMsg;
+	}
+
+	public void setPurchaseSuspensionMsg(String purchaseSuspensionMsg) {
+		this.purchaseSuspensionMsg = purchaseSuspensionMsg;
 	}
 }
