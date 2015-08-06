@@ -11,7 +11,10 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseHeaderSacReq;
 
@@ -25,8 +28,29 @@ public class ExistenceUserInfoSacV2 extends PurchaseHeaderSacReq {
 	private static final long serialVersionUID = 1L;
 
 	@NotBlank
+	private String tenantId;
+	@NotBlank
 	private String userKey;
+	@NotEmpty
+	@Valid
 	private List<ExistenceInfoSac> deviceList;
+
+	/**
+	 * @return the tenantId
+	 */
+	@Override
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	@Override
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	/**
 	 * @return the userKey

@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseHeaderSacReq;
 
 /**
@@ -21,6 +23,7 @@ public class ExistenceInfoSac extends PurchaseHeaderSacReq {
 	private static final long serialVersionUID = 1L;
 
 	private String prodId;
+	@NotBlank
 	private String deviceKey;
 
 	/**

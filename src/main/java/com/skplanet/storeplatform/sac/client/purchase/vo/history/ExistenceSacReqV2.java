@@ -11,6 +11,10 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseHeaderSacReq;
 
 /**
@@ -22,7 +26,11 @@ import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseHeaderSa
 public class ExistenceSacReqV2 extends PurchaseHeaderSacReq {
 	private static final long serialVersionUID = 1L;
 
+	@NotEmpty
+	@Valid
 	private List<ExistenceUserInfoSacV2> userList;
+	@NotEmpty
+	@Valid
 	private List<ExistenceInfoSac> prodList;
 
 	/**
