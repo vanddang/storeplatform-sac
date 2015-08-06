@@ -374,9 +374,13 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 
 			} else {
 				if (StringUtils.equals(purchaseProduct.getResvCol03(), "128")) {
-					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_NORMAL;
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_128;
+				} else if (StringUtils.equals(purchaseProduct.getResvCol03(), "192")) {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_192;
+				} else if (StringUtils.equals(purchaseProduct.getResvCol03(), "320")) {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_320;
 				} else {
-					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH;
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3;
 				}
 			}
 
@@ -638,7 +642,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_S2S_UNIT; // S2S 단품: TC09
 
 			} else if (bAutoPrchs
-					&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
+					&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
+							.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
 					&& StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
 				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
 
