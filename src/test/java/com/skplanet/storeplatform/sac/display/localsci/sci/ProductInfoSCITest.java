@@ -55,14 +55,14 @@ public class ProductInfoSCITest {
         prods.add(new TestProd("0000653862", ProductType.App));
         prods.add(new TestProd("0000655120", ProductType.App)); // SeedMapg 존재하는 앱 상품
         prods.add(new TestProd("0900000141", ProductType.App));
-        prods.add(new TestProd("H000400088", ProductType.Music));
+//        prods.add(new TestProd("H000400088", ProductType.Music));
         prods.add(new TestProd("H000043059", ProductType.Vod));
         prods.add(new TestProd("H000043062", ProductType.Vod, "Y"));
-        prods.add(new TestProd("H001727890", ProductType.EbookComic, "Y"));
-        prods.add(new TestProd("H002928525", ProductType.EbookComic));
+//        prods.add(new TestProd("H001727890", ProductType.EbookComic, "Y"));
+//        prods.add(new TestProd("H002928525", ProductType.EbookComic));
         prods.add(new TestProd("H002643572", ProductType.RingBell));
-        prods.add(new TestProd("H001929394", ProductType.RingBell));
-        prods.add(new TestProd("S900027675", ProductType.Shopping));
+//        prods.add(new TestProd("H001929394", ProductType.RingBell));
+//        prods.add(new TestProd("S900027675", ProductType.Shopping));
 //        prods.add(new TestProd("H002725517", ProductType.RingBell));    // QA Only
         // TODO 링벨의 메타 클래스 응답 체크
 
@@ -81,7 +81,7 @@ public class ProductInfoSCITest {
             for (ProductInfo productInfo : productList) {
                 log.info(ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
 
-                if(!prod.seriesYn.equals(productInfo.getSeriesYn()))
+                if(!productInfo.getSeriesYn().equals(prod.seriesYn))
                     throw new RuntimeException("시리즈 여부가 일치하지 않습니다.");
             }
         }
@@ -90,8 +90,7 @@ public class ProductInfoSCITest {
     @Test
     public void integratedTestProd2() {
 //        String strReq = "H001578408,S930000018,S930000018,S930000732,S930001020,0000289283,S930001020,H002797317,0000654465,0000654480,S930000732,0000646768,0000654464,H002795912,F901000867,H001319405,H001287490,H002796749,H001535053,H001478925,0000651010,H000046822,0000036197,0000652916,H001491582,H001453210,0000654428,H001226577,0000651702,0000649183,0000325500,H900736484,H001477758,H900722153,H001579410,H002796764,H002796763,H002795530,H002796762,H002795479,H002795941,H002795536,H002795530,0000411082,H001535053,0000651010,H002796015,H002795612,0000410688,S930000018,S930000018,H002621961,H002794927,H002794925,0000326758,0000649063,0000649063,H001118870,H001593434,H002795912,0000290423,H001169876,0000654409,H002794868,0000132081,H000045030,H002795887,S930000732,H001505727,H001181693,H900366974,H001611312,H001606653,0000654407,0000654407,H002794756,H002795381,H001610044,0000266426,S930000018,H002621961,H002621961,0000654336,H001598309,H002795285,H900158143,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,0000654251,0000654251";
-//        String strReq = "0000642920,0000405537,0000408104,0000650997";
-        String strReq = "H001171840";
+        String strReq = "0000414210,0000131401,H000046599,S900002648,H102832823,H102977086";
 
         // Episode Only
         List<String> prods = Arrays.asList(StringUtils.split(strReq, ","));
@@ -107,6 +106,10 @@ public class ProductInfoSCITest {
 
         if(productList.size() == 0)
             throw new RuntimeException("응답 데이터가 없습니다.");
+
+        for (ProductInfo productInfo : productList) {
+            log.info(ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
+        }
     }
 
     class TestProd {
