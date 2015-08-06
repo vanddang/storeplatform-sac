@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
-import java.io.Serializable;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -20,13 +19,29 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 28. Updated by : 조용진, 엔텔스.
  */
-public class ExistenceListSacResV2 extends CommonInfo implements Serializable {
+public class ExistenceListSacResV2 extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	private String tenantId;
 	private String userKey;
 	private String deviceKey;
 
 	List<ExistenceSacRes> existenceList;
+
+	/**
+	 * @return the tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	/**
 	 * @return the userKey
