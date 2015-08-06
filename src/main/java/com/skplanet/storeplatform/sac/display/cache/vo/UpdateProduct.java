@@ -47,6 +47,7 @@ public class UpdateProduct extends CommonInfo{
     private String prodVer;
     private String fakeYn;
     private String updtText;
+	private String apkSignedKeyHash;
 
     public String getAid() {
         return aid;
@@ -249,5 +250,11 @@ public class UpdateProduct extends CommonInfo{
 		this.updtText = updtText;
 	}
 
+	public String getApkSignedKeyHash() {
+		return apkSignedKeyHash;
+	}
 
+	public void setApkSignedKeyHash(String apkSignedKeyHash) {
+		this.apkSignedKeyHash = apkSignedKeyHash;
+	}
 }

@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.sac.common.util.PartialProcessor;
 import com.skplanet.storeplatform.sac.common.util.PartialProcessorHandler;
 import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
+import com.skplanet.storeplatform.sac.display.personal.vo.UpdatePkgDetail;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -300,23 +301,14 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
 
     @Override
     public MemberInfo getMemberInfo(String deviceId) {
-        logger.debug("##### check user status");
-        logger.debug("##### deviceId :: {} " + deviceId);
         UserInfoSacReq userInfoSacReq = new UserInfoSacReq();
         userInfoSacReq.setDeviceId(deviceId);
-        logger.debug("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserBydeviceId");
-        long start = System.currentTimeMillis();
+
         UserInfoSacRes userInfoSacRes = this.searchUserSCI.searchUserBydeviceId(userInfoSacReq);
-        logger.debug("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserBydeviceId");
-        long end = System.currentTimeMillis();
-        logger.debug("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserBydeviceId takes {} ms",
-                (end - start));
 
         String userMainStatus = userInfoSacRes.getUserMainStatus();
         final String userKey = userInfoSacRes.getUserKey();
         final String deviceKey = userInfoSacRes.getDeviceKey();
-        logger.debug("##### userKey :: {} " + userKey);
-        logger.debug("##### deviceKey :: {} " + deviceKey);
 
         new TLogUtil().set(new TLogUtil.ShuttleSetter() {
             @Override
@@ -328,11 +320,8 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
         // 회원에 의하면 정상은 UserMainStatus를 참고
         // 정상 회원일이 아닐 경우 -> '업데이트 내역이 없습니다' 에러 발생
         // 탈퇴 회원일 경우 -> 회원에서 '탈퇴한 회원입니다.'에러 발생하여 그대로 throw 함
-        if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)) {
-            logger.debug("##### This user is normal user!!!!");
-        } else {
-            logger.debug("##### This user is unnormal user!!!!");
-            throw new StorePlatformException("SAC_DSP_0006");
+        if (!DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)) {
+			throw new StorePlatformException("SAC_DSP_0006");
         }
 
         return new MemberInfo(userKey, deviceKey);
@@ -354,4 +343,29 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
         // 매핑된 패키지명의 가짓수가 1개 이상이면 경고
         return v > 1;
     }
+
+	@Override
+	public Map<String, UpdatePkgDetail> parsePkgInfoList(List<String> packageInfoList) {
+		int reqSize = packageInfoList.size();
+
+		Map<String, UpdatePkgDetail> pkgReqMap = new LinkedHashMap<String, UpdatePkgDetail>(reqSize);
+
+		for (String s : packageInfoList) {
+			UpdatePkgDetail dtl = new UpdatePkgDetail(s);
+			// parameter가 적어도 packageName/version정보로 와야지만 update 리스트에 추가한다.
+			if (dtl.getParsedCnt() >= 2)
+				pkgReqMap.put(dtl.getPkgNm(), dtl);
+		}
+
+		return pkgReqMap;
+	}
+
+	@Override
+	public boolean isTargetUpdateProduct(int reqVer, int dbVer, String reqApkSign, String dbApkSign) {
+
+		if (StringUtils.isNotEmpty(reqApkSign) && StringUtils.isNotEmpty(dbApkSign))
+			return (dbVer > reqVer) && reqApkSign.equals(dbApkSign);
+		else
+			return (dbVer > reqVer);
+	}
 }

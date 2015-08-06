@@ -22,20 +22,23 @@ public class UpdatePkgDetail {
 
     private String pkgNm;
     private Integer ver;
+	private String installer;
+	private String apkSignedKeyHash;
+	private Integer parsedCnt;
 
     public UpdatePkgDetail(String pkgInfo) {
         String[] arrInfo = StringUtils.split(pkgInfo, "/");
-        if(arrInfo.length >= 1)
+		this.parsedCnt = arrInfo.length;
+
+        if(this.parsedCnt >= 1)
             this.pkgNm = arrInfo[0];
-        if(arrInfo.length >= 2) {
+        if(this.parsedCnt >= 2)
             this.ver = NumberUtils.toInt(arrInfo[1]);
-        }
+		if(this.parsedCnt >= 3)
+			this.installer = arrInfo[2];
+		if(this.parsedCnt >= 4)
+			this.apkSignedKeyHash = arrInfo[3];
 
-    }
-
-    public UpdatePkgDetail(String pkgNm, Integer ver) {
-        this.pkgNm = pkgNm;
-        this.ver = ver;
     }
 
     public String getPkgNm() {
@@ -53,4 +56,28 @@ public class UpdatePkgDetail {
     public void setVer(Integer ver) {
         this.ver = ver;
     }
+
+	public String getInstaller() {
+		return installer;
+	}
+
+	public void setInstaller(String installer) {
+		this.installer = installer;
+	}
+
+	public String getApkSignedKeyHash() {
+		return apkSignedKeyHash;
+	}
+
+	public void setApkSignedKeyHash(String apkSignedKeyHash) {
+		this.apkSignedKeyHash = apkSignedKeyHash;
+	}
+
+	public Integer getParsedCnt() {
+		return parsedCnt;
+	}
+
+	public void setParsedCnt(Integer parsedCnt) {
+		this.parsedCnt = parsedCnt;
+	}
 }

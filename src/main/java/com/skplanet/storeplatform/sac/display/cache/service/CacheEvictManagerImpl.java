@@ -135,7 +135,7 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = {"sac:display:updateProductInfo","sac:display:updateProductInfo:v2", "sac:display:updateProductInfo:v3"}, allEntries = true)
+    @CacheEvict(value = {"sac:display:updateProductInfo:v2", "sac:display:updateProductInfo:v3","sac:display:updateProductInfo:v4"}, allEntries = true)
     public void evictAllUpdateProduct() {
 
     }

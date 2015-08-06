@@ -11,8 +11,10 @@ package com.skplanet.storeplatform.sac.display.personal.service;
 
 import com.skplanet.storeplatform.sac.display.personal.vo.MemberInfo;
 import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
+import com.skplanet.storeplatform.sac.display.personal.vo.UpdatePkgDetail;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -72,4 +74,22 @@ public interface AppUpdateSupportService {
      * @return true 다른 매핑이 조회됨.
      */
     boolean getDifferentPackageNameYn(String prodId);
+
+	/**
+	 * packageInfo string 값을 파싱하여 Map으로 리턴한다.
+	 * @param packageInfoList
+	 * @return
+	 */
+	Map<String, UpdatePkgDetail> parsePkgInfoList(List<String> packageInfoList);
+
+	/**
+	 * dbVer이 reqVer보다 높고,
+	 * ApkSign 값이 존재 한다면, 일치하는 경우 true을 리턴한다.
+	 * @param reqVer
+	 * @param dbVer
+	 * @param reqApkSign
+	 * @param dbApkSign
+	 * @return
+	 */
+	boolean isTargetUpdateProduct(int reqVer, int dbVer, String reqApkSign, String dbApkSign);
 }

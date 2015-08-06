@@ -51,7 +51,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     private static final Logger logger = LoggerFactory.getLogger(CachedExtraInfoManagerImpl.class);
 
     @Override
-    @Cacheable(value = "sac:display:updateProductInfo:v3", key = "#param.getCacheKey()")
+    @Cacheable(value = "sac:display:updateProductInfo:v4", key = "#param.getCacheKey()")
     public UpdateProduct getUpdateProductInfo(UpdateProductParam param) {
 
         Map<String, Object> updateTargetMap = new HashMap<String, Object>();

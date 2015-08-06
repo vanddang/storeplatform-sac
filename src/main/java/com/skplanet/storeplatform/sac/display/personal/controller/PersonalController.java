@@ -15,7 +15,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.personal.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpdateService;
-import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateAlarmService;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService;
 import com.skplanet.storeplatform.sac.display.personal.service.RecommendNewMemberProductService;
 import org.slf4j.Logger;
@@ -50,9 +49,6 @@ public class PersonalController {
 	private PersonalAutoUpdateService personalAutoUpdateService;
 
 	@Autowired
-	private PersonalUpdateAlarmService personalUpdateAlarmService;
-
-	@Autowired
 	private RecommendNewMemberProductService recommendNewMemberProductService;
 
 	@InitBinder("personalUpdateProductReq")
@@ -76,17 +72,17 @@ public class PersonalController {
 	@RequestMapping(value = "/update/product/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public PersonalUpdateProductRes searchUpdateProductList(
-			@Validated @RequestBody PersonalUpdateProductReq personalUpdateProductReq, SacRequestHeader header) {
-		List<String> packageInfoList = Arrays.asList(StringUtils.split(personalUpdateProductReq.getPackageInfo(), "+"));
+			@Validated @RequestBody PersonalUpdateProductReq req, SacRequestHeader header) {
+		List<String> packageInfoList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
 		if (packageInfoList.size() > DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT) {
 			throw new StorePlatformException("SAC_DSP_0004", "packageInfo",
 					DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT);
 		}
 		this.log.debug("----------------------------------------------------------------");
 		this.log.debug("[searchUpdateProductList] SacRequestHeader\n{}", header.toString());
-		this.log.debug("[searchUpdateProductList] PersonalUpdateProductReq\n{}", personalUpdateProductReq.toString());
+		this.log.debug("[searchUpdateProductList] PersonalUpdateProductReq\n{}", req.toString());
 		this.log.debug("----------------------------------------------------------------");
-		return this.personalUpdateProductService.searchUpdateProductList(personalUpdateProductReq, header,
+		return this.personalUpdateProductService.searchUpdateProductList(req, header,
 				packageInfoList);
 	}
 
@@ -105,15 +101,23 @@ public class PersonalController {
 	@ResponseBody
 	public PersonalAutoUpdateRes updateAutoUpdateList(@Validated @RequestBody PersonalAutoUpdateReq req,
 			SacRequestHeader header) {
+
 		List<String> packageInfoList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
 		if (packageInfoList.size() > DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT) {
 			throw new StorePlatformException("SAC_DSP_0004", "packageInfo",
 					DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT);
 		}
+
+		Integer limitCnt = req.getUpdLimitCnt();
+		if(limitCnt != null && limitCnt < 0)
+			throw new StorePlatformException("SAC_DSP_0006");
+
+
 		this.log.debug("----------------------------------------------------------------");
 		this.log.debug("[updateAutoUpdateList] SacRequestHeader\n{}", header.toString());
 		this.log.debug("[updateAutoUpdateList] PersonalAutoUpdateReq\n{}", req.toString());
 		this.log.debug("----------------------------------------------------------------");
+
 		return this.personalAutoUpdateService.updateAutoUpdateList(req, header, packageInfoList);
 	}
 
