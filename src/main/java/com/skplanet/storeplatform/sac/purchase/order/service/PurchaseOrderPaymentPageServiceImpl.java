@@ -371,7 +371,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 						PurchaseConstants.RINGBELL_CLASS_RING_BASIC)) {
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC;
 				}
-
+			// MP3
 			} else {
 				if (StringUtils.equals(purchaseProduct.getResvCol03(), "128")) {
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_128;
