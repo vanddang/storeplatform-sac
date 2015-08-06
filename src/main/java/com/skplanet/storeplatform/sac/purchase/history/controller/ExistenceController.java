@@ -100,7 +100,6 @@ public class ExistenceController {
 		this.logger.info("PRCHS,ExistenceController V2,SAC,REQ,{},{}", existenceSacReqV2, requestHeader);
 
 		existenceSacReqV2.setSystemId(tenantHeader.getSystemId());
-		existenceSacReqV2.setTenantId(tenantHeader.getTenantId());
 		ExistenceSacResV2 existenceSacResV2 = this.existenceSacService.searchExistenceListV2(existenceSacReqV2,
 				networkHeader.getType());
 
