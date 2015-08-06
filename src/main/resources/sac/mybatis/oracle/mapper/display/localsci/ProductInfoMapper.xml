@@ -164,14 +164,12 @@
                    AND  SMAP.CASE_REF_CD(+) = #{seedLauncherCd}
                    AND  TENANT.TENANT_ID = #{tenantId}
                    AND  C.LANG_CD = #{lang}                /* ko : 한국어 */
-                   <if test='productBasicInfo.svcGrpCd != null'>
-                   AND  D.SVC_GRP_CD = #{productBasicInfo.svcGrpCd}       /* DP000201 : 애플리캐이션 */
-                   </if>
+                   AND  D.SVC_GRP_CD = 'DP000201'       /* DP000201 : 애플리캐이션 */
                    AND  F.LANG_CD = #{lang}                /* ko : 한국어 */
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    -----------------------------------------------------------------------------
-                   AND  B.PROD_ID = #{productBasicInfo.prodId}        /* 상품ID */
+                   AND  B.PROD_ID = #{epsdId}        /* 상품ID */
                    AND  D.PROD_ID = RSHP.PART_PROD_ID
                    AND  RSHP.PROD_ID = DESC2.PROD_ID
                    AND RSHP.PROD_RSHP_CD = (
@@ -207,8 +205,8 @@
                    , E.STRM_EPSD_CNT
                    , E.EPSD_CNT
                    , E.ISSUE_DAY
-                   , E.CHNL_COMP_NM
-                   , E.AGENCY_NM
+                   , CVP.CHNL_COMP_NM
+                   , CVP.AGENCY_NM
                    , E.HDV_YN
                    , E.HDCP_YN
                    , E.REG_DT
@@ -239,8 +237,6 @@
                    , TENANT.PROD_STATUS_CD
               <![CDATA[
               , ( CASE WHEN E.EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_STORE
-             ]]>
-              <![CDATA[
               , ( CASE WHEN E.STRM_EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_PLAY
              ]]>
                ,(SELECT MENU_NM
@@ -260,6 +256,7 @@
                     , TB_DP_USE_POLICY              J
                     , TB_DP_TENANT_PROD             TENANT
                     , TB_DP_PROD                    CPROD
+                    , TB_DP_VOD_PROD                CVP
                WHERE A.MENU_ID = B.MENU_ID
                  AND A.MENU_ID = C.MENU_ID
                  AND B.PROD_ID = D.PROD_ID
@@ -267,6 +264,7 @@
                  AND B.PROD_ID = F.PROD_ID
                  AND B.PROD_ID = I.PART_PROD_ID
                  AND CPROD.PROD_ID = I.PROD_ID
+                 AND CVP.PROD_ID = CPROD.PROD_ID
                  AND B.PROD_ID = TENANT.PROD_ID
                  AND D.USE_POLICY_ID = J.USE_POLICY_ID(+)
                  AND TENANT.TENANT_ID = #{tenantId}
@@ -275,7 +273,7 @@
                  AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                  AND D.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 채널타입 */
                  AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
-                 AND I.PART_PROD_ID = #{productBasicInfo.partProdId}
+                 AND I.PART_PROD_ID = #{epsdId}
                  AND I.PROD_RSHP_CD = #{rshpCd}
     </select>
     
@@ -319,7 +317,7 @@
                    WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
                       AND A.PROD_ID = CP.PART_PROD_ID 
                       AND (
-                      CASE WHEN #{productBasicInfo.metaClsfCd} = 'CT25' THEN
+                      CASE WHEN #{metaClsfCd} = 'CT25' THEN
                            CASE WHEN #{supportDevice.musicSprtYn} = 'Y' THEN 1
                            ELSE 0
                            END
@@ -356,7 +354,7 @@
        -----------------------------------------------------------------------------
        -- INPUT PARAMETER
        ----------------------------------------------------------------------------- 
-          AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
+          AND CP.PART_PROD_ID = #{epsdId}
           AND PD.LANG_CD = #{lang}
           AND CD.LANG_CD = #{lang}
           AND CP.PROD_RSHP_CD = #{rshpCd}
@@ -446,7 +444,7 @@
        -----------------------------------------------------------------------------
        -- INPUT PARAMETER
        ----------------------------------------------------------------------------- 
-          AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
+          AND CP.PART_PROD_ID = #{epsdId}
           AND PD.LANG_CD = #{lang}
           AND PD1.LANG_CD = #{lang}
           AND CD.LANG_CD = #{lang}
@@ -520,11 +518,11 @@
                        WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
                           AND A.PROD_ID = I.PART_PROD_ID 
                           AND (
-                          CASE WHEN #{productBasicInfo.topMenuId} = 'DP13' THEN
+                          CASE WHEN #{topMenuId} = 'DP13' THEN
                                CASE WHEN #{supportDevice.ebookSprtYn} = 'Y' THEN 1 
                                ELSE 0 
                                END
-                               WHEN #{productBasicInfo.topMenuId} = 'DP14' THEN
+                               WHEN #{topMenuId} = 'DP14' THEN
                                CASE WHEN #{supportDevice.comicSprtYn} = 'Y' THEN 1 
                                ELSE 0 
                                END
@@ -571,7 +569,7 @@
               -----------------------------------------------------------------------------
               -- INPUT PARAMETER
               ----------------------------------------------------------------------------- 
-              AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
+              AND I.PART_PROD_ID = #{epsdId}   -- 에피소드 상품 ID 조회
               AND I.PROD_RSHP_CD = #{rshpCd}
               AND B.BASE_YN = 'Y'
          ) TA
@@ -657,7 +655,7 @@
                                         ,TB_DP_SPRC_PROD B1
                                    WHERE 1=1
                                      AND A1.PART_PROD_ID = B1.PROD_ID
-                                     AND B1.PROD_ID  = #{productBasicInfo.partProdId}
+                                     AND B1.PROD_ID  = #{epsdId}
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
                                      ORDER BY  B1.SPRC_APPLY_END_DT DESC
@@ -686,7 +684,7 @@
                 AND PI.EXPO_ORD ='1'           
                 AND I.PROD_ID = N.PROD_ID(+)   
                 AND I.PROD_ID = OPT.EPSD_PROD_ID(+)     
-                AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
+                AND H.PROD_RSHP_CD =#{rshpCd}    /*채널-에피소드 상품 관계*/
                 AND C.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND M.LANG_CD =#{lang}          /* ko : 한국어 */
@@ -696,7 +694,7 @@
                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                AND I.PROD_ID = #{productBasicInfo.partProdId}        /* 상품ID */
+                AND I.PROD_ID = #{epsdId}        /* 상품ID */
            ) KK
     </select>
     
@@ -771,7 +769,7 @@
                     , TB_DP_TENANT_PROD TP
                     , TB_DP_TENANT_PROD_PRICE PR
                     , TB_DP_USE_POLICY UP
-                WHERE PD.PROD_ID = #{productBasicInfo.partProdId}
+                WHERE PD.PROD_ID = #{epsdId}
                 AND PD.PROD_ID = CM.PROD_ID
                 AND PD.PROD_ID = DC.PROD_ID
                 AND PD.PROD_ID = TP.PROD_ID
@@ -793,8 +791,8 @@
     </select>
     <!--정액권 ID를 이용 채널 상품 조회-->
     <select id="getMapgProdIdList" parameterType="Map" resultType="MapgProdMeta">
-       /* ProductInfoMapper.xml, getMapgProdIdList ,정액권 ID를 이용 채널 상품 조회 , 김형식/SK플래닛, 2014-01-07 */
-        SELECT  A.PART_PROD_ID AS PROD_ID
+        SELECT  /* ProductInfoMapper.xml, getMapgProdIdList ,정액권 ID를 이용 채널 상품 조회 , 김형식/SK플래닛, 2014-01-07 */
+                A.PART_PROD_ID AS PROD_ID
                ,B.META_CLSF_CD
                ,C.MENU_ID
                ,D.MENU_NM
@@ -803,13 +801,13 @@
                ,TB_DP_MENU_CATEGORY_PROD_MAPG C
                ,TB_DP_MENU_CATEGORY_DESC D
          WHERE 1=1  
-           AND A.PROD_ID =#{productBasicInfo.partProdId}
+           AND A.PROD_ID = #{epsdId}
            AND A.PART_PROD_ID = B.PROD_ID
-           AND B.PROD_ID =C.PROD_ID
-           AND C.MENU_ID =D.MENU_ID
-           AND C.BASE_YN='Y'
-           AND C.USE_YN='Y'
-           AND D.LANG_CD=#{lang}     
+           AND B.PROD_ID = C.PROD_ID
+           AND C.MENU_ID = D.MENU_ID
+           AND C.BASE_YN = 'Y'
+           AND C.USE_YN = 'Y'
+           AND D.LANG_CD = #{lang}
     </select>    
     
 </mapper>
