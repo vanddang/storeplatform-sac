@@ -87,7 +87,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         sw.start();
 
         MetaInfo dateInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
-//        String sysDate = dateInfo.getSysDate();
+        String sysDate = dateInfo.getSysDate();
         String reqExpireDate = dateInfo.getExpiredDate();
 
         String productId = comicReq.getProductId();
@@ -137,13 +137,18 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
                 List<Purchase> purchaseList = new ArrayList<Purchase>();
 
+
                 for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
                     String prchsProdId = historySacIn.getProdId();
                     String permitDeviceYn = historySacIn.getPermitDeviceYn();
 					String prchsState = setPrchsState(historySacIn);
 
                     loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
-                    addPurchaseIntoList(purchaseList, historySacIn, prchsState);
+					if (supportService.resetExprDtOfGift(historySacIn, header, comicReq.getUserKey(), comicReq.getDeviceKey(),
+							prchsProdId, sysDate, prchsState)) {
+						prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
+					}
+					addPurchaseIntoList(purchaseList, historySacIn, prchsState);
                     // 구매상태 만료여부 및 단말 지원여부 확인
                     if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !"Y".equals(permitDeviceYn)) {
                     	continue;

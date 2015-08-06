@@ -14,8 +14,13 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.sci.PurchaseDrmInfoSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftConfirmInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -57,6 +62,9 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
 
     @Autowired
     private PurchaseDrmInfoSCI purchaseDrmInfoSCI;
+
+    @Autowired
+    private GiftConfirmInternalSCI giftConfirmInternalSCI;
 
     @Autowired
     @Qualifier("sac")
@@ -182,5 +190,41 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         //-	OR000413, OR000420 2개 코드가 T Freemium을 통한 구매건임.
         return StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM1_CD, prchsReqPathCd)
                 || StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM2_CD, prchsReqPathCd);
+    }
+
+    // 선물인경우 다운로드 시점에 만료기간을 reset한다.
+    // 이는 선물 받은 상품이 다운로드 하는 시점에 만료가 되어 사용할 수 없게 되는 것을 방지하기 위함이다.
+    @Override
+    public boolean resetExprDtOfGift(HistorySacIn historySacIn,
+                                  SacRequestHeader header,
+                                  String userKey,
+                                  String deviceKey,
+                                  String prodId,
+                                  String sysDate,
+                                  String prchsState) {
+
+        if (prchsState.equals("gift") && StringUtils.isEmpty(historySacIn.getRecvDt()) ){
+
+            GiftConfirmSacInReq req = new GiftConfirmSacInReq();
+
+            req.setTenantId(header.getTenantHeader().getTenantId());
+            req.setSystemId(header.getTenantHeader().getSystemId());
+            req.setUserKey(userKey);
+            req.setDeviceKey(deviceKey);
+            req.setProdId(prodId);
+            req.setPrchsId(historySacIn.getPrchsId());
+            req.setRecvDt(sysDate);
+            req.setRecvConfPathCd("OR003904");  // TODO 매핑룰 추가 필요.
+
+            GiftConfirmSacInRes res = giftConfirmInternalSCI.modifyGiftConfirm(req);
+
+            historySacIn.setUseStartDt(res.getUseStartDt());
+            historySacIn.setUseExprDt(res.getUseExprDt());
+            historySacIn.setDwldStartDt(res.getDwldStartDt());
+            historySacIn.setDwldExprDt(res.getDwldExprDt());
+
+            return true;
+        }
+        return false;
     }
 }

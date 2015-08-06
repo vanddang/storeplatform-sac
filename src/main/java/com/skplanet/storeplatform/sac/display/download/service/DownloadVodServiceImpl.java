@@ -153,9 +153,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					String prchsState = setPrchsState(historySacIn);
 
                     loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
-					resetExprDtOfGift(historySacIn, downloadVodSacReq, sysDate, prchsState);
-					prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
-
+					if (supportService.resetExprDtOfGift(historySacIn, requestheader, downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(),
+							historySacIn.getProdId(), sysDate, prchsState)) {
+						prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
+					}
 					addPurchaseIntoList(purchaseList, historySacIn, prchsState);
 					/************************************************************************************************
 					 * 구매 정보에 따른 암호화 시작
@@ -232,6 +233,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		return prchsState;
 	}
 
+/*	DownloadSupportServiceImpl로 옮김
+
 	// 선물인경우 다운로드 시점에 만료기간을 reset한다.
 	// 이는 선물 받은 상품이 다운로드 하는 시점에 만료가 되어 사용할 수 없게 되는 것을 방지하기 위함이다.
 	private void resetExprDtOfGift(HistorySacIn historySacIn, DownloadVodSacReq downloadVodSacReq, String sysDate, String prchsState) {
@@ -261,7 +264,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		req.setRecvConfPathCd("OR003904");  // TODO 매핑룰 추가 필요.
 		return req;
 	}
-
+*/
 	private void setRequest(DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader, DeviceHeader deviceHeader) {
 		downloadVodSacReq.setTenantId(tenantHeader.getTenantId());
 		downloadVodSacReq.setSystemId(tenantHeader.getSystemId());

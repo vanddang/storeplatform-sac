@@ -9,7 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 import java.util.List;
@@ -74,4 +76,15 @@ public interface DownloadSupportService {
      * @return Tfreemium 구매이면 true, 그외 false
      */
     boolean isTfreemiumPurchase(String prchsReqPathCd);
+
+    /**
+     * 선물 수신일이 null인 경우 재 설정한다.
+     */
+    boolean resetExprDtOfGift(HistorySacIn historySacIn,
+                              SacRequestHeader header,
+                              String userKey,
+                              String deviceKey,
+                              String prodId,
+                              String sysDate,
+                              String prchsState);
 }

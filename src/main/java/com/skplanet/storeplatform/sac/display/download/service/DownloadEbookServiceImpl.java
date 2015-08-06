@@ -94,7 +94,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
         // 현재일시 및 요청만료일시 조회
 		MetaInfo dateInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
-
+		String sysDate = dateInfo.getSysDate();
 		String reqExpireDate = dateInfo.getExpiredDate();
 
 		String idType = ebookReq.getIdType();
@@ -155,9 +155,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					String prchsState = setPrchsState(historySacIn);
 
 					loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
-					//resetExprDtOfGift(historySacIn, ebookReq, header, sysDate, prchsState);
-					prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
-					
+					if (supportService.resetExprDtOfGift(historySacIn, header, ebookReq.getUserKey(), ebookReq.getDeviceKey(),
+							prchsProdId, sysDate, prchsState)) {
+						prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
+					}
+
 					addPurchaseIntoList(purchaseList, historySacIn, prchsState);
 					// 구매상태 만료여부 및 단말 지원여부 확인
 					if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !"Y".equals(permitDeviceYn)) {
