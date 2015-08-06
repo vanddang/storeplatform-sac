@@ -829,7 +829,7 @@ public class VodServiceImpl implements VodService {
 		support.setText(mapperVO.getHdcpYn());
 		supportList.add(support);
 
-		/** DOLBY_SPRT_YN */
+		/** HD_YN */
 		support = new Support();
 		support.setType(DisplayConstants.DP_VOD_HD_SUPPORT_NM);
 		support.setText(mapperVO.getHdvYn());
@@ -895,7 +895,7 @@ public class VodServiceImpl implements VodService {
 				subProduct.setTitle(this.mapTitle(mapperVO));
 
 				// 상품 설명
-				subProduct.setProductExplain(mapperVO.getProdBaseDesc());
+				subProduct.setProductExplain(mapperVO.getProdBaseDesc()); 
 				subProduct.setProductDetailExplain(mapperVO.getProdDtlDesc());
 				subProduct.setProductIntroduction(mapperVO.getProdIntrDscr());
 
