@@ -37,6 +37,8 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	private String isAdultLock;
 	/** Wi-Fi에서만 다운로드 여부. */
 	private String isDownloadWifiOnly;
+	/** ICAS 인증 여부. */
+	private String isIcasAuth;
 
 	/**
 	 * @return the isPin
@@ -201,6 +203,21 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	 */
 	public void setIsDownloadWifiOnly(String isDownloadWifiOnly) {
 		this.isDownloadWifiOnly = isDownloadWifiOnly;
+	}
+
+	/**
+	 * @return the isIcasAuth
+	 */
+	public String getIsIcasAuth() {
+		return this.isIcasAuth;
+	}
+
+	/**
+	 * @param isIcasAuth
+	 *            the isIcasAuth to set
+	 */
+	public void setIsIcasAuth(String isIcasAuth) {
+		this.isIcasAuth = isIcasAuth;
 	}
 
 }
