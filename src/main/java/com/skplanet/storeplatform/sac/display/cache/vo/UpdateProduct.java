@@ -48,6 +48,10 @@ public class UpdateProduct extends CommonInfo{
     private String fakeYn;
     private String updtText;
 	private String apkSignedKeyHash;
+	private String hasDiffPkgYn;
+	private String hasDiffApkPkgNm;
+	private String prchsId;
+
 
     public String getAid() {
         return aid;
@@ -256,5 +260,29 @@ public class UpdateProduct extends CommonInfo{
 
 	public void setApkSignedKeyHash(String apkSignedKeyHash) {
 		this.apkSignedKeyHash = apkSignedKeyHash;
+	}
+
+	public String getHasDiffPkgYn() {
+		return hasDiffPkgYn;
+	}
+
+	public void setHasDiffPkgYn(String hasDiffPkgYn) {
+		this.hasDiffPkgYn = hasDiffPkgYn;
+	}
+
+	public String getHasDiffApkPkgNm() {
+		return hasDiffApkPkgNm;
+	}
+
+	public void setHasDiffApkPkgNm(String hasDiffApkPkgNm) {
+		this.hasDiffApkPkgNm = hasDiffApkPkgNm;
+	}
+
+	public String getPrchsId() {
+		return prchsId;
+	}
+
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
 	}
 }

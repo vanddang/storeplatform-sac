@@ -21,6 +21,17 @@ public class UpdateContextParam {
 	private String networkType;
 	private Integer updLimitCnt;
 	private MemberInfo memberInfo;
+	private String memberType;
+	private String operator;
+
+	public UpdateContextParam(String tenantId, String langCd, String deviceModelCd, String networkType, String memberType, String operator) {
+		this.tenantId = tenantId;
+		this.langCd = langCd;
+		this.deviceModelCd = deviceModelCd;
+		this.networkType = networkType;
+		this.memberType = memberType;
+		this.operator = operator;
+	}
 
 	public UpdateContextParam(String tenantId, String langCd, String deviceModelCd, String deviceId, String networkType, Integer updLimitCnt) {
 		this.tenantId = tenantId;
@@ -86,4 +97,21 @@ public class UpdateContextParam {
 	public void setMemberInfo(MemberInfo memberInfo) {
 		this.memberInfo = memberInfo;
 	}
+
+	public String getMemberType() {
+		return memberType;
+	}
+
+	public void setMemberType(String memberType) {
+		this.memberType = memberType;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
 }

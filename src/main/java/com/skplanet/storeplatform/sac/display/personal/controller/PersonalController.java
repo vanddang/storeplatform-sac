@@ -15,6 +15,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.personal.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpdateService;
+import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductListService;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService;
 import com.skplanet.storeplatform.sac.display.personal.service.RecommendNewMemberProductService;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class PersonalController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private PersonalUpdateProductService personalUpdateProductService;
+	private PersonalUpdateProductListService personalUpdateProductListService;
 
 	@Autowired
 	private PersonalAutoUpdateService personalAutoUpdateService;
@@ -82,7 +83,7 @@ public class PersonalController {
 		this.log.debug("[searchUpdateProductList] SacRequestHeader\n{}", header.toString());
 		this.log.debug("[searchUpdateProductList] PersonalUpdateProductReq\n{}", req.toString());
 		this.log.debug("----------------------------------------------------------------");
-		return this.personalUpdateProductService.searchUpdateProductList(req, header,
+		return this.personalUpdateProductListService.searchUpdateProductList(req, header,
 				packageInfoList);
 	}
 
