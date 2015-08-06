@@ -224,6 +224,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 
 							prodItem = new ExistenceSacRes();
 
+							userItem.setTenantId(item.getTenantId());
 							userItem.setUserKey(item.getUseInsdUsermbrNo());
 							userItem.setDeviceKey(item.getUseInsdDeviceId());
 
