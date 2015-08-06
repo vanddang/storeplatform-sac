@@ -140,7 +140,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             }
 
             if(product == null)
-                return null;
+                continue;
 
             // 상품별 후처리
             switch(typeInfo) {
