@@ -520,6 +520,9 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		// Default=Y
 		res.setIsDownloadWifiOnly(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
 				.getIsDownloadWifiOnly(), null));
+		// Default=N, ICAS_AUTH_YN 컬럼은 디폴트 값이 없고 기존 데이터는 NULL로 되어 있으므로 주의.
+		res.setIsIcasAuth(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsIcasAuth(),
+				"N"));
 		return res;
 	}
 
@@ -566,6 +569,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		userMbrDeviceSet.setIsAdult(req.getIsAdult());
 		userMbrDeviceSet.setIsAdultLock(req.getIsAdultLock());
 		userMbrDeviceSet.setIsDownloadWifiOnly(req.getIsDownloadWifiOnly());
+		userMbrDeviceSet.setIsIcasAuth(req.getIsIcasAuth());
 		modifyDeviceSetInfoRequest.setUserMbrDeviceSet(userMbrDeviceSet);
 
 		// SC Call
