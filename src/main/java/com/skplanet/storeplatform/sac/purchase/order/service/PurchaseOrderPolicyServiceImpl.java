@@ -1331,7 +1331,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// 결제수단 별 가능 거래금액/비율 조정 정책 조회
 
 		TenantSalePolicy paymentPolicy = this.purchaseTenantPolicyService.searchPaymentPolicy(tenantId,
-				StringUtils.isEmpty(cmpxProdClsfCd) ? tenantProdGrpCd : tenantProdGrpCd+cmpxProdClsfCd, prodKindCd, prodId, parentProdId);
+				StringUtils.isEmpty(cmpxProdClsfCd) ? tenantProdGrpCd : tenantProdGrpCd + cmpxProdClsfCd, prodKindCd,
+				prodId, parentProdId);
 		if (paymentPolicy == null) {
 			throw new StorePlatformException("SAC_PUR_7103");
 		}
@@ -1488,7 +1489,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		if (StringUtils.equals(paymentPolicy.getPolicyId(), PurchaseConstants.POLICY_ID_PAYMETHOD_ADJUST)) {
 
 			// 정액권,시리즈 패스: PayPin 허용 (차후 필요 없을 것 같은 로직-영향도 파악후 제거 필요)
-			if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS) || StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
+			if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)
+					|| StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
 				paymethodInfo = paymethodInfo.replaceAll("14:0:0;", "").replaceAll(";14:0:0", "");
 				paymethodInfo = paymethodInfo.replaceAll("14:0.0:0;", "").replaceAll(";14:0.0:0", "");
 			}
@@ -1629,5 +1631,21 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 			return sbOcbAccum.toString();
 		}
+	}
+
+	/**
+	 * 추가 정책 코드를 조건으로 정책 조회
+	 *
+	 * @param tenantId
+	 *            테넌트 ID
+	 * @param extraUnitCd
+	 *            추가 조회 코드
+	 * @return 정책
+	 */
+	@Override
+	public TenantSalePolicy getExtraSalePolicy(String tenantId, String extraUnitCd) {
+		List<TenantSalePolicy> tenantSalePolicies = this.purchaseTenantPolicyService.searchTenantExtraSalePolicyList(
+				tenantId, extraUnitCd);
+		return tenantSalePolicies.get(0); // 정책은 첫번째 결과만 사용한다.
 	}
 }

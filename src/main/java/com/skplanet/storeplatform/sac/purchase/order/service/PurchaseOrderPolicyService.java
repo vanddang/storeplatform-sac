@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyResult;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
@@ -187,4 +188,15 @@ public interface PurchaseOrderPolicyService {
 	 */
 	public String adjustOcbSaveInfo(String tenantId, String telecom, String tenantProdGrpCd, String iapProdCase,
 			boolean sktTestOrSkpCorp);
+
+	/**
+	 * 추가 정책 코드를 조건으로 정책 조회
+	 *
+	 * @param tenantId
+	 *            테넌트 ID
+	 * @param extraUnitCd
+	 *            추가 조회 코드
+	 * @return 정책
+	 */
+	TenantSalePolicy getExtraSalePolicy(String tenantId, String extraUnitCd);
 }

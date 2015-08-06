@@ -70,6 +70,8 @@ public interface PurchaseTenantPolicyService {
 	public List<TenantSalePolicy> searchTenantSalePolicyList(String tenantId, String tenantProdGrpCd,
 			String procPatternCd, boolean ignoreTenantProdGrpCd);
 
+	List<TenantSalePolicy> searchTenantExtraSalePolicyList(String tenantId, String extraUnitCd);
+
 	/**
 	 * 
 	 * <pre>

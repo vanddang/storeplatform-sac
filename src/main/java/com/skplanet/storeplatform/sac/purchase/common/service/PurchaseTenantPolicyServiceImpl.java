@@ -9,16 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.purchase.common.service;
 
+import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
+import com.skplanet.storeplatform.purchase.client.policy.sci.PurchaseTenantPolicySCI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
-import com.skplanet.storeplatform.purchase.client.policy.sci.PurchaseTenantPolicySCI;
 
 /**
  * 
@@ -99,8 +98,22 @@ public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyServ
 	@Override
 	public List<TenantSalePolicy> searchTenantSalePolicyList(String tenantId, String tenantProdGrpCd,
 			String procPatternCd, boolean ignoreTenantProdGrpCd) {
-		return this.purchaseTenantPolicySCI.searchTenantSalePolicyList(tenantId, tenantProdGrpCd, procPatternCd,
+		return this.purchaseTenantPolicySCI.searchTenantSalePolicyList(tenantId, tenantProdGrpCd, procPatternCd, null,
 				ignoreTenantProdGrpCd);
+	}
+
+	/**
+	 * 추가 정책에 대해 조회한다.
+	 *
+	 * @param tenantId
+	 *            정책을 조회할 대상 테넌트 ID
+	 * @param extraUnitCd
+	 * 			  추가 조회할 정책처리코드
+	 * @return 추가 정책 목록
+	 */
+	@Override
+	public List<TenantSalePolicy> searchTenantExtraSalePolicyList(String tenantId, String extraUnitCd) {
+		return this.purchaseTenantPolicySCI.searchTenantSalePolicyList(tenantId, null, null, extraUnitCd, true);
 	}
 
 	/**
