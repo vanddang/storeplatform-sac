@@ -11,11 +11,12 @@ package com.skplanet.storeplatform.sac.display.openapi.controller;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.openapi.service.*;
 import com.skplanet.storeplatform.sac.display.openapi.vo.MusicDetail;
 import com.skplanet.storeplatform.sac.display.openapi.vo.MusicDetailParam;
+import com.skplanet.storeplatform.sac.display.openapi.vo.MusicDetailSendSmsParam;
+import com.skplanet.storeplatform.sac.display.openapi.vo.MusicDetailSendSmsRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -412,11 +413,38 @@ public class OpenApiController {
 
         MusicDetailParam musicDetailParam = new MusicDetailParam(sacRequestHeader, musicDetailSacReq);
         MusicDetail musicDetail = musicService.getMusicDetail(musicDetailParam);
-        MusicDetailSacRes musicDetailSacRes = musicDetail.toMusicDetailSacRes();
+        MusicDetailSacRes musicDetailSacRes = musicDetail.newMusicDetailSacRes();
         if(musicDetailSacRes == null)
             throw new StorePlatformException("SAC_DSP_0009");
 
         return musicDetailSacRes;
+    }
+
+    /**
+     *
+     * <pre>
+     * 티스토어 음악 상세 URL 포함 SMS 전송
+     * </pre>
+     *
+     * @param sacRequestHeader
+     *            sacRequestHeader
+     * @param musicDetailSendSmsSacReq
+     *            musicDetailSendSmsSacReq
+     * @return MusicDetailSendSmsSacRes
+     */
+    @RequestMapping(value = "/music/detail/sendSms/v1", method = RequestMethod.POST)
+    @ResponseBody
+    public MusicDetailSendSmsSacRes musicDetailSendSms(
+            SacRequestHeader sacRequestHeader, @RequestBody @Validated MusicDetailSendSmsSacReq musicDetailSendSmsSacReq) {
+
+        MusicDetailSendSmsParam musicDetailSendSmsParam = new MusicDetailSendSmsParam(sacRequestHeader, musicDetailSendSmsSacReq);
+        MusicDetailSendSmsRes musicDetailSendSmsRes = musicService.musicDetailSendSms(musicDetailSendSmsParam);
+
+        if(musicDetailSendSmsRes.getResultCode() == MusicDetailSendSmsRes.ResultCode.ERROR) {
+            throw new StorePlatformException("SAC_DSP_9999");
+        }
+
+        return new MusicDetailSendSmsSacRes();
     }
 
 }

@@ -9,7 +9,7 @@ public class MusicDetail {
     private MusicProd channel;
     private List<MusicProd> episodes;
 
-    public MusicDetailSacRes toMusicDetailSacRes() {
+    public MusicDetailSacRes newMusicDetailSacRes() {
         if (channel == null || episodes == null) {
             return null;
         }
