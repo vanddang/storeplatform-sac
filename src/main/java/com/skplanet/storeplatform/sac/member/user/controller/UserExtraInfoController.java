@@ -192,9 +192,9 @@ public class UserExtraInfoController {
 
 		// Constant.USERMBR_MOVE_TYPE_ACTIVATE(정상 처리), Constant.USERMBR_MOVE_TYPE_DORMANT(휴면 처리)
 		if ("1".equals(req.getMoveType()))
-			req.setMoveType(Constant.USERMBR_MOVE_TYPE_ACTIVATE);
+			req.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 		if ("2".equals(req.getMoveType()))
-			req.setMoveType(Constant.USERMBR_MOVE_TYPE_DORMANT);
+			req.setMoveType(MemberConstants.USER_MOVE_TYPE_DORMANT);
 
 		try {
 			// IDP 휴면계정 연동
