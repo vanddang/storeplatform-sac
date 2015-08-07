@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Maps;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
@@ -55,7 +56,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
     /**
      * <pre>
-     * 결제 시 필요한 상품 메타 정보 조회.
+     * 결제시 상품 메타 정보 조회.
      * </pre>
      *
      * @param req 파라미터
@@ -95,7 +96,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                     paymentInfo = getShoppingPaymentMeta(ctx, prodId);
                     break;
                 case Voucher:
-                    paymentInfo = getFreepassPaymentMeta(ctx, prodId);
+                    paymentInfo = getVoucherPaymentMeta(ctx, prodId);
                     break;
                 default:
                     paymentInfo = getAppAndMultimediaPaymentMeta(ctx, prodId, baseInfo);
@@ -105,7 +106,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                 continue;
 
             // 멤버십 프로모션 정보 매핑
-            mapgPromotion(tenantId, paymentInfo);
+            mapgPromotion(tenantId, baseInfo, paymentInfo);
 
             // 허용 연령 정보
             paymentInfo.setAgeAllowedFrom(displayCommonService.getAllowedAge(paymentInfo.getTopMenuId(), paymentInfo.getProdGrdCd()));
@@ -145,7 +146,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
      * @param prodId
      * @return
      */
-    private PaymentInfo getFreepassPaymentMeta(PaymentInfoContext ctx, String prodId) {
+    private PaymentInfo getVoucherPaymentMeta(PaymentInfoContext ctx, String prodId) {
 
         List<String> exclusiveFixrateProdIdList = new ArrayList<String>();
 
@@ -161,7 +162,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         paramMap.put("comicSprtYn", ctx.getComicSprtYn());
         paramMap.put("prodId", prodId);
 
-        PaymentInfo paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getFreePassMetaInfo", paramMap, PaymentInfo.class);
+        PaymentInfo paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getVoucherMetaInfo", paramMap, PaymentInfo.class);
 
         if(paymentInfo == null)
             throw new StorePlatformException("SAC_DSP_0009", "[정액권 상품 조회]" + prodId);
@@ -308,13 +309,15 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         }
     }
 
-    private void mapgPromotion(String tenantId, PaymentInfo paymentInfo) {
+    private void mapgPromotion(String tenantId, ProductBaseInfo baseInfo, PaymentInfo paymentInfo) {
 
-        // IAP상품은 부모 상품으로 조회한다.
-        String prodId = "Y".equals(paymentInfo.getInAppYn()) ? paymentInfo.getParentProdId() : paymentInfo.getProdId();
+        // IAP상품은 부모 상품으로, 그 외의 상품은 chnlId로 조회
+        String chnlId = baseInfo.isIapProduct() ? paymentInfo.getParentProdId() : baseInfo.getChnlId();
+        String menuId = StringUtils.defaultString(paymentInfo.getMenuId(), paymentInfo.getTopMenuId());
 
-        PromotionEvent event = extraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, paymentInfo.getTopMenuId(), prodId));
-        Map<String, Integer> milMap = new HashMap<String, Integer>();
+        PromotionEvent event = extraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId));
+
+        Map<String, Integer> milMap = Maps.newHashMap();
         if (event != null) {
             milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, event.getRateGrd1());
             milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV2, event.getRateGrd2());

@@ -178,7 +178,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             }
         }
 
-        final String[] keys = new String[]{param.getProdId(), menuOrTopMenuId, topMenuId};
+        final String[] keys = new String[]{param.getChnlId(), menuOrTopMenuId, topMenuId};
 
         if(connectionFactory == null)
             return getPromotionEventFromDb(tenantId, keys);

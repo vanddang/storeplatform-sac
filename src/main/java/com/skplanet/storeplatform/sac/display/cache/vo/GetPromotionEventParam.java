@@ -22,21 +22,21 @@ public class GetPromotionEventParam {
 
     private String tenantId;
     private String menuId;
-    private String prodId;
+    private String chnlId;
     private Date nowDt;
 
     public GetPromotionEventParam() {}
 
-    public GetPromotionEventParam(String tenantId, String menuId, String prodId) {
+    public GetPromotionEventParam(String tenantId, String menuId, String chnlId) {
         this.tenantId = tenantId;
         this.menuId = menuId;
-        this.prodId = prodId;
+        this.chnlId = chnlId;
     }
 
-    public GetPromotionEventParam(String tenantId, String menuId, String prodId, Date nowDt) {
+    public GetPromotionEventParam(String tenantId, String menuId, String chnlId, Date nowDt) {
         this.tenantId = tenantId;
         this.menuId = menuId;
-        this.prodId = prodId;
+        this.chnlId = chnlId;
         this.nowDt = nowDt;
     }
 
@@ -56,12 +56,12 @@ public class GetPromotionEventParam {
         this.menuId = menuId;
     }
 
-    public String getProdId() {
-        return prodId;
+    public String getChnlId() {
+        return chnlId;
     }
 
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
+    public void setChnlId(String chnlId) {
+        this.chnlId = chnlId;
     }
 
     public Date getNowDt() {
