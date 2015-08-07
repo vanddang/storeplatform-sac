@@ -82,6 +82,7 @@ public final class MemberConstants {
 	public static final String KEY_TYPE_INSD_DEVICE_ID = "INSD_DEVICE_ID"; // 내부 기기 키
 	public static final String KEY_TYPE_DEVICE_ID = "DEVICE_ID"; // 기기 ID
 	public static final String KEY_TYPE_SVC_MANG_NO = "SVC_MANG_NO"; // SKT 서비스 관리번호
+	public static final String KEY_TYPE_INTG_SVC_NO = "INTG_SVC_NO"; // OneID 회원키
 	public static final String KEY_TYPE_EMAIL_ADDR = "EMAIL_ADDR"; // 사용자 이메일
 	public static final String KEY_TYPE_EMAIL = "EMAIL"; // 판매자 이메일
 	public static final String KEY_TYPE_TEL_NO = "TEL_NO"; // 사용자 연락처

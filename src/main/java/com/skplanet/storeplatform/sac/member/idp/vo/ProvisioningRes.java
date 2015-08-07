@@ -14,7 +14,7 @@ public class ProvisioningRes extends CommonInfo {
 	/**
 	 * 기존 IDP Provisioning 수신시 처리 결과 코드
 	 */
-	private String result;
+	private ProvisioningResult result;
 	/**
 	 * One ID Rx 수신시 처리 결과 코드
 	 */
@@ -23,7 +23,7 @@ public class ProvisioningRes extends CommonInfo {
 	/**
 	 * @return the result
 	 */
-	public String getResult() {
+	public ProvisioningResult getResult() {
 		return this.result;
 	}
 
@@ -31,7 +31,7 @@ public class ProvisioningRes extends CommonInfo {
 	 * @param result
 	 *            the result to set
 	 */
-	public void setResult(String result) {
+	public void setResult(ProvisioningResult result) {
 		this.result = result;
 	}
 

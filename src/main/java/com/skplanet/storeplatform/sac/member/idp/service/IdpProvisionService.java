@@ -2,6 +2,8 @@ package com.skplanet.storeplatform.sac.member.idp.service;
 
 import java.util.HashMap;
 
+import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningResult;
+
 /**
  * IDP에서 전달되는 Provisioning 처리를 위한 인터페이스.
  * 
@@ -19,7 +21,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String changeMobileNumber(HashMap<String, String> map);
+	public ProvisioningResult changeMobileNumber(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -32,7 +34,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String changeMobileID(HashMap<String, String> map);
+	public ProvisioningResult changeMobileID(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -45,7 +47,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String secedeMobileNumber(HashMap<String, String> map);
+	public ProvisioningResult secedeMobileNumber(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -58,7 +60,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String joinComplete(HashMap<String, String> map);
+	public ProvisioningResult joinComplete(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -71,7 +73,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String adjustWiredProfile(HashMap<String, String> map);
+	public ProvisioningResult adjustWiredProfile(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -84,7 +86,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String ecgJoinedTStore(HashMap<String, String> map);
+	public ProvisioningResult ecgJoinedTStore(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -97,6 +99,17 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String ecgScededTStore(HashMap<String, String> map);
+	public ProvisioningResult ecgScededTStore(HashMap<String, String> map);
 
+	/**
+	 * <pre>
+	 * 분리보관 상태 조회 Provisioning.
+	 * - CMD : checkDeactivateStatusForSP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return IDP Provisioning 처리 결과
+	 */
+	public ProvisioningResult checkDeactivateStatusForSP(HashMap<String, String> map);
 }

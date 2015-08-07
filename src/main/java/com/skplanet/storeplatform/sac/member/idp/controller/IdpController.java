@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.sac.member.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
+import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningResult;
 
 /**
  * 
@@ -63,7 +64,7 @@ public class IdpController {
 				provisioningRes.setImResult((ImResult) method.invoke(this.idpService, provisioningReq.getReqParam()));
 			} else {
 				Method method = this.idpProvisionService.getClass().getMethod(cmd, HashMap.class);
-				provisioningRes.setResult((String) method.invoke(this.idpProvisionService,
+				provisioningRes.setResult((ProvisioningResult) method.invoke(this.idpProvisionService,
 						provisioningReq.getReqParam()));
 			}
 		} catch (Exception e) {
