@@ -757,8 +757,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// T store 쿠폰 조회
 
-		if (StringUtils.contains(cdMaxAmtRateNoDouble, "26:0:0") == false
-				&& StringUtils.equals(PurchaseConstants.TENANT_ID_TSTORE, verifyOrderInfo.getTenantId())) {
+		if (StringUtils.contains(cdMaxAmtRateNoDouble, "26:0:0") == false){
+//				&& StringUtils.equals(PurchaseConstants.TENANT_ID_TSTORE, verifyOrderInfo.getTenantId())) {
 			List<String> prodIdList = new ArrayList<String>();
 			for (PrchsDtlMore productInfo : prchsDtlMoreList) {
 				prodIdList.add(productInfo.getProdId());
