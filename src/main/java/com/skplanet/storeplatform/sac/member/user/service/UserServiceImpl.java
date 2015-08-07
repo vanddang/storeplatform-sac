@@ -239,6 +239,14 @@ public class UserServiceImpl implements UserService {
 						recvNm = StringUtil.cvtProdNoMask(moveUserInfoResponse.getUserMbrDevice().getDeviceID());
 					} else {
 						recvNm = moveUserInfoResponse.getMbrId();
+						
+						// ID회원 ID 마스킹 처리, ID 가 Email 로 된 경우에는 전자우편(E-mail) 의 마스킹 정책 적용
+						if (StringUtils.isNotBlank(recvNm)) {
+							if (recvNm.indexOf("@") > 0)
+								recvNm = StringUtil.cvtEmailMask(recvNm);
+							else
+								recvNm = StringUtil.cvtIdMask(recvNm);
+						}						
 					}
 
 					EmailSendEcReq emailSendEcReq = new EmailSendEcReq();
