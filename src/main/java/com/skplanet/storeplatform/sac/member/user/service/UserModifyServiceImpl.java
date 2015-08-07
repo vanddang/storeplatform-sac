@@ -344,6 +344,10 @@ public class UserModifyServiceImpl implements UserModifyService {
 		detailReq.setSearchExtent(searchExtent);
 		DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
 
+		if (StringUtils.equals(detailRes.getUserInfo().getIsDormant(), MemberConstants.USE_Y)) {
+			throw new StorePlatformException("SAC_MEM_0006");
+		}
+
 		// S01
 		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, sacHeader.getTenantHeader().getTenantId())) {
 			if (StringUtils.equals(MemberConstants.USER_TYPE_ONEID, detailRes.getUserInfo().getUserType())

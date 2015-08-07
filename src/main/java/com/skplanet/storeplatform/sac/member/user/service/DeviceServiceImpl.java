@@ -1423,6 +1423,9 @@ public class DeviceServiceImpl implements DeviceService {
 		for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
 
 			UserInfo userInfo = this.commService.getUserBaseInfo("deviceId", id.getDeviceId(), requestHeader);
+			if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
+				throw new StorePlatformException("SAC_MEM_0006");
+			}
 
 			/* 휴대기기 조회 */
 			DeviceInfo deviceInfo = null;

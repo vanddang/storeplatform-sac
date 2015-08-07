@@ -116,6 +116,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			 * userId로 회원 정보 조회.
 			 */
 			userInfo = this.mcc.getUserBaseInfo("userId", req.getUserId(), requestHeader);
+			if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
+				throw new StorePlatformException("SAC_MEM_0006");
+			}
 
 			/** MQ 연동을 위해 userId가 가지고 있는 휴대기기 목록 조회 */
 			ListDeviceReq listDeviceReq = new ListDeviceReq();
