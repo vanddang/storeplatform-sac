@@ -207,7 +207,7 @@ public class UserExtraInfoController {
 
 			// 휴면계정상태해제 계정의 TB_US_USERMBR 테이블의 LAST_LOGIN_DT를 업데이트 한다.
 			// 테스트 API에서 복구 처리시 휴면계정고지 배치 대상에 들어가지 않도록 하기 위함.
-			if ("1".equals(req.getMoveType())) {
+			if (MemberConstants.USER_MOVE_TYPE_ACTIVATE.equals(req.getMoveType())) {
 				this.userService.updateActiveMoveUserLastLoginDt(sacHeader, req);
 			}
 
