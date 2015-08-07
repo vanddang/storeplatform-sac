@@ -335,7 +335,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				long prodTime = System.currentTimeMillis();
 				this.logger.info("##### [SAC History CallTime] LOCAL SCI prod productInfoSCI.getProductList param {}",
 						productInfoSacReq);
-				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
+				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq); // 2.2.2.에피소드ID을 이용하여 상품 정보 조회(전시의 응답항목이 추가되더라도 별도 작업 불필요)
 				this.logger.info(
 						"##### [SAC History CallTime] LOCAL SCI prod productInfoSCI.getProductList END takes {} ms",
 						(System.currentTimeMillis() - prodTime));
