@@ -1,74 +1,68 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.runtime.filter;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.skplanet.storeplatform.framework.core.cache.process.GlobalCacheProcessor;
+import com.skplanet.storeplatform.framework.core.util.log.TLogThreadHolder;
+import com.skplanet.storeplatform.framework.web.filter.AbstractStorePlatformRequestFilter;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.google.common.collect.Collections2;
-import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import com.skplanet.storeplatform.framework.core.cache.process.GlobalCacheProcessor;
-import com.skplanet.storeplatform.framework.core.util.log.TLogThreadHolder;
-import com.skplanet.storeplatform.framework.integration.filter.AbstractStorePlatformRequestFilter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Thread Context Filter
- * 
+ * 모든 Request 에 대해서 흐름 상의 Framework 로직 처리 (대부분 상위 클래스에서 처리)
+ *
  * Updated on : 2014-01-06 Updated by : 김상호, 에이엔비.
  * Updated on : 2014-12-12 Updated by : 정희원, SKP.
+ * Updated on : 2015-07-10 Updated by : 최은봉, SKP.
+ * Updated on : 2015-07-20 Updated by : 최은봉, SKP. - spring bean 으로 변경 & global cache use flag 체크 로직 개선
  */
+@Component
 public class RequestFilter extends AbstractStorePlatformRequestFilter {
 
-    private boolean checkGlobalCache = true;
+    @Autowired(required = false)
+    GlobalCacheProcessor globalCacheProcessor;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
-
-        ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(filterConfig.getServletContext());
-        // 실행 환경의 프로파일이 local로 지정된 경우 globalCacheProcessor가 정의되지 않은 경우 plandas의 상태값을 헤더에 포함시키지 않도록 처리한다.
-        if(ArrayUtils.contains(ctx.getEnvironment().getActiveProfiles(), "local")) {
-            checkGlobalCache = ctx.containsBeanDefinition("globalCacheProcessor");
-        }
     }
 
     @Override
-	protected String getContextId() {
-		return "SAC";
-	}
+    protected String getContextId() {
+        return "SAC";
+    }
 
-	@Override
-	protected void initExtraRequestFilter(HttpServletRequest request, HttpServletResponse response) {
-		/* ShuttleThreadHolder 에 기본 Logger 를 지정 한다. */
-		TLogThreadHolder.setShuttleLogger(LoggerFactory.getLogger("TLOG_SAC_LOGGER"));
-	}
+    @Override
+    protected void initCustomContexts() {
+        // ShuttleThreadHolder 에 기본 Logger 를 지정
+        TLogThreadHolder.setShuttleLogger(LoggerFactory.getLogger("TLOG_SAC_LOGGER"));
+    }
 
-	@Override
-	protected Map<String, String> getReqeustHeader(HttpServletRequest request) {
+    @Override
+    protected Map<String, String> addCustomHeaders() {
 
         Map<String, String> headerMap = new HashMap<String, String>();
 
-        if (checkGlobalCache) {
-            ApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(this.filterConfig
-                    .getServletContext());
-
-		    /* GlobalCacheProcessor useCache 가 false 일 경우 request header 내 'x-sac-use-cache' 에 false 를 셋팅 한다. */
-            GlobalCacheProcessor globalCacheProcessor = (GlobalCacheProcessor) ac.getBean("globalCacheProcessor");
-            if (!globalCacheProcessor.isUseCache()) {
-                headerMap.put("x-sac-use-cache", "false");
-            }
+        // 테스트를 위해 globalCache 를 사용하지 않도록 설정한 경우에 대한 방어 로직
+        if(globalCacheProcessor != null && !globalCacheProcessor.isUseCache()) {
+            headerMap.put("x-sac-use-cache", "false");
         }
 
-		return headerMap;
-	}
+        return headerMap;
+    }
 
 }
