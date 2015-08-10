@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.Header;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.service.authentication.AuthenticateService;
 import com.skplanet.storeplatform.sac.runtime.acl.service.authorization.AuthorizeService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
@@ -27,7 +28,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
  */
 @Service
 public class AclService {
-
+	
 	@Autowired
 	private AuthenticateService authenticateService;
 
@@ -59,12 +60,16 @@ public class AclService {
 
 		return true;
 	}
-
+ 
 	/**
 	 * Interface를 인가한다. (호출하는 API에 권한이 있는지 확인)
 	 */
 	public boolean authorize(@Header("httpHeaders") HttpHeaders headers) {
 		if (!this.authorization) return true;
+		
+		if (CommonConstants.EXPRESS_INTERFACE_ID.equals(headers.getInterfaceId())) {
+			return true;
+		}
 
 		// 1. Interface 유효성 확인
 		this.authorizationService.checkInterface(headers);
