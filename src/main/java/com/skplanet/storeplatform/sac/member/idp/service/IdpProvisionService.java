@@ -21,7 +21,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public ProvisioningResult changeMobileNumber(HashMap<String, String> map);
+	public String changeMobileNumber(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -34,7 +34,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public ProvisioningResult changeMobileID(HashMap<String, String> map);
+	public String changeMobileID(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -47,7 +47,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public ProvisioningResult secedeMobileNumber(HashMap<String, String> map);
+	public String secedeMobileNumber(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -60,7 +60,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public ProvisioningResult joinComplete(HashMap<String, String> map);
+	public String joinComplete(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -73,7 +73,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public ProvisioningResult adjustWiredProfile(HashMap<String, String> map);
+	public String adjustWiredProfile(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -86,7 +86,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public ProvisioningResult ecgJoinedTStore(HashMap<String, String> map);
+	public String ecgJoinedTStore(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -99,7 +99,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public ProvisioningResult ecgScededTStore(HashMap<String, String> map);
+	public String ecgScededTStore(HashMap<String, String> map);
 
 	/**
 	 * <pre>

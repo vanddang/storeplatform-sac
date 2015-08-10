@@ -11,29 +11,21 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class ProvisioningRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 기존 IDP Provisioning 수신시 처리 결과 코드
 	 */
-	private ProvisioningResult result;
+	private String result;
+
+	/**
+	 * 기존 IDP Provisioning 수신시 처리 결과
+	 */
+	private ProvisioningResult provisioningResult;
+
 	/**
 	 * One ID Rx 수신시 처리 결과 코드
 	 */
 	private ImResult imResult;
-
-	/**
-	 * @return the result
-	 */
-	public ProvisioningResult getResult() {
-		return this.result;
-	}
-
-	/**
-	 * @param result
-	 *            the result to set
-	 */
-	public void setResult(ProvisioningResult result) {
-		this.result = result;
-	}
 
 	/**
 	 * @return the imResult
@@ -49,4 +41,35 @@ public class ProvisioningRes extends CommonInfo {
 	public void setImResult(ImResult imResult) {
 		this.imResult = imResult;
 	}
+
+	/**
+	 * @return result
+	 */
+	public String getResult() {
+		return this.result;
+	}
+
+	/**
+	 * @param result
+	 *            String
+	 */
+	public void setResult(String result) {
+		this.result = result;
+	}
+
+	/**
+	 * @return provisioningResult
+	 */
+	public ProvisioningResult getProvisioningResult() {
+		return this.provisioningResult;
+	}
+
+	/**
+	 * @param provisioningResult
+	 *            ProvisioningResult
+	 */
+	public void setProvisioningResult(ProvisioningResult provisioningResult) {
+		this.provisioningResult = provisioningResult;
+	}
+
 }

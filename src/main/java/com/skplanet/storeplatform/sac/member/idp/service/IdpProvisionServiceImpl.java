@@ -120,7 +120,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return IDP Provisioning 처리 결과
 	 */
 	@Override
-	public ProvisioningResult changeMobileNumber(HashMap<String, String> map) {
+	public String changeMobileNumber(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
@@ -447,12 +447,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			});
 		}
 
-		ProvisioningResult result = new ProvisioningResult();
-		result.setCmd(map.get("cmd"));
-		result.setResult(resultCode);
-		result.setResultText(resultText);
-
-		return result;
+		return resultCode;
 	}
 
 	/**
@@ -482,7 +477,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return IDP Provisioning 처리 결과
 	 */
 	@Override
-	public ProvisioningResult changeMobileID(HashMap<String, String> map) {
+	public String changeMobileID(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
@@ -690,11 +685,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 		}
 
-		ProvisioningResult result = new ProvisioningResult();
-		result.setCmd(map.get("cmd"));
-		result.setResult(resultCode);
-		result.setResultText(resultText);
-		return result;
+		return resultCode;
 	}
 
 	/*
@@ -706,7 +697,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return IDP Provisioning 처리 결과
 	 */
 	@Override
-	public ProvisioningResult secedeMobileNumber(HashMap<String, String> map) {
+	public String secedeMobileNumber(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
@@ -939,12 +930,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		}
 
-		ProvisioningResult result = new ProvisioningResult();
-		result.setCmd(map.get("cmd"));
-		result.setResult(resultCode);
-		result.setResultText(resultText);
-
-		return result;
+		return resultCode;
 	}
 
 	/*
@@ -956,7 +942,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return HashMap
 	 */
 	@Override
-	public ProvisioningResult joinComplete(HashMap<String, String> map) {
+	public String joinComplete(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
@@ -1057,12 +1043,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 		}
 
-		ProvisioningResult result = new ProvisioningResult();
-		result.setCmd(map.get("cmd"));
-		result.setResult(resultCode);
-		result.setResultText(resultText);
-
-		return result;
+		return resultCode;
 	}
 
 	/*
@@ -1074,7 +1055,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return HashMap
 	 */
 	@Override
-	public ProvisioningResult adjustWiredProfile(HashMap<String, String> map) {
+	public String adjustWiredProfile(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String imIntSvcNo = StringUtil.nvl(map.get("im_int_svc_no"), "");
@@ -1526,12 +1507,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 		}
 
-		ProvisioningResult result = new ProvisioningResult();
-		result.setCmd(map.get("cmd"));
-		result.setResult(resultCode);
-		result.setResultText(resultText);
-
-		return result;
+		return resultCode;
 	}
 
 	/*
@@ -1543,7 +1519,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return HashMap
 	 */
 	@Override
-	public ProvisioningResult ecgJoinedTStore(HashMap<String, String> map) {
+	public String ecgJoinedTStore(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
@@ -1646,12 +1622,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 		}
 
-		ProvisioningResult result = new ProvisioningResult();
-		result.setCmd(map.get("cmd"));
-		result.setResult(resultCode);
-		result.setResultText(resultText);
-
-		return result;
+		return resultCode;
 	}
 
 	/*
@@ -1663,13 +1634,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return HashMap
 	 */
 	@Override
-	public ProvisioningResult ecgScededTStore(HashMap<String, String> map) {
-		ProvisioningResult result = new ProvisioningResult();
-		result.setCmd(map.get("cmd"));
-		result.setResult(IdpConstants.IDP_RESPONSE_SUCCESS_CODE);
-		result.setResultText(IdpConstants.IDP_RESPONSE_SUCCESS_MSG);
-
-		return result;
+	public String ecgScededTStore(HashMap<String, String> map) {
+		return IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 	}
 
 	/*

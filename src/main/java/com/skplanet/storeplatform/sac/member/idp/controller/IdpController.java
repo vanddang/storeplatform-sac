@@ -64,8 +64,13 @@ public class IdpController {
 				provisioningRes.setImResult((ImResult) method.invoke(this.idpService, provisioningReq.getReqParam()));
 			} else {
 				Method method = this.idpProvisionService.getClass().getMethod(cmd, HashMap.class);
-				provisioningRes.setResult((ProvisioningResult) method.invoke(this.idpProvisionService,
-						provisioningReq.getReqParam()));
+				if (StringUtils.equals(cmd, "checkDeactivateStatusForSP")) {
+					provisioningRes.setProvisioningResult((ProvisioningResult) method.invoke(this.idpProvisionService,
+							provisioningReq.getReqParam()));
+				} else {
+					provisioningRes.setResult((String) method.invoke(this.idpProvisionService,
+							provisioningReq.getReqParam()));
+				}
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
