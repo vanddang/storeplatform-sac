@@ -2614,6 +2614,15 @@ public class LoginServiceImpl implements LoginService {
 			}
 		}
 
+		// 휴면계정인 경우 복구처리
+		if (StringUtils.equals(detailRes.getUserInfo().getIsDormant(), MemberConstants.USE_Y)) {
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserKey(detailRes.getUserInfo().getUserKey());
+			userMbr.setImSvcNo(detailRes.getUserInfo().getImSvcNo());
+			userMbr.setUserType(detailRes.getUserInfo().getUserType());
+			this.recorverySleepUser(requestHeader, req.getDeviceId(), userMbr);
+		}
+
 		// 사용자 기본정보
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
