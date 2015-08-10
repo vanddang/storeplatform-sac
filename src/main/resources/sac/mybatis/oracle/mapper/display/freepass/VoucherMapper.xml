@@ -257,9 +257,23 @@
 	    LEFT OUTER JOIN TB_DP_PROD_IMG BIG ON BIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = BIG.PROD_ID AND BIG.IMG_CD = #{bannerImageCd}
 	    LEFT OUTER JOIN TB_DP_PROD_IMG TIG ON TIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = TIG.PROD_ID 
 	        AND TIG.IMG_CD = (
-	            CASE WHEN IV.TOP_MENU_ID IN ('DP17','DP18') THEN  #{thumbnailImageCd}
-	            WHEN IV.TOP_MENU_ID IN ('DP13','DP14') THEN  #{ebookThumbnailImageCd}
-	            END
+                CASE WHEN IV.CMPX_PROD_CLSF_CD ='OR004301' THEN 
+			           (
+			            CASE WHEN IV.TOP_MENU_ID IN ('DP17','DP18') THEN  #{thumbnailImageCd}
+			                 WHEN IV.TOP_MENU_ID IN ('DP13','DP14') THEN  #{thumbnailImageCd}
+			            END
+			            )
+		             WHEN IV.CMPX_PROD_CLSF_CD ='OR004302' THEN
+                       (
+                        CASE WHEN IV.TOP_MENU_ID IN ('DP17','DP18') THEN  #{thumbnailImageCd}
+                             WHEN IV.TOP_MENU_ID IN ('DP13','DP14') THEN  #{ebookThumbnailImageCd}
+                        END
+                       )
+                     ELSE
+                       (
+                         #{thumbnailImageCd}
+                       )
+                 END		             
 	        )
 	    INNER JOIN TB_DP_USE_POLICY UP ON IV.USE_POLICY_ID = UP.USE_POLICY_ID
 	    ORDER BY IV.EXPO_ORD ASC        

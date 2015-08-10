@@ -782,10 +782,22 @@
                ON TIG.LANG_CD = IV.LANG_CD 
                AND IV.PROD_ID = TIG.PROD_ID 
                AND TIG.IMG_CD = (
-                    CASE WHEN IV.TOP_MENU_ID IN ('DP17','DP18') THEN  #{imageCd}
-                         WHEN IV.TOP_MENU_ID IN ('DP13','DP14') THEN  #{ebookImageCd}
-                    END
-                    )
+                  CASE WHEN IV.PLAN_TYPE ='OR004301' THEN
+                      ( 
+	                       CASE WHEN IV.TOP_MENU_ID IN ('DP17','DP18') THEN  #{imageCd}
+	                            WHEN IV.TOP_MENU_ID IN ('DP13','DP14') THEN  #{imageCd}
+	                       END
+                       )
+                        WHEN IV.PLAN_TYPE ='OR004302' THEN
+                       (
+	                       CASE WHEN IV.TOP_MENU_ID IN ('DP17','DP18') THEN  #{imageCd}
+	                            WHEN IV.TOP_MENU_ID IN ('DP13','DP14') THEN  #{ebookImageCd}
+	                       END                       
+                       )ELSE(
+                          #{imageCd}
+                       )
+                   END
+               )
                
               
     </select>

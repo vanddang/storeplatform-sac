@@ -1123,9 +1123,21 @@
                FROM TB_DP_PROD_IMG TIMG
                WHERE TIMG.PROD_ID = CPROD.PROD_ID
                AND TIMG.LANG_CD = CPDESC.LANG_CD
-               AND TIMG.IMG_CD = (CASE WHEN CPROD.TOP_MENU_ID IN ('DP17','DP18') THEN #{thumbnailImageCd} -- thumbnail
-                                       WHEN CPROD.TOP_MENU_ID IN ('DP13','DP14') THEN #{ebookThumbnailImageCd}  -- ebook thumbnail
-                                  END)
+               AND TIMG.IMG_CD = (
+                                  CASE WHEN CXPROD.FREE_PASS_CLSF_CD ='OR004301' THEN ( 
+		                                  CASE WHEN CPROD.TOP_MENU_ID IN ('DP17','DP18') THEN #{thumbnailImageCd} -- thumbnail
+		                                       WHEN CPROD.TOP_MENU_ID IN ('DP13','DP14') THEN #{thumbnailImageCd} -- thumbnail
+		                                  END
+                                       )
+                                       WHEN CXPROD.FREE_PASS_CLSF_CD ='OR004302' THEN (
+                                          CASE WHEN CPROD.TOP_MENU_ID IN ('DP17','DP18') THEN #{thumbnailImageCd} -- thumbnail
+                                               WHEN CPROD.TOP_MENU_ID IN ('DP13','DP14') THEN #{ebookThumbnailImageCd}  -- ebook thumbnail
+                                          END
+                                       )ELSE (
+                                           #{thumbnailImageCd}
+                                       )
+                                  END
+                                 )
                ) AS THUMBNAIL_FILE_PATH
             , CXPROD.CMPX_PROD_GRP_CD 
             , (CASE WHEN CXPROD.FREE_PASS_CLSF_CD !='OR004305' THEN CXPROD.SERIES_BOOK_CLSF_CD ELSE '' END) AS SERIES_BOOK_CLSF_CD
