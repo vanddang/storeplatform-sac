@@ -21,7 +21,7 @@ public class MenuIntegrationListReq extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
     private String upMenuId;
-    private String useGrdCd = "PD004403"; // default : 청소년이용불가
+    private String useGrdCd = "PD004404"; // default : 청소년이용불가
 
     public String getUpMenuId() {
         return upMenuId;
