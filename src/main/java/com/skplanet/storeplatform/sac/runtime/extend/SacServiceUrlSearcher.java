@@ -37,6 +37,7 @@ import com.skplanet.storeplatform.sac.runtime.extend.url.SacInternalUrlService;
  * Updated on 2014. 05. 29. by 서대영, SK 플래닛 : bypass 여부 획득 방법 변경 (Properties File -> DB Cache)
  * </pre>
  */
+@Deprecated
 @Component
 public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 

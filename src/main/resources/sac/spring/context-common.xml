@@ -28,13 +28,27 @@
     
     <context:component-scan base-package="com.skplanet.storeplatform.sac" name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator"/>
    
+   <bean id="errorInfoGenerator" class="com.skplanet.storeplatform.framework.core.exception.ErrorInfoGenerator">
+   		<property name="errorCodePrefix" value="${componentId}" />
+   		<property name="messageSourceAccessorList">
+   			<list>
+   				<ref bean="messageSourceAccessor"/>
+   			</list>
+   		</property>
+   		<property name="systemErrorCodeTranslatorList">
+   			<list>
+   				<ref bean="sacSystemErrorCodeTranslator"/>
+   			</list>
+   		</property>
+   </bean>
+   
     <bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
         <constructor-arg ref="messageSource" />
     </bean> 
     
     <bean class="com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor" />  
     
-    <bean class="com.skplanet.storeplatform.sac.common.support.SacSystemErrorCodeTranslator" /> 
+    <bean id="sacSystemErrorCodeTranslator" class="com.skplanet.storeplatform.sac.common.support.SacSystemErrorCodeTranslator" /> 
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
@@ -50,7 +64,8 @@
         </property>
         <property name="defaultEncoding" value="utf-8" />
         <property name="cacheSeconds" value="60"/>
-    </bean> 
+    </bean>
+
     <bean id="accessLoggingFitler" class="com.skplanet.storeplatform.framework.core.log.access.AccessLoggingFitler" >
         <property name="accessLoggingManager" >
 		   <bean class="com.skplanet.storeplatform.framework.core.log.access.AccessLoggingManagerFactoryBean">

@@ -25,7 +25,7 @@
     <bean id="applicationContextProvder" class="com.skplanet.storeplatform.framework.core.proxy.ApplicationContextProvider"/>
     
     <bean id="restTemplate" class="com.skplanet.storeplatform.framework.web.client.StoreplatformRestTemplate">      
-        <property name="componentId" value="SAC" />  
+        <property name="componentId" value="${componentId}" />  
 		<constructor-arg>
 			<bean class="org.springframework.http.client.SimpleClientHttpRequestFactory">
 				<property name="connectTimeout" value="2000" />
@@ -35,7 +35,7 @@
         <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
         <property name="errorHandler">
             <bean class="com.skplanet.storeplatform.framework.web.bind.StorePlatformResponseErrorHandler">
-                <property name="componentId" value="SAC" />
+                <property name="componentId" value="${componentId}" />
                 <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
             </bean> 
         </property>

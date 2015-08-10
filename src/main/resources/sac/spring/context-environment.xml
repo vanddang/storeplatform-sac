@@ -10,7 +10,12 @@
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-    <context:property-placeholder properties-ref="propertiesForSac" /> 
+	<!-- Property Placeholder for RootContext -->
+	<!-- Profile-specific Properties -->
+    <context:property-placeholder order="1" properties-ref="propertiesForSac" ignore-unresolvable="true" /> 
+	<!-- Common Properties -->
+    <context:property-placeholder order="2" location="classpath:sac/properties/app.cmn.properties"  />
+	
     
     <beans profile="local"> 
 	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >

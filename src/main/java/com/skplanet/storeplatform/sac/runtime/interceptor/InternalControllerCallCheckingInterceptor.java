@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
  * 
  * Updated on : 2013. 11. 26. Updated by : 최현식과장, ANB Updated on : 2014. 05. 27. Updated by : 김상호, ANB
  */
+@Deprecated
 public class InternalControllerCallCheckingInterceptor extends HandlerInterceptorAdapter {
 	private static Logger LOGGER = LoggerFactory.getLogger(InternalControllerCallCheckingInterceptor.class);
 

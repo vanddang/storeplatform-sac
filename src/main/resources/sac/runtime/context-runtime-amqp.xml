@@ -37,21 +37,47 @@
 
     <!-- Staging 서버에서는 수신받지 않도록 profile 예외처리 적용 -->
     <beans profile="dev,qa,real">
-        <import resource="classpath*:runtime/context-runtime-amqp.xml"/>
 
-        <!-- Inbound MQ이름 선언 - Spring integration에서 참조된다. 전처리부가 독립되면서 이부분은 동작을 위한 더미 큐만 선언된다.-->
+		<!-- [FWR][Deprecated]
+		- Inbound MQ 이름 선언 - Spring integration에서 참조된다. 전처리부가 독립되면서 이부분은 동작을 위한 더미 큐만 선언된다.
+		- 14.07.16. kdlim) Spring integration 제거
+		<import resource="classpath*:runtime/context-runtime-amqp.xml"/>
         <bean id="inboundQueueNames" class="java.lang.String">
             <constructor-arg><value>sac.dummy.dont-delete-me.async</value></constructor-arg>
         </bean>
- 	
-	 	<bean class="com.rabbitmq.client.ConnectionFactory">
-	        <property name="host" ><value>#{propertiesForSac['skp.mq.server.host']}</value></property>
-	        <property name="port" ><value>#{propertiesForSac['skp.mq.server.port']}</value></property>
-	        <property name="username" ><value>#{propertiesForSac['skp.mq.server.username']}</value></property>
-	        <property name="password" ><value>#{propertiesForSac['skp.mq.server.password']}</value></property>
-	        <property name="virtualHost" ><value>#{propertiesForSac['skp.mq.server.virtualHost']}</value></property>
-	    </bean>
-        
+        -->
+
+		<!-- [FWR] Spring integration 제거를 위해 storeplatform-framework resources/runtime/context-runtime-amqp.xml 파일의 일부를 옮김 -->
+		<!-- rabbit admin -->
+		<rabbit:admin connection-factory="storeplatformRabbitConnectionFactory" auto-startup="true" />
+
+		<!-- rabbit connection-factory -->
+		<rabbit:connection-factory id="storeplatformRabbitConnectionFactory" />
+
+		<!-- ConnectionFactory bean -->
+		<bean id="storeplatformRabbitConnectionFactory" class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory" >
+			<constructor-arg>
+				<bean class="com.rabbitmq.client.ConnectionFactory">
+					<property name="host" ><value>#{propertiesForSac['skp.mq.server.host']}</value></property>
+					<property name="port" ><value>#{propertiesForSac['skp.mq.server.port']}</value></property>
+					<property name="username" ><value>#{propertiesForSac['skp.mq.server.username']}</value></property>
+					<property name="password" ><value>#{propertiesForSac['skp.mq.server.password']}</value></property>
+					<property name="virtualHost" ><value>#{propertiesForSac['skp.mq.server.virtualHost']}</value></property>
+				</bean>
+			</constructor-arg>
+			<property name="channelCacheSize" value="10"/>
+		</bean>
+
+
+
+
+		<!-- RabbitTemplate -->
+		<rabbit:template id="storeplatformRabbitTemplate" connection-factory="storeplatformRabbitConnectionFactory" message-converter="storeplatformRabbitJsonMessageConverter" reply-timeout="60000" />
+
+		<!-- amqp jsonMessageConverter -->
+		<bean id="storeplatformRabbitJsonMessageConverter" class="org.springframework.amqp.support.converter.JsonMessageConverter" />
+
+
         <!-- Outbound 발송용 AmqpTemplate정의 -->
 	    <!-- Member - Add Device Rabbit Template -->
 	    <bean id="memberAddDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
