@@ -103,5 +103,10 @@ public class CommonConstants {
      * 요청 헤더 상수 - Remote PORT
      */
     public static final String HEADER_REMOTE_PORT = "RemotePort";
+    
+    /**
+     * 익스프레스 인터페이스 아이디
+     */
+    public static final String EXPRESS_INTERFACE_ID = "I00000000";
 
 }
