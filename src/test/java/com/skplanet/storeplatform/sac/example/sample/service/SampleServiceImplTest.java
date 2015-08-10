@@ -1,44 +1,31 @@
 package com.skplanet.storeplatform.sac.example.sample.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Date;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.external.client.example.sample.vo.Sample;
-import com.skplanet.storeplatform.sac.example.sample.repository.SampleRepository;
 
-@RunWith(MockitoJUnitRunner.class)
+@ActiveProfiles(value = "local")
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class SampleServiceImplTest {
 
-	@Mock
-	private SampleRepository repository;
-
-	@InjectMocks
+	@Autowired
 	private SampleServiceImpl service;
 
 
 	@Test
 	public void test() {
-		Sample expectedOutput = new Sample(17);
-		expectedOutput.setId("#713");
-		expectedOutput.setName("Sample User");
-		expectedOutput.setDescription("Description");
-		expectedOutput.setDate(new Date());
-
-		when(this.repository.detailFromEC(17)).thenReturn(expectedOutput);
-
-		Sample actualOutput = this.service.detail(17);
-
-		assertEquals(expectedOutput, actualOutput);
-		verify(this.repository).detailFromEC(17);
+		Sample actualOutput = this.service.findOneFromRemoteSci(17);
+		assertEquals(17, actualOutput.getNo().intValue());
 	}
 
 }

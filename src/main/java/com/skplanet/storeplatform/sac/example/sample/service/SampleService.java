@@ -12,6 +12,13 @@ package com.skplanet.storeplatform.sac.example.sample.service;
 import java.util.List;
 
 import com.skplanet.storeplatform.external.client.example.sample.vo.Sample;
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.BannerInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.BannerInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.example.vo.SampleSacReq;
+import com.skplanet.storeplatform.sac.client.internal.example.vo.SampleSacRes;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
 /**
 *
@@ -21,8 +28,16 @@ import com.skplanet.storeplatform.external.client.example.sample.vo.Sample;
 */
 public interface SampleService {
 
-	List<Sample> search(Sample sample);
+	Tenant findTenantFromDb(String tenantId);
+	
+	SampleSacRes findDummyFromLocalSci(SampleSacReq req);
+	
+	BannerInfoSacRes findBannerFromLocalSci(BannerInfoSacReq req);
 
-	Sample detail(Integer no);
+	List<Sample> findListFromRemoteSci(Sample sample);
+
+	Sample findOneFromRemoteSci(Integer no);
+	
+	SmsSendEcRes sendSms(SmsSendEcReq smsSendEcReq);
 
 }
