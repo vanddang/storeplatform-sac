@@ -496,29 +496,29 @@ public class ShoppingCouponSacController {
 			brandInfo.setFileNameList(couponReq.getFileNameList());
 			brandInfo.setIsList(couponReq.getIsList());
 			
-			if (couponReq.getCudType().equals("") || couponReq.getCudType() == null) {
+			if (StringUtils.isEmpty(couponReq.getCudType())) {
 				result = false;
 				message="필수 파라미터 값이 없습니다. (cudType)\n";
 			}else if (!couponReq.getCudType().equals("C") && !couponReq.getCudType().equals("U")) {
 				message="cudType 값은 C or U 로만 가능합니다.\n";
 				result = false;
 			}
-			if (brandInfo.getBrandId().equals("") || brandInfo.getBrandId() == null) {
+			if (StringUtils.isEmpty(brandInfo.getBrandId())) {
 				result = false;
 				message="필수 파라미터 값이 없습니다. (brandCode)\n";
 			}
-			if (brandInfo.getDpCatNo().equals("") || brandInfo.getDpCatNo() == null) {
+			if (StringUtils.isEmpty(brandInfo.getDpCatNo())) {
 				result = false;
 				message="필수 파라미터 값이 없습니다. (brandCategory)\n";
 			}
-			if (brandInfo.getBrandNm().equals("") || brandInfo.getBrandNm() == null) {
+			if (StringUtils.isEmpty(brandInfo.getBrandNm())) {
 				result = false;
 				message="필수 파라미터 값이 없습니다. (brandName)\n";
 			} else if (brandInfo.getBrandNm().length() > 50) {
 				result = false;
 				message="brandName은 length 50을 가질수 없습니다.\n";
 			}
-			if (brandInfo.getBrandImgPath().equals("") || brandInfo.getBrandImgPath() == null) {
+			if (StringUtils.isEmpty(brandInfo.getBrandImgPath())) {
 				result = false;
 				message="필수 파라미터 값이 없습니다. (brandImage)\n";
 			}
@@ -568,7 +568,7 @@ public class ShoppingCouponSacController {
 			catalogInfo.setFileNameList(couponReq.getFileNameList());
 			catalogInfo.setIsList(couponReq.getIsList());
 
-			if (couponReq.getCudType().equals("") || couponReq.getCudType() == null) {
+			if (StringUtils.isEmpty(couponReq.getCudType())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (cudType)\n";
 			}else if (!couponReq.getCudType().equals("C") && !couponReq.getCudType().equals("U")) {
@@ -576,23 +576,23 @@ public class ShoppingCouponSacController {
 				result = false;
 			}
 			
-			if (catalogInfo.getCatalogId().equals("") || catalogInfo.getCatalogId() == null) {
+			if (StringUtils.isEmpty(catalogInfo.getCatalogId())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (catalogCode)\n";
 			}
-			if (catalogInfo.getCatalogNm().equals("") || catalogInfo.getCatalogNm() == null) {
+			if (StringUtils.isEmpty(catalogInfo.getCatalogNm())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (catalogName)\n";
 			} else if (catalogInfo.getCatalogNm().length() > 100) {
 				result = false;
 				message ="catalogName은 length 100을 가질수 없습니다.";
 			}
-			if (catalogInfo.getDpCatNo().equals("") || catalogInfo.getDpCatNo() == null) {
+			if (StringUtils.isEmpty(catalogInfo.getDpCatNo())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (catalogCategory)\n";
 			}
 
-			if (catalogInfo.getCatalogDesc().equals("") || catalogInfo.getCatalogDesc() == null) {
+			if (StringUtils.isEmpty(catalogInfo.getCatalogDesc())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (catalogDescription)\n";
 			} else if (catalogInfo.getCatalogDesc().length() > 4000) {
@@ -600,19 +600,19 @@ public class ShoppingCouponSacController {
 				message ="catalogDescription은 length 4000 가질수 없습니다.\n";
 			}
 
-			if (catalogInfo.getTopImgPath().equals("") || catalogInfo.getTopImgPath() == null) {
+			if (StringUtils.isEmpty(catalogInfo.getTopImgPath())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (catalogImage1)\n";
 			}
-			if (catalogInfo.getDtlImgPath().equals("") || catalogInfo.getDtlImgPath() == null) {
+			if (StringUtils.isEmpty(catalogInfo.getDtlImgPath())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (catalogImage2)\n";
 			}
-			if (catalogInfo.getBrandId().equals("") || catalogInfo.getBrandId() == null) {
+			if (StringUtils.isEmpty(catalogInfo.getBrandId())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (brandCode)\n";
 			}
-			if (catalogInfo.getIntroText().equals("") || catalogInfo.getIntroText() == null) {
+			if (StringUtils.isEmpty(catalogInfo.getIntroText())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (intro_text)\n";
 			} else if (catalogInfo.getIntroText().length() > 150) {
