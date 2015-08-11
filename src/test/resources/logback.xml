@@ -13,15 +13,15 @@
         </else>
     </if>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <encoder>
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
-        </layout>
+        </encoder>
     </appender>
     
     <appender name="SIMPLE_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <encoder>
             <pattern>%msg%n</pattern>
-        </layout>
+        </encoder>
     </appender>
     
     <logger name="org.springframework" additivity="false" level="${LOG_LEVEL_INFO}"> 

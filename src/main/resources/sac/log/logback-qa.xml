@@ -11,9 +11,9 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${catalina.home}/logs/sac/svc/service_storeplatform-sac_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy>
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <encoder>
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
-        </layout>
+        </encoder>
     </appender>
     
     <appender name="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -21,9 +21,9 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${catalina.home}/logs/sac/err/error_storeplatform-sac_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <encoder>
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
-        </layout>
+        </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
@@ -36,9 +36,9 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${catalina.home}/logs/sac/tlog/tlog_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <encoder>
             <pattern>%msg%n</pattern>
-        </layout>
+        </encoder>
     </appender>
     
     <!-- SQL EXCEPTION ERROR LOG APPENDER -->
@@ -47,9 +47,9 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${catalina.home}/logs/sql/err/sql_err_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <encoder>
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
-        </layout>
+        </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level> 
             <onMatch>ACCEPT</onMatch>
@@ -62,9 +62,9 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${catalina.home}/logs/sql/sql_%d{yyyyMMdd_HH}.log</FileNamePattern>            
         </rollingPolicy> 
-        <layout class="ch.qos.logback.classic.PatternLayout">
+        <encoder>
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
-        </layout>
+        </encoder>
     </appender>
     
     <!-- ADD ASYNC APPENDER -->
