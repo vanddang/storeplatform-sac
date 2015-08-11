@@ -417,6 +417,7 @@
 	                      )AA
                         , TB_DP_EBOOK_PROD BB
                        WHERE AA.EPISODE_ID = BB.PROD_ID
+                         AND AA.PROD_ID = PD.PROD_ID
                          AND AA.CHAPTER = BB.CHAPTER
                          AND ROWNUM =1
                       ) AS chapterUnit     
