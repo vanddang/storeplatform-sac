@@ -66,6 +66,11 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if (StringUtils.isEmpty(req.getLang())) {
 			throw new StorePlatformException("SAC_DSP_0002", "lang", req.getLang());
 		}
+		
+		this.log.info("--------------searchCmpxBasicInfoList s--------------------------------------------------");
+		this.log.info("tenantId : " + req.getTenantId());
+		this.log.info("lang : " + req.getLang());
+		this.log.info("--------------searchCmpxBasicInfoList e--------------------------------------------------");
 
 		CmpxBasicInfoSacRes res = new CmpxBasicInfoSacRes();
 		List<CmpxBasicInfo> cmpxBasicInfoList = new ArrayList<CmpxBasicInfo>();
@@ -76,6 +81,9 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 
 		for (String prodId : prodIdList) {
 			paramMap.put("prodId", prodId);
+			this.log.info("------------------------searchCmpxBasicInfoList s----------------------------------------");
+			this.log.info("prodId : " + prodId);
+			this.log.info("------------------------searchCmpxBasicInfoList e----------------------------------------");
 			CmpxBasicInfo cmpxBasicInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxBasicInfoList", paramMap,
 					CmpxBasicInfo.class);
 
@@ -139,7 +147,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		
 
 
-		this.log.info("----------------------------------------------------------------");
+		this.log.info("------------------searchCmpxProductList s----------------------------------------------");
 		this.log.info("tenantId : " + req.getTenantId());
 		this.log.info("cmpxProdClsfCd : " + req.getCmpxProdClsfCd());
 		this.log.info("prodId : " + req.getProdId());
@@ -153,7 +161,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 			this.log.info("seriesBookClsfCd : " + req.getSeriesBookClsfCd());
 		}
 		
-		this.log.info("----------------------------------------------------------------");
+		this.log.info("-------------------searchCmpxProductList e---------------------------------------------");
 		if(req.getEpisodeProdStatusCdList() != null){
     		if(req.getEpisodeProdStatusCdList().size() ==1){
         		for(int kk =0; kk < 1 ; kk++){
@@ -232,7 +240,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 			req.setChapter(null);
 		}
 
-		this.log.info("----------------------------------------------------------------");
+		this.log.info("---------------searchCmpxProductInfo s-------------------------------------------------");
 		this.log.info("tenantId : " + req.getTenantId());
 		this.log.info("langCd : " + req.getLangCd());
 		this.log.info("prodId : " + req.getProdId());
@@ -241,7 +249,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if(req.getEpisodeProdStatusCdList() != null){
 			this.log.info("episodeProdStatusCdList : " + req.getEpisodeProdStatusCdList().toString());
 		}
-		this.log.info("----------------------------------------------------------------");
+		this.log.info("---------------searchCmpxProductInfo e-------------------------------------------------");
 		if(req.getEpisodeProdStatusCdList() != null){
     		if(req.getEpisodeProdStatusCdList().size() ==1){
         		for(int kk =0; kk < 1 ; kk++){
