@@ -149,6 +149,10 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if(req.getEpisodeProdStatusCdList() != null){
 			this.log.info("episodeProdStatusCdList : " + req.getEpisodeProdStatusCdList().toString());
 		}
+		if (StringUtils.isNotEmpty(req.getSeriesBookClsfCd())) {
+			this.log.info("seriesBookClsfCd : " + req.getSeriesBookClsfCd());
+		}
+		
 		this.log.info("----------------------------------------------------------------");
 		if(req.getEpisodeProdStatusCdList() != null){
     		if(req.getEpisodeProdStatusCdList().size() ==1){
