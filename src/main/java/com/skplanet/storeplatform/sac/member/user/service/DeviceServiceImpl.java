@@ -581,13 +581,13 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 			// 기등록된 모바일회원이 휴면 계정이였을 경우 IDP 복구 요청
-			if (StringUtils.equals(previousIsDormant, MemberConstants.USE_Y)) {
-				LOGGER.info("{} 휴면 회원 IDP 복구", deviceInfo.getDeviceId());
-				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
-				authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
-				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
-				this.idpSCI.authForWap(authForWapEcReq);
-			}
+			// if (StringUtils.equals(previousIsDormant, MemberConstants.USE_Y)) {
+			// LOGGER.info("{} 휴면 회원 IDP 복구", deviceInfo.getDeviceId());
+			// AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+			// authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
+			// authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
+			// this.idpSCI.authForWap(authForWapEcReq);
+			// }
 
 		}
 
