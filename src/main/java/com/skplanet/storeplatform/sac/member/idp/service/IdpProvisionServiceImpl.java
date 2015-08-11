@@ -493,7 +493,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String deviceKey = null;
 		String modelCd = null;
 		String resultCode = null;
-		String resultText = null;
 		String isDormant = null;
 
 		CommonRequest commonRequest = new CommonRequest();
@@ -641,7 +640,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 
 			resultCode = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
-			resultText = IdpConstants.IDP_RESPONSE_SUCCESS_MSG;
+
 		} catch (StorePlatformException ex) {
 
 			LOGGER.error(ex.getMessage(), ex);
@@ -649,10 +648,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				resultCode = IdpConstants.IDP_RESPONSE_NO_DATA;
-				resultText = IdpConstants.IDP_RESPONSE_NO_DATA_MSG;
 			} else {
 				resultCode = IdpConstants.IDP_RESPONSE_FAIL_CODE;
-				resultText = IdpConstants.IDP_RESPONSE_FAIL_MSG;
 			}
 
 		} finally {
@@ -709,7 +706,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String userKey = null;
 		String deviceKey = null;
 		String resultCode = null;
-		String resultText = null;
 		String changeCaseCode = null;
 		String isDormant = null;
 
@@ -884,7 +880,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			LOGGER.info("{},결과:{},Type:{},svcRsnCd:{},changeCaseCode:{}", mdn, resultLogStr, schUserRes.getUserMbr()
 					.getUserType(), svcRsnCd, changeCaseCode);
 			resultCode = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
-			resultText = IdpConstants.IDP_RESPONSE_SUCCESS_MSG;
 		} catch (StorePlatformException ex) {
 
 			LOGGER.error(ex.getMessage(), ex);
@@ -892,10 +887,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				resultCode = IdpConstants.IDP_RESPONSE_NO_DATA;
-				resultText = IdpConstants.IDP_RESPONSE_NO_DATA_MSG;
 			} else {
 				resultCode = IdpConstants.IDP_RESPONSE_FAIL_CODE;
-				resultText = IdpConstants.IDP_RESPONSE_FAIL_MSG;
 			}
 
 		} finally {
@@ -952,7 +945,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
 		String userKey = null;
 		String resultCode = null;
-		String resultText = null;
 		String isDormant = null;
 
 		CommonRequest commonRequest = new CommonRequest();
@@ -999,7 +991,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				LOGGER.info("MQ process fail {}", mqInfo);
 			}
 			resultCode = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
-			resultText = IdpConstants.IDP_RESPONSE_SUCCESS_MSG;
 		} catch (StorePlatformException ex) {
 
 			LOGGER.error(ex.getMessage(), ex);
@@ -1007,10 +998,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				resultCode = IdpConstants.IDP_RESPONSE_NO_DATA;
-				resultText = IdpConstants.IDP_RESPONSE_NO_DATA_MSG;
 			} else {
 				resultCode = IdpConstants.IDP_RESPONSE_FAIL_CODE;
-				resultText = IdpConstants.IDP_RESPONSE_FAIL_MSG;
 			}
 
 		} finally {
@@ -1062,7 +1051,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String imMbrNo = StringUtil.nvl(map.get("user_key"), "");
 		String userKey = null;
 		String resultCode = null;
-		String resultText = null;
 		String isDormant = null;
 
 		CommonRequest commonRequest = new CommonRequest();
@@ -1458,10 +1446,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					}
 				}
 				resultCode = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
-				resultText = IdpConstants.IDP_RESPONSE_SUCCESS_MSG;
 			} else {
 				resultCode = IdpConstants.IDP_RESPONSE_NO_DATA;
-				resultText = IdpConstants.IDP_RESPONSE_NO_DATA_MSG;
 			}
 
 		} catch (StorePlatformException ex) {
@@ -1471,10 +1457,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				resultCode = IdpConstants.IDP_RESPONSE_NO_DATA;
-				resultText = IdpConstants.IDP_RESPONSE_NO_DATA_MSG;
 			} else {
 				resultCode = IdpConstants.IDP_RESPONSE_FAIL_CODE;
-				resultText = IdpConstants.IDP_RESPONSE_FAIL_MSG;
 			}
 
 		} finally {
@@ -1528,7 +1512,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		String userKey = null;
 		String resultCode = null;
-		String resultText = null;
 		String isDormant = null;
 
 		CommonRequest commonRequest = new CommonRequest();
@@ -1567,7 +1550,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 
 			resultCode = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
-			resultText = IdpConstants.IDP_RESPONSE_SUCCESS_MSG;
 		} catch (StorePlatformException ex) {
 
 			LOGGER.error(ex.getMessage(), ex);
@@ -1575,10 +1557,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				resultCode = IdpConstants.IDP_RESPONSE_NO_DATA;
-				resultText = IdpConstants.IDP_RESPONSE_NO_DATA_MSG;
 			} else {
 				resultCode = IdpConstants.IDP_RESPONSE_FAIL_CODE;
-				resultText = IdpConstants.IDP_RESPONSE_FAIL_MSG;
 			}
 
 		} finally {
@@ -1600,7 +1580,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				this.userSCI.updateNonMbrSegment(req);
 
 				resultCode = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
-				resultText = IdpConstants.IDP_RESPONSE_SUCCESS_MSG;
 			} else if (StringUtil.equals(resultCode, IdpConstants.IDP_RESPONSE_FAIL_CODE)) {
 				changeDeviceLog.setPreData("ERROR");
 			}
