@@ -9,6 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.display.appguide.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.mysql.jdbc.StringUtils;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
@@ -25,16 +36,6 @@ import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * App guide 테마 추천 목록 Service 인터페이스(CoreStoreBusiness) 구현체
@@ -53,12 +54,18 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 	@Autowired
 	private DisplayCommonService displayCommonService;
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.biz.product.service.AppguideVersionServiceImpl#searchThemeRecommendMain(AppguideSacReq
-	 * requestVO, SacRequestHeader requestHeader)
+	 * <pre>
+	 * 2.15.3 테마 추천 리스트.
+	 * 앱 가이드 추천 테마 리스트를 조회한다.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            AppguideVersionSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return AppguideSacRes
 	 */
 	@Override
 	public AppguideSacRes searchThemeRecommendList(AppguideThemeSacReq requestVO, SacRequestHeader requestHeader) {
@@ -77,11 +84,11 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 		mapReq.put("listGrpCd", "TAP"); // 앱가이드 테마추천
 
 		List<String> imageCodeList = new ArrayList<String>();
-		imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-		imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-		imageCodeList.add(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-		imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-		imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD); // App Image Code(DP000101)
+		imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD); // VOD Image Code(DP000127)
+		imageCodeList.add(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD); // Ebook/Comic Image Code(DP006207)
+		imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD); // Music Image Code(DP000162)
+		imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD); // Shopping Image Code(DP0001A3)
 		mapReq.put("imageCdList", imageCodeList);
 
 		int start = 1;
@@ -108,13 +115,13 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 			mapReq.put("sdVideoSprtYn", supportDevice.getSdVideoSprtYn());
 			mapReq.put("sclShpgSprtYn", supportDevice.getSclShpgSprtYn());
 
-			List<String> listIdList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendMainList", mapReq,
-					String.class);
+			// 추천 테마 ID 조회
+			List<String> listIdList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendMainList", mapReq, String.class);
 
 			mapReq.put("listId", listIdList);
 
-			List<Appguide> themeList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
-					Appguide.class);
+			// 추천 테마 ID의 리스트에 해당하는 테마정보를 조회한다 
+			List<Appguide> themeList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq, Appguide.class);
 			if (themeList == null || themeList.isEmpty()) {
 				commonResponse.setTotalCount(0);
 				responseVO.setCommonResponse(commonResponse);
@@ -143,7 +150,7 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 			Identifier themeId = new Identifier();
 			themeId.setText(main.getThemeId());
 			themeId.setType("theme");
-			theme.setIdentifier(themeId);
+			theme.setIdentifier(themeId); //Indentifier 정보 set
 
 			Title themeNm = new Title();
 			themeNm.setText(main.getThemeNm());

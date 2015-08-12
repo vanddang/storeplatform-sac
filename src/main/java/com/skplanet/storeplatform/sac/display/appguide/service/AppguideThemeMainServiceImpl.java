@@ -66,12 +66,18 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.biz.product.service.AppguideVersionServiceImpl#searchThemeRecommendMain(AppguideSacReq
-	 * requestVO, SacRequestHeader requestHeader)
+	 * <pre>
+	 * 2.15.2 테마 추천 메인 조회.
+	 * 앱 가이드 메인 화면의 테마 추천을 조회한다.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            AppguideVersionSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return AppguideSacRes
 	 */
 	@Override
 	public AppguideSacRes searchThemeRecommendMain(AppguideThemeSacReq requestVO, SacRequestHeader requestHeader) {
@@ -104,13 +110,12 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 			mapReq.put("sdVideoSprtYn", supportDevice.getSdVideoSprtYn());
 			mapReq.put("sclShpgSprtYn", supportDevice.getSclShpgSprtYn());
 
-			List<String> listIdList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendMainList", mapReq,
-					String.class);
+			List<String> listIdList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendMainList", mapReq, String.class); // 테마 추천 메인 ( 테마 추천의 List ID를 조회한다)
 
 			mapReq.put("listId", listIdList);
 
-			List<AppguideMain> themeMainList = this.commonDAO.queryForList(
-					"Appguide.Theme.getBasicThemeRecommendMainProductList", mapReq, AppguideMain.class);
+			// 해당 List ID 의 상품 리스트 조회( 테마의 타입이 1일때 테마당 조회되는 상품의 수는 5건이고 2일때는 4개의 상품이 조회된다. 노출순서 정렬 기준) - 상품의 채널 정보
+			List<AppguideMain> themeMainList = this.commonDAO.queryForList("Appguide.Theme.getBasicThemeRecommendMainProductList", mapReq, AppguideMain.class);
 			if (themeMainList == null || themeMainList.isEmpty()) {
 				throw new StorePlatformException("SAC_DSP_0009");
 			}
@@ -122,24 +127,25 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 			int total = themeMainList.size();
 			String beforeThemeId = "";
 			Product theme = new Product();
-			List<Product> productListA = new ArrayList<Product>(); // 테마추천별 상품 리스트
+			List<Product> productListA = new ArrayList<Product>(); // 테마추천별 상품 리스트(하나의 테마에 속해 있는 상품 리스트)
 			// List<Product> productListB = new ArrayList<Product>(); // 테마추천별 상품 리스트
-			List<Product> productListB = null; // 테마추천별 상품 리스트
+			List<Product> productListB = null; // 테마추천별 상품 리스트(전체 상품 리스트)
 			for (AppguideMain main : themeMainList) {
 
 				count++;
 
-				Product currTheme = new Product();
-				Identifier themeId = new Identifier();
+				Product currTheme = new Product(); // 테마 정보 변수
+				Identifier themeId = new Identifier(); // 테마 ID
 				themeId.setText(main.getThemeId());
 				themeId.setType("theme");
 				currTheme.setIdentifier(themeId);
 
-				Title themeNm = new Title();
+				Title themeNm = new Title(); // 테마명
 				themeNm.setText(main.getThemeNm());
 				currTheme.setTitle(themeNm);
 				currTheme.setThemeType(main.getThemeType());
 
+				// 테마 Source 정보
 				if (!StringUtils.isNullOrEmpty(main.getThemeImg())) {
 					List<Source> themeUrlList = new ArrayList<Source>();
 					Source themeUrl = new Source();
@@ -149,7 +155,7 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 				}
 
 				ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-				productBasicInfo.setContentsTypeCd(main.getContentsTypeCd());
+				productBasicInfo.setContentsTypeCd(main.getContentsTypeCd()); 
 				productBasicInfo.setExpoOrd(main.getExpoOrd());
 				productBasicInfo.setMenuId(main.getMenuId());
 				productBasicInfo.setMetaClsfCd(main.getMetaClsfCd());
@@ -211,8 +217,7 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 							productListA.add(product);
 						}
 					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
-																						  // 경우
+							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
 
 						paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
@@ -256,7 +261,7 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 					}
 				}
 
-				if (count == 1 || productCnt == 1) { // 최초
+				if (count == 1 || productCnt == 1) { // 최초 Data일때의 테마 ID를 beforeThemeId 변수에 담아둔다
 					theme = new Product();
 
 					beforeThemeId = main.getThemeId();
@@ -268,36 +273,36 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 					}
 					continue;
 				} else if (beforeThemeId.equals(main.getThemeId())) { // 이전 테마 아이디와 현재 테마 아이디가 동일한 경우
-					if (count == total) {
+					if (count == total) { // 마지막 ListId(테마)에 해당하는 List 데이터(productListA)를 subProductList에 set. 여기서 productListB는 사용하지 않음 
 						try {
 							productListB = new ArrayList<Product>();
-							productListB.addAll(productListA.subList(0, productCnt));
+							productListB.addAll(productListA.subList(0, productCnt)); //productListA 의 0에서 productCnt 까지의 배열 데이터 
 
 							theme.setSubProductList(productListA);
 							themeList.add(theme);
 						} catch (Exception e) {
 						}
 					} else {
-						beforeThemeId = main.getThemeId();
+						beforeThemeId = main.getThemeId(); // 하나의 테마가 끝나기 전인지 아닌지 비교하기 위해 조회된 테마 ID를 변수에 SET
 						productCnt++;
 						continue;
 					}
-				} else if (!beforeThemeId.equals(main.getThemeId())) { // 이전 테마 아이디와 현재 테마 아이디가 동일하지 않은 경우
+				} else if (!beforeThemeId.equals(main.getThemeId())) { // 이전 테마 아이디와 현재 테마 아이디가 동일하지 않은 경우(하나의 테마에 대한 조회 종료)
 					beforeThemeId = main.getThemeId();
 					try {
 						productListB = new ArrayList<Product>();
-						productListB.addAll(productListA.subList(0, productCnt));
-						productListA.removeAll(productListB);
-
-						theme.setSubProductList(productListB);
+						productListB.addAll(productListA.subList(0, productCnt)); //productListA 의 0에서 productCnt 까지의 배열 데이터 
+						productListA.removeAll(productListB); // 다음 테마의 경우 productListA에 set 되어 있는 데이터를 productListB add 후 , productListB와 동일한 데이터를 productListA에서 삭제.
+															  // productListA에 다음 테마에 대한 상품 리스트를 담기 위한 초기화 
+						theme.setSubProductList(productListB);// 하나의 테마에 대한 상품 정보를 subProductList에 set
 						themeList.add(theme);
 
-						productCnt = 1;
+						productCnt = 1; // 다음 테마의 상품 건수를 체크하기 위해 초기화
 
 					} catch (Exception e) {
 					}
 				} else { // 예외 상황
-					throw new StorePlatformException("SAC_DSP_9999");
+					throw new StorePlatformException("SAC_DSP_9999"); //정의되지 않은 오류가 발생하였습니다.
 				}
 			} // end of for loop
 		} else {

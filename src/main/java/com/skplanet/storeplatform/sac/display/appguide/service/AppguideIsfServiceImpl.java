@@ -152,7 +152,9 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 
 		ISFRes response = null;
 		try {
-			// ISF 연동
+			// ISF 연동(EC)
+			// UserKey와 DeviceId 값에 대항하는 ISF 연동 결과를 내려받는다
+			// SVC_RECM_0001의 연동결과를 내려받는다.
 			response = this.invoker.invoke(this.makeRequest(requestVO));
 
 			int multiCount = response.getProps().getMultiValues() != null ? response.getProps().getMultiValues()
@@ -160,9 +162,9 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 			this.log.debug("multiCount : {}", multiCount);
 
 			if (multiCount > 0) {
-				MultiValuesType multis = response.getProps().getMultiValues();
+				MultiValuesType multis = response.getProps().getMultiValues(); // 연동결과가 담겨있는 객체
 				for (MultiValueType multi : multis.getMultiValue()) {
-					sPid = multi.getId(); // pid
+					sPid = multi.getId(); // pid(상품 ID : 채널)
 					sReasonCode = multi.getReasonCode(); // 추천 사유 코드
 					sRelId = multi.getRelId(); // 연관 상품 id
 
@@ -178,14 +180,14 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 					if (StringUtils.isNotEmpty(sRelId)) {
 						// 연관 상품 PID 저장 : DB 조회용
 						listRelProdParam.add(sRelId);
-						// PID - 연관상품 ID 매핑 관리
+						// 연관 상품 맵핑(추천상품ID, 연관상품ID)
 						mapRelProd.put(sPid, sRelId);
 					}
 				}
 				this.log.debug("idx : {}", idx);
 				this.log.debug("size : {}", listProdParam.size());
 
-				// 앱코디 상품 리스트 조회
+				// ISF 내려받은 PID 리스트의 값을 상품 기본정보 조회를 위한 mapReq에 Put
 				mapReq.put("pidList", listProdParam);
 
 				// 단말 지원정보 조회
@@ -222,7 +224,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 
 							String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
 							String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
-							paramMap.put("productBasicInfo", productBasicInfo);
+							paramMap.put("productBasicInfo", productBasicInfo); // 상품 기본 정보
 
 							Product product = null;
 
@@ -269,8 +271,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 									}
 								} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 										|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic
-																									  // 상품의
-																									  // 경우
+																									  // 상품의 경우
 
 									paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
@@ -336,7 +337,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 						Map<String, Object> mapRel = new HashMap<String, Object>();
 						mapRel.put("tenantHeader", tenantHeader);
 						mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
-						mapRel.put("pidList", listRelProdParam);
+						mapRel.put("pidList", listRelProdParam); // 연관상품의 상품 ID List
 
 						listRelProd = this.commonDAO.queryForList("Isf.Appguide.getRelProdList", mapRel, HashMap.class);
 					}
@@ -345,14 +346,16 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 					boolean isRel = false;
 					String reasonMessage = "";
 
-					/*
-					 * 앱코디 상품 조회 리스트를 돌리면서 추천 사유 메세지 만드는 작업을 한다. 순서는 처음에 저장한 mapRank 를 참조로 Index 생성하여 처리한다.
-					 */
+					// ISF 내려받은 상품의 숫자만큼 추천 사유가 들어갈 Array 공간을 만들어준다
 					List<Product> listAppCodiReason = new ArrayList<Product>(idx);
 					for (int i = 0; i < idx; i++) {
 						listAppCodiReason.add(null);
 					}
 
+					/*
+					 * 앱가이드 상품 조회 리스트를 돌리면서 추천 사유 메세지 만드는 작업을 한다. 처리 순서는 처음에 저장한 mapRank의 Index 값을 가져와서 생성하여 처리한다.(pid를
+					 * key값으로 Index가 잡혀있음)
+					 */
 					for (Product product : productList) {
 						for (Identifier id : product.getIdentifierList()) {
 							if (id.getType().equalsIgnoreCase(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD)) {
@@ -361,11 +364,15 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 									break;
 							}
 						}
-						sRelId = mapRelProd.get(sPid);
-						sReasonCode = mapReason.get(sPid);
+						sRelId = mapRelProd.get(sPid); // 추천 상품 ID에 맵핑되어 있는 연관상품 ID
+						sReasonCode = mapReason.get(sPid); // 추천 상품에 맵핑되어 있는 추천 사유 코드
+
+						// 추천 사유코드가 02 또는 03이면 04로 치환
 						if ("02".equals(sReasonCode) || "03".equals(sReasonCode)) {
 							sReasonCode = "04";
 						}
+
+						// ISF에서 내려받은 추천 코드에 해당 하는 Message
 						if (sReasonCode != null) {
 							reasonMessage = IsfConstants.mapReasonCode.get(sReasonCode);
 						}
@@ -373,24 +380,30 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 							reasonMessage = "";
 
 						// 기존 두자리 사유 코드 처리 정책 (4자리로 바뀌면 의미는 없음)
-						// 추천사유코드 : 01이고, 연관 상품이 있으면 구매 추천
-						// 추천사유코드 : 01이고, 연관 상품이 없으면, Power User’s Best 추천
-						// 추천사유코드 : 02이면, 무조건 Power User’s Best 추천
-						// 추천사유코드 : 03이면 무조건 Beginner’s Best 추천
+						// 추천사유코드 : 01이고, 연관 상품이 있으면 상품명의 구매 추천(410 Line에서 처리)
+						// 추천사유코드 : 01이고, 연관 상품이 없으면, Power User’s Best 추천(441 Line에서 처리)
+						// 추천사유코드 : 02,03 무조건 Power User’s Best 추천
+
 						// 연관상품 여부
 						isRel = false;
-						/* replace 해야하는 사유가 아니면 skip */
+
+						/*
+						 * 추천 사유 Msessage 중 $문자가 포함되어 있으면 치환 시작 $ 문자는 replace해야 되는 문자
+						 */
 						if (reasonMessage.indexOf("$") > -1) {
 
-							// 대상상품 대분류 카테고리명
-							// 대상상품은 연관상품과 별개로 처리함
+							// 조회된 추천 상품(Isf.Appguide.getAppguideProdList) 대분류 카테고리명
+							// 추천상품은 연관상품과 별개로 처리함
 							String top_cat_nm_pid = "";
 							for (Menu menu : product.getMenuList()) {
+								// 조회된 추천 상품(Isf.Appguide.getAppguideProdList)의 menu type이 topClass일때 해당 메뉴명을 치환 변수에 set
 								if (!StringUtils.isEmpty(menu.getType())
 										&& DisplayConstants.DP_MENU_TOPCLASS_TYPE.equals(menu.getType())) {
 									top_cat_nm_pid = menu.getName();
 								}
 							}
+
+							// 추천사유의 $4 문자를 추천상품의 top_menu 명으로 치환
 							reasonMessage = StringUtils.replace(reasonMessage, "$4", top_cat_nm_pid);
 
 							// 연관상품 정보가 있을 경우에 치환처리함
@@ -420,11 +433,11 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 							}
 						}
 
-						// 연관상품이 없을 경우에는 각각의 사유 메세지 정보를 셋팅
-						// 단, 2자리 사유코드 01일 경우에는 04 코드로 사용한다.
-						// 01일 경우에는 연관상품이 있어야 하나 없을 경우에...
-						// 기타 4자리 코드인데 연관상품으로 치환되지 않았을 경우에
-						// $1,2,3가 그냥 노출되기 때문에 임시로 04번 코드로 치환한다.
+						// 연관상품이 없거나 치환할 문자가 없는 경우에는 각각의 사유 메세지 정보를 셋팅
+						// 단, 2자리 사유코드 01일 경우($문자가 포함되어 있는 추천사유는 01밖에 없음)에는 04 코드로 사용한다.
+						// 01일 경우에는 연관상품이 있어야 하나 없을 경우 대비한 방어로직
+						// 기타 4자리 코드인데 연관상품으로 치환되지 않고 사유 메세지가 $문자를 포함되어 있을때 $1,2,3가 그냥 노출되기 때문에 임시로 04번 코드로 치환한다.
+
 						if (!isRel && reasonMessage.indexOf("$") > -1) {
 							reasonMessage = IsfConstants.mapReasonCode.get("04");
 							product.setRecommendedReason(reasonMessage);
@@ -436,12 +449,12 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 							this.log.debug("reasonMessage : " + product.getRecommendedReason());
 						}
 
-						// ISF연동 정보시 저장한 순서를 가져와서 최종 List에 해당 Index로 add 한다.
+						// ISF연동 정보시 저장한 순서를 가져와서 최종 List에 해당 Index 순서대로 add 한다.
 						int index = mapRank.get(sPid);
 						listAppCodiReason.set(index, product);
 					}
 
-					// 앱코디 상품리스트 조회 결과가 ISF 에서 넘겨주는 상품 정보보다 적을 수 있어서(판매중지 등의 사유)
+					// 앱가이드 상품리스트 조회 결과(Isf.Appguide.getAppguideProdList)가 ISF 에서 넘겨주는 상품 정보보다 적을 수 있어서(판매중지 등의 사유)
 					// 중간에 Index가 비는 문제가 발생할 수 있다. 그래서 아래와 같이 null element 삭제 로직 추가한다.
 					listAppCodiReason.removeAll(Arrays.asList(new Object[] { null }));
 
@@ -487,7 +500,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 			e.printStackTrace();
 			// isExists = false;
 			ErrorInfo error = new ErrorInfo();
-			error.setCode("SAC_DSP_0009");
+			error.setCode("SAC_DSP_0009"); // 요청하신 자료가 존재하지 않습니다.
 			error.setMessage(e.getLocalizedMessage());
 			throw new StorePlatformException(error);
 		}
@@ -609,10 +622,10 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 
 		IsfEcReq request = new IsfEcReq();
 
-		request.setId("SVC_RECM_0001");
+		request.setId("SVC_RECM_0001"); // ISF 추천
 		request.setMbn(requestVO.getUserKey());
 		request.setMdn(requestVO.getDeviceId());
-		request.setChCode("M");
+		request.setChCode("M"); // 접속 채널 구분 M(Mobile) /W(Web)
 		// request.setType("appguide");
 
 		if (this.log.isDebugEnabled()) {

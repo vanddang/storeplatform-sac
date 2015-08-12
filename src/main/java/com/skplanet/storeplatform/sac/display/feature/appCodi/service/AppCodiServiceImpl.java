@@ -100,11 +100,19 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 	// private final String APP_CODI_SVC_GRP_NM = "APPCODI";
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuReq
-	 * requestVO)
+	 * <pre>
+	 * App Codi 상품 리스트 조회.
+	 * 회원 번호,전화 번호를 이용하여 ISF와 연동하여 App Codi 상품 리스트를 조회
+	 * App Codi 상품의 정보는 채널 정보
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            AppCodiSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return AppCodiListSacRes
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	@Override
@@ -159,15 +167,16 @@ public class AppCodiServiceImpl implements AppCodiService {
 		// ISFRes response = new ISFRes();
 		ISFRes response = null;
 		try {
-			// ISF 연동
+			// ISF 연동(EC)
+			// UserKey와 DeviceId 값에 대항하는 ISF 연동 결과를 내려받는다
+			// long 으로 조회시 SVC_CODI_0001 (App Codi Home추천)그 이외에는 SVC_MAIN_0003(메인 4Top Product추천) 연동결과를 내려받는다.
 			response = this.invoker.invoke(this.makeRequest(requestVO));
 
-			int multiCount = (response.getProps().getMultiValues() != null) ? response.getProps().getMultiValues()
-					.getCount() : 0;
+			int multiCount = (response.getProps().getMultiValues() != null) ? response.getProps().getMultiValues().getCount() : 0;
 			if (multiCount > 0) {
-				MultiValuesType multis = response.getProps().getMultiValues();
+				MultiValuesType multis = response.getProps().getMultiValues(); // 연동결과가 담겨있는 객체
 				for (MultiValueType multi : multis.getMultiValue()) {
-					sPid = multi.getId(); // pid
+					sPid = multi.getId(); // pid(상품 ID : 채널)
 					sReasonCode = multi.getReasonCode(); // 추천 사유 코드
 					sRelId = multi.getRelId(); // 연관 상품 id
 
@@ -183,12 +192,12 @@ public class AppCodiServiceImpl implements AppCodiService {
 					if (StringUtils.isNotEmpty(sRelId)) {
 						// 연관 상품 PID 저장 : DB 조회용
 						listRelProdParam.add(sRelId);
-						// PID - 연관상품 ID 매핑 관리
+						// 연관 상품 맵핑(추천상품ID, 연관상품ID)
 						mapRelProd.put(sPid, sRelId);
 					}
 				}
 
-				// 앱코디 상품 리스트 조회
+				// ISF 내려받은 PID 리스트의 값을 상품 기본정보 조회를 위한 mapReq에 Put
 				mapReq.put("pidList", listProdParam);
 				mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
@@ -225,7 +234,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 							String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
 							String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
-							paramMap.put("productBasicInfo", productBasicInfo);
+							paramMap.put("productBasicInfo", productBasicInfo); // 상품 기본 정보
 
 							if (this.log.isDebugEnabled()) {
 								this.log.debug("##### Top Menu Id : {}", topMenuId);
@@ -254,7 +263,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 								// 영화/방송 상품의 경우
 								paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-										|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+										|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) { // 영화 / 방송일 경우
 									if (this.log.isDebugEnabled()) {
 										this.log.debug("##### Search for Vod  meta info product");
 									}
@@ -269,9 +278,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 										productList.add(product);
 									}
 								} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-										|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic
-																									  // 상품의
-																									  // 경우
+										|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
 
 									paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
@@ -289,7 +296,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 									}
 
 								} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-
+								
 									paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 									paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
@@ -302,9 +309,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 										productList.add(product);
 									}
 								}
-							} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의
-																											   // 경우
-								paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+							} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
+								paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD); // 채널-에피소드  상품 관계 코드
 								paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
 								if (this.log.isDebugEnabled()) {
@@ -333,36 +339,43 @@ public class AppCodiServiceImpl implements AppCodiService {
 						Map<String, Object> mapRel = new HashMap<String, Object>();
 						mapRel.put("tenantHeader", tenantHeader);
 						mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
-						mapRel.put("pidList", listRelProdParam);
+						mapRel.put("pidList", listRelProdParam); // 연관상품의 상품 ID List
 
 						listRelProd = this.commonDAO.queryForList("Isf.AppCodi.getRelProdList", mapRel, HashMap.class);
 					}
 
-					// 추천사유코드 Mapping
-					boolean isRel = false;
-					String reasonMessage = "";
+					boolean isRel = false; // 연관상품 boolean
+					String reasonMessage = ""; // 추천사유 Message
 
-					/*
-					 * 앱코디 상품 조회 리스트를 돌리면서 추천 사유 메세지 만드는 작업을 한다. 순서는 처음에 저장한 mapRank 를 참조로 Index 생성하여 처리한다.
-					 */
+					// ISF 내려받은 상품의 숫자만큼 추천 사유가 들어갈 Array 공간을 만들어준다
 					List<Product> listAppCodiReason = new ArrayList<Product>(idx);
 					for (int i = 0; i < idx; i++) {
 						listAppCodiReason.add(null);
 					}
 
+					/*
+					 * 앱코디 상품 조회 리스트를 돌리면서 추천 사유 메세지 생성. 처리 순서는 처음에 저장한 mapRank의 Index 값을 가져와서 생성하여 처리한다.(pid를 key값으로
+					 * Index가 잡혀있음)
+					 */
 					for (Product product : productList) {
 						for (Identifier id : product.getIdentifierList()) {
+							// Meta 데이터를 조회한 상품의 ID Type이 채널일때
 							if (id.getType().equalsIgnoreCase(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD)) {
 								sPid = id.getText();
 								if (StringUtil.isNotEmpty(sPid))
 									break;
 							}
 						}
-						sRelId = mapRelProd.get(sPid);
-						sReasonCode = mapReason.get(sPid);
+
+						sRelId = mapRelProd.get(sPid); // 추천 상품 ID에 맵핑되어 있는 연관상품 ID
+						sReasonCode = mapReason.get(sPid); // 추천 상품에 맵핑되어 있는 추천 사유 코드
+
+						// 추천 사유코드가 02 또는 03이면 04로 치환
 						if ("02".equals(sReasonCode) || "03".equals(sReasonCode)) {
 							sReasonCode = "04";
 						}
+
+						// ISF에서 내려받은 추천 코드에 해당 하는 Message
 						if (sReasonCode != null) {
 							reasonMessage = IsfConstants.mapReasonCode.get(sReasonCode);
 						}
@@ -370,25 +383,31 @@ public class AppCodiServiceImpl implements AppCodiService {
 							reasonMessage = "";
 
 						// 기존 두자리 사유 코드 처리 정책 (4자리로 바뀌면 의미는 없음)
-						// 추천사유코드 : 01이고, 연관 상품이 있으면 구매 추천
-						// 추천사유코드 : 01이고, 연관 상품이 없으면, Power User’s Best 추천
-						// 추천사유코드 : 02이면, 무조건 Power User’s Best 추천
-						// 추천사유코드 : 03이면 무조건 Beginner’s Best 추천
+						// 추천사유코드 : 01이고, 연관 상품이 있으면 상품명의 구매 추천(414 Line에서 처리)
+						// 추천사유코드 : 01이고, 연관 상품이 없으면, Power User’s Best 추천(445 Line에서 처리)
+						// 추천사유코드 : 02,03 무조건 Power User’s Best 추천
+
 						// 연관상품 여부
 						isRel = false;
-						/* replace 해야하는 사유가 아니면 skip */
+
+						/*
+						 * 추천 사유 Msessage 중 $문자가 포함되어 있으면 치환 시작 $ 문자는 replace해야 되는 문자
+						 */
 						if (reasonMessage.indexOf("$") > -1) {
 
-							// 대상상품 대분류 카테고리명
-							// 대상상품은 연관상품과 별개로 처리함
+							// 조회된 추천 상품(Isf.AppCodi.getAppCodiProdList) 대분류 카테고리명
+							// 추천상품은 연관상품과 별개로 처리함
 							String top_cat_nm_pid = "";
+
 							for (Menu menu : product.getMenuList()) {
+								// 조회된 추천 상품(Isf.AppCodi.getAppCodiProdList)의 menu type이 topClass 일때 해당 메뉴명을 치환할 변수에 set
 								if (!StringUtils.isEmpty(menu.getType())
 										&& DisplayConstants.DP_MENU_TOPCLASS_TYPE.equals(menu.getType())) {
 									top_cat_nm_pid = menu.getName();
 								}
 							}
 
+							// 추천사유의 $4 문자를 추천상품의 top_menu 명으로 치환
 							reasonMessage = StringUtils.replace(reasonMessage, "$4", top_cat_nm_pid);
 
 							// 연관상품 정보가 있을 경우에 치환처리함
@@ -398,7 +417,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 											&& sRelId.equals(ObjectUtils.toString(mapRelProdTemp.get("PROD_ID")))) {
 										// 연관상품명
 										String prod_nm = (String) mapRelProdTemp.get("PROD_NM");
-										// DA 팀에서 24 byte(한글 12자리)로 상품명을 조절해 달라고 요청함
+										// 24 byte(한글 12자리)로 상품명을 조절( DA 팀 요청)
 										prod_nm = IsfUtils.cutStringLimit(prod_nm, 24);
 										// 연관상품 대분류 카테고리명
 										String top_cat_nm = (String) mapRelProdTemp.get("TOP_MENU_NM");
@@ -418,11 +437,11 @@ public class AppCodiServiceImpl implements AppCodiService {
 							}
 						}
 
-						// 연관상품이 없을 경우에는 각각의 사유 메세지 정보를 셋팅
-						// 단, 2자리 사유코드 01일 경우에는 04 코드로 사용한다.
-						// 01일 경우에는 연관상품이 있어야 하나 없을 경우에...
-						// 기타 4자리 코드인데 연관상품으로 치환되지 않았을 경우에
-						// $1,2,3가 그냥 노출되기 때문에 임시로 04번 코드로 치환한다.
+						// 연관상품이 없거나 치환할 문자가 없는 경우에는 각각의 사유 메세지 정보를 셋팅
+						// 단, 2자리 사유코드 01일 경우($문자가 포함되어 있는 추천사유는 01밖에 없음)에는 04 코드로 사용한다.
+						// 01일 경우에는 연관상품이 있어야 하나 없을 경우 대비한 방어로직
+						// 기타 4자리 코드인데 연관상품으로 치환되지 않고 사유 메세지가 $문자를 포함되어 있을때 $1,2,3가 그냥 노출되기 때문에 임시로 04번 코드로 치환한다.
+
 						if (!isRel && reasonMessage.indexOf("$") > -1) {
 							reasonMessage = IsfConstants.mapReasonCode.get("04");
 							product.setRecommendedReason(reasonMessage);
@@ -434,12 +453,12 @@ public class AppCodiServiceImpl implements AppCodiService {
 							this.log.debug("reasonMessage : " + product.getRecommendedReason());
 						}
 
-						// ISF연동 정보시 저장한 순서를 가져와서 최종 List에 해당 Index로 add 한다.
+						// ISF연동 정보시 저장한 순서를 가져와서 최종 List에 해당 Index 순서대로 add 한다.
 						int index = mapRank.get(sPid);
 						listAppCodiReason.set(index, product);
 					}
 
-					// 앱코디 상품리스트 조회 결과가 ISF 에서 넘겨주는 상품 정보보다 적을 수 있어서(판매중지 등의 사유)
+					// 앱코디 상품리스트 조회 결과(Isf.AppCodi.getAppCodiProdList)가 ISF 에서 넘겨주는 상품 정보보다 적을 수 있어서(판매중지 등의 사유)
 					// 중간에 Index가 비는 문제가 발생할 수 있다. 그래서 아래와 같이 null element 삭제 로직 추가한다.
 					listAppCodiReason.removeAll(Arrays.asList(new Object[] { null }));
 
@@ -480,7 +499,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			} else {
 				// isExists = false;
 				ErrorInfo error = new ErrorInfo();
-				error.setCode("SAC_DSP_0010");
+				error.setCode("SAC_DSP_0010"); // ISF 서버로부터 받은 결과값이 없습니다.
 				throw new StorePlatformException(error);
 			}
 		} catch (StorePlatformException se) {
@@ -490,12 +509,12 @@ public class AppCodiServiceImpl implements AppCodiService {
 			e.printStackTrace();
 			// isExists = false;
 			ErrorInfo error = new ErrorInfo();
-			error.setCode("SAC_DSP_0009");
+			error.setCode("SAC_DSP_0009"); // 요청하신 자료가 존재하지 않습니다.
 			error.setMessage(e.getLocalizedMessage());
 			throw new StorePlatformException(error);
 		}
 
-		// ISF 연동 실패나 Data 가 없는 경우( 운영자 추천으로 대체 )
+		// ISF 연동 실패나 Data 가 없는 경우
 		if (!isExists) {
 			commonResponse.setTotalCount(0);
 			responseVO.setCommonRes(commonResponse);
@@ -612,13 +631,19 @@ public class AppCodiServiceImpl implements AppCodiService {
 		return responseVO;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.feature.appCodi.service.AppCodiService#searchAppCodiListV2(com.skplanet
-	 * .storeplatform.sac.client.display.vo.feature.appCodi.AppCodiV2SacReq,
-	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
+	 * <pre>
+	 * 개인별 선호 메뉴 및 추천 상품을 조회.
+	 * 회원 번호,전화 번호를 이용하여 (DA)서버와 연동하여 개인별 선호 메뉴와 추천 상품 정보를 받는다
+	 * 2.8.1 과 달리 상품 정보 조회 상품에 대한 Provisioning는 하지 않는다.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            AppCodiSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return AppCodiListSacRes
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -641,7 +666,10 @@ public class AppCodiServiceImpl implements AppCodiService {
 			ecReq = new IsfV2EcReq();
 			ecReq.setUserKey(userKey);
 			ecReq.setPreference(preference);
+			// Parameter 중 TopMenuId가 DP00으로 들어오는 경우 빈값(Empty String)으로 Setting(전체 조회를 위해)
 			ecReq.setCateId(StringUtils.equals(topMenuId, "DP00") ? "" : topMenuId);
+
+			// Parameter의 상품이용등급이 null 이거나 PD004404 코드가 들어오면 성인등급 추천 값을 Y로 setting
 			if (StringUtils.isEmpty(prodGradeCd) || prodGradeCd.indexOf("PD004404") >= 0) {
 				ecReq.setAdultYN("Y");
 			} else {
@@ -683,10 +711,11 @@ public class AppCodiServiceImpl implements AppCodiService {
 				paramMap.put("menuList", itemList);
 				paramMap.put("tenantHeader", requestHeader.getTenantHeader());
 
-				// ISF 응답 결과인 카테고리 정보 조회
+				// ISF 응답 결과(선호 카테고리)의 카테고리 정보 조회
 				List<HashMap> menuInfoList = this.commonDAO.queryForList("Isf.AppCodi.getCategoryInfoList", paramMap,
 						HashMap.class);
 
+				// 조회된 카테고리 정보를 Layout 규격에 set
 				if (CollectionUtils.isNotEmpty(menuInfoList)) {
 					Menu menu = null;
 					List<Menu> menuList = new ArrayList<Menu>();
@@ -833,14 +862,14 @@ public class AppCodiServiceImpl implements AppCodiService {
 		IsfEcReq request = new IsfEcReq();
 
 		if ("long".equals(requestVO.getFilteredBy()))
-			request.setId("SVC_CODI_0001");
+			request.setId("SVC_CODI_0001"); // App Codi Home추천App&Contents 정보를 조회
 		else
-			request.setId("SVC_MAIN_0003");
+			request.setId("SVC_MAIN_0003"); // 모바일 앱의 4Top Product 추천 정보를 조회
 
-		request.setChCode("M");
+		request.setChCode("M"); // 접속 채널 구분 M(Mobile) /W(Web)
 		request.setMbn(requestVO.getUserKey());
 		request.setMdn(requestVO.getDeviceId());
-		request.setType(requestVO.getFilteredBy());
+		request.setType(requestVO.getFilteredBy()); // long / short 실질적으로 ISF에서 사용되지는 않음
 
 		if (this.log.isDebugEnabled()) {
 			this.log.debug(request.toString());

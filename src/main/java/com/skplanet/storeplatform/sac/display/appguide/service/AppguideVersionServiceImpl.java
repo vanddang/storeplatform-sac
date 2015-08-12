@@ -9,6 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.display.appguide.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
@@ -21,16 +32,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * App guide Version Service 인터페이스(CoreStoreBusiness) 구현체
@@ -46,11 +47,18 @@ public class AppguideVersionServiceImpl implements AppguideVersionService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.AppguideVersionServiceImpl#searchVersion(AppguideSacReq
-	 * requestVO, SacRequestHeader requestHeader)
+	 * <pre>
+	 * 앱 가이드 버전정보 조회.
+	 * 패키지명과 OS Version으로 App 상품의 버전을 조회한다.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            AppguideVersionSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return AppguideSacRes
 	 */
 	@Override
 	public AppguideSacRes searchVersion(AppguideVersionSacReq requestVO, SacRequestHeader requestHeader) {
@@ -81,6 +89,7 @@ public class AppguideVersionServiceImpl implements AppguideVersionService {
 		mapReq.put("packageName", packageName);
 		mapReq.put("osVersion", osVersion);
 
+		// 패키지명과 os version으로 앱 정보를 조회한다.
 		Appguide appguide = this.commonDAO.queryForObject("Appguide.getVersion", mapReq, Appguide.class);
 		if (appguide == null) {
 			throw new StorePlatformException("SAC_DSP_0009");

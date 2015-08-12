@@ -89,7 +89,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 		// 헤더값 세팅
 		req.setDeviceModelCd(header.getDeviceHeader().getModel());
 		req.setTenantId(header.getTenantHeader().getTenantId());
-		req.setImageCd("DP000101");
+		req.setImageCd("DP000101"); // App Image Code
 		req.setLangCd(header.getTenantHeader().getLangCd());
 		req.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
@@ -118,8 +118,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 		List<ProductBasicInfo> productBasicInfoList;
 
 		// 단말 지원정보 조회
-		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
-				.getModel());
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader().getModel());
 
 		if (supportDevice != null) {
 			req.setEbookSprtYn(supportDevice.getEbookSprtYn());
@@ -129,9 +128,8 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 			req.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
 		}
 
-		// 추천 리스트 조회
-		productBasicInfoList = this.commonDAO.queryForList("AppguideAppranking.selectApprankingList", req,
-				ProductBasicInfo.class);
+		// 추천 리스트 조회( Meta 정보 조회를 위한 쇼핑 및 일반 상품( 앱, VOD, EBook/Comic, Music ) 조회
+		productBasicInfoList = this.commonDAO.queryForList("AppguideAppranking.selectApprankingList", req,	ProductBasicInfo.class);
 
 		List<Product> productList = new ArrayList<Product>();
 
@@ -149,6 +147,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 		// reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+		// 추천 리스트 조회시에는 앱 상품까지 조회하지만, 메타정보 조회시 서비스 그룹코드(svcGrpCd)를 멀티미디어 그룹코드 값을 넣어주기 때문에 앱 상품은 조회되지 않는다.
 		if (!productBasicInfoList.isEmpty()) {
 
 			Product product = null;
@@ -192,9 +191,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 							}
 							productList.add(product);
 						}
-					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
-																						  // 경우
+					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
 						reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
 						if (retMetaInfo != null) {

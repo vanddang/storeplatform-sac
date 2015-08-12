@@ -64,16 +64,22 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.biz.product.service.AppguideThemeProductServiceImpl#searchThemeRecommendProductList
-	 * (AppguideThemeProdSacReq requestVO, SacRequestHeader requestHeader)
+	 * <pre>
+	 * 2.15.4.테마 추천별 상품 리스트
+	 * 앱가이드의 테마 추천별 상품 리스트를 조회한다.
+	 * Theme ID에 속해있는 상품 정보 조회
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            AppguideVersionSacReq
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @return AppguideSacRes
 	 */
 	@Override
-	public AppguideSacRes searchThemeRecommendProductList(AppguideThemeProdSacReq requestVO,
-			SacRequestHeader requestHeader) {
+	public AppguideSacRes searchThemeRecommendProductList(AppguideThemeProdSacReq requestVO, SacRequestHeader requestHeader) {
 
 		AppguideSacRes responseVO = new AppguideSacRes();
 		List<Product> productList = new ArrayList<Product>();
@@ -97,11 +103,8 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 			String[] arrayProdGradeCd = requestVO.getProdGradeCd().split("\\+");
 			for (int i = 0; i < arrayProdGradeCd.length; i++) {
 				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
-					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
-							&& !"PD004403".equals(arrayProdGradeCd[i])) {
-
-						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
-								arrayProdGradeCd[i]);
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])&& !"PD004403".equals(arrayProdGradeCd[i])) {
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd", 	arrayProdGradeCd[i]); //실행에 필요한 파라미터가 유효하지 않습니다. (파라미터 : {0}, 값 : {1})
 					}
 				}
 			}
@@ -116,6 +119,7 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 		int start = 1;
 		int end = 100;
 
+		// 조회 Range 재조정
 		if (requestVO.getOffset() > 0) {
 			start = requestVO.getOffset();
 		}
@@ -125,6 +129,7 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 		mapReq.put("START_ROW", start);
 		mapReq.put("END_ROW", end);
 
+		// 테마 정보를 조회한다.
 		Appguide theme = this.commonDAO.queryForObject("Appguide.Theme.getThemeRecommendInfo", mapReq, Appguide.class);
 		if (theme == null) {
 			throw new StorePlatformException("SAC_DSP_0009");
@@ -160,9 +165,8 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 			mapReq.put("sdVideoSprtYn", supportDevice.getSdVideoSprtYn());
 			mapReq.put("sclShpgSprtYn", supportDevice.getSclShpgSprtYn());
 
-			// 상품 기본 정보 List 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"Appguide.Theme.getBasicThemeRecommendProductList", mapReq, ProductBasicInfo.class);
+			// 상품 기본 정보 List 조회 - 상품의 채널 정보 조회
+			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList( "Appguide.Theme.getBasicThemeRecommendProductList", mapReq, ProductBasicInfo.class);
 
 			if (this.log.isDebugEnabled()) {
 				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
@@ -208,10 +212,8 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 						}
 
 					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
-						// 영화/방송 상품의 경우
 						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) { // 영화/방송 상품의 경우
 							if (this.log.isDebugEnabled()) {
 								this.log.debug("##### Search for Vod  meta info product");
 							}
@@ -224,8 +226,7 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 								}
 								productList.add(product);
 							}
-						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
+						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId) || DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
 
 							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
