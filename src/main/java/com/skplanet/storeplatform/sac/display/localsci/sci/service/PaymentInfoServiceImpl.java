@@ -257,7 +257,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         }
 
         // 이용가능한 정액권목록 제공
-        List<FreePass> availableFixrateInfoList = getAvailableFixrateInfoList(ctx, prodId);
+        List<FreePass> availableFixrateInfoList = getAvailableFixrateInfoList(ctx, prodId ,paymentInfo.getPossLendClsfCd(),paymentInfo.getBookClsfCd());
         Collection<String> availableFixrateProdList = Collections2.transform(availableFixrateInfoList, new Function<FreePass, String>() {
             @Override
             public String apply(FreePass input) {
@@ -270,7 +270,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         return paymentInfo;
     }
 
-    private List<FreePass> getAvailableFixrateInfoList(PaymentInfoContext ctx, String prodId) {
+    private List<FreePass> getAvailableFixrateInfoList(PaymentInfoContext ctx, String prodId ,String possLendClsfCd, String bookClsfCd ) {
 
         List<FreePass> availableFixrateInfoList = null;
         Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -278,6 +278,8 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         paramMap.put("tenantId", ctx.getTenantId());
         paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
         paramMap.put("prodId", prodId);
+        paramMap.put("possLendClsfCd", possLendClsfCd);
+        paramMap.put("bookClsfCd", bookClsfCd);
         availableFixrateInfoList = this.commonDAO.queryForList("PaymentInfo.getAvailableFixrateInfoList", paramMap,
                 FreePass.class);
 
