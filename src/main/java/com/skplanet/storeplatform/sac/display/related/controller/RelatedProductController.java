@@ -26,28 +26,28 @@ public class RelatedProductController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private SimilarProductService similarProductService;
+	private SimilarProductService similarProductService; // 유사상품 조회 Service
 
 	@Autowired
-	private SimilarMovieService similarMovieService;
+	private SimilarMovieService similarMovieService; //이 영화와 유사 영화 조회 Sercice
 
 	@Autowired
-	private BoughtTogetherProductService boughtTogetherProductService;
+	private BoughtTogetherProductService boughtTogetherProductService; //함께 구매한 상품 조회 Service
 
 	@Autowired
-	private SellerProductService sellerProductService;
+	private SellerProductService sellerProductService; // 특정 판매자별 상품 조회 Service
 
 	@Autowired
-	private AuthorProductService authorProductService;
+	private AuthorProductService authorProductService; // 특정 작가별 상품 조회 Service
 
 	@Autowired
-	private ArtistProductService artistProductService;
+	private ArtistProductService artistProductService; // 특정 아티스트별 상품(곡) 조회 Service
 
 	@Autowired
-	private AlbumProductService albumProductService;
+	private AlbumProductService albumProductService; //특정 앨범별 상품(곡) 조회 Service
 
     @Autowired
-    private RelatedProductService relatedProductService;
+    private RelatedProductService relatedProductService; // 연관상품 목록조회 조회 Service
 
 	/**
 	 *
@@ -63,18 +63,15 @@ public class RelatedProductController {
 	 */
 	@RequestMapping(value = "/similar/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SimilarProductSacRes searchSimilarProductList(@Validated SimilarProductSacReq requestVO,
-			SacRequestHeader requestHeader) {
-
+	public SimilarProductSacRes searchSimilarProductList(@Validated SimilarProductSacReq requestVO,	SacRequestHeader requestHeader) {
 		this.logger.debug("RelatedProductController.searchSimilarProductList start !!");
-
 		return this.similarProductService.searchSimilarProductList(requestVO, requestHeader);
 	}
 
 	/**
 	 *
 	 * <pre>
-	 * [] 2.5.7.이 상품과 유사 상품 조회 V2.
+	 * [I03000146] 2.5.7.이 상품과 유사 상품 조회 V2.
 	 * </pre>
 	 *
 	 * @param requestVO
@@ -85,11 +82,8 @@ public class RelatedProductController {
 	 */
 	@RequestMapping(value = "/similar/product/list/v2", method = RequestMethod.GET)
 	@ResponseBody
-	public SimilarProductSacRes searchSimilarProductListV2(@Validated SimilarProductSacReq requestVO,
-			SacRequestHeader requestHeader) {
-
+	public SimilarProductSacRes searchSimilarProductListV2(@Validated SimilarProductSacReq requestVO,SacRequestHeader requestHeader) {
 		this.logger.debug("RelatedProductController.searchSimilarProductListV2 start !!");
-
 		return this.similarProductService.searchSimilarProductListV2(requestVO, requestHeader);
 	}
 
@@ -98,8 +92,7 @@ public class RelatedProductController {
 	 */
 	@RequestMapping(value = "/boughtTogether/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BoughtTogetherProductSacRes searchBoughtTogetherProductList(
-			@Validated BoughtTogetherProductSacReq requestVO, SacRequestHeader requestHeader) {
+	public BoughtTogetherProductSacRes searchBoughtTogetherProductList(@Validated BoughtTogetherProductSacReq requestVO, SacRequestHeader requestHeader) {
 		this.logger.debug("RelatedProductController.searchBoughtTogetherProductList start !!");
 		return this.boughtTogetherProductService.searchBoughtTogetherProductList(requestVO, requestHeader);
 	}
@@ -109,19 +102,17 @@ public class RelatedProductController {
 	 */
 	@RequestMapping(value = "/boughtTogether/product/list/v2", method = RequestMethod.GET)
 	@ResponseBody
-	public BoughtTogetherProductSacRes searchBoughtTogetherProductListV2(
-			@Validated BoughtTogetherProductSacV2Req requestVO, SacRequestHeader requestHeader) {
+	public BoughtTogetherProductSacRes searchBoughtTogetherProductListV2(@Validated BoughtTogetherProductSacV2Req requestVO, SacRequestHeader requestHeader) {
 		this.logger.debug("RelatedProductController.searchBoughtTogetherProductListV2 start !!");
 		return this.boughtTogetherProductService.searchBoughtTogetherProductList(requestVO, requestHeader);
 	}
 
 	/**
-	 * [I03000XXX] 2.5.8. 이 상품과 함께 구매한 상품 조회 V3
+	 * [I03000147] 2.5.8. 이 상품과 함께 구매한 상품 조회 V3
 	 */
 	@RequestMapping(value = "/boughtTogether/product/list/v3", method = RequestMethod.GET)
 	@ResponseBody
-	public BoughtTogetherProductSacRes searchBoughtTogetherProductListV3(
-			@Validated BoughtTogetherProductSacV3Req requestVO, SacRequestHeader requestHeader) {
+	public BoughtTogetherProductSacRes searchBoughtTogetherProductListV3(@Validated BoughtTogetherProductSacV3Req requestVO, SacRequestHeader requestHeader) {
 		this.logger.debug("RelatedProductController.searchBoughtTogetherProductListV3 start !!");
 		return this.boughtTogetherProductService.searchBoughtTogetherProductListV3(requestVO, requestHeader);
 	}
