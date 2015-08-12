@@ -47,13 +47,13 @@ public class RequestFilter extends AbstractStorePlatformRequestFilter {
     }
 
     @Override
-    protected void initCustomContexts(StoreplatformServletRequestWrapper requestWrapper) {
+    protected void initCustomContexts() {
         // ShuttleThreadHolder 에 기본 Logger 를 지정
         TLogThreadHolder.setShuttleLogger(LoggerFactory.getLogger("TLOG_SAC_LOGGER"));
     }
 
     @Override
-    protected Map<String, String> addCustomHeaders() {
+    protected Map<String, String> addCustomHeaders(StoreplatformServletRequestWrapper requestWrapper) {
 
         Map<String, String> headerMap = new HashMap<String, String>();
 
