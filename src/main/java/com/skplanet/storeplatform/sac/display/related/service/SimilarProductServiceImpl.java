@@ -66,12 +66,14 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 	private DisplayCommonService displayCommonService;
 
 	@Autowired
-	private MemberBenefitService benefitService;
+	private MemberBenefitService benefitService; // 마일리지, 할인율 등 사용자 혜택 정보 조회 Service
 
 	/**
 	 * 
 	 * <pre>
 	 * 유사 상품 리스트 조회.
+	 * 상품 ID(기준 상품ID)로 유사 상품을 TB_DP_SMLR_PROD_MANG.SCORE 컬럼의 값이 높은 순으로 정렬하여 조회한다.
+	 * ISF 연동(DailyISFSimilarProdMain Batch) 데이터 참조
 	 * </pre>
 	 * 
 	 * @param requestVO
@@ -94,38 +96,42 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 		this.log.debug("요청 값 세팅");
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
+		
+		//요청 Parameter에 조회시 제외 ID 값이 존재하면 제외 ID값 중 + 기호를 제외하고 배열의 형태로 Parameter 재생성한다. 		
 		if (!StringUtils.isEmpty(requestVO.getExceptId())) {
 			requestVO.setArrayExceptId(StringUtils.split(requestVO.getExceptId(), "+"));
 		}
 
-		SimilarProductSacRes similarProductSacRes = new SimilarProductSacRes();
+		SimilarProductSacRes similarProductSacRes = new SimilarProductSacRes(); // 이 상품과 유사 상품 조회 API의 응답 규격 위한 최종 변수(상품의 meta 정보 포함)
 		CommonResponse commonResponse = new CommonResponse();
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		MetaInfo retMetaInfo = null;
-		Product product = null;
+		Map<String, Object> reqMap = new HashMap<String, Object>(); // Meta 조회를 위한 요청 Parameter를 담을 Map 변수
+		MetaInfo retMetaInfo = null; // Meta 조회 데이터를 담을 변수
+		Product product = null; // 상품 변수
 
-		List<ProductBasicInfo> similarProductList = new ArrayList<ProductBasicInfo>();
-		List<Product> productList = null;
+		List<ProductBasicInfo> similarProductList = new ArrayList<ProductBasicInfo>(); // TB_DP_SMLR_PROD_MANG(유사 상품)에서 조회한 상품 기본정보 List 변수
+		List<Product> productList = null; // 상품 List
 
 		// 단말 지원정보 조회
-		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(requestHeader.getDeviceHeader()
-				.getModel());
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(requestHeader.getDeviceHeader().getModel());
 
+		//단말 지원정보가 존재하면
 		if (supportDevice != null) {
-			requestVO.setEbookSprtYn(supportDevice.getEbookSprtYn());
-			requestVO.setComicSprtYn(supportDevice.getComicSprtYn());
-			requestVO.setMusicSprtYn(supportDevice.getMusicSprtYn());
-			requestVO.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
-			requestVO.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+			requestVO.setEbookSprtYn(supportDevice.getEbookSprtYn()); // eBook 상품 지원여부
+			requestVO.setComicSprtYn(supportDevice.getComicSprtYn()); // Comic 상품 지원여부
+			requestVO.setMusicSprtYn(supportDevice.getMusicSprtYn()); // 음악 상품 지원여부
+			requestVO.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn()); // VOD 상품 DRM 지원여부
+			requestVO.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn()); // VOD 상품 SD 지원여부			
 
-			String plus19Yn = this.getPlus19Yn(requestVO.getProductId());
+			// 요청 상품 ID로 19+상품여부 조회 (Y : 19+ 상품 , N : 19+가 아닌 상품)
+			// 조회된 상품이 19+ 상품이면 유사 상품 조회시 19+상품을 포함하여 유사 상품들을 조회
+			// 19+상품이 아닌경우 유사 상품 조회시 19+상품을 제외하고 유사 상품들을 조회
+			String plus19Yn = this.getPlus19Yn(requestVO.getProductId()); 
 
 			requestVO.setPlus19Yn(plus19Yn); // 19+상품 여부
-			// 이 상품과 유사 상품 조회
+			
+			// 이 상품과 유사 상품 조회 - TB_DP_SMLR_PROD_MANG.SCORE 컬럼의 값이 높은 순으로 정렬된 Data
 			this.log.debug("이 상품과 유사 상품 조회");
-			similarProductList = this.commonDAO.queryForList("SimilarProduct.selectSimilarProductList", requestVO,
-					ProductBasicInfo.class);
-
+			similarProductList = this.commonDAO.queryForList("SimilarProduct.selectSimilarProductList", requestVO,	ProductBasicInfo.class);
 		}
 
 		if (!similarProductList.isEmpty()) {
@@ -133,7 +139,7 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 
 			reqMap.put("tenantHeader", requestHeader.getTenantHeader());
 			reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 현재 판매중인 상품만 조회함
 
 			for (ProductBasicInfo productBasicInfo : similarProductList) {
 
@@ -141,42 +147,40 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 
 				if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap); // Ebook Meta 정보 조회
 					if (retMetaInfo != null) {
-						product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+						product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo); 
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD); 
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap); // Comic Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD); 
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap); // 영화 Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);  // TV/방송 Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,
-							MetaInfo.class); // 뮤직 메타
+					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,MetaInfo.class); // 뮤직 메타
 					// retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap); // 뮤직 공통 메타
 					if (retMetaInfo != null) {
 						// Tstore멤버십 적립율 정보
-						MileageInfo mileageInfo = this.benefitService.getMileageInfo(requestHeader.getTenantHeader()
-								.getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo
-								.getProdAmt());
+						// 음악 상세화면에서 이 상품과 함께 본 상품 진입, 다운로드가 완료된 경우 상품가격영역에 멤버십 적립율이 노출. #22048 2014.09.23
+						MileageInfo mileageInfo = this.benefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt());
 						List<Point> pointList = this.commonGenerator.generateMileage(mileageInfo);
 
 						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
@@ -187,7 +191,7 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 					}
 				} else {
 					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap); // App Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 						productList.add(product);
@@ -208,6 +212,8 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 	 * 
 	 * <pre>
 	 * 유사 상품 리스트 조회 V2.
+	 * 상품 ID(기준 상품ID)로 유사 상품을 TB_DP_SMLR_PROD_MANG.SCORE 컬럼의 값이 높은 순으로 정렬하여 조회한다.
+	 * ISF 연동(DailyISFSimilarProdMain Batch) 데이터 참조
 	 * </pre>
 	 * 
 	 * @param requestVO
@@ -231,43 +237,48 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 		this.log.debug("요청 값 세팅");
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
+		
+		//요청 Parameter에 조회시 제외 ID 값이 존재하면 제외 ID값 중 + 기호를 제외하고 배열의 형태로 Parameter 재생성한다.
 		if (!StringUtils.isEmpty(requestVO.getExceptId())) {
 			requestVO.setArrayExceptId(StringUtils.split(requestVO.getExceptId(), "+"));
 		}
 
-		// prodGradeCd 배열로 변경
+		// prodGradeCd(상품 이용등급코드) 배열로 변경
 		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
 			String[] prodGradeCdArr = StringUtils.split(requestVO.getProdGradeCd(), "+");
 			requestVO.setProdGradeCdArr(prodGradeCdArr);
 		}
 
-		SimilarProductSacRes similarProductSacRes = new SimilarProductSacRes();
+		SimilarProductSacRes similarProductSacRes = new SimilarProductSacRes(); // 이 상품과 유사 상품 조회 API의 응답 규격 위한 최종 변수(상품의 meta 정보 포함)
 		CommonResponse commonResponse = new CommonResponse();
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		MetaInfo retMetaInfo = null;
-		Product product = null;
+		Map<String, Object> reqMap = new HashMap<String, Object>(); // Meta 조회를 위한 요청 Parameter를 담을 Map 변수
+		MetaInfo retMetaInfo = null; // Meta 조회 데이터를 담을 변수
+		Product product = null; // 상품 변수
 
-		List<ProductBasicInfo> similarProductList = new ArrayList<ProductBasicInfo>();
-		List<Product> productList = null;
+		List<ProductBasicInfo> similarProductList = new ArrayList<ProductBasicInfo>(); // TB_DP_SMLR_PROD_MANG(유사 상품)에서 조회한 상품 기본정보 List 변수
+		List<Product> productList = null; // 상품 List 변수
 
 		// 단말 지원정보 조회
-		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(requestHeader.getDeviceHeader()
-				.getModel());
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(requestHeader.getDeviceHeader().getModel());
 
+		// 단말 지원정보가 존재 하면
 		if (supportDevice != null) {
-			requestVO.setEbookSprtYn(supportDevice.getEbookSprtYn());
-			requestVO.setComicSprtYn(supportDevice.getComicSprtYn());
-			requestVO.setMusicSprtYn(supportDevice.getMusicSprtYn());
-			requestVO.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
-			requestVO.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+			requestVO.setEbookSprtYn(supportDevice.getEbookSprtYn()); // eBook 상품 지원여부
+			requestVO.setComicSprtYn(supportDevice.getComicSprtYn()); // Comic 상품 지원여부
+			requestVO.setMusicSprtYn(supportDevice.getMusicSprtYn()); // 음악 상품 지원여부
+			requestVO.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn()); // VOD 상품 DRM 지원여부
+			requestVO.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn()); // VOD 상품 SD 지원여부
+			
+			// 요청 상품 ID로 19+상품여부 조회 (Y : 19+ 상품 , N : 19+가 아닌 상품)
+			// 조회된 상품이 19+ 상품이면 유사 상품 조회시 19+상품을 포함하여 유사 상품들을 조회
+			// 19+상품이 아닌경우 유사 상품 조회시 19+상품을 제외하고 유사 상품들을 조회
 			String plus19Yn = this.getPlus19Yn(requestVO.getProductId());
 
 			requestVO.setPlus19Yn(plus19Yn); // 19+상품 여부
 
-			// 이 상품과 유사 상품 조회
-			this.log.debug("이 상품과 유사 상품 조회");
-			similarProductList = this.commonDAO.queryForList("SimilarProduct.selectSimilarProductListV2", requestVO,
-					ProductBasicInfo.class);
+			// 이 상품과 유사 상품 조회 V2 - TB_DP_SMLR_PROD_MANG.SCORE 컬럼의 값이 높은 순으로 정렬된 Data
+			this.log.debug("이 상품과 유사 상품 조회 V2");
+			similarProductList = this.commonDAO.queryForList("SimilarProduct.selectSimilarProductListV2", requestVO, ProductBasicInfo.class);
 
 		}
 
@@ -276,7 +287,7 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 
 			reqMap.put("tenantHeader", requestHeader.getTenantHeader());
 			reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 현재 판매중인 상품만 조회함
 
 			for (ProductBasicInfo productBasicInfo : similarProductList) {
 
@@ -284,42 +295,40 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 
 				if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap); // Ebook Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap); // Comic Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap); // 영화 Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap); // TV/방송 Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,
-							MetaInfo.class); // 뮤직 메타
+					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap, MetaInfo.class); // 뮤직 메타
 					// retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap); // 뮤직 공통 메타
 					if (retMetaInfo != null) {
 						// Tstore멤버십 적립율 정보
-						MileageInfo mileageInfo = this.benefitService.getMileageInfo(requestHeader.getTenantHeader()
-								.getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo
-								.getProdAmt());
+						// 음악 상세화면에서 이 상품과 함께 본 상품(유사상품) 진입, 다운로드가 완료된 경우 상품가격영역에 멤버십 적립율이 노출. #22048 2014.09.23
+						MileageInfo mileageInfo = this.benefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt());
 						List<Point> pointList = this.commonGenerator.generateMileage(mileageInfo);
 
 						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
@@ -330,7 +339,7 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 					}
 				} else {
 					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap); // App Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 						productList.add(product);
@@ -347,6 +356,16 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 		return similarProductSacRes;
 	}
 
+	
+	/**
+	 * 
+	 * <pre>
+	 * 19+ 상품 여부 조회.
+	 * </pre>
+	 * 
+	 * @param string prodId
+	 * @return prodGrdExtraYn
+	 */
 	public String getPlus19Yn(String prodId) {
 		String prodGrdExtraYn = (String) this.commonDAO.queryForObject("SimilarProduct.getPlus19Yn", prodId);
 

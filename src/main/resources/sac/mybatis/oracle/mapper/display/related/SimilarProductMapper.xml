@@ -14,7 +14,7 @@
         AND B.MENU_ID = C.MENU_ID
         )    
         </if>
-        SELECT /* SimilarProductMapper.xml, selectSimilarProductList, SAC 전시 , 2014-02-18 */
+        SELECT /* SimilarProductMapper.xml, selectSimilarProductList, SAC 전시 , 2014-02-18 */             
               A.TOTAL_COUNT
             , A.TOP_MENU_ID
             , A.MENU_ID
@@ -22,9 +22,9 @@
             , A.CONTENTS_TYPE_CD
             , A.PLUS19_YN
         FROM (
-            SELECT 
+            SELECT /* APP 상품 조회 */
                   COUNT(A.PROD_ID) OVER() TOTAL_COUNT
-                , ROW_NUMBER() OVER(ORDER BY SCORE DESC) RNK
+                , ROW_NUMBER() OVER(ORDER BY SCORE DESC) RNK /* SCORE 가 높은 순으로 정렬함 */
                 , A.RNUM
                 , A.STD_PROD_ID
                 , A.STD_TOP_MENU_ID                
@@ -36,7 +36,7 @@
                 , A.PLUS19_YN
             FROM (
                 SELECT 
-                      ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
+                      ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM 
                     , A.STD_PROD_ID
                     , (SELECT TOP_MENU_ID FROM TB_DP_PROD WHERE PROD_ID = A.STD_PROD_ID) AS STD_TOP_MENU_ID                      
                     , D.TOP_MENU_ID
@@ -46,7 +46,7 @@
                     , B.CONTENTS_TYPE_CD
                     , NVL(B.PLUS19_YN, 'N') AS PLUS19_YN
                 FROM 
-                      TB_DP_SMLR_PROD_MANG A
+                      TB_DP_SMLR_PROD_MANG A /* 유사 상품 테이블( 앱 상품은 에피소드) */
                     , TB_DP_PROD B
                     , TB_DP_MENU_CATEGORY_PROD_MAPG C
                     , TB_DP_MENU_CATEGORY D
@@ -82,8 +82,8 @@
                 AND D.TOP_MENU_ID = #{topMenuId}
                 </if>
                 UNION ALL
-                SELECT 
-                      ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
+                SELECT  /* 멀티미디어 상품 조회 */
+                      ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM 
                     , A.STD_PROD_ID
                     , (SELECT TOP_MENU_ID FROM TB_DP_PROD WHERE PROD_ID = A.STD_PROD_ID) AS STD_TOP_MENU_ID                      
                     , D.TOP_MENU_ID
@@ -93,8 +93,8 @@
                     , 'PD002501' CONTENTS_TYPE_CD
                     , NVL(CH.PLUS19_YN, 'N') AS PLUS19_YN
                   FROM
-                      TB_DP_SMLR_PROD_MANG A
-                    , TB_DP_PROD CH
+                      TB_DP_SMLR_PROD_MANG A /* 유사 상품 테이블(채널 Join)*/
+                    , TB_DP_PROD CH /* 채널 */
                     , TB_DP_PROD_RSHP B                    
                     , TB_DP_MENU_CATEGORY_PROD_MAPG C
                     , TB_DP_MENU_CATEGORY D
@@ -108,7 +108,7 @@
                   AND B.PART_PROD_ID = E.PROD_ID
                   AND B.PART_PROD_ID = F.PROD_ID
                   AND B.PART_PROD_ID = G.PROD_ID
-                  AND C.USE_YN = 'Y'
+                  AND C.USE_YN = 'Y' 
                   AND D.USE_YN = 'Y'
                   AND F.EXPO_YN = 'Y'
                   AND E.SVC_GRP_CD = 'DP000203'
@@ -135,7 +135,7 @@
 	                    ELSE 1 
 	                     END
 	                   ) = 1
-                AND A.STD_PROD_ID = #{productId} /* 상품ID */
+                AND A.STD_PROD_ID = #{productId} /* 상품ID (채널로 Join)*/
                 AND F.TENANT_ID = #{tenantId}
                 AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{mmDeviceModelCd})
                 <if test='plus19Yn == "N"'> /* 19+ 상품 코드 */
@@ -167,9 +167,9 @@
             , A.CONTENTS_TYPE_CD
             , A.PLUS19_YN
         FROM (
-            SELECT 
+            SELECT /* APP 상품 조회 */
                   COUNT(A.PROD_ID) OVER() TOTAL_COUNT
-                , ROW_NUMBER() OVER(ORDER BY SCORE DESC) RNK
+                , ROW_NUMBER() OVER(ORDER BY SCORE DESC) RNK /* SCORE 가 높은 순으로 정렬함 */
                 , A.RNUM
                 , A.STD_PROD_ID
                 , A.STD_TOP_MENU_ID                
@@ -181,7 +181,7 @@
                 , A.PLUS19_YN
             FROM (
                 SELECT 
-                      ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
+                      ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM 
                     , A.STD_PROD_ID
                     , (SELECT TOP_MENU_ID FROM TB_DP_PROD WHERE PROD_ID = A.STD_PROD_ID) AS STD_TOP_MENU_ID                      
                     , D.TOP_MENU_ID
@@ -191,7 +191,7 @@
                     , B.CONTENTS_TYPE_CD
                     , NVL(B.PLUS19_YN, 'N') AS PLUS19_YN
                 FROM 
-                      TB_DP_SMLR_PROD_MANG A
+                      TB_DP_SMLR_PROD_MANG A /* 유사 상품 테이블 */
                     , TB_DP_PROD B
                     , TB_DP_MENU_CATEGORY_PROD_MAPG C
                     , TB_DP_MENU_CATEGORY D
@@ -230,8 +230,8 @@
                 AND D.TOP_MENU_ID = #{topMenuId}
                 </if>
                 UNION ALL
-                SELECT 
-                      ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
+                SELECT /* 멀티미디어 상품 조회 */
+                      ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM 
                     , A.STD_PROD_ID
                     , (SELECT TOP_MENU_ID FROM TB_DP_PROD WHERE PROD_ID = A.STD_PROD_ID) AS STD_TOP_MENU_ID                      
                     , D.TOP_MENU_ID
@@ -241,8 +241,8 @@
                     , 'PD002501' CONTENTS_TYPE_CD
                     , NVL(CH.PLUS19_YN, 'N') AS PLUS19_YN
                 FROM
-                      TB_DP_SMLR_PROD_MANG A
-                    , TB_DP_PROD CH
+                      TB_DP_SMLR_PROD_MANG A /* 유사 상품 테이블(채널 Join)*/
+                    , TB_DP_PROD CH /* 채널 */
                     , TB_DP_PROD_RSHP B
                     , TB_DP_MENU_CATEGORY_PROD_MAPG C
                     , TB_DP_MENU_CATEGORY D
@@ -281,7 +281,7 @@
                         ELSE 1 
                          END
                        ) = 1
-                  AND A.STD_PROD_ID = #{productId} /* 상품ID */
+                  AND A.STD_PROD_ID = #{productId} /* 상품ID (채널로 Join)*/
                   AND F.TENANT_ID = #{tenantId}
                 <if test='plus19Yn == "N"'> /* 19+ 상품 코드 */
                 AND (CH.PLUS19_YN IS NULL OR CH.PLUS19_YN  = 'N') 
