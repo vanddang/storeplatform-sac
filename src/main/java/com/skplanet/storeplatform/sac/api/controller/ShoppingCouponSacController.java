@@ -209,6 +209,10 @@ public class ShoppingCouponSacController {
 					break;
 				case DT:
 					// 특가 상품 상세 조회 작업을 호출한다.
+					if (StringUtils.isEmpty(couponReq.getItemCodes())) {
+						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemsCodes)", null);
+					}
+					
 					String[] itemsCodes = couponReq.getItemCodes().split(",");
 					couponRes = this.getSpecialProductDetail(couponReq.getCouponCode(),itemsCodes);
 					if (couponRes.getRCode().equals("")) {
