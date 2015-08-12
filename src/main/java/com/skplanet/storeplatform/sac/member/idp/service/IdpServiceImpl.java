@@ -45,7 +45,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
@@ -2215,14 +2214,9 @@ public class IdpServiceImpl implements IdpService {
 			updatePasswordUserRequest.setMbrPwd(mbrPwd);
 			updatePasswordUserRequest.setIsDormant(searchUserRespnse.getUserMbr().getIsDormant());
 			try {
-				UpdatePasswordUserResponse updatePasswordUserResponse = this.userSCI
-						.updatePasswordUser(updatePasswordUserRequest);
-
-				if (updatePasswordUserResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) {
-					idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
-					idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
-				}
+				this.userSCI.updatePasswordUser(updatePasswordUserRequest);
+				idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			} catch (StorePlatformException spe) {
 				LOGGER.debug("RXUpdateUserPwdIDP fail to set success as result");
 			}
