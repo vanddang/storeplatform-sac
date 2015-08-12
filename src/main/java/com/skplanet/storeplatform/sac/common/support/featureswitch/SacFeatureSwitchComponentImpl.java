@@ -37,7 +37,7 @@ public class SacFeatureSwitchComponentImpl implements SacFeatureSwitchManager, S
     @Override
     public boolean get(int featureKey) {
 
-        if(featureKey < 0x01)
+        if(featureKey <= 7)
             throw new IllegalArgumentException("정의되지 않은 키입니다.");
 
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
@@ -79,7 +79,7 @@ public class SacFeatureSwitchComponentImpl implements SacFeatureSwitchManager, S
     }
 
     private boolean returnValue(byte[] swVal, int featureKey) {
-        if(swVal == null || swVal.length == 0 || featureKey < 0x00)
+        if(swVal == null || swVal.length == 0 || featureKey < 0)
             return false;
 
         int offset = featureKey / 8;
