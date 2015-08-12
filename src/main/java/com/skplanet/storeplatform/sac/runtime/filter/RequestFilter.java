@@ -12,13 +12,13 @@ package com.skplanet.storeplatform.sac.runtime.filter;
 import com.skplanet.storeplatform.framework.core.cache.process.GlobalCacheProcessor;
 import com.skplanet.storeplatform.framework.core.util.log.TLogThreadHolder;
 import com.skplanet.storeplatform.framework.web.filter.AbstractStorePlatformRequestFilter;
+import com.skplanet.storeplatform.framework.web.filter.StoreplatformServletRequestWrapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +47,7 @@ public class RequestFilter extends AbstractStorePlatformRequestFilter {
     }
 
     @Override
-    protected void initCustomContexts() {
+    protected void initCustomContexts(StoreplatformServletRequestWrapper requestWrapper) {
         // ShuttleThreadHolder 에 기본 Logger 를 지정
         TLogThreadHolder.setShuttleLogger(LoggerFactory.getLogger("TLOG_SAC_LOGGER"));
     }
