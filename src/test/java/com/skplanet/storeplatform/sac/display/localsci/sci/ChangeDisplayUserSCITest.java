@@ -34,12 +34,12 @@ public class ChangeDisplayUserSCITest {
 	 * 사용자 ID 변경.
 	 * </pre>
 	 */
-	@Test
 	public void testChangeUserId() {
 		ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
 		changeDisplayUserSacReq.setTenantId("S01");
 		changeDisplayUserSacReq.setOldUserId("test1");
 		changeDisplayUserSacReq.setNewUserId("test2");
+		changeDisplayUserSacReq.setOldUserKey("IW1423599199920120710170411");
 		this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReq);
 	}
 
@@ -53,8 +53,8 @@ public class ChangeDisplayUserSCITest {
 	public void testChangeUserKey() {
 		ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
 		changeDisplayUserSacReq.setTenantId("S01");
-		changeDisplayUserSacReq.setOldUserKey("test3");
-		changeDisplayUserSacReq.setNewUseKey("test4");
+		changeDisplayUserSacReq.setOldUserKey("IW1423599199920120710170411");
+		changeDisplayUserSacReq.setNewUseKey("IM142100002351398201212021423");
 		this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
 	}
 }

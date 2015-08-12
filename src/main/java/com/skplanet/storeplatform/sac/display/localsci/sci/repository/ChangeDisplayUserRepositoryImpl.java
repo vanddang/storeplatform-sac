@@ -55,4 +55,14 @@ public class ChangeDisplayUserRepositoryImpl implements ChangeDisplayUserReposit
 	public Object changeMsgMbrMapg(ChangeDisplayUser changeDisplayUser) {
 		return this.commonDAO.update("LocalSci.changeMsgMbrMapg", changeDisplayUser);
 	}
+	
+	@Override
+	public Object searchMsgMbrMapg(ChangeDisplayUser changeDisplayUser) {
+		return this.commonDAO.queryForObject("LocalSci.searchMsgMbrMapg", changeDisplayUser);
+	}
+
+	@Override
+	public Object deleteMsgMbrMapg(ChangeDisplayUser changeDisplayUser) {
+		return this.commonDAO.delete("LocalSci.deleteMsgMbrMapg", changeDisplayUser);
+	}
 }

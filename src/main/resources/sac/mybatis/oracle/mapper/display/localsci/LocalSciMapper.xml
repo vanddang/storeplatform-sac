@@ -175,6 +175,23 @@
           </where>    
     </update>
     
+    <!-- 메시지 회원 매핑 테이블 조회 -->
+    <select id="searchMsgMbrMapg" parameterType="ChangeDisplayUser" resultType="Integer">
+        SELECT /* LocalSciMapper.xml, searchMsgMbrMapg, SAC : 이태희 , 2015-02-02 */
+               COUNT(1)
+          FROM TB_DP_MSG_MBR_MAPG
+         WHERE TENANT_ID = #{tenantId}
+           AND MBR_NO = #{newUserKey}
+    </select>
+    
+    <!-- 메시지 회원 매핑 테이블 삭제 -->
+    <delete id="deleteMsgMbrMapg" parameterType="ChangeDisplayUser">
+        DELETE /* LocalSciMapper.xml, deleteMsgMbrMapg, SAC : 이태희 , 2015-02-02 */
+          FROM TB_DP_MSG_MBR_MAPG
+         WHERE TENANT_ID = #{tenantId}
+           AND MBR_NO = #{oldUserKey}
+    </delete>
+    
     <!-- 메시지 회원 맵핑 테이블 회원ID, KEY 변경 -->
     <update id="changeMsgMbrMapg" parameterType="ChangeDisplayUser">
         UPDATE /* LocalSciMapper.xml, changeMsgMbrMapg, SAC : 김현일 , 2014-02-17 */

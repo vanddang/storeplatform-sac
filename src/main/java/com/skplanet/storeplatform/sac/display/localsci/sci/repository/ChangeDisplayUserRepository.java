@@ -95,4 +95,28 @@ public interface ChangeDisplayUserRepository {
 	 * @return Object
 	 */
 	public Object changeMsgMbrMapg(ChangeDisplayUser changeDisplayUser);
+	
+	/**
+	 * 
+	 * <pre>
+	 * 메시지 회원 매핑 테이블 조회.
+	 * </pre>
+	 * 
+	 * @param changeDisplayUser
+	 *            changeDisplayUser
+	 * @return Object
+	 */
+	public Object searchMsgMbrMapg(ChangeDisplayUser changeDisplayUser);
+
+	/**
+	 * 
+	 * <pre>
+	 * 메시지 회원 매핑 테이블 삭제.
+	 * </pre>
+	 * 
+	 * @param changeDisplayUser
+	 *            changeDisplayUser
+	 * @return Object
+	 */
+	public Object deleteMsgMbrMapg(ChangeDisplayUser changeDisplayUser);
 }
