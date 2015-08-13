@@ -151,5 +151,12 @@
 		   AND DRM_YN = #{drmYn} 
     </select>
 
+    <select id="getDbDateTime" resultType="Date">
+        SELECT
+          sysdate
+        FROM
+          DUAL
+    </select>
+
 
 </mapper>

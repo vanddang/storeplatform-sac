@@ -23,7 +23,7 @@ public class FeatureKey {
      */
     public static final int FEATURE_SWITCH_DEBUG = 0;
 
-    public static final int EVENT_MODE_SW1 = 8;
+    public static final int EVENT_MODE_FORCE_DB = 8;
     public static final int EVENT_MODE_SW2 = 9;
 
 }

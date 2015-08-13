@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.display.common.service;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.display.common.vo.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -198,7 +199,13 @@ public interface DisplayCommonService {
      * @param drmYn drmYn
      * @return 이용 기간 설정 구분
      */
-    String getUsePeriodSetCd(String topMenuId, String prodId,String drmYn,String svcGrpCd);    
-    
+    String getUsePeriodSetCd(String topMenuId, String prodId,String drmYn,String svcGrpCd);
+
+    /**
+     * DB시간을 조회한다.
+     * DB액세스는 Request당 한번만 수행되며 RequestContextHolder에 저장된다.
+     * @return 현재DB시간
+     */
+    Date getDbDateTime();
 
 }

@@ -13,6 +13,8 @@ import com.google.common.base.Strings;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.common.support.featureswitch.FeatureKey;
+import com.skplanet.storeplatform.sac.common.support.featureswitch.SacFeatureSwitchAccessor;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleAction;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleGetOrLoadHandler;
 import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
@@ -20,6 +22,7 @@ import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,12 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
     @Autowired
     private PromotionEventSyncService promotionEventSyncService;
+
+    @Autowired
+    private SacFeatureSwitchAccessor featureSwitchAccessor;
+
+    @Autowired
+    private DisplayCommonService displayCommonService;
 
     private static final Logger logger = LoggerFactory.getLogger(CachedExtraInfoManagerImpl.class);
 
@@ -180,12 +189,13 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
         final String[] keys = new String[]{param.getChnlId(), menuOrTopMenuId, topMenuId};
 
-        if(connectionFactory == null)
+        if(featureSwitchAccessor.get(FeatureKey.EVENT_MODE_FORCE_DB) || connectionFactory == null)
             return getPromotionEventFromDb(tenantId, keys);
 
         Date now = param.getNowDt();
-        if(now == null)
-            now = new Date();
+        if(now == null) {
+            now = displayCommonService.getDbDateTime();
+        }
 
         Plandasj client = connectionFactory.getConnectionPool().getClient();
 

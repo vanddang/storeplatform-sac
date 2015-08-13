@@ -1,24 +1,5 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
@@ -36,15 +17,21 @@ import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.VodType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest;
-import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
-import com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq;
-import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
-import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
-import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
-import com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy;
-import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
-import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
+import com.skplanet.storeplatform.sac.display.common.vo.*;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+
+import java.util.*;
 
 /**
  * 전시 공통 서비스
@@ -54,7 +41,9 @@ import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 @Service
 public class DisplayCommonServiceImpl implements DisplayCommonService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final String ATTR_DB_DATETIME = "_DB_DATETIME";
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -460,4 +449,25 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 		return upSetCd;
 	}
+
+    @Override
+    public Date getDbDateTime() {
+
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+
+        if(requestAttributes != null) {
+            Object valObj = requestAttributes.getAttribute("_DB_DATETIME", RequestAttributes.SCOPE_REQUEST);
+            if(valObj != null) {
+                return (Date) valObj;
+            }
+        }
+
+        Date now = commonDAO.queryForObject("DisplayCommon.getDbDateTime", null, Date.class);
+
+        if(requestAttributes != null) {
+            requestAttributes.setAttribute(ATTR_DB_DATETIME, now, RequestAttributes.SCOPE_REQUEST);
+        }
+
+        return now;
+    }
 }
