@@ -125,7 +125,7 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 		Product product = null;
 
 		List<MetaInfo> productMetaInfoList = null;
-		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchProductByProductId", paramMap, MetaInfo.class);
+		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchProductByProductId", paramMap, MetaInfo.class); // 상품ID로 상품 상세정보 조회.
 
 		if (productMetaInfoList.size() != 0) {
 
@@ -136,9 +136,9 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 			paramMap.clear();
 			paramMap.put("productId", appDetailByProductIdSacReq.getProductId());
 
-			List<MetaInfo> resultList = this.commonDAO.queryForList("OpenApi.searchSupportDeviceListByProdId",
-					paramMap, MetaInfo.class);
+			List<MetaInfo> resultList = this.commonDAO.queryForList("OpenApi.searchSupportDeviceListByProdId", paramMap, MetaInfo.class); // 타켓 단말 리스트 (By ProductId).
 
+            // 지원단말 정보 세팅.
 			if (resultList != null && !resultList.isEmpty()) {
 				for (int i = 0; i < resultList.size(); i++) {
 					device = new Device();
@@ -162,12 +162,10 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 
 				List<Identifier> identifierList = new ArrayList<Identifier>();
 
-				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
-						metaInfo.getChnlProdId());
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getChnlProdId());
 				identifierList.add(identifier);
 
-				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-						metaInfo.getProdId());
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
 				identifierList.add(identifier);
 
 				product.setIdentifierList(identifierList); // 상품 ID
@@ -180,8 +178,7 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 				product.setUrlList(urlList);
 
 				List<Source> sourceList = new ArrayList<Source>();
-				sourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL,
-						metaInfo.getImagePath()));
+				sourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL, metaInfo.getImagePath()));
 
 				product.setSourceList(sourceList); // 상품 이미지 정보
 
@@ -190,8 +187,7 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 				// 평점정보
 				Accrual accrual = new Accrual();
 				// 3사 통함 평점, 구매수, 참여수 조회 (캐쉬적용)
-				ProductStats productStats = this.productInfoManager.getProductStats(new ProductStatsParam(
-						appDetailByProductIdSacReq.getProductId()));
+				ProductStats productStats = this.productInfoManager.getProductStats(new ProductStatsParam(appDetailByProductIdSacReq.getProductId()));
 				accrual.setVoterCount(productStats.getParticipantCount());
 				accrual.setDownloadCount(productStats.getPurchaseCount());
 				accrual.setScore(productStats.getAverageScore());
@@ -256,9 +252,7 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 
 					this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformationListForProduct");
 					long end = System.currentTimeMillis();
-					this.log.info(
-							"##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformationListForProduct takes {} ms",
-							(end - start));
+					this.log.info("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformationListForProduct takes {} ms", (end - start));
 
 					if (StringUtils.isNotEmpty(sellerMbrNo)) {
 						SellerMbrInfoSac SellerMbrInfoSac = sellerRes.getSellerMbrMap().get(sellerMbrNo);
@@ -279,7 +273,7 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 
 				productList.add(product);
 				commonResponse.setTotalCount(1);
-			}
+			} // while End.
 		} else {
 			throw new StorePlatformException("SAC_DSP_0009");
 		}

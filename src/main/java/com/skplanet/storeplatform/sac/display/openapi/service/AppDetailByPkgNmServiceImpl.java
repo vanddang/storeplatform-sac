@@ -88,6 +88,9 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		String scUrl = DisplayConstants.DP_OPENAPI_SC_URL;
 		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
 
+        /**
+         * 응답 셋팅.
+         */
 		AppDetailByPackageNameSacRes response = new AppDetailByPackageNameSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
@@ -119,7 +122,7 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		 * 패키지명을 이용하여 상품ID 가져오기
 		 */
 		List<MetaInfo> prodIdList = null;
-		prodIdList = this.commonDAO.queryForList("OpenApi.searchProductIdByPackageName", paramMap, MetaInfo.class);
+		prodIdList = this.commonDAO.queryForList("OpenApi.searchProductIdByPackageName", paramMap, MetaInfo.class); // PackageName으로 상품ID 조회.
 
 		if (prodIdList.size() != 0) {
 			Iterator<MetaInfo> iterator = prodIdList.iterator();
@@ -150,7 +153,7 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		paramMap.put("rshpCd", rshpCd);
 
 		List<MetaInfo> productMetaInfoList = null;
-		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchProductByProductId", paramMap, MetaInfo.class);
+		productMetaInfoList = this.commonDAO.queryForList("OpenApi.searchProductByProductId", paramMap, MetaInfo.class); // 상품ID로 상품 상세정보 조회.
 
 		if (productMetaInfoList.size() != 0) {
 
@@ -159,8 +162,7 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 			paramMap.put("rshpCd", rshpCd);
 			// 지원 단말 리스트 조회
 			List<Device> supportDeviceList = null;
-			supportDeviceList = this.commonDAO.queryForList("OpenApi.searchSupportDeviceListByPkgNm", paramMap,
-					Device.class);
+			supportDeviceList = this.commonDAO.queryForList("OpenApi.searchSupportDeviceListByPkgNm", paramMap, Device.class); // 타켓 단말 리스트 (By PackageName).
 
 			// 상품 상세정보 Meta 데이타
 			Iterator<MetaInfo> iterator = productMetaInfoList.iterator();
@@ -173,12 +175,10 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 
 				List<Identifier> identifierList = new ArrayList<Identifier>();
 
-				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
-						metaInfo.getChnlProdId());
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getChnlProdId());
 				identifierList.add(identifier);
 
-				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-						metaInfo.getProdId());
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
 				identifierList.add(identifier);
 
 				product.setIdentifierList(identifierList); // 상품 ID
@@ -191,8 +191,7 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 				product.setUrlList(urlList);
 
 				List<Source> sourceList = new ArrayList<Source>();
-				sourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL,
-						metaInfo.getImagePath()));
+				sourceList.add(this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL, metaInfo.getImagePath()));
 
 				product.setSourceList(sourceList); // 상품 이미지 정보
 

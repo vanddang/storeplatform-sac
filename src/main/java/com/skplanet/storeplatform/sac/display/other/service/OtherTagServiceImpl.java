@@ -53,13 +53,16 @@ public class OtherTagServiceImpl implements OtherTagService {
 		OtherTagRes res = new OtherTagRes();
 		List<Tag> tagList = new ArrayList<Tag>();
 
+        /**
+         * 파라미터 세팅.
+         */
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("sellerTagCd", DisplayConstants.DP_SELLER_TAG_CD);
 		paramMap.put("keywordTagCd", DisplayConstants.DP_KEYWORD_TAG_CD);
 		paramMap.put("shoppingCouponTagCd", DisplayConstants.DP_SHOPPING_COUPON_CD);
 		paramMap.put("prodId", req.getProductId());
 
-		List<MetaInfo> metaInfoList = this.commonDAO.queryForList("OtherTag.searchTagList", paramMap, MetaInfo.class);
+		List<MetaInfo> metaInfoList = this.commonDAO.queryForList("OtherTag.searchTagList", paramMap, MetaInfo.class); // 상품에 등록된 태그 조회
 		for (MetaInfo metaInfo : metaInfoList) {
 			Tag tag = new Tag();
 			tag.setTagCd(metaInfo.getTagCd());
