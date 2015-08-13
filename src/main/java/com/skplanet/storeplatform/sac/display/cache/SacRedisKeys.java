@@ -25,6 +25,8 @@ public class SacRedisKeys {
     private static final String PREFIX_PROMOEVENT = "promoEvent:";
     private static final String PREFIX_LIVE_PROMOEVENT = "livePromoEvent";
     private static final String SET_PROMOEVENT = "set:promoEvent";
+    private static final String LIVE_PROMO_EVENT_END_LOG = "livePromoEventEndLog";
+    private static final String LIVE_PROMO_EVENT_TRANSITION = "livePromoEventTransition";
 
     public static String pkg2prod(String pkgNm) {
         return PREFIX_PKG_2_PROD + pkgNm;
@@ -56,6 +58,14 @@ public class SacRedisKeys {
 
     public static String livePromoEvent() {
         return PREFIX_LIVE_PROMOEVENT;
+    }
+
+    public static String livePromoEventEndLog() {
+        return LIVE_PROMO_EVENT_END_LOG;
+    }
+
+    public static String livePromoEventTransition() {
+        return LIVE_PROMO_EVENT_TRANSITION;
     }
 
 }

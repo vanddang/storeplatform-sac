@@ -124,7 +124,7 @@ public class PromotionEventWrapper {
      */
     public boolean isLive(Date now) {
         return !(this.startDt == null || this.endDt == null || now == null) &&
-                now.after(startDt) && now.before(endDt);
+                !now.before(startDt) && !now.after(endDt);
     }
 
     // TODO makePromotionEvent와 통일시켜야 함

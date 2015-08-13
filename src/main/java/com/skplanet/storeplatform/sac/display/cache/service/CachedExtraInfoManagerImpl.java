@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,14 @@ import java.util.*;
 @Service
 public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
+    /**
+     * 이벤트 트랜지션 임계치.
+     * - 임계치 이전에는 Reserved에서 조회하여 응답
+     * - 임계치를 넘으면 liveMap에 반영해줌
+     * - 단위시간당 임계치를 적용하려면 ttl 적용해야 함
+     */
+    private static final int TRANSITION_THRESHOLD = 100;
+
     @Autowired
     @Qualifier("sac")
     private CommonDAO commonDAO;
@@ -52,7 +61,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     private PromotionEventSyncService promotionEventSyncService;
 
     @Autowired
-    private SacFeatureSwitchAccessor featureSwitchAccessor;
+    private SacFeatureSwitchAccessor featureSwitch;
 
     @Autowired
     private DisplayCommonService displayCommonService;
@@ -179,6 +188,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
         String tenantId = param.getTenantId(),
                 menuOrTopMenuId = "",
                 topMenuId = "";
+
         if(!Strings.isNullOrEmpty(param.getMenuId())) {
 
             menuOrTopMenuId = param.getMenuId();
@@ -189,13 +199,18 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
         final String[] keys = new String[]{param.getChnlId(), menuOrTopMenuId, topMenuId};
 
-        if(featureSwitchAccessor.get(FeatureKey.EVENT_MODE_FORCE_DB) || connectionFactory == null)
+        if(featureSwitch.get(FeatureKey.PROMO_EVENT_FORCE_DB) || connectionFactory == null)
             return getPromotionEventFromDb(tenantId, keys);
 
         Date now = param.getNowDt();
         if(now == null) {
-            now = displayCommonService.getDbDateTime();
+            if (featureSwitch.get(FeatureKey.PROMO_EVENT_USE_SYSTIME))
+                now = new Date();
+            else
+                now = displayCommonService.getDbDateTime();
         }
+        else
+            now = DateUtils.truncate(now, Calendar.MILLISECOND);
 
         Plandasj client = connectionFactory.getConnectionPool().getClient();
 
@@ -225,17 +240,39 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
                     continue;
             }
 
-            if (now.before(eventWrapper.getEndDt())) {
+            if (now.compareTo(eventWrapper.getEndDt()) <= 0) {
                 return eventWrapper.isLive(now) ? eventWrapper.makePromotionEvent(key) : null;
             } else {
-                eventWrapper = PromotionEventRedisHelper.getEventFromReserved(client, tenantId, key, now);
+                // TODO jitter에 의한 의도하지 않은 이벤트 transition 처리 방안 => 임계치를 적용하여 처리함
+                // TODO eventTransition:[beforePromId]:[afterPromId] => numeric
+                String prevDatetimeKey = eventWrapper.getDatetimeKey();
+                PromotionEventWrapper incommingEventWrapper = PromotionEventRedisHelper.getEventFromReserved(client, tenantId, key, now);
 
-                if(eventWrapper != null) {
-                    PromotionEventRedisHelper.saveLiveEvent(client, fullKey, eventWrapper);
-                    return eventWrapper.isLive(now) ? eventWrapper.makePromotionEvent(key) : null;
-                }
-                else {
-                    PromotionEventRedisHelper.removeLiveEvent(client, fullKey);
+                if (incommingEventWrapper != null) {
+
+                    if(featureSwitch.get(FeatureKey.PROMO_EVENT_SKIP_TRANSITION_THRESHOLD))
+                        PromotionEventRedisHelper.saveLiveEvent(client, fullKey, incommingEventWrapper);
+                    else {
+                        if (PromotionEventRedisHelper.tryEventTransition(client, fullKey, prevDatetimeKey, incommingEventWrapper.getDatetimeKey()) >= TRANSITION_THRESHOLD) {
+                            PromotionEventRedisHelper.resetEventTransition(client, fullKey, prevDatetimeKey, incommingEventWrapper.getDatetimeKey());
+                            PromotionEventRedisHelper.saveLiveEvent(client, fullKey, incommingEventWrapper);
+                        }
+                    }
+
+                    return incommingEventWrapper.isLive(now) ? incommingEventWrapper.makePromotionEvent(key) : null;
+                } else {
+
+                    // 더이상의 이벤트가 없는 경우
+                    PromotionEventRedisHelper.addEventEndLog(client, fullKey, now);
+
+                    if(featureSwitch.get(FeatureKey.PROMO_EVENT_SKIP_TRANSITION_THRESHOLD))
+                        PromotionEventRedisHelper.removeLiveEvent(client, fullKey);
+                    else {
+                        if (PromotionEventRedisHelper.tryEventTransition(client, fullKey, prevDatetimeKey, null) >= TRANSITION_THRESHOLD) {
+                            PromotionEventRedisHelper.resetEventTransition(client, fullKey, prevDatetimeKey, null);
+                            PromotionEventRedisHelper.removeLiveEvent(client, fullKey);
+                        }
+                    }
                 }
             }
         }

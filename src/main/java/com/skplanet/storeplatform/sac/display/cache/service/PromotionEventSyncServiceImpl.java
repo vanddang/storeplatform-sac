@@ -18,7 +18,6 @@ import com.google.common.collect.Multimap;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEventWrapper;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
@@ -131,7 +130,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
                 }
             }
 
-            client.sadd(SacRedisKeys.promoEventSet(), events.getKey());
+            PromotionEventRedisHelper.addEventSet(client, events.getKey());
             liveMap.put(events.getKey(), incommingEventWrapper);
         }
 

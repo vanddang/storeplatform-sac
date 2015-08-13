@@ -16,11 +16,11 @@ import com.skplanet.plandasj.Plandasj;
 import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEventWrapper;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
 
 /**
  * <p>
@@ -29,6 +29,8 @@ import java.util.Set;
  * Updated on : 2015. 07. 27 Updated by : 정희원, SK 플래닛.
  */
 public class PromotionEventRedisHelper {
+
+    private PromotionEventRedisHelper() {}
 
     public static List<String> getLiveEventStrs(Plandasj client, String tenantId, String[] keys) {
 
@@ -100,6 +102,15 @@ public class PromotionEventRedisHelper {
     }
 
     /**
+     * promoEventSet에 추가한다.
+     * @param client
+     * @param fullKey
+     */
+    public static void addEventSet(Plandasj client, String fullKey) {
+        client.sadd(SacRedisKeys.promoEventSet(), fullKey);
+    }
+
+    /**
      * 대상이 되는 promoEvent, promoEventSet을 지운다.
      * @param redis
      * @param tenantId 대상이 되는 tenantId
@@ -159,5 +170,26 @@ public class PromotionEventRedisHelper {
         }
 
         return cntLiveRemoved;
+    }
+
+    public static int tryEventTransition(Plandasj redis, String fullKey, String prevDatetimeKey, String nextDatetimeKey) {
+        return redis.hincrBy(SacRedisKeys.livePromoEventTransition(), fullKey + ":" + prevDatetimeKey + "-" + StringUtils.defaultString(nextDatetimeKey, "END"), 1).intValue();
+    }
+
+    public static void resetEventTransition(Plandasj redis, String fullKey, String prevDatetimeKey, String nextDatetimeKey) {
+        redis.hdel(SacRedisKeys.livePromoEventTransition(), fullKey + ":" + prevDatetimeKey + "-" + StringUtils.defaultString(nextDatetimeKey, "END"));
+    }
+
+    public static void addEventEndLog(Plandasj redis, String fullKey, Date now) {
+
+        String svrNm, instanceNm = System.getProperty("instanceName", "N/A");
+        try {
+            svrNm = InetAddress.getLocalHost().getHostName();
+        } catch(UnknownHostException e) {
+            svrNm = "UnknownHost";
+        }
+
+        Object[] vars = new Object[]{fullKey, new DateTime(now), now.getTime(), svrNm, instanceNm};
+        redis.lpush(SacRedisKeys.livePromoEventEndLog(), StringUtils.join(vars, " "));
     }
 }

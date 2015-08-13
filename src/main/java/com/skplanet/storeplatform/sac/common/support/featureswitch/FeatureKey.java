@@ -23,7 +23,10 @@ public class FeatureKey {
      */
     public static final int FEATURE_SWITCH_DEBUG = 0;
 
-    public static final int EVENT_MODE_FORCE_DB = 8;
-    public static final int EVENT_MODE_SW2 = 9;
+    public static final int PROMO_EVENT_FORCE_DB = 8;
+    public static final int PROMO_EVENT_USE_SYSTIME = 9;
+    public static final int PROMO_EVENT_SKIP_TRANSITION_THRESHOLD = 10;
+
+    //public static final int[] INTEGER_SW = new int[]{}; // numeric value가 필요한 경우 offset, length 지정하여 값을 추출하도록 처리
 
 }
