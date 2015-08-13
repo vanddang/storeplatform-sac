@@ -32,7 +32,6 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDResponse;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
@@ -1076,15 +1075,9 @@ public class IdpServiceImpl implements IdpService {
 			mbrOneID.setUserID(map.get("user_id"));
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 			try {
-				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-				if (updateMbrOneIDResponse != null) {
-					if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
-							.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) { // SC반환값이
-						idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
-						idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
-					}
-				}
+				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+				idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			} catch (StorePlatformException spe) {
 				LOGGER.error(spe.getMessage(), spe);
 				imResult.setResult(idpResult);
@@ -1462,15 +1455,9 @@ public class IdpServiceImpl implements IdpService {
 
 				updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
 				updateRealNameRequest.setIsDormant(searchUserRespnse.getUserMbr().getIsDormant());
-				UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-				if (updateRealNameResponse != null) {
-					LOGGER.debug("response param : {}", updateRealNameResponse.getUserKey());
-					if (updateRealNameResponse.getCommonResponse().getResultCode()
-							.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) {
-						idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
-						idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
-					}
-				}
+				this.userSCI.updateRealName(updateRealNameRequest);
+				idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
 		} catch (StorePlatformException spe) {
 			LOGGER.error(spe.getMessage(), spe);
@@ -1792,6 +1779,9 @@ public class IdpServiceImpl implements IdpService {
 
 			if (spe.getErrorInfo().getCode().endsWith(MemberConstants.RESULT_NOT_FOUND_USER_KEY)) {
 				LOGGER.debug("rXPreCheckDeleteUserIDP ------- 회원 정보 없음");
+				idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+
 				imResult.setCmd("RXPreCheckDeleteUserIDP");
 				imResult.setResult(idpResult);
 				imResult.setResultText(idpResultText);
@@ -1872,6 +1862,9 @@ public class IdpServiceImpl implements IdpService {
 
 			if (spe.getErrorInfo().getCode().endsWith(MemberConstants.RESULT_NOT_FOUND_USER_KEY)) {
 				LOGGER.debug("RXPreCheckDisagreeUserIDP ------- 회원 정보 없음");
+				idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+
 				imResult.setCmd("RXPreCheckDisagreeUserIDP");
 				imResult.setResult(idpResult);
 				imResult.setResultText(idpResultText);
@@ -1924,43 +1917,27 @@ public class IdpServiceImpl implements IdpService {
 
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
-		UserMbr getUserMbr = null;
 		try {
 			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-			if (searchUserRespnse != null) // 회원 수정 정보 세팅
-				getUserMbr = searchUserRespnse.getUserMbr();
+			UserMbr userMbr = new UserMbr();
+			userMbr.setImSvcNo(imIntSvcNo); // 통합서비스 번호 M
+			userMbr.setUserID(userId); // mbrID M
+			userMbr.setIsMemberPoint(ocbTermReq);
+			userMbr.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
+			updateUserRequest.setUserMbr(userMbr);
+			updateUserRequest.setIsDormant(searchUserRespnse.getUserMbr().getIsDormant());
+			this.userSCI.updateUser(updateUserRequest);
 
-			if (getUserMbr != null) {
-				UserMbr userMbr = new UserMbr();
-				userMbr.setImSvcNo(imIntSvcNo); // 통합서비스 번호 M
-				userMbr.setUserID(userId); // mbrID M
-				userMbr.setIsMemberPoint(ocbTermReq);
-				userMbr.setUserKey(getUserMbr.getUserKey());
-				updateUserRequest.setUserMbr(userMbr);
-				updateUserRequest.setIsDormant(searchUserRespnse.getUserMbr().getIsDormant());
-				this.userSCI.updateUser(updateUserRequest);
-
-				// oneID 테이블 업데이트
-				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-				updateMbrOneIDRequest.setCommonRequest(commonRequest);
-				MbrOneID mbrOneID = new MbrOneID();
-				mbrOneID.setIntgSvcNumber(imIntSvcNo);
-				mbrOneID.setIsMemberPoint(ocbTermReq);
-				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-				updateMbrOneIDRequest.setIsDormant(searchUserRespnse.getUserMbr().getIsDormant());
-				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-			} else {
-				// oneID 테이블 업데이트
-				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-				updateMbrOneIDRequest.setCommonRequest(commonRequest);
-				MbrOneID mbrOneID = new MbrOneID();
-				mbrOneID.setIntgSvcNumber(imIntSvcNo);
-				mbrOneID.setIsMemberPoint(ocbTermReq);
-				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-
-				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-			}
+			// oneID 테이블 업데이트
+			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+			updateMbrOneIDRequest.setCommonRequest(commonRequest);
+			MbrOneID mbrOneID = new MbrOneID();
+			mbrOneID.setIntgSvcNumber(imIntSvcNo);
+			mbrOneID.setIsMemberPoint(ocbTermReq);
+			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+			updateMbrOneIDRequest.setIsDormant(searchUserRespnse.getUserMbr().getIsDormant());
+			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 			// if (updateUserResponse.getCommonResponse().getResultCode()
 			// .equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
@@ -1969,6 +1946,19 @@ public class IdpServiceImpl implements IdpService {
 			// }
 		} catch (StorePlatformException spe) {
 			LOGGER.debug("RXSetOCBDisagreeIDP fail to set success as result");
+			if (spe.getErrorInfo().getCode().endsWith(MemberConstants.RESULT_NOT_FOUND_USER_KEY)) {
+				// oneID 테이블 업데이트
+				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+				updateMbrOneIDRequest.setCommonRequest(commonRequest);
+				MbrOneID mbrOneID = new MbrOneID();
+				mbrOneID.setIntgSvcNumber(imIntSvcNo);
+				mbrOneID.setIsMemberPoint(ocbTermReq);
+				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+				idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+			}
 		}
 
 		ImResult imResult = new ImResult();

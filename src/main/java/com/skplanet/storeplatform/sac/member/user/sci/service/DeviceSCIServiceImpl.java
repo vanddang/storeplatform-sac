@@ -279,7 +279,7 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 		List<UserMbrDeviceDetail> deviceDetails = new ArrayList<UserMbrDeviceDetail>();
 		deviceDetails.add(userMbrDeviceDetail);
 		updateDeviceManagementRequest.setUserMbrDeviceDetail(deviceDetails);
-
+		updateDeviceManagementRequest.setIsDormant(searchDeviceResponse.getUserMbrDevice().getIsDormant());
 		UpdateDeviceManagementResponse updateDeviceManagementResponse = this.deviceSCI
 				.updateDeviceManagement(updateDeviceManagementRequest);
 		UpdateLimitChargeYnSacRes res = new UpdateLimitChargeYnSacRes();

@@ -150,7 +150,7 @@ import com.skplanet.storeplatform.sac.member.miscellaneous.service.Miscellaneous
 
 /**
  * 회원 로그인 관련 인터페이스 구현체.
- *
+ * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
 @Service
@@ -225,7 +225,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# authorizeByMdn
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq)
@@ -430,7 +430,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# executeAuthorizeByMdnV2
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq)
@@ -674,7 +674,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# executCheckVariability
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq)
@@ -883,7 +883,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeById
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq)
@@ -1224,7 +1224,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 로그인 성공이력 저장 */
-		this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "N");
+		this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "Y");
 
 		/* 정상 로그인 결과 */
 		res.setUserAuthKey(userAuthKey);
@@ -1243,7 +1243,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# executeAuthorizeForAutoUpdate
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, com.skplanet
 	 * .storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq)
@@ -1294,7 +1294,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# authorizeSaveAndSyncByMac
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, com.skplanet
 	 * .storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq)
@@ -1561,7 +1561,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeForInApp(com.skplanet.storeplatform.
 	 * sac.common.header.vo.SacRequestHeader,
@@ -1591,7 +1591,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeForInAppV2(com.skplanet.storeplatform
 	 * .sac.common.header.vo.SacRequestHeader,
@@ -1658,7 +1658,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeForInAppV2(com.skplanet.storeplatform
 	 * .sac.common.header.vo.SacRequestHeader,
@@ -1720,7 +1720,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorize(com.skplanet.storeplatform.sac.common
 	 * .header.vo.SacRequestHeader, com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq)
@@ -1743,7 +1743,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeForOllehMarket(com.skplanet.storeplatform
 	 * .sac.common.header.vo.SacRequestHeader,
@@ -1995,7 +1995,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeForUplusStore(com.skplanet.storeplatform
 	 * .sac.common.header.vo.SacRequestHeader,
@@ -2245,7 +2245,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeV2(com.skplanet.storeplatform.sac.common
 	 * .header.vo.SacRequestHeader, com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacReq)
@@ -2578,7 +2578,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * PayPlanet InApp 에 제공할 Tstore 회원정보 조회.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param req
@@ -2697,7 +2697,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * Tstore 회원의 PIN 정보에 따라서 PIN 설정 URL을 리턴.
 	 * </pre>
-	 *
+	 * 
 	 * @param pinInfo
 	 *            MarketPinInfo
 	 * @return pinSetUrl String
@@ -2723,7 +2723,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * T Store 기타 정보 조회.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param deviceId
@@ -2766,7 +2766,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 회원의 연령대 정보를 코드로 반환.
 	 * </pre>
-	 *
+	 * 
 	 * @param realAge
 	 *            String
 	 * @return prodExpoLevl 회원의 연령대 코드
@@ -2799,7 +2799,7 @@ public class LoginServiceImpl implements LoginService {
 	 * 회원 연령코드를 생년월일로 변환.
 	 * 만생년 + 1231 임시로 생성
 	 * </pre>
-	 *
+	 * 
 	 * @param prodExpoLevl
 	 *            String
 	 * @return birth 생년월일
@@ -2836,7 +2836,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 생년월일을 회원 연령코드로 변환.
 	 * </pre>
-	 *
+	 * 
 	 * @param birth
 	 *            String
 	 * @return prodExpoLevl 회원연령코드
@@ -2855,7 +2855,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/**
 	 * 로그인한 deviceId의 deviceKey 조회.
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param keyType
@@ -2891,17 +2891,17 @@ public class LoginServiceImpl implements LoginService {
 
 	/**
 	 * 회원유무 확인.
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param keyType
 	 *            조회타입
-	 *
+	 * 
 	 * @param keyString
 	 *            조회값
-	 *
+	 * 
 	 * @return CheckDuplicationResponse
-	 *
+	 * 
 	 */
 	private CheckDuplicationResponse checkDuplicationUser(SacRequestHeader requestHeader, String keyType,
 			String keyString) {
@@ -2931,7 +2931,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * SC회원정보 조회.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param keyType
@@ -2969,9 +2969,9 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
-	 *
+	 * 
 	 * SC콤포넌트 로그인 이력저장.
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param userId
@@ -3035,7 +3035,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 회원 상태코드 업데이트.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param keyType
@@ -3090,7 +3090,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 원아이디 회원 정보 업데이트.
 	 * </pre>
-	 *
+	 * 
 	 * @param sacHeader
 	 *            공통 헤더
 	 * @param imSvcNo
@@ -3123,7 +3123,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 특정 약관의 약관동의 여부 조회.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param userKey
@@ -3167,7 +3167,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 변동성 회원 체크 실패인경우 인증한 수단을 조회한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param deviceId
@@ -3201,7 +3201,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 휴대기기정보 update.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param userKey
@@ -3268,7 +3268,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 가가입한 원아이디 사이트 정보 조회.
 	 * </pre>
-	 *
+	 * 
 	 * @param userId
 	 *            String
 	 * @param joinSstList
@@ -3335,7 +3335,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 타사 마켓회원 인증 연동.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param req
@@ -3579,7 +3579,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 타사 회원 약관 수정.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param deviceId
@@ -3624,7 +3624,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 타사 회원 정보 유효성 체크.
 	 * </pre>
-	 *
+	 * 
 	 * @param marketRes
 	 *            MarketAuthorizeEcRes
 	 */
@@ -3668,7 +3668,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 타사 회원 탈퇴처리.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param userKey
@@ -3702,7 +3702,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 타사 마켓회원 Tstore 회원가입 처리.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param deviceId
@@ -3771,7 +3771,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 마켓회원 회원정보 수정.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param deviceId
@@ -3824,7 +3824,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 타사 약관코드를 Tstore 약관코드로 변환.
 	 * </pre>
-	 *
+	 * 
 	 * @param marketClauseAgreeList
 	 *            List<MarketClauseExtraInfoEc>
 	 * @return List<Agreement>
@@ -3878,7 +3878,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * PayPlanet 인증시 요청한 상품 Tstore 구매내역 조회.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param deviceId
@@ -3949,7 +3949,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * PayPlanet 통합인증에 제공 할 Tstore 회원정보 조회.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param req
@@ -4049,7 +4049,7 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * 휴면계정 복구.
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param deviceId
@@ -4105,16 +4105,17 @@ public class LoginServiceImpl implements LoginService {
 	 * <pre>
 	 * Olleh market(S02) 회원 정보 중복 데이터(marketDeviceKey) 여부 체크 후 처리
 	 * </pre>
-	 *
+	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param MarketAuthorizeEcRes
-	 * 			  marketRes
+	 *            marketRes
 	 * @param DetailV2Res
 	 *            detailRes
 	 * @return DetailV2Res
 	 */
-	private DetailV2Res checkDupMarketDeviceKey(SacRequestHeader requestHeader, MarketAuthorizeEcRes marketRes, DetailV2Res detailRes) {
+	private DetailV2Res checkDupMarketDeviceKey(SacRequestHeader requestHeader, MarketAuthorizeEcRes marketRes,
+			DetailV2Res detailRes) {
 		DetailReq detailReq = new DetailReq();
 		SearchExtentReq searchExtent = new SearchExtentReq();
 		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
@@ -4124,10 +4125,10 @@ public class LoginServiceImpl implements LoginService {
 
 		DetailV2Res checkDupDetailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-		if(!StringUtils.equals(marketRes.getDeviceId(), checkDupDetailRes.getDeviceInfoList().get(0).getDeviceId())){
+		if (!StringUtils.equals(marketRes.getDeviceId(), checkDupDetailRes.getDeviceInfoList().get(0).getDeviceId())) {
 
-			LOGGER.info("marketDeviceKey 변경으로 deviceId 변경 : [ {} ] {} -> {}", marketRes.getDeviceInfo().getDeviceKey(), checkDupDetailRes.getDeviceInfoList()
-					.get(0).getDeviceId(), marketRes.getDeviceId());
+			LOGGER.info("marketDeviceKey 변경으로 deviceId 변경 : [ {} ] {} -> {}", marketRes.getDeviceInfo().getDeviceKey(),
+					checkDupDetailRes.getDeviceInfoList().get(0).getDeviceId(), marketRes.getDeviceId());
 			// deviceId 변경
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setUserKey(checkDupDetailRes.getUserInfo().getUserKey());
