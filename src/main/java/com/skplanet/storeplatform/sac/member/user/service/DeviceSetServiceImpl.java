@@ -237,6 +237,49 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 			} else {
 				throw e;
 			}
+		} finally {
+			keySearchList = new ArrayList<KeySearch>();
+			keySchUserKey = new KeySearch();
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+			keySchUserKey.setKeyString(req.getDeviceKey());
+			keySearchList.add(keySchUserKey);
+
+			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+			searchDeviceRequest.setCommonRequest(commonRequest);
+			searchDeviceRequest.setUserKey(req.getUserKey());
+			searchDeviceRequest.setKeySearchList(keySearchList);
+			SearchDeviceResponse schDeviceRes = null;
+
+			try {
+				schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+			} catch (StorePlatformException ex) {
+				schDeviceRes = null;
+			}
+
+			final String tlogUserKey = req.getUserKey();
+			final String tlogDeviceKey = req.getDeviceKey();
+			final String tlogDeviceId = schDeviceRes != null ? schDeviceRes.getUserMbrDevice().getDeviceID() : null;
+
+			// TLog (보안비밀번호 재설정 요청)
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id("TL_SAC_MEM_0011").result_code("Y").result_message("보안비밀번호 재설정 요청")
+							.insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey).device_id(tlogDeviceId);
+				}
+			});
+
+			// 성공 실패
+			final String resultMessage = (modifyDevicePinResponse != null) ? "보안비밀번호 재설정 성공" : "보안비밀번호 재설정 실패";
+
+			// TLog (보안비밀번호 재설정 완료 여부)
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id("TL_SAC_MEM_0012").result_code("보안비밀번호 설정 여부").result_message(resultMessage)
+							.insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey).device_id(tlogDeviceId);
+				}
+			});
 		}
 
 		ModifyDevicePinSacRes res = new ModifyDevicePinSacRes();
@@ -280,9 +323,57 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		keySearchList.add(keySchUserKey);
 
 		searchDevicePinRequest.setKeySearchList(keySearchList);
+		SearchDevicePinResponse searchDevicePinResponse = null;
 
 		// SC Call
-		SearchDevicePinResponse searchDevicePinResponse = this.deviceSetSCI.searchDevicePin(searchDevicePinRequest);
+		try {
+			searchDevicePinResponse = this.deviceSetSCI.searchDevicePin(searchDevicePinRequest);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		} finally {
+			keySearchList = new ArrayList<KeySearch>();
+			keySchUserKey = new KeySearch();
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+			keySchUserKey.setKeyString(req.getDeviceKey());
+			keySearchList.add(keySchUserKey);
+
+			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+			searchDeviceRequest.setCommonRequest(commonRequest);
+			searchDeviceRequest.setUserKey(req.getUserKey());
+			searchDeviceRequest.setKeySearchList(keySearchList);
+			SearchDeviceResponse schDeviceRes = null;
+
+			try {
+				schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+			} catch (StorePlatformException e) {
+				schDeviceRes = null;
+			}
+
+			final String tlogUserKey = req.getUserKey();
+			final String tlogDeviceKey = req.getDeviceKey();
+			final String tlogDeviceId = schDeviceRes != null ? schDeviceRes.getUserMbrDevice().getDeviceID() : null;
+
+			// TLog (보안비밀번호 초기화 요청)
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id("TL_SAC_MEM_0013").result_code("Y").result_message("보안비밀번호 초기화 요청")
+							.insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey).device_id(tlogDeviceId);
+				}
+			});
+
+			// 성공 실패
+			final String resultMessage = (searchDevicePinResponse != null) ? "보안비밀번호 초기화 성공" : "보안비밀번호 초기화 실패";
+
+			// TLog (보안비밀번호 초기화 여부)
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id("TL_SAC_MEM_0014").result_code("보안비밀번호 초기화 여부").result_message(resultMessage)
+							.insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey).device_id(tlogDeviceId);
+				}
+			});
+		}
 
 		SearchDevicePinSacRes res = new SearchDevicePinSacRes();
 		res.setDeviceId(searchDevicePinResponse.getDeviceId());
