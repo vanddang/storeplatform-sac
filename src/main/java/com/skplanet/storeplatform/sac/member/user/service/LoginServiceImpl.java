@@ -1793,32 +1793,55 @@ public class LoginServiceImpl implements LoginService {
 					if (!StringUtils.equals(detailRes.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo()
 							.getDeviceKey())) {
 
-						// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
-						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
-								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
-						this.removeMarketUser(requestHeader, detailRes);
-						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+						try {
+							// marketdevicekey 중복 확인 체크 추가
+							detailReq.setDeviceId(null);
+							detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
+							DetailV2Res checkDupDetailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-						TlogInfo tlogInfo = new TlogInfo();
-						tlogInfo.setTlogID("TL_SC_MEM_0006");
-						tlogInfo.setDeviceId(req.getDeviceId());
-						tlogInfo.setUsermbrNoPre(detailRes.getUserInfo().getImMbrNo());
-						tlogInfo.setUsermbrNoPost(marketRes.getDeviceInfo().getDeviceKey());
+							LOGGER.info("marketDeviceKey 변경으로 deviceId 변경 : [ {} ] {} -> {}", marketRes.getDeviceInfo()
+									.getDeviceKey(), checkDupDetailRes.getDeviceInfoList().get(0).getDeviceId(),
+									marketRes.getDeviceId());
+							// deviceId 변경
+							DeviceInfo deviceInfo = new DeviceInfo();
+							deviceInfo.setUserKey(checkDupDetailRes.getUserInfo().getUserKey());
+							deviceInfo.setDeviceKey(checkDupDetailRes.getDeviceInfoList().get(0).getDeviceKey());
+							deviceInfo.setDeviceId(marketRes.getDeviceId());
+							this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
 
-						// 재가입시킨 회원정보 재조회
-						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+							// 기존 번호 탈퇴 처리
+							this.removeMarketUser(requestHeader, detailRes);
 
-						tlogInfo.setUserKey(detailRes.getUserKey());
-						tlogInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-						TlogRequest tlogRequest = new TlogRequest();
-						tlogRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-						tlogRequest.setTlogInfo(tlogInfo);
-						this.userSCI.tlog(tlogRequest);
+							// 회원정보 재조회
+							detailReq.setDeviceId(marketRes.getDeviceId());
+							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
+						} catch (StorePlatformException e) {
+							if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+								// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
+								LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
+										.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
+								this.removeMarketUser(requestHeader, detailRes);
+								this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+
+								TlogInfo tlogInfo = new TlogInfo();
+								tlogInfo.setTlogID("TL_SC_MEM_0006");
+								tlogInfo.setDeviceId(req.getDeviceId());
+								tlogInfo.setUsermbrNoPre(detailRes.getUserInfo().getImMbrNo());
+								tlogInfo.setUsermbrNoPost(marketRes.getDeviceInfo().getDeviceKey());
+
+								// 재가입시킨 회원정보 재조회
+								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+								tlogInfo.setUserKey(detailRes.getUserKey());
+								tlogInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+								TlogRequest tlogRequest = new TlogRequest();
+								tlogRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+								tlogRequest.setTlogInfo(tlogInfo);
+								this.userSCI.tlog(tlogRequest);
+							}
+						}
 					}
-
-					// marketDeviceKey 중복체크 2015.08.10
-					detailRes = this.checkDupMarketDeviceKey(requestHeader, marketRes, detailRes);
 
 					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
 
@@ -1832,7 +1855,6 @@ public class LoginServiceImpl implements LoginService {
 						detailReq.setSearchExtent(searchExtent);
 
 						try {
-
 							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
 							// 번호변경 케이스로 판단하여 deviceId 업데이트
@@ -2401,20 +2423,75 @@ public class LoginServiceImpl implements LoginService {
 						if (!StringUtils.equals(detailRes.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo()
 								.getDeviceKey())) {
 
-							// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
-							LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
-									.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
-							this.removeMarketUser(requestHeader, detailRes);
-							this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+							// Olleh market 일 경우 중복 체크 후 처리 2015.08.10
+							if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, req.getTenantId())) {
+								try {
+									// marketdevicekey 중복 확인 체크 추가
+									detailReq.setDeviceId(null);
+									detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
+									DetailV2Res checkDupDetailRes = this.userSearchService.detailV2(requestHeader,
+											detailReq);
 
-							// 재가입시킨 회원정보 재조회
-							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+									LOGGER.info("marketDeviceKey 변경으로 deviceId 변경 : [ {} ] {} -> {}", marketRes
+											.getDeviceInfo().getDeviceKey(),
+											checkDupDetailRes.getDeviceInfoList().get(0).getDeviceId(), marketRes
+													.getDeviceId());
+									// deviceId 변경
+									DeviceInfo deviceInfo = new DeviceInfo();
+									deviceInfo.setUserKey(checkDupDetailRes.getUserInfo().getUserKey());
+									deviceInfo
+											.setDeviceKey(checkDupDetailRes.getDeviceInfoList().get(0).getDeviceKey());
+									deviceInfo.setDeviceId(marketRes.getDeviceId());
+									this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
 
-						}
+									// 기존 번호 탈퇴 처리
+									this.removeMarketUser(requestHeader, detailRes);
 
-						// Olleh market 일 경우 중복 체크 후 처리 2015.08.10
-						if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, req.getTenantId())) {
-							detailRes = this.checkDupMarketDeviceKey(requestHeader, marketRes, detailRes);
+									// 회원정보 재조회
+									detailReq.setDeviceId(marketRes.getDeviceId());
+									detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+								} catch (StorePlatformException e) {
+									if (StringUtils.equals(e.getErrorInfo().getCode(),
+											MemberConstants.SC_ERROR_NO_USERKEY)) {
+										// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
+										LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(),
+												detailRes.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo()
+														.getDeviceKey());
+										this.removeMarketUser(requestHeader, detailRes);
+										this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(),
+												marketRes);
+
+										TlogInfo tlogInfo = new TlogInfo();
+										tlogInfo.setTlogID("TL_SC_MEM_0006");
+										tlogInfo.setDeviceId(req.getDeviceId());
+										tlogInfo.setUsermbrNoPre(detailRes.getUserInfo().getImMbrNo());
+										tlogInfo.setUsermbrNoPost(marketRes.getDeviceInfo().getDeviceKey());
+
+										// 재가입시킨 회원정보 재조회
+										detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+										tlogInfo.setUserKey(detailRes.getUserKey());
+										tlogInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+										TlogRequest tlogRequest = new TlogRequest();
+										tlogRequest
+												.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+										tlogRequest.setTlogInfo(tlogInfo);
+										this.userSCI.tlog(tlogRequest);
+									}
+								}
+
+							} else {
+								// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
+								LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
+										.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
+								this.removeMarketUser(requestHeader, detailRes);
+								this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+
+								// 재가입시킨 회원정보 재조회
+								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+							}
+
 						}
 
 						this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
@@ -3395,21 +3472,69 @@ public class LoginServiceImpl implements LoginService {
 
 					if (!StringUtils.equals(detailRes.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo()
 							.getDeviceKey())) {
+						// Olleh market 일 경우 중복 체크 후 처리 2015.08.10
+						if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, tenantId)) {
+							try {
+								// marketdevicekey 중복 확인 체크 추가
+								detailReq.setDeviceId(null);
+								detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
+								DetailV2Res checkDupDetailRes = this.userSearchService.detailV2(requestHeader,
+										detailReq);
 
-						// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
-						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
-								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
-						this.removeMarketUser(requestHeader, detailRes);
-						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+								LOGGER.info("marketDeviceKey 변경으로 deviceId 변경 : [ {} ] {} -> {}", marketRes
+										.getDeviceInfo().getDeviceKey(), checkDupDetailRes.getDeviceInfoList().get(0)
+										.getDeviceId(), marketRes.getDeviceId());
+								// deviceId 변경
+								DeviceInfo deviceInfo = new DeviceInfo();
+								deviceInfo.setUserKey(checkDupDetailRes.getUserInfo().getUserKey());
+								deviceInfo.setDeviceKey(checkDupDetailRes.getDeviceInfoList().get(0).getDeviceKey());
+								deviceInfo.setDeviceId(marketRes.getDeviceId());
+								this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
 
-						// 재가입시킨 회원정보 재조회
-						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+								// 기존 번호 탈퇴 처리
+								this.removeMarketUser(requestHeader, detailRes);
 
-					}
+								// 회원정보 재조회
+								detailReq.setDeviceId(marketRes.getDeviceId());
+								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-					// Olleh market 일 경우 중복 체크 후 처리 2015.08.10
-					if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, tenantId)) {
-						detailRes = this.checkDupMarketDeviceKey(requestHeader, marketRes, detailRes);
+							} catch (StorePlatformException e) {
+								if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+									// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
+									LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
+											.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
+									this.removeMarketUser(requestHeader, detailRes);
+									this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+
+									TlogInfo tlogInfo = new TlogInfo();
+									tlogInfo.setTlogID("TL_SC_MEM_0006");
+									tlogInfo.setDeviceId(req.getDeviceId());
+									tlogInfo.setUsermbrNoPre(detailRes.getUserInfo().getImMbrNo());
+									tlogInfo.setUsermbrNoPost(marketRes.getDeviceInfo().getDeviceKey());
+
+									// 재가입시킨 회원정보 재조회
+									detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+									tlogInfo.setUserKey(detailRes.getUserKey());
+									tlogInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+									TlogRequest tlogRequest = new TlogRequest();
+									tlogRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+									tlogRequest.setTlogInfo(tlogInfo);
+									this.userSCI.tlog(tlogRequest);
+								}
+							}
+
+						} else {
+							// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
+							LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
+									.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
+							this.removeMarketUser(requestHeader, detailRes);
+							this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+
+							// 재가입시킨 회원정보 재조회
+							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+						}
+
 					}
 
 					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
@@ -4101,48 +4226,4 @@ public class LoginServiceImpl implements LoginService {
 		}
 	}
 
-	/**
-	 * <pre>
-	 * Olleh market(S02) 회원 정보 중복 데이터(marketDeviceKey) 여부 체크 후 처리
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param MarketAuthorizeEcRes
-	 *            marketRes
-	 * @param DetailV2Res
-	 *            detailRes
-	 * @return DetailV2Res
-	 */
-	private DetailV2Res checkDupMarketDeviceKey(SacRequestHeader requestHeader, MarketAuthorizeEcRes marketRes,
-			DetailV2Res detailRes) {
-		DetailReq detailReq = new DetailReq();
-		SearchExtentReq searchExtent = new SearchExtentReq();
-		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
-		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
-		detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
-		detailReq.setSearchExtent(searchExtent);
-
-		DetailV2Res checkDupDetailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-
-		if (!StringUtils.equals(marketRes.getDeviceId(), checkDupDetailRes.getDeviceInfoList().get(0).getDeviceId())) {
-
-			LOGGER.info("marketDeviceKey 변경으로 deviceId 변경 : [ {} ] {} -> {}", marketRes.getDeviceInfo().getDeviceKey(),
-					checkDupDetailRes.getDeviceInfoList().get(0).getDeviceId(), marketRes.getDeviceId());
-			// deviceId 변경
-			DeviceInfo deviceInfo = new DeviceInfo();
-			deviceInfo.setUserKey(checkDupDetailRes.getUserInfo().getUserKey());
-			deviceInfo.setDeviceKey(checkDupDetailRes.getDeviceInfoList().get(0).getDeviceKey());
-			deviceInfo.setDeviceId(marketRes.getDeviceId());
-			this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
-
-			// 기존 번호 탈퇴 처리
-			this.removeMarketUser(requestHeader, detailRes);
-
-			// 회원정보 재조회
-			detailReq.setDeviceId(marketRes.getDeviceId());
-			detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-		}
-		return detailRes;
-	}
 }
