@@ -614,7 +614,7 @@ public class VoucherServiceImpl implements VoucherService {
 								purchaseYn = true;
 							}
 						}
-						this.log.info("구매 여부:purchaseYn=>" + purchaseYn);
+						this.log.info("구매 여부:purchaseYn=>" + purchaseYn +"::상품 id ::" + productBasicInfo.getProdId());
 						if (purchaseYn) {
 							totalCnt++;
 							reqMap.put("productBasicInfo", productBasicInfo);
@@ -815,7 +815,7 @@ public class VoucherServiceImpl implements VoucherService {
 								purchaseYn = true;
 							}
 						}
-						this.log.info("구매 여부:purchaseYn=>" + purchaseYn);
+						this.log.info("구매 여부:purchaseYn=>" + purchaseYn +"::상품 id ::" + productBasicInfo.getProdId());
 						if (purchaseYn) {
 							totalCnt++;
 							reqMap.put("productBasicInfo", productBasicInfo);
