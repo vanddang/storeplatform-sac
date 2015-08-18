@@ -490,7 +490,8 @@
             WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
             ORDER BY OV.RNUM
     </select>         
-        
+    
+    <!-- 에피소드 조회시 정보 조회-->   
     <select id="searchVocherProductInfo" parameterType="HashMap" resultType="metaInfo">
         SELECT /* VoucherMapper.xml, searchVocherProductInfo, 에피소드 조회시 정보 조회, SAC전시 김형식/지티소프트, 2015-08-18 */
             CASE
