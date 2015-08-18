@@ -311,7 +311,8 @@
                      , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN CM.SERIES_BOOK_CLSF_CD
                         ELSE ''
                         END
-                        ) AS cmpxProdBookClsfCd       
+                        ) AS cmpxProdBookClsfCd   
+                     ,CM.FREE_PASS_CLSF_CD  AS cmpxProdClsfCd    
                  FROM 
                       TB_DP_PROD PD
                     , TB_DP_CMPX_PROD CM
@@ -349,6 +350,7 @@
                  AND CM.SERIES_BOOK_CLSF_CD IN ('DP004302','DP004305')  
                 </if>                               
                 AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+                ORDER BY FREE_PASS_CLSF_CD DESC
             ) IV 
     </select>        
     
@@ -405,36 +407,42 @@
                     , CM.BNS_CASH_AMT
                     , CM.BNS_USE_PERIOD_UNIT_CD
                     , CM.BNS_USE_PERIOD
-                    , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN NVL(UP.POSS_LEND_CLSF_CD,'DP010603') ELSE '' END)  AS POSS_LEND_CLSF_CD     
-                    ,( SELECT MAX(C.CHAPTER) 
-                         FROM TB_DP_FIXRATE_PROD_MAPG A
-                             ,TB_DP_PROD_RSHP B
-                             ,TB_DP_EBOOK_PROD C
-                        WHERE A.PART_PROD_ID = B.PROD_ID
-                          AND B.PART_PROD_ID = C.PROD_ID
-                          AND A.PROD_ID = PD.PROD_ID    
-                          AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
-                      ) AS chapterText
-                    ,( SELECT BB.BOOK_CLSF_CD 
-                         FROM (
-	                      SELECT 
-	                             MAX(C.CHAPTER) AS CHAPTER 
-                                ,C.PROD_ID AS EPISODE_ID
-                                ,A.PROD_ID 
-	                        FROM TB_DP_FIXRATE_PROD_MAPG A
-	                            ,TB_DP_PROD_RSHP B
-	                            ,TB_DP_EBOOK_PROD C
-	                       WHERE A.PART_PROD_ID = B.PROD_ID
-	                         AND B.PART_PROD_ID = C.PROD_ID
-	                         AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
-	                       GROUP BY C.PROD_ID ,A.PROD_ID
-	                      )AA
-                        , TB_DP_EBOOK_PROD BB
-                       WHERE AA.EPISODE_ID = BB.PROD_ID
-                         AND AA.PROD_ID = PD.PROD_ID
-                         AND AA.CHAPTER = BB.CHAPTER
-                         AND ROWNUM =1
-                      ) AS chapterUnit     
+                    , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN NVL(UP.POSS_LEND_CLSF_CD,'DP010603') ELSE '' END)  AS POSS_LEND_CLSF_CD
+                    , (CASE WHEN CM.FREE_PASS_CLSF_CD ='OR004302' THEN  /*시리즈 패스일 경우만 내려가게 수정*/       
+	                      ( SELECT MAX(C.CHAPTER) 
+	                         FROM TB_DP_FIXRATE_PROD_MAPG A
+	                             ,TB_DP_PROD_RSHP B
+	                             ,TB_DP_EBOOK_PROD C
+	                        WHERE A.PART_PROD_ID = B.PROD_ID
+	                          AND B.PART_PROD_ID = C.PROD_ID
+	                          AND A.PROD_ID = PD.PROD_ID    
+	                          AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
+	                       )
+	                    ELSE NULL END
+	                   ) AS chapterText
+	                , (CASE WHEN CM.FREE_PASS_CLSF_CD ='OR004302' THEN  /*시리즈 패스일 경우만 내려가게 수정*/  
+	                     ( SELECT BB.BOOK_CLSF_CD 
+	                         FROM (
+		                      SELECT 
+		                             MAX(C.CHAPTER) AS CHAPTER 
+	                                ,C.PROD_ID AS EPISODE_ID
+	                                ,A.PROD_ID 
+		                        FROM TB_DP_FIXRATE_PROD_MAPG A
+		                            ,TB_DP_PROD_RSHP B
+		                            ,TB_DP_EBOOK_PROD C
+		                       WHERE A.PART_PROD_ID = B.PROD_ID
+		                         AND B.PART_PROD_ID = C.PROD_ID
+		                         AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
+		                       GROUP BY C.PROD_ID ,A.PROD_ID
+		                      )AA
+	                        , TB_DP_EBOOK_PROD BB
+	                       WHERE AA.EPISODE_ID = BB.PROD_ID
+	                         AND AA.PROD_ID = PD.PROD_ID
+	                         AND AA.CHAPTER = BB.CHAPTER
+	                         AND ROWNUM =1
+	                     )
+	                    ELSE NULL END
+                       ) AS chapterUnit     
 			         ,(SELECT 
 			                  CASE WHEN COUNT(1)>0 THEN 'Y'
 			                  ELSE 'N'
