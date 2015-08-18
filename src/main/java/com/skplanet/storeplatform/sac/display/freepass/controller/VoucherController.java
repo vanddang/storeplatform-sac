@@ -84,27 +84,15 @@ public class VoucherController {
 		return this.voucherService.searchVoucherDetail(req, header);
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	/**
 	 * <pre>
-	 * [I03000172] 2.4.1.3. 특정 상품이 적용된 이용권 조회.
+	 * [I03000172] 2.4.8.3. 특정 상품이 적용된 이용권 조회.
 	 * </pre>
 	 * 
 	 * @param req
-	 *            req
+	 *            VoucherSpecificReq
 	 * @param header
-	 *            header
+	 *            SacRequestHeader
 	 * @return VoucherListRes
 	 */
 
@@ -119,4 +107,28 @@ public class VoucherController {
 
 		return this.voucherService.searchVoucherSpecific(req, header);
 	}
+	
+	/**
+	 * <pre>
+	 * [I03000184] 2.4.8.4. 특정 상품이 적용된 이용권 조회(V2).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            VoucherSpecificReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @return VoucherListRes
+	 */
+
+	@RequestMapping(value = "/specific/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public VoucherListRes searchVoucherSpecificV2(@RequestBody @Validated VoucherSpecificReq req,
+			SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchVoucherSpecific Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.voucherService.searchVoucherSpecificV2(req, header);
+	}	
 }

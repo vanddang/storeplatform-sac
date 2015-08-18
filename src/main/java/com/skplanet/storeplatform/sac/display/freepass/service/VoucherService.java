@@ -61,4 +61,18 @@ public interface VoucherService {
 	 * @return VoucherListRes VoucherListRes
 	 */
 	VoucherListRes searchVoucherSpecific(VoucherSpecificReq req, SacRequestHeader header);	
+	
+	/**
+	 * <pre>
+	 * 특정 상품이 적용된 이용권 조회(V2).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            VoucherSpecificReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @return VoucherListRes VoucherListRes
+	 */
+	VoucherListRes searchVoucherSpecificV2(VoucherSpecificReq req, SacRequestHeader header);		
+	
 }
