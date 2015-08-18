@@ -189,16 +189,44 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 				EncryptionSubContents sdSc = this.getEncryptionSdSubContents(metaInfo);
 				subContentsList.add(sdSc);
 			}
+			
+			/*
+			 * 4.x I/F 일때
+			 * update by 2015.08.18 이석희 I-S PLUS
+			 */
+
+			if (supportFhdVideo) {
+				if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
+					EncryptionSubContents hdSc = this.getEncryptionHdSubContentsV2(metaInfo);
+					subContentsList.add(hdSc);
+				}
+
+				if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+					EncryptionSubContents hihdSc = this.getEncryptionHiHdSubContents(metaInfo);
+					subContentsList.add(hihdSc);
+				}
+
+			} else {
+				/*
+				 * 고화질 정보(3.x I/F 일때) HD 화질 정보와 HIHD 화질정보 동시에 존재 할때에는 HIHD 화질이 우선적으로 내려가도록
+				 * update by 2015.08.18 이석희 I-S PLUS
+				 */
+				if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+					EncryptionSubContents hdSc = this.getEncryptionHdSubContents(metaInfo);
+					subContentsList.add(hdSc);
+				}
+			}			
+			
 			// HD2 (D화질) 정보 우선, 없으면 HD 정보를 내려줌
-			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
-				EncryptionSubContents hdSc = this.getEncryptionHdSubContents(metaInfo);
-				subContentsList.add(hdSc);
-			}
-			// FHD
-			if (supportFhdVideo	&& StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
-				EncryptionSubContents fhdSc = this.getEncryptionFhdSubContents(metaInfo);
-				subContentsList.add(fhdSc);
-			}
+//			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+//				EncryptionSubContents hdSc = this.getEncryptionHdSubContents(metaInfo);
+//				subContentsList.add(hdSc);
+//			}
+			// FHD( FHD 화질이 내려가지 않도록 주석처리) update by 2015.08.18 이석희 I-S PLUS
+//			if (supportFhdVideo	&& StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
+//				EncryptionSubContents fhdSc = this.getEncryptionFhdSubContents(metaInfo);
+//				subContentsList.add(fhdSc);
+//			}
 		} else {
 			EncryptionSubContents sc = new EncryptionSubContents();
 			if (StringUtils.isNotBlank(metaInfo.getDeltaType())) {
@@ -312,6 +340,43 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
         return nmSc;
     }
 
+    /*
+     * 4.X I/F 호출시 HD 화질 설정 
+     */
+    private EncryptionSubContents getEncryptionHdSubContentsV2(MetaInfo metaInfo) {
+        EncryptionSubContents hdSc = new EncryptionSubContents();
+        if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
+	    	hdSc.setType("");
+	        hdSc.setDeltaPath("");
+	        hdSc.setDeltaSize(0L);
+	        hdSc.setSize(Long.parseLong(metaInfo.getHdFileSize()));
+	        hdSc.setScid(metaInfo.getHdSubContsId());
+	        hdSc.setPath(metaInfo.getHiFilePath());
+        }
+        
+        return hdSc;
+    }
+
+    /*
+     * 4.X I/F 호출시 HIHD 화질 설정 
+     */
+    private EncryptionSubContents getEncryptionHiHdSubContents(MetaInfo metaInfo) {
+        EncryptionSubContents hihdSc = new EncryptionSubContents();
+        if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+        	hihdSc.setType("");
+        	hihdSc.setDeltaPath("");
+        	hihdSc.setDeltaSize(0L);
+        	hihdSc.setSize(Long.parseLong(metaInfo.getHihdFileSize()));
+        	hihdSc.setScid(metaInfo.getHihdSubContsId());
+        	hihdSc.setPath(metaInfo.getHihdFilePath());
+        }
+        
+        return hihdSc;
+    }    
+    
+    /*
+     * 3.X I/F 호출시 C(HD), D(HIHD)화질이 동시에 있으면 D화질(HIHD) 우선적으로 내려가도록 설정 
+     */
     private EncryptionSubContents getEncryptionHdSubContents(MetaInfo metaInfo) {
         EncryptionSubContents hdSc = new EncryptionSubContents();
 
