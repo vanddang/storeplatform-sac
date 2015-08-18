@@ -44,6 +44,12 @@ public class VoucherSpecificReq extends CommonInfo {
 
 	// 19+상품여부
 	private String plus19Yn;
+	
+	// 상품ID 유형
+	private String idType;
+	
+	private String possLendClsfCd;	// 소장 대여 구분코드
+	private String bookClsfCd;		// 연재,단행 구분코드
 	/**
 	 * @return the kind
 	 */
@@ -333,6 +339,48 @@ public class VoucherSpecificReq extends CommonInfo {
 	 */
 	public void setPlus19Yn(String plus19Yn) {
 		this.plus19Yn = plus19Yn;
+	}
+
+	/**
+	 * @return the idType
+	 */
+	public String getIdType() {
+		return idType;
+	}
+
+	/**
+	 * @param idType the idType to set
+	 */
+	public void setIdType(String idType) {
+		this.idType = idType;
+	}
+
+	/**
+	 * @return the possLendClsfCd
+	 */
+	public String getPossLendClsfCd() {
+		return possLendClsfCd;
+	}
+
+	/**
+	 * @param possLendClsfCd the possLendClsfCd to set
+	 */
+	public void setPossLendClsfCd(String possLendClsfCd) {
+		this.possLendClsfCd = possLendClsfCd;
+	}
+
+	/**
+	 * @return the bookClsfCd
+	 */
+	public String getBookClsfCd() {
+		return bookClsfCd;
+	}
+
+	/**
+	 * @param bookClsfCd the bookClsfCd to set
+	 */
+	public void setBookClsfCd(String bookClsfCd) {
+		this.bookClsfCd = bookClsfCd;
 	}
 
 }
