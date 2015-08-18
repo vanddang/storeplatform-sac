@@ -472,6 +472,18 @@
             <if test='plus19Yn == "N"'>
             AND (PD.PLUS19_YN = 'N' OR PD.PLUS19_YN IS NULL)
             </if>
+            <if test='possLendClsfCd == "DP010601"'> 
+             AND UP.POSS_LEND_CLSF_CD IN ('DP010601','DP010603')  
+            </if>
+            <if test='possLendClsfCd == "DP010602"'> 
+             AND UP.POSS_LEND_CLSF_CD IN ('DP010602','DP010603')  
+            </if>   
+            <if test='bookClsfCd == "DP004301"'> 
+             AND CM.SERIES_BOOK_CLSF_CD IN ('DP004301','DP004305')  
+            </if>
+            <if test='bookClsfCd == "DP004302"'> 
+             AND CM.SERIES_BOOK_CLSF_CD IN ('DP004302','DP004305')  
+            </if>               
                 ORDER BY TP.EXPO_ORD, PD.REG_DT DESC
               ) IV
             ) OV
@@ -479,4 +491,34 @@
             ORDER BY OV.RNUM
     </select>         
         
+    <select id="searchVocherProductInfo" parameterType="HashMap" resultType="metaInfo">
+        SELECT /* VoucherMapper.xml, searchVocherProductInfo, 에피소드 조회시 정보 조회, SAC전시 김형식/지티소프트, 2015-08-18 */
+            CASE
+                WHEN A.SVC_TYPE_CD = 'DP001111'
+                THEN MU.POSS_LEND_CLSF_CD
+                WHEN A.SVC_TYPE_CD = 'DP001115'
+                THEN VO.POSS_LEND_CLSF_CD
+                WHEN A.SVC_TYPE_CD = 'DP001116'
+                THEN EB.POSS_LEND_CLSF_CD
+            END AS POSS_LEND_CLSF_CD
+           ,EB.BOOK_CLSF_CD
+        FROM TB_DP_PROD A
+            , TB_DP_PROD_DESC B
+            , TB_DP_TENANT_PROD C
+             , TB_DP_APP_PROD AP
+            , TB_DP_EBOOK_PROD EB
+            , TB_DP_VOD_PROD VO
+            , TB_DP_MUSIC_PROD MU
+         WHERE A.PROD_ID = B.PROD_ID
+          AND B.LANG_CD = #{langCd}
+          AND A.PROD_ID = C.PROD_ID
+          AND C.TENANT_ID = #{tenantId}
+          AND A.PROD_ID = AP.PROD_ID (+)
+          AND A.PROD_ID = EB.PROD_ID (+)
+          AND A.PROD_ID = VO.PROD_ID (+)
+          AND A.PROD_ID = MU.PROD_ID (+)
+          AND A.PROD_ID = #{prodId}
+    </select>
+    
+            
  </mapper>
