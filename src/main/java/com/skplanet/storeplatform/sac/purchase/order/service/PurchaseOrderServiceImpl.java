@@ -44,6 +44,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -831,12 +832,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.settMileageSaveRate(reservedDataMap.get("tMileageRateInfo"));
 
 		// 적립 가능 결제수단 코드
-		res.settMileageAvailMtd(this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
-				prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd()));
+		res.settMileageAvailMtd(this.purchaseOrderPolicyService
+				.searchtMileageSavePaymentMethod(prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd()));
 
 		// T마일리지 적립한도 금액
-		res.settMileageLimitAmt(this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
-				prchsDtlMore.getTenantProdGrpCd()));
+//		res.settMileageLimitAmt(this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
+//				prchsDtlMore.getTenantProdGrpCd()));
+		// T마일리지 적립한도 금액(이벤트 별로 전시에서 관리)
+		res.settMileageLimitAmt(NumberUtils.toInt(reservedDataMap.get(
+				PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT), 0));
 
 		// (이번회) T마일리지 적립예정 금액
 		// 2015.07.23 sonarQube 수정(안쓰는 변수 주석처리)
@@ -913,13 +917,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setAfterAutoPayDt(afterAutoPayDt.substring(0, 8) + "100000"); // 다음 자동 결제일
 		}
 		// VOD 정액제 이용권 (ex, 30일 이용권) - 만료예정일
-		if (StringUtils.equals(reservedDataMap.get("cmpxProdClsfCd"), PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)
+		if (StringUtils.equals(reservedDataMap.get("cmpxProdClsfCd"), PurchaseConstants.FIXRATE_PROD_TYPE_FIXRATE)
 				&& (StringUtils.equals(reservedDataMap.get("autoPrchsYn"), PurchaseConstants.USE_Y) == false)) {
 			res.setUseExprDt(prchsDtlMore.getUseExprDt());
 		}
 		// 시리즈 전회차 이용권 - 이용시작일, 이용종료일
 		if (StringUtils.equals(reservedDataMap.get("cmpxProdClsfCd"),
-				PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+				PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)) {
 			res.setUseStartDt(prchsDtlMore.getUseStartDt());
 			res.setUseExprDt(prchsDtlMore.getUseExprDt());
 		}
@@ -989,7 +993,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 특가 상품 여부
 		boolean bSpecialProd = StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"));
 
-		final int promId = Integer.parseInt(StringUtils.defaultIfBlank(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID), "0"));
+		final int promId = NumberUtils.toInt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID), 0);
 
 		String currentDate = this.purchaseOrderSCService.selectCurrentDate();
 
@@ -1278,7 +1282,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			MileageSubInfo mileageSubInfo = new MileageSubInfo();
 			mileageSubInfo.setTypeCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD)); // 프로모션 적립방법 - 캐시, 게임 캐시
-			mileageSubInfo.setPromId(Integer.parseInt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID))); // 이벤트 프로모션 ID
+			mileageSubInfo.setPromId(NumberUtils.toInt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID), 0)); // 이벤트 프로모션 ID
 			mileageSubInfo.setSaveDt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_ACML_DT)); // 적립일
 			mileageSubInfo.setUserGrdCd(userGrade);
 			mileageSubInfo.setProdSaveRate(rateMap.get(userGrade));
@@ -1339,8 +1343,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(
 							prchsDtlMore.getTenantId(), payUserKey, promId);
 
-					int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
-							prchsDtlMore.getTenantProdGrpCd());
+//					int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
+//							prchsDtlMore.getTenantProdGrpCd());
+					// 적립한도 : 이벤트 별로 전시에서 관리
+					int limitAmt = NumberUtils.toInt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT), 0);
 
 					if (preReserveAmt >= limitAmt) { // 한도초과
 						mileageSubInfo.setSaveResultAmt(0);
@@ -1750,8 +1756,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
 							userKey, purchaseProduct.getPromId());
 
-				int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
-						prchsDtlMore.getTenantProdGrpCd());
+//				int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
+//						prchsDtlMore.getTenantProdGrpCd());
+				// 적립한도 : 이벤트 별로 전시에서 관리
+				int limitAmt = purchaseProduct.getPrivateAcmlLimit() == null ? 0 : purchaseProduct.getPrivateAcmlLimit();
 
 				if (preReserveAmt >= limitAmt) { // 한도초과
 					mileageSubInfo.setSaveResultAmt(0);

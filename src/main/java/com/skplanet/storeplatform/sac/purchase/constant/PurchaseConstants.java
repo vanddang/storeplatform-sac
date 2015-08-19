@@ -334,6 +334,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String IF_DISPLAY_RES_ACLMETHOD_CD = "acmlMethodCd";
 	public static final String IF_DISPLAY_RES_ACML_DT = "acmlDt";
 	public static final String IF_DISPLAY_RES_SPECIALTYPE_CD = "specialTypeCd";
+	public static final String IF_DISPLAY_RES_PRIVATEACML_LIMIT = "privateAcmlLimit"; // 개인 적립 한도
 
 	/** 구매 요청 규격 **/
 	public static final String IF_PUR_ORDER_REQ_FLAG = "flag";

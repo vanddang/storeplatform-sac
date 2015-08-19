@@ -244,8 +244,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 									.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
 											.getUseExprDt() + "235959");
 							prchsDtlMore
-									.setDwldExprDt(product.getDwldExprDt().length() == 14 ? product.getDwldExprDt() : 
-										product.getDwldExprDt() + "235959");
+									.setDwldExprDt(product.getDwldExprDt().length() == 14 ? product.getDwldExprDt() : product
+											.getDwldExprDt() + "235959");
 						} else if (StringUtils.isNotBlank(product.getUseExprDt()) // 이용 종료기간만 있는 경우
 								&& StringUtils.isBlank(product.getDwldExprDt())) {
 							prchsDtlMore
@@ -823,19 +823,34 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append(StringUtils.defaultString(product.getAutoPrchsYN()))
 							.append("&autoLastPeriod=")
 							.append(product.getAutoPrchsLastPeriodValue() == null ? 0 : product
-									.getAutoPrchsLastPeriodValue()).append("&specialCouponId=")
+									.getAutoPrchsLastPeriodValue())
+							.append("&specialCouponId=")
 							.append(StringUtils.defaultString(product.getSpecialSaleCouponId()))
-							.append("&specialCouponAmt=").append(product.getSpecialCouponAmt())
-							.append("&possLendClsfCd=").append(StringUtils.defaultString(product.getPossLendClsfCd()))
-							.append("&prodCaseCd=").append(StringUtils.defaultString(product.getProdCaseCd()))
-							.append("&s2sAutoYn=").append(StringUtils.defaultString(product.getS2sAutoPrchsYn()))
-							.append("&s2sYn=").append(StringUtils.isNotBlank(product.getSearchPriceUrl()) ? "Y" : "N")
-							.append("&svcGrpCd=").append(StringUtils.defaultString(product.getSvcGrpCd()))
-							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID,
-									product.getPromId() == null ? "0" : String.valueOf(product.getPromId()))) // 이벤트 프로모션 ID
-							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,product.getAcmlMethodCd())) // 프로모션 적립 방법
-							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT, product.getAcmlDt())) // 프로모션 적립 방법
-							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD, product.getSpecialTypeCd())); // 특가상품 유형코드, 팅요금제 상품 유형 코드
+							.append("&specialCouponAmt=")
+							.append(product.getSpecialCouponAmt())
+							.append("&possLendClsfCd=")
+							.append(StringUtils.defaultString(product.getPossLendClsfCd()))
+							.append("&prodCaseCd=")
+							.append(StringUtils.defaultString(product.getProdCaseCd()))
+							.append("&s2sAutoYn=")
+							.append(StringUtils.defaultString(product.getS2sAutoPrchsYn()))
+							.append("&s2sYn=")
+							.append(StringUtils.isNotBlank(product.getSearchPriceUrl()) ? "Y" : "N")
+							.append("&svcGrpCd=")
+							.append(StringUtils.defaultString(product.getSvcGrpCd()))
+							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID, product.getPromId()))
+							// 이벤트 프로모션 ID
+							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,
+									product.getAcmlMethodCd())) // 프로모션 적립 방법
+							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT, product.getAcmlDt())) // 프로모션
+																														// 적립
+																														// 방법
+							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD,
+									product.getSpecialTypeCd())) // 특가상품 유형코드, 팅요금제 상품 유형 코드
+							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT,
+									product.getPrivateAcmlLimit())); // 개인
+																												 // 적립
+																												 // 한도
 
 					// 대여정보: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1
@@ -878,16 +893,23 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					}
 
 					// 부정결제 참조용 데이터 추가
-					sbReserveData.append(this.appendResvData(PurchaseConstants.IF_PUR_ORDER_REQ_FLAG,purchaseOrderInfo.getFlag()));
+					sbReserveData.append(this.appendResvData(PurchaseConstants.IF_PUR_ORDER_REQ_FLAG,
+							purchaseOrderInfo.getFlag()));
 					prchsDtlMoreList.get(idx++).setPrchsResvDesc(sbReserveData.toString());
 				}
 			}
 		}
 	}
 
-	private String appendResvData(String key, String value) {
+	private String appendResvData(String key, Object value) {
 		StringBuffer sb = new StringBuffer("&");
-		sb.append(key).append("=").append(StringUtils.defaultString(value));
+		sb.append(key).append("=");
+
+		if (value instanceof Integer) {
+			sb.append(value);
+		} else {
+			sb.append(StringUtils.defaultString((String)value));
+		}
 		return sb.toString();
 	}
 
