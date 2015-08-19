@@ -11,13 +11,28 @@ package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.msgpack.MessagePack;
+import org.msgpack.packer.Packer;
+import org.msgpack.unpacker.BufferUnpacker;
+import org.msgpack.unpacker.Unpacker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>
@@ -26,6 +41,7 @@ import java.util.Date;
  * </p>
  * Updated on : 2015. 07. 23 Updated by : 정희원, SK 플래닛.
  */
+@Deprecated
 public class PromotionEventWrapper {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -70,6 +86,20 @@ public class PromotionEventWrapper {
         str = this.datetimeKey + ":" + bodyPart;
 
         this.hasError = false;
+    }
+
+    public PromotionEventWrapper(byte[] data) {
+        MessagePack mp = new MessagePack();
+        Unpacker unpacker = mp.createUnpacker(new ByteArrayInputStream(data));
+        PromotionEvent event;
+        try {
+            event = unpacker.read(PromotionEvent.class);
+        } catch (IOException e) {
+            throw new RuntimeException("데이터 변환에 실패했습니다.", e);
+        }
+
+
+
     }
 
     public PromotionEventWrapper(String str) {
@@ -184,6 +214,33 @@ public class PromotionEventWrapper {
         }
 
         return this.str;
+    }
+
+    public static byte[] getData(PromotionEvent event) {
+        MessagePack mp = new MessagePack();
+        mp.register(PromotionEvent.class);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Packer packer = mp.createPacker(out);
+        try {
+            packer.write(event);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return out.toByteArray();
+    }
+
+    public static PromotionEvent getPromotionEvent(byte[] data) {
+        MessagePack mp = new MessagePack();
+        mp.register(PromotionEvent.class);
+        Unpacker unpacker = mp.createUnpacker(new ByteArrayInputStream(data));
+        PromotionEvent event;
+        try {
+            event = unpacker.read(PromotionEvent.class);
+        } catch (IOException e) {
+            throw new RuntimeException("데이터 변환에 실패했습니다.", e);
+        }
+        return event;
     }
 
     public String getDatetimeKey() {

@@ -117,14 +117,14 @@ public class PromotionEventTest {
         assert promotionEvent == null;
     }
 
-    private DateTime DATE1 = DateTime.parse("2015-08-12");
-    private DateTime DATE2 = DateTime.parse("2015-08-13T23:59:59");
-    private DateTime DATE3 = DateTime.parse("2015-08-14");
-    private DateTime DATE4 = DateTime.parse("2015-08-15T23:59:59");
+    private DateTime DATE1 = DateTime.parse("2015-08-20");
+    private DateTime DATE2 = DateTime.parse("2015-08-20T23:59:59");
+    private DateTime DATE3 = DateTime.parse("2015-08-21");
+    private DateTime DATE4 = DateTime.parse("2015-08-22T23:59:59");
 
     @Test
     public void test02() {
-        DateTime dateTime = DateTime.parse("2015-08-11T23:59:59");
+        DateTime dateTime = DateTime.parse("2015-08-19T23:59:59");
 
         int transition = 0;
         boolean v = true;

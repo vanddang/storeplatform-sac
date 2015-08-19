@@ -33,6 +33,15 @@ public interface PromotionEventSyncService {
 
     SyncPromotionEventResult syncPromotionEvent(String tenantId, String key);
 
+    /**
+     *
+     * @param tenantId
+     * @param keys
+     * @param liveOnly true인 경우 현재시간(DB) 기준으로 유효한 것만, false인 경우 진행중인것과 예정인 이벤트 모두
+     * @return
+     */
     List<RawPromotionEvent> getRawEventList(String tenantId, List<String> keys, boolean liveOnly);
+
+    RawPromotionEvent getRawEvent(String tenantId, Integer promId);
 
 }

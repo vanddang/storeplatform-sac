@@ -18,7 +18,7 @@ import com.google.common.collect.Multimap;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEventWrapper;
+import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
 import org.slf4j.Logger;
@@ -53,7 +53,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
     public SyncPromotionEventResult syncPromotionEvent(final String tenantId, final String key, final boolean forceUpdate) {
 
         if(connectionFactory == null)
-            return new SyncPromotionEventResult(ERR_UPDT_CNT, 0, null, new HashMap<String, PromotionEventWrapper>());
+            return new SyncPromotionEventResult(ERR_UPDT_CNT, 0, null, new HashMap<String, PromotionEvent>());
 
         final Plandasj client = connectionFactory.getConnectionPool().getClient();
 
@@ -74,64 +74,54 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
         // 이벤트 등록
         int updtCnt = 0;
         List<Integer> errorPromId = Lists.newArrayList();
-        Map<String, PromotionEventWrapper> liveMap = Maps.newHashMap();
+        Map<String, PromotionEvent> liveMap = Maps.newHashMap();    // 결과 출력용
 
         for (Map.Entry<String, Collection<RawPromotionEvent>> events : fetchedEventMap.asMap().entrySet()) {
 
-            PromotionEventWrapper incommingEventWrapper = null;
+            PromotionEvent incommingEvent = null;
 
             ///// Inner loop start
             for (RawPromotionEvent rawEvent : events.getValue()) {
 
-                PromotionEventWrapper wrapper = new PromotionEventWrapper(rawEvent);
+                PromotionEvent event = PromotionEventConverter.convert(rawEvent);
 
-                if(wrapper.hasError()) {
+                if(event == null) {
                     errorPromId.add(rawEvent.getPromId());
                     continue;   // for inner loop
                 }
 
-                if(incommingEventWrapper == null)
-                    incommingEventWrapper = wrapper;
+                if(incommingEvent == null)
+                    incommingEvent = event;
 
-                PromotionEventRedisHelper.addReservedEvent(client, events.getKey(), wrapper);
+                PromotionEventRedisHelper.addReservedEvent(client, events.getKey(), event);
 
                 ++updtCnt;
             }
             ///// Inner loop end
 
             // 유효한 event가 없는 경우
-            if(incommingEventWrapper == null) {
+            if(incommingEvent == null) {
                 PromotionEventRedisHelper.removeLiveEvent(client, events.getKey());
                 continue; // for outer loop
             }
 
             // 강제 업데이트 모드인 경우
             if(forceUpdate) {
-                PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEventWrapper);
-                continue;
+                PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEvent);
+                continue; // for outer loop
             }
 
             // 라이브에 기등록된 이벤트라면 incommingEvent와 비교한다
-            if(!PromotionEventRedisHelper.initLiveEvent(client, events.getKey(), incommingEventWrapper)) {
-                PromotionEventWrapper currentEventWrapper = PromotionEventRedisHelper.getLiveEvent(client, events.getKey());
+            if(!PromotionEventRedisHelper.initLiveEvent(client, events.getKey(), incommingEvent)) {
+                PromotionEvent currentEvent = PromotionEventRedisHelper.getLiveEvent(client, events.getKey());
 
-                if(currentEventWrapper.hasError()) {
-                    PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEventWrapper);
-                }
-                else {
-                    // TODO hashCode가 지금 로직으로는 유효하게 작동하지 않는 문제가 있다.
-                    try {
-                        if(currentEventWrapper.getPromotionEvent().hashCode() != incommingEventWrapper.getPromotionEvent().hashCode())
-                            PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEventWrapper);
-                    }
-                    catch (RuntimeException e) {
-                        PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEventWrapper);
-                    }
-                }
+                if(!incommingEvent.equals(currentEvent))
+                    PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEvent);
             }
 
             PromotionEventRedisHelper.addEventSet(client, events.getKey());
-            liveMap.put(events.getKey(), incommingEventWrapper);
+
+            liveMap.put(events.getKey(), incommingEvent);
         }
 
         int cntLiveRemoved = PromotionEventRedisHelper.removeDroppedEventFromLiveEvents(client, tenantId, key, fetchedEventMap.keySet());
@@ -144,7 +134,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
 
         checkSyncedData();
 
-        return new SyncPromotionEventResult(updtCnt, cntLiveRemoved, errorPromId, liveMap);
+        return new SyncPromotionEventResult(updtCnt, cntLiveRemoved, errorPromId, null); // TODO liveMap
     }
 
     /**
@@ -178,8 +168,18 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
             req.put("keyList", keyList);
 
         req.put("liveOnly", liveOnly);
+        req.put("liveAndReserved", !liveOnly);
 
         return commonDAO.queryForList("PromotionEventMapper.getPromotionEventList", req, RawPromotionEvent.class);
+    }
+
+    @Override
+    public RawPromotionEvent getRawEvent(String tenantId, Integer promId) {
+        Map<String, Object> req = Maps.newHashMap();
+        req.put("tenantId", tenantId);
+        req.put("promId", promId);
+
+        return commonDAO.queryForObject("PromotionEventMapper.getPromotionEventList", req, RawPromotionEvent.class);
     }
 
     @Override

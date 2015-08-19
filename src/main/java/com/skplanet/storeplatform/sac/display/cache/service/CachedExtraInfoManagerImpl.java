@@ -214,52 +214,51 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
         Plandasj client = connectionFactory.getConnectionPool().getClient();
 
-        List<String> liveEvents = PromotionEventRedisHelper.getLiveEventStrs(client, tenantId, keys);
+        List<byte[]> liveEvents = PromotionEventRedisHelper.getLiveEventDatas(client, tenantId, keys);
 
         // 조회된 liveEvent 순서대로 유효한 이벤트 정보를 찾아 응답한다.
         for (int i = 0; i < liveEvents.size(); ++i) {
 
-            String str = liveEvents.get(i);
+            byte[] data = liveEvents.get(i);
             String key = keys[i];
 
             // 해당하는 이벤트가 없는 경우
-            if(str == null)
+            if(data == null)
                 continue;
 
             // 이벤트는 등록되었지만 liveEvent에 아직 적재되지 않은 경우
             String fullKey = tenantId + ":" + key;
-            PromotionEventWrapper eventWrapper = new PromotionEventWrapper(str);
+            PromotionEvent event = PromotionEventConverter.convert(data);
 
-            if(eventWrapper.hasError()) {
-                // TODO 테스트 필요함 but, 배포 초기에는 발생할일이 거의 없음
+            if(event == null) {
                 SyncPromotionEventResult eventResult = promotionEventSyncService.syncPromotionEvent(tenantId, key);
                 if(eventResult.getUpdtCnt() > 0) {
-                    eventWrapper = eventResult.getLiveEventMap().get(fullKey);
+                    event = eventResult.getLiveEventMap().get(fullKey);
                 }
                 else
                     continue;
             }
 
-            if (now.compareTo(eventWrapper.getEndDt()) <= 0) {
-                return eventWrapper.isLive(now) ? eventWrapper.makePromotionEvent(key) : null;
+            if (now.compareTo(event.getEndDt()) <= 0) {
+                return event.isLiveFor(now) ? event : null;
             } else {
                 // TODO jitter에 의한 의도하지 않은 이벤트 transition 처리 방안 => 임계치를 적용하여 처리함
                 // TODO eventTransition:[beforePromId]:[afterPromId] => numeric
-                String prevDatetimeKey = eventWrapper.getDatetimeKey();
-                PromotionEventWrapper incommingEventWrapper = PromotionEventRedisHelper.getEventFromReserved(client, tenantId, key, now);
+                String prevDatetimeKey = event.makeDatetimeKey();
+                PromotionEvent incommingEvent = PromotionEventRedisHelper.getEventFromReserved(client, tenantId, key, now);
 
-                if (incommingEventWrapper != null) {
+                if (incommingEvent != null) {
 
                     if(featureSwitch.get(FeatureKey.PROMO_EVENT_SKIP_TRANSITION_THRESHOLD))
-                        PromotionEventRedisHelper.saveLiveEvent(client, fullKey, incommingEventWrapper);
+                        PromotionEventRedisHelper.saveLiveEvent(client, fullKey, incommingEvent);
                     else {
-                        if (PromotionEventRedisHelper.tryEventTransition(client, fullKey, prevDatetimeKey, incommingEventWrapper.getDatetimeKey()) >= TRANSITION_THRESHOLD) {
-                            PromotionEventRedisHelper.resetEventTransition(client, fullKey, prevDatetimeKey, incommingEventWrapper.getDatetimeKey());
-                            PromotionEventRedisHelper.saveLiveEvent(client, fullKey, incommingEventWrapper);
+                        if (PromotionEventRedisHelper.tryEventTransition(client, fullKey, prevDatetimeKey, event.makeDatetimeKey()) >= TRANSITION_THRESHOLD) {
+                            PromotionEventRedisHelper.resetEventTransition(client, fullKey, prevDatetimeKey, event.makeDatetimeKey());
+                            PromotionEventRedisHelper.saveLiveEvent(client, fullKey, incommingEvent);
                         }
                     }
 
-                    return incommingEventWrapper.isLive(now) ? incommingEventWrapper.makePromotionEvent(key) : null;
+                    return incommingEvent.isLiveFor(now) ? incommingEvent : null;
                 } else {
 
                     // 더이상의 이벤트가 없는 경우
@@ -293,7 +292,6 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
             return null;
 
         RawPromotionEvent livePromotionEvent = rawEventList.get(0);
-        PromotionEventWrapper promotionEventWrapper = new PromotionEventWrapper(livePromotionEvent);
-        return promotionEventWrapper.getPromotionEvent();
+        return PromotionEventConverter.convert(livePromotionEvent);
     }
 }

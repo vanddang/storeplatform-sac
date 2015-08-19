@@ -9,14 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
-import com.google.common.base.Objects;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import org.springframework.data.annotation.Transient;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * <p>
  * PromotionEvent
+ * Redis에 저장되는 형태
  * </p>
  * Updated on : 2015. 07. 15 Updated by : 정희원, SK 플래닛.
  */
@@ -28,12 +30,12 @@ public class PromotionEvent {
     private Integer rateGrd1;
     private Integer rateGrd2;
     private Integer rateGrd3;
+    private Integer prvAcmlLimt;
 
     private Date startDt;
     private Date endDt;
 
     private String targetId;
-    private String targetTp;
 
     public Integer getPromId() {
         return promId;
@@ -107,12 +109,63 @@ public class PromotionEvent {
         this.targetId = targetId;
     }
 
+    public Integer getPrvAcmlLimt() {
+        return prvAcmlLimt;
+    }
+
+    public void setPrvAcmlLimt(Integer prvAcmlLimt) {
+        this.prvAcmlLimt = prvAcmlLimt;
+    }
+
+    @Transient
     public String getTargetTp() {
         return StringUtils.defaultString(targetId).startsWith("DP") ? "DP01160102" : "DP01160101";
     }
 
+    public boolean isLiveFor(Date now) {
+        return !(this.startDt == null || this.endDt == null || now == null) &&
+                !now.before(startDt) && !now.after(endDt);
+    }
+
+    @Transient
+    public String makeDatetimeKey() {
+        return DATE_FORMAT.format(startDt) + "_" + DATE_FORMAT.format(endDt);
+    }
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PromotionEvent event = (PromotionEvent) o;
+
+        if (!promId.equals(event.promId)) return false;
+        if (!acmlMethodCd.equals(event.acmlMethodCd)) return false;
+        if (!acmlDt.equals(event.acmlDt)) return false;
+        if (!rateGrd1.equals(event.rateGrd1)) return false;
+        if (!rateGrd2.equals(event.rateGrd2)) return false;
+        if (!rateGrd3.equals(event.rateGrd3)) return false;
+        if (prvAcmlLimt != null ? !prvAcmlLimt.equals(event.prvAcmlLimt) : event.prvAcmlLimt != null) return false;
+        if (!startDt.equals(event.startDt)) return false;
+        if (!endDt.equals(event.endDt)) return false;
+        return targetId.equals(event.targetId);
+
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hashCode(startDt, endDt, promId, rateGrd1, rateGrd2, rateGrd3, acmlMethodCd, acmlDt);
+        int result = promId.hashCode();
+        result = 31 * result + acmlMethodCd.hashCode();
+        result = 31 * result + acmlDt.hashCode();
+        result = 31 * result + rateGrd1.hashCode();
+        result = 31 * result + rateGrd2.hashCode();
+        result = 31 * result + rateGrd3.hashCode();
+        result = 31 * result + (prvAcmlLimt != null ? prvAcmlLimt.hashCode() : 0);
+        result = 31 * result + startDt.hashCode();
+        result = 31 * result + endDt.hashCode();
+        result = 31 * result + targetId.hashCode();
+        return result;
     }
 }

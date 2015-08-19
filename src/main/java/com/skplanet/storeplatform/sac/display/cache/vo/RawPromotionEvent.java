@@ -28,6 +28,7 @@ public class RawPromotionEvent {
 
     private Integer promId;
     private String acmlMethodCd;
+    private Integer acmlLimt;
     private String acmlDt;
     private Integer rateGrd1;
     private Integer rateGrd2;
@@ -132,25 +133,11 @@ public class RawPromotionEvent {
         this.endDt = endDt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RawPromotionEvent that = (RawPromotionEvent) o;
-
-        if (datetimeKey != null ? !datetimeKey.equals(that.datetimeKey) : that.datetimeKey != null) return false;
-        if (promId != null ? !promId.equals(that.promId) : that.promId != null) return false;
-        if (acmlMethodCd != null ? !acmlMethodCd.equals(that.acmlMethodCd) : that.acmlMethodCd != null) return false;
-        if (acmlDt != null ? !acmlDt.equals(that.acmlDt) : that.acmlDt != null) return false;
-        if (rateGrd1 != null ? !rateGrd1.equals(that.rateGrd1) : that.rateGrd1 != null) return false;
-        if (rateGrd2 != null ? !rateGrd2.equals(that.rateGrd2) : that.rateGrd2 != null) return false;
-        return !(rateGrd3 != null ? !rateGrd3.equals(that.rateGrd3) : that.rateGrd3 != null);
-
+    public Integer getAcmlLimt() {
+        return acmlLimt;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(startDt, endDt, promId, rateGrd1, rateGrd2, rateGrd3, acmlMethodCd, acmlDt);
+    public void setAcmlLimt(Integer acmlLimt) {
+        this.acmlLimt = acmlLimt;
     }
 }

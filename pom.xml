@@ -150,7 +150,7 @@
         </dependency> 
 		 -->
 		<!-- JDBC Lib -->
-		<!-- NOTE : 프로젝트별로 DBMS가 틀릴 수 있다는 가정하에 JDBC 라이브러리 업무프로젝트레벨에서 선언하여 사용하도록함 -->
+		<!-- NOTE : 프로젝트별로 DBMS가 다를 수 있다는 가정하에 JDBC 라이브러리 업무프로젝트레벨에서 선언하여 사용하도록함 -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -207,6 +207,11 @@
           <groupId>org.codehaus.janino</groupId>
           <artifactId>janino</artifactId>
           <version>2.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.msgpack</groupId>
+            <artifactId>msgpack</artifactId>
+            <version>0.6.12</version>
         </dependency>
         
         <!-- 통합정산 상품정보 연동 jar -->
