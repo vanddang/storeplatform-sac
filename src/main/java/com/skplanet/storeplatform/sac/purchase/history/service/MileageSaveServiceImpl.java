@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.history.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,6 +25,10 @@ import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveGetScRes
 import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveScRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PromotionEventSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PromotionEventItem;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PromotionEventReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PromotionEventRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSave;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveGetSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveGetSacRes;
@@ -48,6 +53,9 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 
 	@Autowired
 	private PurchaseOrderPolicyService purchaseOrderPolicyService;
+
+	@Autowired
+	private PromotionEventSCI promotionEventSCI;
 
 	/**
 	 * T마일리지 조회 기능을 제공한다.
@@ -87,6 +95,21 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 		scResponse = this.mileageSaveSci.searchMileageSave(scRequest);
 		this.logger.debug("##### MileageSave SC Call End");
 
+		List<Integer> promIdList = new ArrayList<Integer>();
+
+		for (MileageSaveSc obj : scResponse.gettMileageReseveList()) {
+			if (obj.getPromId() != null) {
+				promIdList.add(obj.getPromId());
+			}
+		}
+
+		PromotionEventReq promotionEventReq = new PromotionEventReq();
+		promotionEventReq.setTenantId(request.getTenantId());
+		promotionEventReq.setPromIdList(promIdList);
+
+		PromotionEventRes promotionEventRes = this.promotionEventSCI.getPromotionEvent(promotionEventReq);
+		Map<Integer, PromotionEventItem> promotionMap = promotionEventRes.getPromotionEventMap();
+
 		/*************************************************
 		 * SC -> SAC Response Setting Start
 		 *************************************************/
@@ -94,11 +117,17 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 
 			tstoreMileageSac = new MileageSave();
 
+			if (promotionMap != null && obj.getPromId() != null && promotionMap.get(obj.getPromId()) != null) {
+				tstoreMileageSac.setPrivateAcmlLimit(promotionMap.get(obj.getPromId()).getPrivateAcmlLimit());
+			}
+
 			tstoreMileageSac.setPromId(obj.getPromId());
 			tstoreMileageSac.setSaveAmt(obj.getSaveAmt());
 			tstoreMileageSac.setSaveDt(obj.getSaveDt());
 
 			sacMileageSaveList.add(tstoreMileageSac);
+
+			promIdList.add(obj.getPromId());
 
 		}
 		/*************************************************
