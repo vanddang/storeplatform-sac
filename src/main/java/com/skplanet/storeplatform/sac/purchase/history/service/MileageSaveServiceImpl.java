@@ -94,6 +94,7 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 
 			tstoreMileageSac = new MileageSave();
 
+			tstoreMileageSac.setPromId(obj.getPromId());
 			tstoreMileageSac.setSaveAmt(obj.getSaveAmt());
 			tstoreMileageSac.setSaveDt(obj.getSaveDt());
 
@@ -101,7 +102,7 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 
 		}
 		/*************************************************
-		 * SC -> SAC Response Setting Start
+		 * SC -> SAC Response Setting End
 		 *************************************************/
 
 		// 적립가능 결제수단 조회
@@ -121,9 +122,9 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 		}
 		response.settMileageAvailMtd(availMtd);
 
-		// 적립한도 조회
-		response.settMileageLimitAmt(this.purchaseOrderPolicyService.searchtMileageSaveLimit(request.getTenantId(),
-				null) + "");
+		// // 적립한도 조회
+		// response.settMileageLimitAmt(this.purchaseOrderPolicyService.searchtMileageSaveLimit(request.getTenantId(),
+		// null) + "");
 
 		response.settMileageReseveList(sacMileageSaveList);
 
