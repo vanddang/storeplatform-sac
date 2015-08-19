@@ -24,7 +24,7 @@
           <if test="liveAndReserved">AND sysdate <![CDATA[<]]> END_DT</if>
           <if test="tenantId != null">AND TENANT_ID = #{tenantId}</if>
           <if test="keyList != null">AND PROM_TYPE_VALUE IN <foreach collection="keyList" separator="," open="(" close=")" item="v">#{v}</foreach></if>
-          <if test="promId != null">AND PROM_ID = #{promId}</if>
+          <if test="promIdList != null">AND PROM_ID IN <foreach collection="promIdList" separator="," open="(" close=")" item="v">#{v}</foreach></if>
           <if test="liveAndReserved">ORDER BY TENANT_ID, PROM_TYPE_VALUE, START_DT</if>
           <if test="liveOnly">ORDER BY PROM_TYPE_CD</if>
     </select>

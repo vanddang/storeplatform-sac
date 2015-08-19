@@ -20,11 +20,13 @@ import com.skplanet.storeplatform.sac.display.cache.service.PromotionEventSyncSe
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * <p>
  * PromotionEventSCIController
+ * TODO memDb 기반으로 변경
  * </p>
  * Updated on : 2015. 08. 19 Updated by : 정희원, SK 플래닛.
  */
@@ -41,14 +43,13 @@ public class PromotionEventSCIController implements PromotionEventSCI {
         Preconditions.checkNotNull(req.getPromIdList());
 
         Map<Integer, PromotionEventItem> eventMap = Maps.newHashMap();
-        for (Integer promId : req.getPromIdList()) {
-            RawPromotionEvent event = promotionEventSyncService.getRawEvent(req.getTenantId(), promId);
-            if(event == null)
-                continue;
+        List<RawPromotionEvent> rawEventList = promotionEventSyncService.getRawEventList(req.getTenantId(), req.getPromIdList());
+
+        for (RawPromotionEvent event : rawEventList) {
 
             PromotionEventItem item = new PromotionEventItem();
             item.setPrivateAcmlLimit(event.getAcmlLimt());
-            eventMap.put(promId, item);
+            eventMap.put(event.getPromId(), item);
         }
 
         PromotionEventRes res = new PromotionEventRes();

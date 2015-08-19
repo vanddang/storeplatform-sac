@@ -18,9 +18,13 @@ import com.google.common.collect.Multimap;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.common.util.DefaultPartialProcessorHandler;
+import com.skplanet.storeplatform.sac.common.util.PartialProcessor;
+import com.skplanet.storeplatform.sac.common.util.PartialProcessorHandler;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,12 +178,26 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
     }
 
     @Override
-    public RawPromotionEvent getRawEvent(String tenantId, Integer promId) {
-        Map<String, Object> req = Maps.newHashMap();
-        req.put("tenantId", tenantId);
-        req.put("promId", promId);
+    public List<RawPromotionEvent> getRawEventList(String tenantId, List<Integer> promIdList) {
 
-        return commonDAO.queryForObject("PromotionEventMapper.getPromotionEventList", req, RawPromotionEvent.class);
+        final Map<String, Object> req = Maps.newHashMap();
+        req.put("tenantId", tenantId);
+
+        final List<RawPromotionEvent> res = Lists.newArrayList();
+        PartialProcessor.process(promIdList, new PartialProcessorHandler<Integer>() {
+            @Override
+            public Integer processPaddingItem() {
+                return -1;
+            }
+
+            @Override
+            public void processPartial(List<Integer> partialList) {
+                req.put("promIdList", partialList);
+                res.addAll(commonDAO.queryForList("PromotionEventMapper.getPromotionEventList", req, RawPromotionEvent.class));
+            }
+        }, 20);
+
+        return res;
     }
 
     @Override

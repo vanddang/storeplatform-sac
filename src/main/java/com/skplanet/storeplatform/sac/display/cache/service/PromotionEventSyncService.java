@@ -42,6 +42,6 @@ public interface PromotionEventSyncService {
      */
     List<RawPromotionEvent> getRawEventList(String tenantId, List<String> keys, boolean liveOnly);
 
-    RawPromotionEvent getRawEvent(String tenantId, Integer promId);
+    List<RawPromotionEvent> getRawEventList(String tenantId, List<Integer> promIdList);
 
 }
