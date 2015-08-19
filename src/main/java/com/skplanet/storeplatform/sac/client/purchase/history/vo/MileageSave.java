@@ -11,8 +11,40 @@ public class MileageSave extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	private Integer promId;
+	private Integer privateAcmlLimit;
 	private double saveAmt; // 적립예정금액
 	private String saveDt; // 적립예정일
+
+	/**
+	 * @return the promId
+	 */
+	public Integer getPromId() {
+		return this.promId;
+	}
+
+	/**
+	 * @param promId
+	 *            the promId to set
+	 */
+	public void setPromId(Integer promId) {
+		this.promId = promId;
+	}
+
+	/**
+	 * @return the privateAcmlLimit
+	 */
+	public Integer getPrivateAcmlLimit() {
+		return this.privateAcmlLimit;
+	}
+
+	/**
+	 * @param privateAcmlLimit
+	 *            the privateAcmlLimit to set
+	 */
+	public void setPrivateAcmlLimit(Integer privateAcmlLimit) {
+		this.privateAcmlLimit = privateAcmlLimit;
+	}
 
 	/**
 	 * @return the saveAmt

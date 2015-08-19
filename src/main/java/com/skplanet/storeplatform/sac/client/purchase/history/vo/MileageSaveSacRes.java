@@ -14,7 +14,6 @@ public class MileageSaveSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String tMileageAvailMtd;
-	private String tMileageLimitAmt;
 	private List<MileageSave> tMileageReseveList;
 
 	/**
@@ -30,21 +29,6 @@ public class MileageSaveSacRes extends CommonInfo {
 	 */
 	public void settMileageAvailMtd(String tMileageAvailMtd) {
 		this.tMileageAvailMtd = tMileageAvailMtd;
-	}
-
-	/**
-	 * @return the tMileageLimitAmt
-	 */
-	public String gettMileageLimitAmt() {
-		return this.tMileageLimitAmt;
-	}
-
-	/**
-	 * @param tMileageLimitAmt
-	 *            the tMileageLimitAmt to set
-	 */
-	public void settMileageLimitAmt(String tMileageLimitAmt) {
-		this.tMileageLimitAmt = tMileageLimitAmt;
 	}
 
 	/**
