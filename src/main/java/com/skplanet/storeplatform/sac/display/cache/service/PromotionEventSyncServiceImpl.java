@@ -134,7 +134,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
 
         checkSyncedData();
 
-        return new SyncPromotionEventResult(updtCnt, cntLiveRemoved, errorPromId, null); // TODO liveMap
+        return new SyncPromotionEventResult(updtCnt, cntLiveRemoved, errorPromId, liveMap);
     }
 
     /**
