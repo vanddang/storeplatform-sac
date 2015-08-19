@@ -231,7 +231,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	 * @return 결제Page에 노출할 상품명
 	 */
 	private String makeProductName(PurchaseProduct purchaseProduct) {
-		if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(), PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+		if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(), PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)) {
 			// 시리즈 전회차
 			if (StringUtils
 					.startsWith(purchaseProduct.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)) {
@@ -403,7 +403,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			// VOD정액권, 이북/코믹 전권
 		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
 			if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+					PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)) {
 				if (StringUtil.equals(purchaseProduct.getPossLendClsfCd(),
 						PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION))
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN; // 소장
@@ -414,7 +414,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_SERIES; // 구매
 
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
+					PurchaseConstants.FIXRATE_PROD_TYPE_FIXRATE)) {
 				if (StringUtils.equals(purchaseProduct.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_AUTO;
 				} else {

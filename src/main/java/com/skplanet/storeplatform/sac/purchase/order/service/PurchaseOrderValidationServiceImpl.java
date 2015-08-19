@@ -9,29 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.NoSuchMessageException;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
@@ -60,6 +37,22 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.shopping.repository.ShoppingRepository;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Param;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 
@@ -751,8 +744,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		// 기구매 체크 처리 용 변수
-		List<String> existenceProdIdList = new ArrayList<String>();
-		List<String> tempExistenceProdIdList = null;
+		Set<String> existenceProdIdList = new LinkedHashSet<String>();
 
 		// CLINK 예외처리용
 		boolean bClink = purchaseOrderInfo.isClink();
@@ -920,15 +912,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				// (정액권) 베타 상품 체크
 				if (CollectionUtils.isNotEmpty(product.getExclusiveFixrateProdIdList())) {
 
-					tempExistenceProdIdList = new ArrayList<String>();
+					Set<String> existenceProdIdSet = new LinkedHashSet<String>();
 					for (String exclusiveProdId : product.getExclusiveFixrateProdIdList()) {
-						tempExistenceProdIdList.add(exclusiveProdId);
+						existenceProdIdSet.add(exclusiveProdId);
 					}
 
 					List<ExistenceScRes> checkPurchaseResultList = this.searchExistence(useUser.getTenantId(),
 							useUser.getUserKey(),
 							deviceBasedMap.get(useUser.getTenantId()) ? useUser.getDeviceKey() : null,
-							tempExistenceProdIdList);
+							existenceProdIdSet);
 
 					for (ExistenceScRes checkRes : checkPurchaseResultList) {
 						if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
@@ -938,61 +930,66 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				}
 
 				// 이용 가능한 정액권 기구매 확인 처리 : T프리미엄 요청 경로에 대해서는 정액권 이용 제외
-
 				if (CollectionUtils.isNotEmpty(product.getAvailableFixrateInfoList())
 						&& (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
 								PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
 						&& (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
 								PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false)) {
 
-					tempExistenceProdIdList = new ArrayList<String>();
+					Map<String,String> tempExistenceProdIdList = new LinkedHashMap<String,String>();
 
 					for (FreePass freepass : product.getAvailableFixrateInfoList()) {
 						if (StringUtils.equals(PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_ALL,
 								freepass.getPossLendClsfCd())) {
-							tempExistenceProdIdList.add(freepass.getProdId());
+							tempExistenceProdIdList.put(freepass.getProdId(), freepass.getCmpxProdClsfCd());
 						} else if (StringUtils.equals(PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION,
 								freepass.getPossLendClsfCd())) {
 							if (StringUtils.equals(PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION,
 									product.getPossLendClsfCd())) {
-								tempExistenceProdIdList.add(freepass.getProdId());
+								tempExistenceProdIdList.put(freepass.getProdId(), freepass.getCmpxProdClsfCd());
 							}
 						} else if (StringUtils.equals(PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL,
 								freepass.getPossLendClsfCd())) {
 							if (StringUtils.equals(PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL,
 									product.getPossLendClsfCd())) {
-								tempExistenceProdIdList.add(freepass.getProdId());
+								tempExistenceProdIdList.put(freepass.getProdId(), freepass.getCmpxProdClsfCd());
 							}
 						} else {
 							throw new StorePlatformException("SAC_PUR_5121", freepass.getPossLendClsfCd());
 						}
 					}
 
-					if (CollectionUtils.isEmpty(tempExistenceProdIdList)) {
+					if (CollectionUtils.isEmpty(tempExistenceProdIdList.keySet())) {
 						continue;
 					}
 
 					List<ExistenceScRes> checkPurchaseResultList = this.searchExistence(useUser.getTenantId(),
 							useUser.getUserKey(),
 							deviceBasedMap.get(useUser.getTenantId()) ? useUser.getDeviceKey() : null,
-							tempExistenceProdIdList);
+							tempExistenceProdIdList.keySet());
 
 					ExistenceScRes useExistenceScRes = null;
 					for (ExistenceScRes checkRes : checkPurchaseResultList) {
+						// 구매 완료된 건만 체크
 						if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT) == false) {
 							continue;
 						}
 
 						// 회차 비교: 정액제 상품의 max회차 값이 없는 경우는 모두 허용
-						if (NumberUtils.toInt(product.getChapter(), 0) > NumberUtils.toInt(
-								checkRes.getPartChrgProdNm(), Integer.MAX_VALUE)) {
+						if (NumberUtils.toInt(product.getChapter(), 0) > NumberUtils
+								.toInt(checkRes.getPartChrgProdNm(), Integer.MAX_VALUE)) {
 							continue;
+						}
+
+						if (StringUtils.equals(tempExistenceProdIdList.get(checkRes.getProdId()),
+								PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)) {
+							useExistenceScRes = checkRes;
+							break; // 시리즈일 경우 즉시 적용
 						}
 
 						if (useExistenceScRes == null) {
 							useExistenceScRes = checkRes;
-
-						} else if (checkRes.getPrchsDt().compareTo(useExistenceScRes.getPrchsDt()) > 0) {
+						}  else if (checkRes.getPrchsDt().compareTo(useExistenceScRes.getPrchsDt()) > 0) {
 							useExistenceScRes = checkRes;
 						}
 					}
@@ -1321,11 +1318,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 * @return 기구매 체크 결과
 	 */
 	private List<ExistenceScRes> searchExistence(String tenantId, String userKey, String deviceKey,
-			List<String> prodIdList) {
+			Set<String> prodIdSet) {
 
 		List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
 		ExistenceItemSc existenceItemSc = null;
-		for (String prodId : prodIdList) {
+		for (String prodId : prodIdSet) {
 			existenceItemSc = new ExistenceItemSc();
 			existenceItemSc.setProdId(prodId);
 			existenceItemScList.add(existenceItemSc);

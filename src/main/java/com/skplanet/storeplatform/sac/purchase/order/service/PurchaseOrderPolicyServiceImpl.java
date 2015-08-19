@@ -1489,8 +1489,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		if (StringUtils.equals(paymentPolicy.getPolicyId(), PurchaseConstants.POLICY_ID_PAYMETHOD_ADJUST)) {
 
 			// 정액권,시리즈 패스: PayPin 허용 (차후 필요 없을 것 같은 로직-영향도 파악후 제거 필요)
-			if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)
-					|| StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
+			if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)
+					|| StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_FIXRATE)) {
 				paymethodInfo = paymethodInfo.replaceAll("14:0:0;", "").replaceAll(";14:0:0", "");
 				paymethodInfo = paymethodInfo.replaceAll("14:0.0:0;", "").replaceAll(";14:0.0:0", "");
 			}

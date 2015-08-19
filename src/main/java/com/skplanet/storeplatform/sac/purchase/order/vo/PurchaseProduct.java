@@ -117,8 +117,8 @@ public class PurchaseProduct extends PaymentInfo {
 		this.setPossLendClsfCd(displayInfo.getPossLendClsfCd());
 		// 회차정보
 		this.setBookClsfCd(displayInfo.getBookClsfCd());
-		this.setChapter(displayInfo.getChapter());
-		this.setChapterText(displayInfo.getChapterText());
+		this.setChapter(StringUtils.isEmpty(displayInfo.getChapter()) ? displayInfo.getChapterText() : displayInfo.getChapter());
+		this.setChapterText(StringUtils.isEmpty(displayInfo.getChapterText()) ? displayInfo.getChapter() : displayInfo.getChapterText());
 		this.setChapterUnit(displayInfo.getChapterUnit());
 		// 쇼핑
 		this.setProdCaseCd(displayInfo.getProdCaseCd()); // DP006301-상품권, DP006302-교환권, DP006303-배송상품
@@ -162,6 +162,7 @@ public class PurchaseProduct extends PaymentInfo {
 
 		this.setSeriesYn(displayInfo.getSeriesYn());
 		this.setPackagePrchsYn(displayInfo.getPackagePrchsYn());
+		this.setPrivateAcmlLimit(displayInfo.getPrivateAcmlLimit()); // 개인당 이벤트 적립 한도
 	}
 
 	/**
