@@ -50,8 +50,8 @@ public class CategorySpecificSongServiceImpl implements CategorySpecificSongServ
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	@Autowired
-    private MemberBenefitService memberBenefitService;
+//	@Autowired
+//    private MemberBenefitService memberBenefitService;
 
     @Autowired
     private CategorySpecificMusicService musicService;
@@ -111,7 +111,7 @@ public class CategorySpecificSongServiceImpl implements CategorySpecificSongServ
                         continue;
 
                     // Tstore멤버십 적립율 정보
-                    metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+//                    metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
 
                     Product product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
                     productList.add(product);

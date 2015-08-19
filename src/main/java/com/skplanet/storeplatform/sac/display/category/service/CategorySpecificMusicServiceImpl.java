@@ -57,11 +57,11 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 	@Autowired
 	private MusicInfoGenerator musicGenerator;
 
-	@Autowired
-    private MemberBenefitService memberBenefitService;
+//	@Autowired
+//    private MemberBenefitService memberBenefitService;
 	
-	@Autowired
-	private CommonMetaInfoGenerator commonGenerator;
+//	@Autowired
+//	private CommonMetaInfoGenerator commonGenerator;
 	
 	/*
 	 * (non-Javadoc)
@@ -133,8 +133,8 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
                         mapgRingbell(header.getTenantHeader().getTenantId(), metaInfo.getProdId(), product.getMusic());
 
                         // Tstore멤버십 적립율 정보
-                        List<Point> mileage = commonGenerator.generateMileage(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
-                        product.setPointList(mileage);
+//                        List<Point> mileage = commonGenerator.generateMileage(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+//                        product.setPointList(mileage);
 
                         productList.add(product);
                     }

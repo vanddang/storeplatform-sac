@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.app.service;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
@@ -30,13 +31,11 @@ import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
-import com.skplanet.storeplatform.sac.display.common.service.menu.MenuInfo;
 import com.skplanet.storeplatform.sac.display.common.service.menu.MenuInfoService;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
-import com.skplanet.storeplatform.sac.display.menu.service.MenuDataService;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,13 +98,20 @@ public class AppServiceImpl implements AppService {
     private ProductInfoManager productInfoManager;
 
 	@Override
-	public AppDetailRes searchAppDetail(AppDetailParam request) {
+	public AppDetailRes searchAppDetail(AppDetailParam param) {
 
-		AppDetail appDetail = this.commonDAO.queryForObject("AppDetail.getAppDetail", request, AppDetail.class);
-		if (appDetail == null)
-			return null;
+        Map<String, Object> req = Maps.newHashMap();
+        req.put("deviceModelCd", param.getDeviceModelCd());
+        req.put("userKey", param.getUserKey());
+        req.put("channelId", param.getChannelId());
+        req.put("langCd", param.getLangCd());
+        req.put("tenantId", param.getTenantId());
 
-		AppDetailRes res = new AppDetailRes();
+        AppDetail appDetail = this.commonDAO.queryForObject("AppDetail.getAppDetail", param, AppDetail.class);
+        if (appDetail == null)
+            return null;
+
+        AppDetailRes res = new AppDetailRes();
         Product product = new Product();
         res.setProduct(product);
 
@@ -114,18 +120,16 @@ public class AppServiceImpl implements AppService {
             if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(appDetail.getProdStatusCd()) ||
                     DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(appDetail.getProdStatusCd()) ||
                     DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(appDetail.getProdStatusCd())) {
-                if (!StringUtils.isEmpty(request.getUserKey()) && !StringUtils.isEmpty(request.getDeviceKey()) &&
-                        !commonService.checkPurchase(request.getTenantId(), request.getUserKey(), request.getDeviceKey(), request.getChannelId())) {
+                if (!StringUtils.isEmpty(param.getUserKey()) && !StringUtils.isEmpty(param.getDeviceKey()) &&
+                        !commonService.checkPurchase(param.getTenantId(), param.getUserKey(), param.getDeviceKey(), param.getChannelId())) {
                     return null;
-                }
-                else
+                } else
                     res.getProduct().setUserPurStatus(DisplayConstants.DP_PURSTAT_RESTRICTED);
-            }
-            else
+            } else
                 res.getProduct().setUserPurStatus(DisplayConstants.DP_PURSTAT_RESTRICTED);
         }
 
-        if (!StringUtils.isEmpty(request.getUserKey()) && !StringUtils.isEmpty(request.getDeviceKey())) {
+        if (!StringUtils.isEmpty(param.getUserKey()) && !StringUtils.isEmpty(param.getDeviceKey())) {
             res.getProduct().setUserPurStatus(DisplayConstants.DP_PURSTAT_AVAILABLE);
         }
 
@@ -133,14 +137,14 @@ public class AppServiceImpl implements AppService {
 
         // Product Basic info
         product.setIdentifierList(new ArrayList<Identifier>());
-        product.getIdentifierList().add(new Identifier("channel", request.getChannelId()));
+        product.getIdentifierList().add(new Identifier("channel", param.getChannelId()));
         product.setPacketFee(appDetail.getProdGbn());
 
-		product.setTitle(new Title(appDetail.getProdNm()));
-		Price price = new Price();
-		price.setFixedPrice(appDetail.getFixedAmt());
+        product.setTitle(new Title(appDetail.getProdNm()));
+        Price price = new Price();
+        price.setFixedPrice(appDetail.getFixedAmt());
         price.setText(appDetail.getProdAmt());
-		product.setPrice(price);
+        product.setPrice(price);
         product.setProductExplain(appDetail.getProdBaseDesc());
         product.setProductDetailExplain(appDetail.getProdDtlDesc());
 
@@ -148,7 +152,7 @@ public class AppServiceImpl implements AppService {
 
         product.setLikeYn(appDetail.getLikeYn());
 
-        List<TenantProductInfo> tenantProdInfoList = getTenantProdList(request.getChannelId());
+        List<TenantProductInfo> tenantProdInfoList = getTenantProdList(param.getChannelId());
         List<TenantProduct> tenantProductList = Lists.transform(tenantProdInfoList, new Function<TenantProductInfo, TenantProduct>() {
             @Override
             public TenantProduct apply(TenantProductInfo input) {
@@ -162,125 +166,111 @@ public class AppServiceImpl implements AppService {
         product.setTenantProductList(tenantProductList);
 
         // Menu
-        List<MenuItem> menuList = commonService.getMenuItemList(request.getChannelId(), request.getLangCd());
-        product.setMenuList(new ArrayList<Menu>());
+        product.setMenuList(Lists.newArrayList(
+                new Menu(appDetail.getTopMenuId(), menuInfoService.getMenuName(appDetail.getTopMenuId(), param.getLangCd()), "topClass"),
+                new Menu(appDetail.getMenuId(), appDetail.getMenuNm(), appDetail.getMenuDesc())));
 
-        // Add topMenu
-        if(!Strings.isNullOrEmpty(appDetail.getTopMenuId())) {
-            product.getMenuList()
-                    .add(new Menu(appDetail.getTopMenuId(), menuInfoService.getMenuName(appDetail.getTopMenuId(), request.getLangCd()), "topClass"));
-        }
-
-        for (MenuItem mi : menuList) {
-            if(mi.isInfrMenu())
-                continue;
-
-            Menu menu = new Menu();
-            menu.setId(mi.getMenuId());
-            menu.setName(mi.getMenuNm());
-            menu.setDesc(mi.getMenuDesc());
-
-			product.getMenuList().add(menu);
-		}
 
         //tmembership 할인율
-        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(request.getTenantId(), appDetail.getTopMenuId());
+        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), appDetail.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
         //Tstore멤버십 적립율 정보
-        if (StringUtils.isNotEmpty(request.getUserKey())) {
-        	//회원등급 조회
-        	GradeInfoSac userGradeInfo = commonService.getUserGrade(request.getUserKey());
-        	if(userGradeInfo != null) {
-        		if(pointList == null) pointList = new ArrayList<Point>();
-	        	String userGrade = userGradeInfo.getUserGradeCd();
-	        	Integer prodAmt = appDetail.getProdAmt();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), appDetail.getTopMenuId(), request.getChannelId(), prodAmt);
+        if (StringUtils.isNotEmpty(param.getUserKey())) {
+            //회원등급 조회
+            GradeInfoSac userGradeInfo = commonService.getUserGrade(param.getUserKey());
+            if (userGradeInfo != null) {
+                if (pointList == null) pointList = new ArrayList<Point>();
+                String userGrade = userGradeInfo.getUserGradeCd();
+                Integer prodAmt = appDetail.getProdAmt();
+                MileageInfo mileageInfo = benefitService.getMileageInfo(param.getTenantId(), appDetail.getMenuId(), param.getChannelId(), prodAmt);
+                //benefitService.checkFreeProduct(mileageInfo, prodAmt); TODO 대체
 
-	        	//무료인 경우 예외처리
-	        	if(prodAmt == null || prodAmt == 0) {
-	        		if(StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)
-	        				&& !supportInApp(appDetail)) {
-	        			//무료 && 카테고리 (예외상품 아님) && 인앱 미지원
-	        			// 마일리지 정보를 내려주지 않는다.
-	        			mileageInfo = new MileageInfo();
-	        		}
-	        	}
-	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
-        	}
+                //무료인 경우 예외처리
+                if (prodAmt == null || prodAmt == 0) {
+                    if (StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)
+                            && !supportInApp(appDetail)) {
+                        //무료 && 카테고리 (예외상품 아님) && 인앱 미지원
+                        // 마일리지 정보를 내려주지 않는다.
+                        mileageInfo = new MileageInfo();
+                    }
+                }
+                pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
+            }
         }
-        if(pointList.size() > 0) product.setPointList(pointList);
 
+        if (pointList.size() > 0)
+            product.setPointList(pointList);
 
-        product.setSupportList(new ArrayList<Support>());
-        product.getSupportList().add(new Support("drm", appDetail.getDrmYn()));
-        product.getSupportList().add(new Support("iab", supportInApp(appDetail) ? "Y" : "N"));
+        product.setSupportList(Lists.newArrayList(
+                new Support("drm", appDetail.getDrmYn()),
+                new Support("iab", supportInApp(appDetail) ? "Y" : "N")));
 
         // Source
-        List<Source> sourceList = getImageList(request.getChannelId(), request.getLangCd());
-		product.setSourceList(sourceList);
+        List<Source> sourceList = getImageList(param.getChannelId(), param.getLangCd());
+        product.setSourceList(sourceList);
 
-        ProductStats stats = productInfoManager.getProductStats(new ProductStatsParam(request.getChannelId()));
+        ProductStats stats = productInfoManager.getProductStats(new ProductStatsParam(param.getChannelId()));
         Accrual accrual = new Accrual();
-		accrual.setVoterCount(stats.getParticipantCount());
-		accrual.setDownloadCount(stats.getPurchaseCount());
-		accrual.setScore(stats.getAverageScore());
-		product.setAccrual(accrual);
+        accrual.setVoterCount(stats.getParticipantCount());
+        accrual.setDownloadCount(stats.getPurchaseCount());
+        accrual.setScore(stats.getAverageScore());
+        product.setAccrual(accrual);
 
-		Rights rights = new Rights();
-		rights.setGrade(appDetail.getProdGrdCd());
+        Rights rights = new Rights();
+        rights.setGrade(appDetail.getProdGrdCd());
         rights.setAgeAllowedFrom(commonService.getAllowedAge(appDetail.getTopMenuId(), appDetail.getProdGrdCd()));
-		product.setRights(rights);
+        product.setRights(rights);
 
-		// App
-		App app = new App();
-		product.setApp(app);
-		app.setAid(appDetail.getAid());
-        if(appDetail.getVmVer() != null)
-		    app.setSupportedOs("Android " + appDetail.getVmVer());
-		app.setPackageName(appDetail.getApkPkgNm());
-		app.setVersionCode(appDetail.getApkVer());
-		app.setVersion(appDetail.getApkVerNm());
-		app.setSize(appDetail.getFileSize());
+        // App
+        App app = new App();
+        product.setApp(app);
+        app.setAid(appDetail.getAid());
+        if (appDetail.getVmVer() != null)
+            app.setSupportedOs("Android " + appDetail.getVmVer());
+        app.setPackageName(appDetail.getApkPkgNm());
+        app.setVersionCode(appDetail.getApkVer());
+        app.setVersion(appDetail.getApkVerNm());
+        app.setSize(appDetail.getFileSize());
         app.setDate(new Date(DisplayConstants.DP_DATE_SALE_REG, appDetail.getSaleStrtDt()));
         app.setDescriptionVideoUrl(appDetail.getDescVideoUrl());
 
         // App - Provisioning
         String simpleOsVer = "_NOT_";
-        Matcher matcher = PATTERN_OSVER.matcher(request.getOsVersion());
+        Matcher matcher = PATTERN_OSVER.matcher(param.getOsVersion());
         if (matcher.matches()) {
             simpleOsVer = matcher.group(1);
         }
         app.setIsDeviceSupported(appDetail.getVmVer() != null &&
-                request.getOsVersion() != null &&
+                param.getOsVersion() != null &&
                 appDetail.getVmVer().contains(simpleOsVer != null ? simpleOsVer : "") &&
                 appDetail.getIsDeviceSupp().equals("Y") ? "Y" : "N");
 
-		// Update History
-		History history = new History();
-		List<UpdateHistory> updateHistoryList = this.commonService.getUpdateList(request.getChannelId(), 1, 5);
-		List<Update> updateList = new ArrayList<Update>();
-		for (UpdateHistory uh : updateHistoryList) {
-			Update update = new Update();
+        // Update History
+        History history = new History();
+        List<UpdateHistory> updateHistoryList = this.commonService.getUpdateList(param.getChannelId(), 1, 5);
+        List<Update> updateList = new ArrayList<Update>();
+        for (UpdateHistory uh : updateHistoryList) {
+            Update update = new Update();
 
-			update.setUpdateExplain(uh.getUpdtText());
-			update.setDate(new Date(DisplayConstants.DP_DATE_REG, uh.getProdUpdDt()));
+            update.setUpdateExplain(uh.getUpdtText());
+            update.setDate(new Date(DisplayConstants.DP_DATE_REG, uh.getProdUpdDt()));
 
-			updateList.add(update);
-		}
-		app.setHistory(history);
-		history.setUpdate(updateList);
+            updateList.add(update);
+        }
+        app.setHistory(history);
+        history.setUpdate(updateList);
 
-		// Distributor
-		Distributor distributor = new Distributor();
-		distributor.setSellerKey(appDetail.getSellerMbrNo());
-		distributor.setName(appDetail.getExpoSellerNm());
-		distributor.setTel(appDetail.getExpoSellerTelno());
-		distributor.setEmail(appDetail.getExpoSellerEmail());
-		product.setDistributor(distributor);
+        // Distributor
+        Distributor distributor = new Distributor();
+        distributor.setSellerKey(appDetail.getSellerMbrNo());
+        distributor.setName(appDetail.getExpoSellerNm());
+        distributor.setTel(appDetail.getExpoSellerTelno());
+        distributor.setEmail(appDetail.getExpoSellerEmail());
+        product.setDistributor(distributor);
 
-		res.setProduct(product);
-		return res;
-	}
+        res.setProduct(product);
+        return res;
+    }
 
 	/**
 	 * <pre>

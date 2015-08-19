@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <aop:config>
+        <!-- 마일리지 정보 처리용 AOP-->
+        <aop:aspect id="promotionEventAspect" ref="promotionEventProcessor" order="9999">
+            <aop:pointcut id="ctrlRes" expression="execution(com..*Res com..display..*Service.*(..))"/>
+            <aop:after-returning method="postProcess" pointcut-ref="ctrlRes" returning="retVal"/>
+        </aop:aspect>
+    </aop:config>
+
+    <bean class="com.skplanet.storeplatform.sac.common.support.aop.PromotionEventProcessor" id="promotionEventProcessor"/>
+</beans>

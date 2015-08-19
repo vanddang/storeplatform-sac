@@ -55,8 +55,8 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 	
-	@Autowired
-    private MemberBenefitService memberBenefitService;
+//	@Autowired
+//    private MemberBenefitService memberBenefitService;
 
 	/**
 	 * <pre>
@@ -146,7 +146,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 
                 if (retMetaInfo != null) {
                     // Tstore멤버십 적립율 정보
-                    retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
+//                    retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), retMetaInfo.getMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
 
                     Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
                     productList.add(product);

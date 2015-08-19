@@ -193,7 +193,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
             }
 
             // 마일리지 조회시 항상 channel 기준이어야 함
-            metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(param.getTenantId(), baseInfo.getTopMenuId(), baseInfo.getChnlId(), null));
+            //metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(param.getTenantId(), baseInfo.getTopMenuId(), baseInfo.getChnlId(), null));
 
             Object product; // Product or Coupon
             switch (type) {

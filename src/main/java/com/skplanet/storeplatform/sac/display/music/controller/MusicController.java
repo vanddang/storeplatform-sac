@@ -81,12 +81,12 @@ public class MusicController {
     private void mapProduct(MusicDetailComposite musicDetailComp, Product product) {
 
         MusicDetail musicDetail = musicDetailComp.getMusicDetail();
-        List<MenuItem> menuList = musicDetailComp.getMenuList();
+//        List<MenuItem> menuList = musicDetailComp.getMenuList();
         List<SubContent> contentList = musicDetailComp.getContentList();
         List<Point> pointList = musicDetailComp.getPointList();
         
         musicDetailBinder.mapBasicInfo(product, musicDetail, pointList);
-        musicDetailBinder.mapMenu(product, menuList);
+        musicDetailBinder.mapMenu(product, musicDetail);
         musicDetailBinder.mapThumbnail(product, musicDetail);
         musicDetailBinder.mapMusic(product, musicDetail, contentList, musicDetailComp.getRelatedProductList());
     }

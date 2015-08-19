@@ -27,7 +27,7 @@ public interface MusicDetailBinder {
 
     void mapThumbnail(Product product, MusicDetail musicDetail);
 
-    void mapMenu(Product product, List<MenuItem> menuList);
+    void mapMenu(Product product, MusicDetail musicDetail);
 
     void mapBasicInfo(Product product, MusicDetail musicDetail, List<Point> pointList);
 }

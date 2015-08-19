@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.other.controller;
 
+import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPartProductReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPartProductRes;
@@ -40,7 +41,7 @@ import java.util.List;
 
 /**
  * <p>
- * DESC
+ * OtherPartProductController
  * </p>
  * Updated on : 2014. 03. 25 Updated by : 정희원, SK 플래닛.
  */
@@ -89,14 +90,14 @@ public class OtherPartProductController {
 
             if (ppRes.getParentProduct() == null) {
                 ppRes.setParentProduct(new Product());
-                ppRes.getParentProduct().setMenuList(new ArrayList<Menu>());
-                ppRes.getParentProduct().getMenuList().add(new Menu(pp.getParentTopMenuId(), pp.getParentTopMenuNm(), DisplayConstants.DP_MENU_TOPCLASS_TYPE));
-                ppRes.getParentProduct().getMenuList().add(new Menu(pp.getParentMenuId(), pp.getParentMenuNm(), null));
+                ppRes.getParentProduct().setMenuList(Lists.newArrayList(
+                        new Menu(pp.getParentTopMenuId(), pp.getParentTopMenuNm(), DisplayConstants.DP_MENU_TOPCLASS_TYPE),
+                        new Menu(pp.getParentMenuId(), pp.getParentMenuNm(), null)));
             }
 
             // 부모상품에 대한 마일리지 정책 적용
             if(pointList == null)
-            	pointList = metaInfoGenerator.generateMileage(benefitService.getMileageInfo(tenantId, pp.getParentTopMenuId(), pp.getParentProdId(), pp.getProdAmt()));
+            	pointList = metaInfoGenerator.generateMileage(benefitService.getMileageInfo(tenantId, pp.getParentMenuId(), pp.getParentProdId(), pp.getProdAmt()));
 
             ppro.setPointList(pointList);
 

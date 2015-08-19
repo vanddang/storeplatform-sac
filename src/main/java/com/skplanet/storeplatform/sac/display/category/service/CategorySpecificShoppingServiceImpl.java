@@ -55,8 +55,8 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 	@Autowired
 	private DisplayCommonService displayCommonService;
 	
-    @Autowired
-    private MemberBenefitService memberBenefitService;
+//    @Autowired
+//    private MemberBenefitService memberBenefitService;
 	/**
 	 * 
 	 * <pre>
@@ -121,7 +121,8 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 
         CategoryShoppingSacRes res = new CategoryShoppingSacRes();
 
-        retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
+        // TODO topMenuId -> menuId 작업 안함
+//        retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
 
         // 쇼핑 Response Generate
         Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);

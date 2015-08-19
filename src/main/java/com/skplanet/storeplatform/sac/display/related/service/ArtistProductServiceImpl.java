@@ -65,8 +65,8 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 
-	@Autowired
-    private MemberBenefitService memberBenefitService;
+//	@Autowired
+//    private MemberBenefitService memberBenefitService;
 	
 	/**
 	 * 
@@ -129,7 +129,7 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 						MetaInfo.class); // 뮤직 메타
 				if (retMetaInfo != null) {
 					// Tstore멤버십 적립율 정보
-					retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
+//					retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
 					
 					Product product = null;
 					product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);

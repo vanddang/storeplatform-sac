@@ -56,8 +56,8 @@ public class AlbumProductServiceImpl implements AlbumProductService {
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 
-	@Autowired
-    private MemberBenefitService memberBenefitService;
+//	@Autowired
+//    private MemberBenefitService memberBenefitService;
 	
 	/**
 	 *
@@ -89,7 +89,7 @@ public class AlbumProductServiceImpl implements AlbumProductService {
 			MetaInfo retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", param,
 					MetaInfo.class);
 			if (retMetaInfo != null) {
-				retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
+//				retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
 				Product product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
 				product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
 				product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명

@@ -63,8 +63,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	@Autowired
 	private ProductInfoManager productInfoManager;
 
-	@Autowired
-	private MemberBenefitService memberBenefitService;
+//	@Autowired
+//	private MemberBenefitService memberBenefitService;
 
 	@Autowired
 	private ProductSubInfoManager subInfoManager;
@@ -76,8 +76,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		me.setAvgEvluScore(productStats.getAverageScore());
 		me.setPrchsCnt(productStats.getPurchaseCount());
 
-		me.setMileageInfo(this.memberBenefitService.getMileageInfo(tenantId, me.getTopMenuId(), me.getProdId(),
-				me.getProdAmt()));
+//		me.setMileageInfo(this.memberBenefitService.getMileageInfo(tenantId, me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
 	}
 
 	/*

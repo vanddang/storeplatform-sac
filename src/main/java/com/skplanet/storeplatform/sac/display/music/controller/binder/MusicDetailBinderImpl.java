@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.music.controller.binder;
 
+import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
@@ -72,7 +73,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
                 Identifier identifier = new Identifier();
                 identifier.setType(META_CLS_TO_PROD_TYPE.get(relatedProduct.getMetaClsfCd()));
                 identifier.setText(relatedProduct.getProdId());
-                identifier.setPrice(relatedProduct.getProdAmt());
+                identifier.setPrice(relatedProduct.getProdAmt());   // TODO check
                 music.getRelatedProductList().add(identifier);
             }
         }
@@ -96,18 +97,12 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
     }
 
     @Override
-    public void mapMenu(Product product, List<MenuItem> menuList) {
-        product.setMenuList(new ArrayList<Menu>());
-        if(menuList != null && menuList.size() > 0) {
-            int lastMenuIdx = 0, topMenuIdx = menuList.size() - 1;
-            MenuItem lastMenu = menuList.get(lastMenuIdx);
-            MenuItem topMenu = menuList.get(topMenuIdx);
-
-            product.getMenuList().add(new Menu(topMenu.getMenuId(), topMenu.getMenuNm(), "topClass"));
-            product.getMenuList().add(new Menu(lastMenu.getMenuId(), lastMenu.getMenuNm(), null));
-        }
-
-        product.getMenuList().add(new Menu("CT25", "mp3", "metaClass"));
+    public void mapMenu(Product product, MusicDetail musicDetail) {
+        product.setMenuList(Lists.newArrayList(
+                new Menu(musicDetail.getTopMenuId(), musicDetail.getTopMenuNm(), "topClass"),
+                new Menu(musicDetail.getMenuId(), musicDetail.getMenuNm(), null),
+                new Menu("CT25", "mp3", "metaClass")
+                ));
     }
 
     @Override

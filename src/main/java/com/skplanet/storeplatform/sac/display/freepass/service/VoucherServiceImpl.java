@@ -371,6 +371,7 @@ public class VoucherServiceImpl implements VoucherService {
 							if (pointList == null)
 								pointList = new ArrayList<Point>();
 							String userGrade = userGradeInfo.getUserGradeCd();
+                            // TODO topMenuId -> menuId 작업 안함
 							MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
 									metaInfo.getTopMenuId(), req.getChannelId(), metaInfo.getProdAmt());
 							mileageInfo = this.benefitService.checkFreeProduct(mileageInfo, metaInfo.getProdAmt());

@@ -66,8 +66,8 @@ public class BestAppServiceImpl implements BestAppService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	@Autowired
-    private MemberBenefitService benefitService;
+//	@Autowired
+//    private MemberBenefitService benefitService;
 	
 	/**
 	 * 
@@ -171,8 +171,8 @@ public class BestAppServiceImpl implements BestAppService {
 
                     MetaInfo meta = metaInfoService.getAppMetaInfo(req);
                     //Tstore멤버십 적립율 정보
-                    MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), meta.getMenuId(), meta.getProdId(), meta.getProdAmt());
-                    meta.setMileageInfo(mileageInfo);
+//                    MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), meta.getMenuId(), meta.getProdId(), meta.getProdAmt());
+//                    meta.setMileageInfo(mileageInfo);
 
                     return responseInfoGenerateFacade.generateAppProduct(meta);
                 }

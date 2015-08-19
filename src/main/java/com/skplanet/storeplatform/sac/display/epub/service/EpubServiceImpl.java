@@ -546,7 +546,7 @@ public class EpubServiceImpl implements EpubService {
                     prodAmt = mapperVO.getStoreProdAmt();
                 else if(mapperVO.getPlayProdAmt() != null && mapperVO.getPlayProdAmt() > 0)
                      prodAmt = mapperVO.getPlayProdAmt();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(mapperVO.getTenantId(), mapperVO.getTopMenuId(), mapperVO.getProdId(), prodAmt);
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(mapperVO.getTenantId(), mapperVO.getMenuId(), mapperVO.getProdId(), prodAmt);
 	        	mileageInfo = benefitService.checkFreeProduct(mileageInfo, prodAmt);
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}

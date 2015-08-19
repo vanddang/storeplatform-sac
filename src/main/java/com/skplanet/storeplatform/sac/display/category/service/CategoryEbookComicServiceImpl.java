@@ -55,8 +55,8 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	@Autowired
-    private MemberBenefitService memberBenefitService;
+//	@Autowired
+//    private MemberBenefitService memberBenefitService;
 	
 	/**
 	 * 
@@ -147,7 +147,7 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 
 				if (retMetaInfo != null) {
 					// Tstore멤버십 적립율 정보
-					retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
+//					retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), retMetaInfo.getMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
                 	
 					if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
 						Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);

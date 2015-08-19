@@ -16,9 +16,6 @@ public class AppDetail extends CommonInfo {
     private String prodNm;
     private Integer fixedAmt;
     private Integer prodAmt;
-    private Double avgEvluScore;
-    private Integer dwldCnt;
-    private Integer paticpersCnt;
     private String aid;
     private String apkPkgNm;
     private String apkVer;
@@ -41,6 +38,9 @@ public class AppDetail extends CommonInfo {
     private String descVideoUrl;
     private String partParentClsfCd;
     private String topMenuId;
+    private String menuId;
+    private String menuNm;
+    private String menuDesc;
     private String likeYn;
 
     public String getPartParentClsfCd() {
@@ -179,30 +179,6 @@ public class AppDetail extends CommonInfo {
         this.prodAmt = prodAmt;
     }
 
-    public Double getAvgEvluScore() {
-        return avgEvluScore;
-    }
-
-    public void setAvgEvluScore(Double avgEvluScore) {
-        this.avgEvluScore = avgEvluScore;
-    }
-
-    public Integer getDwldCnt() {
-        return dwldCnt;
-    }
-
-    public void setDwldCnt(Integer dwldCnt) {
-        this.dwldCnt = dwldCnt;
-    }
-
-    public Integer getPaticpersCnt() {
-        return paticpersCnt;
-    }
-
-    public void setPaticpersCnt(Integer paticpersCnt) {
-        this.paticpersCnt = paticpersCnt;
-    }
-
     public String getAid() {
         return aid;
     }
@@ -289,5 +265,29 @@ public class AppDetail extends CommonInfo {
 
     public void setLikeYn(String likeYn) {
         this.likeYn = likeYn;
+    }
+
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
+
+    public String getMenuNm() {
+        return menuNm;
+    }
+
+    public void setMenuNm(String menuNm) {
+        this.menuNm = menuNm;
+    }
+
+    public String getMenuDesc() {
+        return menuDesc;
+    }
+
+    public void setMenuDesc(String menuDesc) {
+        this.menuDesc = menuDesc;
     }
 }

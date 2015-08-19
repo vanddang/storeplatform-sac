@@ -567,9 +567,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 				SalesOption salesOption = this.shoppingGenerator.generateSalesOption(shopping);
 
 				// Tstore멤버십 적립율 정보
-				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
-						shopping.getTopMenuId(), shopping.getProdId(), shopping.getProdAmt());
-				List<Point> pointList = this.commonGenerator.generateMileage(mileageInfo);
+//				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
+//						shopping.getTopMenuId(), shopping.getProdId(), shopping.getProdAmt());
+//				List<Point> pointList = this.commonGenerator.generateMileage(mileageInfo);
 
 				// 데이터 매핑
 				product.setMenuList(menuList);
@@ -581,7 +581,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setContributor(contributor);
 				product.setSalesOption(salesOption);
 				product.setSpecialProdYn(shopping.getSpecialSale()); // 특가 상품 일 경우
-				product.setPointList(pointList); // Tstore멤버십 적립율
+//				product.setPointList(pointList); // Tstore멤버십 적립율
 				totalCount = shopping.getTotalCount();
 				productList.add(i, product);
 			}
@@ -974,16 +974,16 @@ public class ShoppingServiceImpl implements ShoppingService {
 				List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
 
 				// Tstore멤버십 적립율 정보
-				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
-						shopping.getTopMenuId(), shopping.getProdId(), shopping.getProdAmt());
-				List<Point> pointList = this.commonGenerator.generateMileage(mileageInfo);
+//				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
+//						shopping.getTopMenuId(), shopping.getProdId(), shopping.getProdAmt());
+//				List<Point> pointList = this.commonGenerator.generateMileage(mileageInfo);
 
 				// 데이터 매핑
 				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
 				product.setTitle(title);
 				product.setSourceList(sourceList);
-				product.setPointList(pointList); // Tstore멤버십 적립율
+//				product.setPointList(pointList); // Tstore멤버십 적립율
 
 				productList.add(i, product);
 				commonResponse.setTotalCount(shopping.getTotalCount());
@@ -2617,9 +2617,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 				SalesOption salesOption = this.shoppingGenerator.generateSalesOption(shopping);
 
 				// Tstore멤버십 적립율 정보
-				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
-						shopping.getTopMenuId(), shopping.getProdId(), shopping.getProdAmt());
-				List<Point> pointList = this.commonGenerator.generateMileage(mileageInfo);
+//				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
+//						shopping.getTopMenuId(), shopping.getProdId(), shopping.getProdAmt());
+//				List<Point> pointList = this.commonGenerator.generateMileage(mileageInfo);
 
 				// 데이터 매핑
 				product.setMenuList(menuList);
@@ -2631,7 +2631,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setContributor(contributor);
 				product.setSalesOption(salesOption);
 				product.setSpecialProdYn(shopping.getSpecialSale()); // 특가 상품 일 경우
-				product.setPointList(pointList); // Tstore멤버십 적립율
+//				product.setPointList(pointList); // Tstore멤버십 적립율
 				totalCount = shopping.getTotalCount();
 				productList.add(i, product);
 			}

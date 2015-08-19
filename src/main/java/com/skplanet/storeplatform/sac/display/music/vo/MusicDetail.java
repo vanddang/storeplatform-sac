@@ -12,6 +12,11 @@ public class MusicDetail extends CommonInfo {
 
     private String chnlId;
     private String epsdId;
+    private String topMenuId;
+    private String topMenuNm;
+    private String menuId;
+    private String menuNm;
+    private String menuDesc;
     private String albumId;
     private int prodAmt;
     private String prodNm;
@@ -351,5 +356,45 @@ public class MusicDetail extends CommonInfo {
 
     public void setSellerMbrNo(String sellerMbrNo) {
         this.sellerMbrNo = sellerMbrNo;
+    }
+
+    public String getTopMenuId() {
+        return topMenuId;
+    }
+
+    public void setTopMenuId(String topMenuId) {
+        this.topMenuId = topMenuId;
+    }
+
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
+
+    public String getMenuNm() {
+        return menuNm;
+    }
+
+    public void setMenuNm(String menuNm) {
+        this.menuNm = menuNm;
+    }
+
+    public String getMenuDesc() {
+        return menuDesc;
+    }
+
+    public void setMenuDesc(String menuDesc) {
+        this.menuDesc = menuDesc;
+    }
+
+    public String getTopMenuNm() {
+        return topMenuNm;
+    }
+
+    public void setTopMenuNm(String topMenuNm) {
+        this.topMenuNm = topMenuNm;
     }
 }

@@ -18,7 +18,6 @@ public class MusicDetailComposite extends CommonInfo {
     private static final long serialVersionUID = 1L;
     
     private MusicDetail musicDetail;
-    private List<MenuItem> menuList;
     private List<SubContent> contentList;
     private List<RelatedProduct> relatedProductList;
     private List<Point> pointList;
@@ -29,14 +28,6 @@ public class MusicDetailComposite extends CommonInfo {
 
     public void setMusicDetail(MusicDetail musicDetail) {
         this.musicDetail = musicDetail;
-    }
-
-    public List<MenuItem> getMenuList() {
-        return menuList;
-    }
-
-    public void setMenuList(List<MenuItem> menuList) {
-        this.menuList = menuList;
     }
 
     public List<SubContent> getContentList() {

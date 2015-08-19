@@ -60,8 +60,8 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 	@Autowired
 	private CategorySpecificProductInfoManager metaInfoService;
 
-	@Autowired
-    private MemberBenefitService memberBenefitService;
+//	@Autowired
+//    private MemberBenefitService memberBenefitService;
 	
 	/*
 	 * (non-Javadoc)
@@ -139,7 +139,7 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
                         */
 
                     // Tstore멤버십 적립율 정보
-                    metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+//                    metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
 
                     if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
                         product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);

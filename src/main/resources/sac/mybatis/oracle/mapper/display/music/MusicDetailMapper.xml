@@ -7,6 +7,11 @@
         SELECT <![CDATA[/* MusicDetailMapper.xml, getMusicDetail, SAC : 정희원 , 2014-01-24 */
             CPD.PROD_ID AS CHNL_ID,
             EPD.PROD_ID AS EPSD_ID,
+            CPD.TOP_MENU_ID,
+            (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC TMD WHERE TMD.MENU_ID=CPD.TOP_MENU_ID AND TMD.LANG_CD=PDESC.LANG_CD) AS TOP_MENU_NM,
+            MD.MENU_ID,
+            MD.MENU_NM,
+            MD.MENU_DESC,
             AL_RS.PROD_ID AS ALBUM_ID,
             TPRC.PROD_AMT,
             PDESC.PROD_NM,
@@ -70,6 +75,10 @@
                 ON CTP.PROD_ID = CPD.PROD_ID
             INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
                 ON TPRC.PROD_ID = EPD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+            INNER JOIN TB_DP_MENU_CATEGORY_PROD_MAPG MCM
+                ON MCM.PROD_ID = CPD.PROD_ID
+            INNER JOIN TB_DP_MENU_CATEGORY_DESC MD
+                ON MD.MENU_ID = MCM.MENU_ID
             LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
                 ON TS.PROD_ID = CPD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
             LEFT OUTER JOIN TB_DP_PROD_RSHP AL_RS
@@ -82,6 +91,9 @@
         WHERE CPD.META_CLSF_CD = 'CT25'
               AND CPD.CONTENTS_TYPE_CD = 'PD002501'
               AND EPD.CONTENTS_TYPE_CD = 'PD002502'
+              AND MCM.USE_YN = 'Y'
+              AND MCM.BASE_YN = 'Y'
+              AND MD.LANG_CD = PDESC.LANG_CD
               AND RS.PROD_RSHP_CD = 'DP010802'
               --AND AL_RS.PROD_RSHP_CD = 'DP010804'
               AND EPD.META_CLSF_CD = 'CT25'

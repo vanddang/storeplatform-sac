@@ -85,11 +85,9 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 					DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
 		}
 
-		// ################################################################################
-		// 상품 기본 정보 List 조회
+        // 상품 기본정보 목록 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-				"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
-		// ################################################################################
+                                "CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
 
 		if (productBasicInfoList != null) {
 			Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -102,8 +100,8 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 				String topMenuId = productBasicInfo.getTopMenuId();
 				String svcGrpCd = productBasicInfo.getSvcGrpCd();
 				String contentsTypeCd = productBasicInfo.getContentsTypeCd();
-				String prodId = contentsTypeCd.equals(DP_CHANNEL_CONTENT_TYPE_CD) ? productBasicInfo.getProdId() : productBasicInfo
-						.getPartProdId();
+				String prodId = contentsTypeCd.equals(DP_CHANNEL_CONTENT_TYPE_CD) ?
+                                        productBasicInfo.getProdId() : productBasicInfo.getPartProdId();
 				paramMap.put("prodId", prodId);
 				paramMap.put("contentsTypeCd", productBasicInfo.getContentsTypeCd());
 
@@ -125,29 +123,18 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 							|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
 						this.log.debug("##### Search for Vod specific product");
 
-						// #############################################################################
-						// VOD 메타정보조회
-						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo", paramMap,
-								MetaInfo.class);
+                        // 개별 VOD 메타 데이터 조회
+						metaInfo = this.commonDAO.queryForObject(
+                                "CategorySpecificProduct.getVODMetaInfo", paramMap, MetaInfo.class);
 						// metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
-						// #############################################################################
 
 						if (metaInfo == null)
 							continue;
 
-						// #####################################################################
-						// CID를 이용하여 상품의 가격을 조회
-						CidPrice cidPrice = this.productSubInfoManager.getCidPrice(langCd, tenantId,
-								metaInfo.getEpsdCid());
-						// #####################################################################
-						if (cidPrice != null) {
-							metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
-							metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());
-						}
+                        mapPriceByCid(tenantId, langCd, metaInfo);
 
-						// Tstore멤버십 적립율 정보
-						metaInfo.setMileageInfo(this.memberBenefitService.getMileageInfo(header.getTenantHeader()
-								.getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+						// Tstore멤버십 적립율 정보 지정
+						metaInfo.setMileageInfo(this.memberBenefitService.getMileageInfo(tenantId, metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
 
 						// Generate
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
@@ -167,5 +154,19 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 		res.setProductList(productList);
 		return res;
 	}
+
+    /**
+     * CID에 해당하는 에피소드 가격 정보를 매핑한다.
+     * @param tenantId
+     * @param langCd
+     * @param metaInfo
+     */
+    private void mapPriceByCid(String tenantId, String langCd, MetaInfo metaInfo) {
+        CidPrice cidPrice = this.productSubInfoManager.getCidPrice(langCd, tenantId, metaInfo.getEpsdCid());
+        if (cidPrice != null) {
+            metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
+            metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());
+        }
+    }
 
 }

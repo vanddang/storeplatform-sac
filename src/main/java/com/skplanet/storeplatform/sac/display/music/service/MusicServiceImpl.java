@@ -77,9 +77,6 @@ public class MusicServiceImpl implements MusicService {
         if(musicDetail.getMusicSprtYn().equals("N"))
             throw new StorePlatformException("SAC_DSP_0012", param.getDeviceModelCd());
 
-        // 메뉴 목록 조회
-		List<MenuItem> menuList = this.commonService.getMenuItemList(param.getChannelId(), param.getLangCd());
-
         // 서브컨텐트 조회
 		List<SubContent> contentList = this.commonDAO.queryForList("MusicDetail.getSubContentList",
 				musicDetail.getEpsdId(), SubContent.class);
@@ -91,11 +88,8 @@ public class MusicServiceImpl implements MusicService {
         relProdListReq.put("tenantId", param.getTenantId());
         List<RelatedProduct> relProdList = this.commonDAO.queryForList("MusicDetail.getRelatedProductList", relProdListReq, RelatedProduct.class);
 
-        
-        String topMenuId = menuList.get(0).getTopMenuId();
-
         //tmembership 할인율
-        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), topMenuId);
+        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), musicDetail.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
         //Tstore멤버십 적립율 정보
         if (StringUtils.isNotEmpty(param.getUserKey())) {
@@ -104,18 +98,15 @@ public class MusicServiceImpl implements MusicService {
         	if(userGradeInfo != null) {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(param.getTenantId(), topMenuId, param.getChannelId(), musicDetail.getProdAmt());
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(param.getTenantId(), musicDetail.getMenuId(), param.getChannelId(), musicDetail.getProdAmt());
 	        	mileageInfo = benefitService.checkFreeProduct(mileageInfo, musicDetail.getProdAmt());
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
         }
         if(pointList.size() > 0)
             detailComposite.setPointList(pointList);
-        
-        
-        
+
         detailComposite.setMusicDetail(musicDetail);
-		detailComposite.setMenuList(menuList);
 		detailComposite.setContentList(contentList);
         detailComposite.setRelatedProductList(relProdList);
 

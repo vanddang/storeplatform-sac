@@ -47,8 +47,8 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 	
-	@Autowired
-    private MemberBenefitService memberBenefitService;
+//	@Autowired
+//    private MemberBenefitService memberBenefitService;
 
 	/*
 	 * (non-Javadoc)
@@ -114,7 +114,7 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
                     if (metaInfo != null) {
                     	
                     	// Tstore멤버십 적립율 정보
-                    	metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+//                    	metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
                     	
                         product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
                         productList.add(product);

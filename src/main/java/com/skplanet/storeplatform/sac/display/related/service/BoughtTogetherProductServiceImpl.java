@@ -70,8 +70,8 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 	@Autowired
 	private BoughtTogetherProductDataService dataSvc; // Data를 조회하기 위한 Service
 
-	@Autowired
-	private MemberBenefitService benefitService; // 마일리지, 할인율 등 사용자 혜택 정보 조회 Service
+//	@Autowired
+//	private MemberBenefitService benefitService; // 마일리지, 할인율 등 사용자 혜택 정보 조회 Service
 
 	/**
 	 * 
@@ -168,8 +168,8 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 
 						// Tstore멤버십 적립율 정보
 						// 음악 상세화면에서 이 상품과 함께 구매한 상품 진입, 다운로드가 완료된 경우 상품가격영역에 멤버십 적립율이 노출. #22048 2014.09.23
-						MileageInfo mileageInfo = this.benefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt());
-						retMetaInfo.setMileageInfo(mileageInfo);
+//						MileageInfo mileageInfo = this.benefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt());
+//						retMetaInfo.setMileageInfo(mileageInfo);
 
 						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
 						product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
@@ -289,8 +289,8 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 
 						// Tstore멤버십 적립율 정보
 						// 음악 상세화면에서 이 상품과 함께 구매한 상품 진입, 다운로드가 완료된 경우 상품가격영역에 멤버십 적립율이 노출. #22048 2014.09.23
-						MileageInfo mileageInfo = this.benefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt());
-						retMetaInfo.setMileageInfo(mileageInfo);
+//						MileageInfo mileageInfo = this.benefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt());
+//						retMetaInfo.setMileageInfo(mileageInfo);
 
 						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
 						product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
