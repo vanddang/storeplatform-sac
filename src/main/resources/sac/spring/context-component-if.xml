@@ -34,10 +34,15 @@
 		</constructor-arg>
         <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
         <property name="errorHandler">
-            <bean class="com.skplanet.storeplatform.framework.web.bind.StorePlatformResponseErrorHandler">
+        	<!-- 에러 처리에 문제가 생기면 아래 설정 주석 처리 -->
+            <bean class="com.skplanet.storeplatform.framework.web.bind.RemoteSciResponseErrorHandler">
+                <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
+            </bean>
+            <!-- 에러 처리에 문제가 생기면 아래 설정 원복 처리 --> 
+            <!-- bean class="com.skplanet.storeplatform.framework.web.bind.StorePlatformResponseErrorHandler">
                 <property name="componentId" value="${componentId}" />
                 <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
-            </bean> 
+            </bean --> 
         </property>
     </bean>  
     
