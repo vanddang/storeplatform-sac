@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformXssInval
  */
 
 @Controller
-@RequestMapping(value = "/example/excetpion")
+@RequestMapping(value = "/example/exception")
 public class ExceptionSampleController {
 	
 	@RequestMapping(value = "/business")
