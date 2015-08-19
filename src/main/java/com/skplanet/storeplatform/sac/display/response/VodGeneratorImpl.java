@@ -207,6 +207,11 @@ public class VodGeneratorImpl implements VodGenerator {
                 store.getSupportList().add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
         }
 
+        if(metaInfo.getUnlmtAmt() != null)
+            play.setPrice(new Price(metaInfo.getUnlmtAmt()));
+        if(metaInfo.getPeriodAmt() != null)
+            play.setPrice(new Price(metaInfo.getPeriodAmt()));
+
 		rights.setPlay(play);
 		rights.setStore(store);
 		rights.setGrade(metaInfo.getProdGrdCd());
