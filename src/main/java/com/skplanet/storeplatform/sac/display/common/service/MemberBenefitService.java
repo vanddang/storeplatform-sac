@@ -23,25 +23,17 @@ public interface MemberBenefitService {
      * 마일리지 적립율 정보를 조회한다.
      * 상품에 맞는 정보를 찾고 없으면 해당 카테고리의 정보를 응답해준다.
      * @param tenantId		Tenant Id
-     * @param topMenuId		Top Menu ID
+     * @param menuId		topMenuId 또는 2-Depth menuId
      * @param chnlId 		채널ID
-     * @param prodAmt		상품 가격 (예외 상품이 아닌 경우 무료 상품은 적립율을 노출하지 않는다.) 
+     * @param prodAmt		상품 가격 (예외 상품이 아닌 경우 무료 상품은 적립율을 노출하지 않는다.)
      * @return 마일리지 적립율 정보
      */
-    MileageInfo getMileageInfo(String tenantId, String topMenuId, String chnlId, Integer prodAmt);
+    MileageInfo getMileageInfo(String tenantId, String menuId, String chnlId, Integer prodAmt);
 
     /**
-     * 마일리지 적립율 정보를 조회한다.
-     * @param tenantId 테넌트ID
-     * @param menuId topMenuId 또는 2 depth menuId를 입력한다.
-     * @param chnlId 상품 채널ID
-     * @return 마일리지 적립율. 조건에 맞는 정보를 찾지 못한 경우에는 기본값(0)이 응답된다.
-     */
-    MileageInfo getMileageInfo(String tenantId, String menuId, String chnlId);
-
-	/**
 	 * 마일리지 적립율 무료 상품 여부 체크
 	 * @param mileageInfo
+	 * @param prodAmt
 	 */
     MileageInfo checkFreeProduct(MileageInfo mileageInfo, Integer prodAmt);
 
