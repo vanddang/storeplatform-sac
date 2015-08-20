@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.display.PromotionEventAccessor;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonRawValue;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -31,7 +32,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Product extends CommonInfo implements Serializable {
+public class Product extends CommonInfo implements Serializable, PromotionEventAccessor {
 	private static final long serialVersionUID = 1L;
 
 	/**
