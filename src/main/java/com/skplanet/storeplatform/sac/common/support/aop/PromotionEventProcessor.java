@@ -13,8 +13,11 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.PromotionEventAccessor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -69,14 +72,19 @@ public class PromotionEventProcessor {
         if(!checkServiceAvailable())
             return;
 
-        List<Product> productListTarget = extractTarget(retVal);
+        List productListTarget = extractTarget(retVal);
         String tenantId = getTenantId();
 
-        for (Product product : productListTarget) {
-
-            if(containsPromotionInfo(product.getPointList()))
+        for (Object item : productListTarget) {
+            if(!(item instanceof PromotionEventAccessor))
                 continue;
 
+            PromotionEventAccessor product = (PromotionEventAccessor) item;
+
+            if (containsPromotionInfo(product.getPointList()))
+                continue;
+
+            // 이용권은 식별자가 freepass라는 이름으로 되어 있음
             Map<String, String> idMap = convertIdentifierList(product.getIdentifierList());
 
             String chnlId = idMap.get("channel");
@@ -87,27 +95,26 @@ public class PromotionEventProcessor {
 
                 String prodId = chnlId != null ? chnlId : idMap.get("episode");
 
-                if (Strings.isNullOrEmpty(prodId)) {
-                    logger.warn("유효한 상품 식별자가 존재하지 않습니다.");
-                    continue;
+                if (!Strings.isNullOrEmpty(prodId)) {
+                    logger.debug("유효한 상품 식별자가 존재하지 않습니다.");
+                    ProductBaseInfo productBaseInfo = cachedExtraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(prodId));
+
+                    if (productBaseInfo == null) {
+                        logger.warn("#{} 상품은 존재하지 않습니다.", prodId);
+                        continue;
+                    }
+                    chnlId = productBaseInfo.getChnlId();
+                    // TODO menuId = productBaseInfo.getMenuId();
                 }
 
-                ProductBaseInfo productBaseInfo = cachedExtraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(prodId));
-
-                if (productBaseInfo == null) {
-                    logger.warn("#{} 상품은 존재하지 않습니다.", prodId);
+                if(Strings.isNullOrEmpty(chnlId) && Strings.isNullOrEmpty(menuId))
                     continue;
-                }
-
-                chnlId = productBaseInfo.getChnlId();
-                // TODO menuId = productBaseInfo.getMenuId();
             }
 
             // 매핑된 메뉴ID를 찾을 수 없더라도 상품ID로 시도한다.
-            if(Strings.isNullOrEmpty(menuId)) {
+            if (Strings.isNullOrEmpty(menuId)) {
                 logger.warn("#{}는 유효한 메뉴ID매핑을 찾을 수 없습니다.", chnlId != null ? chnlId : idMap.get("episode"));
             }
-
 
             // attach promotion event
             PromotionEvent promotionEvent = cachedExtraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId));
@@ -130,16 +137,15 @@ public class PromotionEventProcessor {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Product> extractTarget(Object retVal) {
+    private List extractTarget(Object retVal) {
         Class<?> aClass = retVal.getClass();
 
         try {
             Field productListFld = aClass.getDeclaredField("productList");
             productListFld.setAccessible(true);
             Object value = productListFld.get(retVal);
-            if(value instanceof List) {
-                return (List<Product>) value;
-            }
+            if(value != null)
+                return (List)value;
 
         } catch (Exception e) {
             logger.debug("productList 필드를 찾을 수 없음.", e);
@@ -190,10 +196,13 @@ public class PromotionEventProcessor {
     private String extractMenu(List<Menu> obj) {
         String topMenuId = null;
         for (Menu menu : obj) {
+            if(menu.getId() == null)
+                continue;
+
             if (menu.getId().startsWith("DP") && menu.getType() == null)
                 return menu.getId();
 
-            if (menu.getType().equals("topClass"))
+            if ("topClass".equals(menu.getType()))
                 topMenuId = menu.getId();
         }
 
