@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -469,24 +470,26 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			rights.setPlay(this.generatePlay(metaInfo));
 		}
 
-        if("Y".equals(metaInfo.getSupportStore()) && StringUtils.isNotEmpty(metaInfo.getStoreDrmYn())) {
+        if("Y".equals(metaInfo.getSupportStore())) {
+            rights.setStore(Objects.firstNonNull(rights.getStore(), new Store()));
             Store store = rights.getStore();
-            if(store == null) {
-                store = new Store();
-                rights.setStore(store);
+            if(StringUtils.isNotEmpty(metaInfo.getStoreDrmYn())) {
+                store.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn())));
             }
-
-            store.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn())));
+            if(metaInfo.getUnlmtAmt() != null) {
+                store.setPrice(new Price(metaInfo.getUnlmtAmt()));
+            }
         }
 
-        if("Y".equals(metaInfo.getSupportPlay()) && StringUtils.isNotEmpty(metaInfo.getPlayDrmYn())) {
+        if("Y".equals(metaInfo.getSupportPlay())) {
+            rights.setPlay(Objects.firstNonNull(rights.getPlay(), new Play()));
             Play play = rights.getPlay();
-            if(play == null) {
-                play = new Play();
-                rights.setPlay(play);
+            if (StringUtils.isNotEmpty(metaInfo.getPlayDrmYn())) {
+                play.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn())));
             }
-
-            play.setSupportList(Lists.newArrayList(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn())));
+            if (metaInfo.getPeriodAmt() != null) {
+                play.setPrice(new Price(metaInfo.getPeriodAmt()));
+            }
         }
 
 		return rights;
