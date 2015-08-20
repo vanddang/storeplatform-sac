@@ -10,6 +10,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.support.aop.PromotionEventManager;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
@@ -91,7 +92,10 @@ public class DeviceProductProvisioningServiceImpl implements DeviceProductProvis
 		commonResponse.setTotalCount(productList.size());
 		res.setCommonResponse(commonResponse);
 		res.setProductList(productList);
-		return res;
+
+        PromotionEventManager.disableProcessEvent();
+
+        return res;
 	}
 
 }

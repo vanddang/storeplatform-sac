@@ -69,7 +69,10 @@ public class PromotionEventProcessor {
      */
     public void postProcess(Object retVal) {
 
-        if(!checkServiceAvailable())
+//        if(!checkServiceAvailable())
+//            return;
+
+        if(!PromotionEventManager.isRun())
             return;
 
         List productListTarget = extractTarget(retVal);
@@ -179,6 +182,10 @@ public class PromotionEventProcessor {
      */
     private Map<String, String> convertIdentifierList(List<Identifier> obj) {
         Map<String, String> res = Maps.newHashMap();
+
+        if(CollectionUtils.isEmpty(obj))
+            return res;
+
         for (Identifier id : obj) {
             String type = id.getType();
             if("channel".equals(type) || "episode".equals(type))
@@ -194,6 +201,9 @@ public class PromotionEventProcessor {
      * @return 2Depth or 1Depth 메뉴. 유효한 것이 없는 경우 null
      */
     private String extractMenu(List<Menu> obj) {
+        if(CollectionUtils.isEmpty(obj))
+            return null;
+
         String topMenuId = null;
         for (Menu menu : obj) {
             if(menu.getId() == null)
