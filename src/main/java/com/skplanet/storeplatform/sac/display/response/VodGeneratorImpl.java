@@ -208,7 +208,7 @@ public class VodGeneratorImpl implements VodGenerator {
         }
 
         if(metaInfo.getUnlmtAmt() != null)
-            play.setPrice(new Price(metaInfo.getUnlmtAmt()));
+            store.setPrice(new Price(metaInfo.getUnlmtAmt()));
         if(metaInfo.getPeriodAmt() != null)
             play.setPrice(new Price(metaInfo.getPeriodAmt()));
 
