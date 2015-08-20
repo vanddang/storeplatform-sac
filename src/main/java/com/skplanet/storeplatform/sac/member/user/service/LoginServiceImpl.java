@@ -1698,21 +1698,25 @@ public class LoginServiceImpl implements LoginService {
 		tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2);
 		requestHeader.setTenantHeader(tenant);
 
+		String updLastLoginDtYn = null; // 마지막 로그인일자 업데이트 유무
 		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, tenantId)) {
 
 			LOGGER.info("{} Tstore 회원인증", req.getDeviceId());
 			res = this.getTstoreMemberInfoForInApp(requestHeader, req);
+			updLastLoginDtYn = MemberConstants.USE_Y;
 
 		} else {
 
 			LOGGER.info("{} 타사 마켓 회원인증", req.getDeviceId());
 			res = this.getMarketMemberInfoForInApp(requestHeader, req, tenantId);
+			updLastLoginDtYn = MemberConstants.USE_N;
 
 		}
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, res.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "", "N");
+			this.regLoginHistory(requestHeader, res.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "",
+					updLastLoginDtYn);
 		}
 
 		return res;
