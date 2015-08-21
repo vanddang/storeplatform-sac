@@ -1646,6 +1646,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	public TenantSalePolicy getExtraSalePolicy(String tenantId, String extraUnitCd) {
 		List<TenantSalePolicy> tenantSalePolicies = this.purchaseTenantPolicyService.searchTenantExtraSalePolicyList(
 				tenantId, extraUnitCd);
-		return tenantSalePolicies.get(0); // 정책은 첫번째 결과만 사용한다.
+		if(tenantSalePolicies.size()>0)
+			return tenantSalePolicies.get(0); // 정책은 첫번째 결과만 사용한다.
+		else
+			return null;
 	}
 }

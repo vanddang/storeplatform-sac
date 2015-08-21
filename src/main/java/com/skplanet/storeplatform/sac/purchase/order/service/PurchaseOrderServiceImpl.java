@@ -958,8 +958,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 시스템 점검중인 결제 수단 정보
 		TenantSalePolicy extraSalePolicy = this.purchaseOrderPolicyService.getExtraSalePolicy(verifyOrderInfo.getTenantId(), PurchaseConstants.POLICY_PATTERN_EXTRA_UNITCD_SUSPENSION);
-		res.setPurchaseSuspensionCd(extraSalePolicy.getApplyValue()); // 결제 점검중인 수단들
-		res.setPurchaseSuspensionMsg(extraSalePolicy.getExtraValue()); // 결제 점검중인 사유(메시지)
+		if(extraSalePolicy!=null){
+			res.setPurchaseSuspensionMsg(extraSalePolicy.getExtraValue()); // 결제 점검중인 사유(메시지)
+			res.setPurchaseSuspensionCd(extraSalePolicy.getApplyValue()); // 결제 점검중인 수단들
+		}
 
 		return res;
 	}
