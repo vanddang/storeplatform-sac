@@ -497,8 +497,8 @@
 				INNER JOIN TB_DP_BNR_IMG BI
 					ON BNR.TENANT_ID = BI.TENANT_ID AND BNR.BNR_MENU_ID = BI.BNR_MENU_ID AND
 					   BNR.BNR_SEQ = BI.BNR_SEQ
-				/* 이북,코믹,이북 보관함 이벤트 */
-				<if test='bnrMenuId=="DP010920" or bnrMenuId=="DP010921" or bnrMenuId=="DP010928"'>
+				/* 이북,코믹,이북 보관함 이벤트, VOD 보관함*/
+				<if test='bnrMenuId=="DP010920" or bnrMenuId=="DP010921" or bnrMenuId=="DP010928" or bnrMenuId=="DP010932" or bnrMenuId=="DP010933"'>
 				INNER JOIN TB_DP_BNR_DVC BD
 					ON BNR.TENANT_ID = BD.TENANT_ID AND BNR.BNR_MENU_ID = BD.BNR_MENU_ID AND
 					   BNR.BNR_SEQ = BD.BNR_SEQ
