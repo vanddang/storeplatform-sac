@@ -14,7 +14,12 @@ public class SacRestConvertingUtils {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T> T convertToData(String json, Class<T> responseType) {
+		if (responseType == String.class) {
+			return (T) json;
+		}
+		
 		T data;
 		try {
 			data = mapper.readValue(json, responseType);
