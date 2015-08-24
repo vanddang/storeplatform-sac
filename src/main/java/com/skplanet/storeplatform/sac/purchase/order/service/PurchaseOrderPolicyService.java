@@ -14,6 +14,8 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyResult;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
+import java.util.List;
+
 /**
  * 
  * 구매 제한정책 체크 서비스
@@ -198,5 +200,5 @@ public interface PurchaseOrderPolicyService {
 	 *            추가 조회 코드
 	 * @return 정책
 	 */
-	TenantSalePolicy getExtraSalePolicy(String tenantId, String extraUnitCd);
+	List<TenantSalePolicy> getExtraSalePolicy(String tenantId, String extraUnitCd);
 }

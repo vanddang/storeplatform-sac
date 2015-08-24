@@ -957,8 +957,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setBannerList(this.searchBannerList(prchsDtlMore));
 
 		// 시스템 점검중인 결제 수단 정보
-		TenantSalePolicy extraSalePolicy = this.purchaseOrderPolicyService.getExtraSalePolicy(verifyOrderInfo.getTenantId(), PurchaseConstants.POLICY_PATTERN_EXTRA_UNITCD_SUSPENSION);
-		if(extraSalePolicy!=null){
+		List<TenantSalePolicy> extraSalePolicyList = this.purchaseOrderPolicyService.getExtraSalePolicy(verifyOrderInfo.getTenantId(), PurchaseConstants.POLICY_PATTERN_EXTRA_UNITCD_SUSPENSION);
+		if(CollectionUtils.isNotEmpty(extraSalePolicyList)){
+			TenantSalePolicy extraSalePolicy = extraSalePolicyList.get(0); // 정책은 첫번째 결과만 사용한다.
 			res.setPurchaseSuspensionMsg(extraSalePolicy.getExtraValue()); // 결제 점검중인 사유(메시지)
 			res.setPurchaseSuspensionCd(extraSalePolicy.getApplyValue()); // 결제 점검중인 수단들
 		}

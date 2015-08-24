@@ -1643,12 +1643,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 정책
 	 */
 	@Override
-	public TenantSalePolicy getExtraSalePolicy(String tenantId, String extraUnitCd) {
-		List<TenantSalePolicy> tenantSalePolicies = this.purchaseTenantPolicyService.searchTenantExtraSalePolicyList(
+	public List<TenantSalePolicy> getExtraSalePolicy(String tenantId, String extraUnitCd) {
+		return this.purchaseTenantPolicyService.searchTenantExtraSalePolicyList(
 				tenantId, extraUnitCd);
-		if(tenantSalePolicies.size()>0)
-			return tenantSalePolicies.get(0); // 정책은 첫번째 결과만 사용한다.
-		else
-			return null;
 	}
 }
