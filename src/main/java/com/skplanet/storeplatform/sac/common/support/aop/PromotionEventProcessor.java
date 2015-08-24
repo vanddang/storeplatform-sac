@@ -13,13 +13,10 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.PromotionEventAccessor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
@@ -69,8 +66,8 @@ public class PromotionEventProcessor {
      */
     public void postProcess(Object retVal) {
 
-//        if(!checkServiceAvailable())
-//            return;
+        if(!checkServiceAvailable())
+            return;
 
         if(!PromotionEventManager.isRun())
             return;
@@ -151,7 +148,7 @@ public class PromotionEventProcessor {
                 return (List)value;
 
         } catch (Exception e) {
-            logger.debug("productList 필드를 찾을 수 없음.", e);
+            logger.trace("productList 필드를 찾을 수 없음.", e);
         }
 
         return Lists.newArrayList();

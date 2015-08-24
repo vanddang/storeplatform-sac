@@ -168,8 +168,7 @@ public class AppServiceImpl implements AppService {
         // Menu
         product.setMenuList(Lists.newArrayList(
                 new Menu(appDetail.getTopMenuId(), menuInfoService.getMenuName(appDetail.getTopMenuId(), param.getLangCd()), "topClass"),
-                new Menu(appDetail.getMenuId(), appDetail.getMenuNm(), appDetail.getMenuDesc())));
-
+                new Menu(appDetail.getMenuId(), appDetail.getMenuNm(), appDetail.getMenuDesc(), null)));
 
         //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), appDetail.getTopMenuId());
