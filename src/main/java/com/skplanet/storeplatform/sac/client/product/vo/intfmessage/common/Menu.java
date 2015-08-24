@@ -31,14 +31,18 @@ public class Menu extends CommonInfo implements Serializable {
 	private Source source; // 전시 메뉴의 graphic resource가 있을 경우 정의
 	private String desc; // 메뉴 설명
 
-	public Menu() {
-	}
+	public Menu() {}
 
 	public Menu(String id, String name, String type) {
-		this.id = id;
-		this.name = name;
-		this.type = type;
-	}
+        this(id, name, null, type);
+    }
+
+    public Menu(String id, String name, String desc, String type) {
+        this.id = id;
+        this.name = name;
+        this.desc = desc;
+        this.type = type;
+    }
 
 	public String getId() {
 		return this.id;
