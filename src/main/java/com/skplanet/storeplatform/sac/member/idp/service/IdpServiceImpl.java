@@ -3144,7 +3144,7 @@ public class IdpServiceImpl implements IdpService {
 										updateAgreementRequest.setUserKey(userKey);
 										updateAgreementRequest.setMbrClauseAgreeList(searchAgreementListResponse
 												.getMbrClauseAgreeList());
-										updateAgreementRequest.setIsDormant(searchUserResponse.getUserMbr()
+										updateAgreementRequest.setIsDormant(searchUserResponseByMdnInfo.getUserMbr()
 												.getIsDormant());
 										this.userSCI.updateAgreement(updateAgreementRequest);
 									}
