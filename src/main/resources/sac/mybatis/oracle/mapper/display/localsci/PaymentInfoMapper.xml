@@ -421,6 +421,8 @@
 	                          AND D.PROD_STATUS_CD = 'PD000403'         /*에피소드의 판매중인거만 수정*/
 	                          AND D.EXPO_YN='Y'
 	                          AND A.PROD_ID = PD.PROD_ID    
+                              AND (CASE WHEN CM.SERIES_BOOK_CLSF_CD IN ('DP004301','DP004305') THEN 'DP004301'
+                                        WHEN CM.SERIES_BOOK_CLSF_CD IN ('DP004302','DP004305') THEN 'DP004302' END )= C.BOOK_CLSF_CD	                          
 	                          AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
 	                       )
 	                    ELSE NULL END
@@ -432,16 +434,20 @@
 		                             MAX(C.CHAPTER) AS CHAPTER 
 	                                ,C.PROD_ID AS EPISODE_ID
 	                                ,A.PROD_ID 
-		                        FROM TB_DP_FIXRATE_PROD_MAPG A
+		                        FROM TB_DP_CMPX_PROD CP
+		                            ,TB_DP_FIXRATE_PROD_MAPG A
 		                            ,TB_DP_PROD_RSHP B
 		                            ,TB_DP_EBOOK_PROD C
 		                            ,TB_DP_TENANT_PROD D
-		                       WHERE A.PART_PROD_ID = B.PROD_ID
+		                       WHERE CP.PROD_ID =A.PROD_ID
+		                         AND A.PART_PROD_ID = B.PROD_ID
 		                         AND B.PART_PROD_ID = C.PROD_ID
 		                         AND C.PROD_ID = D.PROD_ID
 	                             AND D.TENANT_ID = #{tenantId} 
 	                             AND D.PROD_STATUS_CD = 'PD000403'         /*에피소드의 판매중인거만 수정*/		  
-	                             AND D.EXPO_YN='Y'                       
+	                             AND D.EXPO_YN='Y'     
+                                 AND (CASE WHEN CP.SERIES_BOOK_CLSF_CD IN ('DP004301','DP004305') THEN 'DP004301'
+                                           WHEN CP.SERIES_BOOK_CLSF_CD IN ('DP004302','DP004305') THEN 'DP004302' END )= C.BOOK_CLSF_CD                              
 		                         AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
 		                       GROUP BY C.PROD_ID ,A.PROD_ID
 		                      )AA
