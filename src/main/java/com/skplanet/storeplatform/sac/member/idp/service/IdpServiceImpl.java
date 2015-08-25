@@ -1572,7 +1572,9 @@ public class IdpServiceImpl implements IdpService {
 			if (isEmailAuth.equals(MemberConstants.USE_Y))
 				mbrOneID.setEntryStatusCode(MemberConstants.JOIN_STATUS_CODE_NORMAL);// 정상
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-			updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
+			if (searchUserResponse != null) {
+				updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
+			}
 			this.userSCI.createAgreeSite(updateMbrOneIDRequest); // check 20140424
 
 			LOGGER.debug("ONEID DATA MERGE COMPLETE");
