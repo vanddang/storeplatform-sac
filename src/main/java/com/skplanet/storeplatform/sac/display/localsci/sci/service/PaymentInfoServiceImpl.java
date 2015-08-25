@@ -13,6 +13,7 @@ import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetPromotionEventParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
+import com.skplanet.storeplatform.sac.display.localsci.sci.vo.MappedProduct;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.PaymentInfoContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -30,6 +31,8 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.ProductExtraInfoService;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
 
 /**
  * 결제 시 필요한 상품 메타 정보 조회 서비스 구현체.
@@ -314,8 +317,20 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     private void mapgPromotion(String tenantId, ProductBaseInfo baseInfo, PaymentInfo paymentInfo) {
 
         // IAP상품은 부모 상품으로, 그 외의 상품은 chnlId로 조회
-        String chnlId = baseInfo.isIapProduct() ? paymentInfo.getParentProdId() : baseInfo.getChnlId();
-        String menuId = StringUtils.defaultString(paymentInfo.getMenuId(), paymentInfo.getTopMenuId());
+        String chnlId = "", menuId = "";
+
+        // 이용권 상품이면서 "시리즈 전회차 상품"인 경우 매핑된 채널ID의 상품 정보를 조회하여 프로모션 정보를 조회한다.
+        if(paymentInfo.getCmpxProdClsfCd().equals(FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+            MappedProduct mappedProduct = commonDAO.queryForObject("PaymentInfo.getMappedProdByVoucher", paymentInfo.getProdId(), MappedProduct.class);
+            if(mappedProduct != null) {
+                chnlId = mappedProduct.getProdId();
+                menuId = mappedProduct.getMenuId();
+            }
+        }
+        else {
+            chnlId = baseInfo.isIapProduct() ? paymentInfo.getParentProdId() : baseInfo.getChnlId();
+            menuId = StringUtils.defaultString(paymentInfo.getMenuId(), paymentInfo.getTopMenuId());
+        }
 
         PromotionEvent event = extraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId));
 

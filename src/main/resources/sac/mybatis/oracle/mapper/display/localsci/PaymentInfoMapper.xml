@@ -498,5 +498,21 @@
 			WHERE CMPX_PROD_GRP_CD =#{dupPrchsLimtProdId}
     </select>
 
+    <select id="getMappedProdByVoucher" parameterType="String" resultType="com.skplanet.storeplatform.sac.display.localsci.sci.vo.MappedProduct">
+        SELECT /* PaymentInfoMapper.xml, getMappedProdByVoucher, 바우쳐에 매핑된 상품정보 조회, 정희원/SKP, 2015-08-25 */
+            CP.PROD_ID, MCM.MENU_ID, CP.TOP_MENU_ID
+        FROM TB_DP_PROD_RSHP RSHP
+            INNER JOIN TB_DP_PROD CP
+                ON CP.PROD_ID = RSHP.PART_PROD_ID
+            INNER JOIN TB_DP_MENU_CATEGORY_PROD_MAPG MCM
+                ON MCM.PROD_ID = CP.PROD_ID
+        where 1=1
+              AND RSHP.PROD_ID = #{id}
+              AND PROD_RSHP_CD = 'DP010803'
+              AND MCM.USE_YN = 'Y'
+              AND MCM.BASE_YN = 'Y'
+              AND ROWNUM = 1
+    </select>
+
     
 </mapper>
