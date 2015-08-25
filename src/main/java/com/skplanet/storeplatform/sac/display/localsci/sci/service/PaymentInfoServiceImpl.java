@@ -320,7 +320,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         String chnlId = "", menuId = "";
 
         // 이용권 상품이면서 "시리즈 전회차 상품"인 경우 매핑된 채널ID의 상품 정보를 조회하여 프로모션 정보를 조회한다.
-        if(paymentInfo.getCmpxProdClsfCd().equals(FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+        if(FIXRATE_PROD_TYPE_VOD_SERIESPASS.equals(paymentInfo.getCmpxProdClsfCd())) {
             MappedProduct mappedProduct = commonDAO.queryForObject("PaymentInfo.getMappedProdByVoucher", paymentInfo.getProdId(), MappedProduct.class);
             if(mappedProduct != null) {
                 chnlId = mappedProduct.getProdId();
