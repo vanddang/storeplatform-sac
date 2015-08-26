@@ -409,11 +409,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 						// 결제 실패 시 결제내역에 실패오류코드 저장
 						this.purchaseCancelRepository.updatePaymentError(purchaseCancelSacParam,
 								purchaseCancelDetailSacParam, "SAC_PUR_9999");
-						try {
-							throw e;
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
+
+                        throw new StorePlatformException("SAC_PUR_9999" , e);
+
 					}
 
 				} else {
@@ -434,16 +432,13 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 							throw e;
 						}
 					} catch (Exception e) {
-
 						// 결제 실패 시 결제내역에 실패오류코드 저장
 						this.purchaseCancelRepository.updatePaymentError(purchaseCancelSacParam,
 								purchaseCancelDetailSacParam, "SAC_PUR_9999");
-						try {
-							throw e;
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					}
+
+                        throw new StorePlatformException("SAC_PUR_9999" , e);
+
+                    }
 				}
 			}
 		}
