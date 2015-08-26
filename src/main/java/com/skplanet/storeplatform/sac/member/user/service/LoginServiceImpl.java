@@ -253,11 +253,6 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
-		/* 휴면계정인 경우 복구처리 */
-		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
-			this.recorverySleepUser(requestHeader, req.getDeviceId(), chkDupRes.getUserMbr());
-		}
-
 		/* 휴대기기 정보 조회 */
 		DeviceInfo dbDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
 				req.getDeviceId(), chkDupRes.getUserMbr().getUserKey());
@@ -276,12 +271,30 @@ public class LoginServiceImpl implements LoginService {
 							chkDupRes.getUserMbr().getImSvcNo());
 				}
 
+				/* 휴면계정인 경우 복구처리(OneID는 IDP복구후 DB복구) */
+				if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+					this.recorverySleepUser(requestHeader, req.getDeviceId(), chkDupRes.getUserMbr());
+				}
+
 			} else { /* 기존IDP회원 / 모바일회원인 경우 */
 
 				/* 무선회원 인증 */
 				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
 				authForWapEcReq.setUserMdn(req.getDeviceId());
 				this.idpSCI.authForWap(authForWapEcReq);
+
+				/* 휴면계정인 경우 복구 처리(authForWap으로 복구가 된 이후이므로 DB만 복구) */
+				if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+					LOGGER.info(
+							"{} 휴면 {} 회원 복구",
+							req.getDeviceId(),
+							StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE) ? "모바일" : "IDP ID");
+					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+					moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+					moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
+					this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+				}
 
 			}
 
@@ -458,11 +471,6 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
-		/* 휴면계정인 경우 복구처리 */
-		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
-			this.recorverySleepUser(requestHeader, req.getDeviceId(), chkDupRes.getUserMbr());
-		}
-
 		/* SKT인경우 개인정보 3자 제공 동의약관 동의여부 체크 */
 		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
 				&& !StringUtils.equals(this.isAgreementByAgreementCode(requestHeader, chkDupRes.getUserMbr()
@@ -521,12 +529,30 @@ public class LoginServiceImpl implements LoginService {
 							chkDupRes.getUserMbr().getImSvcNo());
 				}
 
+				/* 휴면계정인 경우 복구처리(OneID는 IDP복구후 DB복구) */
+				if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+					this.recorverySleepUser(requestHeader, req.getDeviceId(), chkDupRes.getUserMbr());
+				}
+
 			} else { /* 기존IDP회원 / 모바일회원인 경우 */
 
 				/* 무선회원 인증 */
 				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
 				authForWapEcReq.setUserMdn(req.getDeviceId());
 				this.idpSCI.authForWap(authForWapEcReq);
+
+				/* 휴면계정인 경우 복구 처리(authForWap으로 복구가 된 이후이므로 DB만 복구) */
+				if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+					LOGGER.info(
+							"{} 휴면 {} 회원 복구",
+							req.getDeviceId(),
+							StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE) ? "모바일" : "IDP ID");
+					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+					moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+					moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
+					this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+				}
 
 			}
 
