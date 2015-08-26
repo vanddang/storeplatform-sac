@@ -63,7 +63,7 @@ public class VodGeneratorImpl implements VodGenerator {
 		contributor.setDirector(metaInfo.getArtist2Nm()); // 감독
 		contributor.setCompany(metaInfo.getChnlCompNm()); // 제공업체
 		contributor.setAgency(metaInfo.getAgencyNm()); // 기획사
-		contributor.setChannel(metaInfo.getAgencyNm()); // 방송사
+		contributor.setChannel(metaInfo.getChnlCompNm()); // 방송사
 
 		return contributor;
 	}

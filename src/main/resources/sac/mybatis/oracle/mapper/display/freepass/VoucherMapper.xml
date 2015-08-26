@@ -305,6 +305,7 @@
                     , PD.TOP_MENU_ID
                     , NVL(PD.PLUS19_YN, 'N') AS PLUS19_YN       
                     , (SELECT AGENCY_NM FROM TB_DP_VOD_PROD MP WHERE MP.PROD_ID = FM.PART_PROD_ID) AS AGENCY_NM
+                    , (SELECT CHNL_COMP_NM FROM TB_DP_VOD_PROD MP WHERE MP.PROD_ID = FM.PART_PROD_ID) AS CHNL_COMP_NM                    
                 FROM
                       TB_DP_FIXRATE_PROD_MAPG FM
                     , TB_DP_PROD PD
