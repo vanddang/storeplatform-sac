@@ -584,7 +584,7 @@ public class DisplayConstants {
 	/**
 	 * 특정 상품 조회 API 파라미터 제한 개수.
 	 */
-	public static final Integer DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT = Integer.valueOf(50);
+	public static final Integer DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT = Integer.valueOf(100);
 
 	/**
 	 * 특정 상품 eBook 조회 API 파라미터 제한 개수.
