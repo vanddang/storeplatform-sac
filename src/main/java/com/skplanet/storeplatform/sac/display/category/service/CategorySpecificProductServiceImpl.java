@@ -229,6 +229,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
                         ((Product) product).setSpecialProdYn(metaInfo.getSpecialSale());
                         ((Product) product).setSpecialTypeCd(metaInfo.getSpecialTypeCd());
                     }
+                    ((Product) product).setProductExplain(metaInfo.getProdBaseDesc());
+                    ((Product) product).setProductDetailExplain(metaInfo.getProdDtlDesc());
                     break;
                 case Voucher:
                     product = responseGen.generateVoucherProduct(metaInfo);

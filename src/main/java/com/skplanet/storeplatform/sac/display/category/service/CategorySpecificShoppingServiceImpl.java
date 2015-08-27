@@ -131,6 +131,8 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
             product.setSpecialProdYn(retMetaInfo.getSpecialSale());
             product.setSpecialTypeCd(retMetaInfo.getSpecialTypeCd());
         }
+		product.setProductExplain(retMetaInfo.getProdBaseDesc());
+		product.setProductDetailExplain(retMetaInfo.getProdDtlDesc());
         res.setProduct(product);
         res.setCommonResponse(new CommonResponse(1));
 
