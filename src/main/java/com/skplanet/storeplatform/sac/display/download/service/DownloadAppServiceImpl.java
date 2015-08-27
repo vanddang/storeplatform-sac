@@ -143,7 +143,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		}
 
 		MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "",	MetaInfo.class);
-//		String sysDate = downloadSystemDate.getSysDate();
+		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
 		String purchaseDt = downloadSystemDate.getPurchaseDt();
 		Product product = new Product();
@@ -208,6 +208,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 						String prchsState = setPrchsState(historySacIn);
 						loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
+						if (supportService.resetExprDtOfGift(historySacIn, requestheader, downloadAppSacReq.getUserKey(), downloadAppSacReq.getDeviceKey(),
+								prchsProdId, sysDate, prchsState)) {
+							prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
+						}
 						addPurchaseIntoList(purchaseList, historySacIn, prchsState);
 						// 구매상태 만료 여부 확인
 						if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !permitDeviceYn.equals("Y")) {
