@@ -1592,9 +1592,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			productTenantRate.setUpdId("SAC_SHOPPING"); // 수정ID
 			productTenantRate.setUpdDt(modifiedDate); // 수정일시
 			
-			
 			productTenantRateList.add(productTenantRate);
-			
 			noti.setProductTenantRateList(productTenantRateList);
 			
 			
@@ -1701,9 +1699,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				productTenantRateVo.setUpdId("SAC_SHOPPING"); // 수정ID
 				productTenantRateVo.setUpdDt(modifiedDate); // 수정일시
 				
-				
 				productTenantRateList.add(productTenantRateVo);
-				
 				noti.setProductTenantRateList(productTenantRateList);				
 				
 				
