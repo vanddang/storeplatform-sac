@@ -243,6 +243,7 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 			// channel 및 catalog Id에 대한 update 실행
 			this.commonDAO.update("SpecialPurchaseCount.updateSpecialPurchaseCount", map);
 		}catch (Exception e){
+			e.printStackTrace();
 			flag =false;
 		}
 		return flag;
