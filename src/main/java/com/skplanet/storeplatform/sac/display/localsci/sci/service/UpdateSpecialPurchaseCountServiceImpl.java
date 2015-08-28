@@ -167,17 +167,18 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 
 		res.setProductId(req.getProductId());
 		res.setPurchaseId(req.getPurchaseId());
-
-		this.log.info("----------------------------------------------------------");
-		this.log.info("successFlag : {}", successFlag);
-		this.log.info("----------------------------------------------------------");
-
-		
+	
 		if(successFlag){
 			res.setPurchaseCountStatus("PD003700");
 		}else{
 			res.setPurchaseCountStatus("PD003701");
 		}
+		this.log.info("----------------------------------------------------------");
+		this.log.info("successFlag : {}", successFlag);
+		this.log.info("purchaseCountStatus : {}", res.getPurchaseCountStatus());
+		this.log.info("----------------------------------------------------------");
+		
+		
 		return res;
 	}
 
