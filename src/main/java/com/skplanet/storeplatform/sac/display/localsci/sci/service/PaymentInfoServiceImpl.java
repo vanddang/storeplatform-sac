@@ -178,7 +178,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             if (info.getDupPrchsLimtTypeCd().equals("PD013403")) {
                 paramMap.put("dupPrchsLimtProdId", info.getDupPrchsLimtProdId());
                 exclusiveFixrateProdIdList.addAll(this.commonDAO.queryForList(
-                        "PaymentInfo.getExclusiveTypeInfoList", prodId, String.class));
+                        "PaymentInfo.getExclusiveGroupProdIdList", paramMap, String.class));
             } else {
                 exclusiveFixrateProdIdList.add(info.getDupPrchsLimtProdId());
             }
