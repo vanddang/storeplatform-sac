@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.best.service;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -17,17 +16,11 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
-import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -42,6 +35,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.DP_APP_REPRESENT_IMAGE_CD;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -99,12 +94,6 @@ public class BestAppServiceImpl implements BestAppService {
 		BestAppSacRes response = new BestAppSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		List<Product> productList = new ArrayList<Product>();
-		List<Menu> menuList = null;
-		List<Support> supportList = null;
-		List<Source> sourceList = null;
-		List<Identifier> identifierList = null;
-
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(bestAppReq.getProdGradeCd())) {
 			String[] arrayProdGradeCd = bestAppReq.getProdGradeCd().split("\\+");
@@ -137,8 +126,7 @@ public class BestAppServiceImpl implements BestAppService {
 		count = offset + count - 1;
 		bestAppReq.setCount(count); // set count
 
-		String stdDt = this.commonService
-				.getBatchStandardDateString(tenantHeader.getTenantId(), bestAppReq.getListId());
+		String stdDt = this.commonService.getBatchStandardDateString(tenantHeader.getTenantId(), bestAppReq.getListId());
 		bestAppReq.setStdDt(stdDt); // 2014.01.28 이석희 수정 S01 하드코딩에서 헤더에서 get 한 TenantId
 
 		// '+'로 연결 된 상품등급코드를 배열로 전달
@@ -148,49 +136,43 @@ public class BestAppServiceImpl implements BestAppService {
 		}
 
 		// BEST 앱 상품 조회
-		List<ProductBasicInfo> appList = null;
+		List<ProductBasicInfo> appList;
 
         if (!"ADM000000001".equals(bestAppReq.getListId())) {
             // 추천, 인기(매출), 인기신규 상품 조회
             appList = this.commonDAO.queryForList("BestApp.selectBestAppList", bestAppReq, ProductBasicInfo.class);
         } else {
             // 신규 상품조회
-            appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq,
-                    ProductBasicInfo.class);
+            appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq, ProductBasicInfo.class);
         }
 
-        if (!appList.isEmpty()) {
+        response.setCommonResponse(commonResponse);
 
-            productList = Lists.transform(appList, new Function<ProductBasicInfo, Product>() {
-                @Override
-                public Product apply(ProductBasicInfo prodBasicInfo) {
-                    Map<String, Object> req = Maps.newHashMap();
-                    req.put("productBasicInfo", prodBasicInfo);
-                    req.put("tenantHeader", tenantHeader);
-                    req.put("deviceHeader", deviceHeader);
-
-                    MetaInfo meta = metaInfoService.getAppMetaInfo(req);
-                    //Tstore멤버십 적립율 정보
-//                    MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), meta.getMenuId(), meta.getProdId(), meta.getProdAmt());
-//                    meta.setMileageInfo(mileageInfo);
-
-                    return responseInfoGenerateFacade.generateAppProduct(meta);
-                }
-            });
-
-            commonResponse.setTotalCount(appList.get(0).getTotalCount());
-            response.setProductList(productList);
-            response.setCommonResponse(commonResponse);
-
-        } else {
-            // 조회 결과 없음
+        if(appList.isEmpty()) {
             commonResponse.setTotalCount(0);
-            response.setProductList(productList);
-            response.setCommonResponse(commonResponse);
+            response.setProductList(new ArrayList<Product>());
+            return response;
         }
 
-		response.setCommonResponse(commonResponse);
-		response.setProductList(productList);
+        List<Product> productList = Lists.newArrayList();
+        Map<String, Object> req = Maps.newHashMap();
+        req.put("imageCd", DP_APP_REPRESENT_IMAGE_CD);
+        req.put("tenantHeader", tenantHeader);
+        req.put("deviceHeader", deviceHeader);
+
+        for (ProductBasicInfo prodBasicInfo : appList) {
+            req.put("productBasicInfo", prodBasicInfo);
+            MetaInfo meta = metaInfoService.getAppMetaInfo(req);
+
+            if(meta == null)
+                continue;
+
+            productList.add(responseInfoGenerateFacade.generateAppProduct(meta));
+        }
+
+        commonResponse.setTotalCount(appList.get(0).getTotalCount());
+        response.setProductList(productList);
+
 		return response;
 	}
 }
