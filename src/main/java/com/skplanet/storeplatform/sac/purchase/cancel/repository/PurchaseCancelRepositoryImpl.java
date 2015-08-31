@@ -367,6 +367,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_PAYPIN, paymentSacParam.getPaymentMtdCd())) {
 				// Paypin 결제이면
 				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SYRUP_PAY, paymentSacParam.getPaymentMtdCd())) {
+				// Syrup Pay 결제이면
+				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_GAMECASH, paymentSacParam.getPaymentMtdCd())
 					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_GAMECASH_POINT,
 							paymentSacParam.getPaymentMtdCd())

@@ -9,9 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
+import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCouponSCI;
+import com.skplanet.storeplatform.external.client.tstore.sci.TStoreNotiSCI;
+import com.skplanet.storeplatform.external.client.tstore.sci.TStorePurchaseSCI;
+import com.skplanet.storeplatform.external.client.tstore.vo.*;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -21,38 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
-import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCouponSCI;
-import com.skplanet.storeplatform.external.client.tstore.sci.TStoreNotiSCI;
-import com.skplanet.storeplatform.external.client.tstore.sci.TStorePurchaseSCI;
-import com.skplanet.storeplatform.external.client.tstore.vo.Coupon;
-import com.skplanet.storeplatform.external.client.tstore.vo.ProdId;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceDetailEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeConfirmDetailEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeConfirmEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeConfirmEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanceDetailEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanceEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanceEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreJoinOfferingEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreJoinOfferingEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiV2EcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiV2EcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListV2EcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListV2EcRes;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -307,15 +281,15 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 				sbCashIntgAmt.append(";");
 			}
 			if (StringUtils.equals(cash.getProductGroup(), PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH)) {
-				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":")
+				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":")
 						.append(Double.parseDouble(cash.getAmt()));
 			} else if (StringUtils.equals(cash.getProductGroup(),
 					PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH)) {
-				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH).append(":")
+				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27).append(":")
 						.append(Double.parseDouble(cash.getAmt()));
 			} else if (StringUtils
 					.equals(cash.getProductGroup(), PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS)) {
-				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT).append(":")
+				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30).append(":")
 						.append(Double.parseDouble(cash.getAmt()));
 			}
 		}

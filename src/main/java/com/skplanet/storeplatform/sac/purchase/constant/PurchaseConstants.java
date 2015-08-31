@@ -19,7 +19,7 @@ import java.util.Map;
  * 
  * Updated on : 2014. 1. 9. Updated by : 양주원, 엔텔스.
  */
-public final class PurchaseConstants extends com.skplanet.storeplatform.purchase.constant.PurchaseConstants {
+public class PurchaseConstants extends com.skplanet.storeplatform.purchase.constant.PurchaseConstants {
 
 	/** 기본 인코딩 */
 	public static final String DEFAULT_ENCODING = "UTF-8";
@@ -70,6 +70,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String SAP_POLICY_LIMIT_IAP_PHONEBILL = "LIMIT_IAP_PHONEBILL"; // In-App 상품 후불결제 제한
 	public static final String SAP_POLICY_LIMIT_CREDIT = "LIMIT_CREDIT"; // 신용카드 결제 불가
 	public static final String SAP_POLICY_TEST_PHONE = "TEST_PHONE"; // 시험폰
+	public static final String SAP_POLICY_PASS = "PASS"; // 결제 허용
 
 	/** 비회원 처리용 UserKey */
 	public static final String NONMEMBER_COMMON_USERKEY = "NONMEMBER";
@@ -242,21 +243,25 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYPLANET_PAYMENT_CANCEL_REASON_VOC = "E01"; // VOC 운영 취소.
 
 	/** Pay Planet 결제 방법 코드 */
-	public static final String PAYPLANET_PAYMENT_METHOD_SKT_CARRIER = "11"; // SKT 후불
-	public static final String PAYPLANET_PAYMENT_METHOD_DANAL = "12"; // 다날
-	public static final String PAYPLANET_PAYMENT_METHOD_CREDIT_CARD = "13"; // 신용카드
-	public static final String PAYPLANET_PAYMENT_METHOD_PAYPIN = "14"; // PayPin
-	public static final String PAYPLANET_PAYMENT_METHOD_OCB = "20"; // OK CASHBAG
-	public static final String PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP = "21"; // T Membership (YTmembership)
-	public static final String PAYPLANET_PAYMENT_METHOD_MOBILE_TMONEY = "22"; // T Money
-	public static final String PAYPLANET_PAYMENT_METHOD_DOTORI = "23"; // 도토리
-	public static final String PAYPLANET_PAYMENT_METHOD_CULTURE = "24"; // 문화상품권
-	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_CASH = "25"; // T store 캐쉬
-	public static final String PAYPLANET_PAYMENT_METHOD_COUPON = "26"; // 쿠폰
-	public static final String PAYPLANET_PAYMENT_METHOD_GAMECASH = "27"; // 게임캐쉬
-	public static final String PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT = "28"; // 게임캐쉬 보너스 포인트
-	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_POINT = "29"; // T store 포인트
-	public static final String PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT = "30"; // T game pass 포인트
+	public static final String PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 = "11"; // SKT 후불
+	public static final String PAYPLANET_PAYMENT_METHOD_DANAL_12 = "12"; // 다날
+	public static final String PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13 = "13"; // 신용카드
+	public static final String PAYPLANET_PAYMENT_METHOD_PAYPIN_14 = "14"; // PayPin
+	public static final String PAYPLANET_PAYMENT_METHOD_SYRUPPAY_17 = "17"; // SyrupPay
+	public static final String PAYPLANET_PAYMENT_METHOD_OCB_20 = "20"; // OK CASHBAG
+	public static final String PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP_21 = "21"; // T Membership (YTmembership)
+	public static final String PAYPLANET_PAYMENT_METHOD_MOBILE_TMONEY_22 = "22"; // T Money
+	public static final String PAYPLANET_PAYMENT_METHOD_DOTORI_23 = "23"; // 도토리
+	public static final String PAYPLANET_PAYMENT_METHOD_CULTURE_24 = "24"; // 문화상품권
+	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25 = "25"; // T store 캐쉬
+	public static final String PAYPLANET_PAYMENT_METHOD_COUPON_26 = "26"; // 쿠폰
+	public static final String PAYPLANET_PAYMENT_METHOD_GAMECASH_27 = "27"; // 게임캐쉬
+	public static final String PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT_28 = "28"; // 게임캐쉬 보너스 포인트
+	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_POINT_29 = "29"; // T store 포인트
+	public static final String PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30 = "30"; // T game pass 포인트
+
+	/** 결제 가능액 **/
+	public static final String PAYPLANET_PAYMENT_AMT_MAX = "MAXAMT"; // SKT 후불
 
 	/** 결제Page Template */
 	public static final String PAYMENT_PAGE_TEMPLATE_NORMAL = "TC01"; // 일반

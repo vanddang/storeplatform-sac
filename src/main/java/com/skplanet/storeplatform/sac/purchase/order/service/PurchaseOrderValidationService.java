@@ -26,7 +26,7 @@ public interface PurchaseOrderValidationService {
 	 * 구매요청 파라미터 적합성 체크.
 	 * </pre>
 	 * 
-	 * @param purchaseOrderInfo
+	 * @param req
 	 *            구매 주문 정보
 	 */
 	public void validatePurchaseRequestParameter(CreatePurchaseSacReq req);

@@ -9,60 +9,61 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order;
 
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-
 /**
- * 
+ *
  * Pay Planet 과 결제수단코드 매핑
- * 
+ *
  * Updated on : 2014. 2. 28. Updated by : 이승택, nTels.
  */
-public class PaymethodUtil {
+public class PaymethodUtil extends PurchaseConstants
+{
 
 	private static Map<String, String> convert2StoreMap;
 	private static Map<String, String> convert2PayPlanetMap;
 
 	static {
 		convert2StoreMap = new HashMap<String, String>();
-		convert2StoreMap.put(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER, "OR000605"); // SKT후불
-		convert2StoreMap.put("12", "OR000602"); // 다날
-		convert2StoreMap.put("13", "OR000601"); // 신용카드
-		convert2StoreMap.put("14", "OR000622"); // PayPin
-		convert2StoreMap.put("20", "OR000603"); // OCB
-		convert2StoreMap.put("21", "OR000616"); // T membership
-		convert2StoreMap.put("22", "OR000614"); // T money
-		convert2StoreMap.put("23", "OR000604"); // 도토리
-		convert2StoreMap.put("24", "OR000610"); // 문화상품권
-		convert2StoreMap.put("25", "OR000607"); // T store Cash
-		convert2StoreMap.put("26", "OR000606"); // Coupon
-		convert2StoreMap.put("27", "OR000623"); // 게임캐쉬
-		convert2StoreMap.put("28", "OR000624"); // 게임캐쉬 보너스 포인트
-		convert2StoreMap.put("29", "OR000608"); // T store Point
-		convert2StoreMap.put("30", "OR000625"); // T game pass
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11, PAYMENT_METHOD_SKT_CARRIER); // SKT후불
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_DANAL_12, PAYMENT_METHOD_DANAL); // 다날
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13, PAYMENT_METHOD_CREDIT_CARD); // 신용카드
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_PAYPIN_14, PAYMENT_METHOD_PAYPIN); // PayPin
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_SYRUPPAY_17, PAYMENT_METHOD_SYRUP_PAY); // Syrup Pay
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_OCB_20, PAYMENT_METHOD_OCB); // OCB
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP_21, PAYMENT_METHOD_TMEMBERSHIP); // T membership
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_MOBILE_TMONEY_22, PAYMENT_METHOD_MOBILE_TMONEY); // T money
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_DOTORI_23, PAYMENT_METHOD_DOTORI); // 도토리
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_CULTURE_24, PAYMENT_METHOD_CULTURE); // 문화상품권
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25, PAYMENT_METHOD_TSTORE_CASH); // T store Cash
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_COUPON_26, PAYMENT_METHOD_COUPON); // Coupon
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_GAMECASH_27, PAYMENT_METHOD_GAMECASH); // 게임캐쉬
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT_28, PAYMENT_METHOD_GAMECASH_POINT); // 게임캐쉬 보너스 포인트
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_TSTORE_POINT_29, PAYMENT_METHOD_TSTORE_POINT); // T store Point
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30, PAYMENT_METHOD_TGAMEPASS); // T game pass
 
 		convert2PayPlanetMap = new HashMap<String, String>();
-		convert2PayPlanetMap.put("OR000605", PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER); // SKT후불
-		convert2PayPlanetMap.put("OR000602", "12"); // 다날
-		convert2PayPlanetMap.put("OR000601", "13"); // 신용카드
-		convert2PayPlanetMap.put("OR000622", "14"); // PayPin
-		convert2PayPlanetMap.put("OR000603", "20"); // OCB
-		convert2PayPlanetMap.put("OR000616", "21"); // T membership
-		convert2PayPlanetMap.put("OR000614", "22"); // T money
-		convert2PayPlanetMap.put("OR000604", "23"); // 도토리
-		convert2PayPlanetMap.put("OR000610", "24"); // 문화상품권
-		convert2PayPlanetMap.put("OR000607", "25"); // T store Cash
-		convert2PayPlanetMap.put("OR000606", "26"); // Coupon
-		convert2PayPlanetMap.put("OR000623", "27"); // 게임캐쉬
-		convert2PayPlanetMap.put("OR000624", "28"); // 게임캐쉬 보너스 포인트
-		convert2PayPlanetMap.put("OR000608", "29"); // T store Point
-		convert2PayPlanetMap.put("OR000625", "30"); // T game pass
-		convert2PayPlanetMap.put("OR000694", PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER); // 시험폰: T멤버쉽 QA테스트
-																									  // 지원
+		convert2PayPlanetMap.put(PAYMENT_METHOD_SKT_CARRIER, PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11); // SKT후불
+		convert2PayPlanetMap.put(PAYMENT_METHOD_DANAL, PAYPLANET_PAYMENT_METHOD_DANAL_12); // 다날
+		convert2PayPlanetMap.put(PAYMENT_METHOD_CREDIT_CARD, PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13); // 신용카드
+		convert2PayPlanetMap.put(PAYMENT_METHOD_PAYPIN, PAYPLANET_PAYMENT_METHOD_PAYPIN_14); // PayPin
+		convert2PayPlanetMap.put(PAYMENT_METHOD_SYRUP_PAY, PAYPLANET_PAYMENT_METHOD_SYRUPPAY_17); // Syrup Pay
+		convert2PayPlanetMap.put(PAYMENT_METHOD_OCB, PAYPLANET_PAYMENT_METHOD_OCB_20); // OCB
+		convert2PayPlanetMap.put(PAYMENT_METHOD_TMEMBERSHIP, PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP_21); // T membership
+		convert2PayPlanetMap.put(PAYMENT_METHOD_MOBILE_TMONEY, PAYPLANET_PAYMENT_METHOD_MOBILE_TMONEY_22); // T money
+		convert2PayPlanetMap.put(PAYMENT_METHOD_DOTORI, PAYPLANET_PAYMENT_METHOD_DOTORI_23); // 도토리
+		convert2PayPlanetMap.put(PAYMENT_METHOD_CULTURE, PAYPLANET_PAYMENT_METHOD_CULTURE_24); // 문화상품권
+		convert2PayPlanetMap.put(PAYMENT_METHOD_TSTORE_CASH, PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25); // T store Cash
+		convert2PayPlanetMap.put(PAYMENT_METHOD_COUPON, PAYPLANET_PAYMENT_METHOD_COUPON_26); // Coupon
+		convert2PayPlanetMap.put(PAYMENT_METHOD_GAMECASH, PAYPLANET_PAYMENT_METHOD_GAMECASH_27); // 게임캐쉬
+		convert2PayPlanetMap.put(PAYMENT_METHOD_GAMECASH_POINT, PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT_28); // 게임캐쉬 보너스 포인트
+		convert2PayPlanetMap.put(PAYMENT_METHOD_TSTORE_POINT, PAYPLANET_PAYMENT_METHOD_TSTORE_POINT_29); // T store Point
+		convert2PayPlanetMap.put(PAYMENT_METHOD_TGAMEPASS, PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30); // T game pass
+		convert2PayPlanetMap.put(PAYMENT_METHOD_SKT_TEST_DEVICE, PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11); // 시험폰: T멤버쉽 QA테스트 지원
 	}
 
 	/**
@@ -85,7 +86,7 @@ public class PaymethodUtil {
 	 * Store 결제수단코드를 Pay Planet 코드로 변경.
 	 * </pre>
 	 * 
-	 * @param ppCode
+	 * @param storeCode
 	 *            Store 결제수단코드
 	 * @return Pay Planet 결제수단코드
 	 */
@@ -99,7 +100,7 @@ public class PaymethodUtil {
 	 * Store 결제수단코드를 Pay Planet 코드로 변경 - 포인트 코드는 캐쉬 코드로.
 	 * </pre>
 	 * 
-	 * @param ppCode
+	 * @param storeCode
 	 *            Store 결제수단코드
 	 * @return Pay Planet 결제수단코드
 	 */
@@ -107,10 +108,10 @@ public class PaymethodUtil {
 		String code = convert2PayPlanetMap.containsKey(storeCode) ? convert2PayPlanetMap.get(storeCode) : storeCode;
 
 		// TAKTODO
-		if (StringUtils.equals(code, "29")) {
-			code = "25";
-		} else if (StringUtils.equals(code, "28")) {
-			code = "27";
+		if (StringUtils.equals(code, PAYPLANET_PAYMENT_METHOD_TSTORE_POINT_29)) {
+			code = PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25;
+		} else if (StringUtils.equals(code, PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT_28)) {
+			code = PAYPLANET_PAYMENT_METHOD_GAMECASH_27;
 		}
 
 		return code;

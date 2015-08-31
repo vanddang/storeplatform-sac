@@ -700,7 +700,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		final String purchase_inflow_channel = prchsDtlMore.getPrchsCaseCd();
 		final String mbr_id = reservedDataMap.get("userId");
 		final String device_id = reservedDataMap.get("deviceId");
-		final int promId = Integer.parseInt(StringUtils.defaultIfBlank(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID), "0"));
+		final int promId = Integer.parseInt(StringUtils.defaultIfBlank(
+				reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID), "0"));
 		final String purchase_id = prchsDtlMore.getPrchsId();
 
 		new TLogUtil().set(new ShuttleSetter() {
@@ -758,8 +759,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// T store 쿠폰 조회
 
-		if (StringUtils.contains(cdMaxAmtRateNoDouble, "26:0:0") == false){
-//				&& StringUtils.equals(PurchaseConstants.TENANT_ID_TSTORE, verifyOrderInfo.getTenantId())) {
+		if (StringUtils.contains(cdMaxAmtRateNoDouble, PurchaseConstants.PAYPLANET_PAYMENT_METHOD_COUPON_26 + ":0:0") == false) {
+			// && StringUtils.equals(PurchaseConstants.TENANT_ID_TSTORE, verifyOrderInfo.getTenantId())) {
 			List<String> prodIdList = new ArrayList<String>();
 			for (PrchsDtlMore productInfo : prchsDtlMoreList) {
 				prodIdList.add(productInfo.getProdId());
@@ -794,10 +795,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
 				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-			if (StringUtils.contains(cdMaxAmtRateNoDouble, "25:0:0")
-					&& StringUtils.contains(cdMaxAmtRateNoDouble, "27:0:0")
-					&& StringUtils.contains(cdMaxAmtRateNoDouble, "30:0:0")) {
-				cashIntgAmtInf = "25:0;27:0;30:0";
+			if (StringUtils.contains(cdMaxAmtRateNoDouble, PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25
+					+ ":0:0")
+					&& StringUtils.contains(cdMaxAmtRateNoDouble,
+							PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27 + ":0:0")
+					&& StringUtils.contains(cdMaxAmtRateNoDouble,
+							PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30 + ":0:0")) {
+				cashIntgAmtInf = PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25 + ":0;" // "25:0;27:0;30:0"
+						+ PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27 + ":0;"
+						+ PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30 + ":0";
 			} else {
 				cashIntgAmtInf = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(payUserKey);
 			}
@@ -812,10 +818,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			// 캐쉬/포인트 잔액 통합 정보
 			StringBuffer sbCashPoint = new StringBuffer();
-			sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":")
-					.append(tstoreCashAmt).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH)
+			sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":")
+					.append(tstoreCashAmt).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27)
 					.append(":").append(0).append(";")
-					.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT).append(":").append(0);
+					.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30).append(":").append(0);
 
 			cashIntgAmtInf = sbCashPoint.toString();
 		}
@@ -832,15 +838,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.settMileageSaveRate(reservedDataMap.get("tMileageRateInfo"));
 
 		// 적립 가능 결제수단 코드
-		res.settMileageAvailMtd(this.purchaseOrderPolicyService
-				.searchtMileageSavePaymentMethod(prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd()));
+		res.settMileageAvailMtd(this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
+				prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd()));
 
 		// T마일리지 적립한도 금액
-//		res.settMileageLimitAmt(this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
-//				prchsDtlMore.getTenantProdGrpCd()));
+		// res.settMileageLimitAmt(this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
+		// prchsDtlMore.getTenantProdGrpCd()));
 		// T마일리지 적립한도 금액(이벤트 별로 전시에서 관리)
-		res.settMileageLimitAmt(NumberUtils.toInt(reservedDataMap.get(
-				PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT), 0));
+		res.settMileageLimitAmt(NumberUtils.toInt(
+				reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT), 0));
 
 		// (이번회) T마일리지 적립예정 금액
 		// 2015.07.23 sonarQube 수정(안쓰는 변수 주석처리)
@@ -922,8 +928,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setUseExprDt(prchsDtlMore.getUseExprDt());
 		}
 		// 시리즈 전회차 이용권 - 이용시작일, 이용종료일
-		if (StringUtils.equals(reservedDataMap.get("cmpxProdClsfCd"),
-				PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)) {
+		if (StringUtils.equals(reservedDataMap.get("cmpxProdClsfCd"), PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)) {
 			res.setUseStartDt(prchsDtlMore.getUseStartDt());
 			res.setUseExprDt(prchsDtlMore.getUseExprDt());
 		}
@@ -957,8 +962,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setBannerList(this.searchBannerList(prchsDtlMore));
 
 		// 시스템 점검중인 결제 수단 정보
-		List<TenantSalePolicy> extraSalePolicyList = this.purchaseOrderPolicyService.getExtraSalePolicy(verifyOrderInfo.getTenantId(), PurchaseConstants.POLICY_PATTERN_EXTRA_UNITCD_SUSPENSION);
-		if(CollectionUtils.isNotEmpty(extraSalePolicyList)){
+		List<TenantSalePolicy> extraSalePolicyList = this.purchaseOrderPolicyService.getExtraSalePolicy(
+				verifyOrderInfo.getTenantId(), PurchaseConstants.POLICY_PATTERN_EXTRA_UNITCD_SUSPENSION);
+		if (CollectionUtils.isNotEmpty(extraSalePolicyList)) {
 			TenantSalePolicy extraSalePolicy = extraSalePolicyList.get(0); // 정책은 첫번째 결과만 사용한다.
 			res.setPurchaseSuspensionMsg(extraSalePolicy.getExtraValue()); // 결제 점검중인 사유(메시지)
 			res.setPurchaseSuspensionCd(extraSalePolicy.getApplyValue()); // 결제 점검중인 수단들
@@ -1284,8 +1290,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			String userGrade = this.purchaseMemberRepository.searchUserGrade(payUserKey); // 등급
 
 			MileageSubInfo mileageSubInfo = new MileageSubInfo();
-			mileageSubInfo.setTypeCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD)); // 프로모션 적립방법 - 캐시, 게임 캐시
-			mileageSubInfo.setPromId(NumberUtils.toInt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID), 0)); // 이벤트 프로모션 ID
+			mileageSubInfo.setTypeCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD)); // 프로모션 적립방법 -
+																										  // 캐시, 게임 캐시
+			mileageSubInfo
+					.setPromId(NumberUtils.toInt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_ID), 0)); // 이벤트
+																													 // 프로모션
+																													 // ID
 			mileageSubInfo.setSaveDt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_ACML_DT)); // 적립일
 			mileageSubInfo.setUserGrdCd(userGrade);
 			mileageSubInfo.setProdSaveRate(rateMap.get(userGrade));
@@ -1346,10 +1356,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(
 							prchsDtlMore.getTenantId(), payUserKey, promId);
 
-//					int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
-//							prchsDtlMore.getTenantProdGrpCd());
+					// int limitAmt =
+					// this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
+					// prchsDtlMore.getTenantProdGrpCd());
 					// 적립한도 : 이벤트 별로 전시에서 관리
-					int limitAmt = NumberUtils.toInt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT), 0);
+					int limitAmt = NumberUtils.toInt(
+							reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT), 0);
 
 					if (preReserveAmt >= limitAmt) { // 한도초과
 						mileageSubInfo.setSaveResultAmt(0);
@@ -1701,7 +1713,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		mileageSubInfo.setPromId(purchaseProduct.getPromId());
 		mileageSubInfo.setSaveDt(purchaseProduct.getAcmlDt());
 		mileageSubInfo.setUserGrdCd(userGrade);
-		mileageSubInfo.setProdSaveRate((rateMap == null || rateMap.get(userGrade) == null) ? 0 : rateMap.get(userGrade));
+		mileageSubInfo
+				.setProdSaveRate((rateMap == null || rateMap.get(userGrade) == null) ? 0 : rateMap.get(userGrade));
 		mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
 		mileageSubInfo.setProdNm(prchsDtlMore.getPartChrgProdNm()); // IAP 부분상품명
 
@@ -1759,10 +1772,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
 							userKey, purchaseProduct.getPromId());
 
-//				int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
-//						prchsDtlMore.getTenantProdGrpCd());
+				// int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
+				// prchsDtlMore.getTenantProdGrpCd());
 				// 적립한도 : 이벤트 별로 전시에서 관리
-				int limitAmt = purchaseProduct.getPrivateAcmlLimit() == null ? 0 : purchaseProduct.getPrivateAcmlLimit();
+				int limitAmt = purchaseProduct.getPrivateAcmlLimit() == null ? 0 : purchaseProduct
+						.getPrivateAcmlLimit();
 
 				if (preReserveAmt >= limitAmt) { // 한도초과
 					mileageSubInfo.setSaveResultAmt(0);

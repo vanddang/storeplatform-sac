@@ -44,6 +44,7 @@ public class PayPlanetConstant {
 	public static final String PAYPLANET_PAYMENT_METHOD_DANAL = "12"; // 다날
 	public static final String PAYPLANET_PAYMENT_METHOD_CREDIT_CARD = "13"; // 신용카드
 	public static final String PAYPLANET_PAYMENT_METHOD_PAYPIN = "14"; // PayPin
+	public static final String PAYPLANET_PAYMENT_METHOD_SYRUPPAY = "17"; // SyrupPay
 	public static final String PAYPLANET_PAYMENT_METHOD_OCB = "20"; // OK CASHBAG
 	public static final String PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP = "21"; // T Membership (YTmembership)
 	public static final String PAYPLANET_PAYMENT_METHOD_MOBILE_TMONEY = "22"; // T Money
