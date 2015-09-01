@@ -234,23 +234,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 								}
 
 							}
-							if (i == 2) {
-								if (dpBrandInfo == null) {
-									// downloadFilePath2 = uploadPath + File.separator + renFileName;
-									dpCatalogInfo.setDtlImgPath1(downloadFilePath);
-									this.log.info("dpCatalogInfo.getDtlImgPath1() : " + dpCatalogInfo.getDtlImgPath1());
-								}
-
-							}
-							
-							if (i == 3) {
-								if (dpBrandInfo == null) {
-									// downloadFilePath2 = uploadPath + File.separator + renFileName;
-									dpCatalogInfo.setDtlImgPath2(downloadFilePath);
-									this.log.info("dpCatalogInfo.getDtlImgPath2() : " + dpCatalogInfo.getDtlImgPath2());
-								}
-
-							}							
 							
 
 						} catch (CouponException e) {
@@ -490,13 +473,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			int nHeightSize = oHeight;
 			this.log.info("■■■■■oWidth■■■■■ ::" + oWidth);
 			this.log.info("■■■■■oHeight■■■■■ :: " + oHeight);
-			
-			if(!StringUtils.isBlank(dpCatalogInfo.getDtlImgPath1())){
-				catalogDtlSeq++;
-			}
-			if(!StringUtils.isBlank(dpCatalogInfo.getDtlImgPath2())){
-				catalogDtlSeq++;
-			}
 
 
 			// 카탈로그 대표이미지 리사이즈
@@ -522,41 +498,11 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
 			}
 			
-			int totalCnt = 1;
 			int seq = 1;
-			log.info("_>>>>>>>>>>catalogDtlSeq>>>>>>>>>>>>"+catalogDtlSeq);
 			
 			// 카탈로그 상세이미지 리사이즈
 			for (int i = 0; i < catalogDtlSeq; i++) {
-				boolean flagYn = false;
-				
-				if(i==1){
-    				// 카탈로그 상세이미지 변수 (두번째 상세)
-    				catalogImgPath1 = dpCatalogInfo.getDtlImgPath1(); // 이미지경로 + 이미지NAME
-    				flagYn =true;
-				}
-				if(i==2){
-    				// 카탈로그 상세이미지 변수 (세번째 상세)
-    				catalogImgPath1 = dpCatalogInfo.getDtlImgPath2(); // 이미지경로 + 이미지NAME
-    				flagYn =true;
-				}					
-				
-				if(flagYn){
-    				uploadDir1 = catalogImgPath1.substring(0, catalogImgPath1.lastIndexOf(File.separator) + 1); // 이미지 경로
-    				srcFileName1 = catalogImgPath1.substring(catalogImgPath1.lastIndexOf(File.separator)).replace(File.separator,
-    						""); // 이미지NAME
-    				tmpFileName1 = srcFileName1.substring(0, srcFileName1.lastIndexOf(".")); // 파일명
-    				fileExt1 = srcFileName1.substring(srcFileName1.lastIndexOf(".") + 1); // 확장자
-    
-    				img = new ImageIcon(uploadDir1 + srcFileName1).getImage(); // 이미지 사이즈를 구하기 위해 이미지를 가져옴.
-    
-    				oWidth = img.getWidth(null); // 이미지 가로사이즈
-    				oHeight = img.getHeight(null); // 이미지 세로사이즈
-    				nHeightSize = oHeight;
-    				this.log.info("■■■■■oWidth■■■■■ ::" + oWidth);
-    				this.log.info("■■■■■oHeight■■■■■ :: " + oHeight);					
-				}
-			
+
 				
 				targetFileName1 = tmpFileName1 + "." + fileExt1;
 				int width = oWidth;
@@ -589,7 +535,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 					nHeightSize = 1170;
 					// 이미지를 1170사이즈까지 잘라서 저장
-					for (seq =totalCnt; nHeightSize < height; seq++) {
+					for (seq =1; nHeightSize < height; seq++) {
 
 						String resizetargetFileName1 = tmpFileName1 + "_"+oWidth+"xy" + seq + "." + fileExt1;
 						if (!imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
@@ -646,7 +592,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 					this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
 
 				}
-				totalCnt = seq;
+				
 			}
 
 		} catch (CouponException e) {

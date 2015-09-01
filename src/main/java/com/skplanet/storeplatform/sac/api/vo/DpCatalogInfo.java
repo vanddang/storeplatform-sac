@@ -30,8 +30,6 @@ public class DpCatalogInfo extends BrandCatalogProdImgInfo {
 	// private String catalogStatCd;
 	private String topImgPath; // 
 	private String dtlImgPath; // 
-	private String dtlImgPath1; //
-	private String dtlImgPath2; //
 	private String txType; // 상품구분 브랜드 : bd, 카탈로그 : ct
 	private String cudType; // CUD
 	private String introText; // 한줄설명 INSERT_TB_DP_SHPG_CATALOG_DESC.
@@ -144,34 +142,6 @@ public class DpCatalogInfo extends BrandCatalogProdImgInfo {
 	 */
 	public void setDtlImgPath(String dtlImgPath) {
 		this.dtlImgPath = dtlImgPath;
-	}
-
-	/**
-	 * @return the dtlImgPath1
-	 */
-	public String getDtlImgPath1() {
-		return dtlImgPath1;
-	}
-
-	/**
-	 * @param dtlImgPath1 the dtlImgPath1 to set
-	 */
-	public void setDtlImgPath1(String dtlImgPath1) {
-		this.dtlImgPath1 = dtlImgPath1;
-	}
-
-	/**
-	 * @return the dtlImgPath2
-	 */
-	public String getDtlImgPath2() {
-		return dtlImgPath2;
-	}
-
-	/**
-	 * @param dtlImgPath2 the dtlImgPath2 to set
-	 */
-	public void setDtlImgPath2(String dtlImgPath2) {
-		this.dtlImgPath2 = dtlImgPath2;
 	}
 
 	/**
