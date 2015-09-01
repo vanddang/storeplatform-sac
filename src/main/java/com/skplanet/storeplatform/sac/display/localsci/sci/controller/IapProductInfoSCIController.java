@@ -47,7 +47,7 @@ public class IapProductInfoSCIController implements IapProductInfoSCI {
 
         IapProductInfoRes res = new IapProductInfoRes();
 
-        res.setParentProdId(iapProductInfo.getMapgProdId());
+        res.setParentProdId(iapProductInfo.getParentProdId());
         res.setPartProdId(iapProductInfo.getPartProdId());
         res.setFullAid(iapProductInfo.getFullAid());
         res.setHasFullProdYn(iapProductInfo.getHasFullProdYn());
