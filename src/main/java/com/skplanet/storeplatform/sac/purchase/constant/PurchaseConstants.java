@@ -247,7 +247,7 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String PAYPLANET_PAYMENT_METHOD_DANAL_12 = "12"; // 다날
 	public static final String PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13 = "13"; // 신용카드
 	public static final String PAYPLANET_PAYMENT_METHOD_PAYPIN_14 = "14"; // PayPin
-	public static final String PAYPLANET_PAYMENT_METHOD_SYRUPPAY_17 = "17"; // SyrupPay
+	public static final String PAYPLANET_PAYMENT_METHOD_SYRUPPAY_17 = "18"; // SyrupPay
 	public static final String PAYPLANET_PAYMENT_METHOD_OCB_20 = "20"; // OK CASHBAG
 	public static final String PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP_21 = "21"; // T Membership (YTmembership)
 	public static final String PAYPLANET_PAYMENT_METHOD_MOBILE_TMONEY_22 = "22"; // T Money
