@@ -976,6 +976,16 @@ public class UserModifyServiceImpl implements UserModifyService {
 	private void modAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreementList) {
 
 		/**
+		 * 회원정보조회
+		 */
+		DetailReq detailReq = new DetailReq();
+		detailReq.setUserKey(userKey);
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+		DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
+
+		/**
 		 * 약관 맵핑정보 세팅.
 		 */
 		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), agreementList);
@@ -998,7 +1008,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrClauseAgreeList.add(mbrClauseAgree);
 		}
 		updateAgreementRequest.setMbrClauseAgreeList(mbrClauseAgreeList);
-
+		updateAgreementRequest.setIsDormant(detailRes.getUserInfo().getIsDormant());
 		/**
 		 * SC 약관동의 정보를 등록 또는 수정 연동.
 		 */

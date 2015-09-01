@@ -474,7 +474,8 @@ public class LoginServiceImpl implements LoginService {
 		/* SKT인경우 개인정보 3자 제공 동의약관 동의여부 체크 */
 		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
 				&& !StringUtils.equals(this.isAgreementByAgreementCode(requestHeader, chkDupRes.getUserMbr()
-						.getUserKey(), MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS), "Y")) {
+						.getUserKey(), MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS, chkDupRes
+						.getUserMbr().getIsDormant()), "Y")) {
 			throw new StorePlatformException("SAC_MEM_1506"); // 개인정보 3자 제공 동의약관 미동의 상태입니다.
 		}
 
@@ -3237,9 +3238,12 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @param agreementCode
 	 *            String
+	 * @param isDormant
+	 *            String
 	 * @return String 약관 동의 여부
 	 */
-	private String isAgreementByAgreementCode(SacRequestHeader requestHeader, String userKey, String agreementCode) {
+	private String isAgreementByAgreementCode(SacRequestHeader requestHeader, String userKey, String agreementCode,
+			String isDormant) {
 
 		String isAgreeYn = "N";
 
@@ -3250,7 +3254,7 @@ public class LoginServiceImpl implements LoginService {
 		SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
 		schAgreeListReq.setCommonRequest(commonRequest);
 		schAgreeListReq.setUserKey(userKey);
-
+		schAgreeListReq.setIsDormant(isDormant);
 		try {
 			SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
 			for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
@@ -3261,7 +3265,8 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 		} catch (StorePlatformException ex) {
-			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+					|| !StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				throw ex;
 			}
 		}
