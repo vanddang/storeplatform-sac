@@ -34,6 +34,10 @@
     <rabbit:queue name="any.sac.search-interface.async" >
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
     </rabbit:queue>    
+    
+    <rabbit:queue name="any.sac.rater-interface.async" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>     
 
     <!-- Staging 서버에서는 수신받지 않도록 profile 예외처리 적용 -->
     <beans profile="dev,qa,real">
@@ -123,7 +127,14 @@
             <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
             <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
             <property name="routingKey" value="any.sac.search-interface.async" />
-        </bean> 	    
+        </bean> 	 
+        
+       <!-- skt receipt Search Rabbit Template -->
+        <bean id="raterAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+            <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
+            <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
+            <property name="routingKey" value="any.sac.rater-interface.async" />
+        </bean>            
     </beans>
     
 	<!-- Staging 서버에서는 MQ 송수신 하지않도록 "stg" profile 예외처리 적용 -->
@@ -142,5 +153,7 @@
 	    <bean id="shoppingIprmAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
         <!-- SacEtc - NATE Search Rabbit Template -->
         <bean id="sacSearchAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
+        <!-- shopping - skt receipt Search Rabbit Template -->
+        <bean id="raterAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	</beans>
 </beans>
