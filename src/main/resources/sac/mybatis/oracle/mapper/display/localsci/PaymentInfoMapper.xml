@@ -494,7 +494,7 @@
                    ,DUP_PRCHS_LIMT_TYPE_CD
               FROM TB_DP_DUP_PRCHS_LIMT
              WHERE PROD_ID = #{id}
-               AND DEL_YN ='N'
+               AND (DEL_YN = 'N' OR DEL_YN IS NULL) 
     </select>  
 
 
