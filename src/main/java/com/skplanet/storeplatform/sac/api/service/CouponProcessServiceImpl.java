@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +49,6 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInf
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.mq.client.common.util.RabbitTemplateFactory;
 import com.skplanet.storeplatform.sac.mq.client.rater.vo.RaterMessage;
 import com.skplanet.storeplatform.sac.mq.client.search.constant.SearchConstant;
 import com.skplanet.storeplatform.sac.mq.client.search.util.SearchQueueUtils;
@@ -1501,20 +1499,17 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private boolean getConnectMqForSkReceipt(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList) {
 		boolean result = true;
 		try{
-    		RaterMessage raterMessage = RaterMessage.newMsgWithProdId(couponInfo.getProdId());
-    		this.log.info("raterAmqpTemplate channel_prod_id S:::" + couponInfo.getProdId());
-    		raterAmqpTemplate.convertAndSend(raterMessage);
-    		this.log.info("raterAmqpTemplate channel_prod_id E:::" + couponInfo.getProdId());
+			List<String> ids  = new  ArrayList<String>();
+			for(DpItemInfo info : itemInfoList){
+				ids.add(info.getProdId());
+			}
+//			RaterMessage raterMessage = RaterMessage.newMsgWithProdIds(ids);
+			this.log.info("raterAmqpTemplate episode_prod_ids S:::" + ids.toString());
+//			this.raterAmqpTemplate.convertAndSend(raterMessage);
     		
-    		for (int i = 0; i < itemInfoList.size(); i++) {
-    			raterMessage = RaterMessage.newMsgWithProdId(itemInfoList.get(i).getProdId());
-    			this.log.info("raterAmqpTemplate episode_prod_id S:::" + itemInfoList.get(i).getProdId());
-    			raterAmqpTemplate.convertAndSend(raterMessage);
-    			this.log.info("raterAmqpTemplate episode_prod_id E:::" + itemInfoList.get(i).getProdId());
-    		}
 		} catch (AmqpException ae) {
 			result = false;
-			this.log.info("MQ 연동중 Error 발생. - error msg:{}, NotificationIprm:{}", ae.getMessage(), RaterMessage.class);
+			this.log.info("MQ 연동중 Error 발생. - error msg:{}, raterAmqpTemplate:{}", ae.getMessage(), RaterMessage.class);
 		} catch (Exception e) {
 			result = false;
 			this.log.info("MQ 연동중 Error 발생. - error msg:{}, Exception:{}", e.getMessage());
