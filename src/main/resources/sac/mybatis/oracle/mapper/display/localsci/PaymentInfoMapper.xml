@@ -500,10 +500,10 @@
 
     <select id="getExclusiveGroupProdIdList" parameterType="Map" resultType="String">
 			SELECT /* PaymentInfoMapper.xml, getExclusiveGroupProdIdList,결제시 복합상품 그룹코드로 상품 리스트 조회(정액권), 김형식/SK플래닛, 2015-05-11 */
-                PROD_ID
+                   PROD_ID
 			  FROM TB_DP_CMPX_PROD       
-			WHERE CMPX_PROD_GRP_CD =#{dupPrchsLimtProdId}
-			  AND PROD_ID != #{prodId}
+		     WHERE CMPX_PROD_GRP_CD =#{dupPrchsLimtProdId}
+			   AND PROD_ID != #{prodId}
     </select>
 
     <select id="getMappedProdByVoucher" parameterType="String" resultType="com.skplanet.storeplatform.sac.display.localsci.sci.vo.MappedProduct">
