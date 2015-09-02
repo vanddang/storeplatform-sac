@@ -494,6 +494,7 @@
                    ,DUP_PRCHS_LIMT_TYPE_CD
               FROM TB_DP_DUP_PRCHS_LIMT
              WHERE PROD_ID = #{id}
+               AND DEL_YN ='N'
     </select>  
 
 
@@ -502,6 +503,7 @@
                 PROD_ID
 			  FROM TB_DP_CMPX_PROD       
 			WHERE CMPX_PROD_GRP_CD =#{dupPrchsLimtProdId}
+			  AND PROD_ID != #{prodId}
     </select>
 
     <select id="getMappedProdByVoucher" parameterType="String" resultType="com.skplanet.storeplatform.sac.display.localsci.sci.vo.MappedProduct">
