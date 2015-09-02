@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,10 +50,11 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInf
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.mq.client.common.util.RabbitTemplateFactory;
+import com.skplanet.storeplatform.sac.mq.client.rater.vo.RaterMessage;
 import com.skplanet.storeplatform.sac.mq.client.search.constant.SearchConstant;
 import com.skplanet.storeplatform.sac.mq.client.search.util.SearchQueueUtils;
 import com.skplanet.storeplatform.sac.mq.client.search.vo.SearchInterfaceQueue;
-
 /**
  * <pre>
  * 쿠폰아이템 서비스 인터페이스 imple.
@@ -82,6 +84,10 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	@Autowired
 	@Resource(name = "sacSearchAmqpTemplate")
 	private AmqpTemplate sacSearchAmqpTemplate; // 검색 서버 MQ 연동.
+	
+	@Autowired
+	@Resource(name = "raterAmqpTemplate")
+	private AmqpTemplate raterAmqpTemplate; // skt receipt.	
 
 	@Override
 	public boolean insertCouponInfo(CouponReq couponReq) {
@@ -535,6 +541,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// 저장
 			this.couponItemService.insertTbDpProdDescInfo(tbDpProdDescList);
+			
+			this.getConnectMqForSkReceipt(couponInfo, itemInfoList); // 김희민 매니저 요청으로 SKT로 전송하여 휴대폰 영수증에 티스토어 구매 내역을 보여 주기위한 시스템 
+			
+			
+			
 			this.log.info("■■■■■ setTbDpProdDescListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_DESC VO 셋팅 실패", null);
@@ -1476,7 +1487,41 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		info = this.couponItemService.getCatalogNmMenuId(catalogId);
 		return info;
 	}
+	
+	/**
+	 * getConnectMqForSkReceipt MQ 연동
+	 * 
+	 * @param couponInfo
+	 *            couponInfo
+	 * @param itemInfoList
+	 *            itemInfoList
+	 * @return boolean
+	 */
 
+	private boolean getConnectMqForSkReceipt(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList) {
+		boolean result = true;
+		try{
+    		RaterMessage raterMessage = RaterMessage.newMsgWithProdId(couponInfo.getProdId());
+    		this.log.info("raterAmqpTemplate channel_prod_id S:::" + couponInfo.getProdId());
+    		raterAmqpTemplate.convertAndSend(raterMessage);
+    		this.log.info("raterAmqpTemplate channel_prod_id E:::" + couponInfo.getProdId());
+    		
+    		for (int i = 0; i < itemInfoList.size(); i++) {
+    			raterMessage = RaterMessage.newMsgWithProdId(itemInfoList.get(i).getProdId());
+    			this.log.info("raterAmqpTemplate episode_prod_id S:::" + itemInfoList.get(i).getProdId());
+    			raterAmqpTemplate.convertAndSend(raterMessage);
+    			this.log.info("raterAmqpTemplate episode_prod_id E:::" + itemInfoList.get(i).getProdId());
+    		}
+		} catch (AmqpException ae) {
+			result = false;
+			this.log.info("MQ 연동중 Error 발생. - error msg:{}, NotificationIprm:{}", ae.getMessage(), RaterMessage.class);
+		} catch (Exception e) {
+			result = false;
+			this.log.info("MQ 연동중 Error 발생. - error msg:{}, Exception:{}", e.getMessage());
+		}
+	
+		return result;
+	}
 	/**
 	 * getConnectMq MQ 연동
 	 * 
