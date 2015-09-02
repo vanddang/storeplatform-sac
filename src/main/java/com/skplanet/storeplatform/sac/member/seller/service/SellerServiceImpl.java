@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import com.skplanet.storeplatform.sac.mq.client.rater.vo.RaterMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,6 +128,9 @@ public class SellerServiceImpl implements SellerService {
 	 */
 	@Resource(name = "sellerWithdrawAmqpTemplate")
 	private AmqpTemplate sellerWithdrawAmqpTemplate;
+
+    @Resource
+    private AmqpTemplate raterAmqpTemplate;
 
 	/**
 	 * SPSAC DB 관련 Respository.
@@ -549,7 +553,8 @@ public class SellerServiceImpl implements SellerService {
 		ModifyInformationSacRes res = new ModifyInformationSacRes();
 		res.setSellerKey(updateSellerResponse.getSellerKey());
 
-		LOGGER.debug("############ SellerServiceImpl.modInformation() [START] ############");
+        raterAmqpTemplate.convertAndSend(RaterMessage.newMsgWithSellerId(sellerMbr.getSellerID()));
+		LOGGER.debug("############ SellerServiceImpl.modInformation() [END] ############");
 		return res;
 	}
 
