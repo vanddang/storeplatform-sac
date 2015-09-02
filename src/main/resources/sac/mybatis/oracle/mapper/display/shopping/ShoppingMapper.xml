@@ -4020,10 +4020,10 @@
                                     <if test="specialProdId != null">
                                      AND B1.PROD_ID = #{specialProdId}
                                     </if>
-                                     AND B1.EXPO_YN ='Y'
+                                     --AND B1.EXPO_YN ='Y'  /* 판매 중지 되더라도 특가 유효기간이 아직 안지날 경우 보여줘야함 (FOR 판매중지인 경우도 솔드아웃 경우를 보여주기 위한)*/
                                      AND B1.CPN_ID IS NOT NULL
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
-                                  )N
+                                  )N 
                         WHERE 1=1
                         AND A.BRAND_ID = B.BRAND_ID
                         AND B.CATALOG_ID = C.CATALOG_ID
