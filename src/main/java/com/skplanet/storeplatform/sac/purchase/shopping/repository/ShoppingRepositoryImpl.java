@@ -9,24 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishAvailableEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishAvailableEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishAvailableEcV2Req;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishAvailableEcV2Res;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponStockEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponStockEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusDetailEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusEcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.*;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
@@ -39,15 +23,14 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.Payme
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Param;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Result;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacResult;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusDetailSacResult;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 쇼핑쿠폰 Repository Implements.
@@ -150,6 +133,36 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 
 		return this.paymentInfoSCI.searchPaymentInfo(req);
 
+	}
+
+	@Override
+	public CouponRestoreStatusSacResult restoreCouponStatus(CouponRestoreStatusSacParam couponRestoreStatusSacParam) {
+
+		CouponRestoreStatusEcReq couponRestoreStatusEcReq = this
+				.convertReqForRestoreCouponStatus(couponRestoreStatusSacParam);
+
+		CouponRestoreStatusEcRes couponUseStatusEcRes = this.shoppingSCI.restoreCouponStatus(couponRestoreStatusEcReq);
+
+		return this.convertResForGetRestoreCouponStatus(couponUseStatusEcRes);
+	}
+
+	private CouponRestoreStatusSacResult convertResForGetRestoreCouponStatus(
+			CouponRestoreStatusEcRes couponUseStatusEcRes) {
+		CouponRestoreStatusSacResult couponRestoreStatusSacResult = new CouponRestoreStatusSacResult();
+
+		couponRestoreStatusSacResult.setResultCd(couponUseStatusEcRes.getResultCd());
+		couponRestoreStatusSacResult.setResultMsg(couponUseStatusEcRes.getResultMsg());
+
+		return couponRestoreStatusSacResult;
+	}
+
+	private CouponRestoreStatusEcReq convertReqForRestoreCouponStatus(
+			CouponRestoreStatusSacParam couponRestoreStatusSacParam) {
+		CouponRestoreStatusEcReq couponRestoreStatusEcReq = new CouponRestoreStatusEcReq();
+
+		couponRestoreStatusEcReq.setPrchsId(couponRestoreStatusSacParam.getPrchsId());
+
+		return couponRestoreStatusEcReq;
 	}
 
 	/**
@@ -295,7 +308,7 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 	 * convertReqForGetCouponPublishAvailable.
 	 * </pre>
 	 * 
-	 * @param couponPublishAvailableSacParam
+	 * @param couponStockSacParam
 	 *            couponPublishAvailableSacParam
 	 * @return CouponPublishAvailableEcReq
 	 */

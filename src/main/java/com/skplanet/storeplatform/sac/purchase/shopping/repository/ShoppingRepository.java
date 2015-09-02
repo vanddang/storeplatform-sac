@@ -10,12 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.shopping.repository;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Param;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Result;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.*;
 
 /**
  * 쇼핑쿠폰 Repository Interface.
@@ -86,4 +81,12 @@ public interface ShoppingRepository {
 	 */
 	public PaymentInfoSacRes searchPaymentInfo(CouponPublishAvailableSacParam couponPublishAvailableSacParam);
 
+	/**
+	 * 쿠폰 사용 여부 초기화.
+	 *
+	 * @param couponRestoreStatusSacParam
+	 *            the coupon restore status sac param
+	 * @return the coupon restore status sac result
+	 */
+	public CouponRestoreStatusSacResult restoreCouponStatus(CouponRestoreStatusSacParam couponRestoreStatusSacParam);
 }

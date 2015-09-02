@@ -9,12 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.service;
 
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Param;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Result;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.*;
 
 /**
  * 쇼핑쿠폰 Service Interface.
@@ -34,6 +29,14 @@ public interface ShoppingService {
 	 * @return CouponUseStatusSacResult
 	 */
 	public CouponUseStatusSacResult getCouponUseStatus(CouponUseStatusSacParam couponUseStatusSacParam);
+
+	/**
+	 * 쿠폰 사용 초기
+	 *
+	 * @param couponRestoreStatusSacParam the coupon restore status sac param
+	 * @return the coupon restore status sac result
+	 */
+	public CouponRestoreStatusSacResult restoreCouponStatus(CouponRestoreStatusSacParam couponRestoreStatusSacParam);
 
 	/**
 	 * 

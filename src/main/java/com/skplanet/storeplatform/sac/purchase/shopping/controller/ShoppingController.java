@@ -9,9 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.purchase.common.util.ConvertVO;
+import com.skplanet.storeplatform.sac.purchase.shopping.service.ShoppingService;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -20,28 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponPublishAvailableSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponPublishAvailableSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponPublishAvailableSacV2Req;
-import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponPublishAvailableSacV2Res;
-import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponStockSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponStockSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponUseStatusDetailSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponUseStatusSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponUseStatusSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.purchase.common.util.ConvertVO;
-import com.skplanet.storeplatform.sac.purchase.shopping.service.ShoppingService;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Param;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Result;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacResult;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusDetailSacResult;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 쇼핑 쿠폰 Controller.
@@ -65,8 +48,6 @@ public class ShoppingController {
 	 *            sacRequestHeader
 	 * @param couponUseStatusSacReq
 	 *            couponUseStatusSacReq
-	 * @param bindingResult
-	 *            bindingResult
 	 * @return CouponUseStatusSacRes
 	 */
 	@RequestMapping(value = "/getCouponUseStatus/v1", method = RequestMethod.POST)
@@ -94,8 +75,6 @@ public class ShoppingController {
 	 *            sacRequestHeader
 	 * @param couponPublishAvailableSacReq
 	 *            couponPublishAvailableSacReq
-	 * @param bindingResult
-	 *            bindingResult
 	 * @return CouponPublishAvailableSacRes
 	 */
 	@RequestMapping(value = "/getCouponPublishAvailable/v1", method = RequestMethod.POST)
@@ -122,8 +101,6 @@ public class ShoppingController {
 	 *            sacRequestHeader
 	 * @param couponPublishAvailableSacReq
 	 *            couponPublishAvailableSacReq
-	 * @param bindingResult
-	 *            bindingResult
 	 * @return CouponPublishAvailableSacRes
 	 */
 	@RequestMapping(value = "/getCouponPublishAvailable/v2", method = RequestMethod.POST)
@@ -141,18 +118,16 @@ public class ShoppingController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 쇼핑쿠폰 재고 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @param couponPublishAvailableSacReq
-	 *            couponPublishAvailableSacReq
-	 * @param bindingResult
-	 *            bindingResult
-	 * @return CouponPublishAvailableSacRes
+	 * @param couponStockSacReq
+	 *            the coupon stock sac req
+	 * @return CouponPublishAvailableSacRes coupon stock
 	 */
 	@RequestMapping(value = "/getCouponStock/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -165,6 +140,51 @@ public class ShoppingController {
 		// return this.convertResForGetCouponStock(couponUseStatusSacResult);
 		return new CouponStockSacRes();
 
+	}
+
+	/**
+	 *
+	 * <pre>
+	 * 쿠폰 사용 여부 초기화.
+	 * </pre>
+	 *
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @param couponRestoreStatusSacReq
+	 *            couponRestoreStatusSacReq
+	 * @return CouponPublishAvailableSacRes coupon stock
+	 */
+	@RequestMapping(value = "/restoreCouponStatus/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CouponRestoreStatusSacRes restoreCouponStatus(SacRequestHeader sacRequestHeader,
+			@RequestBody @Validated CouponRestoreStatusSacReq couponRestoreStatusSacReq) {
+
+		CouponRestoreStatusSacParam couponRestoreStatusSacParam = this.convertReqForRestoreCouponStatus(
+				sacRequestHeader, couponRestoreStatusSacReq);
+
+		CouponRestoreStatusSacResult couponRestoreStatusSacResult = this.shoppingService
+				.restoreCouponStatus(couponRestoreStatusSacParam);
+
+		return this.convertResForRestoreCouponStatus(couponRestoreStatusSacResult);
+
+	}
+
+	private CouponRestoreStatusSacRes convertResForRestoreCouponStatus(
+			CouponRestoreStatusSacResult couponRestoreStatusSacResult) {
+
+		CouponRestoreStatusSacRes couponRestoreStatusSacRes = new CouponRestoreStatusSacRes();
+		couponRestoreStatusSacRes.setStatusCd(couponRestoreStatusSacResult.getResultCd());
+		couponRestoreStatusSacRes.setStatusMsg(couponRestoreStatusSacResult.getResultMsg());
+
+		return couponRestoreStatusSacRes;
+	}
+
+	private CouponRestoreStatusSacParam convertReqForRestoreCouponStatus(SacRequestHeader sacRequestHeader,
+			CouponRestoreStatusSacReq couponRestoreStatusSacReq) {
+		CouponRestoreStatusSacParam couponRestoreStatusSacParam = new CouponRestoreStatusSacParam();
+		couponRestoreStatusSacParam.setPrchsId(couponRestoreStatusSacReq.getPrchsId());
+
+		return couponRestoreStatusSacParam;
 	}
 
 	/**
@@ -325,8 +345,8 @@ public class ShoppingController {
 	 * convertResForGetCouponStock.
 	 * </pre>
 	 * 
-	 * @param couponUseStatusSacResult
-	 *            couponUseStatusSacResult
+	 * @param couponStockSacResult
+	 *            couponStockSacResult
 	 * @return CouponStockSacRes
 	 */
 	private CouponStockSacRes convertResForGetCouponStock(CouponStockSacResult couponStockSacResult) {
