@@ -1503,9 +1503,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			for(DpItemInfo info : itemInfoList){
 				ids.add(info.getProdId());
 			}
-//			RaterMessage raterMessage = RaterMessage.newMsgWithProdIds(ids);
+			RaterMessage raterMessage = RaterMessage.newMsgWithProdIds(ids);
 			this.log.info("raterAmqpTemplate episode_prod_ids S:::" + ids.toString());
-//			this.raterAmqpTemplate.convertAndSend(raterMessage);
+			this.raterAmqpTemplate.convertAndSend(raterMessage);
     		
 		} catch (AmqpException ae) {
 			result = false;
