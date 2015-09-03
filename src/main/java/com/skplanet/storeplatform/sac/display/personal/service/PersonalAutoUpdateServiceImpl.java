@@ -108,7 +108,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 		Map<String, UpdatePkgDetail> pkgReqMap = appUpdateSupportService.parsePkgInfoList(packageInfoList);
 
 		List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(
-				updCtxParam.getDeviceModelCd(), new ArrayList<String>(pkgReqMap.keySet()) );
+				updCtxParam.getTenantId(), updCtxParam.getDeviceModelCd(), new ArrayList<String>(pkgReqMap.keySet()) );
 
 		Map<String, UpdateProduct> upMap = new LinkedHashMap<String, UpdateProduct>(packageInfoList.size());
 		List<String> pidPurList = new ArrayList<String>();

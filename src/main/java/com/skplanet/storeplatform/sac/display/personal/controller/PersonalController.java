@@ -16,7 +16,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpdateService;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductListService;
-import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService;
 import com.skplanet.storeplatform.sac.display.personal.service.RecommendNewMemberProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -30,7 +30,7 @@ public interface AppUpdateSupportService {
      * @param deviceModelCd
      * @param pkgList @return
      */
-    List<SubContentInfo> searchSubContentByPkg(String deviceModelCd, List<String> pkgList);
+    List<SubContentInfo> searchSubContentByPkg(String tenantId, String deviceModelCd, List<String> pkgList);
 
     /**
      * 타사 매핑 패키지명으로 서브컨텐트 정보를 조회한다.

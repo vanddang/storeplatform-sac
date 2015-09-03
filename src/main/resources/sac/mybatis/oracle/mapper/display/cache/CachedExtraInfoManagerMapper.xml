@@ -17,9 +17,11 @@
                 SELECT
                     LA.*
                     ,( SELECT COUNT(PROD_ID)
-                       FROM TB_CM_AUTO_UPGRD_ALTR_PROD AUAP
-                       WHERE AUAP.PROD_ID = LA.PART_PROD_ID
-                             AND AUAP.CLSF_CD = 'DP012501' /* DP012501 : 운영자 지정 업데이트 */
+                       FROM TB_DP_APP_UPGRD_POLICY AUP
+                       WHERE AUP.TENANT_ID = #{tenantId}
+							AND AUP.PROD_ID = LA.PART_PROD_ID
+                            AND AUP.POLICY_CLSF_CD = 'DP012501' /* DP012501 : 운영자 지정 업데이트 */
+							AND AUP.USE_YN = 'Y'
                      ) AS FAKE_CNT
                 FROM (
                          SELECT

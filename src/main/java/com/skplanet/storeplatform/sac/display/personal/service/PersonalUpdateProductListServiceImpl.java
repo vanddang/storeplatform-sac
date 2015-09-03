@@ -118,8 +118,9 @@ public class PersonalUpdateProductListServiceImpl implements PersonalUpdateProdu
 										  final UpdateContextParam updCtxParam,
 										  final Map<String, UpdatePkgDetail> pkgReqMap) {
 
-		List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(updCtxParam.getDeviceModelCd(),
-																							 new ArrayList<String>(pkgReqMap.keySet()));
+		List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(updCtxParam.getTenantId()
+																							,updCtxParam.getDeviceModelCd()
+																							,new ArrayList<String>(pkgReqMap.keySet()));
 		if (!StringUtils.equals(TENANT_ID_TSTORE, updCtxParam.getTenantId())) {
 			// 타사 요청인 경우 MAPG_PKG_NM으로 한번더 subContent를 조회 하여 추출 리스트에 추가한다.
 			appUpdateSupportService.addSubContentByMapgPkg(	subContentInfos,

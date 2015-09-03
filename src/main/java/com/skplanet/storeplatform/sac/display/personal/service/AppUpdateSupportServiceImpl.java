@@ -230,7 +230,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
 
 
     @Override
-    public List<SubContentInfo> searchSubContentByPkg(final String deviceModelCd, List<String> pkgList) {
+    public List<SubContentInfo> searchSubContentByPkg(final String tenantId, final String deviceModelCd, List<String> pkgList) {
 
         final List<SubContentInfo> res = new ArrayList<SubContentInfo>(pkgList.size());
 
@@ -251,6 +251,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
                 });
 
                 Map<String, Object> req = new HashMap<String, Object>();
+				req.put("tenantId", tenantId);
                 req.put("parentClsfCd", DisplayConstants.DP_PART_PARENT_CLSF_CD);
                 req.put("deviceModelCd", deviceModelCd);
                 req.put("hashedPkgList", hashedPkgList);
