@@ -12,10 +12,10 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.client.display.PromotionEventAccessor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.display.PromotionEventAccessor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -151,7 +151,13 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	 * 이용권 속성정보
 	 */
 	private String requestProduct;
+	
+	/**
+	 * 상품리스트 응답정보
+	 */
+	private Lists lists;
 
+	
 	/**
 	 * @return rights
 	 */
@@ -540,5 +546,22 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	public void setRequestProduct(String requestProduct) {
 		this.requestProduct = requestProduct;
 	}
+
+	/**
+	 * @return the lists
+	 */
+	public Lists getLists() {
+		return lists;
+	}
+	
+	/**
+	 * @param lists
+	 *            the lists to set
+	 */
+	public void setLists(Lists lists) {
+		this.lists = lists;
+	}
+	
+	
 
 }
