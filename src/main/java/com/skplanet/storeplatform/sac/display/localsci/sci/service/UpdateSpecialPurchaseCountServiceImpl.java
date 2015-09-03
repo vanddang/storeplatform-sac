@@ -245,6 +245,7 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 			this.commonDAO.update("SpecialPurchaseCount.updateSpecialPurchaseCount", map);
 			this.log.info("----------seq5----------");
 		}catch (Exception e){
+			this.log.info("쇼핑 특가 구매수 업데이트 실패 : " + e.getMessage());
 			e.printStackTrace();
 			flag =false;
 		}
