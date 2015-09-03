@@ -50,7 +50,7 @@ public class CspController {
      */
     @RequestMapping(value = "/other/csp/getInquiryBalance/v1", method = RequestMethod.POST)
     @ResponseBody
-    public CspTingPointRes createOcbInformation(SacRequestHeader sacHeader, @Validated @RequestBody CspTingPointReq req) {
+    public CspTingPointRes getTingPointInfo(SacRequestHeader sacHeader, @Validated @RequestBody CspTingPointReq req) {
 
         LOGGER.debug("###############################");
         LOGGER.debug("##### Csp Ting Point 조회 #####");
