@@ -200,7 +200,7 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 			int beforeProdCnt =0;
 			int beforePrchsCnt = 0;
 			
-			
+			this.log.info("----------seq1----------");
 			// (기존 데이터 00:00:00) - 취소인 경우  변경전 데이터  취소함  S
 			if(map.get("purchaseStatusCd").equals("OR000302")){
 				beforeProdCnt = (Integer) this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialProdBeforeCount", map);
@@ -219,6 +219,7 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 					return flag;
 				}
 			}
+			this.log.info("----------seq2----------");
 			// (기존 데이터 00:00:00) - 취소인 경우  변경전 데이터  취소함  E			
 			
 			// TB_DP_SPRC_PROD_PRCHS_MANG 상품 존재 유무 확인
@@ -229,7 +230,7 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 				map.put("purchaseCount", "0");
 				this.commonDAO.update("SpecialPurchaseCount.insertSpecialPurchaseProd", map);
 			}
-
+			this.log.info("----------seq3----------");
 			map.put("purchaseCount", Integer.toString(reqPurchsCnt));
 
 			prchsCnt = (Integer) this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialPurchaseCount", map);
@@ -239,13 +240,15 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 				Integer resetCount = 0 - prchsCnt; // 상품의 현재 구매수만큼 -해주기 위한 변수
 				map.put("purchaseCount", resetCount.toString());
 			}
-
+			this.log.info("----------seq4----------");
 			// channel 및 catalog Id에 대한 update 실행
 			this.commonDAO.update("SpecialPurchaseCount.updateSpecialPurchaseCount", map);
+			this.log.info("----------seq5----------");
 		}catch (Exception e){
 			e.printStackTrace();
 			flag =false;
 		}
+		this.log.info("----------seq6----------");
 		return flag;
 	}
 
