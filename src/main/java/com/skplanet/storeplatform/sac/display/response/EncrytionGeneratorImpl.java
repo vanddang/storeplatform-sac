@@ -81,16 +81,44 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
                 EncryptionSubContents sdSc = getEncryptionSdSubContents(metaInfo);
                 subContentsList.add(sdSc);
             }
-            //HD2 (D화질) 정보 우선, 없으면 HD 정보를 내려줌
-            if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId()) || StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
-                EncryptionSubContents hdSc = getEncryptionHdSubContents(metaInfo);
-                subContentsList.add(hdSc);
-            }
-            //FHD
-            if (supportFhdVideo && StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
-                EncryptionSubContents fhdSc = getEncryptionFhdSubContents(metaInfo);
-                subContentsList.add(fhdSc);
-            }
+            
+            /*
+			 * 4.x I/F 일때
+			 * update by 2015.08.18 이석희 I-S PLUS
+			 */
+
+			if (supportFhdVideo) {
+				if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
+					EncryptionSubContents hdSc = this.getEncryptionHdSubContentsV2(metaInfo);
+					subContentsList.add(hdSc);
+				}
+
+				if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+					EncryptionSubContents hihdSc = this.getEncryptionHiHdSubContents(metaInfo);
+					subContentsList.add(hihdSc);
+				}
+
+			} else {
+				/*
+				 * 고화질 정보(3.x I/F 일때) HD 화질 정보와 HIHD 화질정보 동시에 존재 할때에는 HIHD 화질이 우선적으로 내려가도록
+				 * update by 2015.08.18 이석희 I-S PLUS
+				 */
+				if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+					EncryptionSubContents hdSc = this.getEncryptionHdSubContents(metaInfo);
+					subContentsList.add(hdSc);
+				}
+			}			
+			
+			// HD2 (D화질) 정보 우선, 없으면 HD 정보를 내려줌
+//			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+//				EncryptionSubContents hdSc = this.getEncryptionHdSubContents(metaInfo);
+//				subContentsList.add(hdSc);
+//			}
+			// FHD( FHD 화질이 내려가지 않도록 주석처리) update by 2015.08.18 이석희 I-S PLUS
+//			if (supportFhdVideo	&& StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
+//				EncryptionSubContents fhdSc = this.getEncryptionFhdSubContents(metaInfo);
+//				subContentsList.add(fhdSc);
+//			}
         } else {
             EncryptionSubContents sc = new EncryptionSubContents();
             if (StringUtils.isNotBlank(metaInfo.getDeltaType())) {
