@@ -1506,7 +1506,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			RaterMessage raterMessage = RaterMessage.newMsgWithProdIds(ids);
 			this.log.info("raterAmqpTemplate episode_prod_ids S:::" + ids.toString());
 			this.raterAmqpTemplate.convertAndSend(raterMessage);
-    		
+			this.log.info("raterAmqpTemplate episode_prod_ids E:::" + ids.toString());
 		} catch (AmqpException ae) {
 			result = false;
 			this.log.info("MQ 연동중 Error 발생. - error msg:{}, raterAmqpTemplate:{}", ae.getMessage(), RaterMessage.class);
