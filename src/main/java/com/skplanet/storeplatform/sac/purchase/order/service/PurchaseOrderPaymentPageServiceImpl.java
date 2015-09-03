@@ -245,9 +245,10 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 
 			} else if (StringUtils.startsWith(purchaseProduct.getTenantProdGrpCd(),
 					PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
-				// 이북/코믹
-				return "'" + purchaseProduct.getProdNm() + "' 전권";
-
+				if(StringUtils.equals(purchaseProduct.getChapterUnit(), PurchaseConstants.DISPLAY_BOOK_CLFSCD_SERIAL))
+					return "'" + purchaseProduct.getProdNm() + "' 전회";
+				else
+					return "'" + purchaseProduct.getProdNm() + "' 전권";
 			} else {
 				return purchaseProduct.getProdNm();
 			}
