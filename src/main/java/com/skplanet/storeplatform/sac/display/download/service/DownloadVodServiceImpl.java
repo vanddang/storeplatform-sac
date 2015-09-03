@@ -188,12 +188,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 					// CJ E&M 케이블 자유이용권 구매상품 DRM 만료 여부 - 2015.8월 CJ E&M 요청 사항
 					// CJ E&M 케이블 자유이용권 구매한 상품이고, DRM이 Y이고, 소장상품일 경우 true 아닐 경우 false
-					boolean unlimitedDrmExpireDt = (StringUtils.isNotEmpty(historySacIn.getUseFixrateProdId()) && "Y".equals(historySacIn.getDrmYn()) && StringUtils.isNotEmpty(metaInfo.getStoreProdId()));
+//					boolean unlimitedDrmExpireDt = (StringUtils.isNotEmpty(historySacIn.getUseFixrateProdId()) && "Y".equals(historySacIn.getDrmYn()) && StringUtils.isNotEmpty(metaInfo.getStoreProdId()));
 					setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes); // Meta정보 Set
 
 					// unlimitedDrmExpireDt 값이 true 이면 DL 규격의 ExpirationDate 값이 99991231T125959Z 값으로 내려감  - 2015.8월 CJ E&M 요청 사항
-					Encryption encryption = supportService.generateEncryptionV2(metaInfo, historySacIn.getProdId(), supportFhdVideo, unlimitedDrmExpireDt);
-//					Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
+//					Encryption encryption = supportService.generateEncryptionV2(metaInfo, historySacIn.getProdId(), supportFhdVideo, unlimitedDrmExpireDt);
+					Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
 					encryptionList.add(encryption); // 암호화 규격 add
 					loggingEncResult(encryption); // 암화화 결과 log
 
