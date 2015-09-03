@@ -25,16 +25,17 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherDetailResV2;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherSpecificReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Lists;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -43,6 +44,8 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import com.skplanet.storeplatform.sac.display.feature.list.vo.DisplayListCriteria;
+import com.skplanet.storeplatform.sac.display.feature.list.vo.DisplayListFromDB;
 import com.skplanet.storeplatform.sac.display.freepass.vo.VoucherProdMap;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -84,9 +87,9 @@ public class VoucherServiceImpl implements VoucherService {
 
 	@Autowired
 	private CommonMetaInfoGenerator metaInfoGenerator;
-
+	
 	/*
-	 * (non-Javadoc)
+	 * 2.4.8.1. 이용권 상품 상품 조회.
 	 * 
 	 * @see com.skplanet.storeplatform.sac.display.freepass.service.VoucherService
 	 * #searchVoucherList(com.skplanet.storeplatform .sac.client.display.vo.freepass.VoucherListReq,
@@ -215,7 +218,7 @@ public class VoucherServiceImpl implements VoucherService {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * 2.4.8.2. 이용권 상품 상세 조회.
 	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.freepass.service.VoucherService#searchVoucherDetail(com.skplanet.storeplatform
@@ -462,6 +465,143 @@ public class VoucherServiceImpl implements VoucherService {
 		return responseVO;
 	}
 
+	
+	/*
+	 * 2.4.8.5. 이용권 상품 상세 조회(V2)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.freepass.service.VoucherService#searchVoucherDetailV2(com.skplanet.storeplatform
+	 * .sac.client.display.vo.freepass.VoucherDetailReq,
+	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
+	 */
+	@Override
+	public VoucherDetailResV2 searchVoucherDetailV2(VoucherDetailReq req, SacRequestHeader header) {
+		
+		// 공통 응답 변수 선언
+		VoucherDetailResV2 responseVO = new VoucherDetailResV2();
+		CommonResponse commonResponse = new CommonResponse();
+		Coupon coupon = null;
+		List<Coupon> couponList = new ArrayList<Coupon>();
+		
+		List<MetaInfo> retMetaInfoList = null;
+		int totalCount = 0;
+		
+		// 파라미터 셋팅
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setDeviceModelCd(header.getDeviceHeader().getModel());
+		req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+		req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+		req.setEbookThumbnailImageCd(DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
+		req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
+		req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		
+		// 이용등급코드 : '+'로 연결 된 이용등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getCmpxProdGradeCd())) {
+			try {
+				String[] arrayCmpxProdGradeCd = req.getCmpxProdGradeCd().split("\\+");
+				for (int i = 0; i < arrayCmpxProdGradeCd.length; i++) {
+					if (StringUtils.isNotEmpty(arrayCmpxProdGradeCd[i])) {
+						if (!"PD004401".equals(arrayCmpxProdGradeCd[i]) && !"PD004402".equals(arrayCmpxProdGradeCd[i])
+								&& !"PD004403".equals(arrayCmpxProdGradeCd[i])
+								&& !"PD004404".equals(arrayCmpxProdGradeCd[i])) {
+							this.log.debug("----------------------------------------------------------------");
+							this.log.debug("유효하지않은 이용권 이용등급 코드 : " + arrayCmpxProdGradeCd[i]);
+							this.log.debug("----------------------------------------------------------------");
+							throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 cmpxProdGradeCd",
+									arrayCmpxProdGradeCd[i]);
+						}
+					}
+				}
+				req.setArrayCmpxProdGradeCd(arrayCmpxProdGradeCd);
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_DSP_0003", "cmpxProdGradeCd", req.getTopMenuId());
+			}
+		}
+	
+		// CMPX_PROD_GRP_CD(복합상품 그룹코드), Plus19Yn 알아오기
+		MetaInfo beforeInfo = (MetaInfo) this.commonDAO.queryForObject("Voucher.selectCmpxProdGrpCd", req.getProductId());
+		if (null != beforeInfo) {
+			req.setCmpxProdGrpCd(beforeInfo.getCmpxProdGrpCd());
+			req.setPlus19Yn(beforeInfo.getPlus19Yn());
+		} else {
+			req.setPlus19Yn("N");
+		}
+		
+		// ###################################################################################
+		// 이용권 상세 조회 (복합상품 그룹코드가 있으면 그룹으로 조회)
+		// ###################################################################################
+		retMetaInfoList = this.commonDAO.queryForList("Voucher.selectVoucherDetail", req, MetaInfo.class);
+		// ###################################################################################
+		
+		if (retMetaInfoList == null)
+			throw new StorePlatformException("SAC_DSP_0009", req.getProductId(), req.getProductId());
+		
+		if (retMetaInfoList.size() > 0) {
+			
+			for (MetaInfo metaInfo : retMetaInfoList) {
+				
+				boolean saveFlag = false; // Coupon List에 저장여부
+				
+				// 상품 상태 조회 - 판매대기, 판매종료는 노출안함 ( 판매중,판매중지,판매금지는 노출함 )
+				if (!DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(metaInfo.getProdStatusCd())
+						&& !DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(metaInfo.getProdStatusCd())
+						&& !DisplayConstants.DP_PASS_SALE_STAT_ING.equals(metaInfo.getProdStatusCd())) {
+					saveFlag = false;
+				} else {
+					saveFlag = true;
+				}
+				
+				// 조합
+				if (saveFlag) {
+					
+					coupon = this.responseInfoGenerateFacade.generateVoucherProduct(metaInfo);
+					totalCount++;
+					
+					// 티멤버십 DC 정보
+					TmembershipDcInfo info = this.displayCommonService.getTmembershipDcRateForMenu(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId());
+					List<Point> pointList = this.commonGenerator.generatePoint(info);
+
+					// 정액제 패스/시리즈 패스만 조회
+					if ((StringUtils.equals(DisplayConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE, metaInfo.getCmpxProdClsfCd()) 
+							|| StringUtils.equals(DisplayConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS, metaInfo.getCmpxProdClsfCd())) && StringUtils.isNotEmpty(req.getUserKey())) {
+
+						// 회원등급 조회
+						GradeInfoSac userGradeInfo = this.displayCommonService.getUserGrade(req.getUserKey());
+						if (userGradeInfo != null) {
+							if (pointList == null)
+								pointList = new ArrayList<Point>();
+							String userGrade = userGradeInfo.getUserGradeCd();
+							// TODO topMenuId -> menuId 작업 안함
+							MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(), metaInfo.getTopMenuId(), req.getChannelId(), metaInfo.getProdAmt());
+
+							// Tstore멤버십 적립율 정보
+							mileageInfo = this.benefitService.checkFreeProduct(mileageInfo, metaInfo.getProdAmt());
+							pointList.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
+						}
+					}
+					coupon.setPointList(pointList);
+
+					// LIST_ID가 존재할 경우
+					if(!StringUtils.isEmpty(metaInfo.getListId())) {
+						String listId = metaInfo.getListId();
+						Lists lists = setListIdAndEtcProp(listId,header);
+						if(null != lists){
+							coupon.setLists(lists);
+						}
+					}
+					couponList.add(coupon);
+				} // if
+			} // for
+		}
+		commonResponse.setTotalCount(totalCount);
+		
+		responseVO.setCommonResponse(commonResponse);
+		responseVO.setCouponList(couponList);
+		
+		return responseVO;
+	}
+	
 	/**
 	 * <pre>
 	 * 특정 상품이 적용된 이용권 조회.
@@ -835,4 +975,31 @@ public class VoucherServiceImpl implements VoucherService {
 		responseVO.setCouponList(couponList);
 		return responseVO;
 	}	
+	
+	
+	/**
+	 * <pre>
+	 * Lists Generate.
+	 * </pre>
+	 * @param listId
+	 * @param header
+	 * @return Lists
+	 */
+	private Lists setListIdAndEtcProp(String listId, SacRequestHeader header) {
+		Lists response = null;
+		String tenantId = header.getTenantHeader().getTenantId();
+		int count = 1;
+
+		DisplayListCriteria listCriteria = new DisplayListCriteria(tenantId, listId, "Y", count);
+
+		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class);
+
+		if(!listsFromDB.isEmpty()){
+			response = new Lists();
+    		response.setEtcProp(listsFromDB.get(0).getEtcProp());
+    		response.setListId(listsFromDB.get(0).getListId());
+    		response.setListNm(listsFromDB.get(0).getListNm());
+		}
+		return response;
+	}
 }

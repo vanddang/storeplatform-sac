@@ -334,6 +334,7 @@ public class MetaInfo extends CommonInfo {
 	private String dlStrmAttrCd; //  바로보기/다운로드속성
 	private String usePeriodAttrCd; // 이용기간 이용
 	private String dwldStrmClsfCd; // 다운로드 스트리밍 구분 코드
+	private String listId; // 리스트_ID
 	
 
 	// ////////////////////////// 하루에 하나 변수 ////////////////////////////
@@ -4826,4 +4827,21 @@ public class MetaInfo extends CommonInfo {
 	public void setRequestProduct(String requestProduct) {
 		this.requestProduct = requestProduct;
 	}
+
+	/**
+	 * @return the listId
+	 */
+	public String getListId() {
+		return listId;
+	}
+
+	/**
+	 * @param listId
+	 *            the listId to set
+	 */
+	public void setListId(String listId) {
+		this.listId = listId;
+	}
+	
+	
 }

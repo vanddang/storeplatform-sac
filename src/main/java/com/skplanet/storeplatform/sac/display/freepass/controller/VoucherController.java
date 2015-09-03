@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherDetailResV2;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherSpecificReq;
@@ -42,14 +43,14 @@ public class VoucherController {
 
 	/**
 	 * <pre>
-	 * 이용권 상품 조회(자유 이용권 목록 조회)
+	 * [I03000170] 2.4.8.1 이용권 상품 조회.
 	 * </pre>
 	 * 
 	 * @param req
-	 *            req
+	 *            VoucherListReq
 	 * @param header
-	 *            header
-	 * @return CategoryAppRes
+	 *            SacRequestHeader
+	 * @return VoucherListRes
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -64,14 +65,14 @@ public class VoucherController {
 
 	/**
 	 * <pre>
-	 * 이용권 상품 상세 조회 (자유 이용권 상품 상세 조회)
+	 * [I03000171] 2.4.8.2 이용권 상품 상세 조회.
 	 * </pre>
 	 * 
 	 * @param req
-	 *            req
+	 *            VoucherDetailReq
 	 * @param header
-	 *            header
-	 * @return CategoryAppRes
+	 *            SacRequestHeader
+	 * @return VoucherDetailRes
 	 */
 	@RequestMapping(value = "/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -82,6 +83,28 @@ public class VoucherController {
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.voucherService.searchVoucherDetail(req, header);
+	}
+
+	/**
+	 * <pre>
+	 * [I03000185] 2.4.8.5 이용권 상품 상세 조회(V2).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            VoucherDetailReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @return VoucherDetailRes
+	 */
+	@RequestMapping(value = "/detail/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public VoucherDetailResV2 searchVoucherDetailV2(@Validated @RequestBody VoucherDetailReq req, SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchVoucherDetailV2 Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.voucherService.searchVoucherDetailV2(req, header);
 	}
 
 	/**

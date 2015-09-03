@@ -184,6 +184,7 @@
 		        , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.DRM_ATTR_CLSF ELSE '' END)  as drmAttrCd
 		        , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.DWLD_STRM_ATTR_CLSF ELSE '' END)  as dlStrmAttrCd
 		        , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.USE_PERIOD_ATTR_CLSF ELSE '' END)  as usePeriodAttrCd
+		        , CM.LIST_ID
 	        FROM 
 	            TB_DP_PROD PD
 	            <if test='cmpxProdGrpCd != null and cmpxProdGrpCd != ""'>
@@ -206,6 +207,7 @@
 						, DRM_ATTR_CLSF
 						, DWLD_STRM_ATTR_CLSF
 						, USE_PERIOD_ATTR_CLSF
+						, LIST_ID
 	                FROM 
 	                    TB_DP_CMPX_PROD WHERE CMPX_PROD_GRP_CD = (SELECT CMPX_PROD_GRP_CD FROM TB_DP_CMPX_PROD WHERE PROD_ID = #{productId} )
 	            ) CM
@@ -280,7 +282,7 @@
     </select>
     
         
-    <!-- 이용권 상품 상세 매핑상품 조회 -->
+    <!-- 이용권 상품 상세 조회시 매핑된 상품 조회 -->
     <select id="selectVoucherMapProduct" parameterType="VoucherDetailSacReq" resultType="VoucherMapProduct">
         SELECT  /* VoucherMapper.selectVoucherMapProduct, 이용권 매핑상품 조회, SAC전시 이태균/I-S PLUS, 2015-05-11 */
             *
