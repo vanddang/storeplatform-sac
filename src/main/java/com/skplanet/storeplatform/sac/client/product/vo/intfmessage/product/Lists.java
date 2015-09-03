@@ -9,6 +9,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 public class Lists {
 	private String listId;
 	private String listNm;
+	private String title;
 	private String startKey;
 	private String hasNext; // Y/N
 	private Integer count;
@@ -61,4 +62,12 @@ public class Lists {
 	public void setEtcProp(String etcProp) {
 		this.etcProp = etcProp;
 	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	
 }

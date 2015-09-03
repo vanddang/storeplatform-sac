@@ -33,7 +33,6 @@ public class VoucherDetailResV2 extends CommonInfo {
 
 	private CommonResponse commonResponse;
 	private List<Coupon> couponList;
-	private List<Product> productList;
 
 	/**
 	 * @return the commonResponse
@@ -48,21 +47,6 @@ public class VoucherDetailResV2 extends CommonInfo {
 	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
-	}
-
-	/**
-	 * @return the productList
-	 */
-	public List<Product> getProductList() {
-		return this.productList;
-	}
-
-	/**
-	 * @param productList
-	 *            the productList to set
-	 */
-	public void setProductList(List<Product> productList) {
-		this.productList = productList;
 	}
 
 	/**
