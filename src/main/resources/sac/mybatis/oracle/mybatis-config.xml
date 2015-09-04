@@ -53,7 +53,8 @@
         <typeAlias alias="ChangeDisplayUser" type="com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser" />
         <typeAlias alias="SacService" type="com.skplanet.storeplatform.sac.other.sacservice.vo.SacService" />
         <typeAlias alias="SendMqData" type="com.skplanet.storeplatform.sac.other.feedback.vo.SendMqData" />
-        
+        <typeAlias alias="SearchKeyword" type="com.skplanet.storeplatform.sac.other.search.vo.SearchKeyword" />
+
         <!-- ################################################# -->
         <!-- 회원                                            -->
         <!-- ################################################# -->
