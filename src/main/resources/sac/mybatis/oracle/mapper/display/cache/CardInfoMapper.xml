@@ -3,80 +3,87 @@
 <mapper namespace="CardInfo">
 
 	<select id="getCardInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.CardInfo">
-		SELECT /* CardInfoMapper.xml, getCardInfo, SAC : 양해엽 , 2014-10-10 */
-			CRD.TENANT_ID
-			,CRD.CARD_ID
-			,CRD.CARD_TYPE_CD
-			,CRD.CARD_TITLE
-			,CRD.CARD_DESC
-			,CRD.CARD_LAYOUT
-            ,CRD.CARD_USE_GRD_CD
-			,CRD.LND_TITLE
-			,CRD.LND_DESC
-			,CRD.LND_LAYOUT
-            ,CRD.LND_PLUS19_YN
-			,CRD.DATASET_ID
-			,CRD.INJT_VAR AS CARD_INJT_VAR
-			,CRD.SEGM_TYPE_CD
-			,CRD.CARD_IMG_PATH
-			,CRD.CARD_IMG_RATIO
-			,CRD.CARD_IMG_TYPE
-			,CRD.LND_IMG_PATH
-			,CRD.LND_IMG_RATIO
-			,CRD.MENU_ID
-			,CRD.SMART_OFR_LIST_ID
-            ,CRD.TEST_MDN_USE_YN
-            <choose>
-                <when test='tenantId=="S01"'>
-                ,(  CASE WHEN (SELECT COUNT(1) FROM TB_DP_CARD WHERE CARD_ID = #{cardId}) &gt; 1
-                         THEN
-                            (SELECT NVL2(CD_DESC, CD_DESC||'/'||TO_CHAR(SYSDATE, 'YYYYMMDDHH24'), '')
-                                    FROM TB_CM_CD
-                                    WHERE CD_ID = 'DP0124' || #{tenantId} || 'O')
-                         ELSE
-                            (SELECT NVL2(CD_DESC, CD_DESC||'/'||TO_CHAR(SYSDATE, 'YYYYMMDDHH24'), '')
-                                    FROM TB_CM_CD
-                                    WHERE CD_ID = 'DP0124' || #{tenantId} || 'T')
-                      END ) AS SHARE_URL
-                </when>
-                <otherwise>
-                ,(	SELECT NVL2(CD_DESC, CD_DESC||'/'||TO_CHAR(SYSDATE, 'YYYYMMDDHH24'), '')
-                    FROM TB_CM_CD
-                    WHERE CD_ID = 'DP0124' || #{tenantId})  AS SHARE_URL
-                </otherwise>
-            </choose>
-			,NVL(CEA.EXPO_YN_CARD_TITLE, 'N') 			AS EXPO_YN_CARD_TITLE
-			,NVL(CEA.EXPO_YN_CARD_DESC, 'N') 			AS EXPO_YN_CARD_DESC
-			,NVL(CEA.EXPO_YN_CARD_LIKE, 'N') 			AS EXPO_YN_CARD_LIKE
-			,NVL(CEA.EXPO_YN_CARD_SHAR, 'N') 			AS EXPO_YN_CARD_SHAR
-			,NVL(CEA.EXPO_YN_CARD_LND, 'N') 			AS EXPO_YN_CARD_LND
-			,NVL(CEA.EXPO_YN_CARD_DC_PRV_PRICE, 'N') 	AS EXPO_YN_CARD_DC_PRV_PRICE
-			,NVL(CEA.EXPO_YN_CARD_DC_RATE, 'N') 		AS EXPO_YN_CARD_DC_RATE
-			,NVL(CEA.EXPO_YN_CARD_IMG, 'N') 			AS EXPO_YN_CARD_IMG
-			,NVL(CEA.EXPO_YN_CARD_ITEM_NO, 'N') 		AS EXPO_YN_CARD_ITEM_NO
-			,NVL(CEA.EXPO_YN_CARD_RECOM_REASON, 'N') 	AS EXPO_YN_CARD_RECOM_REASON
-			,NVL(CEA.EXPO_YN_CARD_ABSTR_TM, 'N') 		AS EXPO_YN_CARD_ABSTR_TM
-			,NVL(CEA.EXPO_YN_LND_TITLE, 'N') 			AS EXPO_YN_LND_TITLE
-			,NVL(CEA.EXPO_YN_LND_DESC, 'N') 			AS EXPO_YN_LND_DESC
-			,NVL(CEA.EXPO_YN_LND_ITEM_NO, 'N') 			AS EXPO_YN_LND_ITEM_NO
-			,NVL(CEA.EXPO_YN_LND_DC_PRV_PRICE, 'N') 	AS EXPO_YN_LND_DC_PRV_PRICE
-			,NVL(CEA.EXPO_YN_LND_DC_RATE, 'N') 			AS EXPO_YN_LND_DC_RATE
-			,NVL(CEA.EXPO_YN_LND_IMG, 'N') 				AS EXPO_YN_LND_IMG
-			,NVL(CEA.EXPO_YN_LND_IMG_OVERLAY, 'N') 		AS EXPO_YN_LND_IMG_OVERLAY
-			,DSF.DATASET_GRP_CD
-			,DSF.TITLE
-			,DSF.DATASET_DESC
-			,DSF.TENANT_URL
-			,DSF.INJT_VAR AS DATASET_INJT_VAR
-			,DSF.ITEM_LND_URL
-		FROM TB_DP_CARD 					CRD
-			INNER JOIN TB_DP_CARD_ETC_ATTR	CEA
-				ON CRD.TENANT_ID = CEA.TENANT_ID AND CRD.CARD_ID = CEA.CARD_ID
-			INNER JOIN TB_DP_DATASET_FRAME 	DSF
-				ON CRD.TENANT_ID = DSF.TENANT_ID AND CRD.DATASET_ID = DSF.DATASET_ID
-		WHERE 	1=1
-			AND	CRD.TENANT_ID = #{tenantId}
-			AND	CRD.CARD_ID = #{cardId}
+	SELECT  /* CardInfoMapper.xml, getCardInfo, SAC : 정화수 , 2014-10-10 */
+    		CRD.tenant_id
+          , CRD.card_id
+          , CRD.card_type_cd
+          , CRD.card_title
+          , CRD.card_desc
+          , CRD.card_layout
+          , CRD.card_use_grd_cd
+          , CRD.lnd_title
+          , CRD.lnd_desc
+          , CRD.lnd_layout
+          , CRD.lnd_plus19_yn
+          , CRD.dataset_id
+          , CRD.injt_var AS card_injt_var
+          , CRD.segm_type_cd
+          , CRD.card_img_path
+          , CRD.card_img_ratio
+          , CRD.card_img_type
+          , CRD.lnd_img_path
+          , CRD.lnd_img_ratio
+          , CRD.menu_id
+          , CRD.smart_ofr_list_id
+          , CRD.test_mdn_use_yn
+          <choose>
+              <when test='tenantId=="S01"'>
+				<!-- TStore 는 모바일웹이 2개 (One Store / TStore) -->
+              , CASE
+				    WHEN ( SELECT COUNT(1) FROM TB_DP_CARD WHERE card_id = #{cardId} ) &gt; 1 THEN (
+						SELECT NVL2(cd_desc, cd_desc||'/'||TO_CHAR(SYSDATE, 'YYYYMMDDHH24'), '')
+						FROM   TB_CM_CD
+						WHERE  cd_id = 'DP0124' || #{tenantId} || 'O'
+                    ) ELSE (
+						SELECT NVL2(cd_desc, cd_desc||'/'||TO_CHAR(SYSDATE, 'YYYYMMDDHH24'), '')
+						FROM   TB_CM_CD
+						WHERE  cd_id = 'DP0124' || #{tenantId} || 'T'
+                    )
+                END AS share_url
+			  </when>
+			  <otherwise>
+			  , (  SELECT NVL2(cd_desc, cd_desc||'/'||TO_CHAR(SYSDATE, 'YYYYMMDDHH24'), '')
+				   FROM   TB_CM_CD
+				   WHERE  cd_id = 'DP0124' || #{tenantId}
+			  )     AS share_url
+			  </otherwise>
+		  </choose>
+		, NVL(CEA.expo_yn_card_title,        'N')   AS expo_yn_card_title
+		, NVL(CEA.expo_yn_card_desc,         'N')   AS expo_yn_card_desc
+		, NVL(CEA.expo_yn_card_like,         'N')   AS expo_yn_card_like
+		, NVL(CEA.expo_yn_card_shar,         'N')   AS expo_yn_card_shar
+		, NVL(CEA.expo_yn_card_lnd,          'N')   AS expo_yn_card_lnd
+		, NVL(CEA.expo_yn_card_dc_prv_price, 'N')   AS expo_yn_card_dc_prv_price
+		, NVL(CEA.expo_yn_card_dc_rate,      'N')   AS expo_yn_card_dc_rate
+		, NVL(CEA.expo_yn_card_img,          'N')   AS expo_yn_card_img
+		, NVL(CEA.expo_yn_card_item_no,      'N')   AS expo_yn_card_item_no
+		, NVL(CEA.expo_yn_card_recom_reason, 'N')   AS expo_yn_card_recom_reason
+		, NVL(CEA.expo_yn_card_abstr_tm,     'N')   AS expo_yn_card_abstr_tm
+		, NVL(CEA.expo_yn_lnd_title,         'N')   AS expo_yn_lnd_title
+		, NVL(CEA.expo_yn_lnd_desc,          'N')   AS expo_yn_lnd_desc
+		, NVL(CEA.expo_yn_lnd_item_no,       'N')   AS expo_yn_lnd_item_no
+		, NVL(CEA.expo_yn_lnd_dc_prv_price,  'N')   AS expo_yn_lnd_dc_prv_price
+		, NVL(CEA.expo_yn_lnd_dc_rate,       'N')   AS expo_yn_lnd_dc_rate
+		, NVL(CEA.expo_yn_lnd_img,           'N')   AS expo_yn_lnd_img
+		, NVL(CEA.expo_yn_lnd_img_overlay,   'N')   AS expo_yn_lnd_img_overlay
+		, DSF.dataset_grp_cd
+		, DSF.title
+		, DSF.dataset_desc
+		, DSF.tenant_url
+		, DSF.injt_var AS dataset_injt_var
+		, DSF.item_lnd_url
+	FROM  (
+        SELECT  tenant_id, card_id, card_type_cd, card_title, card_desc, card_layout, lnd_title, lnd_desc, lnd_layout, admin_comment, search_tag, injt_var, segm_type_cd, card_img_path, card_img_ratio, card_img_type, lnd_img_path, lnd_img_ratio, menu_id, smart_ofr_list_id, intent_url, reg_id, reg_dt, upd_id, upd_dt, copied_yn, test_mdn_use_yn, card_use_grd_cd, lnd_plus19_yn,
+        		<!-- 운영자랜덤추천(DT03000110)은 단말 분기처리 미구현으로 운영자추천(DT03000100)으로 변경 -->
+        		CASE dataset_id WHEN 'DT03000110' THEN 'DT03000100' ELSE dataset_id END AS dataset_id
+        FROM    TB_DP_CARD
+        WHERE   tenant_id = #{tenantId}
+        AND     card_id   = #{cardId}
+	) CRD
+	JOIN    TB_DP_CARD_ETC_ATTR  CEA
+			ON( CRD.tenant_id = CEA.tenant_id AND CRD.card_id = CEA.card_id )
+	JOIN    TB_DP_DATASET_FRAME  DSF
+			ON( CRD.tenant_id = DSF.tenant_id AND CRD.dataset_id = DSF.dataset_id )
 	</select>
 
 </mapper>
