@@ -1417,7 +1417,7 @@ public class IdpServiceImpl implements IdpService {
 				if (StringUtils.isNotBlank(map.get("parent_rname_auth_key"))) {
 					mbrLglAgent.setParentCI(map.get("parent_rname_auth_key"));
 				}
-				// mbrLglAgent.setIsParent(map.get("is_parent_approve"));
+				mbrLglAgent.setIsParent(map.get("is_parent_approve"));
 				mbrLglAgent.setParentRealNameSite(map.get("systemID"));
 				if (StringUtils.isNotBlank(map.get("parent_approve_date"))) {
 					if (map.get("parent_approve_date").length() == 8) {
