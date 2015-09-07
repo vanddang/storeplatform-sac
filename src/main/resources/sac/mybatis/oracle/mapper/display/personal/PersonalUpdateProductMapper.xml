@@ -32,7 +32,7 @@
 		         AND AUP.TENANT_ID(+) = #{tenantId}
                  AND AUP.PROD_ID(+) = APPPROD.PROD_ID
                  AND AUP.POLICY_CLSF_CD(+) = 'DP012502' /* DP012502 : 우선순위 지정 업데이트 */
-		         AND AUP.USE_YN(+) = APPPROD.PROD_ID
+		         AND AUP.USE_YN(+) = 'Y'
          ) LA
          WHERE RNUM = 1
      </select>
