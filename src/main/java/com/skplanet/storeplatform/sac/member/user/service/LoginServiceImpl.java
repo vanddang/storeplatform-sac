@@ -2404,6 +2404,10 @@ public class LoginServiceImpl implements LoginService {
 			res.setTstoreEtcInfo(this.getTstoreEtcInfo(requestHeader, deviceInfo.getDeviceId(),
 					deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
+			// imei 업데이트
+			this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(), detailRes
+					.getDeviceInfoList().get(0).getNativeId(), req.getNativeId());
+
 		} else { // 타사 인증
 
 			MarketAuthorizeEcRes marketRes = null;
@@ -2798,7 +2802,53 @@ public class LoginServiceImpl implements LoginService {
 		res.setTstoreEtcInfo(this.getTstoreEtcInfo(requestHeader, deviceInfo.getDeviceId(),
 				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
+		// imei 업데이트
+		this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(), detailRes
+				.getDeviceInfoList().get(0).getNativeId(), req.getNativeId());
+
 		return res;
+	}
+
+	/**
+	 * <pre>
+	 * imei 업데이트.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userKey
+	 *            사용자키
+	 * @param deviceId
+	 *            MDN
+	 * @param nativeId
+	 *            DB에 저장된 imei
+	 * @param reqNativeId
+	 *            request imei
+	 */
+	private void updateImei(SacRequestHeader requestHeader, String userKey, String deviceId, String nativeId,
+			String reqNativeId) {
+		String cspImei = null;
+		try {
+			cspImei = this.deviceService.getIcasImei(deviceId);
+		} catch (StorePlatformException e) {
+			// ignore Exception
+		}
+
+		if (cspImei != null) {
+			if (!StringUtils.equals(reqNativeId, cspImei)) {
+				throw new StorePlatformException("SAC_MEM_1503");
+			}
+			LOGGER.info("{} imei 변경 : {} -> {}", deviceId, nativeId, cspImei);
+			UserMbrDevice userMbrDevice = new UserMbrDevice();
+			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE);
+			userMbrDevice.setNativeID(cspImei);
+			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+			createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+			createDeviceReq.setUserKey(userKey);
+			createDeviceReq.setIsNew("N");
+			createDeviceReq.setUserMbrDevice(userMbrDevice);
+			this.deviceSCI.createDevice(createDeviceReq);
+		}
 	}
 
 	/**
@@ -3266,7 +3316,7 @@ public class LoginServiceImpl implements LoginService {
 			}
 		} catch (StorePlatformException ex) {
 			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
-					|| !StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+					&& !StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				throw ex;
 			}
 		}
@@ -4217,7 +4267,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @param userMbr
 	 *            UserMbr
 	 */
-	public void recorverySleepUser(SacRequestHeader requestHeader, String deviceId, UserMbr userMbr) {
+	private void recorverySleepUser(SacRequestHeader requestHeader, String deviceId, UserMbr userMbr) {
 		String idpResultYn = null;
 		String idpResultErrorCode = null;
 		try {
