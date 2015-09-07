@@ -18,6 +18,8 @@ public class OtherPackageListReq extends CommonInfo {
 	@NotBlank
 	private String packageInfo;
 
+	private String ignoreProvisionYn = "N";
+
 	/**
 	 * @return the packageInfo
 	 */
@@ -33,4 +35,11 @@ public class OtherPackageListReq extends CommonInfo {
 		this.packageInfo = packageInfo;
 	}
 
+	public String getIgnoreProvisionYn() {
+		return ignoreProvisionYn;
+	}
+
+	public void setIgnoreProvisionYn(String ignoreProvisionYn) {
+		this.ignoreProvisionYn = ignoreProvisionYn;
+	}
 }
