@@ -998,7 +998,7 @@ public class VoucherServiceImpl implements VoucherService {
 			response = new Lists();
     		response.setEtcProp(listsFromDB.get(0).getEtcProp());
     		response.setListId(listsFromDB.get(0).getListId());
-    		response.setListNm(listsFromDB.get(0).getListNm());
+    		response.setTitle(listsFromDB.get(0).getListNm());
 		}
 		return response;
 	}
