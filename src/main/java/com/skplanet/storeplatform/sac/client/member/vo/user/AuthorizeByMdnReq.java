@@ -60,6 +60,11 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	private String loginReason;
 
 	/**
+	 * 접속 아이피
+	 */
+	private String deviceIp;
+
+	/**
 	 * 휴대기기 부가정보 리스트.
 	 */
 	private List<DeviceExtraInfo> deviceExtraInfoList;
@@ -197,6 +202,21 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	 */
 	public void setLoginReason(String loginReason) {
 		this.loginReason = loginReason;
+	}
+
+	/**
+	 * @return the deviceIp
+	 */
+	public String getDeviceIp() {
+		return this.deviceIp;
+	}
+
+	/**
+	 * @param deviceIp
+	 *            the deviceIp to set
+	 */
+	public void setDeviceIp(String deviceIp) {
+		this.deviceIp = deviceIp;
 	}
 
 }
