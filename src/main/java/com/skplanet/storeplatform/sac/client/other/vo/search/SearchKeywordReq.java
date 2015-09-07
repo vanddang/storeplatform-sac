@@ -23,7 +23,7 @@ public class SearchKeywordReq extends CommonInfo {
      * DP013803 : 테마검색어
      */
     @NotBlank
-    @Pattern(regexp = "^([A-Z0-9]{8})$|^([A-Z0-9]{8})[+]([A-Z0-9]{8})$|^([A-Z0-9]{8})[+]([A-Z0-9]{8})[+]([A-Z0-9]{8})$")
+    @Pattern(regexp = "^(DP01380){1}?[1-3]$|^(DP01380){1}?[1-3][+](DP01380){1}?[1-3]$|^(DP01380){1}?[1-3][+](DP01380){1}?[1-3][+](DP01380){1}?[1-3]$")
     private String keywordType;
     /**
      * 조회할 검색어 개수.
