@@ -59,7 +59,9 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 
 		CouponUseStatusEcReq couponUseStatusEcReq = this.convertReqForGetCouponUseStatus(couponUseStatusSacParam);
 
+		this.logger.info("PRCHS,ETC,SAC,CMS,GETCOUPONUSESTATUS,REQ,{}", couponUseStatusEcReq);
 		CouponUseStatusEcRes couponUseStatusEcRes = this.shoppingSCI.getCouponUseStatus(couponUseStatusEcReq);
+		this.logger.info("PRCHS,ETC,SAC,CMS,GETCOUPONUSESTATUS,REQ,{}", couponUseStatusEcRes);
 
 		ShoppingScReq shoppingScReq = new ShoppingScReq();
 		shoppingScReq.setTenantId(couponUseStatusSacParam.getTenantId());
@@ -87,8 +89,10 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 		CouponPublishAvailableEcReq couponPublishAvailableEcReq = this
 				.convertReqForGetCouponPublishAvailable(couponPublishAvailableSacParam);
 
+		this.logger.info("PRCHS,ETC,SAC,CMS,GETCOUPONPUBLISHAVAILABLE,REQ,{}", couponPublishAvailableEcReq);
 		CouponPublishAvailableEcRes couponPublishAvailableEcRes = this.shoppingSCI
 				.getCouponPublishAvailable(couponPublishAvailableEcReq);
+		this.logger.info("PRCHS,ETC,SAC,CMS,GETCOUPONPUBLISHAVAILABLE,RES,{}", couponPublishAvailableEcRes);
 
 		return this.convertResForGetCouponPublishAvailable(couponPublishAvailableEcRes);
 
@@ -101,8 +105,10 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 		CouponPublishAvailableEcV2Req couponPublishAvailableEcReq = this
 				.convertReqForGetCouponPublishAvailableV2(couponPublishAvailableSacParam);
 
+		this.logger.info("PRCHS,ETC,SAC,CMS,GETCOUPONPUBLISHAVAILABLEV2,REQ,{}", couponPublishAvailableEcReq);
 		CouponPublishAvailableEcV2Res couponPublishAvailableEcRes = this.shoppingSCI
 				.getCouponPublishAvailableV2(couponPublishAvailableEcReq);
+		this.logger.info("PRCHS,ETC,SAC,CMS,GETCOUPONPUBLISHAVAILABLEV2,RES,{}", couponPublishAvailableEcRes);
 
 		return this.convertResForGetCouponPublishAvailableV2(couponPublishAvailableEcRes);
 
@@ -143,13 +149,15 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 
 		CouponRestoreStatusEcRes couponUseStatusEcRes;
 		try {
+			this.logger.info("PRCHS,ETC,SAC,CMS,RESTORECOUPONSTATUS,REQ,{}", couponRestoreStatusEcReq);
 			couponUseStatusEcRes = this.shoppingSCI.restoreCouponStatus(couponRestoreStatusEcReq);
+			this.logger.info("PRCHS,ETC,SAC,CMS,RESTORECOUPONSTATUS,RES,{}", couponUseStatusEcRes);
 			if(!StringUtils.equals(PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS, couponUseStatusEcRes.getResultCd())){
-				this.logger.info("PRCHS,ETC,SAC,CMS,RESTORECOUPON,ERROR,{},{}", couponRestoreStatusSacParam.getPrchsId(), couponUseStatusEcRes.getResultMsg());
+				this.logger.info("PRCHS,ETC,SAC,CMS,RESTORECOUPONSTATUS,ERROR,{},{}", couponRestoreStatusSacParam.getPrchsId(), couponUseStatusEcRes.getResultMsg());
 				throw new StorePlatformException("SAC_PUR_1802");
 			}
 		} catch (Exception e){
-				this.logger.info("PRCHS,ETC,SAC,CMS,RESTORECOUPON,ERROR,{}", couponRestoreStatusSacParam.getPrchsId());
+				this.logger.info("PRCHS,ETC,SAC,CMS,RESTORECOUPONSTATUS,ERROR,{}", couponRestoreStatusSacParam.getPrchsId());
 				throw new StorePlatformException("SAC_PUR_1801");
 		}
 
@@ -165,11 +173,11 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 			try {
 				int count = this.shoppingScSCI.updatePrchsDtl(shoppingScReq);
 				if(count != 1) {
-					this.logger.info("PRCHS,ETC,SAC,DB,RESTORECOUPON,ERROR,{},{}", couponRestoreStatusSacParam.getPrchsId(), cpnPublicCd);
+					this.logger.info("PRCHS,ETC,SAC,DB,RESTORECOUPONSTATUS,ERROR,{},{}", couponRestoreStatusSacParam.getPrchsId(), cpnPublicCd);
 					throw new StorePlatformException("SAC_PUR_7801");
 				}
 			} catch (Exception e) {
-				this.logger.info("PRCHS,ETC,SAC,DB,RESTORECOUPON,ERROR,{},{}", couponRestoreStatusSacParam.getPrchsId(), cpnPublicCd);
+				this.logger.info("PRCHS,ETC,SAC,DB,RESTORECOUPONSTATUS,ERROR,{},{}", couponRestoreStatusSacParam.getPrchsId(), cpnPublicCd);
 				throw new StorePlatformException("SAC_PUR_7802");
 			}
 		}
