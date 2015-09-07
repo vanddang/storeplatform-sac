@@ -47,9 +47,7 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
          */
         if(searchKeywordReq.getKeywordType().contains(SearchType.POPULAR_KEYWORD.getKeywordType())) {
             SearchKeywordListInfo popularInfo = getKeyword(sacRequestHeader.getTenantHeader().getTenantId(), SearchType.POPULAR_KEYWORD, searchKeywordReq.getCount());
-            if(popularInfo != null) {
-                searchKeywordList.add(popularInfo);
-            }
+            searchKeywordList.add(popularInfo);
         }
 
         /**
@@ -57,9 +55,7 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
          */
         if(searchKeywordReq.getKeywordType().contains(SearchType.RISING_KEYWORD.getKeywordType())) {
             SearchKeywordListInfo risingInfo = getKeyword(sacRequestHeader.getTenantHeader().getTenantId(), SearchType.RISING_KEYWORD, searchKeywordReq.getCount());
-            if(risingInfo != null) {
-                searchKeywordList.add(risingInfo);
-            }
+            searchKeywordList.add(risingInfo);
         }
 
         /**
@@ -67,16 +63,7 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
          */
         if(searchKeywordReq.getKeywordType().contains(SearchType.THEME_KEYWORD.getKeywordType())) {
             SearchKeywordListInfo themeInfo = getKeyword(sacRequestHeader.getTenantHeader().getTenantId(), SearchType.THEME_KEYWORD, searchKeywordReq.getCount());
-            if(themeInfo != null) {
-                searchKeywordList.add(themeInfo);
-            }
-        }
-
-        /**
-         * 검색결과 없음.
-         */
-        if(searchKeywordList.size() <= 0) {
-            throw new StorePlatformException("SAC_OTH_9001");
+            searchKeywordList.add(themeInfo);
         }
 
         res.setSearchKeywordList(searchKeywordList);
@@ -118,6 +105,7 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
          * Response 응답 데이터.
          */
         SearchKeywordListInfo searchKeywordListInfo = new SearchKeywordListInfo();
+        searchKeywordListInfo.setKeywordType(searchType.getKeywordType()); // 검색어 유형
 
         if(list.size() > 0) {
 
@@ -127,7 +115,6 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
                 searchKeywordListInfo.setOperationDt(info.getOperationDt()); // 기준일시 (데이타가 동일하다는 판단으로 맨마지막 데이타가 세팅됨.)
                 searchKeywordListInfo.setSearchNm(info.getSearchNm()); // 검색어명
                 searchKeywordListInfo.setSearchDesc(info.getSearchDesc()); // 검색어 설명
-                searchKeywordListInfo.setKeywordType(searchType.getKeywordType()); // 검색어 유형
 
                 KeywordListInfo keywordListInfo = new KeywordListInfo();
                 keywordListInfo.setRank(info.getRank()); // 순위
@@ -140,7 +127,12 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
             searchKeywordListInfo.setKeywordList(keywordList); // 검색어 List set
 
         } else {
-            searchKeywordListInfo = null;
+
+            /**
+             * 데이타가 존재 하지 않은 경우 Default 값으로 세팅. (By 백승현)
+             */
+            searchKeywordListInfo.setTotalCount("0");
+
         }
 
         return searchKeywordListInfo;

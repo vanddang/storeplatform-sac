@@ -28,6 +28,7 @@
                   FROM TB_DP_SEARCH A, TB_DP_SEARCH_KEYWORD B
                  WHERE A.TENANT_ID = B.TENANT_ID
                    AND A.SEARCH_ID = B.SEARCH_ID
+                   AND A.STD_DT = B.STD_DT
                    AND A.TENANT_ID = #{tenantId}
                    <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(searchId)">
                    AND B.SEARCH_ID = #{searchId}
@@ -35,6 +36,7 @@
                    <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(searchClsfCd)">
                    AND A.SEARCH_CLSF_CD = #{searchClsfCd}
                    </if>
+                   AND A.EXPO_YN = 'Y'
                    AND B.EXPO_YN = 'Y'
                  ORDER BY B.RANK, B.UPD_DT
           )
@@ -50,9 +52,11 @@
                     FROM TB_DP_SEARCH A, TB_DP_SEARCH_KEYWORD B
                    WHERE A.TENANT_ID = B.TENANT_ID
                      AND A.SEARCH_ID = B.SEARCH_ID
+                     AND A.STD_DT = B.STD_DT
                      AND A.TENANT_ID = #{tenantId}
                      AND A.SEARCH_CLSF_CD = #{searchClsfCd}
                      AND B.EXPO_YN = 'Y'
+                     AND A.EXPO_YN = 'Y'
                    GROUP BY B.SEARCH_ID
                    ORDER BY DBMS_RANDOM.VALUE
           )
