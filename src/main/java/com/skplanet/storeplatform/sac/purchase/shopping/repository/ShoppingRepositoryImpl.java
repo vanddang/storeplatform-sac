@@ -141,8 +141,38 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 		CouponRestoreStatusEcReq couponRestoreStatusEcReq = this
 				.convertReqForRestoreCouponStatus(couponRestoreStatusSacParam);
 
-		CouponRestoreStatusEcRes couponUseStatusEcRes = this.shoppingSCI.restoreCouponStatus(couponRestoreStatusEcReq);
+		CouponRestoreStatusEcRes couponUseStatusEcRes;
+		try {
+			couponUseStatusEcRes = this.shoppingSCI.restoreCouponStatus(couponRestoreStatusEcReq);
+			if(!StringUtils.equals(PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS, couponUseStatusEcRes.getResultCd())){
+				this.logger.info("PRCHS,ETC,SAC,CMS,RESTORECOUPON,ERROR,{},{}", couponRestoreStatusSacParam.getPrchsId(), couponUseStatusEcRes.getResultMsg());
+				throw new StorePlatformException("SAC_PUR_1802");
+			}
+		} catch (Exception e){
+				this.logger.info("PRCHS,ETC,SAC,CMS,RESTORECOUPON,ERROR,{}", couponRestoreStatusSacParam.getPrchsId());
+				throw new StorePlatformException("SAC_PUR_1801");
+		}
 
+		ShoppingScReq shoppingScReq = new ShoppingScReq();
+		shoppingScReq.setTenantId(couponRestoreStatusSacParam.getTenantId());
+		shoppingScReq.setPrchsId(couponRestoreStatusSacParam.getPrchsId());
+		shoppingScReq.setSystemId(couponRestoreStatusSacParam.getSystemId());
+		shoppingScReq.setCpnUseStatusCd(PurchaseConstants.TSTORE_COUPON_STATUS_NOTUSE_0);
+
+		for(String cpnPublicCd : StringUtils.splitPreserveAllTokens(StringUtils.defaultString(couponUseStatusEcRes.getCpnPublishCd()), PurchaseConstants.SEPARATOR))
+		{
+			shoppingScReq.setCpnPublishCd(cpnPublicCd);
+			try {
+				int count = this.shoppingScSCI.updatePrchsDtl(shoppingScReq);
+				if(count != 1) {
+					this.logger.info("PRCHS,ETC,SAC,DB,RESTORECOUPON,ERROR,{},{}", couponRestoreStatusSacParam.getPrchsId(), cpnPublicCd);
+					throw new StorePlatformException("SAC_PUR_7801");
+				}
+			} catch (Exception e) {
+				this.logger.info("PRCHS,ETC,SAC,DB,RESTORECOUPON,ERROR,{},{}", couponRestoreStatusSacParam.getPrchsId(), cpnPublicCd);
+				throw new StorePlatformException("SAC_PUR_7802");
+			}
+		}
 		return this.convertResForGetRestoreCouponStatus(couponUseStatusEcRes);
 	}
 

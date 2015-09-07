@@ -188,6 +188,13 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	/** T Store Coupon */
 	/* 응답코드 */
 	public static final String TSTORE_COUPON_RESULT_CD_SUCCESS = "0000"; // SUCCESS
+	/* 쿠폰 사용 내역 코드 */
+	public static final String TSTORE_COUPON_STATUS_NOTUSE_0 = "0"; // 미사용
+	public static final String TSTORE_COUPON_STATUS_USE_1 = "1"; // 사용
+	public static final String TSTORE_COUPON_STATUS_CANCEL_2 = "2"; //
+	public static final String TSTORE_COUPON_STATUS_EXPIRE_3 = "3"; // 미사용
+	public static final String TSTORE_COUPON_STATUS_NOTINQUIRY_4 = "4"; // 조회 불가
+
 
 	/** T Store 구매완료 Noti */
 	/* Noti 타입 */
