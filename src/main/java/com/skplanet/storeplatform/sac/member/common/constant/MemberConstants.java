@@ -168,6 +168,7 @@ public final class MemberConstants {
 	public static final String DEVICE_CHANGE_TYPE_JOIN_ECG = "US012010"; // 부가서비스가입
 	public static final String DEVICE_CHANGE_TYPE_SECEDE_ECG = "US012011"; // 부가서비스해지
 	public static final String DEVICE_CHANGE_TYPE_NUMBER_MOVE = "US012012"; // 번호이동
+	public static final String DEVICE_CHANGE_TYPE_IMEI_CHANGE = "US012013"; // imei변경
 
 	/** 미지원 단말. */
 	public static final String NOT_SUPPORT_HP_CORP = "NSH";

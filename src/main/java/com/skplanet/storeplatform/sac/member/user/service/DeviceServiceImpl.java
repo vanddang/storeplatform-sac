@@ -841,6 +841,7 @@ public class DeviceServiceImpl implements DeviceService {
 	public String modDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, DeviceInfo dbDeviceInfo,
 			String version) {
 
+		String DeviceChangeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT;
 		String oDeviceTelecom = deviceInfo.getDeviceTelecom(); // request 통신사 코드
 		StringBuffer deviceInfoChangeLog = new StringBuffer();
 
@@ -990,7 +991,7 @@ public class DeviceServiceImpl implements DeviceService {
 							deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->")
 									.append(nativeId);
 							userMbrDevice.setNativeID(nativeId);
-
+							DeviceChangeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE;
 						} else {
 							throw new StorePlatformException("SAC_MEM_1503");
 						}
@@ -1032,6 +1033,7 @@ public class DeviceServiceImpl implements DeviceService {
 						deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->")
 								.append(nativeId);
 						userMbrDevice.setNativeID(nativeId);
+						DeviceChangeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE;
 					} else {
 						throw new StorePlatformException("SAC_MEM_1503");
 					}
@@ -1141,7 +1143,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (StringUtils.isNotBlank(deviceInfoChangeLog.toString())) { // 변경내역이 있는경우만 휴대기기 수정 API 호출
 
 			/* 휴대기기 변경 이력 코드 */
-			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
+			userMbrDevice.setChangeCaseCode(DeviceChangeCaseCode);
 
 			/* 기기정보 업데이트 */
 			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
