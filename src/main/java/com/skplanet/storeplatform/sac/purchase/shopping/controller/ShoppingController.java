@@ -182,6 +182,8 @@ public class ShoppingController {
 	private CouponRestoreStatusSacParam convertReqForRestoreCouponStatus(SacRequestHeader sacRequestHeader,
 			CouponRestoreStatusSacReq couponRestoreStatusSacReq) {
 		CouponRestoreStatusSacParam couponRestoreStatusSacParam = new CouponRestoreStatusSacParam();
+		couponRestoreStatusSacParam.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		couponRestoreStatusSacParam.setSystemId(sacRequestHeader.getTenantHeader().getSystemId());
 		couponRestoreStatusSacParam.setPrchsId(couponRestoreStatusSacReq.getPrchsId());
 
 		return couponRestoreStatusSacParam;
