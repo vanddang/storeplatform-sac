@@ -83,6 +83,16 @@ public interface ChangeDisplayUserRepository {
 	 * @return Object
 	 */
 	public Object changeProdNotiGood(ChangeDisplayUser changeDisplayUser);
+	
+	/**
+	 * 
+	 * <pre>
+	 * 좋아요 테이블 변경.
+	 * </pre>
+	 * @param changeDisplayUser changeDisplayUser
+	 * @return Object
+	 */
+	public Object changeSocialLike(ChangeDisplayUser changeDisplayUser);
 
 	/**
 	 * 

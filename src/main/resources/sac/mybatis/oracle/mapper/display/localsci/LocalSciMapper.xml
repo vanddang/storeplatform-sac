@@ -175,6 +175,19 @@
           </where>    
     </update>
     
+    <!-- 좋아요 테이블 회원 KEY 변경 -->
+    <update id="changeSocialLike" parameterType="ChangeDisplayUser">
+        UPDATE /* LocalSciMapper.xml, changeSocialLike, SAC : 이태희 , 2015-08-27 */
+               TB_DP_SOCIAL_STATS_MBR_LIKE
+          <set>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">USER_KEY = #{newUserKey} </if>
+          </set>
+          <where>
+               TENANT_ID = #{tenantId}
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND USER_KEY = #{oldUserKey}</if>
+          </where>    
+    </update>
+    
     <!-- 메시지 회원 매핑 테이블 조회 -->
     <select id="searchMsgMbrMapg" parameterType="ChangeDisplayUser" resultType="Integer">
         SELECT /* LocalSciMapper.xml, searchMsgMbrMapg, SAC : 이태희 , 2015-02-02 */

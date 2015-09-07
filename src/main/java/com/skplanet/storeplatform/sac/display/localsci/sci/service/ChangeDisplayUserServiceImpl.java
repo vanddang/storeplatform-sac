@@ -86,6 +86,10 @@ public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 		affectedRow = (Integer) this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
 		LOGGER.info("## changeDisplayUserRepository.changeProdNotiGood : {}", affectedRow);
 		
+		// 좋아요 테이블 회원 KEY 변경
+		affectedRow = (Integer) this.changeDisplayUserRepository.changeSocialLike(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.changeSocialLike : {}", affectedRow);
+		
 		// 메시지 회원 맵핑 테이블에 이미 등록된 데이터가 있는지 확인
 		Integer changeCnt = (Integer) this.changeDisplayUserRepository.searchMsgMbrMapg(changeDisplayUser);
 		LOGGER.info("## changeDisplayUserRepository.searchMsgMbrMapg : {}", changeCnt);
