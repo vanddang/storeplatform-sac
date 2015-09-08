@@ -87,6 +87,26 @@ public interface ChangeDisplayUserRepository {
 	/**
 	 * 
 	 * <pre>
+	 * 중복 데이터 확인을 위한 좋아요 테이블 조회.
+	 * </pre>
+	 * @param changeDisplayUser
+	 * @return Object
+	 */
+	public Object searchSocialLike(ChangeDisplayUser changeDisplayUser);
+	
+	/**
+	 * 
+	 * <pre>
+	 * 좋아요 테이블 중복 데이터 삭제.
+	 * </pre>
+	 * @param changeDisplayUser
+	 * @return Object
+	 */
+	public Object deleteSocialLike(ChangeDisplayUser changeDisplayUser);
+	
+	/**
+	 * 
+	 * <pre>
 	 * 좋아요 테이블 변경.
 	 * </pre>
 	 * @param changeDisplayUser changeDisplayUser

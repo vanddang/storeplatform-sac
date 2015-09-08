@@ -52,6 +52,16 @@ public class ChangeDisplayUserRepositoryImpl implements ChangeDisplayUserReposit
 	}
 	
 	@Override
+	public Object searchSocialLike(ChangeDisplayUser changeDisplayUser) {
+		return this.commonDAO.queryForList("LocalSci.searchSocialLike", changeDisplayUser);
+	}
+	
+	@Override
+	public Object deleteSocialLike(ChangeDisplayUser changeDisplayUser) {
+		return this.commonDAO.update("LocalSci.deleteSocialLike", changeDisplayUser);
+	}
+	
+	@Override
 	public Object changeSocialLike(ChangeDisplayUser changeDisplayUser) {
 		return this.commonDAO.update("LocalSci.changeSocialLike", changeDisplayUser);
 	}

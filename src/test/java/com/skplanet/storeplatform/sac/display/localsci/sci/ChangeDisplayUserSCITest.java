@@ -53,8 +53,8 @@ public class ChangeDisplayUserSCITest {
 	public void testChangeUserKey() {
 		ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
 		changeDisplayUserSacReq.setTenantId("S01");
-		changeDisplayUserSacReq.setOldUserKey("IW1423599199920120710170411");
-		changeDisplayUserSacReq.setNewUseKey("IM142100002351398201212021423");
+		changeDisplayUserSacReq.setOldUserKey("US201509071714218490028667");
+		changeDisplayUserSacReq.setNewUseKey("US201509071131573740028650");
 		this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
 	}
 }

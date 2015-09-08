@@ -175,17 +175,43 @@
           </where>    
     </update>
     
+    <!-- 중복 데이터 확인을 위한 좋아요 테이블 조회. -->
+    <select id="searchSocialLike" parameterType="ChangeDisplayUser" resultType="Map">
+		SELECT /* LocalSciMapper.xml, searchSocialLike, SAC : 이태희 , 2015-09-08 */
+		       A.TENANT_ID,
+		       A.USER_KEY,
+		       A.STATS_CLSF,
+		       A.STATS_KEY,
+		       NVL((SELECT 'Y'
+		              FROM TB_DP_SOCIAL_STATS_MBR_LIKE
+		             WHERE TENANT_ID = A.TENANT_ID
+		               AND USER_KEY = #{newUserKey}
+		               AND STATS_CLSF = A.STATS_CLSF
+		               AND STATS_KEY = A.STATS_KEY), 'N') AS MATCHED_YN
+		  FROM TB_DP_SOCIAL_STATS_MBR_LIKE A
+		 WHERE A.TENANT_ID = #{tenantId}
+		   AND A.USER_KEY = #{oldUserKey}
+    </select>
+    
+    <!-- 좋아요 테이블 중복 데이터 삭제 -->
+    <delete id="deleteSocialLike" parameterType="ChangeDisplayUser">
+		DELETE /* LocalSciMapper.xml, deleteSocialLike, SAC : 이태희 , 2015-08-27 */
+		  FROM TB_DP_SOCIAL_STATS_MBR_LIKE
+		 WHERE TENANT_ID = #{tenantId}
+		   AND USER_KEY = #{oldUserKey}
+		   AND STATS_CLSF = #{statsClsf}
+		   AND STATS_KEY = #{statsKey}
+    </delete>
+    
     <!-- 좋아요 테이블 회원 KEY 변경 -->
     <update id="changeSocialLike" parameterType="ChangeDisplayUser">
         UPDATE /* LocalSciMapper.xml, changeSocialLike, SAC : 이태희 , 2015-08-27 */
                TB_DP_SOCIAL_STATS_MBR_LIKE
-          <set>
-               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">USER_KEY = #{newUserKey} </if>
-          </set>
-          <where>
-               TENANT_ID = #{tenantId}
-               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND USER_KEY = #{oldUserKey}</if>
-          </where>    
+           SET USER_KEY = #{newUserKey}
+         WHERE TENANT_ID = #{tenantId}
+           AND USER_KEY = #{oldUserKey}
+           AND STATS_CLSF = #{statsClsf}
+           AND STATS_KEY = #{statsKey}
     </update>
     
     <!-- 메시지 회원 매핑 테이블 조회 -->

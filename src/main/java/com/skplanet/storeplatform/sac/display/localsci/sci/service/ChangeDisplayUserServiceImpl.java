@@ -1,14 +1,15 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
-import com.skplanet.storeplatform.sac.display.localsci.sci.repository.ChangeDisplayUserRepository;
-import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import com.skplanet.storeplatform.sac.display.localsci.sci.repository.ChangeDisplayUserRepository;
+import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
 
 /**
  * 
@@ -86,9 +87,31 @@ public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 		affectedRow = (Integer) this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
 		LOGGER.info("## changeDisplayUserRepository.changeProdNotiGood : {}", affectedRow);
 		
-		// 좋아요 테이블 회원 KEY 변경
-		affectedRow = (Integer) this.changeDisplayUserRepository.changeSocialLike(changeDisplayUser);
-		LOGGER.info("## changeDisplayUserRepository.changeSocialLike : {}", affectedRow);
+		// 중복 데이터 확인을 위한 좋아요 테이블 조회.
+		List<Map> likeList = (List<Map>) this.changeDisplayUserRepository.searchSocialLike(changeDisplayUser);
+		LOGGER.info("## changeDisplayUserRepository.searchSocialLike : {}", likeList == null ? 0 : likeList.size());
+		
+		if(likeList != null) {
+			int delCnt = 0;
+			int updCnt = 0;
+			
+			for(Map<String, String> row : likeList) {
+				changeDisplayUser.setStatsKey(row.get("STATS_KEY"));
+				changeDisplayUser.setStatsClsf(row.get("STATS_CLSF"));
+				
+				if("Y".equals((String) row.get("MATCHED_YN"))) {
+					// 좋아요 테이블 중복 데이터 삭제
+					affectedRow = (Integer) this.changeDisplayUserRepository.deleteSocialLike(changeDisplayUser);
+					delCnt = delCnt + affectedRow;
+				} else {
+					// 좋아요 테이블 회원 KEY 변경
+					affectedRow = (Integer) this.changeDisplayUserRepository.changeSocialLike(changeDisplayUser);
+					updCnt = updCnt + affectedRow;
+				}
+			}
+			LOGGER.info("## changeDisplayUserRepository.deleteSocialLike : {}", delCnt);
+			LOGGER.info("## changeDisplayUserRepository.changeSocialLike : {}", updCnt);
+		}
 		
 		// 메시지 회원 맵핑 테이블에 이미 등록된 데이터가 있는지 확인
 		Integer changeCnt = (Integer) this.changeDisplayUserRepository.searchMsgMbrMapg(changeDisplayUser);
