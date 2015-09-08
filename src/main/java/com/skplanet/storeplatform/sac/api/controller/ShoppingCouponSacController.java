@@ -573,7 +573,9 @@ public class ShoppingCouponSacController {
 			catalogInfo.setCatalogTag(couponReq.getTag());
 			catalogInfo.setFileNameList(couponReq.getFileNameList());
 			catalogInfo.setIsList(couponReq.getIsList());
-
+			catalogInfo.setCatalogVodUrl(couponReq.getCatalogVodUrl());
+			catalogInfo.setCatalogVodThumbnail(couponReq.getCatalogVodThumbnail());
+			
 			if (StringUtils.isEmpty(couponReq.getCudType())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (cudType)\n";

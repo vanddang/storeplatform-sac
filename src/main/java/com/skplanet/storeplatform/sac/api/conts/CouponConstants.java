@@ -122,6 +122,9 @@ public class CouponConstants {
 	public static final String CATALOG_TOP_IMG_182_182 = "DP0001A3";
 	public static final String CATALOG_TOP_IMG_31_30 = "DP0001B3";
 
+	// 카탈로그 vod catalogVodThumbnail
+	public static final String CATALOG_VOD_IMG = "DP0001D8";
+	
 	// 카탈로그 상세이미지 IMG_CLS
 	public static final String CATALOG_DTL_IMG_684_X = "DP0001B0"; // 가변길이 684x 세로 최대 1170
 	public static final String CATALOG_DTL_IMG_684_XY = "DP0001B4"; // 카칼로그 상세이미지 684xY

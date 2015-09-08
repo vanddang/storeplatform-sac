@@ -2,15 +2,14 @@ package com.skplanet.storeplatform.sac.api.service;
 
 import static com.skplanet.storeplatform.sac.display.common.ProductType.Shopping;
 
-import java.awt.Image;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
-import javax.swing.ImageIcon;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.api.util.ImageUtil;
 import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
@@ -144,6 +142,8 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		String downloadUrl = "";
 		String orgDownloadFileName = "";
 		String message = "";
+		ArrayList<String> fileDtlImgPathList = new ArrayList<String>();
+		int seqVodImg =2;
 		try {
 
 			// 브랜드 이미지 처리
@@ -232,24 +232,38 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 									dpCatalogInfo.setDtlImgPath(downloadFilePath);
 									this.log.info("dpCatalogInfo.getDtlImgPath() : " + dpCatalogInfo.getDtlImgPath());
 								}
-
 							}
 							
-
+							if (dpBrandInfo == null) {
+    							if(!StringUtils.isBlank(dpCatalogInfo.getCatalogVodThumbnail())){
+    								if (i == 2) {
+    									dpCatalogInfo.setCatalogVodThumbnail(downloadFilePath);
+    									seqVodImg++;
+    								}
+    								this.log.info("dpCatalogInfo.getCatalogVodThumbnail() : " + dpCatalogInfo.getCatalogVodThumbnail());
+    							}
+    							
+    							if(i >= seqVodImg){
+    								fileDtlImgPathList.add(downloadFilePath);
+    								this.log.info("detail Img Path : " + downloadFilePath);
+    							}
+							}
+														
 						} catch (CouponException e) {
 							// this.log.info("파일 다운로드 중 오류 발생!!");
 							// this.message = "파일 다운로드 중 오류 발생!!";
 							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR,
 									"파일 다운로드 중 오류 발생!!", null);
-
 						}
-
 					} else {
 						this.log.info("filePath url에 파일정보가 없습니다!");
 						message = "filePath url에 파일정보가 없습니다!";
 						return false;
 					}
 				}
+			}
+			if (dpCatalogInfo != null) {
+				dpCatalogInfo.setFileDtlImgPathList(fileDtlImgPathList);
 			}
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_FILEACESS_ERR, message, null);
@@ -430,26 +444,15 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	 */
 	public boolean catalogImgResize(DpCatalogInfo dpCatalogInfo) {
 
-		ImageUtil imgUtil = new ImageUtil();
-		// 파일명 끝에 추가할 명칭
-
 		// TB_DP_PROD_IMG.IMG_CLS 설정
-		String[] imgClsCodeTop = { CouponConstants.CATALOG_TOP_IMG_182_182 };
-		String[] imgClsCodeDtl = { CouponConstants.CATALOG_DTL_IMG_684_X };
-
 		String targetFileName = null;
 		String catalogImgPath = null;
 		String uploadDir = null;
 		String srcFileName = null;
 		String tmpFileName = null;
 		String fileExt = null;
-		String targetFileName1 = null;
-		String catalogImgPath1 = null;
-		String uploadDir1 = null;
-		String srcFileName1 = null;
-		String tmpFileName1 = null;
-		String fileExt1 = null;
-		int catalogDtlSeq = 1;
+		String[] imgClsTop = { CouponConstants.CATALOG_TOP_IMG_182_182 ,CouponConstants.CATALOG_DTL_IMG_684_XY, CouponConstants.CATALOG_VOD_IMG };
+		int catalogSeq = 1;
 		try {
 
 			// 카탈로그 대표이미지 변수
@@ -457,27 +460,40 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			uploadDir = catalogImgPath.substring(0, catalogImgPath.lastIndexOf(File.separator) + 1); // 이미지 경로
 			srcFileName = catalogImgPath.substring(catalogImgPath.lastIndexOf(File.separator)).replace(File.separator, ""); // 이미지NAME
 			tmpFileName = srcFileName.substring(0, srcFileName.lastIndexOf(".")); // 파일명
-			fileExt = srcFileName.substring(srcFileName.lastIndexOf(".") + 1); // 확장자
-			// 카탈로그 상세이미지 변수
-			catalogImgPath1 = dpCatalogInfo.getDtlImgPath(); // 이미지경로 + 이미지NAME
-			uploadDir1 = catalogImgPath1.substring(0, catalogImgPath1.lastIndexOf(File.separator) + 1); // 이미지 경로
-			srcFileName1 = catalogImgPath1.substring(catalogImgPath1.lastIndexOf(File.separator)).replace(File.separator,
-					""); // 이미지NAME
-			tmpFileName1 = srcFileName1.substring(0, srcFileName1.lastIndexOf(".")); // 파일명
-			fileExt1 = srcFileName1.substring(srcFileName1.lastIndexOf(".") + 1); // 확장자
+			fileExt = srcFileName.substring(srcFileName.lastIndexOf(".") + 1); // 확장자	
+	
+			if(!StringUtils.isBlank(dpCatalogInfo.getDtlImgPath())){
+				catalogSeq++;
+			}
+			
+			if(!StringUtils.isBlank(dpCatalogInfo.getCatalogVodThumbnail())){
+				catalogSeq++;
+			}
+			
+			// 카탈로그 대표이미지,상세 이미지, VOD 이미지 저장 
+			for (int i = 0; i < catalogSeq; i++) {
+				boolean flagYn = false;
+				
+				if(i==1){
+    				// 카탈로그 상세 이미지 변수
+					catalogImgPath = dpCatalogInfo.getDtlImgPath(); // 이미지경로 + 이미지NAME
+					flagYn =true;
+				}		
 
-			Image img = new ImageIcon(uploadDir1 + srcFileName1).getImage(); // 이미지 사이즈를 구하기 위해 이미지를 가져옴.
-
-			int oWidth = img.getWidth(null); // 이미지 가로사이즈
-			int oHeight = img.getHeight(null); // 이미지 세로사이즈
-			int nHeightSize = oHeight;
-			this.log.info("■■■■■oWidth■■■■■ ::" + oWidth);
-			this.log.info("■■■■■oHeight■■■■■ :: " + oHeight);
-
-
-			// 카탈로그 대표이미지 리사이즈
-			for (int i = 0; i < 1; i++) {
-
+				if(i==2){
+    				// 카탈로그 VOD 이미지 변수
+					catalogImgPath = dpCatalogInfo.getCatalogVodThumbnail(); // 이미지경로 + 이미지NAME
+					flagYn =true;
+				}			
+				
+				if(flagYn){
+					uploadDir = catalogImgPath.substring(0, catalogImgPath.lastIndexOf(File.separator) + 1); // 이미지 경로
+					srcFileName = catalogImgPath.substring(catalogImgPath.lastIndexOf(File.separator)).replace(File.separator, ""); // 이미지NAME
+					tmpFileName = srcFileName.substring(0, srcFileName.lastIndexOf(".")); // 파일명
+					fileExt = srcFileName.substring(srcFileName.lastIndexOf(".") + 1); // 확장자						
+				}
+				
+				
 				targetFileName = tmpFileName + "." + fileExt;
 				int seq = 1;
 
@@ -487,7 +503,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				long fileSize = outputfile.length();
 
 				this.brandCatalogProdImgInfo.setProdId(dpCatalogInfo.getCreateCatalogId());
-				this.brandCatalogProdImgInfo.setImgCls(imgClsCodeTop[i]);
+				this.brandCatalogProdImgInfo.setImgCls(imgClsTop[i]);
 				this.brandCatalogProdImgInfo.setFileSize(fileSize);
 				this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
 				this.brandCatalogProdImgInfo.setFilePos(uploadDir);
@@ -498,105 +514,41 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
 			}
 			
-			int seq = 1;
+			List<String> detailPathList = dpCatalogInfo.getFileDtlImgPathList();
 			
-			// 카탈로그 상세이미지 리사이즈
-			for (int i = 0; i < catalogDtlSeq; i++) {
-
+			int seq = 1;
+			// 카탈로그 상세이미지 이미지 저장 
+			for (int i = 0; i < detailPathList.size(); i++) {
+				 
+    			// 카탈로그 상세이미지 이미지 변수
+    			catalogImgPath = detailPathList.get(i); // 이미지경로 + 이미지NAME
+    			uploadDir = catalogImgPath.substring(0, catalogImgPath.lastIndexOf(File.separator) + 1); // 이미지 경로
+    			srcFileName = catalogImgPath.substring(catalogImgPath.lastIndexOf(File.separator)).replace(File.separator, ""); // 이미지NAME
+    			tmpFileName = srcFileName.substring(0, srcFileName.lastIndexOf(".")); // 파일명
+    			fileExt = srcFileName.substring(srcFileName.lastIndexOf(".") + 1); // 확장자						
 				
-				targetFileName1 = tmpFileName1 + "." + fileExt1;
-				int width = oWidth;
-				int height = oHeight;
+				targetFileName = tmpFileName + "." + fileExt;
 
+				String outFile = uploadDir + targetFileName;
 
-				String cutOutFile = uploadDir1 + targetFileName1;
-
-				this.log.info("■■■■■CatalogImg■■■■■ : " + targetFileName1 + "을 생성 하였습니다.");
-
-				File outputfile = new File(cutOutFile);
+				File outputfile = new File(outFile);
 				long fileSize = outputfile.length();
 
 				this.brandCatalogProdImgInfo.setProdId(dpCatalogInfo.getCreateCatalogId());
-				this.brandCatalogProdImgInfo.setImgCls(CouponConstants.CATALOG_DTL_IMG_684_XY);
+				this.brandCatalogProdImgInfo.setImgCls(CouponConstants.CATALOG_DTL_IMG_684_X);
 				this.brandCatalogProdImgInfo.setFileSize(fileSize);
 				this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
-				this.brandCatalogProdImgInfo.setFilePos(uploadDir1);
-				this.brandCatalogProdImgInfo.setFileNm(targetFileName1);
-				this.brandCatalogProdImgInfo.setSeq(i+1);
+				this.brandCatalogProdImgInfo.setFilePos(uploadDir);
+				this.brandCatalogProdImgInfo.setFileNm(targetFileName);
+				this.brandCatalogProdImgInfo.setSeq(seq);
 
+				// TB_DP_PROD_IMG 테이블에 INSERT
 				this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
-
-				this.brandCatalogProdImgInfo.setImgCls(imgClsCodeDtl[0]);
-
-				// 이미지 세로길이가 1170보다 클경우
-				if (nHeightSize > 1170) {
-					this.log.info("■■■■■이미지 세로길이가 1170보다 클경우■■■■■");
-					int cY = 0; // 이미지 컷처리 시작
-
-					nHeightSize = 1170;
-					// 이미지를 1170사이즈까지 잘라서 저장
-					for (seq =1; nHeightSize < height; seq++) {
-
-						String resizetargetFileName1 = tmpFileName1 + "_"+oWidth+"xy" + seq + "." + fileExt1;
-						if (!imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
-								width, 1170)) {
-							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ",
-									null);
-						}
-						this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
-						this.log.info("■■■■■catalogImg■■■■■ : " + resizetargetFileName1 + "을 생성 하였습니다.");
-
-						cY = nHeightSize;
-						nHeightSize = nHeightSize + 1170;
-						File cutOutputfile = new File(uploadDir1 + resizetargetFileName1);
-						long cutFileSize = cutOutputfile.length();
-
-						this.brandCatalogProdImgInfo.setFileSize(cutFileSize);
-						this.brandCatalogProdImgInfo.setSeq(seq);
-						this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
-						this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
-
-						// TB_DP_PROD_IMG 테이블에 INSERT
-						this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
-
-						// 이미지 마지막 1170보다 작은 이미지 생성및 DB처리
-						if (height <= nHeightSize) {
-							this.log.info("■■■■■이미지 마지막 1170보다 작은 이미지 생성■■■■■");
-							seq = seq + 1;
-
-							resizetargetFileName1 = tmpFileName1 + "_"+oWidth+"xy" + seq + "." + fileExt1;
-							this.log.info("■■■■■resizetargetFileName1■■■■■ :" + resizetargetFileName1 + "을 생성 하였습니다.");
-
-							if (!imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0,
-									cY, width, height - cY)) {
-								throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR,
-										"이미지 생성 오류!!", null);
-							}
-							File lastCutOutputfile = new File(uploadDir1 + resizetargetFileName1);
-							long lastCutFileSize = lastCutOutputfile.length();
-
-							this.brandCatalogProdImgInfo.setFileSize(lastCutFileSize);
-							this.brandCatalogProdImgInfo.setSeq(seq);
-							this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
-							this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
-
-							// TB_DP_PROD_IMG 테이블에 INSERT/UPDATE
-							this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
-
-						}
-					}
-				} else {
-					this.log.info("■■■■■이미지 세로길이가 1170보다 작을경우■■■■■");
-
-					// 이미지 세로의 길이가 1170보다 작을경우 INSERT
-					this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
-
-				}
-				
-			}
-
+				seq++;
+			}			
+			
 		} catch (CouponException e) {
-			this.log.info("■■■■■이미지 생성 오류■■■■■ ");
+			this.log.info("■■■■■이미지 저장 오류■■■■■ ");
 			this.log.error("catalogImgResize> catalogResize : ", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "카탈로그 이미지 Resize 실패", null);
 		}

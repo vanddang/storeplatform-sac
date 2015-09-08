@@ -38,7 +38,9 @@ public class DpCatalogInfo extends BrandCatalogProdImgInfo {
 	private String catalogTag; // 카탈로그태그
 	private List<String> fileNameList;
 	private List<byte[]> isList;
-
+	private String catalogVodUrl;	//카탈로그 VOD URL
+	private String catalogVodThumbnail; //카탈로그 VOD 썸네일 이미지
+	private List<String> fileDtlImgPathList; //카탈로그 상세 이미지 정보
 	/**
 	 * @return the catalogId
 	 */
@@ -262,6 +264,48 @@ public class DpCatalogInfo extends BrandCatalogProdImgInfo {
 	 */
 	public void setIsList(List<byte[]> isList) {
 		this.isList = isList;
+	}
+
+	/**
+	 * @return the catalogVodUrl
+	 */
+	public String getCatalogVodUrl() {
+		return catalogVodUrl;
+	}
+
+	/**
+	 * @param catalogVodUrl the catalogVodUrl to set
+	 */
+	public void setCatalogVodUrl(String catalogVodUrl) {
+		this.catalogVodUrl = catalogVodUrl;
+	}
+
+	/**
+	 * @return the catalogVodThumbnail
+	 */
+	public String getCatalogVodThumbnail() {
+		return catalogVodThumbnail;
+	}
+
+	/**
+	 * @param catalogVodThumbnail the catalogVodThumbnail to set
+	 */
+	public void setCatalogVodThumbnail(String catalogVodThumbnail) {
+		this.catalogVodThumbnail = catalogVodThumbnail;
+	}
+
+	/**
+	 * @return the fileDtlImgPathList
+	 */
+	public List<String> getFileDtlImgPathList() {
+		return fileDtlImgPathList;
+	}
+
+	/**
+	 * @param fileDtlImgPathList the fileDtlImgPathList to set
+	 */
+	public void setFileDtlImgPathList(List<String> fileDtlImgPathList) {
+		this.fileDtlImgPathList = fileDtlImgPathList;
 	}
 
 }
