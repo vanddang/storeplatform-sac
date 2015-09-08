@@ -3886,27 +3886,35 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 이미지 정보
 					String detailImgCd = "";
 					// 이미지 정보 (상세 이미지 가져오기)
-					for (int qq = 0; qq < 2; qq++) {
+					for (int qq = 0; qq < 3; qq++) {
 						if (qq == 0) {
 							detailImgCd = DisplayConstants.DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD;
-						} else {
+						} else if (qq == 1) {
 							detailImgCd = DisplayConstants.DP_SHOPPING_REPRESENT_CUT_DETAIL_IMAGE_CD;
-						}
+						} else if (qq == 2) {
+							detailImgCd = DisplayConstants.DP_SHOPPING_REPRESENT_VOD_IMAGE_CD;
+						} 
+						
 						reqMap.put("cutDetailImageCd", detailImgCd);
 						List<MetaInfo> resultImgDetailList = this.commonDAO.queryForList(
 								"Shopping.getShoppingImgDetailListV2", reqMap, MetaInfo.class); //쇼핑상세(이미지) 조회
 						for (int pp = 0; pp < resultImgDetailList.size(); pp++) {
 							if (qq == 0) {
-								source = this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_ORIGINAL,
-										resultImgDetailList.get(pp).getFilePath());
-							} else {
-								source = this.commonGenerator.generateSource(
-										DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT, 
-										resultImgDetailList.get(pp).getFilePath());
+								source = this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_ORIGINAL,resultImgDetailList.get(pp).getFilePath());
+							} else if (qq == 1) {
+								source = this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT,resultImgDetailList.get(pp).getFilePath());
+							}else if (qq == 2) {
+								source = this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_VOD_THUMBNAIL,resultImgDetailList.get(pp).getFilePath());
 							}
 							sourceList.add(source);
 						}
 					}
+					
+					if (StringUtils.isNotEmpty(shopping.getCatalogVodUrl())) {
+    					source = this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_VOD_URL,shopping.getCatalogVodUrl());
+    					sourceList.add(source);
+					}
+					
 					// Accrual 생성
 					Accrual accrual = this.shoppingGenerator.generateAccrual(shopping);
 					// Shopping용 Contributor 생성
