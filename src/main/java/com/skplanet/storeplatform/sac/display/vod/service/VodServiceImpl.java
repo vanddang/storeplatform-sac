@@ -519,6 +519,11 @@ public class VodServiceImpl implements VodService {
 			supportList.add(this.mapSupport(DisplayConstants.DP_DL_STRM_NM, mapperVO.getStoreDlStrmCd()));
 			store.setSupportList(supportList);
 
+			if (mapperVO.getStoreUsePeriod() != null) {
+				store.setDate(DisplayCommonUtil.makeDateUsagePeriodV2(mapperVO.getStoreUsePeriodUnitCd(),
+						mapperVO.getStoreUsePeriod(), mapperVO.getStoreUsePeriodUnitCdNm()));
+			} 
+			
 			// 가격
 			store.setPrice(this.mapPrice(mapperVO.getStoreProdAmt(), mapperVO.getStoreProdNetAmt()));
 

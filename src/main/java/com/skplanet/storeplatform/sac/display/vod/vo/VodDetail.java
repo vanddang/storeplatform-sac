@@ -102,8 +102,11 @@ public class VodDetail extends CommonInfo {
 	/** 바로보기 상품 상태 */
 	private String playProdStatusCd;
 	private Integer playUsePeriod;
+	private Integer storeUsePeriod;
 	private String playUsePeriodUnitCd;
+	private String storeUsePeriodUnitCd;
 	private String playUsePeriodUnitCdNm;
+	private String storeUsePeriodUnitCdNm;
 
 	/** 챕터 */
 	private String chapter;
@@ -1435,6 +1438,22 @@ public class VodDetail extends CommonInfo {
 	public void setPlayUsePeriod(Integer playUsePeriod) {
 		this.playUsePeriod = playUsePeriod;
 	}
+	
+	
+	/**
+	 * @return the storeUsePeriod
+	 */
+	public Integer getStoreUsePeriod() {
+		return storeUsePeriod;
+	}
+
+	/**
+	 * @param storeUsePeriod
+	 *            the storeUsePeriod to set
+	 */
+	public void setStoreUsePeriod(Integer storeUsePeriod) {
+		this.storeUsePeriod = storeUsePeriod;
+	}
 
 	/**
 	 * @return the playUsePeriodUnitCd
@@ -1450,6 +1469,22 @@ public class VodDetail extends CommonInfo {
 	public void setPlayUsePeriodUnitCd(String playUsePeriodUnitCd) {
 		this.playUsePeriodUnitCd = playUsePeriodUnitCd;
 	}
+	
+	
+	/**
+	 * @return the storeUsePeriodUnitCd
+	 */
+	public String getStoreUsePeriodUnitCd() {
+		return storeUsePeriodUnitCd;
+	}
+
+	/**
+	 * @param storeUsePeriodUnitCd
+	 *            the storeUsePeriodUnitCd to set
+	 */
+	public void setStoreUsePeriodUnitCd(String storeUsePeriodUnitCd) {
+		this.storeUsePeriodUnitCd = storeUsePeriodUnitCd;
+	}
 
 	/**
 	 * @return the playUsePeriodUnitCdNm
@@ -1464,6 +1499,21 @@ public class VodDetail extends CommonInfo {
 	 */
 	public void setPlayUsePeriodUnitCdNm(String playUsePeriodUnitCdNm) {
 		this.playUsePeriodUnitCdNm = playUsePeriodUnitCdNm;
+	}
+	
+	/**
+	 * @return the storeUsePeriodUnitCdNm
+	 */
+	public String getStoreUsePeriodUnitCdNm() {
+		return storeUsePeriodUnitCdNm;
+	}
+
+	/**
+	 * @param storeUsePeriodUnitCdNm
+	 *            the storeUsePeriodUnitCdNm to set
+	 */
+	public void setStoreUsePeriodUnitCdNm(String storeUsePeriodUnitCdNm) {
+		this.storeUsePeriodUnitCdNm = storeUsePeriodUnitCdNm;
 	}
 
 	/**
