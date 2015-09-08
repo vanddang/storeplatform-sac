@@ -1256,7 +1256,9 @@ public class VodServiceImpl implements VodService {
 		vodDetail.setStoreProdId(usePolicyInfo.getStoreProdId());
 		vodDetail.setStoreDrmYn(usePolicyInfo.getStoreDrmYn());
 		vodDetail.setStoreDlStrmCd(usePolicyInfo.getStoreDlStrmCd());
-
+		vodDetail.setStoreUsePeriod(usePolicyInfo.getStoreUsePeriod());
+		vodDetail.setStoreUsePeriodUnitCd(usePolicyInfo.getStoreUsePeriodUnitCd());
+		
 		vodDetail.setPlayProdId(usePolicyInfo.getPlayProdId());
 		vodDetail.setPlayDrmYn(usePolicyInfo.getPlayDrmYn());
 		vodDetail.setPlayUsePeriod(usePolicyInfo.getPlayUsePeriod());
