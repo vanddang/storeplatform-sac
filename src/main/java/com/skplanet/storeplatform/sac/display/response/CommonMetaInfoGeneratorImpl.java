@@ -19,6 +19,7 @@ import java.util.Set;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -791,6 +792,54 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			}
 			if (StringUtils.isNotEmpty(dwldExprDt)) {
 				dateList.add(this.generateDate(DisplayConstants.DP_DATE_DOWNLOAD_EXPIRED_NM, dwldExprDt));
+			}
+
+			if (!dateList.isEmpty()) {
+				purchase.setDateList(dateList);
+			}
+		}
+
+		purchase.setState(prchState);
+		return purchase;
+	}
+
+	@Override
+	public Purchase generatePurchase(String prchState, HistorySacIn historySacIn) {
+
+		String prchsId = historySacIn.getPrchsId();
+		String prodId = historySacIn.getProdId();
+		String prchsDt = historySacIn.getPrchsDt();
+		String dwldExprDt = historySacIn.getDwldExprDt();
+		String useStartDt = historySacIn.getUseStartDt();
+		String useExprDt = historySacIn.getUseExprDt();
+
+		Purchase purchase = new Purchase();
+
+		// 구매상태 만료 여부 확인
+		if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchState)) {
+			List<Identifier> identifierList = new ArrayList<Identifier>();
+			identifierList.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, prchsId));
+
+			purchase.setIdentifierList(identifierList);
+		} else {
+			List<Identifier> identifierList = new ArrayList<Identifier>();
+			identifierList.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, prchsId));
+			identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, prodId));
+			purchase.setIdentifierList(identifierList);
+
+			List<Date> dateList = new ArrayList<Date>();
+
+			if (StringUtils.isNotEmpty(prchsDt)) {
+				dateList.add(this.generateDate(DisplayConstants.DP_DATE_PURCHASE, prchsDt));
+			}
+			if (StringUtils.isNotEmpty(dwldExprDt)) {
+				dateList.add(this.generateDate(DisplayConstants.DP_DATE_DOWNLOAD_EXPIRED_NM, dwldExprDt));
+			}
+			if (StringUtils.isNotEmpty(useStartDt)) {
+				dateList.add(this.generateDate(DisplayConstants.DP_DATE_USE_START_NM, useStartDt));
+			}
+			if (StringUtils.isNotEmpty(useExprDt)) {
+				dateList.add(this.generateDate(DisplayConstants.DP_DATE_USE_EXPIRED_NM, useExprDt));
 			}
 
 			if (!dateList.isEmpty()) {

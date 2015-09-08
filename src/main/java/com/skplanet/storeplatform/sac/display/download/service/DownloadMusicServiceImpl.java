@@ -293,11 +293,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 	}
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {
-		Purchase p = commonGenerator.generatePurchase(historySacIn.getPrchsId(),
-													historySacIn.getProdId(),
-		            								prchsState,
-		            								historySacIn.getPrchsDt(),
-		            								historySacIn.getDwldExprDt());
+		Purchase p = commonGenerator.generatePurchase(prchsState, historySacIn);
 		purchaseList.add(p);
 	}
 

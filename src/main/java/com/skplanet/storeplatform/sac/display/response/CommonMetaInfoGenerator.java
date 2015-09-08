@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.response;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -379,6 +380,14 @@ public interface CommonMetaInfoGenerator {
 	 * @return Purchase
 	 */
 	public Purchase generatePurchase(String prchId, String prodId, String prchState, String prchDt, String dwldExprDt);
+
+	/**
+	 *
+	 * @param prchState
+	 * @param historySacIn
+	 * @return
+	 */
+	public Purchase generatePurchase(String prchState, HistorySacIn historySacIn);
 
 	/**
 	 * <pre>

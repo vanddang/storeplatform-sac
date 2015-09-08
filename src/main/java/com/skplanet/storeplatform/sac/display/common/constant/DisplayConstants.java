@@ -488,6 +488,8 @@ public class DisplayConstants {
 	// ////////////////////////////////// Shopping Rights Type 정보 //////////////////////////////////////////
 
 	public static final String DP_DATE_DOWNLOAD_EXPIRED_NM = "date/downloadExpired";
+	public static final String DP_DATE_USE_START_NM = "date/useStart";
+	public static final String DP_DATE_USE_EXPIRED_NM = "date/useExpired";
 
 	public static final String DP_DATE_UPT_NM = "date/upt";
 
