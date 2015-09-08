@@ -3910,6 +3910,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 						}
 					}
 					
+					// Vod URL 정보 가져오기 
 					if (StringUtils.isNotEmpty(shopping.getCatalogVodUrl())) {
     					source = this.commonGenerator.generateSource(DisplayConstants.DP_SOURCE_TYPE_VOD_URL,shopping.getCatalogVodUrl());
     					sourceList.add(source);
