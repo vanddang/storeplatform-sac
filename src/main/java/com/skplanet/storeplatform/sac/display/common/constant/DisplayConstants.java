@@ -332,6 +332,10 @@ public class DisplayConstants {
 	public static final String DP_SOURCE_TYPE_MOVIE = "movie";
 	/** 스크린샷. */
 	public static final String DP_SOURCE_TYPE_SCREENSHOT = "screenshot";
+	/** VOD 썸네일. */
+	public static final String DP_SOURCE_TYPE_VOD_THUMBNAIL = "vodThumbnail";
+	/** VOD URL. */
+	public static final String DP_SOURCE_TYPE_VOD_URL = "vodUrl";	
 	/** 음악. */
 	public static final String DP_SOURCE_TYPE_MUSIC = "music";
 	/** 바코드이미지. */
@@ -384,6 +388,8 @@ public class DisplayConstants {
 	public static final String DP_SHOPPING_THEME_REPRESENT_IMAGE_CD = "DP0001A7";
 
 	public static final String DP_SHOPPING_REPRESENT_CUT_DETAIL_IMAGE_CD = "DP0001B0";
+	
+	public static final String DP_SHOPPING_REPRESENT_VOD_IMAGE_CD = "DP0001D8";
 
 	public static final String DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD = "DP0001B4";
 
