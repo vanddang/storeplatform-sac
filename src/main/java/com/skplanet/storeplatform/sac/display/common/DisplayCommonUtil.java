@@ -125,7 +125,7 @@ public class DisplayCommonUtil {
 	}
 	
 	/**
-	 * Date타입에 날짜 기간 데이터를 정의해준다. V2
+	 * Date타입에 날짜 기간 데이터를 정의해준다.(VOD 상세에서만 소장에 대한 기간을 내려주기 위하여 V2메소드 생성)
 	 *
 	 * @param tp
 	 * @param period
