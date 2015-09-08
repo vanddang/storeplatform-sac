@@ -75,8 +75,11 @@ public class OtherPackageListServiceImpl implements OtherPackageListService {
 		paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		paramMap.put("partParentClsfCd", DisplayConstants.DP_PART_CHILD_CLSF_CD);
 
-		List<MetaInfo> appList = this.commonDAO.queryForList("OtherPackageList.searchProdListByPackageNm", paramMap,
-				MetaInfo.class);
+		List<MetaInfo> appList;
+		if ("Y".equals(req.getIgnoreProvisionYn()))
+			appList = this.commonDAO.queryForList("OtherPackageList.searchProdListByPackageNmNoProvision", paramMap, MetaInfo.class);
+		else
+			appList = this.commonDAO.queryForList("OtherPackageList.searchProdListByPackageNm", paramMap, MetaInfo.class);
 
 		for (MetaInfo metaInfo : appList) {
 			Product product = new Product();
