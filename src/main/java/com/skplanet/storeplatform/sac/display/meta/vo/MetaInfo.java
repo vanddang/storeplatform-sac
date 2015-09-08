@@ -300,6 +300,7 @@ public class MetaInfo extends CommonInfo {
 	private Integer orgDiscountPrice;
 	private String specialSaleYn;
 	private String specialTypeCd;
+	private String catalogVodUrl;
 
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
@@ -4606,6 +4607,20 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setSpecialTypeCd(String specialTypeCd) {
 		this.specialTypeCd = specialTypeCd;
+	}
+
+	/**
+	 * @return the catalogVodUrl
+	 */
+	public String getCatalogVodUrl() {
+		return catalogVodUrl;
+	}
+
+	/**
+	 * @param catalogVodUrl the catalogVodUrl to set
+	 */
+	public void setCatalogVodUrl(String catalogVodUrl) {
+		this.catalogVodUrl = catalogVodUrl;
 	}
 
 	public String getBookTbctns() {
