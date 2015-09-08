@@ -3431,6 +3431,7 @@
                          ) AS SRC_CONTENT_ID
                         ,K.PROD_STATUS_CD
                         ,C.CATALOG_DTL_DESC AS prodDtlDesc
+                        ,C.CATALOG_VOD_URL 
                         <if test="req.userKey != null">  
                         ,(CASE WHEN ML.STATS_KEY IS NOT NULL THEN 'Y' ELSE 'N' END) AS likeYn
                         </if> 
