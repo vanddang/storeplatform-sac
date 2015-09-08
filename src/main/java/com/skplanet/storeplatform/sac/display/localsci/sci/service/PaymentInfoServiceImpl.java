@@ -226,6 +226,10 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         switch (prodTp) {
             case VodTv:
                 if (StringUtils.isNotEmpty(paymentInfo.getChapter())) {
+                	// 사용정책값
+                    paymentInfo.setUsePeriod(paymentInfo.getUsePeriod());
+                    paymentInfo.setUsePeriodUnitCd(paymentInfo.getUsePeriodUnitCd());
+
                     paymentInfo.setChapterText(paymentInfo.getChapter());
                     paymentInfo.setChapterUnit(this.displayCommonService.getVodChapterUnit());
                     paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
