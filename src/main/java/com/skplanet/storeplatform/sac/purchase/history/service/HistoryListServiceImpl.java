@@ -157,10 +157,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setStartRow(statrRow);
 		scRequest.setEndRow(endRow);
 
-		// pageInfo set
-		// scRequest.getPage().setNo(request.getOffset());
-		// scRequest.getPage().setRows(request.getCount() > 100 ? 100 : request.getCount());
-
 		/**
 		 * 구매정책을 조회하여 list에 셋팅
 		 */
@@ -176,14 +172,20 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// Device를 조회 조건으로 넣을지 여부
 		String selectDeviceYn = "N";
 
-		for (TenantSalePolicy obj : purchaseTenantPolicyList) {
-			mdnCategoryList.add(obj.getTenantProdGrpCd());
+		// 요청값중 deviceHistoryYn이 Y로 들어올 경우 무조건 DEVICE기반으로 구매내역을 조회하도록 처리함.
+		if (StringUtils.equals("Y", request.getDeviceHistoryYn())) {
+			selectDeviceYn = "Y";
+		} else {
+			for (TenantSalePolicy obj : purchaseTenantPolicyList) {
+				mdnCategoryList.add(obj.getTenantProdGrpCd());
 
-			if (!StringUtils.isBlank(request.getTenantProdGrpCd())
-					&& StringUtils.startsWith(request.getTenantProdGrpCd(), obj.getTenantProdGrpCd())) {
-				selectDeviceYn = "Y"; // 디바이스정책 카테고리 조회일 경우 조회 조건으로 DeviceKey를 넣는다.
+				if (!StringUtils.isBlank(request.getTenantProdGrpCd())
+						&& StringUtils.startsWith(request.getTenantProdGrpCd(), obj.getTenantProdGrpCd())) {
+					selectDeviceYn = "Y"; // 디바이스정책 카테고리 조회일 경우 조회 조건으로 DeviceKey를 넣는다.
+				}
 			}
 		}
+
 		this.logger.info("### Device Policy Category ### selectDeviceYn = " + selectDeviceYn);
 		scRequest.setMdnCategoryList(mdnCategoryList);
 		scRequest.setSelectDeviceYn(selectDeviceYn);
@@ -355,7 +357,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 				long prodTime = System.currentTimeMillis();
 				this.logger.info("##### [SAC History CallTime] LOCAL SCI prod productInfoSCI.getProductList param {}",
 						productInfoSacReq);
-				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq); // 2.2.2.에피소드ID을 이용하여 상품 정보 조회(전시의 응답항목이 추가되더라도 별도 작업 불필요)
+				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq); // 2.2.2.에피소드ID을 이용하여 상품 정보
+																						   // 조회(전시의 응답항목이 추가되더라도 별도 작업
+																						   // 불필요)
 				this.logger.info(
 						"##### [SAC History CallTime] LOCAL SCI prod productInfoSCI.getProductList END takes {} ms",
 						(System.currentTimeMillis() - prodTime));
@@ -598,17 +602,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setCount(request.getCount() + 1); // startKey 생성을 위해 +1 처리함
 		scRequest.setNotTenantProdGrpCd(request.getNotTenantProdGrpCd());
 
-		// if (StringUtils.isNotBlank(request.getStartKey())) {
-		// String str[] = StringUtils.split(request.getStartKey(), ";");
-		//
-		// if (str == null || str.length != 3) {
-		// throw new StorePlatformException("SAC_PUR_4107");
-		// }
-		// scRequest.setPrchsDt(str[0]); // 구매일시
-		// scRequest.setPrchsId(str[1]); // 구매ID
-		// scRequest.setPrchsDtlId(Integer.parseInt(str[2])); // 구매상세ID
-		// }
-
 		// startKey(구매일시:구매ID:구매상세ID) 값 처리 - 구매일시만 필수값
 		if (StringUtils.isNotBlank(request.getStartKey())) {
 			String[] str = StringUtils.split(request.getStartKey(), ";");
@@ -640,18 +633,18 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// Device를 조회 조건으로 넣을지 여부
 		String selectDeviceYn = "N";
 
-		for (TenantSalePolicy obj : purchaseTenantPolicyList) {
-			mdnCategoryList.add(obj.getTenantProdGrpCd());
-
-			// if (!StringUtils.isBlank(request.getTenantProdGrpCd())
-			// && StringUtils.startsWith(request.getTenantProdGrpCd(), obj.getTenantProdGrpCd())) {
-			// selectDeviceYn = "Y"; // 디바이스정책 카테고리 조회일 경우 조회 조건으로 DeviceKey를 넣는다.
-			// }
-		}
-
 		// 요청값중 deviceHistoryYn이 Y로 들어올 경우 무조건 DEVICE기반으로 구매내역을 조회하도록 처리함.
 		if (StringUtils.equals("Y", request.getDeviceHistoryYn())) {
 			selectDeviceYn = "Y";
+		} else {
+			for (TenantSalePolicy obj : purchaseTenantPolicyList) {
+				mdnCategoryList.add(obj.getTenantProdGrpCd());
+
+				if (!StringUtils.isBlank(request.getTenantProdGrpCd())
+						&& StringUtils.startsWith(request.getTenantProdGrpCd(), obj.getTenantProdGrpCd())) {
+					selectDeviceYn = "Y"; // 디바이스정책 카테고리 조회일 경우 조회 조건으로 DeviceKey를 넣는다.
+				}
+			}
 		}
 
 		this.logger.info("### Device Policy Category ### selectDeviceYn = " + selectDeviceYn);
