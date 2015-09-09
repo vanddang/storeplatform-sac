@@ -47,9 +47,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * 
+ *
  * 구매 제한정책 체크 서비스 구현체
- * 
+ *
  * Updated on : 2014. 1. 22. Updated by : 이승택, nTels.
  */
 @Service
@@ -382,7 +382,6 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 
 		// --------------------------------------------------------------------------------------------------
 		// 관련 정책 목록 조회
-
 		Map<String, List<TenantSalePolicy>> policyListMap = this.purchaseTenantPolicyService
 				.searchTenantSalePolicyListByMap(checkPaymentPolicyParam.getTenantId(),
 						checkPaymentPolicyParam.getTenantProdGrpCd());
@@ -438,10 +437,13 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 			if (checkPaymentPolicyResult.getPhoneRestAmt() <= 0.0
 					|| StringUtils.equals(checkPaymentPolicyResult.getDeferredPaymentType(),
 							PurchaseConstants.DEFERRED_PAYMENT_TYPE_ETCSERVICE)) {
-				phonePaymethodBaseInfo = PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11+":0:0;"+PAYPLANET_PAYMENT_METHOD_DANAL_12+":0:0";
+				phonePaymethodBaseInfo = PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 + ":0:0;"
+						+ PAYPLANET_PAYMENT_METHOD_DANAL_12 + ":0:0";
 
 			} else {
-				phonePaymethodBaseInfo = PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11+":" + checkPaymentPolicyResult.getPhoneRestAmt() + ":100;"+PAYPLANET_PAYMENT_METHOD_DANAL_12+":0:0";
+				phonePaymethodBaseInfo = PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 + ":"
+						+ checkPaymentPolicyResult.getPhoneRestAmt() + ":100;" + PAYPLANET_PAYMENT_METHOD_DANAL_12
+						+ ":0:0";
 			}
 
 		} else { // 소액 결제 사용 하는 경우 : 12는 별다른 정책 체크는 없음
@@ -449,7 +451,7 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 			checkPaymentPolicyResult = new CheckPaymentPolicyResult();
 			checkPaymentPolicyResult.setDeferredPaymentType(PurchaseConstants.DEFERRED_PAYMENT_TYPE_NORMAL);
 
-			phonePaymethodBaseInfo = PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11+":0:0";
+			phonePaymethodBaseInfo = PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 + ":0:0";
 		}
 
 		// 이용가능 결제수단 재정의 (결제수단 재정의 정책 기반)
@@ -463,7 +465,6 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 	}
 
 	// ========================================================================================================================
-
 	/*
 	 * 
 	 * <pre> SAP 결제정책 조회. </pre>
@@ -1331,7 +1332,7 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 		// 결제수단 별 가능 거래금액/비율 조정 정책 조회
 
 		TenantSalePolicy paymentPolicy = this.purchaseTenantPolicyService.searchPaymentPolicy(tenantId,
-				StringUtils.isEmpty(cmpxProdClsfCd) ? tenantProdGrpCd : tenantProdGrpCd + cmpxProdClsfCd, prodKindCd,
+				getPaymethodTenantGrpCd(checkPaymentPolicyParam), prodKindCd,
 				prodId, parentProdId);
 		if (paymentPolicy == null) {
 			throw new StorePlatformException("SAC_PUR_7103");
@@ -1350,7 +1351,8 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 
 				PaymethodAdjustPolicyInfo policyInfo = new PaymethodAdjustPolicyInfo();
 				policyInfo.setPaymethodCode(arInfo[0]);
-				policyInfo.setAvailAmt(Double.parseDouble(arInfo[1].replaceAll(PAYPLANET_PAYMENT_AMT_MAX, String.valueOf(payAmt))));
+				policyInfo.setAvailAmt(Double.parseDouble(arInfo[1].replaceAll(PAYPLANET_PAYMENT_AMT_MAX,
+						String.valueOf(payAmt))));
 				policyInfo.setAvailPer((int) (Double.parseDouble(arInfo[2])));
 
 				paymethodAdjustPolicyList.add(policyInfo);
@@ -1448,9 +1450,9 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 					+ resultPhonePolicy.getAvailPer();
 
 			if (bTelecomPaymethod) {
-				phonePaymethodInfo = phonePaymethodInfo + ";"+ PAYPLANET_PAYMENT_METHOD_DANAL_12 +":0:0";
+				phonePaymethodInfo = phonePaymethodInfo + ";" + PAYPLANET_PAYMENT_METHOD_DANAL_12 + ":0:0";
 			} else {
-				phonePaymethodInfo = PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 +":0:0;" + phonePaymethodInfo;
+				phonePaymethodInfo = PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 + ":0:0;" + phonePaymethodInfo;
 			}
 
 		}
@@ -1463,90 +1465,102 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 
 		sbPaymethodInfo.append(phonePaymethodInfo).append(";"); // 휴대폰
 
-		if (StringUtils.replace(paymethodAdjustInfo, ":0.0", ":0").contains(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13+":0:0") == false) { // SAP 결제정책 : 신용카드 제한
-			if (CollectionUtils.isNotEmpty(checkPaymentPolicyParam.getSapPolicyCdList())
-					&& checkPaymentPolicyParam.getSapPolicyCdList().contains(PurchaseConstants.SAP_POLICY_LIMIT_CREDIT)) {
-				sbPaymethodInfo.append(PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13 +":0:0;");
-				int pos13 = paymethodAdjustInfo.startsWith(PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13 +":") ? 0 : (paymethodAdjustInfo.indexOf(";"+ PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13
-						+":") + 1);
-				if (pos13 >= 0) {
-					String info13 = "";
-					int endPos = paymethodAdjustInfo.indexOf(";", pos13);
-					if (endPos >= 0) {
-						info13 = paymethodAdjustInfo.substring(pos13, endPos);
-					} else {
-						info13 = paymethodAdjustInfo.substring(pos13);
-					}
-					paymethodAdjustInfo = paymethodAdjustInfo.replaceAll(info13, "");
-				}
-			}
-		}
+//		if (StringUtils.replace(paymethodAdjustInfo, ":0.0", ":0").contains(
+//				PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13 + ":0:0") == false) { // SAP 결제정책 : 신용카드 제한
+//			if (CollectionUtils.isNotEmpty(checkPaymentPolicyParam.getSapPolicyCdList())
+//					&& checkPaymentPolicyParam.getSapPolicyCdList().contains(PurchaseConstants.SAP_POLICY_LIMIT_CREDIT)) {
+//				sbPaymethodInfo.append(PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13 + ":0:0;");
+//				int pos13 = paymethodAdjustInfo.startsWith(PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13 + ":") ? 0 : (paymethodAdjustInfo
+//						.indexOf(";" + PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13 + ":") + 1);
+//				if (pos13 >= 0) {
+//					String info13 = "";
+//					int endPos = paymethodAdjustInfo.indexOf(";", pos13);
+//					if (endPos >= 0) {
+//						info13 = paymethodAdjustInfo.substring(pos13, endPos);
+//					} else {
+//						info13 = paymethodAdjustInfo.substring(pos13);
+//					}
+//					paymethodAdjustInfo = paymethodAdjustInfo.replaceAll(info13, "");
+//				}
+//			}
+//		}
 
 		sbPaymethodInfo.append(paymethodAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
 
 		String paymethodInfo = sbPaymethodInfo.toString();
 
-		// 상품 별 또는 모상품 별 지정한 것들은 정책 그대로. 기본 카테고리 정책이면 상품 별 예외 하드코딩 정책 적용
-		if (StringUtils.equals(paymentPolicy.getPolicyId(), PurchaseConstants.POLICY_ID_PAYMETHOD_ADJUST)) {
-
-			// 정액권,시리즈 패스: PayPin 허용 (차후 필요 없을 것 같은 로직-영향도 파악후 제거 필요)
-			if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)
-					|| StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_FIXRATE)) {
-				paymethodInfo = paymethodInfo.replaceAll(PAYPLANET_PAYMENT_METHOD_PAYPIN_14 +":0:0;", "").replaceAll(";"+ PAYPLANET_PAYMENT_METHOD_PAYPIN_14
-						+":0:0", "");
-				paymethodInfo = paymethodInfo.replaceAll(PAYPLANET_PAYMENT_METHOD_PAYPIN_14 +":0.0:0;", "").replaceAll(";"+ PAYPLANET_PAYMENT_METHOD_PAYPIN_14
-						+":0.0:0", "");
-			}
-
-			// 인앱 자동결제 상품의 경우(서버2서버 자동결제 포함), 휴대폰결제/신용카드만 노출되며 T멤버십은 호핀 앱에서만 노출한다.
-			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
-
-				if (checkPaymentPolicyParam.isAutoPrchs() || checkPaymentPolicyParam.isS2sAutoPrchs()) {
-					StringBuffer sbPaymethodAdjInfo = new StringBuffer(128);
-					int pos = paymethodInfo.indexOf(PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 +":");
-					if (pos >= 0) {
-						sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
-								.append(";");
-					}
-					pos = paymethodInfo.indexOf(PAYPLANET_PAYMENT_METHOD_DANAL_12 +":");
-					if (pos >= 0) {
-						sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
-								.append(";");
-					}
-					pos = paymethodInfo.indexOf(PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13 +":");
-					if (pos >= 0) {
-						sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
-								.append(";");
-					}
-
-					if (PurchaseConstants.HOPPIN_AID_LIST.contains(checkPaymentPolicyParam.getParentProdId())) {
-						pos = paymethodInfo.indexOf(PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP_21 +":");
-						if (pos >= 0) {
-							sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
-									.append(";");
-						}
-					} else {
-						sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP_21 +":0:0;");
-					}
-
-					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_PAYPIN_14).append(":0:0;");
-					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_OCB_20).append(":0:0;");
-					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_MOBILE_TMONEY_22).append(":0:0;");
-					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_DOTORI_23).append(":0:0;");
-					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_CULTURE_24).append(":0:0;");
-					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":0:0;");
-					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_COUPON_26).append(":0:0;");
-					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_GAMECASH_27).append(":0:0;");
-					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30).append(":0:0");
-
-					paymethodInfo = sbPaymethodAdjInfo.toString();
-				}
-
-			}
-		}
+//		// 상품 별 또는 모상품 별 지정한 것들은 정책 그대로. 기본 카테고리 정책이면 상품 별 예외 하드코딩 정책 적용
+//		if (StringUtils.equals(paymentPolicy.getPolicyId(), PurchaseConstants.POLICY_ID_PAYMETHOD_ADJUST)) {
+//
+//			// 정액권,시리즈 패스: PayPin 허용 (차후 필요 없을 것 같은 로직-영향도 파악후 제거 필요)
+//			if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)
+//					|| StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_FIXRATE)) {
+//				paymethodInfo = paymethodInfo.replaceAll(PAYPLANET_PAYMENT_METHOD_PAYPIN_14 + ":0:0;", "").replaceAll(
+//						";" + PAYPLANET_PAYMENT_METHOD_PAYPIN_14 + ":0:0", "");
+//				paymethodInfo = paymethodInfo.replaceAll(PAYPLANET_PAYMENT_METHOD_PAYPIN_14 + ":0.0:0;", "")
+//						.replaceAll(";" + PAYPLANET_PAYMENT_METHOD_PAYPIN_14 + ":0.0:0", "");
+//			}
+//
+//			// 인앱 자동결제 상품의 경우(서버2서버 자동결제 포함), 휴대폰결제/신용카드만 노출되며 T멤버십은 호핀 앱에서만 노출한다.
+//			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+//
+//				if (checkPaymentPolicyParam.isAutoPrchs() || checkPaymentPolicyParam.isS2sAutoPrchs()) {
+//					StringBuffer sbPaymethodAdjInfo = new StringBuffer(128);
+//					int pos = paymethodInfo.indexOf(PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 + ":");
+//					if (pos >= 0) {
+//						sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+//								.append(";");
+//					}
+//					pos = paymethodInfo.indexOf(PAYPLANET_PAYMENT_METHOD_DANAL_12 + ":");
+//					if (pos >= 0) {
+//						sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+//								.append(";");
+//					}
+//					pos = paymethodInfo.indexOf(PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13 + ":");
+//					if (pos >= 0) {
+//						sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+//								.append(";");
+//					}
+//
+//					if (PurchaseConstants.HOPPIN_AID_LIST.contains(checkPaymentPolicyParam.getParentProdId())) {
+//						pos = paymethodInfo.indexOf(PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP_21 + ":");
+//						if (pos >= 0) {
+//							sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+//									.append(";");
+//						}
+//					} else {
+//						sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP_21 + ":0:0;");
+//					}
+//
+//					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_PAYPIN_14).append(":0:0;");
+//					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_OCB_20).append(":0:0;");
+//					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_MOBILE_TMONEY_22).append(":0:0;");
+//					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_DOTORI_23).append(":0:0;");
+//					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_CULTURE_24).append(":0:0;");
+//					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":0:0;");
+//					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_COUPON_26).append(":0:0;");
+//					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_GAMECASH_27).append(":0:0;");
+//					sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30).append(":0:0");
+//
+//					paymethodInfo = sbPaymethodAdjInfo.toString();
+//				}
+//
+//			}
+//		}
 
 		return StringUtils.endsWith(paymethodInfo, ";") ? StringUtils.substring(paymethodInfo, 0,
 				paymethodInfo.length() - 1) : paymethodInfo;
+	}
+
+	private String getPaymethodTenantGrpCd(CheckPaymentPolicyParam checkPaymentPolicyParam)
+	{
+		String tenantProdGrpCd = checkPaymentPolicyParam.getTenantProdGrpCd();
+
+		if(checkPaymentPolicyParam.isAutoPrchs() || checkPaymentPolicyParam.isS2sAutoPrchs()){
+			return tenantProdGrpCd + PurchaseConstants.PAYMENT_METHOD_SALEPOLICY_AUTOPRCHS;
+		}
+
+		return tenantProdGrpCd;
 	}
 
 	/**
@@ -1609,8 +1623,8 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 			boolean sktTestOrSkpCorp) {
 
 		// IAP자동결제상품, 쇼핑상품, VOD정액제 상품, 게임캐쉬 정액 상품 제외
-		if ((StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_IAP) && StringUtils.equals(
-				iapProdCase, "PB0006"))
+		if ((StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_IAP) && StringUtils.equals(iapProdCase,
+				"PB0006"))
 				|| StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_SHOPPING)
 				|| StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
 				|| StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)
@@ -1623,15 +1637,16 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 			if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_TSTORE)) {
 
 				if (StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT)) {
-					sbOcbAccum.append(sktTestOrSkpCorp ? PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 +":0.0;" : PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11
-							+":0.1;"); // 시험폰, SKP법인폰 결제 제외
+					sbOcbAccum
+							.append(sktTestOrSkpCorp ? PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 + ":0.0;" :
+									PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11 + ":0.1;"); // 시험폰, SKP법인폰 결제 제외
 				} else {
-					sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_DANAL_12 +":0.1;"); // 다날
+					sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_DANAL_12 + ":0.1;"); // 다날
 				}
 
 				sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13).append(":0.1;");// 신용카드,
 				sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_PAYPIN_14).append(":0.1;"); // PayPin
-				sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":0.1");  //T store Cash
+				sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":0.1"); // T store Cash
 
 				// 2015.04.03 타사 OCB 적립 안함
 			} else if (StringUtils.equals(tenantId, TENANT_ID_OLLEH)) {
@@ -1658,7 +1673,6 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 	 */
 	@Override
 	public List<TenantSalePolicy> getExtraSalePolicy(String tenantId, String extraUnitCd) {
-		return this.purchaseTenantPolicyService.searchTenantExtraSalePolicyList(
-				tenantId, extraUnitCd);
+		return this.purchaseTenantPolicyService.searchTenantExtraSalePolicyList(tenantId, extraUnitCd);
 	}
 }
