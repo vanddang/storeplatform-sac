@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.purchase.history.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
@@ -143,6 +143,14 @@ public class ExistenceController {
 		req.setDeviceKey(existenceSacReq.getDeviceKey());
 		req.setPrchsId(existenceSacReq.getPrchsId());
 		req.setCheckValue(false);
+
+		// 해당값이 Y일 경우 무조건 디바이스 기반구매내역 조회( Y일 경우 deviceKey 필수체크)
+		if (StringUtils.equals("Y", existenceSacReq.getDeviceHistoryYn())) {
+			if (StringUtils.isBlank(existenceSacReq.getDeviceKey())) {
+				throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
+			}
+			req.setCheckValue(true);
+		}
 
 		// 상품리스트가 없을시 제외
 		if (existenceSacReq.getProductList() != null) {
