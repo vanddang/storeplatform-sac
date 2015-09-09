@@ -30,6 +30,9 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String TENANT_ID_OLLEH = "S02";
 	public static final String TENANT_ID_UPLUS = "S03";
 
+	/** 인터페이스ID */
+	public static final String INTERFACE_ID_CANCEL = "I02000017"; // 구매취소
+
 	public static final Map<String, String> TENANT_DEFAULT_TELECOM_MAP = new HashMap<String, String>();
 	static {
 		TENANT_DEFAULT_TELECOM_MAP.put(TENANT_ID_TSTORE, TELECOM_SKT);
@@ -194,7 +197,6 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String TSTORE_COUPON_STATUS_CANCEL_2 = "2"; //
 	public static final String TSTORE_COUPON_STATUS_EXPIRE_3 = "3"; // 미사용
 	public static final String TSTORE_COUPON_STATUS_NOTINQUIRY_4 = "4"; // 조회 불가
-
 
 	/** T Store 구매완료 Noti */
 	/* Noti 타입 */
