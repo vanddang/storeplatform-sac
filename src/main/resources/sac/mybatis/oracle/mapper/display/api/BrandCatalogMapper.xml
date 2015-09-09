@@ -135,7 +135,9 @@
             ,CATALOG_NM
             ,CATALOG_DESC
             ,CATALOG_DTL_DESC
+            <if test="catalogVodUrl != null">  
             ,CATALOG_VOD_URL
+            </if>
             ,REG_ID
             ,REG_DT
             ,UPD_ID
@@ -147,7 +149,9 @@
             ,#{catalogNm}
             ,#{introText}
             ,#{catalogDesc}
+             <if test="catalogVodUrl != null">  
             ,#{catalogVodUrl}
+            </if>
             ,'admin'
             ,SYSDATE
             ,'admin'
@@ -200,7 +204,9 @@
             CATALOG_NM  = #{catalogNm}
           , CATALOG_DESC = #{introText}
           , CATALOG_DTL_DESC = #{catalogDesc}
+          <if test="catalogVodUrl != null">  
           , CATALOG_VOD_URL = #{catalogVodUrl}
+          </if>
           , UPD_DT    = SYSDATE
         WHERE CATALOG_ID = #{createCatalogId}
           AND LANG_CD= 'ko'
