@@ -105,7 +105,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			}
 
 			// 이미지 가져옴
-			this.inputBrandFile(dpBrandInfo, null);
+			this.inputBrandCatalogFile(dpBrandInfo, null);
 
 			// 이미지 리사이즈 처리
 			this.brandImgResize(dpBrandInfo);
@@ -131,9 +131,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	 *            dpCatalogInfo
 	 * @return boolean
 	 */
-	public boolean inputBrandFile(DpBrandInfo dpBrandInfo, DpCatalogInfo dpCatalogInfo) {
+	public boolean inputBrandCatalogFile(DpBrandInfo dpBrandInfo, DpCatalogInfo dpCatalogInfo) {
 
-		// log.info("<inputBrandFile> inputBrandFile...");
+		// log.info("<inputBrandCatalogFile> inputBrandCatalogFile...");
 
 		byte[] bytes = null;
 		String uploadPath = null;
@@ -349,7 +349,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 			// 이미지 가져옴
 			this.log.info("============이미지 NAS에 처리 시작====================");
-			this.inputBrandFile(null, dpCatalogInfo);
+			this.inputBrandCatalogFile(null, dpCatalogInfo);
 			this.log.info("============이미지 NAS에 처리 끝====================");
 
 			// 이미지 리사이즈 처리
