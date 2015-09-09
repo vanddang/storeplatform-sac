@@ -29,9 +29,6 @@ public class RelatedProductController {
 	private SimilarProductService similarProductService; // 유사상품 조회 Service
 
 	@Autowired
-	private SimilarMovieService similarMovieService; //이 영화와 유사 영화 조회 Sercice
-
-	@Autowired
 	private BoughtTogetherProductService boughtTogetherProductService; //함께 구매한 상품 조회 Service
 
 	@Autowired
@@ -268,27 +265,6 @@ public class RelatedProductController {
 
 		this.logger.debug("RelatedProductController.searchAlbumProductList start !!");
 		return this.albumProductService.searchAlbumProductList(requestVO, requestHeader);
-	}
-
-	/**
-	 *
-	 * <pre>
-	 * [I03000032] 2.5.11.이 영화와 유사 영화 조회.
-	 * </pre>
-	 *
-	 * @param requestVO
-	 *            SimilarProductSacReq
-	 * @param requestHeader
-	 *            SimilarProductSacReq
-	 * @return SimilarProductSacRes
-	 */
-	@RequestMapping(value = "/similar/movie/list/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public SimilarMovieSacRes searchSimilarMovieList(@Validated SimilarMovieSacReq requestVO,
-			SacRequestHeader requestHeader) {
-
-		this.logger.debug("RelatedProductController.searchSimilarMovieList start !!");
-		return this.similarMovieService.searchSimilarMovieList(requestVO, requestHeader);
 	}
 
     /**

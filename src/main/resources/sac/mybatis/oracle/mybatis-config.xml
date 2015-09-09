@@ -80,10 +80,6 @@
         <!-- 상품 이미지 -->
         <typeAlias alias="ProductImage"  type="com.skplanet.storeplatform.sac.display.common.vo.ProductImage" />
         
-        <!-- 이 영화와 유사한 영화 조회 -->
-        <typeAlias alias="SimilarMovieCriteria"     type="com.skplanet.storeplatform.sac.display.related.vo.SimilarMovieCriteria"/>
-        <typeAlias alias="SimilarMovieDbResultMap"  type="com.skplanet.storeplatform.sac.display.related.vo.SimilarMovieDbResultMap"/>
-        
         <!-- 전시 목록 통합 조회 T-Store4.0 -->
         <typeAlias alias="DisplayListCriteria"      type="com.skplanet.storeplatform.sac.display.feature.list.vo.DisplayListCriteria"/>
         <typeAlias alias="DisplayList"              type="com.skplanet.storeplatform.sac.display.feature.list.vo.DisplayListFromDB"/>
