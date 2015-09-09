@@ -95,6 +95,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 
 		// SAC내부호출여부
 		sacReq.setInternalYn("Y");
+		sacReq.setDeviceHistoryYn(request.getDeviceHistoryYn());
 
 		// SAC Service Call
 		sacRes = this.service.searchHistoryList(sacReq);

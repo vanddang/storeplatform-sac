@@ -12,14 +12,13 @@ package com.skplanet.storeplatform.sac.purchase.history.sci;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
@@ -124,8 +123,8 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 
 				for (ExistenceListSacResV2 item : sacResponse.getUserList()) {
 
-					if (StringUtil.equals(reqUserItem.getUserKey(), item.getUserKey())
-							&& StringUtil.equals(device, item.getDeviceKey())) {
+					if (StringUtils.equals(reqUserItem.getUserKey(), item.getUserKey())
+							&& StringUtils.equals(device, item.getDeviceKey())) {
 
 						prodItem = new ExistenceRes();
 
@@ -174,6 +173,13 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		req.setUserKey(existenceReq.getUserKey());
 		req.setDeviceKey(existenceReq.getDeviceKey());
 		req.setPrchsId(existenceReq.getPrchsId());
+
+		if (StringUtils.equals("Y", existenceReq.getDeviceHistoryYn())) {
+			if (StringUtils.isBlank(existenceReq.getDeviceKey())) {
+				throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
+			}
+			req.setCheckValue(true);
+		}
 
 		req.setCheckValue(false);
 		// 상품리스트가 없을시 제외
