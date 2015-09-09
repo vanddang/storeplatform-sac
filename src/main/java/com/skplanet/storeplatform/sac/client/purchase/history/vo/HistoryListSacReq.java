@@ -46,6 +46,8 @@ public class HistoryListSacReq extends PurchaseHeaderSacReq {
 
 	private String internalYn;
 
+	private String deviceHistoryYn; // 해당값이 Y일 경우 무조건 디바이스 기반구매내역 조회
+
 	/**
 	 * @return the prchsReqPathCd
 	 */
@@ -299,6 +301,21 @@ public class HistoryListSacReq extends PurchaseHeaderSacReq {
 	 */
 	public void setInternalYn(String internalYn) {
 		this.internalYn = internalYn;
+	}
+
+	/**
+	 * @return the deviceHistoryYn
+	 */
+	public String getDeviceHistoryYn() {
+		return this.deviceHistoryYn;
+	}
+
+	/**
+	 * @param deviceHistoryYn
+	 *            the deviceHistoryYn to set
+	 */
+	public void setDeviceHistoryYn(String deviceHistoryYn) {
+		this.deviceHistoryYn = deviceHistoryYn;
 	}
 
 }

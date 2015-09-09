@@ -31,6 +31,8 @@ public class ExistenceSacReq extends CommonInfo implements Serializable {
 
 	private List<ExistenceItemSac> productList; // 기구매 상품 리스트
 
+	private String deviceHistoryYn; // 해당값이 Y일 경우 무조건 디바이스 기반구매내역 조회
+
 	/**
 	 * @return the tenantId
 	 */
@@ -119,6 +121,21 @@ public class ExistenceSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setProductList(List<ExistenceItemSac> productList) {
 		this.productList = productList;
+	}
+
+	/**
+	 * @return the deviceHistoryYn
+	 */
+	public String getDeviceHistoryYn() {
+		return this.deviceHistoryYn;
+	}
+
+	/**
+	 * @param deviceHistoryYn
+	 *            the deviceHistoryYn to set
+	 */
+	public void setDeviceHistoryYn(String deviceHistoryYn) {
+		this.deviceHistoryYn = deviceHistoryYn;
 	}
 
 }
