@@ -112,10 +112,17 @@ public class AuthorizeSaveAndSyncByMacReq extends CommonInfo implements Serializ
 		this.deviceAccount = deviceAccount;
 	}
 
+	/**
+	 * @return preDeviceType
+	 */
 	public String getPreDeviceType() {
 		return this.preDeviceType;
 	}
 
+	/**
+	 * @param preDeviceType
+	 *            String
+	 */
 	public void setPreDeviceType(String preDeviceType) {
 		this.preDeviceType = preDeviceType;
 	}
