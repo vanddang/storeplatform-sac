@@ -40,6 +40,7 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.MoveUserInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
@@ -81,6 +82,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacRes;
@@ -94,6 +96,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
@@ -129,6 +132,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private UserSearchService userSearchService;
+
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	@Resource(name = "memberAddDeviceAmqpTemplate")
@@ -421,47 +427,71 @@ public class DeviceServiceImpl implements DeviceService {
 		String idpResultErrorCode = null;
 		try {
 			schUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
+		} catch (StorePlatformException e) {
+			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				throw e;
+			}
+		}
 
+		if (schUserRes != null) {
+			// 등록될 MDN이 휴면아이디 회원에 붙은 MDN인 경우 복구처리한다.
 			if (StringUtils.equals(schUserRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)
 					&& !StringUtils.equals(schUserRes.getUserKey(), userKey)
 					&& !StringUtils.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-				if (StringUtils.isNotBlank(schUserRes.getUserMbr().getImSvcNo())) {
-					ActivateUserEcReq activateUserEcReq = new ActivateUserEcReq();
-					activateUserEcReq.setKeyType("1");
-					activateUserEcReq.setKey(schUserRes.getUserMbr().getImSvcNo());
-					activateUserEcReq.setReqDate(DateUtil.getToday("yyyyMMdd"));
-					LOGGER.info("{} 휴면 OneID IDP 복구", deviceInfo.getDeviceId());
-					LOGGER.info("{} idp activateUser request : {}", deviceInfo.getDeviceId(),
-							ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
-					ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
-					LOGGER.info("{} idp activateUser response : {}", deviceInfo.getDeviceId(),
-							ConvertMapperUtils.convertObjectToJson(activateUserEcRes));
-				} else {
-					AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
-					authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
-					authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
-					LOGGER.info("{} 휴면 IDP ID IDP 복구", deviceInfo.getDeviceId());
-					LOGGER.info("{} idp authForWap request : {}", deviceInfo.getDeviceId(),
-							ConvertMapperUtils.convertObjectToJson(authForWapEcReq));
-					AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);
-					LOGGER.info("{} idp authForWap response : {}", deviceInfo.getDeviceId(),
-							ConvertMapperUtils.convertObjectToJson(authForWapEcRes));
-				}
-				idpResultYn = MemberConstants.USE_Y;
-			}
-		} catch (StorePlatformException e) {
-			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-				if (StringUtils.indexOf(e.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE) > -1) {
+				try {
+					if (StringUtils.isNotBlank(schUserRes.getUserMbr().getImSvcNo())) {
+						ActivateUserEcReq activateUserEcReq = new ActivateUserEcReq();
+						activateUserEcReq.setKeyType("1");
+						activateUserEcReq.setKey(schUserRes.getUserMbr().getImSvcNo());
+						activateUserEcReq.setReqDate(DateUtil.getToday("yyyyMMdd"));
+						LOGGER.info("{} 휴면 OneID IDP 복구", deviceInfo.getDeviceId());
+						LOGGER.info("{} idp activateUser request : {}", deviceInfo.getDeviceId(),
+								ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
+						ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
+						LOGGER.info("{} idp activateUser response : {}", deviceInfo.getDeviceId(),
+								ConvertMapperUtils.convertObjectToJson(activateUserEcRes));
+					} else {
+						AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+						authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
+						authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
+						LOGGER.info("{} 휴면 IDP ID IDP 복구", deviceInfo.getDeviceId());
+						LOGGER.info("{} idp authForWap request : {}", deviceInfo.getDeviceId(),
+								ConvertMapperUtils.convertObjectToJson(authForWapEcReq));
+						AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);
+						LOGGER.info("{} idp authForWap response : {}", deviceInfo.getDeviceId(),
+								ConvertMapperUtils.convertObjectToJson(authForWapEcRes));
+					}
+					idpResultYn = MemberConstants.USE_Y;
+
+				} catch (StorePlatformException e) {
 					idpResultYn = MemberConstants.USE_N;
-					idpResultErrorCode = e.getErrorInfo().getCode();
-					createDeviceReq.setIdpResultErrorCode(idpResultErrorCode);
-				} else {
+					idpResultErrorCode = StringUtils.substringAfter(e.getErrorInfo().getCode(),
+							MemberConstants.EC_IDP_ERROR_CODE_TYPE);
 					throw e;
+				} finally {
+					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+					moveUserInfoSacReq.setUserKey(schUserRes.getUserKey());
+					moveUserInfoSacReq.setIdpResultYn(idpResultYn);
+					moveUserInfoSacReq.setIdpErrCd(idpResultErrorCode);
+					SacRequestHeader requestHeader = new SacRequestHeader();
+					TenantHeader tenant = new TenantHeader();
+					tenant.setSystemId(systemId);
+					tenant.setTenantId(tenantId);
+					requestHeader.setTenantHeader(tenant);
+					this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+
+					if (StringUtils.equals(idpResultYn, MemberConstants.USE_Y)) {
+						// 복구한 회원 마지막 로그인일자 업데이트
+						MoveUserInfoRequest moveUserInfoRequest = new MoveUserInfoRequest();
+						moveUserInfoRequest.setCommonRequest(commonRequest);
+						moveUserInfoRequest.setUserKey(schUserRes.getUserKey());
+						this.userSCI.updateActiveMoveUserLastLoginDt(moveUserInfoRequest);
+					}
 				}
 			}
 		}
-		createDeviceReq.setIdpResultYn(idpResultYn); // 휴면아이디 IDP 복구 성공유무
 
 		/* 1. 휴대기기 정보 등록 요청 */
 		createDeviceReq.setCommonRequest(commonRequest);

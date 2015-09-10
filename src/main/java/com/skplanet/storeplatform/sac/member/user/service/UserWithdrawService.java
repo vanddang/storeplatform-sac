@@ -24,7 +24,7 @@ public interface UserWithdrawService {
 	/**
 	 * <pre>
 	 * deviceId 삭제처리
-	 * - 모바일 전용회원 인증 시에 SC는 회원이고, IDP는 미회원인 경우 deviceId를 삭제처리 하기 위해 호출한다.
+	 * - 모바일 전용회원 인증 시에 SC는 회원이고, IDP는 비회원인 경우 deviceId를 삭제처리 하기 위해 호출한다.
 	 * </pre>
 	 * 
 	 * @param requestHeader
@@ -35,4 +35,17 @@ public interface UserWithdrawService {
 	 *            String
 	 */
 	public void removeDevice(SacRequestHeader requestHeader, String deviceId, String userAuthKey);
+
+	/**
+	 * <pre>
+	 * 아이디 삭제처리.
+	 * - 아이디 기반 인증시에 IDP 비회원인 경우 아이디 탈퇴처리를 위해 호출한다.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userId
+	 *            String
+	 */
+	public void removeUser(SacRequestHeader requestHeader, String userId);
 }

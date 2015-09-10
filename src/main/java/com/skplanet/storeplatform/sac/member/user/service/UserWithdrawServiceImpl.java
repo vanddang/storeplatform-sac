@@ -47,6 +47,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 /**
@@ -352,7 +353,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 			if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-				this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), MemberConstants.USE_N);
+				this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes.getUserInfo().getIsDormant());
 
 				/**
 				 * MQ 연동(회원 탈퇴).
@@ -386,7 +387,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			} else if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_IDPID)) {
 
 				this.deviceIdInvalidByDeviceKey(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes
-						.getDeviceInfoList().get(0).getDeviceKey());
+						.getDeviceInfoList().get(0).getDeviceKey(), detailRes.getUserInfo().getIsDormant());
 
 				/** MQ 연동(휴대기기 삭제) */
 				RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
@@ -409,6 +410,57 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		} catch (StorePlatformException e) {
 			// ignore Exception
 		}
+	}
+
+	@Override
+	public void removeUser(SacRequestHeader requestHeader, String userId) {
+
+		DetailReq detailReq = new DetailReq();
+		detailReq.setUserId(userId);
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+		DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+		/** MQ 연동 (회원 탈퇴) */
+		StringBuffer buf = new StringBuffer();
+		String mqDeviceStr = "";
+		if (detailRes.getDeviceInfoList() != null && detailRes.getDeviceInfoList().size() > 0) {
+			for (DeviceInfo deviceInfo : detailRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
+				buf.append(deviceInfo.getDeviceId()).append("|");
+			}
+			mqDeviceStr = buf.toString();
+			mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
+		}
+		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+		mqInfo.setUserId(detailRes.getUserInfo().getUserId());
+		mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+
+		List<UserExtraInfo> list = detailRes.getUserInfo().getUserExtraInfoList();
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+				UserExtraInfo extraInfo = list.get(i);
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
+					mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+				}
+			}
+		}
+
+		if (StringUtils.isNotBlank(mqDeviceStr)) {
+			mqInfo.setDeviceId(mqDeviceStr);
+		}
+		try {
+
+			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+
+		} catch (AmqpException ex) {
+			LOGGER.error("MQ process fail {}", mqInfo);
+		}
+
+		// 회원탈퇴처리
+		this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes.getUserInfo().getIsDormant());
 	}
 
 	/**
@@ -440,11 +492,16 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 *            기기 ID (mdn, uuid)
 	 */
 	public void secedeForWap(String deviceId) {
-
 		SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
 		ecReq.setUserMdn(deviceId);
-		this.idpSCI.secedeForWap(ecReq);
-
+		try {
+			this.idpSCI.secedeForWap(ecReq);
+		} catch (StorePlatformException e) {
+			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+					+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
+				throw e;
+			}
+		}
 	}
 
 	/**
@@ -530,7 +587,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 	}
 
-	public void deviceIdInvalidByDeviceKey(SacRequestHeader requestHeader, String userKey, String deviceKey) {
+	public void deviceIdInvalidByDeviceKey(SacRequestHeader requestHeader, String userKey, String deviceKey,
+			String isDormant) {
 
 		List<String> removeKeyList = new ArrayList<String>();
 		removeKeyList.add(deviceKey);
@@ -539,7 +597,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		removeDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(requestHeader));
 		removeDeviceRequest.setUserKey(userKey);
 		removeDeviceRequest.setDeviceKey(removeKeyList);
-
+		removeDeviceRequest.setIsDormant(isDormant);
 		this.deviceSCI.removeDevice(removeDeviceRequest);
 
 	}

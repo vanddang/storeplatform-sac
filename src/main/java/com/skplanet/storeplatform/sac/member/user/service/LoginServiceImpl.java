@@ -1113,7 +1113,9 @@ public class LoginServiceImpl implements LoginService {
 					return res;
 
 				} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-						+ ImIdpConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
+						+ ImIdpConstants.IDP_RES_CODE_NOT_EXIST_ID)
+						|| StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+								+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER)) {
 
 					/* 미존재 회원인 경우 로그 남김 */
 					LOGGER.info("NOT_EXIST_USER authorizeById userId : {}, {}", userId, userType);
