@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.ResourceAccessException;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformError;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformServerError;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformXssInvalidException;
 
@@ -41,7 +41,7 @@ public class ExceptionSampleController {
 	
 	@RequestMapping(value = "/system")
 	public void system() {
-		throw new StorePlatformError("SYS_ERROR");
+		throw new StorePlatformServerError("SYS_ERROR");
 	}
 	
 	@RequestMapping(value = "/database")
