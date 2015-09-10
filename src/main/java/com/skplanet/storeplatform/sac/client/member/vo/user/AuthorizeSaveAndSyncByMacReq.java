@@ -23,14 +23,19 @@ public class AuthorizeSaveAndSyncByMacReq extends CommonInfo implements Serializ
 	/**
 	 * 기기 ID.
 	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
+	@NotEmpty
 	private String deviceId;
 
 	/**
-	 * mac 주소.
+	 * 가가입된 기기 ID.
 	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
-	private String macAddress;
+	@NotEmpty
+	private String preDeviceId;
+
+	/**
+	 * 가가입된 기기 ID 타입.
+	 */
+	private String preDeviceType;
 
 	/**
 	 * 기기 고유 번호.
@@ -63,18 +68,18 @@ public class AuthorizeSaveAndSyncByMacReq extends CommonInfo implements Serializ
 	}
 
 	/**
-	 * @return macAddress
+	 * @return preDeviceId
 	 */
-	public String getMacAddress() {
-		return this.macAddress;
+	public String getPreDeviceId() {
+		return this.preDeviceId;
 	}
 
 	/**
-	 * @param macAddress
+	 * @param preDeviceId
 	 *            String
 	 */
-	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress;
+	public void setPreDeviceId(String preDeviceId) {
+		this.preDeviceId = preDeviceId;
 	}
 
 	/**
@@ -105,6 +110,14 @@ public class AuthorizeSaveAndSyncByMacReq extends CommonInfo implements Serializ
 	 */
 	public void setDeviceAccount(String deviceAccount) {
 		this.deviceAccount = deviceAccount;
+	}
+
+	public String getPreDeviceType() {
+		return this.preDeviceType;
+	}
+
+	public void setPreDeviceType(String preDeviceType) {
+		this.preDeviceType = preDeviceType;
 	}
 
 	/**
