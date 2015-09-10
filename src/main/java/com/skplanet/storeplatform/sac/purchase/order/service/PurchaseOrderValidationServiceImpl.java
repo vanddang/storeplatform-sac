@@ -390,6 +390,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			reqProdList.add(reqProduct);
 		}
 
+		// 전시 연동 & 연동 결과 validation check
 		Map<String, PurchaseProduct> purchaseProductMap = this.purchaseDisplayRepository.searchPurchaseProductList(
 				tenantId, langCd, useDeviceModelCd, prodIdList, purchaseOrderInfo.isFlat());
 		if (purchaseProductMap == null || purchaseProductMap.size() < 1) {

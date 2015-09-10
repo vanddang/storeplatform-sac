@@ -938,8 +938,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setBonusCashPoint(reservedDataMap.get("bonusPoint")); // 보너스 캐쉬 지급 Point
 			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		}
-		res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
-		res.setUsePeriodCnt(StringUtils.defaultIfBlank(reservedDataMap.get("usePeriodCnt"), "")); // 이용기간(일)
+		res.setDwldAvailableDayCnt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT)); // 다운로드 가능기간(일)
+		res.setUsePeriodCnt(StringUtils.defaultIfBlank(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT), "")); // 이용기간(일)
 
 		res.setProdKind(reservedDataMap.get("prodCaseCd")); // 쇼핑상품 종류
 		res.setSpecialTypeCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD));

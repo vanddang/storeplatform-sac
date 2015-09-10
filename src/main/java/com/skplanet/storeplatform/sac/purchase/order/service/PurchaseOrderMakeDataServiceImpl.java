@@ -838,19 +838,19 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append(StringUtils.isNotBlank(product.getSearchPriceUrl()) ? "Y" : "N")
 							.append("&svcGrpCd=")
 							.append(StringUtils.defaultString(product.getSvcGrpCd()))
-							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID, product.getPromId()))
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID, product.getPromId()))
 							// 이벤트 프로모션 ID
-							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,
 									product.getAcmlMethodCd())) // 프로모션 적립 방법
-							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT, product.getAcmlDt())) // 프로모션
-																														// 적립
-																														// 방법
-							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD,
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT, product.getAcmlDt())) // 프로모션
+																													 // 적립
+																													 // 방법
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD,
 									product.getSpecialTypeCd())) // 특가상품 유형코드, 팅요금제 상품 유형 코드
-							.append(this.appendResvData(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT,
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT,
 									product.getPrivateAcmlLimit())); // 개인
-																												 // 적립
-																												 // 한도
+																	 // 적립
+																	 // 한도
 
 					// 대여정보: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1
@@ -858,17 +858,24 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
 							&& purchaseOrderInfo.isFlat() == false) {
 
-						if (StringUtils.equals(StringUtils.defaultIfBlank(product.getPossLendClsfCd(),
-								PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION),
-								PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL)) {
-							sbReserveData.append("&dwldAvailableDayCnt=").append(product.getUsePeriod())
-									.append("&usePeriodCnt=").append(product.getUsePeriod());
+						if (StringUtils.equals(product.getPossLendClsfCd(),
+								PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)
+								|| StringUtils.equals(product.getPossLendClsfCd(),
+										PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL)
+								|| StringUtils.equals(product.getPossLendClsfCd(),
+										PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_ALL)) {
+							sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT,
+									product.getUsePeriod()));
+							sbReserveData.append(
+									genResvData(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT, product.getUsePeriod()));
 						} else {
-							sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=");
+							sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT, ""));
+							sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT, ""));
 						}
 
 					} else {
-						sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=");
+						sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT, ""));
+						sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT, ""));
 					}
 
 					// IAP P/P 처리
@@ -893,22 +900,22 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					}
 
 					// 부정결제 참조용 데이터 추가
-					sbReserveData.append(this.appendResvData(PurchaseConstants.IF_PUR_ORDER_REQ_FLAG,
-							purchaseOrderInfo.getFlag()));
+					sbReserveData.append(
+							genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_FLAG, purchaseOrderInfo.getFlag()));
 					prchsDtlMoreList.get(idx++).setPrchsResvDesc(sbReserveData.toString());
 				}
 			}
 		}
 	}
 
-	private String appendResvData(String key, Object value) {
+	private String genResvData(String key, Object value) {
 		StringBuffer sb = new StringBuffer("&");
 		sb.append(key).append("=");
 
 		if (value instanceof Integer) {
 			sb.append(value);
 		} else {
-			sb.append(StringUtils.defaultString((String)value));
+			sb.append(StringUtils.defaultString((String) value));
 		}
 		return sb.toString();
 	}
@@ -968,8 +975,9 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		purchaseReservedData.setProdCaseCd(reservedDataMap.get("prodCaseCd"));
 		purchaseReservedData.setS2sAutoYn(reservedDataMap.get("s2sAutoYn"));
 		purchaseReservedData.setS2sYn(reservedDataMap.get("s2sYn"));
-		purchaseReservedData.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt"));
-		purchaseReservedData.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt"));
+		purchaseReservedData.setDwldAvailableDayCnt(reservedDataMap
+				.get(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT));
+		purchaseReservedData.setUsePeriodCnt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT));
 		purchaseReservedData.setIapYn(reservedDataMap.get("iapYn"));
 		purchaseReservedData.setIapPostbackUrl(reservedDataMap.get("iapPostbackUrl"));
 		purchaseReservedData.setIapProdKind(reservedDataMap.get("iapProdKind"));

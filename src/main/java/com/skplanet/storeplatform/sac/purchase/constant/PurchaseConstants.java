@@ -342,13 +342,16 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	/** TSTORE 고객센터 전화번호 */
 	public static final String TSTORE_CALL_CENTER_MDN = "16006573";
 
-	/** 연동 데이터 관리 **/
+	/** 구매 예약 데이터 관리 **/
 	/** 전시 응답 규격 **/
 	public static final String IF_DISPLAY_RES_PROM_ID = "promId";
 	public static final String IF_DISPLAY_RES_ACLMETHOD_CD = "acmlMethodCd";
 	public static final String IF_DISPLAY_RES_ACML_DT = "acmlDt";
 	public static final String IF_DISPLAY_RES_SPECIALTYPE_CD = "specialTypeCd";
 	public static final String IF_DISPLAY_RES_PRIVATEACML_LIMIT = "privateAcmlLimit"; // 개인 적립 한도
+	public static final String IF_DISPLAY_RES_USE_PERIOD_CNT = "usePeriodCnt"; // 사용일
+	public static final String IF_DISPLAY_RES_DWLD_PERIOD_CNT = "dwldAvailableDayCnt"; // 다운로드 가능일 (현재는 전시의 사용일을 동일하게 세팅하여 사용)
+
 
 	/** 구매 요청 규격 **/
 	public static final String IF_PUR_ORDER_REQ_FLAG = "flag";
