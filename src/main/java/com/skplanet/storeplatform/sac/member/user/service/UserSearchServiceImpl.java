@@ -34,6 +34,9 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEc
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
+import com.skplanet.storeplatform.external.client.syrup.sci.SyrupSCI;
+import com.skplanet.storeplatform.external.client.syrup.vo.SsoCredentialCreateEcReq;
+import com.skplanet.storeplatform.external.client.syrup.vo.SsoCredentialCreateEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -81,6 +84,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailReque
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
@@ -106,6 +110,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DailyPhone;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DailyPhoneOs;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
@@ -160,6 +166,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	@Autowired
 	private DeviceSCI deviceSCI;
+
+	@Autowired
+	private SyrupSCI syrupSCI;
 
 	private static CommonRequest commonRequest;
 
@@ -2292,5 +2301,74 @@ public class UserSearchServiceImpl implements UserSearchService {
 		searchSocialAccountSacRes.setUserList(socialAccountInfos);
 
 		return searchSocialAccountSacRes;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#createSSOCredential(com.skplanet.storeplatform
+	 * .sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacReq)
+	 */
+	@Override
+	public CreateSSOCredentialSacRes createSSOCredential(SacRequestHeader header, CreateSSOCredentialSacReq req) {
+
+		/*
+		 * 처리 도중 에러가 발생하더라도 Exception을 throw 시키지 않고 ssoCredential "" 값으로 내려준다.
+		 */
+
+		CreateSSOCredentialSacRes res = new CreateSSOCredentialSacRes();
+		String ssoCredential = null;
+		boolean isSsoCredential = false; // ssoCredential 존재유무
+
+		// ssoCredential 조회
+		SearchManagementListRequest searchUserExtraRequest = new SearchManagementListRequest();
+		searchUserExtraRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		searchUserExtraRequest.setUserKey(req.getUserKey());
+		SearchManagementListResponse schUserExtraRes = null;
+		try {
+			schUserExtraRes = this.userSCI.searchManagementList(searchUserExtraRequest);
+			for (MbrMangItemPtcr info : schUserExtraRes.getMbrMangItemPtcrList()) {
+				if (StringUtils.equals(info.getExtraProfile(), MemberConstants.USER_EXTRA_SYRUP_SSO_CREDENTIAL)) {
+					ssoCredential = info.getExtraProfileValue();
+					if (StringUtils.isNotBlank(ssoCredential)) {
+						isSsoCredential = true;
+					}
+					break;
+				}
+			}
+		} catch (StorePlatformException e) {
+			LOGGER.info("{}, {}, {}", req.getUserKey(), e.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
+		}
+
+		if (!isSsoCredential) {
+			try {
+				// syrup pay ssoCredential 조회 연동
+				SsoCredentialCreateEcReq ssoCredentialCreateEcReq = new SsoCredentialCreateEcReq();
+				ssoCredentialCreateEcReq.setMctUserId(req.getUserKey());
+				SsoCredentialCreateEcRes ssoCredentialCreateEcRes = this.syrupSCI
+						.ssoCredential(ssoCredentialCreateEcReq);
+				ssoCredential = ssoCredentialCreateEcRes.getSsoCredential();
+				if (StringUtils.isNotBlank(ssoCredential)) {
+					// ssoCredential 저장
+					UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
+					List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
+					MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
+					ptcr.setExtraProfile(MemberConstants.USER_EXTRA_SYRUP_SSO_CREDENTIAL);
+					ptcr.setExtraProfileValue(ssoCredential);
+					ptcrList.add(ptcr);
+					updateManagementRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
+					updateManagementRequest.setUserKey(req.getUserKey());
+					updateManagementRequest.setMbrMangItemPtcr(ptcrList);
+					this.userSCI.updateManagement(updateManagementRequest);
+				}
+			} catch (StorePlatformException e) {
+				LOGGER.info("{}, {}, {}", req.getUserKey(), e.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
+			}
+		}
+
+		res.setSSOCredential(StringUtils.defaultString(ssoCredential, ""));
+		return res;
 	}
 }

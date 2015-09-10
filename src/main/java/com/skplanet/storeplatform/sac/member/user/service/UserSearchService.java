@@ -18,6 +18,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserS
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -329,4 +331,18 @@ public interface UserSearchService {
 	 * @return SearchSocialAccountSacRes
 	 */
 	public SearchSocialAccountSacRes searchSocialAccount(SacRequestHeader header, SearchSocialAccountSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.61.	PayPlanet SSOCredential 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SacRequestHeader
+	 * @return CreateSSOCredentialSacRes
+	 */
+	public CreateSSOCredentialSacRes createSSOCredential(SacRequestHeader header, CreateSSOCredentialSacReq req);
+
 }

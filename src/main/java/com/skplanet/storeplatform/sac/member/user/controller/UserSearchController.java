@@ -24,6 +24,8 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -405,4 +407,24 @@ public class UserSearchController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 2.1.61.	PayPlanet SSOCredential 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateSSOCredentialSacReq
+	 * @return CreateSSOCredentialSacRes
+	 */
+	@RequestMapping(value = "/member/user/createSSOCredential/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateSSOCredentialSacRes createSSOCredential(SacRequestHeader header,
+			@RequestBody @Validated CreateSSOCredentialSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		CreateSSOCredentialSacRes res = this.svc.createSSOCredential(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
 }

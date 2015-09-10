@@ -134,6 +134,8 @@ public final class MemberConstants {
 	public static final String USER_EXTRA_SOCIAL_REF_TOKEN = "US010918";
 	public static final String USER_EXTRA_SOCIAL_EXPIRED_TIME = "US010919";
 
+	public static final String USER_EXTRA_SYRUP_SSO_CREDENTIAL = "US010920"; // syrup Pay에서 발행하는 자격증명 값
+
 	public static final String USER_EXTRA_FACEBOOK = "facebook";
 	public static final String USER_EXTRA_KAKAO = "kakao";
 	public static final String USER_EXTRA_GOOGLE = "google";
