@@ -353,6 +353,8 @@ public class MetaInfo extends CommonInfo {
 	private String deviceModelNm; // 단말 모델명
 	private String mnftCompCd; // 제조사 코드
 	private String mnftCompNm; // 제조사 명
+	private String cmntCompCd; // 통신사 코드	
+	private String cmntCompNm; // 통신사명
 	private String listImagePath; // 리스트 노출 이미지 경로
 	private String dtlImagePath; // 상세 노출 이미지 경로
 	private String uaCd;
@@ -4003,6 +4005,36 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setMnftCompNm(String mnftCompNm) {
 		this.mnftCompNm = mnftCompNm;
+	}
+
+	/**
+	 * @return the cmntCompCd
+	 */
+	public String getCmntCompCd() {
+		return cmntCompCd;
+	}
+
+	/**
+	 * @param cmntCompCd
+	 *            the cmntCompCd to set
+	 */
+	public void setCmntCompCd(String cmntCompCd) {
+		this.cmntCompCd = cmntCompCd;
+	}
+
+	/**
+	 * @return the cmntCompNm
+	 */
+	public String getCmntCompNm() {
+		return cmntCompNm;
+	}
+
+	/**
+	 * @param cmntCompNm
+	 *            the cmntCompNm to set
+	 */
+	public void setCmntCompNm(String cmntCompNm) {
+		this.cmntCompNm = cmntCompNm;
 	}
 
 	/**
