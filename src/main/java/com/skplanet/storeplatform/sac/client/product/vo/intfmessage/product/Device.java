@@ -119,6 +119,16 @@ public class Device extends CommonInfo implements Serializable {
 	 * 제조사 명.
 	 */
 	private String mnftCompNm;
+	
+	/**
+	 * 통신사 코드.
+	 */
+	private String cmntCompCd;
+	
+	/**
+	 * 통신사 명.
+	 */
+	private String cmntCompNm;
 
 	/**
 	 * 리스트 노출 이미지 경로.
@@ -417,6 +427,22 @@ public class Device extends CommonInfo implements Serializable {
 	 */
 	public void setMnftCompNm(String mnftCompNm) {
 		this.mnftCompNm = mnftCompNm;
+	}
+
+	public String getCmntCompCd() {
+		return cmntCompCd;
+	}
+
+	public void setCmntCompCd(String cmntCompCd) {
+		this.cmntCompCd = cmntCompCd;
+	}
+
+	public String getCmntCompNm() {
+		return cmntCompNm;
+	}
+
+	public void setCmntCompNm(String cmntCompNm) {
+		this.cmntCompNm = cmntCompNm;
 	}
 
 	/**
