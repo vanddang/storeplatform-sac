@@ -2339,7 +2339,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 				}
 			}
 		} catch (StorePlatformException e) {
-			LOGGER.info("{}, {}, {}", req.getUserKey(), e.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
+			if (!e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				res.setSSOCredential(StringUtils.defaultString(ssoCredential, ""));
+				return res;
+			}
 		}
 
 		if (!isSsoCredential) {
