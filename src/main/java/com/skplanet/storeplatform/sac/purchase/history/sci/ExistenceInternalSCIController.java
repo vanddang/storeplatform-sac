@@ -173,6 +173,7 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		req.setUserKey(existenceReq.getUserKey());
 		req.setDeviceKey(existenceReq.getDeviceKey());
 		req.setPrchsId(existenceReq.getPrchsId());
+		req.setCheckValue(false);
 
 		if (StringUtils.equals("Y", existenceReq.getDeviceHistoryYn())) {
 			if (StringUtils.isBlank(existenceReq.getDeviceKey())) {
@@ -181,7 +182,6 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 			req.setCheckValue(true);
 		}
 
-		req.setCheckValue(false);
 		// 상품리스트가 없을시 제외
 		if (existenceReq.getExistenceItem() != null) {
 			int size = existenceReq.getExistenceItem().size();
