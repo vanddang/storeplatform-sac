@@ -17,10 +17,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,24 +70,16 @@ public class DeviceModelListServiceImpl implements DeviceModelListService {
 			
 		req.setLangCd(tenantHeader.getLangCd());
 		String modelNm = "";
-		String deviceModelCd = "";
+
 		if (StringUtils.isNotEmpty(req.getDeviceModelNm())) {
 			try {
 				// 한글 모델명 처리
-				modelNm = URLDecoder.decode(req.getDeviceModelNm(), "utf-8");
+				//modelNm = URLDecoder.decode(req.getDeviceModelNm(), "utf-8"); 
+				modelNm = new String(req.getDeviceModelNm().getBytes("8859_1"), "utf-8");
 			} catch (Exception e) {
 				throw new StorePlatformException("SAC_DSP_0014");
 			}
 			req.setDeviceModelNm(modelNm);// Device 모델명
-		}
-		
-		if (StringUtils.isNotEmpty(req.getDeviceModelCd())) {
-			try {
-				deviceModelCd = URLDecoder.decode(req.getDeviceModelCd(), "utf-8");
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_DSP_0014");
-			}
-			req.setDeviceModelCd(deviceModelCd);
 		}
 
 		int offset = 1; // default
