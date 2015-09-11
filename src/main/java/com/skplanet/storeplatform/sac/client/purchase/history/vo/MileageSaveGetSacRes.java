@@ -12,6 +12,7 @@ public class MileageSaveGetSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String procStatusCd;
+	private String typeCd; // 마일리지타입
 	private String saveDt;
 	private String saveResultAmt;
 
@@ -60,4 +61,22 @@ public class MileageSaveGetSacRes extends CommonInfo {
 		this.saveResultAmt = saveResultAmt;
 	}
 
+	/**
+	 * Gets type cd.
+	 *
+	 * @return the type cd
+	 */
+	public String getTypeCd() {
+		return typeCd;
+	}
+
+	/**
+	 * Sets type cd.
+	 *
+	 * @param typeCd
+	 *            the type cd
+	 */
+	public void setTypeCd(String typeCd) {
+		this.typeCd = typeCd;
+	}
 }

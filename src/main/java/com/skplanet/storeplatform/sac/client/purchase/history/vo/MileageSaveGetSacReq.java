@@ -15,7 +15,6 @@ public class MileageSaveGetSacReq extends PurchaseHeaderSacReq {
 
 	@NotBlank
 	private String tenantId; // 테넌트ID
-	@NotBlank
 	private String typeCd; // 마일리지타입
 	@NotBlank
 	private String prchsId; // 구매ID
