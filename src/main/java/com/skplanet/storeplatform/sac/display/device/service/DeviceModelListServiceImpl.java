@@ -74,8 +74,8 @@ public class DeviceModelListServiceImpl implements DeviceModelListService {
 		if (StringUtils.isNotEmpty(req.getDeviceModelNm())) {
 			try {
 				// 한글 모델명 처리
-				//modelNm = URLDecoder.decode(req.getDeviceModelNm(), "utf-8"); 
-				modelNm = new String(req.getDeviceModelNm().getBytes("8859_1"), "utf-8");
+				modelNm = URLDecoder.decode(req.getDeviceModelNm(), "utf-8"); 
+				//modelNm = new String(req.getDeviceModelNm().getBytes("8859_1"), "utf-8");
 			} catch (Exception e) {
 				throw new StorePlatformException("SAC_DSP_0014");
 			}
