@@ -335,6 +335,7 @@
                  , TA.FILE_PATH
                  , ( CASE WHEN TA.STORE_PROD_ID is not null THEN 'Y' ELSE 'N' END ) AS SUPPORT_STORE
                  , ( CASE WHEN TA.PLAY_PROD_ID is not null THEN 'Y' ELSE 'N' END ) AS SUPPORT_PLAY
+                 , HDV_SPRT_YN
             FROM
                  (
                    SELECT  ROWNUM AS RNUM
@@ -383,6 +384,7 @@
                          , DWLD_NETWORK_CD
                          , STRM_NETWORK_CD
                          , FILE_PATH
+                         , HDV_SPRT_YN
                      FROM
                           (
                             SELECT  JA.CID
@@ -441,6 +443,7 @@
                                   , MAX( JA.DWLD_NETWORK_CD ) AS DWLD_NETWORK_CD
                                   , MAX( JA.STRM_NETWORK_CD ) AS STRM_NETWORK_CD
                                   , MAX( JA.FILE_PATH ) AS FILE_PATH
+                                  , MAX( JA.HDV_SPRT_YN) AS HDV_SPRT_YN
                               FROM
                                    (
                                     SELECT  IA.MENU_ID
@@ -490,6 +493,7 @@
                                           , IA.DWLD_NETWORK_CD
                                           , IA.STRM_NETWORK_CD
                                           , IA.FILE_PATH
+                                          , IA.HDV_SPRT_YN
                                       FROM
                                            (
                                             SELECT A.MENU_ID
@@ -536,13 +540,13 @@
                                                       END ) AS SD_SUB_CONTS_DB
                                                  , ( CASE WHEN ( M.AUDIO_TYPE_CD = 'PD002215' AND M.DP_PG_QULT_CD = 'PD009703' ) THEN
                                                           M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
-                                                      END ) AS HD_SUB_CONTS_DB
+                                                      END ) AS HD_SUB_CONTS_DB 
                                                  , ( CASE WHEN ( P.HDV_YN = 'Y' AND M.AUDIO_TYPE_CD = 'PD002215' AND M.DP_PG_QULT_CD = 'PD009704' ) THEN
                                                           M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
-                                                      END ) AS HIHD_SUB_CONTS_DB
+                                                      END ) AS HIHD_SUB_CONTS_DB 
                                                  , ( CASE WHEN ( P.HDV_YN = 'Y' AND M.AUDIO_TYPE_CD = 'PD002215' AND M.DP_PG_QULT_CD = 'PD009705' ) THEN
                                                           M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
-                                                      END ) AS FHD_SUB_CONTS_DB
+                                                      END ) AS FHD_SUB_CONTS_DB 
                                                  , ( CASE WHEN ( ( M.AUDIO_TYPE_CD IS NULL OR M.AUDIO_TYPE_CD != 'PD002215' ) AND M.DP_PG_QULT_CD = 'PD009701' ) THEN
                                                           M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
                                                       END ) AS NM_SUB_CONTS
@@ -554,12 +558,13 @@
                                                       END ) AS HD_SUB_CONTS  
                                                  , ( CASE WHEN (  P.HDV_YN = 'Y' AND ( M.AUDIO_TYPE_CD IS NULL OR M.AUDIO_TYPE_CD != 'PD002215' ) AND M.DP_PG_QULT_CD = 'PD009704' ) THEN
                                                          M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
-                                                      END ) AS HIHD_SUB_CONTS  
+                                                      END ) AS HIHD_SUB_CONTS 
                                                  , ( CASE WHEN (  P.HDV_YN = 'Y' AND ( M.AUDIO_TYPE_CD IS NULL OR M.AUDIO_TYPE_CD != 'PD002215' ) AND M.DP_PG_QULT_CD = 'PD009705' ) THEN
                                                          M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
                                                       END ) AS FHD_SUB_CONTS  
                                                  , M.EPSD_PLAY_TM
                                                  , M.FILE_PATH
+                                                 , L.HDV_SPRT_YN
                                               FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
                                                  , TB_DP_MENU_CATEGORY           B
                                                  , TB_DP_PROD                    D

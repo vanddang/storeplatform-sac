@@ -88,24 +88,30 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 			 */
 
 			if (supportFhdVideo) {
-				if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
-					EncryptionSubContents hdSc = this.getEncryptionHdSubContentsV2(metaInfo);
-					subContentsList.add(hdSc);
+				/*
+				 * TB_CM_DEVICE.HDV_SPRT_YN ='N'이면 A,B 화질만 보이게 변경 Update By 2015.09.10 이석희 I-S PLUS
+				 */
+				if(!"N".equals(metaInfo.getHdvSprtYn())){
+					if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
+						EncryptionSubContents hdSc = this.getEncryptionHdSubContentsV2(metaInfo);
+						subContentsList.add(hdSc);
+					}
+	
+					if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+						EncryptionSubContents hihdSc = this.getEncryptionHiHdSubContents(metaInfo);
+						subContentsList.add(hihdSc);
+					}
 				}
-
-				if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
-					EncryptionSubContents hihdSc = this.getEncryptionHiHdSubContents(metaInfo);
-					subContentsList.add(hihdSc);
-				}
-
 			} else {
 				/*
-				 * 고화질 정보(3.x I/F 일때) HD 화질 정보와 HIHD 화질정보 동시에 존재 할때에는 HIHD 화질이 우선적으로 내려가도록
-				 * update by 2015.08.18 이석희 I-S PLUS
+				 * 고화질 정보(3.x I/F 일때) HD 화질 정보와 HIHD 화질정보 동시에 존재 할때에는 HIHD 화질이 우선적으로 내려가도록  update by 2015.08.18 이석희 I-S PLUS
+				 * TB_CM_DEVICE.HDV_SPRT_YN ='N'이면 A,B 화질만 보이게 변경 Update By 2015.09.10 이석희 I-S PLUS
 				 */
-				if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
-					EncryptionSubContents hdSc = this.getEncryptionHdSubContents(metaInfo);
-					subContentsList.add(hdSc);
+				if(!"N".equals(metaInfo.getHdvSprtYn())){
+					if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+						EncryptionSubContents hdSc = this.getEncryptionHdSubContents(metaInfo);
+						subContentsList.add(hdSc);
+					}
 				}
 			}			
 			

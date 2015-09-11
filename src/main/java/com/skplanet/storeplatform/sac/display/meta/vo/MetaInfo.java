@@ -219,6 +219,8 @@ public class MetaInfo extends CommonInfo {
 	private String prefixTitle;
 	private String badgeCd;
 	private String badgeOptText;
+	
+	private String hdvSprtYn;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -4745,6 +4747,20 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setBadgeOptText(String badgeOptText) {
 		this.badgeOptText = badgeOptText;
+	}
+
+	/**
+	 * @return the hdvSprtYn
+	 */
+	public String getHdvSprtYn() {
+		return hdvSprtYn;
+	}
+
+	/**
+	 * @param hdvSprtYn the hdvSprtYn to set
+	 */
+	public void setHdvSprtYn(String hdvSprtYn) {
+		this.hdvSprtYn = hdvSprtYn;
 	}
 
 	public Integer getBookLastChapter() {

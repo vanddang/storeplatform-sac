@@ -249,24 +249,30 @@ public class VodGeneratorImpl implements VodGenerator {
 		 */
 
 		if (supportFhdVideo) {
-			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
-				videoInfo = this.getHdVideoInfoV2(metaInfo);
-				videoInfoList.add(videoInfo);
-			}
-
-			if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
-				videoInfo = this.getHiHdVideoInfo(metaInfo);
-				videoInfoList.add(videoInfo);
+			
+			// TB_CM_DEVICE.HDV_SPRT_YN ='N'이면 A,B 화질만 보이게 변경 Update By 2015.09.10 이석희 I-S PLUS
+			if(!"N".equals(metaInfo.getHdvSprtYn())){
+				if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
+					videoInfo = this.getHdVideoInfoV2(metaInfo);
+					videoInfoList.add(videoInfo);
+				}
+	
+				if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+					videoInfo = this.getHiHdVideoInfo(metaInfo);
+					videoInfoList.add(videoInfo);
+				}
 			}
 
 		} else {
 			/*
 			 * 고화질 정보(3.x I/F 일때) HD 화질 정보와 HIHD 화질정보 동시에 존재 할때에는 HIHD 화질이 우선적으로 내려가도록
+			 * TB_CM_DEVICE.HDV_SPRT_YN ='N'이면 A,B 화질만 보이게 변경 Update By 2015.09.10 이석희 I-S PLUS
 			 */
-			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())
-					|| StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
-				videoInfo = this.getHdVideoInfo(metaInfo);
-				videoInfoList.add(videoInfo);
+			if(!"N".equals(metaInfo.getHdvSprtYn())){
+				if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId()) || StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+					videoInfo = this.getHdVideoInfo(metaInfo);
+					videoInfoList.add(videoInfo);
+				}
 			}
 		}
 

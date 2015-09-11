@@ -1023,18 +1023,23 @@ public class VodServiceImpl implements VodService {
 			videoInfoList.add(videoInfo);
 		}
 
-		// HIHD (D화질) 정보 우선, 없으며 HD 정보를 내려줌
-		if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId()) || StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
-			/** HD 화질 정보 */
-			videoInfo = this.getHdVideoInfo(mapperVO);
-			videoInfoList.add(videoInfo);
-		}
-
-		// FHD 지원 : T store 4.0 에서는 NM, SD, HD, FHD 화질 지원
-		if (supportFhdVideo && StringUtils.isNotEmpty(mapperVO.getFhdSubContsId())) {
-			/** FHD 고화질 정보 */
-			videoInfo = this.getFhdVideoInfo(mapperVO);
-			videoInfoList.add(videoInfo);
+		/**
+		 * TB_CM_DEVICE.HDV_SPRT_YN ='N'이면 A,B 화질만 보이게 변경 Update By 2015.09.10 이석희 I-S PLUS
+		 */
+		if(!"N".equals(mapperVO.getHdvSprtYn())){
+			// HIHD (D화질) 정보 우선, 없으며 HD 정보를 내려줌
+			if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId()) || StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
+				/** HD 화질 정보 */
+				videoInfo = this.getHdVideoInfo(mapperVO);
+				videoInfoList.add(videoInfo);
+			}
+	
+			// FHD 지원 : T store 4.0 에서는 NM, SD, HD, FHD 화질 지원
+			if (supportFhdVideo && StringUtils.isNotEmpty(mapperVO.getFhdSubContsId())) {
+				/** FHD 고화질 정보 */
+				videoInfo = this.getFhdVideoInfo(mapperVO);
+				videoInfoList.add(videoInfo);
+			}
 		}
 		if (videoInfoList.size() > 0)
 			vod.setVideoInfoList(videoInfoList);
@@ -1081,16 +1086,21 @@ public class VodServiceImpl implements VodService {
 			videoInfoList.add(videoInfo);
 		}
 
-		/** HD 화질 정보 */
-		if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId())) {
-			videoInfo = this.getHdVideoInfoV2(mapperVO);
-			videoInfoList.add(videoInfo);
-		}
-
-		/** HIHD 화질 정보 */
-		if (StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
-			videoInfo = this.getHiHdVideoInfo(mapperVO);
-			videoInfoList.add(videoInfo);
+		/**
+		 * TB_CM_DEVICE.HDV_SPRT_YN ='N'이면 A,B 화질만 보이게 변경 Update By 2015.09.10 이석희 I-S PLUS
+		 */
+		if(!"N".equals(mapperVO.getHdvSprtYn())){
+			/** HD 화질 정보 */
+			if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId())) {
+				videoInfo = this.getHdVideoInfoV2(mapperVO);
+				videoInfoList.add(videoInfo);
+			}
+	
+			/** HIHD 화질 정보 */
+			if (StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
+				videoInfo = this.getHiHdVideoInfo(mapperVO);
+				videoInfoList.add(videoInfo);
+			}
 		}
 
 		if (videoInfoList.size() > 0)

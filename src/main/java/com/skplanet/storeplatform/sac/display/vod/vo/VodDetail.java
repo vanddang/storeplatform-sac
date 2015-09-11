@@ -311,6 +311,8 @@ public class VodDetail extends CommonInfo {
 	private String badgeOptText;
 	/** 19+ 상품여부 */
 	private String plus19Yn;
+	/** HDV 지원여부*/
+	private String hdvSprtYn;
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -1747,6 +1749,20 @@ public class VodDetail extends CommonInfo {
 	 */
 	public void setPlus19Yn(String plus19Yn) {
 		this.plus19Yn = plus19Yn;
+	}
+
+	/**
+	 * @return the hdvSprtYn
+	 */
+	public String getHdvSprtYn() {
+		return hdvSprtYn;
+	}
+
+	/**
+	 * @param hdvSprtYn the hdvSprtYn to set
+	 */
+	public void setHdvSprtYn(String hdvSprtYn) {
+		this.hdvSprtYn = hdvSprtYn;
 	}
 
 }

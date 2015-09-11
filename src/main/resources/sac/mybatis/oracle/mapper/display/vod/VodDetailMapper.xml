@@ -270,6 +270,7 @@
                    WHEN PLAY_DWLD_STRM='DP010502' THEN 'strm'
                    WHEN PLAY_DWLD_STRM='DP010503' THEN 'both' END
               ) AS PLAY_DL_STRM_CD
+            , HDV_SPRT_YN              
 		FROM
 		(
 		    SELECT  
@@ -299,6 +300,7 @@
 		       , STORE_PROD_ID, STORE_PROD_AMT, STORE_PROD_NET_AMT, STORE_DRM_YN, STORE_PROD_STATUS_CD, STORE_USE_PERIOD, STORE_USE_PERIOD_UNIT_CD
 		       , PLAY_PROD_ID, PLAY_PROD_AMT, PLAY_PROD_NET_AMT, PLAY_DRM_YN, PLAY_PROD_STATUS_CD, PLAY_USE_PERIOD, PLAY_USE_PERIOD_UNIT_CD
 		       , STORE_DWLD_STRM, PLAY_DWLD_STRM
+		       , HDV_SPRT_YN
 		     FROM
 		          (
 				SELECT * FROM (
@@ -375,6 +377,7 @@
 		                  , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD ) ) AS PLAY_USE_PERIOD
 		                  , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
 		                  , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD
+		                  , MAX( T1.HDV_SPRT_YN ) AS HDV_SPRT_YN
 		                FROM
 		                   (
 		                    SELECT
@@ -433,6 +436,7 @@
 		                        , ( CASE WHEN (  MP.HDV_YN = 'Y' AND ( SC.AUDIO_TYPE_CD IS NULL OR SC.AUDIO_TYPE_CD != 'PD002215' ) AND SC.DP_PG_QULT_CD = 'PD009705' ) THEN
 		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
 		                            END ) AS FHD_SUB_CONTS
+		                        , DV.HDV_SPRT_YN
 		                  FROM TB_DP_PROD_RSHP PR
 		                    , TB_DP_PROD PD
 		                    , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
