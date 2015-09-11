@@ -47,7 +47,7 @@ public class MileageSaveController {
 	 * 
 	 * @param request
 	 *            T마일리지요청
-	 * @param requestHeader
+	 * @param sacRequestHeader
 	 *            공통헤더정보
 	 * @return MileageSaveSacRes
 	 */
@@ -66,7 +66,7 @@ public class MileageSaveController {
 	 * 
 	 * @param request
 	 *            T마일리지요청
-	 * @param requestHeader
+	 * @param sacRequestHeader
 	 *            공통헤더정보
 	 * @return MileageSaveSacRes
 	 */
@@ -79,5 +79,4 @@ public class MileageSaveController {
 
 		return this.mileageSaveService.getMileageSave(request);
 	}
-
 }

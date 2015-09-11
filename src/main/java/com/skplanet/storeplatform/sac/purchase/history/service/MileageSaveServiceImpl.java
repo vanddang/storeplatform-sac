@@ -9,34 +9,25 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.skplanet.storeplatform.purchase.client.history.sci.MileageSaveSCI;
+import com.skplanet.storeplatform.purchase.client.history.vo.*;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PromotionEventSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PromotionEventItem;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PromotionEventReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PromotionEventRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.*;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.purchase.client.history.sci.MileageSaveSCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveGetScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveGetScRes;
-import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveSc;
-import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveScRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PromotionEventSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PromotionEventItem;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PromotionEventReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PromotionEventRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSave;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveGetSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveGetSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveSacRes;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
-import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * T마일리지 Implements
@@ -200,6 +191,7 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 		 *************************************************/
 		if (scResponse != null) {
 			response.setProcStatusCd(scResponse.getProcStatusCd());
+			response.setTypeCd(scResponse.getTypeCd());
 			response.setSaveDt(scResponse.getSaveDt());
 			response.setSaveResultAmt(scResponse.getSaveResultAmt());
 		}
