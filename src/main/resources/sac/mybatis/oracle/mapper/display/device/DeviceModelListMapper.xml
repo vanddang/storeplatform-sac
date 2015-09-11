@@ -13,6 +13,8 @@
 		     , MAKE_COMP_NM AS MNFT_COMP_NM
 		     , CMNT_COMP_CD
 		     , CMNT_COMP_NM
+		     , LIST_IMAGE_PATH
+		     , DTL_IMAGE_PATH
 		  FROM
 		       (
 		        SELECT COUNT(*) OVER() AS TOTAL_COUNT
@@ -23,6 +25,8 @@
 		             , SPSAC.FC_GET_CM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
 		             , A.CMNT_COMP_CD
 		             , SPSAC.FC_GET_CM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS CMNT_COMP_NM
+		             , REPLACE( REPLACE( REPLACE( NVL(A.LIST_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS LIST_IMAGE_PATH
+		             , REPLACE( REPLACE( REPLACE( NVL(A.DTL_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS DTL_IMAGE_PATH
 		          FROM TB_CM_DEVICE       A 
 		         WHERE 1=1
 		           AND A.USE_YN = 'Y'

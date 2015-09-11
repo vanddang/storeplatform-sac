@@ -112,6 +112,8 @@ public class DeviceModelListServiceImpl implements DeviceModelListService {
 				device.setCmntCompNm(metaInfo.getCmntCompNm());
 				device.setMnftCompCd(metaInfo.getMnftCompCd());
 				device.setMnftCompNm(metaInfo.getMnftCompNm());
+				device.setListImagePath(metaInfo.getListImagePath());
+				device.setDtlImagePath(metaInfo.getDtlImagePath());
 				deviceList.add(device);
 			}
 		} else {
