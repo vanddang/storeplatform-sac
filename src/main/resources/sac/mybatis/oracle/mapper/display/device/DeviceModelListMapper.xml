@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DeviceModelList">
+
+	<!-- 단말 리스트 조회 -->
+	<select id="selectDeviceModelList" parameterType="com.skplanet.storeplatform.sac.client.display.vo.device.DeviceModelListSacReq" resultType="MetaInfo">
+		SELECT /* DeviceModelListMapper.selectDeviceModelList, 2015-09-10 */ 
+		      TOTAL_COUNT
+		     , RNUM	     
+		     , DEVICE_MODEL_CD
+		     , MODEL_NM AS DEVICE_MODEL_NM
+		     , MNFT_COMP_CD
+		     , MAKE_COMP_NM AS MNFT_COMP_NM
+		     , CMNT_COMP_CD
+		     , CMNT_COMP_NM
+		  FROM
+		       (
+		        SELECT COUNT(*) OVER() AS TOTAL_COUNT
+		             , ROWNUM AS RNUM 
+		             , A.DEVICE_MODEL_CD
+		             , A.MODEL_NM
+		             , A.MNFT_COMP_CD
+		             , SPSAC.FC_GET_CM_CD_NM(A.MNFT_COMP_CD, #{langCd}) AS MAKE_COMP_NM
+		             , A.CMNT_COMP_CD
+		             , SPSAC.FC_GET_CM_CD_NM(A.CMNT_COMP_CD, #{langCd}) AS CMNT_COMP_NM
+		          FROM TB_CM_DEVICE       A 
+		         WHERE 1=1
+		           AND A.USE_YN = 'Y'
+		           AND NVL(A.VERIFY_DVC_YN, 'N') = 'N'
+		           AND DP_YN = 'Y' 
+		           AND A.REP_DEVICE_YN = 'Y'
+		           
+		           AND UPPER(A.MODEL_NM) NOT LIKE '%'||UPPER('테스트')||'%'
+		           
+				  <if test='deviceModelCd != null and deviceModelCd != ""'>
+				   AND (UPPER(A.DEVICE_MODEL_CD) LIKE '%'||UPPER(#{deviceModelCd})||'%' OR UPPER(A.MODEL_NM) LIKE '%'||UPPER(#{deviceModelCd})||'%')
+				  </if>
+  	              <if test='deviceModelNm != null and deviceModelNm != ""'>
+		           AND (UPPER(A.MODEL_NM) LIKE '%'||UPPER(#{deviceModelNm})||'%' OR UPPER(A.DEVICE_MODEL_CD) LIKE '%'||UPPER(#{deviceModelNm})||'%')
+		          </if>
+		          <if test='cmntCompCd != null and cmntCompCd != ""'>
+		           AND CMNT_COMP_CD = #{cmntCompCd}
+		          </if>
+		          <if test='mnftCompCd != null and mnftCompCd != ""'>
+		           AND MNFT_COMP_CD = #{mnftCompCd}
+		          </if>
+		          
+		          ORDER BY MNFT_COMP_CD, CMNT_COMP_CD, REG_DT DESC
+		       )
+		  WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select>
+     
+</mapper>

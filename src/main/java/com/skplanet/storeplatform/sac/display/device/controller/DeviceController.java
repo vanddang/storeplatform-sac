@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.sac.display.device.service.DeviceChangeService
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
 import com.skplanet.storeplatform.sac.display.device.service.UseableDeviceService;
+import com.skplanet.storeplatform.sac.display.device.service.DeviceModelListService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,6 +47,9 @@ public class DeviceController {
 
 	@Autowired
 	private DeviceChangeService deviceChangeService;
+	
+	@Autowired
+	private DeviceModelListService deviceModelListService;
 
 	@InitBinder("useableDeviceSacReq")
 	public void initUseableDeviceSacReqBinder(WebDataBinder dataBinder) {
@@ -136,5 +140,23 @@ public class DeviceController {
 	@ResponseBody
 	public DeviceUserAgentSacRes searchDeviceChangeModelList(@RequestBody @Validated DeviceUserAgentSacReq deviceReq) {
 		return this.deviceChangeService.searchDeviceUserAgentList(deviceReq);
+	}
+	
+	/**
+	 * <pre>
+	 * 단말 리스트 정보 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return DeviceModelListSacRes
+	 */
+	@RequestMapping(value = "/deviceModel/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public DeviceModelListSacRes searchDeviceList(@Validated DeviceModelListSacReq deviceModelListSacReq,
+			SacRequestHeader header) {
+		return this.deviceModelListService.searchDeviceList(deviceModelListSacReq, header);
 	}
 }
