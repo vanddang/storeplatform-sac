@@ -2409,8 +2409,11 @@ public class LoginServiceImpl implements LoginService {
 					deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
 			// imei 업데이트
-			this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(), detailRes
-					.getDeviceInfoList().get(0).getNativeId(), req.getNativeId());
+			if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+					&& StringUtils.isNotBlank(req.getNativeId())) {
+				this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(), detailRes
+						.getDeviceInfoList().get(0).getNativeId(), req.getNativeId());
+			}
 
 		} else { // 타사 인증
 
@@ -2807,8 +2810,11 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
 		// imei 업데이트
-		this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(), detailRes
-				.getDeviceInfoList().get(0).getNativeId(), req.getNativeId());
+		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+				&& StringUtils.isNotBlank(req.getNativeId())) {
+			this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(), detailRes
+					.getDeviceInfoList().get(0).getNativeId(), req.getNativeId());
+		}
 
 		return res;
 	}
