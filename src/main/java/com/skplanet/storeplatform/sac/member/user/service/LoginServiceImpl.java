@@ -2351,7 +2351,7 @@ public class LoginServiceImpl implements LoginService {
 			// imei 업데이트
 			boolean isEqualsImei = this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(),
 					req.getDeviceId(), detailRes.getDeviceInfoList().get(0).getNativeId(), req.getNativeId(),
-					req.getDeviceTelecom());
+					req.getDeviceTelecom(), detailRes.getDeviceInfoList().get(0).getDeviceKey());
 			if (!isEqualsImei) {
 				LOGGER.info("{} IMEI 불일치", req.getDeviceId());
 				res.setUserMainStatus(MemberConstants.INAPP_USER_STATUS_IMEI_MISMATCH);
@@ -2752,7 +2752,8 @@ public class LoginServiceImpl implements LoginService {
 
 		// imei 업데이트
 		boolean isEqualsImei = this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(),
-				detailRes.getDeviceInfoList().get(0).getNativeId(), req.getNativeId(), req.getDeviceTelecom());
+				detailRes.getDeviceInfoList().get(0).getNativeId(), req.getNativeId(), req.getDeviceTelecom(),
+				detailRes.getDeviceInfoList().get(0).getDeviceKey());
 
 		if (!isEqualsImei) {
 			LOGGER.info("{} IMEI 불일치", req.getDeviceId());
@@ -2855,7 +2856,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @return boolean isEqualsImei
 	 */
 	private boolean updateImei(SacRequestHeader requestHeader, String userKey, String deviceId, String nativeId,
-			String reqNativeId, String reqDeviceTelecom) {
+			String reqNativeId, String reqDeviceTelecom, String deviceKey) {
 		String cspImei = null;
 		boolean isEqualsImei = true;
 
@@ -2875,6 +2876,8 @@ public class LoginServiceImpl implements LoginService {
 					UserMbrDevice userMbrDevice = new UserMbrDevice();
 					userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE);
 					userMbrDevice.setNativeID(cspImei);
+					userMbrDevice.setDeviceID(deviceId);
+					userMbrDevice.setDeviceKey(deviceKey);
 					CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 					createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 					createDeviceReq.setUserKey(userKey);
