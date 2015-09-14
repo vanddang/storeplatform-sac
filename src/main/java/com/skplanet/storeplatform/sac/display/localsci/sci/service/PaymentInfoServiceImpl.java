@@ -1,18 +1,23 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
-import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.EXINFO_S2S_INFO;
-
-import java.util.*;
-
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.GetPromotionEventParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
-import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
+import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
+import com.skplanet.storeplatform.sac.display.common.ProductType;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.ProductExtraInfoService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.MappedProduct;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.PaymentInfoContext;
 import org.apache.commons.collections.CollectionUtils;
@@ -22,17 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.google.common.base.Strings;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.display.common.ProductType;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.service.ProductExtraInfoService;
-import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import java.util.*;
 
-import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.EXINFO_S2S_INFO;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS;
 
 /**
  * 결제 시 필요한 상품 메타 정보 조회 서비스 구현체.
@@ -332,7 +330,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             menuId = StringUtils.defaultString(paymentInfo.getMenuId(), paymentInfo.getTopMenuId());
         }
 
-        PromotionEvent event = extraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId));
+        RawPromotionEvent event = extraInfoManager.getRawPromotionEvent(tenantId, chnlId, menuId, false);
 
         Map<String, Integer> milMap = Maps.newHashMap();
         if (event != null) {
@@ -343,7 +341,12 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             paymentInfo.setPromId(event.getPromId());
             paymentInfo.setAcmlDt(event.getAcmlDt());
             paymentInfo.setAcmlMethodCd(event.getAcmlMethodCd());
-            paymentInfo.setPrivateAcmlLimit(event.getPrvAcmlLimt());
+            paymentInfo.setPrivateAcmlLimit(event.getAcmlLimt());
+            paymentInfo.setPromForceCloseCd(event.getPromForceCloseCd());
+            if(Strings.isNullOrEmpty(event.getPromForceCloseCd()))
+                paymentInfo.setPromEndDt(DateUtils.format(event.getEndDt()));
+            else
+                paymentInfo.setPromEndDt(DateUtils.format(event.getPromForceCloseDt()));
         }
         else {
             milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, 0);

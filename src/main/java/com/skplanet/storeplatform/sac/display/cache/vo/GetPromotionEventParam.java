@@ -24,6 +24,7 @@ public class GetPromotionEventParam {
     private String menuId;
     private String chnlId;
     private Date nowDt;
+    private boolean useDb = false;
 
     public GetPromotionEventParam() {}
 
@@ -31,6 +32,13 @@ public class GetPromotionEventParam {
         this.tenantId = tenantId;
         this.menuId = menuId;
         this.chnlId = chnlId;
+    }
+
+    public GetPromotionEventParam(String tenantId, String menuId, String chnlId, boolean useDb) {
+        this.tenantId = tenantId;
+        this.menuId = menuId;
+        this.chnlId = chnlId;
+        this.useDb = useDb;
     }
 
     public GetPromotionEventParam(String tenantId, String menuId, String chnlId, Date nowDt) {
@@ -70,5 +78,13 @@ public class GetPromotionEventParam {
 
     public void setNowDt(Date nowDt) {
         this.nowDt = nowDt;
+    }
+
+    public boolean isUseDb() {
+        return useDb;
+    }
+
+    public void setUseDb(boolean useDb) {
+        this.useDb = useDb;
     }
 }

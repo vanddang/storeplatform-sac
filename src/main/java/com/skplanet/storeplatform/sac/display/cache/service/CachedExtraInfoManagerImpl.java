@@ -185,22 +185,14 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     public PromotionEvent getPromotionEvent(GetPromotionEventParam param) {
 
         // 조회할 대상들의 키를 생성한다.
-        String tenantId = param.getTenantId(),
-                menuOrTopMenuId = "",
-                topMenuId = "";
+        String tenantId = param.getTenantId();
 
-        if(!Strings.isNullOrEmpty(param.getMenuId())) {
+        final String[] keys = makeKeys(param.getChnlId(), param.getMenuId());
 
-            menuOrTopMenuId = param.getMenuId();
-            if(param.getMenuId().length() > 4) {
-                topMenuId = menuOrTopMenuId.substring(0, 4);
-            }
+        if(featureSwitch.get(FeatureKey.PROMO_EVENT_FORCE_DB) || connectionFactory == null) {
+            RawPromotionEvent rawPromotionEvent = getRawPromotionEvent(tenantId, keys, true);
+            return PromotionEventConverter.convert(rawPromotionEvent);
         }
-
-        final String[] keys = new String[]{param.getChnlId(), menuOrTopMenuId, topMenuId};
-
-        if(featureSwitch.get(FeatureKey.PROMO_EVENT_FORCE_DB) || connectionFactory == null)
-            return getPromotionEventFromDb(tenantId, keys);
 
         Date now = param.getNowDt();
         if(now == null) {
@@ -280,18 +272,44 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     }
 
     /**
+     * 프로모션 이벤트 조회에 필요한 키 파라메터를 생성한다.
+     * @param prodId
+     * @param menuId
+     * @return
+     */
+    private String[] makeKeys(String prodId, String menuId) {
+        String menuOrTopMenuId = "",
+                topMenuId = "";
+
+        if(!Strings.isNullOrEmpty(menuId)) {
+
+            menuOrTopMenuId = menuId;
+            if(menuId.length() > 4) {
+                topMenuId = menuOrTopMenuId.substring(0, 4);
+            }
+        }
+
+        return new String[]{prodId, menuOrTopMenuId, topMenuId};
+    }
+
+    /**
      * DB 에서 이벤트를 조회한다.
      * @param tenantId
      * @param keys
      * @return
      */
-    private PromotionEvent getPromotionEventFromDb(String tenantId, String[] keys) {
+    @Override
+    public RawPromotionEvent getRawPromotionEvent(String tenantId, String[] keys, boolean liveOnly) {
 
-        List<RawPromotionEvent> rawEventList = promotionEventSyncService.getRawEventList(tenantId, Arrays.asList(keys), true);
+        List<RawPromotionEvent> rawEventList = promotionEventSyncService.getRawEventList(tenantId, Arrays.asList(keys), PromotionEventSyncService.GET_RAW_EVENT_BY_ALL);
         if (rawEventList.size() == 0)
             return null;
 
-        RawPromotionEvent livePromotionEvent = rawEventList.get(0);
-        return PromotionEventConverter.convert(livePromotionEvent);
+        return rawEventList.get(0);
+    }
+
+    @Override
+    public RawPromotionEvent getRawPromotionEvent(String tenantId, String chnlId, String menuId, boolean liveOnly) {
+        return getRawPromotionEvent(tenantId, makeKeys(chnlId, menuId), liveOnly);
     }
 }

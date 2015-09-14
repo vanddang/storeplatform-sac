@@ -106,4 +106,12 @@ public class DateUtils {
             return null;
         }
     }
+
+    public static String format(Date dt) {
+        if(dt == null)
+            return null;
+
+        SimpleDateFormat fmt = MAP_SDF.get("yyyyMMddHHmmss");
+        return fmt.format(dt);
+    }
 }

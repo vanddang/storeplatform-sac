@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
-import com.google.common.base.Objects;
-
 import java.util.Date;
 
 /**
@@ -36,6 +34,9 @@ public class RawPromotionEvent {
 
     private Date startDt;
     private Date endDt;
+
+    private String promForceCloseCd;
+    private Date promForceCloseDt;
 
     public String getTenantId() {
         return tenantId;
@@ -139,5 +140,21 @@ public class RawPromotionEvent {
 
     public void setAcmlLimt(Integer acmlLimt) {
         this.acmlLimt = acmlLimt;
+    }
+
+    public String getPromForceCloseCd() {
+        return promForceCloseCd;
+    }
+
+    public void setPromForceCloseCd(String promForceCloseCd) {
+        this.promForceCloseCd = promForceCloseCd;
+    }
+
+    public Date getPromForceCloseDt() {
+        return promForceCloseDt;
+    }
+
+    public void setPromForceCloseDt(Date promForceCloseDt) {
+        this.promForceCloseDt = promForceCloseDt;
     }
 }

@@ -23,6 +23,19 @@ import java.util.List;
 public interface PromotionEventSyncService {
 
     /**
+     * 모두
+     */
+    int GET_RAW_EVENT_BY_ALL = 0;
+    /**
+     * 진행중이거나 예정인 이벤트
+     */
+    int GET_RAW_EVENT_BY_READY = 1;
+    /**
+     * 라이브 상태의 이벤트
+     */
+    int GET_RAW_EVENT_BY_LIVE = 2;
+
+    /**
      * 모든 프로모션 이벤트들을 동기화 한다.
      * @param tenantId 대상이 되는 테넌트ID
      * @param key 동기화 대상이 되는 메뉴ID 또는 상품ID
@@ -37,10 +50,10 @@ public interface PromotionEventSyncService {
      *
      * @param tenantId
      * @param keys
-     * @param liveOnly true인 경우 현재시간(DB) 기준으로 유효한 것만, false인 경우 진행중인것과 예정인 이벤트 모두
+     * @param filterCode GET_RAW_EVENT_BY_ALL, GET_RAW_EVENT_BY_READY, GET_RAW_EVENT_BY_LIVE
      * @return
      */
-    List<RawPromotionEvent> getRawEventList(String tenantId, List<String> keys, boolean liveOnly);
+    List<RawPromotionEvent> getRawEventList(String tenantId, List<String> keys, int filterCode);
 
     List<RawPromotionEvent> getRawEventList(String tenantId, List<Integer> promIdList);
 
