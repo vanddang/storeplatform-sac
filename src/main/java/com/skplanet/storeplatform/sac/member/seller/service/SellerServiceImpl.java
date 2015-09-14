@@ -129,8 +129,8 @@ public class SellerServiceImpl implements SellerService {
 	@Resource(name = "sellerWithdrawAmqpTemplate")
 	private AmqpTemplate sellerWithdrawAmqpTemplate;
 
-    @Resource
-    private AmqpTemplate raterAmqpTemplate;
+	@Resource
+	private AmqpTemplate raterAmqpTemplate;
 
 	/**
 	 * SPSAC DB 관련 Respository.
@@ -582,11 +582,12 @@ public class SellerServiceImpl implements SellerService {
 		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
 				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
 
-		// 메인, 서브 상태
+		// 정산 정보 수정 시 메인상태 : 정상, 서브상태 : 정상, 개발자유형 전환 거절 시만 수정 가능 2015.09.14
 		if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
 				.getSellerMainStatus())
-				|| !StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
-						.getSellerSubStatus())) {
+				|| (!StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+						.getSellerSubStatus()) && !StringUtils.equals(MemberConstants.SUB_STATUS_TURN_REJECT,
+						searchSellerResponse.getSellerMbr().getSellerSubStatus()))) {
 			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
 					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 		}
