@@ -1777,7 +1777,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						List<LimitTarget> limitTargetList = new ArrayList<LimitTarget>();
 						LimitTarget limitTarget = new LimitTarget();
 						limitTarget.setLimitTargetNo(info.getLimitTargetNo());
-						limitTarget.setUpdateID(info.getRegID() + "|번호 변경");
+						limitTarget.setUpdateID("번호 변경");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(info.getLimitPolicyKey());
 						limitTarget.setRegID(info.getRegID());
@@ -1793,7 +1793,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						updatePolicyRequest = new UpdatePolicyRequest();
 						limitTargetList = new ArrayList<LimitTarget>();
 						limitTarget = new LimitTarget();
-						limitTarget.setRegID(info.getRegID() + "|번호 변경");
+						limitTarget.setRegID("번호 변경");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(beMdn);
 						limitTarget.setPolicyApplyValue(beMdn + " -> " + mdn + " 번호 변경에 의해 " + beMdn + "의 " + svcCdNm
@@ -1810,7 +1810,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						updatePolicyRequest = new UpdatePolicyRequest();
 						limitTargetList = new ArrayList<LimitTarget>();
 						limitTarget = new LimitTarget();
-						limitTarget.setRegID(info.getRegID() + "|번호 변경");
+						limitTarget.setRegID("번호 변경");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(mdn);
 						limitTarget
@@ -1845,7 +1845,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						List<LimitTarget> limitTargetList = new ArrayList<LimitTarget>();
 						LimitTarget limitTarget = new LimitTarget();
 						limitTarget.setLimitTargetNo(info.getLimitTargetNo());
-						limitTarget.setUpdateID(info.getRegID() + "|회선 해지");
+						limitTarget.setUpdateID("회선 해지");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(info.getLimitPolicyKey());
 						limitTarget.setRegID(info.getRegID());
@@ -1858,7 +1858,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						updatePolicyRequest = new UpdatePolicyRequest();
 						limitTargetList = new ArrayList<LimitTarget>();
 						limitTarget = new LimitTarget();
-						limitTarget.setRegID(info.getRegID() + "|회선 해지");
+						limitTarget.setRegID("회선 해지");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(mdn);
 						String svcCdNm = StringUtils.equals(info.getLimitPolicyCode(),
