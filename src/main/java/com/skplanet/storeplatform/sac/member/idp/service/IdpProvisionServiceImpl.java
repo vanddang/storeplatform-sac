@@ -1777,7 +1777,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						List<LimitTarget> limitTargetList = new ArrayList<LimitTarget>();
 						LimitTarget limitTarget = new LimitTarget();
 						limitTarget.setLimitTargetNo(info.getLimitTargetNo());
-						limitTarget.setUpdateID(info.getRegID() + " 번호 변경");
+						limitTarget.setUpdateID(info.getRegID() + "|번호 변경");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(info.getLimitPolicyKey());
 						limitTarget.setRegID(info.getRegID());
@@ -1793,13 +1793,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						updatePolicyRequest = new UpdatePolicyRequest();
 						limitTargetList = new ArrayList<LimitTarget>();
 						limitTarget = new LimitTarget();
-						limitTarget.setRegID(info.getRegID() + " 번호 변경");
+						limitTarget.setRegID(info.getRegID() + "|번호 변경");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(beMdn);
 						limitTarget.setPolicyApplyValue(beMdn + " -> " + mdn + " 번호 변경에 의해 " + beMdn + "의 " + svcCdNm
 								+ " 결제 차단을 해지");
 						limitTarget.setIsUsed(MemberConstants.USE_N);
 						limitTarget.setPermissionType("2");
+						limitTarget.setEndDate(DateUtil.getToday("yyyyMMddhh24miss"));
 						limitTargetList.add(limitTarget);
 						updatePolicyRequest.setCommonRequest(commonRequest);
 						updatePolicyRequest.setLimitTargetList(limitTargetList);
@@ -1809,13 +1810,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						updatePolicyRequest = new UpdatePolicyRequest();
 						limitTargetList = new ArrayList<LimitTarget>();
 						limitTarget = new LimitTarget();
-						limitTarget.setRegID(info.getRegID() + " 번호 변경");
+						limitTarget.setRegID(info.getRegID() + "|번호 변경");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(mdn);
 						limitTarget
 								.setPolicyApplyValue(beMdn + " 결제 차단을 해지하고, " + mdn + "가 " + svcCdNm + " 결제 차단을 승계함");
 						limitTarget.setIsUsed(MemberConstants.USE_Y);
 						limitTarget.setPermissionType("1");
+						limitTarget.setEndDate("99991231235959");
 						limitTargetList.add(limitTarget);
 						updatePolicyRequest.setCommonRequest(commonRequest);
 						updatePolicyRequest.setLimitTargetList(limitTargetList);
@@ -1843,7 +1845,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						List<LimitTarget> limitTargetList = new ArrayList<LimitTarget>();
 						LimitTarget limitTarget = new LimitTarget();
 						limitTarget.setLimitTargetNo(info.getLimitTargetNo());
-						limitTarget.setUpdateID(info.getRegID() + " 회선 해지");
+						limitTarget.setUpdateID(info.getRegID() + "|회선 해지");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(info.getLimitPolicyKey());
 						limitTarget.setRegID(info.getRegID());
@@ -1856,7 +1858,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						updatePolicyRequest = new UpdatePolicyRequest();
 						limitTargetList = new ArrayList<LimitTarget>();
 						limitTarget = new LimitTarget();
-						limitTarget.setRegID(info.getRegID() + " 회선 해지");
+						limitTarget.setRegID(info.getRegID() + "|회선 해지");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(mdn);
 						String svcCdNm = StringUtils.equals(info.getLimitPolicyCode(),
