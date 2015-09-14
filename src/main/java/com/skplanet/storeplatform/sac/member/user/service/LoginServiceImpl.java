@@ -2348,6 +2348,22 @@ public class LoginServiceImpl implements LoginService {
 				return res;
 			}
 
+			// imei 업데이트
+			boolean isEqualsImei = this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(),
+					req.getDeviceId(), detailRes.getDeviceInfoList().get(0).getNativeId(), req.getNativeId(),
+					req.getDeviceTelecom());
+			if (!isEqualsImei) {
+				LOGGER.info("{} IMEI 불일치", req.getDeviceId());
+				res.setUserMainStatus(MemberConstants.INAPP_USER_STATUS_IMEI_MISMATCH);
+				res.setUserInfo(new UserInfo());
+				res.setAgreementList(new ArrayList<Agreement>());
+				res.setDeviceInfo(new DeviceInfo());
+				res.setPinInfo(new MarketPinInfo());
+				res.setMbrAuth(new MbrAuth());
+				res.setTstoreEtcInfo(new TstoreEtcInfo());
+				return res;
+			}
+
 			// 사용자 기본정보
 			UserInfo userInfo = new UserInfo();
 			userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
@@ -2407,13 +2423,6 @@ public class LoginServiceImpl implements LoginService {
 			res.setMbrAuth(detailRes.getMbrAuth()); // 실명인증정보
 			res.setTstoreEtcInfo(this.getTstoreEtcInfo(requestHeader, deviceInfo.getDeviceId(),
 					deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
-
-			// imei 업데이트
-			if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-					&& StringUtils.isNotBlank(req.getNativeId())) {
-				this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(), detailRes
-						.getDeviceInfoList().get(0).getNativeId(), req.getNativeId());
-			}
 
 		} else { // 타사 인증
 
@@ -2741,6 +2750,22 @@ public class LoginServiceImpl implements LoginService {
 			}
 		}
 
+		// imei 업데이트
+		boolean isEqualsImei = this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(),
+				detailRes.getDeviceInfoList().get(0).getNativeId(), req.getNativeId(), req.getDeviceTelecom());
+
+		if (!isEqualsImei) {
+			LOGGER.info("{} IMEI 불일치", req.getDeviceId());
+			res.setUserStatus(MemberConstants.INAPP_USER_STATUS_IMEI_MISMATCH);
+			res.setUserInfo(new UserInfo());
+			res.setAgreementList(new ArrayList<Agreement>());
+			res.setDeviceInfo(new DeviceInfo());
+			res.setPinInfo(new MarketPinInfo());
+			res.setMbrAuth(new MbrAuth());
+			res.setTstoreEtcInfo(new TstoreEtcInfo());
+			return res;
+		}
+
 		// 휴면계정인 경우 복구처리
 		if (StringUtils.equals(detailRes.getUserInfo().getIsDormant(), MemberConstants.USE_Y)) {
 			UserMbr userMbr = new UserMbr();
@@ -2809,19 +2834,12 @@ public class LoginServiceImpl implements LoginService {
 		res.setTstoreEtcInfo(this.getTstoreEtcInfo(requestHeader, deviceInfo.getDeviceId(),
 				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
-		// imei 업데이트
-		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-				&& StringUtils.isNotBlank(req.getNativeId())) {
-			this.updateImei(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(), detailRes
-					.getDeviceInfoList().get(0).getNativeId(), req.getNativeId());
-		}
-
 		return res;
 	}
 
 	/**
 	 * <pre>
-	 * imei 업데이트.
+	 * pp인증 관련 imei 업데이트.
 	 * </pre>
 	 * 
 	 * @param requestHeader
@@ -2834,31 +2852,42 @@ public class LoginServiceImpl implements LoginService {
 	 *            DB에 저장된 imei
 	 * @param reqNativeId
 	 *            request imei
+	 * @return boolean isEqualsImei
 	 */
-	private void updateImei(SacRequestHeader requestHeader, String userKey, String deviceId, String nativeId,
-			String reqNativeId) {
+	private boolean updateImei(SacRequestHeader requestHeader, String userKey, String deviceId, String nativeId,
+			String reqNativeId, String reqDeviceTelecom) {
 		String cspImei = null;
-		try {
-			cspImei = this.deviceService.getIcasImei(deviceId);
-		} catch (StorePlatformException e) {
-			// ignore Exception
+		boolean isEqualsImei = true;
+
+		if (StringUtils.equals(reqDeviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)
+				&& StringUtils.isNotBlank(reqNativeId)) {
+			try {
+				cspImei = this.deviceService.getIcasImei(deviceId);
+			} catch (StorePlatformException e) {
+				// error skip
+				LOGGER.info("{} icas error : {}, {}", deviceId, e.getErrorInfo().getCode(), e.getErrorInfo()
+						.getMessage());
+			}
+
+			if (cspImei != null) {
+				if (StringUtils.equals(reqNativeId, cspImei)) {
+					LOGGER.info("{} imei 변경 : {} -> {}", deviceId, nativeId, cspImei);
+					UserMbrDevice userMbrDevice = new UserMbrDevice();
+					userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE);
+					userMbrDevice.setNativeID(cspImei);
+					CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+					createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+					createDeviceReq.setUserKey(userKey);
+					createDeviceReq.setIsNew("N");
+					createDeviceReq.setUserMbrDevice(userMbrDevice);
+					this.deviceSCI.createDevice(createDeviceReq);
+				} else {
+					isEqualsImei = false;
+				}
+			}
 		}
 
-		if (cspImei != null) {
-			if (!StringUtils.equals(reqNativeId, cspImei)) {
-				throw new StorePlatformException("SAC_MEM_1503");
-			}
-			LOGGER.info("{} imei 변경 : {} -> {}", deviceId, nativeId, cspImei);
-			UserMbrDevice userMbrDevice = new UserMbrDevice();
-			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE);
-			userMbrDevice.setNativeID(cspImei);
-			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
-			createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-			createDeviceReq.setUserKey(userKey);
-			createDeviceReq.setIsNew("N");
-			createDeviceReq.setUserMbrDevice(userMbrDevice);
-			this.deviceSCI.createDevice(createDeviceReq);
-		}
+		return isEqualsImei;
 	}
 
 	/**
