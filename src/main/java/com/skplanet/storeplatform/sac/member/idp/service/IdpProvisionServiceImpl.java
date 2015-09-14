@@ -1414,35 +1414,41 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					keySearchList.add(key);
 					schDeviceListReq.setKeySearchList(keySearchList);
 					schDeviceListReq.setCommonRequest(commonRequest);
-					SearchDeviceListResponse schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
-					if (schDeviceListRes != null && schDeviceListRes.getUserMbrDevice().size() > 0) {
-						List<String> removeKeyList = new ArrayList<String>();
-						for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
+					try {
+						SearchDeviceListResponse schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
+						if (schDeviceListRes != null && schDeviceListRes.getUserMbrDevice().size() > 0) {
+							List<String> removeKeyList = new ArrayList<String>();
+							for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
 
-							LOGGER.info("delete deviceId : {}", userMbrDevice.getDeviceID());
-							removeKeyList.add(userMbrDevice.getDeviceKey());
+								LOGGER.info("delete deviceId : {}", userMbrDevice.getDeviceID());
+								removeKeyList.add(userMbrDevice.getDeviceKey());
 
-							/* mdn 삭제 MQ 연동 */
-							RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
-							try {
-								mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-								mqInfo.setUserKey(userMbrDevice.getUserKey());
-								mqInfo.setDeviceKey(userMbrDevice.getDeviceKey());
-								mqInfo.setDeviceId(userMbrDevice.getDeviceID());
-								mqInfo.setSvcMangNo(userMbrDevice.getSvcMangNum());
-								mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
-								this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
-							} catch (AmqpException ex) {
-								LOGGER.info("MQ process fail {}", mqInfo);
+								/* mdn 삭제 MQ 연동 */
+								RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
+								try {
+									mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+									mqInfo.setUserKey(userMbrDevice.getUserKey());
+									mqInfo.setDeviceKey(userMbrDevice.getDeviceKey());
+									mqInfo.setDeviceId(userMbrDevice.getDeviceID());
+									mqInfo.setSvcMangNo(userMbrDevice.getSvcMangNum());
+									mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
+									this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
+								} catch (AmqpException ex) {
+									LOGGER.info("MQ process fail {}", mqInfo);
+								}
 							}
-						}
 
-						RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
-						removeDeviceReq.setCommonRequest(commonRequest);
-						removeDeviceReq.setUserKey(userKey);
-						removeDeviceReq.setDeviceKey(removeKeyList);
-						removeDeviceReq.setIsDormant(isDormant);
-						this.deviceSCI.removeDevice(removeDeviceReq);
+							RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+							removeDeviceReq.setCommonRequest(commonRequest);
+							removeDeviceReq.setUserKey(userKey);
+							removeDeviceReq.setDeviceKey(removeKeyList);
+							removeDeviceReq.setIsDormant(isDormant);
+							this.deviceSCI.removeDevice(removeDeviceReq);
+						}
+					} catch (StorePlatformException e) {
+						if (!StringUtil.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+							throw e;
+						}
 					}
 				}
 				resultCode = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
@@ -1744,5 +1750,40 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		result.setDeactivateStatus(deactivateStatus);
 		return result;
 
+	}
+
+	public void transferLimitTargetInfo(String tenantId, String systemId, String cmd, String mdn, String beMdn) {
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setTenantID(tenantId);
+		commonRequest.setSystemID(systemId);
+
+		if (StringUtils.equals(cmd, "changeMobileId")) {
+			List<String> limitPolicyCodeList = new ArrayList<String>();
+			limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE);
+			limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_NATECA);
+			SearchPolicyRequest policyRequest = new SearchPolicyRequest();
+			policyRequest.setCommonRequest(commonRequest);
+			policyRequest.setLimitPolicyKey(beMdn);
+			policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
+			try {
+				SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+				for (LimitTarget info : policyResponse.getLimitTargetList()) {
+					if (StringUtils.equals(info.getIsUsed(), MemberConstants.USE_Y)) {
+						// 이전 번호 해지이력 종료처리 -> 현재 차단된 이력의 종료일자 : sysdate, upd_id : reg_id + "번호 변경"
+
+						// 이전 번호 해지 이력 남김 -> reg_id = reg_id + "번호 변경"
+
+						// 신규 번호 차딘 이력 남김 -> reg_id = reg_id + "번호 변경"
+					}
+				}
+			} catch (StorePlatformException e) {
+				// ignore
+			}
+		} else if (StringUtils.equals(cmd, "secedeMobileNumber")) {
+			// 기존 번호 해지이력 종료처리 -> 현재 차단된 이력의 종료일자 : sysdate, upd_id : reg_id + "회선 해지"
+
+			// 기존 번호 해지 이력 남김 -> reg_id = reg_id + "회선 해지"
+		}
 	}
 }
