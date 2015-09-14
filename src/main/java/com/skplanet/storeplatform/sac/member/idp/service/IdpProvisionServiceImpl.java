@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
+import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ChangedDeviceLog;
@@ -51,10 +52,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateNonMbrSegmentRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyValueRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyValueResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserMbrSegmentRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
@@ -353,20 +350,21 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				}
 
 				/* 사용자제한정책 mdn 변경(as-is 구매한도/선물수신한도 / 단말테스터 변경용) */
-				UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
-				updPolicyKeyReq.setCommonRequest(commonRequest);
-				updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
-				updPolicyKeyReq.setNewLimitPolicyKey(mdn);
-				UpdatePolicyKeyResponse updPolicyKeyRes = this.userSCI.updatePolicyKey(updPolicyKeyReq);
+				// UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
+				// updPolicyKeyReq.setCommonRequest(commonRequest);
+				// updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
+				// updPolicyKeyReq.setNewLimitPolicyKey(mdn);
+				// UpdatePolicyKeyResponse updPolicyKeyRes = this.userSCI.updatePolicyKey(updPolicyKeyReq);
+				//
+				// UpdatePolicyValueRequest updPolicyValueReq = new UpdatePolicyValueRequest();
+				// updPolicyValueReq.setCommonRequest(commonRequest);
+				// updPolicyValueReq.setOldApplyValue(beMdn);
+				// updPolicyValueReq.setNewApplyValue(mdn);
+				// UpdatePolicyValueResponse updPolicyValueRes = this.userSCI.updatePolicyValue(updPolicyValueReq);
+				// LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 policyKey : {},  policyValue : {}",
+				// updPolicyKeyRes.getUpdateCount(), updPolicyValueRes.getUpdateCount());
+				this.transferLimitTargetInfo(tenantId, systemId, map.get("cmd"), mdn, beMdn);
 
-				UpdatePolicyValueRequest updPolicyValueReq = new UpdatePolicyValueRequest();
-				updPolicyValueReq.setCommonRequest(commonRequest);
-				updPolicyValueReq.setOldApplyValue(beMdn);
-				updPolicyValueReq.setNewApplyValue(mdn);
-				UpdatePolicyValueResponse updPolicyValueRes = this.userSCI.updatePolicyValue(updPolicyValueReq);
-
-				LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 policyKey : {},  policyValue : {}",
-						updPolicyKeyRes.getUpdateCount(), updPolicyValueRes.getUpdateCount());
 			}
 
 			resultCode = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
@@ -879,6 +877,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			LOGGER.info("{},결과:{},Type:{},svcRsnCd:{},changeCaseCode:{}", mdn, resultLogStr, schUserRes.getUserMbr()
 					.getUserType(), svcRsnCd, changeCaseCode);
+
+			this.transferLimitTargetInfo(tenantId, systemId, map.get("cmd"), mdn, null);
+
 			resultCode = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 		} catch (StorePlatformException ex) {
 
@@ -1758,7 +1759,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		commonRequest.setTenantID(tenantId);
 		commonRequest.setSystemID(systemId);
 
-		if (StringUtils.equals(cmd, "changeMobileId")) {
+		if (StringUtils.equals(cmd, "changeMobileNumber")) {
 			List<String> limitPolicyCodeList = new ArrayList<String>();
 			limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE);
 			limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_NATECA);
@@ -1770,20 +1771,108 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
 				for (LimitTarget info : policyResponse.getLimitTargetList()) {
 					if (StringUtils.equals(info.getIsUsed(), MemberConstants.USE_Y)) {
-						// 이전 번호 해지이력 종료처리 -> 현재 차단된 이력의 종료일자 : sysdate, upd_id : reg_id + "번호 변경"
+						LOGGER.info("{} -> {} 결제차단 승계처리", beMdn, mdn);
+						// 이전 번호 차단이력 종료처리
+						UpdatePolicyRequest updatePolicyRequest = new UpdatePolicyRequest();
+						List<LimitTarget> limitTargetList = new ArrayList<LimitTarget>();
+						LimitTarget limitTarget = new LimitTarget();
+						limitTarget.setLimitTargetNo(info.getLimitTargetNo());
+						limitTarget.setUpdateID(info.getRegID() + " 번호 변경");
+						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
+						limitTarget.setLimitPolicyKey(info.getLimitPolicyKey());
+						limitTarget.setRegID(info.getRegID());
+						limitTargetList.add(limitTarget);
+						updatePolicyRequest.setCommonRequest(commonRequest);
+						updatePolicyRequest.setLimitTargetList(limitTargetList);
+						this.userSCI.updatePolicyHistory(updatePolicyRequest);
 
-						// 이전 번호 해지 이력 남김 -> reg_id = reg_id + "번호 변경"
+						String svcCdNm = StringUtils.equals(info.getLimitPolicyCode(),
+								MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE) ? "단품" : "부분";
 
-						// 신규 번호 차딘 이력 남김 -> reg_id = reg_id + "번호 변경"
+						// 이전 번호 해지 처리
+						updatePolicyRequest = new UpdatePolicyRequest();
+						limitTargetList = new ArrayList<LimitTarget>();
+						limitTarget = new LimitTarget();
+						limitTarget.setRegID(info.getRegID() + " 번호 변경");
+						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
+						limitTarget.setLimitPolicyKey(beMdn);
+						limitTarget.setPolicyApplyValue(beMdn + " -> " + mdn + " 번호 변경에 의해 " + beMdn + "의 " + svcCdNm
+								+ " 결제 차단을 해지");
+						limitTarget.setIsUsed(MemberConstants.USE_N);
+						limitTarget.setPermissionType("2");
+						limitTargetList.add(limitTarget);
+						updatePolicyRequest.setCommonRequest(commonRequest);
+						updatePolicyRequest.setLimitTargetList(limitTargetList);
+						this.userSCI.insertPolicy(updatePolicyRequest);
+
+						// 신규 번호 차딘 처리
+						updatePolicyRequest = new UpdatePolicyRequest();
+						limitTargetList = new ArrayList<LimitTarget>();
+						limitTarget = new LimitTarget();
+						limitTarget.setRegID(info.getRegID() + " 번호 변경");
+						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
+						limitTarget.setLimitPolicyKey(mdn);
+						limitTarget
+								.setPolicyApplyValue(beMdn + " 결제 차단을 해지하고, " + mdn + "가 " + svcCdNm + " 결제 차단을 승계함");
+						limitTarget.setIsUsed(MemberConstants.USE_Y);
+						limitTarget.setPermissionType("1");
+						limitTargetList.add(limitTarget);
+						updatePolicyRequest.setCommonRequest(commonRequest);
+						updatePolicyRequest.setLimitTargetList(limitTargetList);
+						this.userSCI.insertPolicy(updatePolicyRequest);
 					}
 				}
 			} catch (StorePlatformException e) {
 				// ignore
 			}
 		} else if (StringUtils.equals(cmd, "secedeMobileNumber")) {
-			// 기존 번호 해지이력 종료처리 -> 현재 차단된 이력의 종료일자 : sysdate, upd_id : reg_id + "회선 해지"
+			List<String> limitPolicyCodeList = new ArrayList<String>();
+			limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE);
+			limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_NATECA);
+			SearchPolicyRequest policyRequest = new SearchPolicyRequest();
+			policyRequest.setCommonRequest(commonRequest);
+			policyRequest.setLimitPolicyKey(mdn);
+			policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
+			try {
+				SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+				for (LimitTarget info : policyResponse.getLimitTargetList()) {
+					if (StringUtils.equals(info.getIsUsed(), MemberConstants.USE_Y)) {
+						LOGGER.info("{} 결제차단 해지처리", mdn);
+						// 해지번호 차단이력 종료처리
+						UpdatePolicyRequest updatePolicyRequest = new UpdatePolicyRequest();
+						List<LimitTarget> limitTargetList = new ArrayList<LimitTarget>();
+						LimitTarget limitTarget = new LimitTarget();
+						limitTarget.setLimitTargetNo(info.getLimitTargetNo());
+						limitTarget.setUpdateID(info.getRegID() + " 회선 해지");
+						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
+						limitTarget.setLimitPolicyKey(info.getLimitPolicyKey());
+						limitTarget.setRegID(info.getRegID());
+						limitTargetList.add(limitTarget);
+						updatePolicyRequest.setCommonRequest(commonRequest);
+						updatePolicyRequest.setLimitTargetList(limitTargetList);
+						this.userSCI.updatePolicyHistory(updatePolicyRequest);
 
-			// 기존 번호 해지 이력 남김 -> reg_id = reg_id + "회선 해지"
+						// 해지 처리
+						updatePolicyRequest = new UpdatePolicyRequest();
+						limitTargetList = new ArrayList<LimitTarget>();
+						limitTarget = new LimitTarget();
+						limitTarget.setRegID(info.getRegID() + " 회선 해지");
+						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
+						limitTarget.setLimitPolicyKey(mdn);
+						String svcCdNm = StringUtils.equals(info.getLimitPolicyCode(),
+								MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE) ? "단품" : "부분";
+						limitTarget.setPolicyApplyValue(mdn + " 회선 해지에 따라 " + svcCdNm + " 결제 차단을 해지");
+						limitTarget.setIsUsed(MemberConstants.USE_N);
+						limitTarget.setPermissionType("2");
+						limitTargetList.add(limitTarget);
+						updatePolicyRequest.setCommonRequest(commonRequest);
+						updatePolicyRequest.setLimitTargetList(limitTargetList);
+						this.userSCI.insertPolicy(updatePolicyRequest);
+					}
+				}
+			} catch (StorePlatformException e) {
+				// ignore
+			}
 		}
 	}
 }
