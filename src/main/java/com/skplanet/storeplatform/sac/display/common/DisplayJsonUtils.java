@@ -28,14 +28,13 @@ public class DisplayJsonUtils {
 
     /**
      * JSON 문자열을 객체로 변환한다.
-     * notifyException값이 false인 경우 파싱 에러가 나면 기본 Map객체가 응답되므로 호출부에서 따로 null체크를 할 필요는 없다.
      * @param json JSON문자열
      * @param notifyException true 설정시 경우 파싱에러가 나는 경우 런타임 에러 발생
      * @return 결과 객체. 입력값에 따라 Map 또는 List 상속 객체가 응답된다.
      */
-    public static Object parse(String json, boolean notifyException) {
+    private static Object parse(String json, boolean notifyException) {
         if(json == null)
-            return new HashMap();
+            return null;
 
         JSONParser parser = new JSONParser();
         try {
@@ -46,7 +45,7 @@ public class DisplayJsonUtils {
             if (notifyException) {
                 throw new RuntimeException("JSON Parse Error");
             }
-            return new HashMap();
+            return null;
         }
     }
 
