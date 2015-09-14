@@ -14,9 +14,19 @@
                            http://www.springframework.org/schema/util/spring-util.xsd"> 
                             
     <import resource="classpath:runtime/context-runtime.xml"/>
-    <import resource="classpath:sac/spring/context-*.xml"/> 
-    <import resource="classpath:sac/runtime/context-*.xml"/> 
     
+    <import resource="classpath:sac/spring/context-app-aop.xml"/>
+	<import resource="classpath:sac/spring/context-common.xml"/>
+	<import resource="classpath:sac/spring/context-component-if.xml"/>
+	<import resource="classpath:sac/spring/context-environment.xml"/>
+	<import resource="classpath:sac/spring/context-lpc-sci-import.xml"/>	
+	<import resource="classpath:sac/spring/context-repository.xml"/>	
+    
+    <import resource="classpath:sac/runtime/context-runtime.xml"/>
+    <import resource="classpath:sac/runtime/context-runtime-amqp.xml"/>
+    <import resource="classpath:sac/runtime/context-runtime-preprocess.xml"/> 
+	<import resource="classpath:sac/runtime/context-rest-sac.xml"/>    
+	
     <!-- JUnit Test TransactionManager -->
     <bean id="transactionManager" class="org.springframework.data.transaction.ChainedTransactionManager">
         <constructor-arg>
