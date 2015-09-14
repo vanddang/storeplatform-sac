@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.feature.product.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -43,22 +44,25 @@ public class ProductControllerTest {
 	
 	
 	@Test
-	public void searchProductList_RNK050020001_영화() throws Exception {
-		
-		//RNK050020001 / 영화 | DP17
+	public void searchProductList() throws Exception {
+//	public void searchProductList_RNK050020001_영화() throws Exception {
+
+		// RNK050020001 / 영화 | DP17
 		this.mvc.perform(
-				get("/display/product/list/v1?listId=RNK050010003&menuId=DP01&count=6")
-					.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-					.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
-					.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
-					.header("x-sac-interface-id", "I03000134")
+				get("/display/feature/product/list/v1?listId=RNK050100003&menuId=DP16002006&count=20")
+						.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+						.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+						.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+
 		)
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andExpect(header().string("x-sac-result-code", "SUCC"))
 		;
-	}	
+
+	}
+
 	@Test
 	public void searchProductList_RNK050020001_TV방송() throws Exception {
 		
