@@ -268,6 +268,8 @@ public final class MemberConstants {
 	 * 사용자 제한 정책 코드.
 	 */
 	public static final String USER_LIMIT_POLICY_TESTER = "US011702"; // 단말 검증자
+	public static final String USER_LIMIT_POLICY_SERVICE_STOP_TSTORE = "OR003101"; // 서비스 단품 제한
+	public static final String USER_LIMIT_POLICY_SERVICE_STOP_NATECA = "OR003103"; // 서비스 부분 제한
 
 	/**
 	 * 게임센터 관련 상수.
