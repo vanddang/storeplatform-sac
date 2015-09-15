@@ -58,15 +58,6 @@ public class DeviceModelListServiceImpl implements DeviceModelListService {
 		TenantHeader tenantHeader = header.getTenantHeader();
 		List<MetaInfo> deviceModelList = null;
 		List<Device> deviceList = new ArrayList<Device>();
-		
-		// request Parameter가 없을 경우
-		if(StringUtils.isEmpty(req.getCmntCompCd()) && StringUtils.isEmpty(req.getMnftCompCd()) && 
-				StringUtils.isEmpty(req.getDeviceModelCd()) && StringUtils.isEmpty(req.getDeviceModelNm())) {
-			commonResponse.setTotalCount(0);
-			res.setDeviceList(deviceList);
-			res.setCommonResponse(commonResponse);
-			return res;
-		}
 			
 		req.setLangCd(tenantHeader.getLangCd());
 		String modelNm = "";
