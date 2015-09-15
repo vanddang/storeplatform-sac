@@ -29,6 +29,7 @@
 		             , REPLACE( REPLACE( REPLACE( NVL(A.DTL_IMG_PATH, '/images/no_imgage/phone_68_68.gif') , '/data/img', '/images'), '/data/wipi', '/wipiimages'), '/data/common', '/common') AS DTL_IMAGE_PATH
 		          FROM TB_CM_DEVICE       A 
 		         WHERE 1=1
+		           AND A.VM_TYPE_CD IN ('PD005606', 'PD005612')
 		           AND A.USE_YN = 'Y'
 		           AND NVL(A.VERIFY_DVC_YN, 'N') = 'N'
 		           AND DP_YN = 'Y' 
