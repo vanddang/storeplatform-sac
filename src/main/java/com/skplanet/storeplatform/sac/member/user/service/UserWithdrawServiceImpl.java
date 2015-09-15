@@ -498,7 +498,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			this.idpSCI.secedeForWap(ecReq);
 		} catch (StorePlatformException e) {
 			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-					+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
+					+ IdpConstants.IDP_RES_CODE_NOT_EXIST_MDN)) {
 				throw e;
 			}
 		}

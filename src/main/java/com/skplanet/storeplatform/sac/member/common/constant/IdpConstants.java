@@ -64,6 +64,8 @@ public final class IdpConstants {
 	public static final String IDP_RES_CODE_WATERMARK_AUTH_FAIL = "2208";
 	/** 가입신청 상태이므로 로그인 실패 (2215). */
 	public static final String IDP_RES_CODE_INVALID_USER_INFO = "2215";
+	/** 무선 서비스에 가입되지 않은 MDN (2900). */
+	public static final String IDP_RES_CODE_NOT_EXIST_MDN = "2900";
 	/** 한신정 연동 실패 (4000). */
 	public static final String IDP_RES_CODE_NICE_LINKAGE_FAIL = "4000";
 	/** ICAS 연동 오류 (4100). */
