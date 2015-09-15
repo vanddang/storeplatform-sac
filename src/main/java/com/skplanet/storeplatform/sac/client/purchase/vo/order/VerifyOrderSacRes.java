@@ -66,6 +66,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String prodCaseCd; // 쇼핑 상품 유형 코드
 	private String specialTypeCd; // 특가상품 유형 코드,팅요금제 상품 유형
 								  // 코드(특가상품-상품권/교환권:DP007501,특가상품-배송상품:DP007502,팅요금제-상품권/교환권:DP007503)
+	private String promForceCloseCd; // 프로모션 강제 종료 코드
 
 	private VerifyOrderIapInfoSac iapProdInfo; // IAP상품 정보
 	private List<VerifyOrderPromotionInfoSac> promotionList; // 프로모션 정보
@@ -717,19 +718,60 @@ public class VerifyOrderSacRes extends CommonInfo {
 		this.specialTypeCd = specialTypeCd;
 	}
 
+	/**
+	 * Gets purchase suspension cd.
+	 *
+	 * @return the purchase suspension cd
+	 */
 	public String getPurchaseSuspensionCd() {
 		return purchaseSuspensionCd;
 	}
 
+	/**
+	 * Sets purchase suspension cd.
+	 *
+	 * @param purchaseSuspensionCd
+	 *            the purchase suspension cd
+	 */
 	public void setPurchaseSuspensionCd(String purchaseSuspensionCd) {
 		this.purchaseSuspensionCd = purchaseSuspensionCd;
 	}
 
+	/**
+	 * Gets purchase suspension msg.
+	 *
+	 * @return the purchase suspension msg
+	 */
 	public String getPurchaseSuspensionMsg() {
 		return purchaseSuspensionMsg;
 	}
 
+	/**
+	 * Sets purchase suspension msg.
+	 *
+	 * @param purchaseSuspensionMsg
+	 *            the purchase suspension msg
+	 */
 	public void setPurchaseSuspensionMsg(String purchaseSuspensionMsg) {
 		this.purchaseSuspensionMsg = purchaseSuspensionMsg;
+	}
+
+	/**
+	 * Gets prom force close cd.
+	 *
+	 * @return the prom force close cd
+	 */
+	public String getPromForceCloseCd() {
+		return promForceCloseCd;
+	}
+
+	/**
+	 * Sets prom force close cd.
+	 *
+	 * @param promForceCloseCd
+	 *            the prom force close cd
+	 */
+	public void setPromForceCloseCd(String promForceCloseCd) {
+		this.promForceCloseCd = promForceCloseCd;
 	}
 }
