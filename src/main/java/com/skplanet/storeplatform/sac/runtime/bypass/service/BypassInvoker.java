@@ -12,8 +12,18 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+
+/**
+ * 바이패스 호출기
+ * <pre>
+ * Created on 2015.07.22 by 서대영
+ * Updated on 2015.09.15 by 서대영, SK플래닛 : Bypass 예외 처리 개선
+ * </pre>
+ */
 @Component
 public class BypassInvoker {
 	
@@ -31,9 +41,16 @@ public class BypassInvoker {
 
 	public ResponseEntity<String> invoke(URI uri, HttpMethod method, HttpHeaders requestHeaders, String requestBody, HttpServletResponse response) {
 		HttpEntity<String> bypassRequestEntity = handleRequest(requestHeaders, requestBody);
-		ResponseEntity<String> bypassResponseEntity = restTemplate.exchange(uri, method, bypassRequestEntity, String.class);
+		ResponseEntity<String> bypassResponseEntity = null;
+		
+		try {
+			bypassResponseEntity = restTemplate.exchange(uri, method, bypassRequestEntity, String.class);
+		} catch (RestClientException e) {
+			throw new StorePlatformException("SYS_ERROR_BYPASS", e);
+		}
+		
 		ResponseEntity<String> responseEntity = handleResponse(bypassResponseEntity, response);
-		return responseEntity;
+		return responseEntity;	
 	}
 	
 	private HttpEntity<String> handleRequest(HttpHeaders requestHeaders, String requestBody) {
