@@ -1760,6 +1760,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		commonRequest.setSystemID(systemId);
 
 		if (StringUtils.equals(cmd, "changeMobileNumber")) {
+			UpdatePolicyRequest updatePolicyRequest = null;
+			List<LimitTarget> limitTargetList = null;
+			LimitTarget limitTarget = null;
 			List<String> limitPolicyCodeList = new ArrayList<String>();
 			limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE);
 			limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_NATECA);
@@ -1769,15 +1772,76 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
 			try {
 				SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+
+				// 신규 MDN으로 이미 차단이력이 존재하면, 기존 차단이력 종료처리 및 해지처리
+				limitPolicyCodeList = new ArrayList<String>();
+				limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE);
+				limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_NATECA);
+				policyRequest = new SearchPolicyRequest();
+				policyRequest.setCommonRequest(commonRequest);
+				policyRequest.setLimitPolicyKey(mdn);
+				policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
+				try {
+					SearchPolicyResponse policyResponseByMdn = this.userSCI.searchPolicyList(policyRequest);
+					for (LimitTarget limitTargetInfo : policyResponseByMdn.getLimitTargetList()) {
+						if (StringUtils.equals(limitTargetInfo.getIsUsed(), MemberConstants.USE_Y)) {
+							String regId = limitTargetInfo.getRegID();
+							if (regId != null && regId.indexOf("|") > 0) {
+								regId = regId.substring(0, regId.indexOf("|"));
+							}
+							// 신규 MDN 차단이력 종료처리
+							LOGGER.info("{} 기등록 결제차단 해지처리", mdn);
+							updatePolicyRequest = new UpdatePolicyRequest();
+							limitTargetList = new ArrayList<LimitTarget>();
+							limitTarget = new LimitTarget();
+							limitTarget.setLimitTargetNo(limitTargetInfo.getLimitTargetNo());
+							limitTarget.setUpdateID(regId + "|번호 변경");
+							limitTarget.setLimitPolicyCode(limitTargetInfo.getLimitPolicyCode());
+							limitTarget.setLimitPolicyKey(limitTargetInfo.getLimitPolicyKey());
+							limitTarget.setRegID(limitTargetInfo.getRegID());
+							limitTargetList.add(limitTarget);
+							updatePolicyRequest.setCommonRequest(commonRequest);
+							updatePolicyRequest.setLimitTargetList(limitTargetList);
+							this.userSCI.updatePolicyHistory(updatePolicyRequest);
+
+							String svcCdNm = StringUtils.equals(limitTargetInfo.getLimitPolicyCode(),
+									MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE) ? "단품" : "부분";
+
+							// 신규 MDN 서비스제한 해지 처리
+							updatePolicyRequest = new UpdatePolicyRequest();
+							limitTargetList = new ArrayList<LimitTarget>();
+							limitTarget = new LimitTarget();
+							limitTarget.setRegID(regId + "|번호 변경");
+							limitTarget.setLimitPolicyCode(limitTargetInfo.getLimitPolicyCode());
+							limitTarget.setLimitPolicyKey(limitTargetInfo.getLimitPolicyKey());
+							limitTarget.setPolicyApplyValue(beMdn + " -> " + mdn + " 번호 변경에 의해 " + beMdn + "의 "
+									+ svcCdNm + " 결제 차단을 해지");
+							limitTarget.setIsUsed(MemberConstants.USE_N);
+							limitTarget.setPermissionType("2");
+							limitTarget.setEndDate(DateUtil.getToday("yyyyMMddHHmmss"));
+							limitTargetList.add(limitTarget);
+							updatePolicyRequest.setCommonRequest(commonRequest);
+							updatePolicyRequest.setLimitTargetList(limitTargetList);
+							this.userSCI.insertPolicy(updatePolicyRequest);
+						}
+					}
+				} catch (StorePlatformException e) {
+					// ignore
+				}
+
 				for (LimitTarget info : policyResponse.getLimitTargetList()) {
 					if (StringUtils.equals(info.getIsUsed(), MemberConstants.USE_Y)) {
 						LOGGER.info("{} -> {} 결제차단 승계처리", beMdn, mdn);
-						// 이전 번호 차단이력 종료처리
-						UpdatePolicyRequest updatePolicyRequest = new UpdatePolicyRequest();
-						List<LimitTarget> limitTargetList = new ArrayList<LimitTarget>();
-						LimitTarget limitTarget = new LimitTarget();
+						String regId = info.getRegID();
+						if (regId != null && regId.indexOf("|") > 0) {
+							regId = regId.substring(0, regId.indexOf("|"));
+						}
+						// 이전 MDN 서비스제한 종료처리
+						updatePolicyRequest = new UpdatePolicyRequest();
+						limitTargetList = new ArrayList<LimitTarget>();
+						limitTarget = new LimitTarget();
 						limitTarget.setLimitTargetNo(info.getLimitTargetNo());
-						limitTarget.setUpdateID("번호 변경");
+						limitTarget.setUpdateID(regId + "|번호 변경");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(info.getLimitPolicyKey());
 						limitTarget.setRegID(info.getRegID());
@@ -1789,28 +1853,28 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						String svcCdNm = StringUtils.equals(info.getLimitPolicyCode(),
 								MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE) ? "단품" : "부분";
 
-						// 이전 번호 해지 처리
+						// 이전 MDN 서비스제한 해지 처리
 						updatePolicyRequest = new UpdatePolicyRequest();
 						limitTargetList = new ArrayList<LimitTarget>();
 						limitTarget = new LimitTarget();
-						limitTarget.setRegID("번호 변경");
+						limitTarget.setRegID(regId + "|번호 변경");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(beMdn);
 						limitTarget.setPolicyApplyValue(beMdn + " -> " + mdn + " 번호 변경에 의해 " + beMdn + "의 " + svcCdNm
 								+ " 결제 차단을 해지");
 						limitTarget.setIsUsed(MemberConstants.USE_N);
 						limitTarget.setPermissionType("2");
-						limitTarget.setEndDate(DateUtil.getToday("yyyyMMddhh24miss"));
+						limitTarget.setEndDate(DateUtil.getToday("yyyyMMddHHmmss"));
 						limitTargetList.add(limitTarget);
 						updatePolicyRequest.setCommonRequest(commonRequest);
 						updatePolicyRequest.setLimitTargetList(limitTargetList);
 						this.userSCI.insertPolicy(updatePolicyRequest);
 
-						// 신규 번호 차딘 처리
+						// 신규 MDN 서비스제한 차단 처리
 						updatePolicyRequest = new UpdatePolicyRequest();
 						limitTargetList = new ArrayList<LimitTarget>();
 						limitTarget = new LimitTarget();
-						limitTarget.setRegID("번호 변경");
+						limitTarget.setRegID(regId + "|번호 변경");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(mdn);
 						limitTarget
@@ -1828,6 +1892,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				// ignore
 			}
 		} else if (StringUtils.equals(cmd, "secedeMobileNumber")) {
+			UpdatePolicyRequest updatePolicyRequest = null;
+			List<LimitTarget> limitTargetList = null;
+			LimitTarget limitTarget = null;
 			List<String> limitPolicyCodeList = new ArrayList<String>();
 			limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE);
 			limitPolicyCodeList.add(MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_NATECA);
@@ -1840,12 +1907,16 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				for (LimitTarget info : policyResponse.getLimitTargetList()) {
 					if (StringUtils.equals(info.getIsUsed(), MemberConstants.USE_Y)) {
 						LOGGER.info("{} 결제차단 해지처리", mdn);
-						// 해지번호 차단이력 종료처리
-						UpdatePolicyRequest updatePolicyRequest = new UpdatePolicyRequest();
-						List<LimitTarget> limitTargetList = new ArrayList<LimitTarget>();
-						LimitTarget limitTarget = new LimitTarget();
+						String regId = info.getRegID();
+						if (regId != null && regId.indexOf("|") > 0) {
+							regId = regId.substring(0, regId.indexOf("|"));
+						}
+						// 해지 MDN 서비스제한 종료처리
+						updatePolicyRequest = new UpdatePolicyRequest();
+						limitTargetList = new ArrayList<LimitTarget>();
+						limitTarget = new LimitTarget();
 						limitTarget.setLimitTargetNo(info.getLimitTargetNo());
-						limitTarget.setUpdateID("회선 해지");
+						limitTarget.setUpdateID(regId + "|회선 해지");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(info.getLimitPolicyKey());
 						limitTarget.setRegID(info.getRegID());
@@ -1854,11 +1925,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						updatePolicyRequest.setLimitTargetList(limitTargetList);
 						this.userSCI.updatePolicyHistory(updatePolicyRequest);
 
-						// 해지 처리
+						// 해지 MDN 서비스제한 해지 처리
 						updatePolicyRequest = new UpdatePolicyRequest();
 						limitTargetList = new ArrayList<LimitTarget>();
 						limitTarget = new LimitTarget();
-						limitTarget.setRegID("회선 해지");
+						limitTarget.setRegID(regId + "|회선 해지");
 						limitTarget.setLimitPolicyCode(info.getLimitPolicyCode());
 						limitTarget.setLimitPolicyKey(mdn);
 						String svcCdNm = StringUtils.equals(info.getLimitPolicyCode(),
