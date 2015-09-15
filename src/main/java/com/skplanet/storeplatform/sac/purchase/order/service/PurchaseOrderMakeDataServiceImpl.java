@@ -842,15 +842,14 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							// 이벤트 프로모션 ID
 							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,
 									product.getAcmlMethodCd())) // 프로모션 적립 방법
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT, product.getAcmlDt())) // 프로모션
-																													 // 적립
-																													 // 방법
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT,
+									product.getAcmlDt())) // 프로모션 적립일
 							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD,
 									product.getSpecialTypeCd())) // 특가상품 유형코드, 팅요금제 상품 유형 코드
 							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT,
-									product.getPrivateAcmlLimit())); // 개인
-																	 // 적립
-																	 // 한도
+									product.getPrivateAcmlLimit())) // 개인 적립 한도
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_FORCECLOSE_CD,
+									product.getPromForceCloseCd())); // 프로모션 상태 코드 - 조기종료 사유 코드
 
 					// 대여정보: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1

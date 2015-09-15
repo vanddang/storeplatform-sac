@@ -163,6 +163,7 @@ public class PurchaseProduct extends PaymentInfo {
 		this.setSeriesYn(displayInfo.getSeriesYn());
 		this.setPackagePrchsYn(displayInfo.getPackagePrchsYn());
 		this.setPrivateAcmlLimit(displayInfo.getPrivateAcmlLimit()); // 개인당 이벤트 적립 한도
+		this.setPromForceCloseCd(displayInfo.getPromForceCloseCd()); // 프로모션 조기 종료 코드
 	}
 
 	/**

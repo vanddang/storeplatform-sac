@@ -801,7 +801,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27 + ":0:0")
 					&& StringUtils.contains(cdMaxAmtRateNoDouble,
 							PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30 + ":0:0")) {
-				cashIntgAmtInf = PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25 + ":0;" // "25:0;27:0;30:0"
+				cashIntgAmtInf = PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25
+						+ ":0;" // "25:0;27:0;30:0"
 						+ PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27 + ":0;"
 						+ PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30 + ":0";
 			} else {
@@ -848,6 +849,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.settMileageLimitAmt(NumberUtils.toInt(
 				reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT), 0));
 
+		// 프로모션 강제 종료 코드
+		res.setPromForceCloseCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_FORCECLOSE_CD));
+
 		// (이번회) T마일리지 적립예정 금액
 		// 2015.07.23 sonarQube 수정(안쓰는 변수 주석처리)
 		// String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
@@ -871,7 +875,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제Page 템플릿
-
 		res.setCdPaymentTemplate(this.orderPaymentPageService.adjustPaymentPageTemplate(prchsDtlMore.getPrchsCaseCd(),
 				prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("cmpxProdClsfCd"),
 				StringUtils.equals(reservedDataMap.get("autoPrchsYn"), "Y"),
@@ -880,7 +883,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// ------------------------------------------------------------------------------------------------
 		// (다날) 컨텐츠 종류: 실물 / 디지털 : 쇼핑상품만 실물로 처리
-
 		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			res.setTypeDanalContent(PurchaseConstants.DANAL_CONTENT_TYPE_REAL);
 		} else {
@@ -938,8 +940,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setBonusCashPoint(reservedDataMap.get("bonusPoint")); // 보너스 캐쉬 지급 Point
 			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		}
-		res.setDwldAvailableDayCnt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT)); // 다운로드 가능기간(일)
-		res.setUsePeriodCnt(StringUtils.defaultIfBlank(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT), "")); // 이용기간(일)
+		res.setDwldAvailableDayCnt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT)); // 다운로드
+																										   // 가능기간(일)
+		res.setUsePeriodCnt(StringUtils.defaultIfBlank(
+				reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT), "")); // 이용기간(일)
 
 		res.setProdKind(reservedDataMap.get("prodCaseCd")); // 쇼핑상품 종류
 		res.setSpecialTypeCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD));
@@ -1350,32 +1354,38 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					int expectAmt = (int) (availPayAmt * rateMap.get(userGrade) * 0.01);
 					mileageSubInfo.setSaveExpectAmt(expectAmt);
 
-					// 적립예정 이력 총 금액
-					// 2015.07.23 sonarQube 수정(사용하지 않는 변수라 주석처리)
-					// String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
-					int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(
-							prchsDtlMore.getTenantId(), payUserKey, promId);
-
-					// int limitAmt =
-					// this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
-					// prchsDtlMore.getTenantProdGrpCd());
-					// 적립한도 : 이벤트 별로 전시에서 관리
-					int limitAmt = NumberUtils.toInt(
-							reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT), 0);
-
-					if (preReserveAmt >= limitAmt) { // 한도초과
+					// 프로모션이 종료 되었을 경우 0원 적립
+					if (StringUtils.isNotEmpty(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_FORCECLOSE_CD))){
 						mileageSubInfo.setSaveResultAmt(0);
-						mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_OVER);
-
-					} else if ((preReserveAmt + expectAmt) <= limitAmt) { // 전체적립
-						mileageSubInfo.setSaveResultAmt(expectAmt);
-						mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_ALL);
-
-					} else { // 부분적립
-						mileageSubInfo.setSaveResultAmt(limitAmt - preReserveAmt);
-						mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_PART);
+						mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_PROM_FINISH);
 					}
+					else{
+						// 적립예정 이력 총 금액
+						// 2015.07.23 sonarQube 수정(사용하지 않는 변수라 주석처리)
+						// String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
+						int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(
+								prchsDtlMore.getTenantId(), payUserKey, promId);
 
+						// int limitAmt =
+						// this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
+						// prchsDtlMore.getTenantProdGrpCd());
+						// 적립한도 : 이벤트 별로 전시에서 관리
+						int limitAmt = NumberUtils.toInt(
+								reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT), 0);
+
+						if (preReserveAmt >= limitAmt) { // 한도초과
+							mileageSubInfo.setSaveResultAmt(0);
+							mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_OVER);
+
+						} else if ((preReserveAmt + expectAmt) <= limitAmt) { // 전체적립
+							mileageSubInfo.setSaveResultAmt(expectAmt);
+							mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_ALL);
+
+						} else { // 부분적립
+							mileageSubInfo.setSaveResultAmt(limitAmt - preReserveAmt);
+							mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_PART);
+						}
+					}
 				}
 			}
 
@@ -1602,8 +1612,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 구매ID 생성용: 구매 시퀀스
 		SearchPurchaseSequenceAndDateRes searchPurchaseSequenceAndDateRes = this.purchaseOrderSearchSCI
 				.searchPurchaseSequenceAndDate();
-		String prchsId = this.purchaseOrderAssistService.makePrchsId(
-				searchPurchaseSequenceAndDateRes.getNextSequence(), searchPurchaseSequenceAndDateRes.getNowDate());
+		String prchsId = this.purchaseOrderAssistService.makePrchsId(searchPurchaseSequenceAndDateRes.getNextSequence(),
+				searchPurchaseSequenceAndDateRes.getNowDate());
 
 		// 구매정보 세팅
 		PrchsDtlMore prchsDtlMore = new PrchsDtlMore();
