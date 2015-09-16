@@ -38,10 +38,10 @@
 		           AND UPPER(A.MODEL_NM) NOT LIKE '%'||UPPER('테스트')||'%'
 		           
 				  <if test='deviceModelCd != null and deviceModelCd != ""'>
-				   AND (UPPER(A.DEVICE_MODEL_CD) LIKE '%'||UPPER(#{deviceModelCd})||'%' OR UPPER(A.MODEL_NM) LIKE '%'||UPPER(#{deviceModelCd})||'%')
+				   AND (UPPER(A.DEVICE_MODEL_CD) LIKE '%'||UPPER(#{deviceModelCd})||'%')
 				  </if>
   	              <if test='deviceModelNm != null and deviceModelNm != ""'>
-		           AND (UPPER(A.MODEL_NM) LIKE '%'||UPPER(#{deviceModelNm})||'%' OR UPPER(A.DEVICE_MODEL_CD) LIKE '%'||UPPER(#{deviceModelNm})||'%')
+		           AND (UPPER(A.MODEL_NM) LIKE '%'||UPPER(#{deviceModelNm})||'%')
 		          </if>
 		          <if test='cmntCompCd != null and cmntCompCd != ""'>
 		           AND CMNT_COMP_CD = #{cmntCompCd}
