@@ -2351,7 +2351,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 				SsoCredentialCreateEcReq ssoCredentialCreateEcReq = new SsoCredentialCreateEcReq();
 				ssoCredentialCreateEcReq.setMctUserId(req.getUserKey());
 				SsoCredentialCreateEcRes ssoCredentialCreateEcRes = this.syrupSCI
-						.ssoCredential(ssoCredentialCreateEcReq);
+						.getSsoCredential(ssoCredentialCreateEcReq);
 				ssoCredential = ssoCredentialCreateEcRes.getSsoCredential();
 				if (StringUtils.isNotBlank(ssoCredential)) {
 					// ssoCredential 저장
