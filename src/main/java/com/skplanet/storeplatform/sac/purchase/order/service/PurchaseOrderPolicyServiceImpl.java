@@ -1554,9 +1554,11 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 
 		if (checkPaymentPolicyParam.isAutoPrchs() || checkPaymentPolicyParam.isS2sAutoPrchs()) {
 			return PurchaseConstants.PAYMENT_METHOD_SALEPOLICY_AUTOPRCHS;
-		} else {
+		} else
+		{
 			// 상품타입: 쇼핑 경우 - VOD/이북 정액상품 경우 추가
-			return StringUtils.isNotBlank(prodCaseCd) ? prodCaseCd : (StringUtils.isNotBlank(cmpxProdClsfCd) ? cmpxProdClsfCd : null);
+//			return StringUtils.isNotBlank(prodCaseCd) ? prodCaseCd : (StringUtils.isNotBlank(cmpxProdClsfCd) ? cmpxProdClsfCd : null);
+			return StringUtils.isNotBlank(prodCaseCd) ? prodCaseCd : null;
 		}
 	}
 
