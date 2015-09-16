@@ -1819,6 +1819,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							limitTarget.setIsUsed(MemberConstants.USE_N);
 							limitTarget.setPermissionType("2");
 							limitTarget.setEndDate(DateUtil.getToday("yyyyMMddHHmmss"));
+							limitTarget.setLineMangStatus("US013401");
 							limitTargetList.add(limitTarget);
 							updatePolicyRequest.setCommonRequest(commonRequest);
 							updatePolicyRequest.setLimitTargetList(limitTargetList);
@@ -1865,6 +1866,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						limitTarget.setIsUsed(MemberConstants.USE_N);
 						limitTarget.setPermissionType("2");
 						limitTarget.setEndDate(DateUtil.getToday("yyyyMMddHHmmss"));
+						limitTarget.setLineMangStatus("US013401");
 						limitTargetList.add(limitTarget);
 						updatePolicyRequest.setCommonRequest(commonRequest);
 						updatePolicyRequest.setLimitTargetList(limitTargetList);
@@ -1882,6 +1884,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						limitTarget.setIsUsed(MemberConstants.USE_Y);
 						limitTarget.setPermissionType("1");
 						limitTarget.setEndDate("99991231235959");
+						limitTarget.setLineMangStatus("US013401");
 						limitTargetList.add(limitTarget);
 						updatePolicyRequest.setCommonRequest(commonRequest);
 						updatePolicyRequest.setLimitTargetList(limitTargetList);
@@ -1938,6 +1941,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						limitTarget.setIsUsed(MemberConstants.USE_N);
 						limitTarget.setPermissionType("2");
 						limitTarget.setEndDate(DateUtil.getToday("yyyyMMddHHmmss"));
+						limitTarget.setLineMangStatus("US013401");
 						limitTargetList.add(limitTarget);
 						updatePolicyRequest.setCommonRequest(commonRequest);
 						updatePolicyRequest.setLimitTargetList(limitTargetList);
