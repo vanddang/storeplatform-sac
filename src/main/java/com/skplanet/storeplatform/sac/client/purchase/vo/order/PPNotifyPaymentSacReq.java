@@ -10,11 +10,10 @@
 
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
-import javax.validation.constraints.NotNull;
-
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -52,6 +51,7 @@ public class PPNotifyPaymentSacReq extends CommonInfo {
 
 	private String paymentTelecomCd; // 휴대폰 결제 통신사 코드
 	private String flgLimitUser; // 한도가입자 여부 Y/N
+	private String removeSSOCredential; // 회원 SSOCredential 정보 삭제요청(SyrupPay) Y
 
 	/**
 	 * @return the code
@@ -383,4 +383,21 @@ public class PPNotifyPaymentSacReq extends CommonInfo {
 		this.flgLimitUser = flgLimitUser;
 	}
 
+	/**
+	 * Gets remove sSO credential.
+	 *
+	 * @return the remove sSO credential
+	 */
+	public String getRemoveSSOCredential() {
+		return removeSSOCredential;
+	}
+
+	/**
+	 * Sets remove sSO credential.
+	 *
+	 * @param removeSSOCredential the remove sSO credential
+	 */
+	public void setRemoveSSOCredential(String removeSSOCredential) {
+		this.removeSSOCredential = removeSSOCredential;
+	}
 }
