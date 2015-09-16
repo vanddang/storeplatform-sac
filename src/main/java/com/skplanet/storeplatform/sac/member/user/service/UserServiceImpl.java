@@ -35,6 +35,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
+import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
@@ -221,7 +223,11 @@ public class UserServiceImpl implements UserService {
 		MoveUserInfoResponse moveUserInfoResponse = this.userSCI.executeMoveUserMbr(moveUserInfoRequest);
 
 		// IDP 결과값이 N일 경우 이력만 저장하고 return.
-		if (StringUtils.equals(moveUserInfoSacReq.getIdpResultYn(), MemberConstants.USE_N)) {
+		// IDP ERROR CODE가 2031, 2031X000 : 변경 요청된 상태값과 현재의 상태값이 같습니다 오류가 아닐 경우
+		if (StringUtils.equals(moveUserInfoSacReq.getIdpResultYn(), MemberConstants.USE_N)
+				&& !StringUtils.equals(moveUserInfoSacReq.getIdpErrCd(), IdpConstants.IDP_RES_CODE_STATUS_ALREAY_APPLY)
+				&& !StringUtils.equals(moveUserInfoSacReq.getIdpErrCd(),
+						ImIdpConstants.IDP_RES_CODE_STATUS_ALREAY_APPLY)) {
 			MoveUserInfoSacRes moveUserInfoSacRes = new MoveUserInfoSacRes();
 			moveUserInfoSacRes.setUserKey(moveUserInfoResponse.getUserKey());
 
@@ -239,14 +245,14 @@ public class UserServiceImpl implements UserService {
 						recvNm = StringUtil.cvtProdNoMask(moveUserInfoResponse.getUserMbrDevice().getDeviceID());
 					} else {
 						recvNm = moveUserInfoResponse.getMbrId();
-						
+
 						// ID회원 ID 마스킹 처리, ID 가 Email 로 된 경우에는 전자우편(E-mail) 의 마스킹 정책 적용
 						if (StringUtils.isNotBlank(recvNm)) {
 							if (recvNm.indexOf("@") > 0)
 								recvNm = StringUtil.cvtEmailMask(recvNm);
 							else
 								recvNm = StringUtil.cvtIdMask(recvNm);
-						}						
+						}
 					}
 
 					EmailSendEcReq emailSendEcReq = new EmailSendEcReq();

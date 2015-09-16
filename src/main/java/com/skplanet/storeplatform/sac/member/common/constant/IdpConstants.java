@@ -30,6 +30,8 @@ public final class IdpConstants {
 	public static final String IDP_RES_CODE_UNAUTHORIZED_IP = "2006";
 	/** 등록되어 있지 않은 사용자 (2007). */
 	public static final String IDP_RES_CODE_UNAUTHORIZED = "2007";
+	/** 변경 요청된 상태값과 현재의 상태값이 같습니다. (2031). */
+	public static final String IDP_RES_CODE_STATUS_ALREAY_APPLY = "2031";
 	/** 이미 서비스에 등록한 사용자 (2100). */
 	public static final String IDP_RES_CODE_ALREADY_JOIN = "2100";
 	/** 가 가입 상태인 사용자 (2101). */

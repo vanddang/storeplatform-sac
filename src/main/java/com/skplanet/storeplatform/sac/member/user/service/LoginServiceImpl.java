@@ -419,7 +419,38 @@ public class LoginServiceImpl implements LoginService {
 					updateDeviceManagementRequest.setUserMbrDeviceDetail(setDeviceDetails);
 
 					this.deviceSCI.updateDeviceManagement(updateDeviceManagementRequest);
+
+					// TLOG 회원 한도 요금제 사용여부 업데이트 추가 (성공)
+					final String tlogUserKey = dbDeviceInfo.getUserKey();
+					final String tlogDeviceKey = dbDeviceInfo.getDeviceKey();
+					final String tlogDeviceId = dbDeviceInfo.getDeviceId();
+					final String tlogTingYn = userMbrDeviceDetail.getExtraProfileValue();
+
+					new TLogUtil().log(new ShuttleSetter() {
+						@Override
+						public void customize(TLogSentinelShuttle shuttle) {
+							shuttle.log_id("TL_SAC_MEM_0015").insd_usermbr_no(tlogUserKey)
+									.insd_device_id(tlogDeviceKey).device_id(tlogDeviceId).result_code("Y")
+									.result_message("팅요금제 사용여부 업데이트 성공").ting_yn(tlogTingYn);
+						}
+					});
+
 				} catch (StorePlatformException e) {
+					// TLOG 회원 한도 요금제 사용여부 업데이트 추가 (실패)
+					final String tlogUserKey = dbDeviceInfo.getUserKey();
+					final String tlogDeviceKey = dbDeviceInfo.getDeviceKey();
+					final String tlogDeviceId = dbDeviceInfo.getDeviceId();
+					final String tlogTingYn = userMbrDeviceDetail.getExtraProfileValue();
+
+					new TLogUtil().log(new ShuttleSetter() {
+						@Override
+						public void customize(TLogSentinelShuttle shuttle) {
+							shuttle.log_id("TL_SAC_MEM_0015").insd_usermbr_no(tlogUserKey)
+									.insd_device_id(tlogDeviceKey).device_id(tlogDeviceId).result_code("N")
+									.result_message("팅요금제 사용여부 업데이트 실패").ting_yn(tlogTingYn);
+						}
+					});
+
 					LOGGER.info("UAPS getMappingInfo MDN : {}, errorCode : {}, errorMessage : {}", req.getDeviceId(), e
 							.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
 				}
@@ -678,7 +709,35 @@ public class LoginServiceImpl implements LoginService {
 					updateDeviceManagementRequest.setUserMbrDeviceDetail(setDeviceDetails);
 
 					this.deviceSCI.updateDeviceManagement(updateDeviceManagementRequest);
+
+					// TLOG 회원 한도 요금제 사용여부 업데이트 추가 (성공)
+					final String tlogUserKey = dbDeviceInfo.getUserKey();
+					final String tlogDeviceKey = dbDeviceInfo.getDeviceKey();
+					final String tlogDeviceId = dbDeviceInfo.getDeviceId();
+
+					new TLogUtil().log(new ShuttleSetter() {
+						@Override
+						public void customize(TLogSentinelShuttle shuttle) {
+							shuttle.log_id("TL_SAC_MEM_0015").insd_usermbr_no(tlogUserKey)
+									.insd_device_id(tlogDeviceKey).device_id(tlogDeviceId).result_code("Y")
+									.result_message("팅요금제 사용여부 업데이트 성공");
+						}
+					});
+
 				} catch (StorePlatformException e) {
+					// TLOG 회원 한도 요금제 사용여부 업데이트 추가 (실패)
+					final String tlogUserKey = dbDeviceInfo.getUserKey();
+					final String tlogDeviceKey = dbDeviceInfo.getDeviceKey();
+					final String tlogDeviceId = dbDeviceInfo.getDeviceId();
+
+					new TLogUtil().log(new ShuttleSetter() {
+						@Override
+						public void customize(TLogSentinelShuttle shuttle) {
+							shuttle.log_id("TL_SAC_MEM_0015").insd_usermbr_no(tlogUserKey)
+									.insd_device_id(tlogDeviceKey).device_id(tlogDeviceId).result_code("N")
+									.result_message("팅요금제 사용여부 업데이트 실패");
+						}
+					});
 					LOGGER.info("UAPS getMappingInfo MDN : {}, errorCode : {}, errorMessage : {}", req.getDeviceId(), e
 							.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
 				}

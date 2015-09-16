@@ -12,7 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
@@ -246,46 +249,87 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 		keySearchList.add(keySchUserKey);
 		searchDeviceRequest.setKeySearchList(keySearchList);
 
-		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
+		SearchDeviceResponse searchDeviceResponse = null;
 
-		UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
-		updateDeviceManagementRequest.setCommonRequest(commonRequest);
-		updateDeviceManagementRequest.setUserKey(req.getUserKey());
-		updateDeviceManagementRequest.setDeviceKey(req.getDeviceKey());
-		updateDeviceManagementRequest.setIsDormant(searchDeviceResponse.getUserMbrDevice().getIsDormant());
+		try {
+			searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
 
-		// 단말 부가속성 (한도요금제 저장값) 설정
-		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-		userMbrDeviceDetail.setDeviceKey(req.getDeviceKey());
-		userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN);
-		userMbrDeviceDetail.setExtraProfileValue(req.getLimitChargeYn());
-		userMbrDeviceDetail.setRegDate(req.getSearchDt());
+			UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
+			updateDeviceManagementRequest.setCommonRequest(commonRequest);
+			updateDeviceManagementRequest.setUserKey(req.getUserKey());
+			updateDeviceManagementRequest.setDeviceKey(req.getDeviceKey());
+			updateDeviceManagementRequest.setIsDormant(searchDeviceResponse.getUserMbrDevice().getIsDormant());
 
-		List<UserMbrDeviceDetail> userMbrDeviceDetails = searchDeviceResponse.getUserMbrDevice()
-				.getUserMbrDeviceDetail();
-		if (userMbrDeviceDetails != null) {
-			for (UserMbrDeviceDetail userMbrDeviceDetail2 : userMbrDeviceDetails) {
+			// 단말 부가속성 (한도요금제 저장값) 설정
+			UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+			userMbrDeviceDetail.setDeviceKey(req.getDeviceKey());
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN);
+			userMbrDeviceDetail.setExtraProfileValue(req.getLimitChargeYn());
+			userMbrDeviceDetail.setRegDate(req.getSearchDt());
 
-				// 단말 부가속성중 한도요금제 속성 여부
-				if (StringUtils.equals(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN,
-						userMbrDeviceDetail2.getExtraProfile())) {
-					userMbrDeviceDetail.setUpdateDate(req.getSearchDt());
-					userMbrDeviceDetail.setRegDate(null);
-					break;
+			List<UserMbrDeviceDetail> userMbrDeviceDetails = searchDeviceResponse.getUserMbrDevice()
+					.getUserMbrDeviceDetail();
+			if (userMbrDeviceDetails != null) {
+				for (UserMbrDeviceDetail userMbrDeviceDetail2 : userMbrDeviceDetails) {
+
+					// 단말 부가속성중 한도요금제 속성 여부
+					if (StringUtils.equals(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN,
+							userMbrDeviceDetail2.getExtraProfile())) {
+						userMbrDeviceDetail.setUpdateDate(req.getSearchDt());
+						userMbrDeviceDetail.setRegDate(null);
+						break;
+					}
 				}
 			}
+
+			List<UserMbrDeviceDetail> deviceDetails = new ArrayList<UserMbrDeviceDetail>();
+			deviceDetails.add(userMbrDeviceDetail);
+			updateDeviceManagementRequest.setUserMbrDeviceDetail(deviceDetails);
+			updateDeviceManagementRequest.setIsDormant(searchDeviceResponse.getUserMbrDevice().getIsDormant());
+			UpdateDeviceManagementResponse updateDeviceManagementResponse = this.deviceSCI
+					.updateDeviceManagement(updateDeviceManagementRequest);
+
+			// TLOG 회원 한도 요금제 사용여부 업데이트 추가 (성공)
+			final String tlogUserKey = req.getUserKey();
+			final String tlogDeviceKey = req.getDeviceKey();
+			final String tlogDeviceId = searchDeviceResponse != null ? searchDeviceResponse.getUserMbrDevice()
+					.getDeviceID() : null;
+			final String tlogTingYn = req.getLimitChargeYn();
+
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id("TL_SAC_MEM_0015").insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey)
+							.device_id(tlogDeviceId).result_code("Y").result_message("팅요금제 사용여부 업데이트 성공")
+							.ting_yn(tlogTingYn);
+				}
+			});
+
+			UpdateLimitChargeYnSacRes res = new UpdateLimitChargeYnSacRes();
+			res.setDeviceKey(updateDeviceManagementResponse.getDeviceKey());
+			res.setUserKey(updateDeviceManagementResponse.getUserKey());
+			return res;
+		} catch (StorePlatformException ex) {
+			// TLOG 회원 한도 요금제 사용여부 업데이트 추가 (실패)
+			final String tlogUserKey = req.getUserKey();
+			final String tlogDeviceKey = req.getDeviceKey();
+			final String tlogDeviceId = searchDeviceResponse != null ? searchDeviceResponse.getUserMbrDevice()
+					.getDeviceID() : null;
+			final String tlogTingYn = req.getLimitChargeYn();
+
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id("TL_SAC_MEM_0015").insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey)
+							.device_id(tlogDeviceId).result_code("N").result_message("팅요금제 사용여부 업데이트 실패")
+							.ting_yn(tlogTingYn);
+					;
+				}
+			});
+
+			throw ex;
 		}
 
-		List<UserMbrDeviceDetail> deviceDetails = new ArrayList<UserMbrDeviceDetail>();
-		deviceDetails.add(userMbrDeviceDetail);
-		updateDeviceManagementRequest.setUserMbrDeviceDetail(deviceDetails);
-		updateDeviceManagementRequest.setIsDormant(searchDeviceResponse.getUserMbrDevice().getIsDormant());
-		UpdateDeviceManagementResponse updateDeviceManagementResponse = this.deviceSCI
-				.updateDeviceManagement(updateDeviceManagementRequest);
-		UpdateLimitChargeYnSacRes res = new UpdateLimitChargeYnSacRes();
-		res.setDeviceKey(updateDeviceManagementResponse.getDeviceKey());
-		res.setUserKey(updateDeviceManagementResponse.getUserKey());
-		return res;
 	}
 
 }

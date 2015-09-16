@@ -90,10 +90,13 @@ public final class ImIdpConstants {
 
 	public static final String IDP_RES_CODE_PHONE_STATUS_HALT = "2024X000";
 
-	public static final String IDP_RES_CODE_PROCESS_NOT_PERMISSION = "2026X000"; //처리 권한이 없는 SP입니다
+	public static final String IDP_RES_CODE_PROCESS_NOT_PERMISSION = "2026X000"; // 처리 권한이 없는 SP입니다
 
 	public static final String IDP_RES_CODE_USER_STOP = "2025E073"; // 계정 잠금 상태
 	public static final String IDP_RES_CODE_USER_NOT_CHANGE = "2025X000"; // 변경 가능한 회원상태가 아닙
+
+	/** 변경 요청된 상태값과 현재의 상태값이 같습니다. (2031). */
+	public static final String IDP_RES_CODE_STATUS_ALREAY_APPLY = "2031X000";
 
 	/** 이미 서비스에 등록한 사용자 (2100). */
 	public static final String IDP_RES_CODE_ALREADY_JOIN = "2100X000";
