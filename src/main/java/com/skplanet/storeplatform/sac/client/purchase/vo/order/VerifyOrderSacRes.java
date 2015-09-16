@@ -66,6 +66,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String prodCaseCd; // 쇼핑 상품 유형 코드
 	private String specialTypeCd; // 특가상품 유형 코드,팅요금제 상품 유형
 								  // 코드(특가상품-상품권/교환권:DP007501,특가상품-배송상품:DP007502,팅요금제-상품권/교환권:DP007503)
+	private String acmlMethodCd; // 적립 수단 코드
 	private String promForceCloseCd; // 프로모션 강제 종료 코드
 
 	private VerifyOrderIapInfoSac iapProdInfo; // IAP상품 정보
@@ -773,5 +774,24 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setPromForceCloseCd(String promForceCloseCd) {
 		this.promForceCloseCd = promForceCloseCd;
+	}
+
+	/**
+	 * Gets acml method cd.
+	 *
+	 * @return the acml method cd
+	 */
+	public String getAcmlMethodCd() {
+		return acmlMethodCd;
+	}
+
+	/**
+	 * Sets acml method cd.
+	 *
+	 * @param acmlMethodCd
+	 *            the acml method cd
+	 */
+	public void setAcmlMethodCd(String acmlMethodCd) {
+		this.acmlMethodCd = acmlMethodCd;
 	}
 }
