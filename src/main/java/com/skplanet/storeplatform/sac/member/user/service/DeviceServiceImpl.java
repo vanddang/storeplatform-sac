@@ -100,6 +100,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
+import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
@@ -468,7 +469,10 @@ public class DeviceServiceImpl implements DeviceService {
 					idpResultYn = MemberConstants.USE_N;
 					idpResultErrorCode = StringUtils.substringAfter(e.getErrorInfo().getCode(),
 							MemberConstants.EC_IDP_ERROR_CODE_TYPE);
-					throw e;
+					if (!StringUtils.equals(idpResultErrorCode, IdpConstants.IDP_RES_CODE_STATUS_ALREAY_APPLY)
+							&& !StringUtils.equals(idpResultErrorCode, ImIdpConstants.IDP_RES_CODE_STATUS_ALREAY_APPLY)) {
+						throw e;
+					}
 				} finally {
 					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);

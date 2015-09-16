@@ -4403,7 +4403,10 @@ public class LoginServiceImpl implements LoginService {
 			idpResultYn = MemberConstants.USE_N;
 			idpResultErrorCode = StringUtils.substringAfter(e.getErrorInfo().getCode(),
 					MemberConstants.EC_IDP_ERROR_CODE_TYPE);
-			throw e;
+			if (!StringUtils.equals(idpResultErrorCode, IdpConstants.IDP_RES_CODE_STATUS_ALREAY_APPLY)
+					&& !StringUtils.equals(idpResultErrorCode, ImIdpConstants.IDP_RES_CODE_STATUS_ALREAY_APPLY)) {
+				throw e;
+			}
 		} finally {
 			MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 			moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
