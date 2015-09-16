@@ -1940,7 +1940,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						limitTarget.setPolicyApplyValue(mdn + " 회선 해지에 따라 " + svcCdNm + " 결제 차단을 해지");
 						limitTarget.setIsUsed(MemberConstants.USE_N);
 						limitTarget.setPermissionType("2");
-						limitTarget.setEndDate(DateUtil.getToday("yyyyMMddHHmmss"));
+						limitTarget.setEndDate("99991231235959");
 						limitTarget.setLineMangStatus("US013401");
 						limitTargetList.add(limitTarget);
 						updatePolicyRequest.setCommonRequest(commonRequest);
