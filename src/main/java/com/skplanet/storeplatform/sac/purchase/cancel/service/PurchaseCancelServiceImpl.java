@@ -42,7 +42,6 @@ import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreateSapNotiScReq;
 import com.skplanet.storeplatform.purchase.client.transaction.sci.PurchaseTransactionSCI;
 import com.skplanet.storeplatform.purchase.client.transaction.vo.PurchaseTransactionScReq;
-import com.skplanet.storeplatform.purchase.client.transaction.vo.PurchaseTransactionScRes;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
@@ -135,12 +134,13 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		for (PurchaseCancelDetailSacParam purchaseCancelDetailSacParam : purchaseCancelSacParam.getPrchsCancelList()) {
 
-			/** 트랙잭션 처리 */
-			this.transactionProcess("START", purchaseCancelSacParam, purchaseCancelDetailSacParam, null);
-
 			totCnt++;
 			PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 			try {
+
+				/** 트랙잭션 처리 시작 */
+				this.startTransaction(purchaseCancelSacParam.getTenantId(), purchaseCancelDetailSacParam.getPrchsId(),
+						purchaseCancelSacParam.getSystemId());
 
 				/** 구매 취소 처리. */
 				if (purchaseCancelSacParam.getPrchsCancelServiceType() == PurchaseConstants.PRCHS_CANCEL_SERVICE_TCASH) {
@@ -196,9 +196,15 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				this.logger.info("purchaseCancelDetailSacParam data : {}", purchaseCancelDetailSacParam);
 
 			} finally {
-				/** 트랙잭션 처리 */
-				this.transactionProcess("END", purchaseCancelSacParam, purchaseCancelDetailSacParam,
-						purchaseCancelDetailSacResult);
+
+				// 처리중인 트랜잭션이 있으면 UPDATE처리 안함(해당 트랜잭션에서 UPDATE할거이기 때문에)
+				if (purchaseCancelDetailSacResult != null
+						&& !StringUtils.equals("SAC_PUR_8105", purchaseCancelDetailSacResult.getResultCd())) {
+					/** 트랙잭션 처리 종료 */
+					this.endTransaction(purchaseCancelSacParam.getTenantId(),
+							purchaseCancelDetailSacParam.getPrchsId(), purchaseCancelSacParam.getSystemId(),
+							purchaseCancelDetailSacResult.getResultCd());
+				}
 			}
 
 			if (StringUtils.equals("SAC_PUR_0000", purchaseCancelDetailSacResult.getResultCd())) {
@@ -1158,48 +1164,40 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 	}
 
-	private void transactionProcess(String type, PurchaseCancelSacParam purchaseCancelSacParam,
-			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam,
-			PurchaseCancelDetailSacResult purchaseCancelDetailSacResult) {
+	private void startTransaction(String tenantId, String prchsId, String systemId) {
 
 		/** 트랜잭션 파라미터 등록 */
 		PurchaseTransactionScReq purchaseTransactionScReq = new PurchaseTransactionScReq();
-		purchaseTransactionScReq.setTenantId(purchaseCancelSacParam.getTenantId());
-		purchaseTransactionScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+		purchaseTransactionScReq.setTenantId(tenantId);
+		purchaseTransactionScReq.setPrchsId(prchsId);
 		purchaseTransactionScReq.setInterfaceId(PurchaseConstants.INTERFACE_ID_CANCEL); // 구매취소
-		purchaseTransactionScReq.setSystemId(purchaseCancelSacParam.getSystemId());
+		purchaseTransactionScReq.setSystemId(systemId);
+		purchaseTransactionScReq.setProcStatusCd(PurchaseConstants.PROCESSING_STATUS_WORKING); // 처리중
+		purchaseTransactionScReq.setProcSeq(0);
 
-		/** 트랜잭션 파라미터 조회 */
-		PurchaseTransactionScRes purchaseTransactionScRes = this.purchaseTransactionSCI
-				.searchTransaction(purchaseTransactionScReq);
+		/** 트랜잭션 처리 등록 */
+		this.purchaseTransactionSCI.createTransaction(purchaseTransactionScReq);
 
-		if ("START".equals(type)) {
+	}
 
-			if (purchaseTransactionScRes != null
-					&& StringUtils.equals(PurchaseConstants.PROCESSING_STATUS_WORKING,
-							purchaseTransactionScRes.getProcStatusCd())) {
-				new StorePlatformException("SAC_PUR_8105");
-			}
+	private void endTransaction(String tenantId, String prchsId, String systemId, String resultCd) {
 
-			purchaseTransactionScReq.setProcStatusCd(PurchaseConstants.PROCESSING_STATUS_WORKING); // 처리중
+		/** 트랜잭션 파라미터 등록 */
+		PurchaseTransactionScReq purchaseTransactionScReq = new PurchaseTransactionScReq();
+		purchaseTransactionScReq.setTenantId(tenantId);
+		purchaseTransactionScReq.setPrchsId(prchsId);
+		purchaseTransactionScReq.setInterfaceId(PurchaseConstants.INTERFACE_ID_CANCEL); // 구매취소
+		purchaseTransactionScReq.setSystemId(systemId);
+		purchaseTransactionScReq.setProcSeq(0);
 
-			/** 트랜잭션 처리 등록 */
-			this.purchaseTransactionSCI.createTransaction(purchaseTransactionScReq);
-
+		if (StringUtils.equals("SAC_PUR_0000", resultCd)) {
+			purchaseTransactionScReq.setProcStatusCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE); // 완료
 		} else {
-			if (purchaseCancelDetailSacResult != null
-					&& "SAC_PUR_0000".equals(purchaseCancelDetailSacResult.getResultCd())) {
-				purchaseTransactionScReq.setProcStatusCd(PurchaseConstants.PROCESSING_STATUS_COMPLETE); // 완료
-			} else {
-				purchaseTransactionScReq.setProcStatusCd(PurchaseConstants.PROCESSING_STATUS_FAIL); // 실패
-			}
-
-			purchaseTransactionScReq.setProcSeq(purchaseTransactionScRes.getProcSeq());
-
-			/** 트랜잭션 처리 등록 */
-			this.purchaseTransactionSCI.updateTransaction(purchaseTransactionScReq);
+			purchaseTransactionScReq.setProcStatusCd(PurchaseConstants.PROCESSING_STATUS_FAIL); // 실패
 		}
 
-		//
+		/** 트랜잭션 처리 수정(처리상태업데이트) */
+		this.purchaseTransactionSCI.updateTransaction(purchaseTransactionScReq);
 	}
+
 }
