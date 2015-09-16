@@ -849,6 +849,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.settMileageLimitAmt(NumberUtils.toInt(
 				reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT), 0));
 
+		// 적립 수단 코드
+		res.setAcmlMethodCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD));
+
 		// 프로모션 강제 종료 코드
 		res.setPromForceCloseCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROM_FORCECLOSE_CD));
 
