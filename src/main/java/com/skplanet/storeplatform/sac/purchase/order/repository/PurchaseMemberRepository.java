@@ -124,5 +124,20 @@ public interface PurchaseMemberRepository {
 	 */
 	public SellerMbrAppSacParam detailInformationListForProduct(String sellerKey, String tenantProdGrpCd);
 
+	/**
+	 * 2.1.13.회원 한도 요금제 사용여부 업데이트.
+	 *
+	 * @param userKey the user key
+	 * @param deviceKey the device key
+	 * @param searchDt the search dt
+	 * @param limitChargeYn the limit charge yn
+	 */
 	public void updateLimitChargeYn(String userKey, String deviceKey, String searchDt, String limitChargeYn);
+
+	/**
+	 * 2.1.15.회원 SSOCredentail정보 삭제
+	 *
+	 * @param userKey the user key
+	 */
+	public void removeSSOCredential(String userKey);
 }

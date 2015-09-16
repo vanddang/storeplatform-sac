@@ -9,21 +9,20 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PPNotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.order.constant.PayPlanetConstant;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -140,8 +139,8 @@ public class PayPlanetServiceImpl implements PayPlanetService {
 		NotifyPaymentSacReq notifyPaymentSacReq = new NotifyPaymentSacReq();
 		notifyPaymentSacReq.setResultCd(ppNotifyPaymentSacReq.getCode());
 		notifyPaymentSacReq.setResultMsg(ppNotifyPaymentSacReq.getMsg());
-		notifyPaymentSacReq.setPrchsId(StringUtils.defaultIfBlank(ppNotifyPaymentSacReq.getOrderId(),
-				ppNotifyPaymentSacReq.getPrchsId()));
+		notifyPaymentSacReq.setPrchsId(
+				StringUtils.defaultIfBlank(ppNotifyPaymentSacReq.getOrderId(), ppNotifyPaymentSacReq.getPrchsId()));
 		notifyPaymentSacReq.setUserKey(ppNotifyPaymentSacReq.getUserKey());
 		notifyPaymentSacReq.setProdId(ppNotifyPaymentSacReq.getProdId());
 		notifyPaymentSacReq.setTotAmt(Double.parseDouble(ppNotifyPaymentSacReq.getAmtPurchase()));
@@ -152,6 +151,7 @@ public class PayPlanetServiceImpl implements PayPlanetService {
 		notifyPaymentSacReq.setSaveResultAmt(ppNotifyPaymentSacReq.getSaveResultAmt());
 		notifyPaymentSacReq.setProcSubStatusCd(ppNotifyPaymentSacReq.getProcSubStatusCd());
 		notifyPaymentSacReq.setPaymentInfoList(paymentInfoList);
+		notifyPaymentSacReq.setRemoveSSOCredential(ppNotifyPaymentSacReq.getRemoveSSOCredential());
 
 		return notifyPaymentSacReq;
 	}

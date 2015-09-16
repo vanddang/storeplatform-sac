@@ -112,7 +112,16 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			} catch(Exception ignore){
 				this.logger.info("PRCHS,ORDER,SAC,MEMBER,UPDATELIMITCHARGEYN,ERROR,{},{}", prchsDtlMore.getPrchsId(), ignore.getMessage());
 			}
-		} catch (Exception e) {
+
+			// SyrupPay SSOCredentail 초기화 요청
+			try{
+				if (StringUtils.equals(notifyPaymentReq.getRemoveSSOCredential(), PurchaseConstants.USE_Y)) {
+					this.purchaseMemberRepository.removeSSOCredential(prchsDtlMore.getInsdUsermbrNo());
+				}
+			} catch(Exception ignore){
+				this.logger.info("PRCHS,ORDER,SAC,MEMBER,REMOVESSO,ERROR,{},{}", prchsDtlMore.getPrchsId(), ignore.getMessage());
+			}
+		} catch (Exception e) { // 후처리 실패시 에러 처리 안함
 			exception = e;
 		}
 

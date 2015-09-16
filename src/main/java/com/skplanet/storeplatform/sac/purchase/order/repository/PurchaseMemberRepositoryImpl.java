@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInf
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac.SellerMbrAppSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.UserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.*;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
@@ -55,6 +56,8 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	private MiscellaneousSCI miscellaneousSCI;
 	@Autowired
 	private DeviceSCI deviceSCI;
+	@Autowired
+	private UserSCI userSCI;
 
 	/**
 	 * 
@@ -394,6 +397,16 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		UpdateLimitChargeYnSacRes updateLimitChargeYnSacRes = this.deviceSCI
 				.updateLimitChargeYn(updateLimitChargeYnSacReq);
 		this.logger.info("PRCHS,ORDER,SAC,MEMBER,UPDATELIMITCHARGEYN,RES,{}", updateLimitChargeYnSacRes);
+	}
+
+	@Override
+	public void removeSSOCredential(String userKey) {
+		RemoveSSOCredentialSacReq removeSSOCredentialSacReq = new RemoveSSOCredentialSacReq();
+		removeSSOCredentialSacReq.setUserKey(userKey);
+
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,REMOVESSO,REQ,{}", removeSSOCredentialSacReq.getUserKey());
+		RemoveSSOCredentialSacRes removeSSOCredentialSacRes = this.userSCI.removeSSOCredential(removeSSOCredentialSacReq);
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,REMOVESSO,RES,{}", removeSSOCredentialSacRes.getUserKey());
 	}
 
 	/*
