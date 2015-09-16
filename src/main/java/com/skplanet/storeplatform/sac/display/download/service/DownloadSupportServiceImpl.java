@@ -179,9 +179,14 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         req.setPrchsId(metaInfo.getPurchaseId());
         req.setProdId(metaInfo.getPurchaseProdId());
 
+        /**
+         * 다운로드 여부에 따른 DRM 정보 수정시 DL Token의 만료일(요청만료일)에 대한 수정이 필요한 것이 아니라 사용만료일에 대한 기간 재산정이 필요
+         * Update By 2015.09.16 이석희 I-S PLUS
+         */
         PurchaseDrmInfoScRes drmInfoScRes = purchaseDrmInfoSCI.updatePrchaseDrm(req);
         if(drmInfoScRes != null && "Y".equals(drmInfoScRes.getResultYn()))
-            metaInfo.setExpiredDate(drmInfoScRes.getUseExprDt());
+//            metaInfo.setExpiredDate(drmInfoScRes.getUseExprDt());
+        	 metaInfo.setUseExprDt(drmInfoScRes.getUseExprDt());
     }
 
     @Override
