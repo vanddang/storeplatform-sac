@@ -47,6 +47,8 @@ public class UserSCIServiceImpl implements UserSCIService {
 	 */
 	@Override
 	public RemoveSSOCredentialSacRes removeSSOCredential(SacRequestHeader sacHeader, RemoveSSOCredentialSacReq request) {
+
+		LOGGER.info("{} ssoCredential 초기화", request.getUserKey());
 		RemoveSSOCredentialSacRes res = new RemoveSSOCredentialSacRes();
 
 		UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();

@@ -2344,7 +2344,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 				return res;
 			}
 		}
-
+		LOGGER.info("{}, isSsoCredential : {}", req.getUserKey(), isSsoCredential);
 		if (!isSsoCredential) {
 			try {
 				// syrup pay ssoCredential 조회 연동
@@ -2355,6 +2355,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 				ssoCredential = ssoCredentialCreateEcRes.getSsoCredential();
 				if (StringUtils.isNotBlank(ssoCredential)) {
 					// ssoCredential 저장
+					LOGGER.info("{}, ssoCredential 저장 : {}", req.getUserKey(), ssoCredential);
 					UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
 					List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 					MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
@@ -2370,7 +2371,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 				LOGGER.info("{}, {}, {}", req.getUserKey(), e.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
 			}
 		}
-
 		res.setSSOCredential(StringUtils.defaultString(ssoCredential, ""));
 		return res;
 	}
