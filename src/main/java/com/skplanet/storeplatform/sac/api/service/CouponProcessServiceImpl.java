@@ -1627,6 +1627,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			productTenantRate.setSttlTyp("01");// 정산_유형
 			productTenantRate.setSttlMthd("01");// 정산_방법
 			productTenantRate.setSttlApplStdCd("02");// 정산_적용_기준_코드
+			productTenantRate.setUnitAmt("0"); //단위_금액
 			productTenantRate.setRegId("SAC_SHOPPING"); // 등록ID
 			productTenantRate.setRegDt(modifiedDate); // 등록일시
 			productTenantRate.setUpdId("SAC_SHOPPING"); // 수정ID
@@ -1734,6 +1735,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				productTenantRateVo.setSttlTyp("01");// 정산_유형
 				productTenantRateVo.setSttlMthd("01");// 정산_방법
 				productTenantRateVo.setSttlApplStdCd("02");// 정산_적용_기준_코드
+				productTenantRateVo.setUnitAmt(itemInfo.getItemPrice()); //단위_금액
 				productTenantRateVo.setRegId("SAC_SHOPPING"); // 등록ID
 				productTenantRateVo.setRegDt(modifiedDate); // 등록일시
 				productTenantRateVo.setUpdId("SAC_SHOPPING"); // 수정ID
