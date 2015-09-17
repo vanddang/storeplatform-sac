@@ -2340,7 +2340,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 		} catch (StorePlatformException e) {
 			if (!e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				res.setSSOCredential(StringUtils.defaultString(ssoCredential, ""));
+				res.setSsoCredential(StringUtils.defaultString(ssoCredential, ""));
 				return res;
 			}
 		}
@@ -2371,7 +2371,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 				LOGGER.info("{}, {}, {}", req.getUserKey(), e.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
 			}
 		}
-		res.setSSOCredential(StringUtils.defaultString(ssoCredential, ""));
+		res.setSsoCredential(StringUtils.defaultString(ssoCredential, ""));
 		return res;
 	}
 }
