@@ -38,7 +38,7 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 
 	/**
 	 * 다운로드 여부에 따른 DRM 정보 수정.
-	 *
+	 * 
 	 * @param request
 	 *            DRM정보
 	 * @return PurchaseDrmInfoSacInRes
@@ -67,12 +67,12 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 
 		PurchaseDrmInfoSc purchaseDrmInfoSc = this.purchaseDrmInfoSCI.selectPrchsDtl(scRequest);
 
-		this.logger.info("PurchaseDrmInfoServiceImpl.updatePrchaseDrm.purchaseDrmInfoSc {}", purchaseDrmInfoSc);
+		this.logger.info("####PurchaseDrmInfoServiceImpl.purchaseDrmInfoSc {}", purchaseDrmInfoSc);
 
 		// 구매내역이 존재하며 쇼핑상품이 아닌경우
 		if (purchaseDrmInfoSc != null
 				&& !StringUtils.startsWith(purchaseDrmInfoSc.getTenantProdGrpCd(),
-				PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 
 			// 처리대기 상태인 경우만 처리
 			if (StringUtils.equals(PurchaseConstants.PROCESSING_STATUS_STANDBY,
@@ -97,9 +97,9 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 		/*************************************************
 		 * SC -> SAC Response Setting Start
 		 *************************************************/
-		response.setPrchsId(scResponse.getPrchsId());
+		response.setPrchsId(request.getPrchsId());
 		response.setResultYn(!StringUtils.equals("Y", scResponse.getResultYn()) ? "N" : scResponse.getResultYn());
-		response.setProdId(scResponse.getProdId());
+		response.setProdId(request.getProdId());
 		response.setUseStartDt(scResponse.getUseStartDt());
 		response.setUseExprDt(scResponse.getUseExprDt());
 		response.setDwldStartDt(scResponse.getDwldStartDt());
@@ -107,6 +107,8 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 		/*************************************************
 		 * SC -> SAC Response Setting End
 		 *************************************************/
+
+		this.logger.info("####PurchaseDrmInfoServiceImpl.response {}", response);
 
 		return response;
 	}
