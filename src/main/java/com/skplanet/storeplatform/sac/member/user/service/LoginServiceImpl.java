@@ -442,7 +442,7 @@ public class LoginServiceImpl implements LoginService {
 					final String tlogDeviceKey = dbDeviceInfo.getDeviceKey();
 					final String tlogDeviceId = dbDeviceInfo.getDeviceId();
 					final String tlogTingYn = userMbrDeviceDetail.getExtraProfileValue();
-					final String resultMessage = "팅요금제 사용여부 업데이트 실패(MDN인증 v1)";
+					final String resultMessage = "팅요금제 사용여부 업데이트 실패(MDN인증 v1) ErrCode " + e.getErrorInfo().getCode();
 
 					new TLogUtil().log(new ShuttleSetter() {
 						@Override
@@ -734,7 +734,7 @@ public class LoginServiceImpl implements LoginService {
 					final String tlogDeviceKey = dbDeviceInfo.getDeviceKey();
 					final String tlogDeviceId = dbDeviceInfo.getDeviceId();
 					final String tlogTingYn = userMbrDeviceDetail.getExtraProfileValue();
-					final String resultMessage = "팅요금제 사용여부 업데이트 실패(MDN인증 v2)";
+					final String resultMessage = "팅요금제 사용여부 업데이트 실패(MDN인증 v2) ErrCode " + e.getErrorInfo().getCode();
 
 					new TLogUtil().log(new ShuttleSetter() {
 						@Override
