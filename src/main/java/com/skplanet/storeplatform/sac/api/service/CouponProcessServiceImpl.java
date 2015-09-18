@@ -1535,7 +1535,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 		NotificationIprm noti = new NotificationIprm();
 		List<ProductTenantPrice> productTenantPriceList = null;
-		List<ProductTenantRate> productTenantRateList = null;
+
 		try {
 			CouponRes couponRes = this.getCatalogNmMenuId(couponInfo.getStoreCatalogCode());
 
@@ -1570,7 +1570,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			product.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
 			product.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
 			product.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
-			product.setChnlTypCd(CouponConstants.COUPON_CONTENT_TP_CHA);
+			product.setMbrStrte(couponInfo.getAccountingRate()); // 파트너 상품정산율
 			Date date = new Date();
 			String modifiedDate = new SimpleDateFormat("yyyyMMddHHmmss").format(date);
 			if ("C".equalsIgnoreCase(cudType)) {
@@ -1609,35 +1609,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				productTenantPrice.setUpdId(couponInfo.getBpId()); // 수정ID
 				productTenantPrice.setUpdDt(modifiedDate); // 수정일시
 			}
-			
+
 			productTenantPriceList.add(productTenantPrice);
 			noti.setProductTenantPriceList(productTenantPriceList);
-			
-			
-			/**
-			 * 상품의 테넌트별 정산율.
-			 */
-			productTenantRateList = new ArrayList<ProductTenantRate>();
-			ProductTenantRate productTenantRate = new ProductTenantRate();
-			productTenantRate.setProdId(couponInfo.getProdId());
-			productTenantRate.setSyncDataControlType(cudType);
-			productTenantRate.setTenantId(CouponConstants.TENANT_ID); // tenentId
-			productTenantRate.setApplyStartDt(couponInfo.getIssueSDate());// 적용_시작_일시
-			productTenantRate.setProdRate(couponInfo.getAccountingRate());// 상품정산율
-			productTenantRate.setSttlTyp("01");// 정산_유형
-			productTenantRate.setSttlMthd("01");// 정산_방법
-			productTenantRate.setSttlApplStdCd("02");// 정산_적용_기준_코드
-			productTenantRate.setUnitAmt("0"); //단위_금액
-			productTenantRate.setRegId("SAC_SHOPPING"); // 등록ID
-			productTenantRate.setRegDt(modifiedDate); // 등록일시
-			productTenantRate.setUpdId("SAC_SHOPPING"); // 수정ID
-			productTenantRate.setUpdDt(modifiedDate); // 수정일시
-			
-			productTenantRateList.add(productTenantRate);
-			noti.setProductTenantRateList(productTenantRateList);
-			
-			
-			
 			this.log.info("channel_prod_id S:::" + couponInfo.getProdId());
 			this.shoppingIprmAmqpTemplate.convertAndSend(noti); // async
 			this.log.info("channel_prod_id E:::" + couponInfo.getProdId());
@@ -1679,7 +1653,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				productVO.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
 				productVO.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
 				productVO.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
-				productVO.setChnlTypCd(CouponConstants.COUPON_CONTENT_TP_EPI);
+				productVO.setMbrStrte(couponInfo.getAccountingRate()); // 파트너 상품정산율
 				if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
 					productVO.setRegId(couponInfo.getBpId()); // 등록ID
 					productVO.setRegDt(modifiedDate); // 등록일시
@@ -1719,37 +1693,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 				productTenantPriceList.add(productTenantPriceVO);
 				noti.setProductTenantPriceList(productTenantPriceList);
-				
-				
-				
-				/**
-				 * 상품의 테넌트별 정산율.
-				 */
-				productTenantRateList = new ArrayList<ProductTenantRate>();
-				ProductTenantRate productTenantRateVo = new ProductTenantRate();
-				productTenantRateVo.setProdId(itemInfo.getProdId());
-				productTenantRateVo.setSyncDataControlType(itemInfo.getCudType());
-				productTenantRateVo.setTenantId(CouponConstants.TENANT_ID); // tenentId
-				productTenantRateVo.setApplyStartDt(couponInfo.getIssueSDate());// 적용_시작_일시
-				productTenantRateVo.setProdRate(couponInfo.getAccountingRate());// 상품정산율
-				productTenantRateVo.setSttlTyp("01");// 정산_유형
-				productTenantRateVo.setSttlMthd("01");// 정산_방법
-				productTenantRateVo.setSttlApplStdCd("02");// 정산_적용_기준_코드
-				productTenantRateVo.setUnitAmt(itemInfo.getItemPrice()); //단위_금액
-				productTenantRateVo.setRegId("SAC_SHOPPING"); // 등록ID
-				productTenantRateVo.setRegDt(modifiedDate); // 등록일시
-				productTenantRateVo.setUpdId("SAC_SHOPPING"); // 수정ID
-				productTenantRateVo.setUpdDt(modifiedDate); // 수정일시
-				
-				productTenantRateList.add(productTenantRateVo);
-				noti.setProductTenantRateList(productTenantRateList);				
-				
-				
 				this.log.info("episode_prod_id S:::" + itemInfo.getProdId());
 				this.shoppingIprmAmqpTemplate.convertAndSend(noti); // async
 				this.log.info("episode_prod_id E:::" + itemInfo.getProdId());
 			}
-			
+
 			this.log.info("■■■■■ MQ 연동 End ■■■■■");
 		} catch (AmqpException ae) {
 			result = false;
@@ -1761,6 +1709,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 		return result;
 	}
+
 
 	/**
 	 * setForMakeMq 값 만들기 (채널 에피소드 값 xml일경우)
