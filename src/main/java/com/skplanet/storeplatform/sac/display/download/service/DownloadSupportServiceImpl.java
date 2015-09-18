@@ -12,12 +12,9 @@ package com.skplanet.storeplatform.sac.display.download.service;
 import com.google.common.base.Strings;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.sci.PurchaseDrmInfoSCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftConfirmInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseDrmInfoInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -61,7 +58,7 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
     private DownloadAES128Helper downloadAES128Helper;
 
     @Autowired
-    private PurchaseDrmInfoSCI purchaseDrmInfoSCI;
+    private PurchaseDrmInfoInternalSCI purchaseDrmInfoInternalSCI;
 
     @Autowired
     private GiftConfirmInternalSCI giftConfirmInternalSCI;
@@ -172,21 +169,23 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
 
     @Override
     public void mapPurchaseDrmInfo(MetaInfo metaInfo) {
-        PurchaseDrmInfoScReq req = new PurchaseDrmInfoScReq();
+        // 구매 SC --> SAC localSCI를 호출하도록 수정
+        PurchaseDrmInfoSacInReq req = new PurchaseDrmInfoSacInReq();
         req.setUserKey(metaInfo.getUserKey());
         req.setTenantId(metaInfo.getTenantId());
         req.setSystemId(metaInfo.getSystemId());
         req.setPrchsId(metaInfo.getPurchaseId());
         req.setProdId(metaInfo.getPurchaseProdId());
 
-        /**
-         * 다운로드 여부에 따른 DRM 정보 수정시 DL Token의 만료일(요청만료일)에 대한 수정이 필요한 것이 아니라 사용만료일에 대한 기간 재산정이 필요
-         * Update By 2015.09.16 이석희 I-S PLUS
-         */
-        PurchaseDrmInfoScRes drmInfoScRes = purchaseDrmInfoSCI.updatePrchaseDrm(req);
-        if(drmInfoScRes != null && "Y".equals(drmInfoScRes.getResultYn()))
+        PurchaseDrmInfoSacInRes drmInfoScRes = purchaseDrmInfoInternalSCI.updatePrchaseDrm(req);
+        if(drmInfoScRes != null && "Y".equals(drmInfoScRes.getResultYn())) {
+            /**
+             * 다운로드 여부에 따른 DRM 정보 수정시 DL Token의 만료일(요청만료일)에 대한 수정이 필요한 것이 아니라 사용만료일에 대한 기간 재산정이 필요
+             * Update By 2015.09.16 이석희 I-S PLUS
+             */
 //            metaInfo.setExpiredDate(drmInfoScRes.getUseExprDt());
-        	 metaInfo.setUseExprDt(drmInfoScRes.getUseExprDt());
+            metaInfo.setUseExprDt(drmInfoScRes.getUseExprDt());
+        }
     }
 
     @Override
