@@ -1823,6 +1823,21 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							updatePolicyRequest.setCommonRequest(commonRequest);
 							updatePolicyRequest.setLimitTargetList(limitTargetList);
 							this.userSCI.insertPolicy(updatePolicyRequest);
+						} else {
+							// 신규 MDN 기등록 서비스제한 해지이력 종료(end_dt = sysdate)
+							LOGGER.info("{} 기등록 결제차단해지 종료처리", mdn);
+							updatePolicyRequest = new UpdatePolicyRequest();
+							limitTargetList = new ArrayList<LimitTarget>();
+							limitTarget = new LimitTarget();
+							limitTarget.setLimitTargetNo(limitTargetInfo.getLimitTargetNo());
+							limitTarget.setUpdateID(limitTargetInfo.getRegID());
+							limitTarget.setLimitPolicyCode(limitTargetInfo.getLimitPolicyCode());
+							limitTarget.setLimitPolicyKey(limitTargetInfo.getLimitPolicyKey());
+							limitTarget.setRegID(limitTargetInfo.getRegID());
+							limitTargetList.add(limitTarget);
+							updatePolicyRequest.setCommonRequest(commonRequest);
+							updatePolicyRequest.setLimitTargetList(limitTargetList);
+							this.userSCI.updatePolicyHistory(updatePolicyRequest);
 						}
 					}
 				} catch (StorePlatformException e) {
