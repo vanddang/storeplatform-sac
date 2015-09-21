@@ -216,10 +216,6 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		// preDeviceType default macaddress
-		if (StringUtils.isBlank(req.getPreDeviceType())) {
-			req.setPreDeviceType(MemberConstants.DEVICE_ID_TYPE_MACADDRESS);
-		}
 		AuthorizeSaveAndSyncByMacRes res = this.loginService.authorizeSaveAndSyncByMac(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
