@@ -1819,6 +1819,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							limitTarget.setPermissionType("2");
 							limitTarget.setEndDate(DateUtil.getToday("yyyyMMddHHmmss"));
 							limitTarget.setLineMangStatus("US013401");
+							if (StringUtils.isNotBlank(limitTargetInfo.getInsDate())) {
+								limitTarget.setInsDate(DateUtil.getToday("yyyyMMddHHmmss"));
+							}
 							limitTargetList.add(limitTarget);
 							updatePolicyRequest.setCommonRequest(commonRequest);
 							updatePolicyRequest.setLimitTargetList(limitTargetList);
@@ -1881,6 +1884,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						limitTarget.setPermissionType("2");
 						limitTarget.setEndDate("99991231235959");
 						limitTarget.setLineMangStatus("US013401");
+						if (StringUtils.isNotBlank(info.getInsDate())) {
+							limitTarget.setInsDate(DateUtil.getToday("yyyyMMddHHmmss"));
+						}
 						limitTargetList.add(limitTarget);
 						updatePolicyRequest.setCommonRequest(commonRequest);
 						updatePolicyRequest.setLimitTargetList(limitTargetList);
@@ -1899,6 +1905,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						limitTarget.setPermissionType("1");
 						limitTarget.setEndDate("99991231235959");
 						limitTarget.setLineMangStatus("US013401");
+						if (StringUtils.isNotBlank(info.getInsDate())) {
+							limitTarget.setInsDate(DateUtil.getToday("yyyyMMddHHmmss"));
+						}
 						limitTargetList.add(limitTarget);
 						updatePolicyRequest.setCommonRequest(commonRequest);
 						updatePolicyRequest.setLimitTargetList(limitTargetList);
@@ -1956,6 +1965,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						limitTarget.setPermissionType("2");
 						limitTarget.setEndDate("99991231235959");
 						limitTarget.setLineMangStatus("US013401");
+						if (StringUtils.isNotBlank(info.getInsDate())) {
+							limitTarget.setInsDate(DateUtil.getToday("yyyyMMddHHmmss"));
+						}
 						limitTargetList.add(limitTarget);
 						updatePolicyRequest.setCommonRequest(commonRequest);
 						updatePolicyRequest.setLimitTargetList(limitTargetList);
