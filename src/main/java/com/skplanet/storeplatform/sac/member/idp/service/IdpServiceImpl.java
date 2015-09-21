@@ -852,7 +852,7 @@ public class IdpServiceImpl implements IdpService {
 		String idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		String userId = map.get("user_id");
-
+		String isDormant = null;
 		// 휴대폰 번호가 초기값이면 변경하지 않음
 		String getUserTn = "";
 		if (StringUtils.isNotBlank(map.get("user_tn"))) {
@@ -891,6 +891,7 @@ public class IdpServiceImpl implements IdpService {
 		UserMbr getUserMbr = null;
 		try {
 			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
+			isDormant = searchUserRespnse.getUserMbr().getIsDormant();
 
 			// 회원 수정 정보 세팅
 			if (searchUserRespnse != null)
@@ -900,7 +901,7 @@ public class IdpServiceImpl implements IdpService {
 				getUserMbr.setUserPhone(getUserTn);
 				userVo.setUserMbr(getUserMbr);
 				userVo.setCommonRequest(commonRequest);
-				userVo.setIsDormant(getUserMbr.getIsDormant());
+				userVo.setIsDormant(isDormant);
 				// 회원 정보 수정 API call
 				this.userSCI.updateUser(userVo);
 
