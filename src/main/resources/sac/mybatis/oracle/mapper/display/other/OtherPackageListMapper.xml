@@ -56,7 +56,9 @@
 			       <foreach collection="PKG_LIST" item="item" index="index" open="(" separator="," close=")">
 	                #{item}
 	               </foreach>
+					<if test='req.ignoreProvisionYn != "Y"'>
 			       AND CONTENTS.VM_VER LIKE '%'||#{osVersion}||'%' /* Provisioning OS VERSION 체크 */
+					</if>
 	               AND RSHP.PROD_RSHP_CD = #{rshpCd}
 	               AND (APPPROD.PART_PARENT_CLSF_CD <![CDATA[<>]]> #{partParentClsfCd} OR APPPROD.PART_PARENT_CLSF_CD IS NULL )
 	       ) LA
