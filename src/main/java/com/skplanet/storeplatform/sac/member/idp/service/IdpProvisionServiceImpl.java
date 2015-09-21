@@ -1779,72 +1779,68 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				policyRequest.setCommonRequest(commonRequest);
 				policyRequest.setLimitPolicyKey(mdn);
 				policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
-				try {
-					SearchPolicyResponse policyResponseByMdn = this.userSCI.searchPolicyList(policyRequest);
-					// 신규 MDN으로 단품/부분 차단이력이 존재하면 종료 및 해지
-					for (LimitTarget limitTargetInfo : policyResponseByMdn.getLimitTargetList()) {
-						String regId = limitTargetInfo.getRegID();
-						if (regId != null && regId.indexOf("|") > 0) {
-							regId = regId.substring(0, regId.indexOf("|"));
-						}
-						if (StringUtils.equals(limitTargetInfo.getIsUsed(), MemberConstants.USE_Y)) {
-							// 신규 MDN 기등록 서비스제한 차단이력 종료(end_dt = sysdate)
-							LOGGER.info("{} 기등록 결제차단 해지처리", mdn);
-							updatePolicyRequest = new UpdatePolicyRequest();
-							limitTargetList = new ArrayList<LimitTarget>();
-							limitTarget = new LimitTarget();
-							limitTarget.setLimitTargetNo(limitTargetInfo.getLimitTargetNo());
-							limitTarget.setUpdateID(regId + "|번호 변경");
-							limitTarget.setLimitPolicyCode(limitTargetInfo.getLimitPolicyCode());
-							limitTarget.setLimitPolicyKey(limitTargetInfo.getLimitPolicyKey());
-							limitTarget.setRegID(limitTargetInfo.getRegID());
-							limitTargetList.add(limitTarget);
-							updatePolicyRequest.setCommonRequest(commonRequest);
-							updatePolicyRequest.setLimitTargetList(limitTargetList);
-							this.userSCI.updatePolicyHistory(updatePolicyRequest);
-
-							String svcCdNm = StringUtils.equals(limitTargetInfo.getLimitPolicyCode(),
-									MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE) ? "단품" : "부분";
-
-							// 신규 MDN 기등록 서비스제한 해지
-							updatePolicyRequest = new UpdatePolicyRequest();
-							limitTargetList = new ArrayList<LimitTarget>();
-							limitTarget = new LimitTarget();
-							limitTarget.setRegID(regId + "|번호 변경");
-							limitTarget.setLimitPolicyCode(limitTargetInfo.getLimitPolicyCode());
-							limitTarget.setLimitPolicyKey(limitTargetInfo.getLimitPolicyKey());
-							limitTarget.setPolicyApplyValue(beMdn + "-> " + mdn + " 번호변경에 의해 " + mdn + "의 기존 "
-									+ svcCdNm + "결제 차단을 해지");
-							limitTarget.setIsUsed(MemberConstants.USE_N);
-							limitTarget.setPermissionType("2");
-							limitTarget.setEndDate(DateUtil.getToday("yyyyMMddHHmmss"));
-							limitTarget.setLineMangStatus(limitTargetInfo.getLineMangStatus());
-							if (StringUtils.isNotBlank(limitTargetInfo.getInsDate())) {
-								limitTarget.setInsDate(DateUtil.getToday("yyyyMMddHHmmss"));
-							}
-							limitTargetList.add(limitTarget);
-							updatePolicyRequest.setCommonRequest(commonRequest);
-							updatePolicyRequest.setLimitTargetList(limitTargetList);
-							this.userSCI.insertPolicy(updatePolicyRequest);
-						} else {
-							// 신규 MDN 기등록 서비스제한 해지이력 종료(end_dt = sysdate)
-							LOGGER.info("{} 기등록 결제차단해지 종료처리", mdn);
-							updatePolicyRequest = new UpdatePolicyRequest();
-							limitTargetList = new ArrayList<LimitTarget>();
-							limitTarget = new LimitTarget();
-							limitTarget.setLimitTargetNo(limitTargetInfo.getLimitTargetNo());
-							limitTarget.setUpdateID(regId + "|번호 변경");
-							limitTarget.setLimitPolicyCode(limitTargetInfo.getLimitPolicyCode());
-							limitTarget.setLimitPolicyKey(limitTargetInfo.getLimitPolicyKey());
-							limitTarget.setRegID(limitTargetInfo.getRegID());
-							limitTargetList.add(limitTarget);
-							updatePolicyRequest.setCommonRequest(commonRequest);
-							updatePolicyRequest.setLimitTargetList(limitTargetList);
-							this.userSCI.updatePolicyHistory(updatePolicyRequest);
-						}
+				SearchPolicyResponse policyResponseByMdn = this.userSCI.searchPolicyList(policyRequest);
+				// 신규 MDN으로 단품/부분 차단이력이 존재하면 종료 및 해지
+				for (LimitTarget limitTargetInfo : policyResponseByMdn.getLimitTargetList()) {
+					String regId = limitTargetInfo.getRegID();
+					if (regId != null && regId.indexOf("|") > 0) {
+						regId = regId.substring(0, regId.indexOf("|"));
 					}
-				} catch (StorePlatformException e) {
-					// ignore
+					if (StringUtils.equals(limitTargetInfo.getIsUsed(), MemberConstants.USE_Y)) {
+						// 신규 MDN 기등록 서비스제한 차단이력 종료(end_dt = sysdate)
+						LOGGER.info("{} 기등록 결제차단 해지처리", mdn);
+						updatePolicyRequest = new UpdatePolicyRequest();
+						limitTargetList = new ArrayList<LimitTarget>();
+						limitTarget = new LimitTarget();
+						limitTarget.setLimitTargetNo(limitTargetInfo.getLimitTargetNo());
+						limitTarget.setUpdateID(regId + "|번호 변경");
+						limitTarget.setLimitPolicyCode(limitTargetInfo.getLimitPolicyCode());
+						limitTarget.setLimitPolicyKey(limitTargetInfo.getLimitPolicyKey());
+						limitTarget.setRegID(limitTargetInfo.getRegID());
+						limitTargetList.add(limitTarget);
+						updatePolicyRequest.setCommonRequest(commonRequest);
+						updatePolicyRequest.setLimitTargetList(limitTargetList);
+						this.userSCI.updatePolicyHistory(updatePolicyRequest);
+
+						String svcCdNm = StringUtils.equals(limitTargetInfo.getLimitPolicyCode(),
+								MemberConstants.USER_LIMIT_POLICY_SERVICE_STOP_TSTORE) ? "단품" : "부분";
+
+						// 신규 MDN 기등록 서비스제한 해지
+						updatePolicyRequest = new UpdatePolicyRequest();
+						limitTargetList = new ArrayList<LimitTarget>();
+						limitTarget = new LimitTarget();
+						limitTarget.setRegID(regId + "|번호 변경");
+						limitTarget.setLimitPolicyCode(limitTargetInfo.getLimitPolicyCode());
+						limitTarget.setLimitPolicyKey(limitTargetInfo.getLimitPolicyKey());
+						limitTarget.setPolicyApplyValue(beMdn + "-> " + mdn + " 번호변경에 의해 " + mdn + "의 기존 " + svcCdNm
+								+ "결제 차단을 해지");
+						limitTarget.setIsUsed(MemberConstants.USE_N);
+						limitTarget.setPermissionType("2");
+						limitTarget.setEndDate(DateUtil.getToday("yyyyMMddHHmmss"));
+						limitTarget.setLineMangStatus(limitTargetInfo.getLineMangStatus());
+						if (StringUtils.isNotBlank(limitTargetInfo.getInsDate())) {
+							limitTarget.setInsDate(DateUtil.getToday("yyyyMMddHHmmss"));
+						}
+						limitTargetList.add(limitTarget);
+						updatePolicyRequest.setCommonRequest(commonRequest);
+						updatePolicyRequest.setLimitTargetList(limitTargetList);
+						this.userSCI.insertPolicy(updatePolicyRequest);
+					} else {
+						// 신규 MDN 기등록 서비스제한 해지이력 종료(end_dt = sysdate)
+						LOGGER.info("{} 기등록 결제차단해지 종료처리", mdn);
+						updatePolicyRequest = new UpdatePolicyRequest();
+						limitTargetList = new ArrayList<LimitTarget>();
+						limitTarget = new LimitTarget();
+						limitTarget.setLimitTargetNo(limitTargetInfo.getLimitTargetNo());
+						limitTarget.setUpdateID(regId + "|번호 변경");
+						limitTarget.setLimitPolicyCode(limitTargetInfo.getLimitPolicyCode());
+						limitTarget.setLimitPolicyKey(limitTargetInfo.getLimitPolicyKey());
+						limitTarget.setRegID(limitTargetInfo.getRegID());
+						limitTargetList.add(limitTarget);
+						updatePolicyRequest.setCommonRequest(commonRequest);
+						updatePolicyRequest.setLimitTargetList(limitTargetList);
+						this.userSCI.updatePolicyHistory(updatePolicyRequest);
+					}
 				}
 
 				for (LimitTarget info : policyResponse.getLimitTargetList()) {
