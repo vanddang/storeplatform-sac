@@ -94,7 +94,7 @@ public class AuthorizeSaveAndSyncByMacTest {
 
 							AuthorizeSaveAndSyncByMacReq req = new AuthorizeSaveAndSyncByMacReq();
 							req.setDeviceId("01066786220");
-							req.setPreDeviceId("00-0D-F0-8A-5A-A0");
+							req.setMacAddress("00-0D-F0-8A-5A-A0");
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
