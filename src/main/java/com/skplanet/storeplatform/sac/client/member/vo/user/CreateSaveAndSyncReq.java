@@ -29,7 +29,7 @@ public class CreateSaveAndSyncReq extends CommonInfo {
 	 * 기기 ID 타입 (MSISDN or MAC)
 	 */
 	@NotEmpty
-	@Pattern(regexp = "^msisdn|macaddress|imei")
+	@Pattern(regexp = "^msisdn|macaddress")
 	private String deviceIdType = "";
 
 	/**
