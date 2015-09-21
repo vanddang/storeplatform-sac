@@ -1813,8 +1813,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							limitTarget.setRegID(regId + "|번호 변경");
 							limitTarget.setLimitPolicyCode(limitTargetInfo.getLimitPolicyCode());
 							limitTarget.setLimitPolicyKey(limitTargetInfo.getLimitPolicyKey());
-							limitTarget.setPolicyApplyValue(beMdn + " -> " + mdn + " 번호 변경에 의해 " + mdn + "의 기존 "
-									+ svcCdNm + " 결제 차단을 해지");
+							limitTarget.setPolicyApplyValue(beMdn + "-> " + mdn + " 번호변경에 의해 " + mdn + "의 기존 "
+									+ svcCdNm + "결제 차단을 해지");
 							limitTarget.setIsUsed(MemberConstants.USE_N);
 							limitTarget.setPermissionType("2");
 							limitTarget.setEndDate(DateUtil.getToday("yyyyMMddHHmmss"));
