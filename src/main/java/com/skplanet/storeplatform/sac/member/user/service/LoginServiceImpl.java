@@ -1403,10 +1403,10 @@ public class LoginServiceImpl implements LoginService {
 
 		/* mac 정보 조회 */
 		DeviceInfo macDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
-				req.getPreDeviceId(), null);
+				req.getMacAddress(), null);
 
 		if (macDeviceInfo == null) {
-			throw new StorePlatformException("SAC_MEM_0003", req.getPreDeviceType(), req.getPreDeviceId());
+			throw new StorePlatformException("SAC_MEM_0003", "macAddress", req.getMacAddress());
 		}
 
 		/* 모번호 조회 및 셋팅 */
@@ -1473,7 +1473,7 @@ public class LoginServiceImpl implements LoginService {
 			removeUserRequest.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
 			removeUserRequest.setSecedeReasonMessage("Save&Sync인증탈퇴");
 			this.userSCI.remove(removeUserRequest);
-			LOGGER.info("{} 탈퇴 처리", req.getPreDeviceId());
+			LOGGER.info("{} 탈퇴 처리", req.getMacAddress());
 
 			/* 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
@@ -1570,12 +1570,12 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			/* 가가입 상태인 mac 회원정보를 정상상태로 */
-			this.modStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getPreDeviceId(),
+			this.modStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(),
 					MemberConstants.USE_N, null, null, MemberConstants.MAIN_STATUS_NORMAL,
 					MemberConstants.SUB_STATUS_NORMAL);
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
-			LOGGER.info("{} -> {} deviceId 변경", req.getPreDeviceId(), req.getDeviceId());
+			LOGGER.info("{} -> {} deviceId 변경", req.getMacAddress(), req.getDeviceId());
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setUserKey(oldUserKey);
 			deviceInfo.setDeviceKey(oldDeviceKey);

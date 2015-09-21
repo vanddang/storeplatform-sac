@@ -1005,9 +1005,26 @@ public class UserJoinServiceImpl implements UserJoinService {
 				deviceTelecom, req.getDeviceId(), req.getDeviceIdType(), true);
 
 		/**
-		 * MSISDN 가입자와 기타 가입자(macaddress, imei)를 분기하여 처리한다.
+		 * MSISDN 가입자와 MAC 가입자를 분기하여 처리한다.
 		 */
-		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MACADDRESS)) {
+
+			LOGGER.debug("=========================================");
+			LOGGER.debug("## >> SAVE & SYNC MAC 가가입 START ======");
+			LOGGER.debug("=========================================");
+
+			/**
+			 * MAC IDP 연동없이 DB 만 가입처리.
+			 */
+			userKey = this.regSaveAndSyncMacUser(sacHeader, req);
+
+			/**
+			 * 휴대기기 등록.
+			 */
+			deviceKey = this.regDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
+
+		} else {
+
 			LOGGER.debug("==========================================");
 			LOGGER.debug("## >> SAVE & SYNC MSISDN 가입 START ======");
 			LOGGER.debug("==========================================");
@@ -1035,20 +1052,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 				deviceKey = this.regDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
 
 			}
-		} else {
-			LOGGER.debug("=========================================");
-			LOGGER.debug("## >> SAVE & SYNC 기타 가가입 START ======");
-			LOGGER.debug("=========================================");
 
-			/**
-			 * IDP 연동없이 DB 만 가입처리.
-			 */
-			userKey = this.regSaveAndSyncMacUser(sacHeader, req);
-
-			/**
-			 * 휴대기기 등록.
-			 */
-			deviceKey = this.regDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
 		}
 
 		/**
