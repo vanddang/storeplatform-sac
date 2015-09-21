@@ -2918,7 +2918,11 @@ public class LoginServiceImpl implements LoginService {
 	 *            DB에 저장된 imei
 	 * @param reqNativeId
 	 *            request imei
-	 * @return boolean isEqualsImei
+	 * @param reqDeviceTelecom
+	 *            request 통신사
+	 * @param deviceKey
+	 *            디바이스키
+	 * @return isEqualsImei
 	 */
 	private boolean updateImei(SacRequestHeader requestHeader, String userKey, String deviceId, String nativeId,
 			String reqNativeId, String reqDeviceTelecom, String deviceKey) {
