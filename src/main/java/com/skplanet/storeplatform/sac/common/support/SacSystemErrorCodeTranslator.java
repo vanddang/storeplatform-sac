@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.framework.core.exception.SystemErrorCodeTransl
  *
  * Updated on : 2014. 4. 23. Updated by : 홍占썸동, SK 占시뤄옙占쏙옙.
  */
+@Deprecated
 public class SacSystemErrorCodeTranslator implements SystemErrorCodeTranslator {
 
 	private final Map<String, String> systemErrorCodeMap;
