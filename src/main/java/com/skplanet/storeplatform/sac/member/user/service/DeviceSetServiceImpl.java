@@ -283,9 +283,11 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		}
 
 		ModifyDevicePinSacRes res = new ModifyDevicePinSacRes();
-		res.setDeviceId(modifyDevicePinResponse.getDeviceId());
-		res.setDeviceKey(modifyDevicePinResponse.getDeviceKey());
-		res.setUserKey(modifyDevicePinResponse.getUserKey());
+		if (modifyDevicePinResponse != null) {
+			res.setDeviceId(modifyDevicePinResponse.getDeviceId());
+			res.setDeviceKey(modifyDevicePinResponse.getDeviceKey());
+			res.setUserKey(modifyDevicePinResponse.getUserKey());
+		}
 
 		return res;
 	}
@@ -376,10 +378,12 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		}
 
 		SearchDevicePinSacRes res = new SearchDevicePinSacRes();
-		res.setDeviceId(searchDevicePinResponse.getDeviceId());
-		res.setDeviceKey(searchDevicePinResponse.getDeviceKey());
-		res.setUserKey(searchDevicePinResponse.getUserKey());
-		res.setPinNo(searchDevicePinResponse.getPinNo());
+		if (searchDevicePinResponse != null) {
+			res.setDeviceId(searchDevicePinResponse.getDeviceId());
+			res.setDeviceKey(searchDevicePinResponse.getDeviceKey());
+			res.setUserKey(searchDevicePinResponse.getUserKey());
+			res.setPinNo(searchDevicePinResponse.getPinNo());
+		}
 
 		return res;
 	}
