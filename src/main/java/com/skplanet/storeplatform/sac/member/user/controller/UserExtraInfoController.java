@@ -178,7 +178,7 @@ public class UserExtraInfoController {
 	public MoveUserInfoSacRes moveUserInfo(SacRequestHeader sacHeader, @RequestBody MoveUserInfoSacReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		MoveUserInfoSacRes sacRes = new MoveUserInfoSacRes();
+		MoveUserInfoSacRes sacRes = null;
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String moveType = StringUtil.nvl(req.getMoveType(), "");
@@ -216,7 +216,7 @@ public class UserExtraInfoController {
 			if (ex.getCode() != null && ex.getCode().contains("EC_IDP_")) {
 				req.setIdpResultYn(MemberConstants.USE_N);
 				req.setIdpErrCd(ex.getCode().replace("EC_IDP_", ""));
-				sacRes = this.userService.moveUserInfo(sacHeader, req);
+				this.userService.moveUserInfo(sacHeader, req);
 			}
 			throw ex;
 		}

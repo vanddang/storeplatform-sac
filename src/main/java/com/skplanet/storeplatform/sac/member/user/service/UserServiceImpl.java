@@ -320,7 +320,7 @@ public class UserServiceImpl implements UserService {
 		String key = null;
 		String reqDate = DateUtil.getToday();
 		String reason = null;
-		CommonRes commonRes = new CommonRes();
+		CommonRes commonRes = null;
 
 		// 회원 타입별 IDP 연동값 셋팅
 		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
