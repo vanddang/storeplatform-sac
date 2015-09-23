@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformXssInvalidException;
 
 /**
  * 예외 테스트 컨트롤러
@@ -66,7 +65,7 @@ public class ExceptionSampleController {
 	
 	@RequestMapping(value = "/xss")
 	public void xss() {
-		throw new StorePlatformXssInvalidException("SYS_ERROR_SECURITY_XSS", "<script/>");
+		throw new StorePlatformException("SYS_ERROR_SECURITY_XSS", "<script/>");
 	}
 	
 	@RequestMapping(value = "/hierarchy")
