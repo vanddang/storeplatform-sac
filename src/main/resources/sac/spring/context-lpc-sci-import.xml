@@ -27,14 +27,5 @@
     <import resource="classpath*:member/spring/context-common.xml" />
     
     <import resource="classpath*:purchase/spring/context-common.xml" /> 
-    
-    <bean id="allLocalSCIPostProcessor" class="com.skplanet.storeplatform.framework.core.proxy.LocalSCIPostProcessor">
-        <property name="validator">
-            <bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>  
-        </property>
-        <property name="systemErrorCodeTranslator">
-            <bean class="com.skplanet.storeplatform.sac.common.support.SacSystemErrorCodeTranslator" /> 
-        </property>
-        <property name="order" value="10"/>
-    </bean> 
+
 </beans>
