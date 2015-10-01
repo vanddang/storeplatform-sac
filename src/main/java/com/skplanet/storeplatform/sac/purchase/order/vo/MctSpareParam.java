@@ -49,6 +49,8 @@ public class MctSpareParam extends CommonInfo {
 				this.useTenantId = arrVal[1];
 				this.useUserKey = arrVal[2];
 				break;
+			default:
+				break;
 			}
 		}
 	}
@@ -71,6 +73,8 @@ public class MctSpareParam extends CommonInfo {
 		switch (this.version) {
 		case 1:
 			sbMctParam.append(SEPARATOR).append(this.useTenantId).append(SEPARATOR).append(this.useUserKey);
+			break;
+		default:
 			break;
 		}
 

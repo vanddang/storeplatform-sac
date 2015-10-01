@@ -1318,7 +1318,7 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 			boolean bTelecomPaymethod) {
 		String tenantId = checkPaymentPolicyParam.getTenantId();
 		// String systemId = checkPaymentPolicyParam.getSystemId();
-		String tenantProdGrpCd = checkPaymentPolicyParam.getTenantProdGrpCd();
+//		String tenantProdGrpCd = checkPaymentPolicyParam.getTenantProdGrpCd();
 		double payAmt = checkPaymentPolicyParam.getPaymentTotAmt();
 		String prodId = checkPaymentPolicyParam.getProdId();
 		String parentProdId = checkPaymentPolicyParam.getParentProdId();
@@ -1550,7 +1550,7 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 
 	private String getAdditionalTenantGrpCd(CheckPaymentPolicyParam checkPaymentPolicyParam) {
 		String prodCaseCd = checkPaymentPolicyParam.getProdCaseCd();
-		String cmpxProdClsfCd = checkPaymentPolicyParam.getCmpxProdClsfCd();
+//		String cmpxProdClsfCd = checkPaymentPolicyParam.getCmpxProdClsfCd();
 
 		if (checkPaymentPolicyParam.isAutoPrchs() || checkPaymentPolicyParam.isS2sAutoPrchs()) {
 			return PurchaseConstants.PAYMENT_METHOD_SALEPOLICY_AUTOPRCHS;
