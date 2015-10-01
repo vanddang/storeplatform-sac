@@ -136,7 +136,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		// TAKTODO:: 링&벨 필수 항목 체크 확인 처리
-		// if( StringUtils.startsWith(req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
+		// if( StringUtils.startsWith(req.getTenantProdGrpCd(), PurchaseCDConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
 		// for(CreatePurchaseSacReqProduct product : req.getProductList()) {
 		// if( StringUtils.isBlank(product.getTimbreClsf()) ) {
 		// throw new StorePlatformException("SAC_PUR_5100", "링&벨 필수정보 누락");
@@ -692,7 +692,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// if (StringUtils.equals(purchaseOrderInfo.getSaleAmtProcType(),
-			// PurchaseConstants.SALE_AMT_PROC_TYPE_SERVER) == false
+			// PurchaseCDConstants.SALE_AMT_PROC_TYPE_SERVER) == false
 			// && checkTotAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt().doubleValue()) {
 			// throw new StorePlatformException("SAC_PUR_5106", purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()
 			// .doubleValue(), checkTotAmt);
@@ -761,7 +761,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
 			// 연령체크 안함: 모바일 회원은 생년월일 저장X, 생년월일도 * 문자 포함으로 확인불가
-			// if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19) && useUser.getAge() <
+			// if (StringUtils.equals(product.getProdGrdCd(), PurchaseCDConstants.PRODUCT_GRADE_19) && useUser.getAge() <
 			// 20) {
 			// throw new StorePlatformException("SAC_PUR_5110");
 			// }
@@ -844,9 +844,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// // T-Freemium 19금 상품에 대한 실명(성인)인증 없이 처리 : 2014.06.25 반영
 			// // T-Freemium 은 OR000420, OR000413 2개의 요청경로로 유입됨.
 			// if ((StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
-			// PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
+			// PurchaseCDConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
 			// && (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
-			// PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false)) {
+			// PurchaseCDConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false)) {
 			// throw new StorePlatformException("SAC_PUR_4105");
 			// }
 			// }
@@ -1004,7 +1004,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						// 이북/코믹 경우, 이용 가능한 정액권이 나오면 구매 불가 처리 (구매가 가능한 상황이 나오지 못함: 2014.05. 현재)
 						// 2015.05. 정액제 고도화 적용 : 이북/코믹이 시리즈패스 로 흡수 되면서 단품 구매 가능
 						// if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-						// PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
+						// PurchaseCDConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
 						// throw new StorePlatformException("SAC_PUR_6111");
 						// }
 

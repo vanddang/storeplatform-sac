@@ -391,7 +391,7 @@ public class PurchaseOrderController {
 		// new TLogUtil().set(new ShuttleSetter() {
 		// @Override
 		// public void customize(TLogSentinelShuttle shuttle) {
-		// shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_RESULT).purchase_id(prchsId);
+		// shuttle.log_id(PurchaseCDConstants.TLOG_ID_PURCHASE_ORDER_RESULT).purchase_id(prchsId);
 		// }
 		// });
 

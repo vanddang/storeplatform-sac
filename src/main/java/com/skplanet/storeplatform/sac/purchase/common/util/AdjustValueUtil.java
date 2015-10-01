@@ -11,7 +11,7 @@
 package com.skplanet.storeplatform.sac.purchase.common.util;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
 
 import java.util.*;
 
@@ -52,15 +52,15 @@ public class AdjustValueUtil {
 	}
 
 	public static String extendsValue(String parent, String child, String separator){
-		return extendsValue(parent, child, separator, PurchaseConstants.DELIMITER, false);
+		return extendsValue(parent, child, separator, PurchaseCDConstants.DELIMITER, false);
 	}
 
 	public static String extendsValue(String parent, String child){
-		return extendsValue(parent, child, PurchaseConstants.SEPARATOR, PurchaseConstants.DELIMITER, false);
+		return extendsValue(parent, child, PurchaseCDConstants.SEPARATOR, PurchaseCDConstants.DELIMITER, false);
 	}
 
 	public static String extendsValue(String parent, String child, boolean sortKey){
-		return extendsValue(parent, child, PurchaseConstants.SEPARATOR, PurchaseConstants.DELIMITER, sortKey);
+		return extendsValue(parent, child, PurchaseCDConstants.SEPARATOR, PurchaseCDConstants.DELIMITER, sortKey);
 	}
 
 	/**

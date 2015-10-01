@@ -760,7 +760,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// T store 쿠폰 조회
 
 		if (StringUtils.contains(cdMaxAmtRateNoDouble, PurchaseConstants.PAYPLANET_PAYMENT_METHOD_COUPON_26 + ":0:0") == false) {
-			// && StringUtils.equals(PurchaseConstants.TENANT_ID_TSTORE, verifyOrderInfo.getTenantId())) {
+			// && StringUtils.equals(PurchaseCDConstants.TENANT_ID_TSTORE, verifyOrderInfo.getTenantId())) {
 			List<String> prodIdList = new ArrayList<String>();
 			for (PrchsDtlMore productInfo : prchsDtlMoreList) {
 				prodIdList.add(productInfo.getProdId());
@@ -1586,7 +1586,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		PurchaseProduct purchaseProduct = purchaseProductMap.get(purchase.getProdId());
 
 		// IAP 여부 체크
-		// if (StringUtils.equals(purchaseProduct.getInAppYn(), PurchaseConstants.USE_Y) == false) {
+		// if (StringUtils.equals(purchaseProduct.getInAppYn(), PurchaseCDConstants.USE_Y) == false) {
 		// throw new StorePlatformException("SAC_PUR_5111");
 		// }
 

@@ -254,13 +254,13 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			}
 
 			// } else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-			// PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
+			// PurchaseCDConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
 			// // 전권 소장
 			// return "'" + purchaseProduct.getProdNm() + "' 전"
 			// + StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권");
 			//
 			// } else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-			// PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
+			// PurchaseCDConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
 			// // 전권 대여
 			// return "'" + purchaseProduct.getProdNm() + "' 전"
 			// + StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권");

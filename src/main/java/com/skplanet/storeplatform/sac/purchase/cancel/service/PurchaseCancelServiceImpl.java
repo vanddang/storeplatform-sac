@@ -482,7 +482,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		// if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
 		// for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
 		// if (!StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
-		// PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) {
+		// PurchaseCDConstants.TENANT_PRODUCT_GROUP_APP)) {
 		// // APP 상품이 아니면 통과.
 		// continue;
 		// }
@@ -573,9 +573,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		 * purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
 		 * 
 		 * if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
-		 * PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) { // 쇼핑상품이면 true 셋팅. shoppingYn = true; }
+		 * PurchaseCDConstants.TENANT_PRODUCT_GROUP_SHOPPING)) { // 쇼핑상품이면 true 셋팅. shoppingYn = true; }
 		 * 
-		 * if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())) { // 정액권
+		 * if (StringUtils.equals(PurchaseCDConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())) { // 정액권
 		 * 상품 처리. this.updateProdTypeFix(purchaseCancelSacParam, prchsDtlSacParam); }
 		 * 
 		 * }

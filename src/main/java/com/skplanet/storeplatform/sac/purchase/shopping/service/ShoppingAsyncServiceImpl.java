@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.shopping.sci.ShoppingAsyncSCI;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncItemSc;
-import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
 
 /**
  * 쇼핑쿠폰 Service Implements.
@@ -128,7 +128,7 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 								new TLogUtil().log(new ShuttleSetter() {
 									@Override
 									public void customize(TLogSentinelShuttle shuttle) {
-										shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006)
+										shuttle.log_id(PurchaseCDConstants.INTERFACE_ID_TL_SAC_PUR_0006)
 												.purchase_id(purchase_id).use_start_time(use_start_time)
 												.use_end_time(use_end_time).download_expired_time(use_end_time)
 												.coupon_publish_code(coupon_publish_code).coupon_code(coupon_code)
@@ -169,7 +169,7 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 								new TLogUtil().log(new ShuttleSetter() {
 									@Override
 									public void customize(TLogSentinelShuttle shuttle) {
-										shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006)
+										shuttle.log_id(PurchaseCDConstants.INTERFACE_ID_TL_SAC_PUR_0006)
 												.purchase_id(purchase_id).use_start_time(use_start_time)
 												.use_end_time(use_end_time).download_expired_time(use_end_time)
 												.coupon_publish_code(coupon_publish_code).coupon_code(coupon_code)
@@ -222,8 +222,8 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 				shoppingAsyncItemSc.setTenantId(tenantId);
 				shoppingAsyncItemSc.setSystemId(systemId);
 				shoppingAsyncItemSc.setPrchsId(prchsId);
-				shoppingAsyncItemSc.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
-				shoppingAsyncItemSc.setCancelReqPathCd(PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON);
+				shoppingAsyncItemSc.setPrchsStatusCd(PurchaseCDConstants.PRCHS_STATUS_CANCEL);
+				shoppingAsyncItemSc.setCancelReqPathCd(PurchaseCDConstants.PRCHS_REQ_PATH_BIZ_COUPON);
 
 				logger.info("### Biz쿠폰 발급 취소 요청 param {} : " + shoppingAsyncItemSc);
 

@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.constant;
 
+import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +21,18 @@ import java.util.Map;
  * 
  * Updated on : 2014. 1. 9. Updated by : 양주원, 엔텔스.
  */
-public class PurchaseConstants extends com.skplanet.storeplatform.purchase.constant.PurchaseConstants {
+public class PurchaseConstants extends PurchaseCDConstants {
+
+	/** 사용 여부 Y N. **/
+	public static final String USE_Y = "Y"; // Y
+	public static final String USE_N = "N"; // N
+
+	/** 무제한 일시 */
+	public static final String UNLIMITED_DATE = "99991231235959";
+
+	/** String 처리 **/
+	public static final String DELIMITER = ":";
+	public static final String SEPARATOR = ";";
 
 	/** 기본 인코딩 */
 	public static final String DEFAULT_ENCODING = "UTF-8";

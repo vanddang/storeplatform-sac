@@ -71,7 +71,7 @@ public class PurchaseUserInfoSacServiceImpl implements PurchaseUserInfoSacServic
 		// throw new StorePlatformException("SAC_PUR_4106", newUserKey, newDeviceKey);
 		// }
 		// } catch (StorePlatformException e) {
-		// if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
+		// if (StringUtils.equals(e.getCode(), PurchaseCDConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
 		// throw new StorePlatformException("SAC_PUR_4106", newUserKey, newDeviceKey);
 		// } else {
 		// throw e;

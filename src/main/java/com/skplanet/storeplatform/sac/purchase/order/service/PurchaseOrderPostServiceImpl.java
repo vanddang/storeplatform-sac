@@ -324,7 +324,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			// PurchaseUserDevice purchaseUserDevice = null;
 			// String payUserKey = null;
 			// String payDeviceKey = null;
-			// if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			// if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseCDConstants.PRCHS_CASE_GIFT_CD)) {
 			// payUserKey = prchsDtlMore.getSendInsdUsermbrNo();
 			// payDeviceKey = prchsDtlMore.getSendInsdDeviceId();
 			// } else {

@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import com.skplanet.storeplatform.purchase.client.cancel.sci.ImmediatelyUseStopS
 import com.skplanet.storeplatform.purchase.client.cancel.vo.ImmediatelyUseStopScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.ImmediatelyUseStopScRes;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
-import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.ImmediatelyUseStopSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.ImmediatelyUseStopSacRes;
 
@@ -73,12 +73,12 @@ public class ImmediatelyUseStopServiceImpl implements ImmediatelyUseStopService 
 		for (PrchsDtl dtl : prchsDtl) {
 
 			// 권한상품이 아닌경우 상태가 아닌 경우 Exception
-			if (!PurchaseConstants.PRCHS_PROD_TYPE_AUTH.equals(dtl.getPrchsProdType())) {
+			if (!PurchaseCDConstants.PRCHS_PROD_TYPE_AUTH.equals(dtl.getPrchsProdType())) {
 				throw new StorePlatformException("SAC_PUR_8130"); // 정액권상품 아님
 			}
 
 			// 구매완료 상태가 아닌 경우 Exception
-			if (!PurchaseConstants.PRCHS_STATUS_COMPT.equals(dtl.getStatusCd())) {
+			if (!PurchaseCDConstants.PRCHS_STATUS_COMPT.equals(dtl.getStatusCd())) {
 				throw new StorePlatformException("SAC_PUR_8101"); // 구매완료상태 아님
 			}
 		}

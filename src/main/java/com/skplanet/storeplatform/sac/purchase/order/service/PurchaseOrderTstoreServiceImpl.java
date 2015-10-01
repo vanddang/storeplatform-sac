@@ -73,7 +73,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	// public String searchTstoreOldCouponList(String userKey, String deviceId, List<String> prodIdList, int
 	// purchaseQty) {
 	// // TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-	// // if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+	// // if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
 	// // return "NULL";
 	// // }
 	//
@@ -102,7 +102,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	// throw new StorePlatformException("SAC_PUR_7210", e);
 	// }
 	//
-	// if (StringUtils.equals(userCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) ==
+	// if (StringUtils.equals(userCouponListEcRes.getResultCd(), PurchaseCDConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) ==
 	// false) {
 	// throw new StorePlatformException("SAC_PUR_7206", userCouponListEcRes.getResultCd(),
 	// userCouponListEcRes.getResultMsg());
@@ -151,7 +151,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	@Override
 	public String searchTstoreCouponList(String userKey, String deviceId, List<String> prodIdList, int purchaseQty) {
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
 		// return "NULL";
 		// }
 
@@ -247,7 +247,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	@Override
 	public String searchTstoreCashIntegrationAmt(String userKey) {
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
 		// return 0.0;
 		// }
 
@@ -311,7 +311,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	@Override
 	public double searchTstoreCashAmt(String userKey) {
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
 		// return 0.0;
 		// }
 
@@ -358,7 +358,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	@Override
 	public double searchTgamepassAmt(String userKey) {
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
 		// return 0.0;
 		// }
 
@@ -405,7 +405,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	@Override
 	public double searchGameCashAmt(String userKey) {
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
 		// return 0.0;
 		// }
 

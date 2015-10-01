@@ -15,6 +15,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
-import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
 
 /**
@@ -51,15 +51,15 @@ public class PurchaseTenantPolicyServiceImplTest {
 	public void searchTest() {
 		String tenantId = "S01";
 
-		String tenantProdGrpCd = PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING;
+		String tenantProdGrpCd = PurchaseCDConstants.TENANT_PRODUCT_GROUP_SHOPPING;
 		List<TenantSalePolicy> policyList = this.policyService.searchTenantSalePolicyList(tenantId, tenantProdGrpCd);
 		assertThat(policyList.size(), not(0));
 
-		String procPatternCd = PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST;
+		String procPatternCd = PurchaseCDConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST;
 		policyList = this.policyService.searchTenantSalePolicyList(tenantId, tenantProdGrpCd, procPatternCd, true);
 		assertThat(policyList.size(), not(0));
 
-		procPatternCd = PurchaseConstants.POLICY_PATTERN_TMILEAGE_SAVE_PAYMENT_METHOD;
+		procPatternCd = PurchaseCDConstants.POLICY_PATTERN_TMILEAGE_SAVE_PAYMENT_METHOD;
 		// policyList = this.policyService.searchTenantSalePolicyList(tenantId, tenantProdGrpCd, procPatternCd,
 		// false);
 		policyList = this.policyService.searchTenantSalePolicyList(tenantId, null, procPatternCd, false);
