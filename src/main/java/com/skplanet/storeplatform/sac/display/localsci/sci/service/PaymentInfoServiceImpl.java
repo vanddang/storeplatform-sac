@@ -173,7 +173,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
         for (ExclusiveFreePass info : exclusiveTypeInfoList) {
 
-            if (info.getDupPrchsLimtTypeCd().equals("PD013403")) {
+            if ("PD013403".equals(info.getDupPrchsLimtTypeCd())) {
                 paramMap.put("dupPrchsLimtProdId", info.getDupPrchsLimtProdId());
                 exclusiveFixrateProdIdList.addAll(this.commonDAO.queryForList(
                         "PaymentInfo.getExclusiveGroupProdIdList", paramMap, String.class));
