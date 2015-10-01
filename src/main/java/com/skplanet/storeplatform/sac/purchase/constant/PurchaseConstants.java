@@ -23,17 +23,6 @@ import java.util.Map;
  */
 public class PurchaseConstants extends PurchaseCDConstants {
 
-	/** 사용 여부 Y N. **/
-	public static final String USE_Y = "Y"; // Y
-	public static final String USE_N = "N"; // N
-
-	/** 무제한 일시 */
-	public static final String UNLIMITED_DATE = "99991231235959";
-
-	/** String 처리 **/
-	public static final String DELIMITER = ":";
-	public static final String SEPARATOR = ";";
-
 	/** 기본 인코딩 */
 	public static final String DEFAULT_ENCODING = "UTF-8";
 
