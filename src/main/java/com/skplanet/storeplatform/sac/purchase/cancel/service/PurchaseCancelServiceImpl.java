@@ -9,6 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.sap.sci.SapPurchaseSCI;
 import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiEcReq;
@@ -46,23 +57,19 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.Coupo
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.repository.PurchaseCancelRepository;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.*;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacResult;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * 구매 취소 Service Implements.
@@ -136,8 +143,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 						purchaseCancelSacParam.getSystemId());
 
 				/** 구매 취소 처리. */
-				if (purchaseCancelSacParam
-						.getPrchsCancelServiceType() == PurchaseConstants.PRCHS_CANCEL_SERVICE_TCASH) {
+				if (PurchaseConstants.PRCHS_CANCEL_SERVICE_TCASH.equals(purchaseCancelSacParam
+						.getPrchsCancelServiceType())) {
 					purchaseCancelDetailSacResult = this.executePurchaseCancelForTCash(purchaseCancelSacParam,
 							purchaseCancelDetailSacParam);
 				} else {
@@ -169,8 +176,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 					}
 				}
 
-				purchaseCancelDetailSacResult.setResultMsg(
-						errorMsg + (StringUtils.isBlank(addErrorMsg) ? "" : ", detailMsg : " + addErrorMsg));
+				purchaseCancelDetailSacResult.setResultMsg(errorMsg
+						+ (StringUtils.isBlank(addErrorMsg) ? "" : ", detailMsg : " + addErrorMsg));
 
 				this.logger.info("SAC_PUR_XXXX code : {}", purchaseCancelDetailSacResult.getResultCd() + ", msg : "
 						+ purchaseCancelDetailSacResult.getResultMsg());
@@ -182,8 +189,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 				purchaseCancelDetailSacResult.setResultCd("SAC_PUR_8999");
 
-				purchaseCancelDetailSacResult
-						.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_8999") + "cause : " + e);
+				purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_8999")
+						+ "cause : " + e);
 
 				this.logger.info("SAC_PUR_8999 : code : {}", purchaseCancelDetailSacResult.getResultCd() + ", msg : "
 						+ purchaseCancelDetailSacResult.getResultMsg());
@@ -195,8 +202,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				if (purchaseCancelDetailSacResult != null
 						&& !StringUtils.equals("SAC_PUR_8105", purchaseCancelDetailSacResult.getResultCd())) {
 					/** 트랙잭션 처리 종료 */
-					this.endTransaction(purchaseCancelSacParam.getTenantId(), purchaseCancelDetailSacParam.getPrchsId(),
-							purchaseCancelSacParam.getSystemId(), purchaseCancelDetailSacResult.getResultCd());
+					this.endTransaction(purchaseCancelSacParam.getTenantId(),
+							purchaseCancelDetailSacParam.getPrchsId(), purchaseCancelSacParam.getSystemId(),
+							purchaseCancelDetailSacResult.getResultCd());
 				}
 			}
 
@@ -212,9 +220,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 								prchsDtlSacParam.getPrchsId())) {
 					this.purchaseDisplayRepository.updateSpecialPurchaseCount(prchsDtlSacParam.getTenantId(),
 							prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getProdId(),
-							PurchaseConstants.PRCHS_STATUS_CANCEL,
-							-purchaseCancelDetailSacParam.getPrchsDtlSacParamList().size(),
-							prchsDtlSacParam.getPrchsDt(), purchaseCancelDetailSacParam.getCancelDt());
+							PurchaseConstants.PRCHS_STATUS_CANCEL, -purchaseCancelDetailSacParam
+									.getPrchsDtlSacParamList().size(), prchsDtlSacParam.getPrchsDt(),
+							purchaseCancelDetailSacParam.getCancelDt());
 				}
 			} else {
 				failCnt++;
@@ -264,7 +272,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			throw new StorePlatformException("SAC_PUR_8101");
 		}
 
-		if (PurchaseConstants.PRCHS_CANCEL_BY_USER == purchaseCancelSacParam.getPrchsCancelByType()) {
+		if (PurchaseConstants.PRCHS_CANCEL_BY_USER.equals(purchaseCancelSacParam.getPrchsCancelByType())) {
 			// 사용자가 취소하는 경우 권한 체크.
 			if (!StringUtils.equals(purchaseCancelSacParam.getUserKey(), prchsSacParam.getInsdUsermbrNo())) {
 				throw new StorePlatformException("SAC_PUR_8102");
@@ -275,8 +283,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		MembershipReserve membershipReserveRes = this.purchaseCancelRepository.getMembershipReserve(prchsSacParam);
 
 		// 마일리지 적립 정보가 존재하며 처리상태가 처리중인 경우 취소불가
-		if (membershipReserveRes != null && StringUtils.equals(PurchaseConstants.MEMBERSHIP_PROC_STATUS_WORKING,
-				membershipReserveRes.getProcStatusCd())) {
+		if (membershipReserveRes != null
+				&& StringUtils.equals(PurchaseConstants.MEMBERSHIP_PROC_STATUS_WORKING,
+						membershipReserveRes.getProcStatusCd())) {
 			throw new StorePlatformException("SAC_PUR_8501");
 		}
 
@@ -291,8 +300,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			// 2014.07.29 최상훈c 요건 추가(해당값이 존재하면 회원정보 조회 안함)
 			if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
 
-				prchsSacParam.setDeviceId(this.purchaseCancelRepository.searchOrderDeviceId(prchsSacParam.getTenantId(),
-						prchsSacParam.getInsdUsermbrNo(), prchsSacParam.getInsdDeviceId()));
+				prchsSacParam
+						.setDeviceId(this.purchaseCancelRepository.searchOrderDeviceId(prchsSacParam.getTenantId(),
+								prchsSacParam.getInsdUsermbrNo(), prchsSacParam.getInsdDeviceId()));
 			}
 		} else {
 			SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = this.purchaseCancelRepository
@@ -544,7 +554,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		// T CASH는 운영자용임.. 아래꺼 타면 안됨.
-		if (PurchaseConstants.PRCHS_CANCEL_BY_USER == purchaseCancelSacParam.getPrchsCancelByType()) {
+		if (PurchaseConstants.PRCHS_CANCEL_BY_USER.equals(purchaseCancelSacParam.getPrchsCancelByType())) {
 			// 사용자가 취소하는 경우 권한 체크.
 			if (!StringUtils.equals(purchaseCancelSacParam.getUserKey(), prchsSacParam.getInsdUsermbrNo())) {
 				throw new StorePlatformException("SAC_PUR_8102");
@@ -687,8 +697,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		MembershipReserve membershipReserveRes = this.membershipReserveSCI.getSaveInfo(membershipReserveReq);
 
 		// 마일리지 적립 정보가 존재하며 처리상태가 처리중인 경우 취소불가
-		if (membershipReserveRes != null && StringUtils.equals(PurchaseConstants.MEMBERSHIP_PROC_STATUS_WORKING,
-				membershipReserveRes.getProcStatusCd())) {
+		if (membershipReserveRes != null
+				&& StringUtils.equals(PurchaseConstants.MEMBERSHIP_PROC_STATUS_WORKING,
+						membershipReserveRes.getProcStatusCd())) {
 			throw new StorePlatformException("SAC_PUR_8501");
 		}
 
@@ -931,9 +942,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			if (this.payPlanetShopService.startsWithPayPlanetMID(paymentSacParam.getTid())) {
 				this.logger.info("[##PurchaseCancel] PayPlanet 결제처리");
 
-				PpProperty payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(
-						purchaseCancelDetailSacParam.getPrchsSacParam().getTenantId(),
-						PurchaseConstants.PAYPLANET_API_TYPE_CANCEL,
+				PpProperty payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(purchaseCancelDetailSacParam
+						.getPrchsSacParam().getTenantId(), PurchaseConstants.PAYPLANET_API_TYPE_CANCEL,
 						purchaseCancelDetailSacParam.getPrchsSacParam().getPrchsReqPathCd());
 
 				paymentSacParam.setAuthKey(payPlanetShop.getAuthKey());
@@ -971,8 +981,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 					if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER,
 							paymentSacParam.getPaymentMtdCd())) {
 						// SKT 후불 결제.
-						UserEcRes userEcRes = this.purchaseUapsRespository.searchUapsMappingInfoByMdn(
-								purchaseCancelDetailSacParam.getPrchsSacParam().getDeviceId());
+						UserEcRes userEcRes = this.purchaseUapsRespository
+								.searchUapsMappingInfoByMdn(purchaseCancelDetailSacParam.getPrchsSacParam()
+										.getDeviceId());
 						String[] serviceCdList = userEcRes.getServiceCD();
 						if (serviceCdList != null) {
 							for (String serviceCd : serviceCdList) {
@@ -991,9 +1002,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	private String devicdKeyToMdn(String deviceKey) {
 
-		deviceKey = deviceKey.replaceAll("Ab", "0").replaceAll("cDe", "5").replaceAll("Fg", "2").replaceAll("HiJk", "6")
-				.replaceAll("Lm", "4").replaceAll("NoP", "1").replaceAll("qR", "8").replaceAll("sTu", "7")
-				.replaceAll("Vw", "3").replaceAll("XyZ", "9");
+		deviceKey = deviceKey.replaceAll("Ab", "0").replaceAll("cDe", "5").replaceAll("Fg", "2")
+				.replaceAll("HiJk", "6").replaceAll("Lm", "4").replaceAll("NoP", "1").replaceAll("qR", "8")
+				.replaceAll("sTu", "7").replaceAll("Vw", "3").replaceAll("XyZ", "9");
 
 		return deviceKey;
 	}
@@ -1064,8 +1075,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		// userKey, deviceKey 를 이용한 회원정보조회
 		SearchUserDeviceSacRes searchUserDeviceSacRes = this.purchaseCancelRepository.searchUserByDeviceKey(
 				prchsSacParam.getTenantId(), prchsSacParam.getInsdUsermbrNo(), prchsSacParam.getInsdDeviceId());
-		UserDeviceInfoSac userDeviceInfoSac = searchUserDeviceSacRes.getUserDeviceInfo()
-				.get(prchsSacParam.getInsdDeviceId());
+		UserDeviceInfoSac userDeviceInfoSac = searchUserDeviceSacRes.getUserDeviceInfo().get(
+				prchsSacParam.getInsdDeviceId());
 
 		SendPurchaseNotiEcReq sendPurchaseNotiEcReq = new SendPurchaseNotiEcReq();
 		sendPurchaseNotiEcReq.setTenantId(prchsSacParam.getTenantId());
@@ -1101,8 +1112,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		this.logger.info("PRCHS,CANCEL,SAC,POST,NOTI,SAP,RESULT,{},{}", bSucc, errDesc);
 
-		String procStatusCd = bSucc ? PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_SUCCESS
-				: PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE;
+		String procStatusCd = bSucc ? PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_SUCCESS : PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE;
 
 		this.notiDbInsert(prchsSacParam, purchaseCancelDetailSacParam, purchaseCancelSacParam, sendPurchaseNotiEcReq,
 				procStatusCd, errDesc);
