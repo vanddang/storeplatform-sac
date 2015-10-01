@@ -230,7 +230,7 @@ public class PurchaseConstants extends PurchaseCDConstants {
 
 	/** UAPS */
 	public static final String UAPS_SVC_TP_SKTTEST = "12"; // 회선 타입: 시험폰
-	public static final String[] UAPS_SVC_LIMIT_SERVICE = { "NA00002125" }; // 한도요금 상품
+	public static final String UAPS_SVC_LIMIT_SERVICE = "NA00002125"; // 한도요금 상품
 
 	/** Pay Planet TID prefix */
 	public static final String PAYPLANET_TID_PREFIX = "SKTstore"; // Pay Planet TID prefix
