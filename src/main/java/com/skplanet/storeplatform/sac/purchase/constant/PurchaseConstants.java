@@ -80,6 +80,26 @@ public class PurchaseConstants extends PurchaseCDConstants {
 	public static final String SACINNER_MEMBER_RESULT_NOTFOUND = "SC_MEM_9982";
 	public static final String SACINNER_MEMBER_RESULT_NOTEXIST_KEY = "SC_MEM_9995"; // 회원키 없음
 
+	/** 테넌트 정책 ID */
+	public static final String POLICY_ID_PHONE_SHOPPING_PRCHS_LIMIT = "policy001"; // SKT후불 쇼핑상품 구매결제 한도제한
+	public static final String POLICY_ID_PHONE_RECV_LIMIT = "policy002"; // SKT후불 선물수신 한도제한
+	public static final String POLICY_ID_PHONE_PRCHS_LIMIT = "policy003"; // SKT후불 구매결제 한도제한
+	public static final String POLICY_ID_PHONE_SHOPPING_RECV_LIMIT = "policy004"; // SKT후불 쇼핑상품 선물수신 한도제한
+	public static final String POLICY_ID_CORP_DEVICE = "policy005"; // 법인명의 제한
+	public static final String POLICY_ID_PHONE_TEST_DEVICE = "policy006"; // 시험폰 결제 허용
+	public static final String POLICY_ID_STORE_TEST_DEVICE_CD = "policy007"; // 비과금 결제 허용
+	public static final String POLICY_ID_DEVICE_BASED_PRCHSHST = "policy008"; // Device기반 구매내역 관리처리
+	public static final String POLICY_ID_USER_BLOCK_CD = "policy012"; // 회원Part 구매차단 코드
+	public static final String POLICY_ID_MVNO_ALLOW_CD = "policy013"; // MVNO 허용코드
+	public static final String POLICY_ID_PAYMETHOD_ADJUST = "policy014"; // 결제 가능 수단 재정의
+	public static final String POLICY_ID_ALLOW_PURCHASE_DEVICE_CD = "policy015"; // 시험폰 구매허용코드
+	public static final String POLICY_ID_TMILEAGE_SAVE_PAYMENT_METHOD = "policy016"; // T마일리지 적립 대상 결제수단
+	public static final String POLICY_ID_TMILEAGE_SAVE_LIMIT = "policy017"; // T마일리지 적립 한도
+	public static final String POLICY_ID_SAP_TEST_DEVICE = "policy018"; // 시험폰 조회 (SAP)
+	public static final String POLICY_ID_PAYMETHOD_ADJUST_BY_PRODUCT = "policy019"; // 상품 별 결제 가능 수단 재정의
+	public static final String POLICY_ID_PAYMETHOD_ADJUST_BY_PARENT = "policy020"; // IAP 모상품 별 결제 가능 수단 재정의
+	public static final String POLICY_ID_SAP_CHECK_POLICY = "policy021"; // (SAP) 결제정책 조회
+
 	/** SAP 결제정책코드 값 */
 	public static final String SAP_POLICY_LIMIT_ALL = "LIMIT_ALL"; // 전체 결제수단 결제 제한
 	public static final String SAP_POLICY_LIMIT_PHONEBILL = "LIMIT_PHONEBILL"; // 후불결제 제한(전체 상품)
@@ -354,6 +374,27 @@ public class PurchaseConstants extends PurchaseCDConstants {
 
 	/** TSTORE 고객센터 전화번호 */
 	public static final String TSTORE_CALL_CENTER_MDN = "16006573";
+
+	/** 전시 TOP 메뉴 ID */
+	public static final String DISPLAY_TOP_MENU_ID_GAME = "DP01"; // 게임
+	public static final String DISPLAY_TOP_MENU_ID_PHONEDECO = "DP02"; // 폰꾸미기
+	public static final String DISPLAY_TOP_MENU_ID_FUN = "DP03"; // FUN
+	public static final String DISPLAY_TOP_MENU_ID_LIVING = "DP04"; // 생활/위치
+	public static final String DISPLAY_TOP_MENU_ID_MUSIC = "DP05"; // 뮤직
+	public static final String DISPLAY_TOP_MENU_ID_COMIC = "DP06"; // 만화
+	public static final String DISPLAY_TOP_MENU_ID_TVMOVIE = "DP07"; // 방송/영화
+	public static final String DISPLAY_TOP_MENU_ID_EDUVOD = "DP08"; // 어학/교육
+	public static final String DISPLAY_TOP_MENU_ID_HDVOD = "DP09"; // 고화질 동영상
+	public static final String DISPLAY_TOP_MENU_ID_ANDROID = "DP12"; // Android
+	public static final String DISPLAY_TOP_MENU_ID_EBOOK = "DP13"; // 이북(eBook)
+	public static final String DISPLAY_TOP_MENU_ID_TOONCITY = "DP14"; // 툰도시(Comic)
+	public static final String DISPLAY_TOP_MENU_ID_SOCIAL = "DP15"; // 소셜쇼핑
+	public static final String DISPLAY_TOP_MENU_ID_INTEGRATEMUSIC = "DP16"; // 통합뮤직
+	public static final String DISPLAY_TOP_MENU_ID_MOVIE = "DP17"; // 영화
+	public static final String DISPLAY_TOP_MENU_ID_TV = "DP18"; // TV방송
+	public static final String DISPLAY_TOP_MENU_ID_WEBTOON = "DP26"; // 웹툰
+	public static final String DISPLAY_TOP_MENU_ID_SHOPPING = "DP28"; // T Store 쇼핑
+	public static final String DISPLAY_TOP_MENU_ID_SERIALNOVEL = "DP29"; // 연재소설
 
 	/** 구매 예약 데이터 관리 **/
 	/** 전시 응답 규격 **/
