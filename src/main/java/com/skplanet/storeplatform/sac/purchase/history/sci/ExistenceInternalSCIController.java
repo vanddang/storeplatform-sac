@@ -110,7 +110,7 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		ExistenceSacResV2 sacResponse = this.existenceSacService.searchExistenceListV2(sacRequest, "");
 
 		List<ExistenceListInV2Res> userList = new ArrayList<ExistenceListInV2Res>();
-		ExistenceListInV2Res userItem = new ExistenceListInV2Res();
+		ExistenceListInV2Res userItem;
 		List<ExistenceRes> prodList;
 		ExistenceRes prodItem;
 
@@ -237,8 +237,8 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 
 		List<ExistenceInfoSac> deviceList = new ArrayList<ExistenceInfoSac>();
 		List<ExistenceInfoSac> prodList = new ArrayList<ExistenceInfoSac>();
-		ExistenceInfoSac deviceInfo = new ExistenceInfoSac();
-		ExistenceInfoSac prodInfo = new ExistenceInfoSac();
+		ExistenceInfoSac deviceInfo;
+		ExistenceInfoSac prodInfo;
 
 		/********** SC Request Setting Start **********/
 		for (ExistenceUserInfoInV2 reqUserItem : existenceInV2Req.getUserList()) {
