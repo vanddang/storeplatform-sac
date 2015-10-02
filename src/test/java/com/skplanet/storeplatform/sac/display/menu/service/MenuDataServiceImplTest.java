@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.menu.service;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.display.menu.vo.MenuCategory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,14 +37,15 @@ public class MenuDataServiceImplTest {
 
 	@Test
 	public void testSelectBestMenuList() {
+
 		TenantHeader tenant = new TenantHeader();
 		tenant.setTenantId("S01");
-		tenant.setSystemId("S01-01002");
 
 		String menuCategoryCd = "DP01150101";
 
-		List<Menu> list = this.svc.selectBestMenuList(tenant, menuCategoryCd);
+		List<MenuCategory> list = this.svc.selectBestMenuList(tenant, menuCategoryCd);
 		System.out.println("# testSelectBestMenuList()\n" + list);
+
 	}
 
 }

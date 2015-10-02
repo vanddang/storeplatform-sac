@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.menu.service;
 
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuCategoryListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq;
@@ -17,7 +18,7 @@ public interface MenuService {
     /**
      * Best 카테고리 조회
      */
-	public MenuListSacRes searchBestMenuList(String menuCategoryCd, SacRequestHeader requestHeader);
+	MenuCategoryListSacRes searchBestMenuList( String menuCategoryCd, SacRequestHeader requestHeader );
 
 	/**
 	 * <pre>
@@ -30,7 +31,7 @@ public interface MenuService {
 	 *            SacRequestHeader
 	 * @return MenuListSacRes
 	 */
-	public MenuListSacRes searchMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader);
+	MenuListSacRes searchMenuList(MenuSacReq requestVO, SacRequestHeader requestHeader);
 
 	/**
 	 * <pre>
@@ -43,6 +44,6 @@ public interface MenuService {
 	 *            SacRequestHeader
 	 * @return MenuListSacRes
 	 */
-	public MenuDetailSacRes searchMenuDetail(MenuSacReq requestVO, SacRequestHeader requestHeader);
+	MenuDetailSacRes searchMenuDetail(MenuSacReq requestVO, SacRequestHeader requestHeader);
 
 }

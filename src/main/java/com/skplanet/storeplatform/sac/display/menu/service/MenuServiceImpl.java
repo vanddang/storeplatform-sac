@@ -10,15 +10,18 @@
 package com.skplanet.storeplatform.sac.display.menu.service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuCategoryListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.MenuCategoryDetail;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.MenuDetail;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.menu.vo.Menu;
+import com.skplanet.storeplatform.sac.display.menu.vo.MenuCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -44,28 +47,20 @@ public class MenuServiceImpl implements MenuService {
 	private MenuDataService dataSvc;
 
 	@Override
-	public MenuListSacRes searchBestMenuList(String menuCategoryCd, SacRequestHeader requestHeader) {
+	public MenuCategoryListSacRes searchBestMenuList(String menuCategoryCd, SacRequestHeader requestHeader) {
+
 		TenantHeader tenant = requestHeader.getTenantHeader();
-		tenant.setSystemId(DisplayConstants.DP_SHOP_CLIENT_3_0_SYSTEM_ID); // SYSTEM ID 고정(임시)
 
-		List<Menu> resultList = this.dataSvc.selectBestMenuList(tenant, menuCategoryCd);
+		List<MenuCategory> resultList = this.dataSvc.selectBestMenuList( tenant, menuCategoryCd );
 
-		MenuListSacRes menuListSacRes = new MenuListSacRes();
-		CommonResponse commonResponse = new CommonResponse();
+		MenuCategoryListSacRes menuListSacRes = new MenuCategoryListSacRes();
 
-		if (!resultList.isEmpty()) {
-			List<MenuDetail> menuDetailList = new ArrayList<MenuDetail>();
-			for (Menu menu : resultList) {
-				MenuDetail menuDetail = this.convert(menu);
-				menuDetailList.add(menuDetail);
-			}
-
-			menuListSacRes.setMenuDetailList(menuDetailList);
-			commonResponse.setTotalCount(resultList.get(0).getTotalCount());
-		} else {
-			commonResponse.setTotalCount(0);
+		for( MenuCategory menuCategory : resultList ) {
+			menuListSacRes.addMenuCategoryDetail( convert(menuCategory) );
 		}
-		menuListSacRes.setCommonResponse(commonResponse);
+
+		menuListSacRes.getCommonResponse().setTotalCount(resultList.size() );
+
 		return menuListSacRes;
 	}
 
@@ -175,6 +170,19 @@ public class MenuServiceImpl implements MenuService {
 		menuDetail.setPreCategoryInfo(menu.getPreCategoryInfo());
 		menuDetail.setCategoryMenuYn(menu.getCategoryMenuYn());
 		return menuDetail;
+	}
+
+	private MenuCategoryDetail convert( MenuCategory menuCategory ) {
+
+		MenuCategoryDetail menuDetail = new MenuCategoryDetail();
+
+		menuDetail.setTenantId( menuCategory.getTenantId() );
+		menuDetail.setMenuId( menuCategory.getMenuId() );
+		menuDetail.setMenuNm( menuCategory.getMenuNm() );
+		menuDetail.setMenuDesc( menuCategory.getMenuDesc() );
+
+		return menuDetail;
+
 	}
 
 }

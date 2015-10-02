@@ -11,7 +11,7 @@ package com.skplanet.storeplatform.sac.display.menu.service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.display.menu.vo.Menu;
+import com.skplanet.storeplatform.sac.display.menu.vo.MenuCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -38,12 +38,20 @@ public class MenuDataServiceImpl implements MenuDataService {
 	}
 
 	@Override
-	public List<Menu> selectBestMenuList(TenantHeader tenant, String menuCategoryCd) {
+	public List<MenuCategory> selectBestMenuList( TenantHeader tenant, String menuCategoryCd ) {
+
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("tenantId", tenant.getTenantId());
-		paramMap.put("systemId", tenant.getSystemId());
 		paramMap.put("menuCategoryCd", menuCategoryCd);
-		return this.commonDAO.queryForList("Menu.selectBestMenuList", paramMap, Menu.class);
+
+		List<MenuCategory> menuCategories = this.commonDAO.queryForList( "Menu.selectBestMenuList", paramMap, MenuCategory.class );
+
+		for( MenuCategory menuCategory : menuCategories ) {
+			menuCategory.setTenantId( tenant.getTenantId() );
+		}
+
+		return menuCategories;
+
 	}
 
 }

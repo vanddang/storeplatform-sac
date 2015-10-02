@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.menu.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuCategoryListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq;
@@ -10,6 +11,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq.SearchTo
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.menu.service.CategoryService;
 import com.skplanet.storeplatform.sac.display.menu.service.MenuService;
+import com.skplanet.storeplatform.sac.display.menu.vo.MenuCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,7 @@ public class MenuController {
 	 */
 	@RequestMapping(value = "/best/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuListSacRes searchBestMenuList(@RequestParam("menuCategoryCd") String menuCategoryCd, SacRequestHeader requestHeader) {
+	public MenuCategoryListSacRes searchBestMenuList(@RequestParam("menuCategoryCd") String menuCategoryCd, SacRequestHeader requestHeader) {
 		this.logger.debug("MenuController.searchBestMenuList start !!");
 		return this.menuService.searchBestMenuList(menuCategoryCd, requestHeader);
 	}

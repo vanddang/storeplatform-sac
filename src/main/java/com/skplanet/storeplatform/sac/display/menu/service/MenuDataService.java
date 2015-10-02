@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.display.menu.service;
 
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.display.menu.vo.Menu;
+import com.skplanet.storeplatform.sac.display.menu.vo.MenuCategory;
 
 import java.util.List;
 
@@ -25,6 +25,6 @@ public interface MenuDataService {
     /**
      * Best 카테고리 조회
      */
-	public List<Menu> selectBestMenuList(TenantHeader tenant, String menuCategoryCd);
+	List<MenuCategory> selectBestMenuList( TenantHeader tenant, String menuCategoryCd );
 
 }
