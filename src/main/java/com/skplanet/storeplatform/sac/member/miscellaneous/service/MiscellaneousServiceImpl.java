@@ -37,7 +37,6 @@ import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UafmapEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
-import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -54,8 +53,6 @@ import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDCDRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.DCDInfo;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
@@ -76,8 +73,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhon
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateDCDReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateDCDRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
@@ -951,74 +946,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		LOGGER.debug("==>>[SAC] RemoveIndividualPolicyRes.toString() : {}", res.toString());
 		LOGGER.debug("###### MiscellaneousServiceImpl.removeIndividualPolicy [END] ######");
-		return res;
-	}
-
-	/**
-	 * <pre>
-	 * 2.3.16. DCD 가입.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            CreateDCDReq
-	 * @return CreateDCDRes
-	 */
-	@Override
-	public CreateDCDRes createDCD(SacRequestHeader header, CreateDCDReq req) {
-		String systemId = header.getTenantHeader().getSystemId();
-		String tenantId = header.getTenantHeader().getTenantId();
-		String devideId = req.getDeviceId();
-		String regCd = req.getEntryClass();
-		String prodId = req.getProdId();
-		String svcMngNum = "";
-
-		// DCD 가입 요청 체크
-		if (MemberConstants.DCD_REG_CD.equals(regCd) && MemberConstants.DCD_REG_PROD_ID.equals(prodId)) {
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setTenantID(tenantId);
-			commonRequest.setSystemID(systemId);
-
-			UapsEcReq uapsReq = new UapsEcReq();
-			uapsReq.setDeviceId(devideId);
-			uapsReq.setType("mdn");
-
-			UserEcRes uapsRes = null;
-			try {
-				uapsRes = this.uapsSCI.getMappingInfo(uapsReq);
-			} catch (StorePlatformException e) {
-				LOGGER.info("## {} createDCD uaps error : {} {}", devideId, e.getErrorInfo().getCode(), e
-						.getErrorInfo().getMessage());
-			}
-
-			if (uapsRes != null) {
-				if (StringUtils.isNotBlank(uapsRes.getSvcMngNum())) {
-					svcMngNum = uapsRes.getSvcMngNum();
-
-					DCDInfo dcdInfo = new DCDInfo();
-					dcdInfo.setRegChannel(systemId);
-					dcdInfo.setTenantID(tenantId);
-					dcdInfo.setEntryClass(regCd);
-					dcdInfo.setServiceNumber(svcMngNum);
-					dcdInfo.setDeviceID(devideId);
-					dcdInfo.setRegDeviceID(null);
-					dcdInfo.setPriorityClass("0");
-					dcdInfo.setProductID(prodId);
-
-					CreateDCDRequest createDcdReq = new CreateDCDRequest();
-					createDcdReq.setCommonRequest(commonRequest);
-					createDcdReq.setDCDInfo(dcdInfo);
-					this.userSCI.createDCD(createDcdReq);
-				} else {
-					// else svcMngNum 존재하지 않을 경우
-					LOGGER.info("## {} createDCD svcMngNum is not exists : ", devideId);
-				}
-			}
-		}
-
-		CreateDCDRes res = new CreateDCDRes();
-		res.setDeviceId(devideId);
 		return res;
 	}
 

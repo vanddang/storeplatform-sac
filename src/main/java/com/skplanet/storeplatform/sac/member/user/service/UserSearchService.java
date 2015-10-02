@@ -29,8 +29,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantReq;
@@ -91,19 +89,6 @@ public interface UserSearchService {
 	 * @throws Exception
 	 */
 	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req);
-
-	/**
-	 * 
-	 * <pre>
-	 * 회원 프로비저닝 이력 조회.
-	 * </pre>
-	 * 
-	 * @param req
-	 * @return
-	 * @throws Exception
-	 */
-	@Deprecated
-	public GetProvisioningHistoryRes getProvisioningHistory(SacRequestHeader sacHeader, GetProvisioningHistoryReq req);
 
 	/**
 	 * 

@@ -14,8 +14,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhon
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateDCDReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateDCDRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
@@ -235,20 +233,6 @@ public interface MiscellaneousService {
 	 * @return RemoveIndividualPolicyRes
 	 */
 	public RemoveIndividualPolicyRes remIndividualPolicy(SacRequestHeader header, RemoveIndividualPolicyReq req);
-
-	/**
-	 * <pre>
-	 * 2.3.16. DCD 가입.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            CreateDCDReq
-	 * @return CreateDCDRes
-	 */
-	@Deprecated
-	public CreateDCDRes createDCD(SacRequestHeader header, CreateDCDReq req);
 
 	/**
 	 * <pre>

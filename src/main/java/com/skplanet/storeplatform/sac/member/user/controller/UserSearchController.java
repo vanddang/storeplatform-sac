@@ -35,8 +35,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantRes;
@@ -79,26 +77,6 @@ public class UserSearchController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		ExistRes res = this.svc.exist(sacHeader, req);
-
-		LOGGER.info("Response : {}", res.getUserKey());
-
-		return res;
-	}
-
-	/* @RequestMapping(value = "/member/user/getProvisioningHistory/v1", method = RequestMethod.POST) */
-	@ResponseBody
-	public GetProvisioningHistoryRes getProvisioningHistory(@RequestBody GetProvisioningHistoryReq req,
-			SacRequestHeader sacHeader) {
-
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-
-		if ("".equals(deviceId)) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
-		}
-
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		GetProvisioningHistoryRes res = this.svc.getProvisioningHistory(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.getUserKey());
 

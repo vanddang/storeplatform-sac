@@ -26,8 +26,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhon
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateDCDReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateDCDRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
@@ -416,31 +414,6 @@ public class MiscellaneousController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		RemoveIndividualPolicyRes response = this.service.remIndividualPolicy(header, request);
 		LOGGER.info("Response : policy key : {}", response.getKey());
-		return response;
-	}
-
-	/**
-	 * <pre>
-	 * 2.3.16. DCD 가입.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param request
-	 *            RemoveIndividualPolicyReq
-	 * @return RemoveIndividualPolicyRes
-	 */
-	// @RequestMapping(value = "/createDCD/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateDCDRes createDCD(SacRequestHeader header, @RequestBody @Validated CreateDCDReq request) {
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
-
-		if (!ValidationCheckUtils.isMdn(request.getDeviceId())) {
-			throw new StorePlatformException("SAC_MEM_3004");
-		}
-
-		CreateDCDRes response = this.service.createDCD(header, request);
-		LOGGER.info("Response : deviceId : {}", response.getDeviceId());
 		return response;
 	}
 

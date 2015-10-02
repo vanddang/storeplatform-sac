@@ -53,7 +53,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceMbrStatus;
 import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceSystemStats;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.GameCenter;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
@@ -66,8 +65,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGameCenterResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest;
@@ -123,8 +120,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
@@ -309,55 +304,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 				res.setUserMbrPnsh(null);
 			}
 
-		}
-
-		return res;
-	}
-
-	/**
-	 * 회원 프로비저닝 이력 조회
-	 */
-	@Override
-	public GetProvisioningHistoryRes getProvisioningHistory(SacRequestHeader sacHeader, GetProvisioningHistoryReq req) {
-
-		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-
-		/**
-		 * 모번호 조회 (989 일 경우만)
-		 */
-		if (req.getDeviceId() != null) {
-			String opmdMdnInfo = this.mcc.getOpmdMdnInfo(req.getDeviceId());
-			req.setDeviceId(opmdMdnInfo);
-		}
-
-		/* 회원 기본 정보 */
-
-		SearchGameCenterRequest scReq = new SearchGameCenterRequest();
-		scReq.setCommonRequest(commonRequest);
-		if (!deviceId.equals("")) {
-			List<String> workCodeList = new ArrayList<String>();
-			String userChange = MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE;
-			String imuserChange = MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE;
-
-			workCodeList.add(userChange);
-			workCodeList.add(imuserChange);
-
-			scReq.setWorkCodeList(workCodeList);
-			scReq.setDeviceID(req.getDeviceId());
-		}
-
-		SearchGameCenterResponse scRes = this.userSCI.searchGameCenter(scReq);
-		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
-
-		for (GameCenter gameCenter : scRes.getGameCenterList()) {
-			res.setOldUserKey(StringUtil.setTrim(gameCenter.getPreUserKey()));
-			res.setUserKey(StringUtil.setTrim(gameCenter.getUserKey()));
-			res.setWorkCd(StringUtil.setTrim(gameCenter.getWorkCode()));
-			res.setRegDate(StringUtil.setTrim(gameCenter.getRegDate()));
 		}
 
 		return res;
