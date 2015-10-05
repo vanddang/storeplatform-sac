@@ -614,7 +614,7 @@
                 CPROD.CONTENTS_TYPE_CD,
                 CPROD.SELLER_MBR_NO,
                 CEBOOK.STRM_EPSD_CNT,
-                CEBOOK.ISSUE_DAY,
+                EEBOOK.ISSUE_DAY,
                 CEBOOK.CHNL_COMP_NM,
                 CEBOOK.EPSD_CNT,
                 CEBOOK.COMPT_YN,
@@ -707,7 +707,8 @@
                 AND CMCM.USE_YN = 'Y'
                 AND CMC.USE_YN = 'Y'
             ORDER BY
-                EEBOOK.CHAPTER DESC
+                DECODE(ETPROD.PROD_STATUS_CD, 'PD000403', 0, 1)
+                , EEBOOK.CHAPTER DESC
                 , NVL(EUPOL.POSS_LEND_CLSF_CD, 'DP010601') DESC
                 , EPROD.LAST_DEPLOY_DT DESC
         ) TB

@@ -869,7 +869,7 @@
                       , D.CID
                       , D.PROD_GRD_CD   -- 채널 상품 ID 조회
                       , D.REG_DT
-                      , E.ISSUE_DAY    
+                      , L.ISSUE_DAY
                       , E.BOOK_TBCTNS
                       , E.ISBN
                       , E.SAMPL_URL /* 미리보기 URL */
@@ -1032,7 +1032,7 @@
              , TB.EXPO_SELLER_TELNO
              , TB.EXPO_SELLER_EMAIL
           FROM (
-                 SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID ORDER BY J.LAST_DEPLOY_DT DESC ) AS RN
+                 SELECT ROW_NUMBER() OVER ( PARTITION BY B.PROD_ID ORDER BY DECODE(ETPP.PROD_STATUS_CD, 'PD000403', 0, 1), J.LAST_DEPLOY_DT DESC ) AS RN
                       , A.UP_MENU_ID
                       , A.TOP_MENU_ID                                                             
                       , A.MENU_ID
@@ -1113,6 +1113,7 @@
                       , TB_DP_PROD                    J /* 에피소드 상품 */
                       , TB_DP_EBOOK_PROD              L /* 에피소드 상품 */
                       , TB_DP_PROD_IMG                M /* 채널 상품 이미지 */
+                      , TB_DP_TENANT_PROD             ETPP
                       , TB_DP_TENANT_PROD_STATS       N /* 채널 Tenant 상품 통계 건수 */
                       , TB_DP_TENANT_PROD_PRICE       O /* 에피소드 Tenant 상품 가격 */
                       , TB_DP_PROD_DESC               P /* 에피소드 상품 설명 */
@@ -1136,6 +1137,7 @@
                    AND B.PROD_ID = H.PROD_ID
                    AND B.PROD_ID = I.PROD_ID
                    AND B.PROD_ID = M.PROD_ID
+                   AND ETPP.PROD_ID = J.PROD_ID
                    <if test='contentsTypeCd == "PD002502"'>
                    AND I.PART_PROD_ID = M1.PROD_ID(+)
                    </if>
