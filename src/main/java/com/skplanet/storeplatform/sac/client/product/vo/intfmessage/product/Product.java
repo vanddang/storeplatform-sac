@@ -94,6 +94,11 @@ public class Product extends CommonInfo implements Serializable, PromotionEventA
 	 * Badge
 	 */
 	private Badge badge = null;
+	
+	/**
+	 * 웹툰 원고 타입 여부 (Y : 웹툰 원고 타입)
+	 */
+	private String verticalYn;
 
 	/**
 	 * 상품설명.
@@ -376,11 +381,6 @@ public class Product extends CommonInfo implements Serializable, PromotionEventA
 	 * 이북/코믹 스티커
 	 */
 	private String sticker;
-	
-	/**
-	 * 웹툰 원고 타입 여부 (Y : 웹툰 원고 타입)
-	 */
-	private String verticalYn;
 
 	/*
 	 * ETC_PROP
