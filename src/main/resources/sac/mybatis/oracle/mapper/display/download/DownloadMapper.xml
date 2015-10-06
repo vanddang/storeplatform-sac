@@ -886,6 +886,7 @@
                               , CH_B.ARTIST2_NM
                               , CH_B.ARTIST3_NM
                               , CH_C.CHNL_COMP_NM
+                              , NVL(CH_C.VERTICAL_YN, 'N') AS VERTICAL_YN
                               , MP_E.PART_PROD_ID
                               , EP_F.META_CLSF_CD
                               , EP_F.PROD_GRD_CD

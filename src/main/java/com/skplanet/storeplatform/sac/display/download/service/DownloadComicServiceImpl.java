@@ -233,6 +233,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         product.setRights(commonGenerator.generateRights(metaInfo));
         product.setDistributor(commonGenerator.generateDistributor(metaInfo));
         product.setContributor(ebookComicGenerator.generateComicContributor(metaInfo));
+        product.setVerticalYn(metaInfo.getVerticalYn());
 	}
 
 	private void loggingEncResult(Encryption encryption) {

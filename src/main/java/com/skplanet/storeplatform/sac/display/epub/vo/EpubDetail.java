@@ -199,6 +199,8 @@ public class EpubDetail extends CommonInfo {
 	private String storeDlStrmCd; // 소장 다운로드 스트리밍 값
 	private String playDlStrmCd;  // 대여 다운로드 스트리밍 값
 	
+	private String verticalYn;	  // Y : 웹툰 원고 타입
+	
 	public String getTopMenuId() {
 		return this.topMenuId;
 	}
@@ -1127,5 +1129,13 @@ public class EpubDetail extends CommonInfo {
 	 */
 	public void setPlayDlStrmCd(String playDlStrmCd) {
 		this.playDlStrmCd = playDlStrmCd;
+	}
+
+	public String getVerticalYn() {
+		return verticalYn;
+	}
+
+	public void setVerticalYn(String verticalYn) {
+		this.verticalYn = verticalYn;
 	}
 }

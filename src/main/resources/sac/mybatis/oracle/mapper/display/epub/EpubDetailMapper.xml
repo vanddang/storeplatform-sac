@@ -117,7 +117,8 @@
                 , MP.SAMPL_URL
 			  	<if test="userKey != null">  
 			  	, (CASE WHEN ML.STATS_KEY IS NOT NULL THEN 'Y' ELSE 'N' END) AS LIKE_YN
-              	</if> 
+              	</if>
+              	, NVL(MP.VERTICAL_YN, 'N') AS VERTICAL_YN
 		      FROM
 		         (
 	              SELECT  TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
