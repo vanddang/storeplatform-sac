@@ -376,6 +376,11 @@ public class Product extends CommonInfo implements Serializable, PromotionEventA
 	 * 이북/코믹 스티커
 	 */
 	private String sticker;
+	
+	/**
+	 * 웹툰 원고 타입 여부 (Y : 웹툰 원고 타입)
+	 */
+	private String verticalYn;
 
 	/*
 	 * ETC_PROP
@@ -1406,6 +1411,14 @@ public class Product extends CommonInfo implements Serializable, PromotionEventA
 	 */
 	public void setSticker(String sticker) {
 		this.sticker = sticker;
+	}
+
+	public String getVerticalYn() {
+		return verticalYn;
+	}
+
+	public void setVerticalYn(String verticalYn) {
+		this.verticalYn = verticalYn;
 	}
 
 	public String getEtcProp() {
