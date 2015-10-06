@@ -209,6 +209,7 @@ public class MetaInfo extends CommonInfo {
 	private String chnlClsfCd;
 	private Integer unlmtAmt;
 	private Integer periodAmt;
+	private String verticalYn;
 
 	/** 도서 목차 */
 	private String bookTbctns;
@@ -4305,6 +4306,14 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setPeriodAmt(Integer periodAmt) {
 		this.periodAmt = periodAmt;
+	}
+
+	public String getVerticalYn() {
+		return verticalYn;
+	}
+
+	public void setVerticalYn(String verticalYn) {
+		this.verticalYn = verticalYn;
 	}
 
 	public String getBnchProdId() {
