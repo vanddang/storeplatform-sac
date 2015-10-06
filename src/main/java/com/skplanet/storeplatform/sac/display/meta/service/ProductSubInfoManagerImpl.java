@@ -13,6 +13,9 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -30,12 +33,19 @@ import java.util.Map;
 @Service
 public class ProductSubInfoManagerImpl implements ProductSubInfoManager {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductSubInfoManagerImpl.class);
+
     @Autowired
     @Qualifier("sac")
     private CommonDAO commonDAO;
 
     @Override
     public CidPrice getCidPrice(String langCd, String tenantId, String cid) {
+        if(StringUtils.isEmpty(cid)) {
+            logger.warn("CID 값이 비어있습니다");
+            return null;
+        }
+
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("langCd", langCd);
         req.put("tenantId", tenantId);
@@ -45,6 +55,11 @@ public class ProductSubInfoManagerImpl implements ProductSubInfoManager {
 
     @Override
     public CidPrice getCidPriceByEpsdId(String langCd, String tenantId, String epsdId) {
+        if(StringUtils.isEmpty(epsdId)) {
+            logger.warn("epsdId 값이 비어있습니다");
+            return null;
+        }
+
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("langCd", langCd);
         req.put("tenantId", tenantId);
