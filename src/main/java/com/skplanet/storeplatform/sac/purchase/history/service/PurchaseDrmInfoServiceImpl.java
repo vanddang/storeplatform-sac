@@ -69,8 +69,9 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 		 *************************************************/
 		response.setPrchsId(request.getPrchsId());
 		response.setProdId(request.getProdId());
-		response.setResultYn(scResponse.getResultYn());
+
 		if (scResponse != null) {
+			response.setResultYn(scResponse.getResultYn());
 			response.setUseStartDt(scResponse.getUseStartDt());
 			response.setUseExprDt(scResponse.getUseExprDt());
 			response.setDwldStartDt(scResponse.getDwldStartDt());
