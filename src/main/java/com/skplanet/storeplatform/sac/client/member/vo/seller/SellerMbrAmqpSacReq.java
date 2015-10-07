@@ -82,6 +82,8 @@ public class SellerMbrAmqpSacReq implements Serializable {
 
 	private String repTelNo;
 
+	private String repWebsite;
+
 	private String ceoNm;
 
 	private String msalbizDeclYn;
@@ -1204,4 +1206,18 @@ public class SellerMbrAmqpSacReq implements Serializable {
 		this.agreementList = agreementList;
 	}
 
+	/**
+	 * @return the repWebsite
+	 */
+	public String getRepWebsite() {
+		return this.repWebsite;
+	}
+
+	/**
+	 * @param repWebsite
+	 *            the repWebsite to set
+	 */
+	public void setRepWebsite(String repWebsite) {
+		this.repWebsite = repWebsite;
+	}
 }
