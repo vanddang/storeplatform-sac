@@ -77,6 +77,7 @@ public class EbookComicMeta extends CommonInfo {
     private String usePeriodUnitCd;
     private String usePeriodNm;
     private Integer usePeriod;
+    private String verticalYn;		// 웹툰 원고 보기
 
 
     public Integer getChnlUnlmtAmt() {
@@ -494,4 +495,12 @@ public class EbookComicMeta extends CommonInfo {
     public void setUsePeriod(Integer usePeriod) {
         this.usePeriod = usePeriod;
     }
+
+	public String getVerticalYn() {
+		return verticalYn;
+	}
+
+	public void setVerticalYn(String verticalYn) {
+		this.verticalYn = verticalYn;
+	}
 }

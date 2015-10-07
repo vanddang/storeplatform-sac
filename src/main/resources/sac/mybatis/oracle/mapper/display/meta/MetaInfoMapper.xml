@@ -570,6 +570,7 @@
                 FROM TB_CM_CD Y
                   WHERE Y.CD_ID(+) = TB.BADGE_CD AND Y.LANG_CD(+) = TB.LANG_CD
                 ) AS BADGE_OPT_TEXT
+             , TB.VERTICAL_YN
           FROM (
                  SELECT 
                         ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
@@ -595,6 +596,7 @@
                       , E.CHNL_COMP_NM
                       , E.EPSD_CNT
                       , E.COMPT_YN
+                      , NVL(E.VERTICAL_YN, 'N') AS VERTICAL_YN
                       , F.PROD_NM
                       , F.ARTIST1_NM
                       , F.ARTIST2_NM

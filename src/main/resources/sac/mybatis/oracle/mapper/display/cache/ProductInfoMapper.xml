@@ -600,6 +600,7 @@
                 FROM TB_CM_CD Y
                 WHERE Y.CD_ID(+) = TB.BADGE_CD AND Y.LANG_CD(+) = TB.LANG_CD
               ) AS BADGE_OPT_TEXT
+            , VERTICAL_YN
         FROM (
             SELECT
                 CMC.UP_MENU_ID,
@@ -621,6 +622,7 @@
                 CEBOOK.SERIES_CONTENTS_CNT,
                 CEBOOK.BOOK_CONTENTS_CNT,
                 CEBOOK.MGZIN_CONTENTS_CNT,
+                NVL(CEBOOK.VERTICAL_YN, 'N') AS VERTICAL_YN,
                 CPDESC.PROD_NM,
                 CPDESC.ARTIST1_NM,
                 CPDESC.ARTIST2_NM,

@@ -557,6 +557,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
+		// 웹툰 원고 보기
+		product.setVerticalYn(metaInfo.getVerticalYn());
 		// 마일리지
 		this.appendMileageInfo(metaInfo, product);
 
