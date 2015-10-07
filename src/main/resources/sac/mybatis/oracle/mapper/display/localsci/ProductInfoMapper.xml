@@ -538,6 +538,7 @@
                  , CE.SERIES_CONTENTS_CNT
                  , CE.MGZIN_CONTENTS_CNT
                  , NVL(CPROD.PLUS19_YN, 'N') AS PLUS19_YN
+                 , NVL(E.VERTICAL_YN, 'N') AS VERTICAL_YN
              FROM  TB_DP_MENU_CATEGORY           A
                  , TB_DP_MENU_CATEGORY_PROD_MAPG B
                  , TB_DP_MENU_CATEGORY_DESC      C
