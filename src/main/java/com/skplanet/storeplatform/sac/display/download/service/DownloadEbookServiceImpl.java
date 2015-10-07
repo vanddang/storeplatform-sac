@@ -245,6 +245,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		product.setRights(commonGenerator.generateRights(metaInfo));
 		product.setDistributor(commonGenerator.generateDistributor(metaInfo));
 		product.setContributor(ebookComicGenerator.generateEbookContributor(metaInfo));
+		product.setVerticalYn(metaInfo.getVerticalYn());
 	}
 	private void loggingEncResult(Encryption encryption) {
 		log.debug("-----------------------------------------------------------");
