@@ -45,7 +45,6 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 
 		// SC request/response VO
 		PurchaseDrmInfoScReq scRequest = new PurchaseDrmInfoScReq();
-		PurchaseDrmInfoScRes scResponse = new PurchaseDrmInfoScRes();
 
 		// SAC Response VO
 		PurchaseDrmInfoSacInRes response = new PurchaseDrmInfoSacInRes();
@@ -63,18 +62,20 @@ public class PurchaseDrmInfoServiceImpl implements PurchaseDrmInfoService {
 		 *************************************************/
 
 		/** SC Call */
-		scResponse = this.purchaseDrmInfoSCI.updatePrchaseDrm(scRequest);
+		PurchaseDrmInfoScRes scResponse = this.purchaseDrmInfoSCI.updatePrchaseDrm(scRequest);
 
 		/*************************************************
 		 * SC -> SAC Response Setting Start
 		 *************************************************/
 		response.setPrchsId(request.getPrchsId());
-		response.setResultYn(scResponse.getResultYn());
 		response.setProdId(request.getProdId());
-		response.setUseStartDt(scResponse.getUseStartDt());
-		response.setUseExprDt(scResponse.getUseExprDt());
-		response.setDwldStartDt(scResponse.getDwldStartDt());
-		response.setDwldExprDt(scResponse.getDwldExprDt());
+		response.setResultYn(scResponse.getResultYn());
+		if (scResponse != null) {
+			response.setUseStartDt(scResponse.getUseStartDt());
+			response.setUseExprDt(scResponse.getUseExprDt());
+			response.setDwldStartDt(scResponse.getDwldStartDt());
+			response.setDwldExprDt(scResponse.getDwldExprDt());
+		}
 		/*************************************************
 		 * SC -> SAC Response Setting End
 		 *************************************************/
