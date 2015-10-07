@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.purchase.client.common.vo.SapNoti;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreateSapNotiScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
+import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
@@ -130,11 +131,11 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 인터파크/씨네21 전송 처리.
 	 * </pre>
-	 * 
+	 *
 	 * @param prchsDtlMoreList
 	 */
 	private void createInterworking(List<PrchsDtlMore> prchsDtlMoreList) {
@@ -175,11 +176,11 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	}
 
 	/*
-	 * 
+	 *
 	 * <pre> 결제완료Noti. </pre>
-	 * 
+	 *
 	 * @param prchsDtlMoreList 구매정보 목록
-	 * 
+	 *
 	 * @param notifyPaymentReq 결제처리결과 Noti 정보
 	 */
 	private void sendPurchaseNoti(List<PrchsDtlMore> prchsDtlMoreList, NotifyPaymentSacReq notifyPaymentReq) {
@@ -273,7 +274,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			SendPurchaseNotiSellerInfoEc seller = null;
 			for (PrchsDtlMore prchsInfo : prchsDtlMoreList) {
 
-				String prodNm = null;
+				PurchaseProduct purchaseProduct = new PurchaseProduct();
 
 				List<String> prodIdList = new ArrayList<String>();
 				prodIdList.add(prchsInfo.getProdId());
@@ -284,7 +285,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 						.searchPurchaseProductList(prchsDtlMore.getTenantId(), prchsDtlMore.getCurrencyCd(), null,
 								prodIdList, false);
 				if (purchaseProductMap != null && purchaseProductMap.get(prchsInfo.getProdId()) != null) {
-					prodNm = purchaseProductMap.get(prchsInfo.getProdId()).getProdNm();
+					purchaseProduct = purchaseProductMap.get(prchsInfo.getProdId());
 				}
 
 				reservedDataMap = this.purchaseOrderMakeDataService
@@ -292,7 +293,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 
 				product = new SendPurchaseNotiProductInfoEc();
 				product.setProdId(prchsInfo.getProdId());
-				product.setProdNm(prodNm);
+				product.setProdNm(purchaseProduct.getProdNm());
 				product.setProdAmt(prchsInfo.getProdAmt());
 				product.setAutoPrchsYn(reservedDataMap.get("autoPrchsYn"));
 				if (StringUtils.equals(product.getAutoPrchsYn(), "Y")) {
@@ -300,16 +301,21 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 					product.setAutoPrchsPeriodValue(Integer.parseInt(reservedDataMap.get("autoPrchsPeriodValue")));
 				}
 
-				SellerMbrSac sellerMbrSac = this.purchaseMemberRepository.searchSellerInfo(reservedDataMap
-						.get("sellerMbrNo"));
+				SellerMbrSac sellerMbrSac = this.purchaseMemberRepository.searchSellerInfo(
+						reservedDataMap.get("sellerMbrNo"));
 				if (sellerMbrSac != null) {
 					seller = new SendPurchaseNotiSellerInfoEc();
 					seller.setSellerCompany(sellerMbrSac.getSellerCompany());
+					seller.setBizRegNumber(sellerMbrSac.getBizRegNumber());
 					seller.setSellerName(sellerMbrSac.getSellerName());
-					seller.setSellerEmail(sellerMbrSac.getSellerEmail());
 					seller.setSellerAddress(sellerMbrSac.getSellerAddress());
 					seller.setSellerPhone(sellerMbrSac.getRepPhone());
-					seller.setBizRegNumber(sellerMbrSac.getBizRegNumber());
+
+					// 앱 상품- 1순위:전시 정보, 2순위:회원정보
+					if(StringUtils.equals(purchaseProduct.getSvcGrpCd(), PurchaseCDConstants.DISPLAY_SVCGRPCD_APP))
+						seller.setSellerEmail(StringUtils.defaultString(purchaseProduct.getSellerEmail(), sellerMbrSac.getSellerEmail()));
+					else // 앱 이외 상품-회원 정보
+						seller.setSellerEmail(sellerMbrSac.getSellerEmail());
 
 					product.setSellerInfo(seller);
 				}
