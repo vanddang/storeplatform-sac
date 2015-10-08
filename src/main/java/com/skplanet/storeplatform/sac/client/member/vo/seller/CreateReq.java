@@ -100,6 +100,8 @@ public class CreateReq extends CommonInfo {
 	private String repPhoneArea;
 	/** 대표전화번호. */
 	private String repPhone;
+	/** 대표 웹사이트. */
+	private String repWebsite;
 	/** 대표 Email. */
 	private String repEmail;
 	/** 웹사이트 정보. */
@@ -601,6 +603,21 @@ public class CreateReq extends CommonInfo {
 	 */
 	public void setRepPhoneArea(String repPhoneArea) {
 		this.repPhoneArea = repPhoneArea;
+	}
+
+	/**
+	 * @return the repWebsite
+	 */
+	public String getRepWebsite() {
+		return this.repWebsite;
+	}
+
+	/**
+	 * @param repWebsite
+	 *            the repWebsite to set
+	 */
+	public void setRepWebsite(String repWebsite) {
+		this.repWebsite = repWebsite;
 	}
 
 	/**

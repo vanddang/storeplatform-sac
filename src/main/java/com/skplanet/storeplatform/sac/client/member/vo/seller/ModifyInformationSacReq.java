@@ -78,6 +78,8 @@ public class ModifyInformationSacReq extends CommonInfo {
 	private String repPhoneArea;
 	/** 대표전화번호. */
 	private String repPhone;
+	/** 대표 웹사이트. */
+	private String repWebsite;
 	/** 대표 Email. */
 	private String repEmail;
 	/** 웹사이트. */
@@ -476,6 +478,21 @@ public class ModifyInformationSacReq extends CommonInfo {
 	 */
 	public void setRepPhone(String repPhone) {
 		this.repPhone = repPhone;
+	}
+
+	/**
+	 * @return the repWebsite
+	 */
+	public String getRepWebsite() {
+		return this.repWebsite;
+	}
+
+	/**
+	 * @param repWebsite
+	 *            the repWebsite to set
+	 */
+	public void setRepWebsite(String repWebsite) {
+		this.repWebsite = repWebsite;
 	}
 
 	/**

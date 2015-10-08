@@ -49,6 +49,8 @@ public class SellerMbrSac extends CommonInfo {
 	private String repPhoneArea;
 	/** 대표 전화 번호 . */
 	private String repPhone;
+	/** 대표 웹사이트 . */
+	private String repWebsite;
 	/** 대표 이메일 . */
 	private String repEmail;
 	/** 판매자 분류 코드. */
@@ -488,6 +490,21 @@ public class SellerMbrSac extends CommonInfo {
 	 */
 	public void setRepPhone(String repPhone) {
 		this.repPhone = repPhone;
+	}
+
+	/**
+	 * @return the repWebsite
+	 */
+	public String getRepWebsite() {
+		return this.repWebsite;
+	}
+
+	/**
+	 * @param repWebsite
+	 *            the repWebsite to set
+	 */
+	public void setRepWebsite(String repWebsite) {
+		this.repWebsite = repWebsite;
 	}
 
 	/**

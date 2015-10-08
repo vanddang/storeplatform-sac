@@ -33,6 +33,8 @@ public class ConversionClassSacReq extends CommonInfo {
 	private String charger;
 	/** 대표 Email. */
 	private String repEmail;
+	/** 대표 웹사이트. */
+	private String repWebsite;
 	/** 무선전화 국가번호. */
 	private String sellerPhoneCountry;
 	/** 무선전화 번호. */
@@ -224,6 +226,21 @@ public class ConversionClassSacReq extends CommonInfo {
 	 */
 	public void setRepEmail(String repEmail) {
 		this.repEmail = repEmail;
+	}
+
+	/**
+	 * @return the repWebsite
+	 */
+	public String getRepWebsite() {
+		return this.repWebsite;
+	}
+
+	/**
+	 * @param repWebsite
+	 *            the repWebsite to set
+	 */
+	public void setRepWebsite(String repWebsite) {
+		this.repWebsite = repWebsite;
 	}
 
 	/**
