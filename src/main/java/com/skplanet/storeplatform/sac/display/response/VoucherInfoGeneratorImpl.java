@@ -349,7 +349,7 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 		support.setType("play");
 
 		// 대여, 소장/대여 경우
-		if (metaInfo.getPossLendClsfCd().equals("DP010602") || metaInfo.getPossLendClsfCd().equals("DP010603")) {
+		if ("DP010602".equals(metaInfo.getPossLendClsfCd()) || "DP010603".equals(metaInfo.getPossLendClsfCd())) {
 			support.setText("Y");
 		} else {
 			support.setText("N");
@@ -361,7 +361,7 @@ public class VoucherInfoGeneratorImpl implements VoucherInfoGenerator {
 		support.setType("store");
 
 		// 소장, 소장/대여 경우
-		if (metaInfo.getPossLendClsfCd().equals("DP010601") || metaInfo.getPossLendClsfCd().equals("DP010603")) {
+		if ("DP010601".equals(metaInfo.getPossLendClsfCd()) || "DP010603".equals(metaInfo.getPossLendClsfCd())) {
 			support.setText("Y");
 		} else {
 			support.setText("N");
