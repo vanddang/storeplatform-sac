@@ -928,6 +928,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setIsDomestic(sellerMbr.getIsDomestic());
 			sellerMbrRes.setIsRecvEmail(sellerMbr.getIsRecvEmail());
 			sellerMbrRes.setIsRecvSms(sellerMbr.getIsRecvSMS());
+			sellerMbrRes.setRepWebsite(sellerMbr.getRepWebsite());
 			sellerMbrRes.setRepEmail(sellerMbr.getRepEmail());
 			sellerMbrRes.setSellerAddress(sellerMbr.getSellerAddress());
 			sellerMbrRes.setSellerBizNumber(sellerMbr.getSellerBizNumber());

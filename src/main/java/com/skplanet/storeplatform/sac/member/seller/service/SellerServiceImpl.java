@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
-import com.skplanet.storeplatform.sac.mq.client.rater.vo.RaterMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +95,7 @@ import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.mq.client.rater.vo.RaterMessage;
 
 /**
  * 판매자 회원의 가입/수정/탈퇴/인증 기능정의
@@ -301,8 +301,13 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
 		// 담당자 이메일
 		sellerMbr.setCustomerEmail(req.getCustomerEmail());
+		// 대표 웹사이트
+		sellerMbr.setRepWebsite(req.getRepWebsite());
+		// 대표 이메일
 		sellerMbr.setRepEmail(req.getRepEmail());
+		// 대표 전화번호
 		sellerMbr.setRepPhone(req.getRepPhone());
+		// 대표 전화 국가번호
 		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
 		// 법인등록번호
 		sellerMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
@@ -518,6 +523,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
 		sellerMbr.setCustomerEmail(req.getCustomerEmail());
 		sellerMbr.setCharger(req.getCharger());
+		sellerMbr.setRepWebsite(req.getRepWebsite());
 		sellerMbr.setRepEmail(req.getRepEmail());
 		sellerMbr.setRepPhone(req.getRepPhone());
 		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
@@ -553,7 +559,7 @@ public class SellerServiceImpl implements SellerService {
 		ModifyInformationSacRes res = new ModifyInformationSacRes();
 		res.setSellerKey(updateSellerResponse.getSellerKey());
 
-        raterAmqpTemplate.convertAndSend(RaterMessage.newMsgWithSellerId(sellerMbr.getSellerID()));
+		this.raterAmqpTemplate.convertAndSend(RaterMessage.newMsgWithSellerId(sellerMbr.getSellerID()));
 		LOGGER.debug("############ SellerServiceImpl.modInformation() [END] ############");
 		return res;
 	}
@@ -938,6 +944,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerUpgrade.setBankAccount(req.getBankAccount());
 		sellerUpgrade.setSellerClassTo(req.getSellerClassTo());
 		sellerUpgrade.setRepEmail(req.getRepEmail());
+		sellerUpgrade.setRepWebsite(req.getRepWebsite());
 		sellerUpgrade.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
 		sellerUpgrade.setSellerBizType(req.getSellerBizType());
 		sellerUpgrade.setSellerBizCategory(req.getSellerBizCategory());
@@ -1506,8 +1513,13 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
 		// 담당자 이메일
 		sellerMbr.setCustomerEmail(req.getCustomerEmail());
+		// 대표 웹사이트
+		sellerMbr.setRepWebsite(req.getRepWebsite());
+		// 대표 이메일
 		sellerMbr.setRepEmail(req.getRepEmail());
+		// 대표전화 번호
 		sellerMbr.setRepPhone(req.getRepPhone());
+		// 대표전화 국가번호
 		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
 		// 법인등록번호
 		sellerMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
