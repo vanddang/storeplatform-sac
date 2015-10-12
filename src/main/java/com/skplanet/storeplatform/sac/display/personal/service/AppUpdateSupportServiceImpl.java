@@ -139,6 +139,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
         }
 
         if (CollectionUtils.isNotEmpty(pkgsToFind)) {
+            final DisplayCryptUtils.SacSha1Mac sha1Mac = DisplayCryptUtils.createSha1Mac();
             PartialProcessor.process(pkgsToFind, new PartialProcessorHandler<String>() {
                 @Override
                 public String processPaddingItem() {
@@ -152,7 +153,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
                     List<String> hashedPkgList = Lists.transform(partialList, new Function<String, String>() {
                         @Override
                         public String apply(String input) {
-                            return DisplayCryptUtils.hashPkgNm(input);
+                            return sha1Mac.hashPkgNm(input);
                         }
                     });
 
@@ -233,6 +234,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
     public List<SubContentInfo> searchSubContentByPkg(final String tenantId, final String deviceModelCd, List<String> pkgList) {
 
         final List<SubContentInfo> res = new ArrayList<SubContentInfo>(pkgList.size());
+        final DisplayCryptUtils.SacSha1Mac sha1Mac = DisplayCryptUtils.createSha1Mac();
 
         PartialProcessor.process(pkgList, new PartialProcessorHandler<String>() {
             @Override
@@ -246,7 +248,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
                 List<String> hashedPkgList = Lists.transform(partialList, new Function<String, String>() {
                     @Override
                     public String apply(String input) {
-                        return DisplayCryptUtils.hashPkgNm(input);
+                        return sha1Mac.hashPkgNm(input);
                     }
                 });
 

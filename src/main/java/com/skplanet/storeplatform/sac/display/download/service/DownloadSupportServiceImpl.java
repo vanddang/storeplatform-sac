@@ -146,9 +146,9 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
     public void createUserDownloadInfo(String mdn, String aid, String tenantId, String prodId) {
         Map<String, Object> req = new HashMap<String, Object>();
 
-        String key = DisplayCryptUtils.hashMdnAidKey(mdn, aid);
+        String key = DisplayCryptUtils.createSha1Mac().hashMdnAidKey(mdn, aid);
         if (Strings.isNullOrEmpty(key)) {
-            log.error("사용자의 다운로드 이력을 저장하지 못했습니다. (mdn:{}, aid:{}, tenantId:{})", mdn, aid, tenantId);
+            log.error("다운로드 이력 키를 해시 처리하는데 문제가 발생했습니다. (mdn:{}, aid:{}, tenantId:{})", mdn, aid, tenantId);
             return;
         }
 

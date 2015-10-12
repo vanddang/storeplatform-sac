@@ -90,6 +90,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
     @Override
     public String getProdIdByPkgNm(String pkgNm) {
+        final DisplayCryptUtils.SacSha1Mac sha1Mac = DisplayCryptUtils.createSha1Mac();
 
         return RedisSimpleAction.getOrLoad(connectionFactory, pkgNm,
                 new RedisSimpleGetOrLoadHandler<String, String>() {
@@ -109,7 +110,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
                     @Override
                     public String makeValue(String pkgNm) {
-                        String hashedPkgNm = DisplayCryptUtils.hashPkgNm(pkgNm);
+                        String hashedPkgNm = sha1Mac.hashPkgNm(pkgNm);
                         Map<String, Object> req = new HashMap<String, Object>();
                         req.put("tenantIds", ServicePropertyManager.getSupportTenantList());
                         req.put("hashedPkgNm", hashedPkgNm);

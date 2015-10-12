@@ -47,7 +47,7 @@ public class UserDownloadInfoServiceImpl implements UserDownloadInfoService {
         if(aid == null)
             throw new StorePlatformException("SAC_DSP_0005", param.getPartProdId());
 
-        String key = DisplayCryptUtils.hashMdnAidKey(param.getMdn(), aid);
+        String key = DisplayCryptUtils.createSha1Mac().hashMdnAidKey(param.getMdn(), aid);
         if(Strings.isNullOrEmpty(key))
             throw new IllegalStateException();
 

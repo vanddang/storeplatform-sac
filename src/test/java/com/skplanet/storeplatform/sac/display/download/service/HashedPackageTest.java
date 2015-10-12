@@ -9,9 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.personal.service.AppUpdateSupportService;
 import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,9 +73,10 @@ public class HashedPackageTest {
         StopWatch sw = new StopWatch();
         sw.start();
         List<String> res = new ArrayList<String>(pkgList.size());
+        DisplayCryptUtils.SacSha1Mac sha1Mac = DisplayCryptUtils.createSha1Mac();
 
         for (String nm : pkgList) {
-            res.add(DisplayCryptUtils.hashPkgNm(nm));
+            res.add(sha1Mac.hashPkgNm(nm));
         }
 
         sw.stop();

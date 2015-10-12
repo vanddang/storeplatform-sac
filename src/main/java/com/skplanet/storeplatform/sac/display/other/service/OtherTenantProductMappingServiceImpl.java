@@ -146,7 +146,7 @@ public class OtherTenantProductMappingServiceImpl implements OtherTenantProductM
         if(aid == null)
             return new OtherUserTenantRes(param.getTenantId());
 
-        String key = DisplayCryptUtils.hashMdnAidKey(param.getMdn(), aid);
+        String key = DisplayCryptUtils.createSha1Mac().hashMdnAidKey(param.getMdn(), aid);
         if(Strings.isNullOrEmpty(key))
             throw new IllegalStateException();
 
