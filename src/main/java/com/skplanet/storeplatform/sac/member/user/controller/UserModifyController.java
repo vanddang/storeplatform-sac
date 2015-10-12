@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
@@ -37,6 +39,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -334,6 +338,48 @@ public class UserModifyController {
 			@RequestBody @Validated RemoveSocialAccountSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		RemoveSocialAccountSacRes res = this.svc.removeSocialAccount(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.62.	배송지 정보 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateDeliveryInfoSacReq
+	 * @return CreateDeliveryInfoSacRes
+	 */
+	@RequestMapping(value = "/member/user/createDeliveryInfo/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateDeliveryInfoSacRes createDeliveryInfo(SacRequestHeader header,
+			@RequestBody @Validated CreateDeliveryInfoSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		CreateDeliveryInfoSacRes res = this.svc.createDeliveryInfo(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.63.	배송지 정보 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            RemoveDeliveryInfoSacReq
+	 * @return RemoveDeliveryInfoSacRes
+	 */
+	@RequestMapping(value = "/member/user/removeDeliveryInfo/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public RemoveDeliveryInfoSacRes removeDeliveryInfo(SacRequestHeader header,
+			@RequestBody @Validated RemoveDeliveryInfoSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		RemoveDeliveryInfoSacRes res = this.svc.removeDeliveryInfo(header, req);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}

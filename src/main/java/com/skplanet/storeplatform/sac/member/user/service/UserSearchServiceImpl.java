@@ -55,10 +55,15 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAfterUserKeyRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAfterUserKeyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfo;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
@@ -95,6 +100,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserS
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeliveryInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.GradeInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
@@ -129,6 +135,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSa
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSac;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
@@ -2319,5 +2327,97 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 		res.setSsoCredential(StringUtils.defaultString(ssoCredential, ""));
 		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.64.	배송지 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchDeliveryInfoSacReq
+	 * @return SearchDeliveryInfoSacRes
+	 */
+	@Override
+	public SearchDeliveryInfoSacRes searchDeliveryInfo(SacRequestHeader header, SearchDeliveryInfoSacReq req) {
+
+		// 1. 응답 객체 셋팅
+		SearchDeliveryInfoSacRes res = new SearchDeliveryInfoSacRes();
+		SearchDeliveryInfoResponse scRes = null;
+		List<DeliveryInfo> deliveryInfoList = new ArrayList<DeliveryInfo>();
+
+		// 2. header, userKey 셋팅
+		SearchDeliveryInfoRequest scReq = new SearchDeliveryInfoRequest();
+		scReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		scReq.setUserKey(req.getUserKey());
+
+		// 3. SC 배송지 조회 호출
+		try {
+			scRes = this.userSCI.searchDeliveryInfo(scReq);
+
+			// 3-1. 조회값이 있으면 res셋팅
+			if (scRes.getSearchDeliveryInfoList() != null && scRes.getSearchDeliveryInfoList().size() > 0) {
+				res.setUserKey(req.getUserKey());
+				for (SearchDeliveryInfo tempDeliveryInfo : scRes.getSearchDeliveryInfoList()) {
+					DeliveryInfo deliveryInfo = new DeliveryInfo();
+					deliveryInfo.setDeliveryTypeCd(tempDeliveryInfo.getDeliveryTypeCd());
+					deliveryInfo.setDeliveryNm(tempDeliveryInfo.getDeliveryNm());
+					deliveryInfo.setReceverNm(tempDeliveryInfo.getReceverNm());
+					deliveryInfo.setSenderNm(tempDeliveryInfo.getSenderNm());
+					deliveryInfo.setZip(tempDeliveryInfo.getZip());
+					deliveryInfo.setAddr(tempDeliveryInfo.getAddr());
+					deliveryInfo.setDtlAddr(tempDeliveryInfo.getDtlAddr());
+					deliveryInfo.setConnTelNo(tempDeliveryInfo.getConnTelNo());
+					deliveryInfo.setDeliveryMsg(tempDeliveryInfo.getDeliveryMsg());
+					deliveryInfo.setDeliverySeq(tempDeliveryInfo.getDeliverySeq());
+					deliveryInfo.setRegDate(tempDeliveryInfo.getRegDate());
+					deliveryInfo.setUseDate(tempDeliveryInfo.getUseDate());
+					deliveryInfoList.add(deliveryInfo);
+				}
+				res.setDeliveryInfoList(deliveryInfoList);
+			}
+		} catch (StorePlatformException e) {
+			// 3-2. 조회값이 없으면
+			if (e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				// 3-2-1. userKey변환이력 조회 : 모바일 > ID회원 전환자중 모바일회원의 userkey로 접근할수 있기 때문에 변환 이력에서 조회
+				SearchAfterUserKeyRequest scKeyReq = new SearchAfterUserKeyRequest();
+				scKeyReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
+				scKeyReq.setUserKey(req.getUserKey());
+
+				SearchAfterUserKeyResponse scKeyRes = this.userSCI.searchAfterUserKey(scKeyReq);
+
+				// 3-2-1-1. userKey변환이력이 있으면 변환한 userKey로 SC 배송지 조회 호출후 res셋팅
+				if (scKeyRes != null) {
+					scReq.setUserKey(scKeyRes.getUserKey());
+					scRes = this.userSCI.searchDeliveryInfo(scReq);
+
+					if (scRes.getSearchDeliveryInfoList() != null && scRes.getSearchDeliveryInfoList().size() > 0) {
+						res.setUserKey(req.getUserKey());
+						for (SearchDeliveryInfo tempDeliveryInfo : scRes.getSearchDeliveryInfoList()) {
+							DeliveryInfo deliveryInfo = new DeliveryInfo();
+							deliveryInfo.setDeliveryTypeCd(tempDeliveryInfo.getDeliveryTypeCd());
+							deliveryInfo.setDeliveryNm(tempDeliveryInfo.getDeliveryNm());
+							deliveryInfo.setReceverNm(tempDeliveryInfo.getReceverNm());
+							deliveryInfo.setSenderNm(tempDeliveryInfo.getSenderNm());
+							deliveryInfo.setZip(tempDeliveryInfo.getZip());
+							deliveryInfo.setAddr(tempDeliveryInfo.getAddr());
+							deliveryInfo.setDtlAddr(tempDeliveryInfo.getDtlAddr());
+							deliveryInfo.setConnTelNo(tempDeliveryInfo.getConnTelNo());
+							deliveryInfo.setDeliveryMsg(tempDeliveryInfo.getDeliveryMsg());
+							deliveryInfo.setDeliverySeq(tempDeliveryInfo.getDeliverySeq());
+							deliveryInfo.setRegDate(tempDeliveryInfo.getRegDate());
+							deliveryInfo.setUseDate(tempDeliveryInfo.getUseDate());
+							deliveryInfoList.add(deliveryInfo);
+						}
+						res.setDeliveryInfoList(deliveryInfoList);
+					}
+				}
+			}
+		}
+
+		return res;
+
 	}
 }

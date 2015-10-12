@@ -37,6 +37,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSa
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSac;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
@@ -329,5 +331,18 @@ public interface UserSearchService {
 	 * @return CreateSSOCredentialSacRes
 	 */
 	public CreateSSOCredentialSacRes createSSOCredential(SacRequestHeader header, CreateSSOCredentialSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.64.	배송지 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchDeliveryInfoSacReq
+	 * @return SearchDeliveryInfoSacRes
+	 */
+	public SearchDeliveryInfoSacRes searchDeliveryInfo(SacRequestHeader header, SearchDeliveryInfoSacReq req);
 
 }

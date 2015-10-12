@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
@@ -25,6 +27,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -152,4 +156,31 @@ public interface UserModifyService {
 	 * @return RemoveSocialAccountSacRes
 	 */
 	public RemoveSocialAccountSacRes removeSocialAccount(SacRequestHeader header, RemoveSocialAccountSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.62.	배송지 정보 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateDeliveryInfoSacReq
+	 * @return CreateDeliveryInfoSacRes
+	 */
+	public CreateDeliveryInfoSacRes createDeliveryInfo(SacRequestHeader header, CreateDeliveryInfoSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.63.	배송지 정보 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            RemoveDeliveryInfoSacReq
+	 * @return RemoveDeliveryInfoSacRes
+	 */
+	public RemoveDeliveryInfoSacRes removeDeliveryInfo(SacRequestHeader header, RemoveDeliveryInfoSacReq req);
+
 }

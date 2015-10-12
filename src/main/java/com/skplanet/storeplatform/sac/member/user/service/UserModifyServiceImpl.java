@@ -45,8 +45,11 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
@@ -64,6 +67,8 @@ import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
@@ -82,6 +87,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
@@ -1479,4 +1486,92 @@ public class UserModifyServiceImpl implements UserModifyService {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 2.1.62.	배송지 정보 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateDeliveryInfoSacReq
+	 * @return CreateDeliveryInfoSacRes
+	 */
+	@Override
+	public CreateDeliveryInfoSacRes createDeliveryInfo(SacRequestHeader header, CreateDeliveryInfoSacReq req) {
+
+		CreateDeliveryInfoSacRes res = new CreateDeliveryInfoSacRes();
+
+		// 1-1. 배송지 타입 유효성 검사 성공 - 등록/수정 진행
+		if (!StringUtils.isBlank(req.getDeliveryTypeCd())) {
+			// 배송지 등록/수정 공통 셋팅
+			CreateDeliveryInfoRequest scReq = new CreateDeliveryInfoRequest();
+			scReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
+			scReq.setUserKey(req.getUserKey());
+			scReq.setDeliveryTypeCd(req.getDeliveryTypeCd());
+			scReq.setDeliveryNm(req.getDeliveryNm());
+			scReq.setReceiverNm(req.getReceiverNm());
+			scReq.setSenderNm(req.getSenderNm());
+			scReq.setZip(req.getZip());
+			scReq.setAddr(req.getAddr());
+			scReq.setDtlAddr(req.getDtlAddr());
+			scReq.setConnTelNo(req.getConnTelNo());
+			scReq.setDeliveryMsg(req.getDeliveryMsg());
+			// 배송지 시퀀스가 있으면 셋팅
+			if (!StringUtils.isBlank(req.getDeliverySeq())) {
+				scReq.setDeliverySeq(req.getDeliverySeq());
+			}
+
+			try {
+				// 등록 및 수정 진행
+				this.userSCI.createDeliveryInfo(scReq);
+				res.setUserKey(req.getUserKey());
+			} catch (StorePlatformException spe) {
+				LOGGER.info("배송지 정보 등록/수정 실패 [{}]", req.getUserKey());
+				throw spe;
+			}
+
+		}
+		// 1-2. 배송지 타입 유효성 검사 실패 - Exception 처리
+		else {
+			throw new StorePlatformException("SAC_MEM_0002", "배송지 타입");
+		}
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.63.	배송지 정보 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            RemoveDeliveryInfoSacReq
+	 * @return RemoveDeliveryInfoSacRes
+	 */
+	@Override
+	public RemoveDeliveryInfoSacRes removeDeliveryInfo(SacRequestHeader header, RemoveDeliveryInfoSacReq req) {
+
+		RemoveDeliveryInfoSacRes res = new RemoveDeliveryInfoSacRes();
+
+		try {
+			// 배송지 삭제 셋팅
+			RemoveDeliveryInfoRequest scReq = new RemoveDeliveryInfoRequest();
+			scReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
+			scReq.setUserKey(req.getUserKey());
+			scReq.setDeliverySeq(req.getDeliverySeq());
+			// 삭제 진행
+			RemoveDeliveryInfoResponse scRes = this.userSCI.removeDeliveryInfo(scReq);
+			res.setUserKey(scRes.getUserKey());
+		} catch (StorePlatformException spe) {
+			LOGGER.info("배송지 삭제 실패 [{}]", req.getUserKey());
+			throw spe;
+		}
+
+		return res;
+
+	}
 }
