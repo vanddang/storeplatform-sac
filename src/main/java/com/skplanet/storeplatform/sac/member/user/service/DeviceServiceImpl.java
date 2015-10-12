@@ -55,6 +55,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameReques
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
@@ -590,6 +591,14 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 
+			/* 배송지 정보 이관 (2015-10-27) */
+			LOGGER.info("기등록된 모바일 회원 배송지 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
+			TransferDeliveryRequest transferDeliveryRequest = new TransferDeliveryRequest();
+			transferDeliveryRequest.setCommonRequest(commonRequest);
+			transferDeliveryRequest.setUserKey(userKey);
+			transferDeliveryRequest.setPreUserKey(previousUserKey);
+			this.userSCI.transferDelivery(transferDeliveryRequest);
+
 			/**
 			 * MQ 연동(회원 탈퇴) - 무선회원.
 			 */
@@ -630,6 +639,7 @@ public class DeviceServiceImpl implements DeviceService {
 			transferDeviceSetInfoRequest.setPreDeviceKey(preDeviceKey);
 			transferDeviceSetInfoRequest.setPreIsDormant(previousIsDormant);
 			this.deviceSetSCI.transferDeviceSetInfo(transferDeviceSetInfoRequest);
+
 		}
 
 		keySearchList = new ArrayList<KeySearch>();
