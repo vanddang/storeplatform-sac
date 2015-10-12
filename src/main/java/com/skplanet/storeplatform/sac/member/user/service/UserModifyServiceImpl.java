@@ -995,7 +995,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		/**
 		 * 약관 맵핑정보 세팅.
 		 */
-		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), agreementList);
+		agreementList = this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), agreementList);
 
 		UpdateAgreementRequest updateAgreementRequest = new UpdateAgreementRequest();
 		updateAgreementRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));

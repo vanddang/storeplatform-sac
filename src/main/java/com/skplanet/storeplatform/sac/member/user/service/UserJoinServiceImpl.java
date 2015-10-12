@@ -129,7 +129,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 약관 맵핑정보 세팅.
 		 */
-		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
+		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(
+				sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
 
 		JoinForWapEcRes joinForWapEcRes = null;
 
@@ -197,7 +198,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 이용약관 정보 setting
 		 */
-		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
 
 		/**
 		 * 법정대리인 setting.
@@ -250,7 +251,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 약관 맵핑정보 세팅.
 		 */
-		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
+		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(
+				sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
 
 		/**
 		 * (통합 IDP 연동) 이용동의 가입 (cmd = TXAgreeUserIDP)
@@ -278,7 +280,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 이용약관 정보 setting
 		 */
-		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
 
 		/**
 		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
@@ -351,7 +353,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 약관 맵핑정보 세팅.
 		 */
-		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
+		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(
+				sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
 
 		/**
 		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
@@ -393,7 +396,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 이용약관 정보 setting
 		 */
-		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
 
 		/**
 		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
@@ -618,7 +621,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 약관 맵핑정보 세팅.
 		 */
-		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
+		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(
+				sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
+
+		// 약관 버전 정보 추가
+		req.setAgreementList(agreementInfoList);
 
 		/**
 		 * 회원 기가입 여부 체크
