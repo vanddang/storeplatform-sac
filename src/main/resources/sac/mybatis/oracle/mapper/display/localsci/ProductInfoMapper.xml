@@ -624,6 +624,8 @@
                         ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
                                WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
                                WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+                               WHEN I.PROD_CASE_CD='DP006305' THEN 'cashExchange'
+                               WHEN I.PROD_CASE_CD='DP006306' THEN 'chargeCard'                                
                           END) AS PROD_CASE_CD     
                         ,J.CID
                         ,(SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE PROD_ID = H.PROD_ID AND EXPO_YN ='Y' AND TENANT_ID = #{tenantId}  AND ROWNUM =1) chnlProdStatusCd
@@ -756,7 +758,7 @@
                     , CM.AUTO_APPR_YN
                     ,(CASE WHEN CM.FREE_PASS_CLSF_CD='OR004301' THEN 'freepass'  -- 영화 자동결제
                            WHEN CM.FREE_PASS_CLSF_CD='OR004302' THEN 'seriesFreepass' -- 시리즈 1회결제
-                           WHEN CM.FREE_PASS_CLSF_CD='OR004305' THEN 'gameCash' -- 게임 캐쉬  
+                           WHEN CM.FREE_PASS_CLSF_CD='OR004305' THEN 'cash' -- 게임 캐쉬  
                       END) AS KIND                       
                     , CM.FREE_PASS_CLSF_CD AS PLAN_TYPE
                     , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.SERIES_BOOK_CLSF_CD
