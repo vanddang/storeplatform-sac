@@ -320,7 +320,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 로그인 성공이력 저장 */
-		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(),
+		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceIp(),
 				req.getIsAutoUpdate(), req.getLoginReason(), "Y");
 
 		/* 일시정지 인경우 (로그인제한상태 / 직권중지상태는 MDN로그인시는 샵클 정상이용가능하게 해야하므로 체크하지 않음) */
@@ -612,7 +612,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 로그인 성공이력 저장 */
-		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(),
+		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceIp(),
 				req.getIsAutoUpdate(), req.getLoginReason(), "Y");
 
 		/* 일시정지 인경우 (로그인제한상태 / 직권중지상태는 MDN로그인시는 샵클 정상이용가능하게 해야하므로 체크하지 않음) */
