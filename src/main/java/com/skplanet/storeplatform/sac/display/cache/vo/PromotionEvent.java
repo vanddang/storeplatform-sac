@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import org.springframework.data.annotation.Transient;
 
 import java.text.SimpleDateFormat;
@@ -129,10 +130,8 @@ public class PromotionEvent {
 
     @Transient
     public String makeDatetimeKey() {
-        return DATE_FORMAT.format(startDt) + "_" + DATE_FORMAT.format(endDt);
+        return DateUtils.format(startDt) + "_" + DateUtils.format(endDt);
     }
-
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
 
     @Override
     public boolean equals(Object o) {

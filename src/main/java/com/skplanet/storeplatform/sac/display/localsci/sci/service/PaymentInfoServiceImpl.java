@@ -240,6 +240,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                 break;
             case InApp:
                 bindS2SInfo(prodId, paymentInfo);
+                paymentInfo.setUsePeriod("0");
+                paymentInfo.setUsePeriodUnitCd(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE);
+                break;
             case App:
                 // 앱상품의 경우 사용정책 값을 무제한으로 지정
                 paymentInfo.setUsePeriod("0");

@@ -22,13 +22,14 @@ import java.util.Map;
 
 /**
  * 날짜 변환 유틸
+ * - SimpleDateFormat은 Threadsafe하지 않아 문제가 발생하지 않도록 개선함
  * Updated on : 2014. 02. 05 Updated by : 정희원, SK 플래닛.
  */
 public class DateUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
-    private final static Map<String, SimpleDateFormat> MAP_SDF = new LinkedHashMap<String, SimpleDateFormat>();
+    private final static String[] ptns;
 
     static {
         /**
@@ -36,18 +37,8 @@ public class DateUtils {
          * 패턴이 많아지면 차후 처리 패턴을 Properties 파일에 독립
          * FIXME yyyy-MM-dd -> yyyyMMdd 순서대로 기술해야 한다. yyyyMMdd가 yyyy-MM-dd형태를 그냥 처리 해버리기 때문
          */
-        String[] ptns = "yyyyMMddHHmmss,yyyy-MM-dd,yyyyMMdd"
-                        .split(",");
-
-        for (String ptn : ptns) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat(ptn);
-                MAP_SDF.put(ptn, sdf);
-            }
-            catch (IllegalArgumentException e) {
-                logger.error("날짜유틸 {} 패턴 초기화시 오류가 발생했습니다.", ptn);
-            }
-        }
+        ptns = "yyyyMMddHHmmss,yyyy-MM-dd,yyyyMMdd"
+                .split(",");
     }
 
     /**
@@ -66,8 +57,10 @@ public class DateUtils {
         if(StringUtils.isEmpty(str))
             return null;
 
-        for (SimpleDateFormat sdf : MAP_SDF.values()) {
+        for (String ptnStr : ptns) {
+
             try {
+                SimpleDateFormat sdf = new SimpleDateFormat(ptnStr);
                 return sdf.parse(str);
             }
             catch (IllegalArgumentException ae) {
@@ -77,6 +70,8 @@ public class DateUtils {
 //                pe.printStackTrace();
             }
         }
+
+        logger.warn("날짜 처리중 아무런 패턴도 사용되지 않음 (text: {})", str);
         return null;
     }
 
@@ -84,25 +79,16 @@ public class DateUtils {
         if(StringUtils.isEmpty(str) || StringUtils.isEmpty(ptn))
             return null;
 
-        SimpleDateFormat parser = MAP_SDF.get(ptn);
-
-        if (parser == null) {
-            try {
-                parser = new SimpleDateFormat(ptn);
-                MAP_SDF.put(ptn, parser);
-            }
-            catch (IllegalArgumentException ie) {
-                logger.error("날짜유틸 {} 패턴 초기화시 오류가 발생했습니다.", ptn);
-            }
-        }
-
-        if (parser == null)
-            return null;
-
         try {
+            SimpleDateFormat parser = new SimpleDateFormat(ptn);
             return parser.parse(str);
         }
+        catch (IllegalArgumentException e) {
+            logger.error("날짜 처리중 에러 (text: {}, pattern: {})", str, ptn, e);
+            return null;
+        }
         catch (ParseException pe) {
+            logger.error("날짜 처리중 에러 (text: {}, pattern: {})", str, ptn, pe);
             return null;
         }
     }
@@ -111,7 +97,7 @@ public class DateUtils {
         if(dt == null)
             return null;
 
-        SimpleDateFormat fmt = MAP_SDF.get("yyyyMMddHHmmss");
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMddHHmmss");
         return fmt.format(dt);
     }
 }

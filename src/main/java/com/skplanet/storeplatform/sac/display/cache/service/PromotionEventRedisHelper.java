@@ -97,7 +97,7 @@ public class PromotionEventRedisHelper {
         liveKeySet = Sets.filter(liveKeySet, new Predicate<String>() {
             @Override
             public boolean apply(String fullKey) {
-                return fullKey.startsWith(fullKeyFilter);
+                return StringUtils.isNotEmpty(fullKey) && fullKey.startsWith(fullKeyFilter);
             }
         });
 
