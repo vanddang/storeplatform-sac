@@ -41,6 +41,8 @@ public class ClauseSacRes extends CommonInfo {
 
 	private String updDt;
 
+	private String reAgreeYn;
+
 	public String getClauseId() {
 		return this.clauseId;
 	}
@@ -147,6 +149,21 @@ public class ClauseSacRes extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	/**
+	 * @return the reAgreeYn
+	 */
+	public String getReAgreeYn() {
+		return this.reAgreeYn;
+	}
+
+	/**
+	 * @param reAgreeYn
+	 *            the reAgreeYn to set
+	 */
+	public void setReAgreeYn(String reAgreeYn) {
+		this.reAgreeYn = reAgreeYn;
 	}
 
 }
