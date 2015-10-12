@@ -66,6 +66,21 @@ public class Clause extends CommonInfo {
 	private String updDt;
 
 	/**
+	 * 모바일웹 파일경로.
+	 */
+	private String mwFilePath;
+
+	/**
+	 * 모바일웹 파일명.
+	 */
+	private String mwFileNm;
+
+	/**
+	 * 재동의 여부.
+	 */
+	private String reAgreeYn;
+
+	/**
 	 * @return String : tenantId
 	 */
 	public String getTenantId() {
@@ -303,6 +318,51 @@ public class Clause extends CommonInfo {
 	 */
 	public void setUpdDt(String updDt) {
 		this.updDt = updDt;
+	}
+
+	/**
+	 * @return the mwFilePath
+	 */
+	public String getMwFilePath() {
+		return this.mwFilePath;
+	}
+
+	/**
+	 * @param mwFilePath
+	 *            the mwFilePath to set
+	 */
+	public void setMwFilePath(String mwFilePath) {
+		this.mwFilePath = mwFilePath;
+	}
+
+	/**
+	 * @return the mwFileNm
+	 */
+	public String getMwFileNm() {
+		return this.mwFileNm;
+	}
+
+	/**
+	 * @param mwFileNm
+	 *            the mwFileNm to set
+	 */
+	public void setMwFileNm(String mwFileNm) {
+		this.mwFileNm = mwFileNm;
+	}
+
+	/**
+	 * @return the reAgreeYn
+	 */
+	public String getReAgreeYn() {
+		return this.reAgreeYn;
+	}
+
+	/**
+	 * @param reAgreeYn
+	 *            the reAgreeYn to set
+	 */
+	public void setReAgreeYn(String reAgreeYn) {
+		this.reAgreeYn = reAgreeYn;
 	}
 
 }

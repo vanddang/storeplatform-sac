@@ -54,12 +54,11 @@ public class ClauseController {
 
 	@RequestMapping(value = "/member/user/detailClause/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailClauseSacRes detailClause(DetailClauseSacReq req) {
+	public DetailClauseSacRes detailClause(SacRequestHeader sacHeader, DetailClauseSacReq req) {
 
 		/*
-		 * 2014-04-08 데이터베이스 SPSAC.TB_CM_CLAUSE 칼럼 변경 clauseItemCd --> cluaseId로
-		 * 변경 clauseId --> clauseItemCd로 변경 VO Request : cluaseItemCd는 변경 없이 그대로
-		 * 적용시킴, 타부서에서 별도작업없이 진행시키기 위해. VO Request : cluaseItemCd로 받는 값은
+		 * 2014-04-08 데이터베이스 SPSAC.TB_CM_CLAUSE 칼럼 변경 clauseItemCd --> cluaseId로 변경 clauseId --> clauseItemCd로 변경 VO
+		 * Request : cluaseItemCd는 변경 없이 그대로 적용시킴, 타부서에서 별도작업없이 진행시키기 위해. VO Request : cluaseItemCd로 받는 값은
 		 * SPSAC.TB_CM_CLAUSE에서 clause_id 와 Mapping 된다.
 		 */
 		String itemCd = StringUtil.nvl(req.getClauseItemCd(), "");
@@ -70,7 +69,7 @@ public class ClauseController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		DetailClauseSacRes res = this.svc.detailClauseList(req);
+		DetailClauseSacRes res = this.svc.detailClauseList(sacHeader, req);
 
 		LOGGER.info("Response Size : {}", res.getDetailClauseList().size());
 

@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListClauseSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 
 /**
@@ -54,9 +55,17 @@ public class ClauseServiceImpl implements ClauseService {
 			clauseRes.setClauseItemCd(StringUtil.setTrim(clause.getClauseItemCd()));
 			clauseRes.setClauseVer(StringUtil.setTrim(clause.getClauseVer()));
 			clauseRes.setEndDay(StringUtil.setTrim(clause.getEndDay()));
-			clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
-			clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
+			// 모바일 웹, PC웹의 약관의 경로 systemId를 가지고 분기 처리.
+			if (MemberConstants.SYSTEM_ID_MOBILE_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
+				clauseRes.setFileNm(StringUtil.setTrim(clause.getMwFileNm()));
+				clauseRes.setFilePath(StringUtil.setTrim(clause.getMwFilePath()));
+			} else {
+				clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
+				clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
+			}
+
 			clauseRes.setStartDay(StringUtil.setTrim(clause.getStartDay()));
+			clauseRes.setReAgreeYn(StringUtil.setTrim(clause.getReAgreeYn()));
 
 			clauseSacResList.add(clauseRes);
 		}
@@ -71,7 +80,7 @@ public class ClauseServiceImpl implements ClauseService {
 	 * 약관목록 상세조회
 	 */
 	@Override
-	public DetailClauseSacRes detailClauseList(DetailClauseSacReq req) {
+	public DetailClauseSacRes detailClauseList(SacRequestHeader sacHeader, DetailClauseSacReq req) {
 		String clauseItemCd = req.getClauseItemCd();
 
 		/* Tenant에 등록된 코드인지 확인 */
@@ -94,9 +103,18 @@ public class ClauseServiceImpl implements ClauseService {
 			clauseRes.setClauseItemCd(StringUtil.setTrim(clause.getClauseItemCd()));
 			clauseRes.setClauseVer(StringUtil.setTrim(clause.getClauseVer()));
 			clauseRes.setEndDay(StringUtil.setTrim(clause.getEndDay()));
-			clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
-			clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
+
+			// 모바일 웹, PC웹의 약관의 경로 systemId를 가지고 분기 처리.
+			if (MemberConstants.SYSTEM_ID_MOBILE_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
+				clauseRes.setFileNm(StringUtil.setTrim(clause.getMwFileNm()));
+				clauseRes.setFilePath(StringUtil.setTrim(clause.getMwFilePath()));
+			} else {
+				clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
+				clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
+			}
+
 			clauseRes.setStartDay(StringUtil.setTrim(clause.getStartDay()));
+			clauseRes.setReAgreeYn(StringUtil.setTrim(clause.getReAgreeYn()));
 
 			detailClauseList.add(clauseRes);
 		}

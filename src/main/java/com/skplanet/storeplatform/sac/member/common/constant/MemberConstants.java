@@ -311,6 +311,8 @@ public final class MemberConstants {
 
 	/** 개발자센터 SystemID */
 	public static final String SYSTEM_ID_DEV_POC = "S00-02001";
+	/** 모바일웹 SystemID */
+	public static final String SYSTEM_ID_MOBILE_WEB = "S01-02001";
 	/** IN APP 2.0 SystemID */
 	public static final String SYSTEM_ID_INAPP_2 = "S01-11002";
 	/** Pay Planet T store SystemID */

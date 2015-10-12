@@ -30,7 +30,10 @@
             reg_id              AS regId,
             TO_CHAR(reg_dt, 'YYYYMMDDHH24MISS') AS regDt, 
             upd_id AS updId, 
-            TO_CHAR(upd_dt, 'YYYYMMDDHH24MISS') AS updDt 
+            TO_CHAR(upd_dt, 'YYYYMMDDHH24MISS') AS updDt,
+            mw_file_path AS mwFilePath,
+            mw_file_nm AS mwFileNm,
+            reagree_yn AS reAgreeYn             
          FROM TB_CM_CLAUSE 
         WHERE dp_yn='Y'
         AND clause_id = #{clauseId}
@@ -52,7 +55,10 @@
             A.reg_id              AS regId,
             TO_CHAR(A.reg_dt, 'YYYYMMDDHH24MISS') AS regDt, 
             A.upd_id AS updId, 
-            TO_CHAR(A.upd_dt, 'YYYYMMDDHH24MISS') AS updDt 
+            TO_CHAR(A.upd_dt, 'YYYYMMDDHH24MISS') AS updDt,
+            A.mw_file_path AS mwFilePath,
+            A.mw_file_nm AS mwFileNm,
+            reagree_yn AS reAgreeYn             
          FROM TB_CM_CLAUSE A, TB_CM_TENANT_CLAUSE B
         WHERE A.dp_yn='Y'
         AND A.clause_id = B.clause_id

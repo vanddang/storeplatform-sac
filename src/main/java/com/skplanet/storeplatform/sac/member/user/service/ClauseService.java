@@ -24,6 +24,6 @@ public interface ClauseService {
 	 * 
 	 * @return ListClauseSacRes
 	 */
-	public DetailClauseSacRes detailClauseList(DetailClauseSacReq req);
+	public DetailClauseSacRes detailClauseList(SacRequestHeader sacHeader, DetailClauseSacReq req);
 
 }
