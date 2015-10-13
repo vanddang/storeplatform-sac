@@ -12,14 +12,15 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 
+ *
  * 구매인증 시, IAP상품 정보
- * 
+ *
  * Updated on : 2014. 11. 3. Updated by : 이승택, nTels.
  */
 public class VerifyOrderIapInfoSac extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	private String parentProdNm; // 부모 상품명
 	private String postbackUrl; // 모상품 결제결과 전송 URL
 	private String prodKind; // 부분유료화 상품 유형
 	private String prodCase; // 부분유료화 상품 종류
@@ -85,4 +86,22 @@ public class VerifyOrderIapInfoSac extends CommonInfo {
 		this.usePeriod = usePeriod;
 	}
 
+	/**
+	 * Gets prant prod nm.
+	 *
+	 * @return the prant prod nm
+	 */
+	public String getParentProdNm() {
+		return parentProdNm;
+	}
+
+	/**
+	 * Sets prant prod nm.
+	 *
+	 * @param parentProdNm
+	 *            the prant prod nm
+	 */
+	public void setParentProdNm(String parentProdNm) {
+		this.parentProdNm = parentProdNm;
+	}
 }
