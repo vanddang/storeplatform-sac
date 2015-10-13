@@ -1502,39 +1502,31 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		CreateDeliveryInfoSacRes res = new CreateDeliveryInfoSacRes();
 
-		// 1-1. 배송지 타입 유효성 검사 성공 - 등록/수정 진행
-		if (!StringUtils.isBlank(req.getDeliveryTypeCd())) {
-			// 배송지 등록/수정 공통 셋팅
-			CreateDeliveryInfoRequest scReq = new CreateDeliveryInfoRequest();
-			scReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
-			scReq.setUserKey(req.getUserKey());
-			scReq.setDeliveryTypeCd(req.getDeliveryTypeCd());
-			scReq.setDeliveryNm(req.getDeliveryNm());
-			scReq.setReceiverNm(req.getReceiverNm());
-			scReq.setSenderNm(req.getSenderNm());
-			scReq.setZip(req.getZip());
-			scReq.setAddr(req.getAddr());
-			scReq.setDtlAddr(req.getDtlAddr());
-			scReq.setConnTelNo(req.getConnTelNo());
-			scReq.setDeliveryMsg(req.getDeliveryMsg());
-			// 배송지 시퀀스가 있으면 셋팅
-			if (!StringUtils.isBlank(req.getDeliverySeq())) {
-				scReq.setDeliverySeq(req.getDeliverySeq());
-			}
-
-			try {
-				// 등록 및 수정 진행
-				this.userSCI.createDeliveryInfo(scReq);
-				res.setUserKey(req.getUserKey());
-			} catch (StorePlatformException spe) {
-				LOGGER.info("배송지 정보 등록/수정 실패 [{}]", req.getUserKey());
-				throw spe;
-			}
-
+		// 배송지 등록/수정 공통 셋팅
+		CreateDeliveryInfoRequest scReq = new CreateDeliveryInfoRequest();
+		scReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		scReq.setUserKey(req.getUserKey());
+		scReq.setDeliveryTypeCd(req.getDeliveryTypeCd());
+		scReq.setDeliveryNm(req.getDeliveryNm());
+		scReq.setReceiverNm(req.getReceiverNm());
+		scReq.setSenderNm(req.getSenderNm());
+		scReq.setZip(req.getZip());
+		scReq.setAddr(req.getAddr());
+		scReq.setDtlAddr(req.getDtlAddr());
+		scReq.setConnTelNo(req.getConnTelNo());
+		scReq.setDeliveryMsg(req.getDeliveryMsg());
+		// 배송지 시퀀스가 있으면 셋팅
+		if (!StringUtils.isBlank(req.getDeliverySeq())) {
+			scReq.setDeliverySeq(req.getDeliverySeq());
 		}
-		// 1-2. 배송지 타입 유효성 검사 실패 - Exception 처리
-		else {
-			throw new StorePlatformException("SAC_MEM_0002", "배송지 타입");
+
+		try {
+			// 등록 및 수정 진행
+			this.userSCI.createDeliveryInfo(scReq);
+			res.setUserKey(req.getUserKey());
+		} catch (StorePlatformException spe) {
+			LOGGER.info("배송지 정보 등록/수정 실패 [{}]", req.getUserKey());
+			throw spe;
 		}
 
 		return res;

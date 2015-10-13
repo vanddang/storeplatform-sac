@@ -2357,7 +2357,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		try {
 			scRes = this.userSCI.searchDeliveryInfo(scReq);
 
-			// 3-1. 조회값이 있으면 res셋팅
+			// 3-1. 조회값이 있으면 res 셋팅
 			if (scRes.getSearchDeliveryInfoList() != null && scRes.getSearchDeliveryInfoList().size() > 0) {
 				res.setUserKey(req.getUserKey());
 				for (SearchDeliveryInfo tempDeliveryInfo : scRes.getSearchDeliveryInfoList()) {
@@ -2381,20 +2381,20 @@ public class UserSearchServiceImpl implements UserSearchService {
 		} catch (StorePlatformException e) {
 			// 3-2. 조회값이 없으면
 			if (e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				// 3-2-1. userKey변환이력 조회 : 모바일 > ID회원 전환자중 모바일회원의 userkey로 접근할수 있기 때문에 변환 이력에서 조회
+				// 3-2-1. userKey변환이력 조회 : 모바일 > ID회원 전환자중 모바일회원의 userKey로 접근할수 있기 때문에 변환 이력에서 조회
 				SearchAfterUserKeyRequest scKeyReq = new SearchAfterUserKeyRequest();
 				scKeyReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
 				scKeyReq.setUserKey(req.getUserKey());
 
 				SearchAfterUserKeyResponse scKeyRes = this.userSCI.searchAfterUserKey(scKeyReq);
 
-				// 3-2-1-1. userKey변환이력이 있으면 변환한 userKey로 SC 배송지 조회 호출후 res셋팅
+				// 3-2-1-1. userKey변환이력이 있으면 변환된 userKey로 SC 배송지 조회 호출후 res 셋팅
 				if (scKeyRes != null) {
 					scReq.setUserKey(scKeyRes.getUserKey());
 					scRes = this.userSCI.searchDeliveryInfo(scReq);
 
 					if (scRes.getSearchDeliveryInfoList() != null && scRes.getSearchDeliveryInfoList().size() > 0) {
-						res.setUserKey(req.getUserKey());
+						res.setUserKey(scKeyRes.getUserKey());
 						for (SearchDeliveryInfo tempDeliveryInfo : scRes.getSearchDeliveryInfoList()) {
 							DeliveryInfo deliveryInfo = new DeliveryInfo();
 							deliveryInfo.setDeliveryTypeCd(tempDeliveryInfo.getDeliveryTypeCd());
