@@ -91,6 +91,7 @@ public class PurchaseProduct extends PaymentInfo {
 		this.setSvcGrpCd(displayInfo.getSvcGrpCd());
 		this.setInAppYn(displayInfo.getInAppYn());
 
+		this.setParentProdNm(displayInfo.getParentProdNm());
 		this.setProdId(displayInfo.getProdId());
 		this.setProdNm(displayInfo.getProdNm());
 		this.setProdAmt(displayInfo.getProdAmt());

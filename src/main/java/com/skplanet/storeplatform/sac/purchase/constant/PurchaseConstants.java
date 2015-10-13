@@ -391,6 +391,7 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String IF_DISPLAY_RES_ACML_DT = "acmlDt";
 	public static final String IF_DISPLAY_RES_PROM_FORCECLOSE_CD = "promForceCloseCd"; // 프로모션 강제 종료 코드
 
+	public static final String IF_DISPLAY_RES_PARENT_PROD_NM = "parentProdNm"; // InApp의 경우 부모 상품명
 	public static final String IF_DISPLAY_RES_SPECIALTYPE_CD = "specialTypeCd";
 	public static final String IF_DISPLAY_RES_PRIVATEACML_LIMIT = "privateAcmlLimit"; // 개인 적립 한도
 	public static final String IF_DISPLAY_RES_USE_PERIOD_CNT = "usePeriodCnt"; // 사용일

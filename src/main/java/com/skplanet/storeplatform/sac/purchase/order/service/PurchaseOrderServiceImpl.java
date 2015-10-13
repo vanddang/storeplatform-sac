@@ -957,6 +957,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			iapProdInfo.setPostbackUrl(reservedDataMap.get("iapPostbackUrl"));
 			iapProdInfo.setProdKind(reservedDataMap.get("iapProdKind"));
 			iapProdInfo.setProdCase(reservedDataMap.get("iapProdCase"));
+			iapProdInfo.setParentProdNm(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM));
 			if (StringUtils.isNotBlank(reservedDataMap.get("iapUsePeriod"))) {
 				iapProdInfo.setUsePeriod(Integer.parseInt(reservedDataMap.get("iapUsePeriod")));
 			}

@@ -883,6 +883,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 								.append(StringUtils.defaultString(product.getIapPostbackUrl())).append("&iapProdKind=")
 								.append(StringUtils.defaultString(product.getIapProdKind())).append("&iapProdCase=")
 								.append(StringUtils.defaultString(product.getIapProdCase()));
+						sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM, product.getParentProdNm()));
 						if (product.getIapUsePeriod() != null) {
 							sbReserveData.append("&iapUsePeriod=").append(product.getIapUsePeriod());
 						}
