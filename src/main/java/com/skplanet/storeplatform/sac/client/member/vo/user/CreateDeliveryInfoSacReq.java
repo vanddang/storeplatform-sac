@@ -17,7 +17,7 @@ public class CreateDeliveryInfoSacReq extends CommonInfo {
 	@NotEmpty
 	private String userKey;
 
-	/** 배송지 타입 */
+	/** 배송지 타입 (등록:required, 수정:optional) */
 	private String deliveryTypeCd;
 
 	/** 배송지 이름 */
@@ -44,7 +44,7 @@ public class CreateDeliveryInfoSacReq extends CommonInfo {
 	/** 남기는 말씀 */
 	private String deliveryMsg;
 
-	/** 배송지 시퀀스 (등록 X, 수정 필수) */
+	/** 배송지 시퀀스 (등록:null, 수정:required) */
 	private String deliverySeq;
 
 	/**
