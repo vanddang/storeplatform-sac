@@ -245,7 +245,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 
 			} else if (StringUtils.startsWith(purchaseProduct.getTenantProdGrpCd(),
 					PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
-				if(StringUtils.equals(purchaseProduct.getChapterUnit(), PurchaseConstants.DISPLAY_BOOK_CLFSCD_SERIAL))
+				if (StringUtils.equals(purchaseProduct.getChapterUnit(), PurchaseConstants.DISPLAY_BOOK_CLFSCD_SERIAL))
 					return "'" + purchaseProduct.getProdNm() + "' 전회";
 				else
 					return "'" + purchaseProduct.getProdNm() + "' 전권";
@@ -351,9 +351,14 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			if (StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_DELIVERY)) {
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_DELIVERY;
-			} else {
+			} else if (StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_CHARGE;
+			} else if (StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_GIFT)
+					|| StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_COUPON)
+					|| StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_CASH_EXCHANGE)) {
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_COUPON;
-			}
+			} else
+				return "";
 
 			// MP3, 벨소리&컬러링
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
@@ -372,7 +377,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 						PurchaseConstants.RINGBELL_CLASS_RING_BASIC)) {
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC;
 				}
-			// MP3
+				// MP3
 			} else {
 				if (StringUtils.equals(purchaseProduct.getResvCol03(), "128")) {
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_128;
@@ -403,8 +408,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 
 			// VOD정액권, 이북/코믹 전권
 		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
-			if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-					PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)) {
+			if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(), PurchaseConstants.FIXRATE_PROD_TYPE_SERIESPASS)) {
 				if (StringUtil.equals(purchaseProduct.getPossLendClsfCd(),
 						PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION))
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN; // 소장

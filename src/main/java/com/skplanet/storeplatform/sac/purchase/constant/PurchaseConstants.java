@@ -312,6 +312,7 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_IAP_AUTOMONTH = "월별 자동결제";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_DELIVERY = "배송 상품";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_COUPON = "쿠폰 상품";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_CHARGE = "충전 상품";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_320 = "MP3 : 320kbps";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_192 = "MP3 : 192kbps";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_128 = "MP3 : 128kbps";
