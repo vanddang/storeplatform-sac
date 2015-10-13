@@ -41,7 +41,7 @@ public class PaymentInfoSCITest {
     @Test
     public void integratedTest() {
 //        List<String> prodIds = Arrays.asList("0000414210","0000131401","H000046599","S900002648","H102832823");
-        List<String> prodIds = Arrays.asList("H000046599");
+        List<String> prodIds = Arrays.asList("0000655347");
         for (String prodId : prodIds) {
             invokeApi(prodId);
         }
@@ -50,7 +50,7 @@ public class PaymentInfoSCITest {
     @Test
     public void test2() {
         PaymentInfoSacReq req = new PaymentInfoSacReq();
-        req.setProdIdList(Arrays.asList("0000414210","0000131401","S900002648","H102832823"));
+        req.setProdIdList(Arrays.asList("0000414210","0000131401","S900002648", "0900300466"));
         req.setTenantId("S01");
         req.setLangCd("ko");
         req.setDeviceModelCd("SHW-M100S");
@@ -65,7 +65,7 @@ public class PaymentInfoSCITest {
         List<String> prodIdList = new ArrayList<String>();
         prodIdList.add(prodId);
         req.setProdIdList(prodIdList);
-        req.setTenantId("S01");
+        req.setTenantId("S02");
         req.setLangCd("ko");
         req.setDeviceModelCd("SHW-M100S");
 
