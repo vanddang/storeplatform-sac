@@ -408,6 +408,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			} else if (couponInfo.getStoreSaleType().equals("3")) { // 배송상품
 				dsp.setProdCaseCd(CouponConstants.PAY_CODE_DELIVER);
 				dsp.setDlvProdYn("Y");
+			}else if (couponInfo.getStoreSaleType().equals("4")) { //  금액교환권
+				dsp.setProdCaseCd(CouponConstants.PAY_CODE_CASH_EXCHANGE);
+				dsp.setDlvProdYn("N");
+			}else if (couponInfo.getStoreSaleType().equals("5")) { // 충전권
+				dsp.setProdCaseCd(CouponConstants.PAY_CODE_CHARGE);
+				dsp.setDlvProdYn("N");
 			}
 			dsp.setB2bProdYn(couponInfo.getStoreb2bFlag());
 			dsp.setMangBpId("");
@@ -462,6 +468,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				} else if (couponInfo.getStoreSaleType().equals("3")) { // 배송상품
 					dsp.setProdCaseCd(CouponConstants.PAY_CODE_DELIVER);
 					dsp.setDlvProdYn("Y");
+				}else if (couponInfo.getStoreSaleType().equals("4")) { //  금액교환권
+					dsp.setProdCaseCd(CouponConstants.PAY_CODE_CASH_EXCHANGE);
+					dsp.setDlvProdYn("N");
+				}else if (couponInfo.getStoreSaleType().equals("5")) { // 충전권
+					dsp.setProdCaseCd(CouponConstants.PAY_CODE_CHARGE);
+					dsp.setDlvProdYn("N");
 				}
 				dsp.setB2bProdYn(couponInfo.getStoreb2bFlag());
 				dsp.setMangBpId(itemInfo.getBpManageId());
@@ -1802,6 +1814,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		} else {
 			ingYn = "Y"; // 수정일 경우는 무조건 MQ 연동
 		}
+
 		this.getConnectMqForSearchServer(ingYn, couponInfo.getStoreCatalogCode());
 
 	}

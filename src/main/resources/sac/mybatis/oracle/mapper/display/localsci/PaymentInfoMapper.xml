@@ -196,6 +196,7 @@
                         ,J.TOP_MENU_ID
                         ,'N' as inAppYn
                         ,N.SPRC_TYPE_CD as specialTypeCd
+                        ,A.ORG_BRAND_ID 
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B

@@ -4281,7 +4281,246 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		return res;
 	}
+	
+	/**
+	 * 충전권 브랜드샵 조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@Override
+	public ShoppingRes getShoppingBrandShopChargeBrandList(SacRequestHeader header, ShoppingReq req) {
+		// 공통 응답 변수 선언
+		ShoppingRes res = null;
+		CommonResponse commonResponse = new CommonResponse();
+		List<MetaInfo> resultList = null;
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setImageCd(DisplayConstants.DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
+		}
+		// offset, Count default setting
+		this.commonOffsetCountV2(req);
+		
+		// 브랜드샵 정보 가져오기
+		resultList = this.commonDAO.queryForList("Shopping.getShoppingBrandShopBrandList", req, MetaInfo.class);
+
+		if (resultList != null) {
+			MetaInfo shopping = null;
+			shopping = new MetaInfo();
+
+			// Response VO를 만들기위한 생성자
+			Product product = null;
+			List<Identifier> identifierList = null;
+
+			List<Product> productList = new ArrayList<Product>();
+
+			for (int i = 0; i < resultList.size(); i++) {
+				shopping = resultList.get(i);
+
+				// 상품 정보 (상품ID)
+				product = new Product();
+				identifierList = new ArrayList<Identifier>();
+				identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_BRAND_IDENTIFIER_CD,
+						shopping.getBrandId()));
+				identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_ORG_BRAND_IDENTIFIER_CD,
+						shopping.getOrgBrandId()));
+
+				// MenuList 생성
+				List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
+
+				// 상품 정보 (상품명)
+				Title title = this.commonGenerator.generateTitle(shopping);
+
+				// SourceList 생성
+				List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
+
+				Contributor contributor = new Contributor();
+				Identifier identifier = new Identifier();
+				List<Identifier> contributorIdentifierList = new ArrayList<Identifier>();
+				identifier.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
+				identifier.setText(shopping.getRegId());
+				contributorIdentifierList.add(identifier);
+				contributor.setIdentifierList(contributorIdentifierList);
+				
+				// 데이터 매핑
+				product.setIdentifierList(identifierList);
+				product.setMenuList(menuList);
+				product.setTitle(title);
+				product.setSourceList(sourceList);
+				product.setContributor(contributor);
+
+				productList.add(i, product);
+				commonResponse.setTotalCount(shopping.getTotalCount());
+			}
+
+			res = new ShoppingRes();
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+		} else {
+			// 조회 결과 없음
+			res = new ShoppingRes();
+			List<Product> productList = new ArrayList<Product>();
+			res.setProductList(productList);
+			commonResponse.setTotalCount(0);
+			res.setCommonResponse(commonResponse);
+		}
+		return res;
+	}	
+
+	/**
+	 * 충전권 상품 조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingBrandRes
+	 */
+	@Override
+	public ShoppingBrandRes getShoppingBrandShopChargeCardList(SacRequestHeader header, ShoppingReq req) {
+		// 공통 응답 변수 선언
+		ShoppingBrandRes res = new ShoppingBrandRes();
+		List<MetaInfo> resultList = null;
+		MetaInfo shopping = null;
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
+
+		if (StringUtils.isEmpty(req.getBrandId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "blandId", req.getBrandId());
+		}
+		
+		if (StringUtils.isEmpty(req.getPrice())) {
+			throw new StorePlatformException("SAC_DSP_0002", "price", req.getPrice());
+		}
+
+		if (StringUtils.isEmpty(req.getOrderedBy())) {
+			req.setOrderedBy(DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION);
+		}
+		if (!DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_HIGHPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())) {
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+		}
+
+
+		int offset = 1; // default
+		int count = 100; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
+		}
+		req.setOffset(offset); // set offset
+
+		if (req.getCount() != null) {
+			count = req.getCount();
+		}
+		count = offset + count - 1;
+		req.setCount(count); // set count
+
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 100 : req.getCount());
+
+
+		// 브랜드샵 정보 가져오기
+		resultList = this.commonDAO.queryForList("Shopping.getShoppingBrandShopBrandList", req, MetaInfo.class);
+
+		if (resultList != null) {
+//			shopping = new MetaInfo();
+
+			// Response VO를 만들기위한 생성자
+			Layout layOut = null;
+
+			for (int i = 0; i < resultList.size(); i++) {
+				shopping = resultList.get(i);
+				layOut = new Layout();
+				// 상품 정보 (상품명)
+				Title title = this.commonGenerator.generateTitle(shopping);
+				// 메뉴정보
+				List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
+
+				layOut.setTitle(title);
+				layOut.setMenuList(menuList);
+			}
+
+			res.setLayOut(layOut);
+		}
+
+		List<Product> productList = new ArrayList<Product>();
+		if (resultList != null) {
+			if (resultList.size() > 0) {
+				// DB 조회 파라미터 생성
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("req", req);
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("lang", tenantHeader.getLangCd());
+
+				reqMap.put("imageCd", req.getImageCd());
+				reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
+				reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+				reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+				if (!this.commonSupportDeviceShopping(header)) {
+					// 조회 결과 없음
+					commonResponse.setTotalCount(0);
+					res.setProductList(productList);
+					res.setCommonResponse(commonResponse);
+					return res;
+				}
+				
+				
+				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+						"Shopping.getShoppingBrandShopChargeCardList", reqMap, ProductBasicInfo.class);
+				if (productBasicInfoList != null) {
+					if (productBasicInfoList.size() > 0) {
+						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+							reqMap.put("productBasicInfo", productBasicInfo);
+							// 쇼핑 Meta 정보 조회
+							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+							if (retMetaInfo != null) {
+								// 쇼핑 Response Generate
+								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+								productList.add(product);
+							}
+						}
+						commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+						res.setProductList(productList);
+						res.setCommonResponse(commonResponse);
+					} else {
+						// 조회 결과 없음
+						commonResponse.setTotalCount(0);
+						res.setProductList(productList);
+						res.setCommonResponse(commonResponse);
+					}
+				}
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			}
+		}
+		return res;
+	}	
+	
 	/**
 	 * 공통 offset,count 셋팅.
 	 * 

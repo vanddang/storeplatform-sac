@@ -146,6 +146,8 @@ public class CouponConstants {
 	public final static String PAY_CODE_GIFTCARD = "DP006301"; // 상품권
 	public final static String PAY_CODE_CUPON = "DP006302"; // 교환권
 	public final static String PAY_CODE_DELIVER = "DP006303"; // 배송상품
+	public final static String PAY_CODE_CASH_EXCHANGE = "DP006305"; // 금액교환권
+	public final static String PAY_CODE_CHARGE = "DP006306"; // 충전권
 	public final static int OPT_NUMBER_FOR_CHANNEL = 1; // 옵션 전시순서(채널용)
 	public final static int OPT_NUMBER_FOR_EPISODE = 2; // 옵션 전시순서(에피소드용)
 

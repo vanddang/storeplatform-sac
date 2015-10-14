@@ -523,4 +523,43 @@ public class ShoppingController {
 		return this.shoppingService.getShoppingDetailV2(header, req);
 
 	}
+	
+	/**
+	 * [I03000187] 2.7.17. 충전권 브랜드샵 조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+
+	@RequestMapping(value = "/brandshop/chargeBrand/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getShoppingBrandShopChargeBrandList(SacRequestHeader header, @Validated ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getShoppingBrandShopChargeBrandList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getShoppingBrandShopChargeBrandList(header, req);		
+	} 
+	
+	/**
+	 * [I03000188] 2.7.18. 충전권 상품 조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingBrandRes 
+	 */
+
+	@RequestMapping(value = "/brandshop/chargeCard/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingBrandRes getShoppingBrandShopChargeCardList(SacRequestHeader header, @Validated ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getShoppingBrandShopChargeCardList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getShoppingBrandShopChargeCardList(header, req);		
+	}	
+
 }

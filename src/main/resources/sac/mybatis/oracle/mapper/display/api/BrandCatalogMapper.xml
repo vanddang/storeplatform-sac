@@ -38,6 +38,7 @@
             ,MENU_ID
             ,BRAND_NM
             ,ORG_BRAND_ID
+            ,CHARGE_CARD_YN
             ,REG_ID
             ,REG_DT
             ,UPD_ID
@@ -47,6 +48,7 @@
             ,#{dpCatNo}
             ,#{brandNm}
             ,#{brandId}
+            ,#{chargeBrandYn}
             ,'admin'
             ,SYSDATE
             ,'admin'
@@ -62,6 +64,7 @@
         SET 
             BRAND_NM  = #{brandNm}
           , MENU_ID = #{dpCatNo}
+          , CHARGE_CARD_YN = #{chargeBrandYn}
           , UPD_DT    = SYSDATE
         WHERE ORG_BRAND_ID = #{brandId}
     </update>    

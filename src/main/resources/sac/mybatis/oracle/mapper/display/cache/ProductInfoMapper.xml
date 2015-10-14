@@ -888,6 +888,8 @@
                 (CASE WHEN SPROD.PROD_CASE_CD = 'DP006301' THEN 'giftcard'
                  WHEN SPROD.PROD_CASE_CD = 'DP006302' THEN 'exchange'
                  WHEN SPROD.PROD_CASE_CD = 'DP006303' THEN 'delivery'
+                 WHEN SPROD.PROD_CASE_CD = 'DP006305' THEN 'cashExchange'
+                 WHEN SPROD.PROD_CASE_CD = 'DP006306' THEN 'chargeCard'                  
                  END)                                                                          AS PROD_CASE_CD,
                 EPROD.PROD_CHRG_YN,
                 SPROD.B2B_PROD_YN,

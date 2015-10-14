@@ -108,6 +108,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -219,6 +220,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -383,6 +385,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -498,6 +501,8 @@
                                ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
                                       WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
                                       WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+ 	                                  WHEN I.PROD_CASE_CD='DP006305' THEN 'cashExchange'
+		                              WHEN I.PROD_CASE_CD='DP006306' THEN 'chargeCard'                                        
                                  END) AS PROD_CASE_CD                                 
                                ,E.TOP_MENU_ID
                                ,J.META_CLSF_CD       
@@ -575,6 +580,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT 
@@ -678,6 +684,7 @@
                           AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                           AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                           AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                          AND I.PROD_CASE_CD != 'DP006306' 
                           AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                           AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
                           AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
@@ -797,6 +804,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -883,7 +891,7 @@
                              </if>
                         WHERE SB.MENU_ID = MC.MENU_ID
                           AND SB.MENU_ID = MCD.MENU_ID
-     
+                          AND (SB.CHARGE_CARD_YN IS NULL OR SB.CHARGE_CARD_YN ='N')
                           <if test="brandId != null">
                           AND SB.BRAND_ID = #{brandId}
                           </if>       
@@ -939,6 +947,7 @@
                                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                                AND I.PROD_CASE_CD != 'DP006306' 
                                 AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                                 AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
                                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
@@ -1013,6 +1022,7 @@
                           AND SB.MENU_ID = MCD.MENU_ID
                           AND SB.BRAND_ID = #{brandId}
                           AND MC.USE_YN ='Y'
+                          AND (SB.CHARGE_CARD_YN IS NULL OR SB.CHARGE_CARD_YN ='N')
                           AND MCD.LANG_CD =#{langCd}
                      )
                     ORDER BY
@@ -1146,6 +1156,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -1321,6 +1332,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -1481,6 +1493,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -1648,6 +1661,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -1719,6 +1733,8 @@
                         ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
                                WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
                                WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+                               WHEN I.PROD_CASE_CD='DP006305' THEN 'cashExchange'
+                               WHEN I.PROD_CASE_CD='DP006306' THEN 'chargeCard'                                 
                           END) AS PROD_CASE_CD  
                         ,CONCAT(PI.FILE_PATH,PI.FILE_NM) as FILE_PATH
                         ,J.CONTENTS_TYPE_CD 
@@ -1771,6 +1787,7 @@
                 AND NVL(B.CHNL_CNT, 0) <![CDATA[ > ]]> 0      
                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                 </if>   
+                AND I.PROD_CASE_CD != 'DP006306' 
                 AND C.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
@@ -1835,6 +1852,8 @@
                         ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
                                WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
                                WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+                               WHEN I.PROD_CASE_CD='DP006305' THEN 'cashExchange'
+                               WHEN I.PROD_CASE_CD='DP006306' THEN 'chargeCard'                                 
                           END) AS PROD_CASE_CD  
                         ,TO_CHAR(NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT),'YYYYMMDDHH24MISS') AS APPLY_START_DT
                         ,TO_CHAR(NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ),'YYYYMMDDHH24MISS') AS APPLY_END_DT      
@@ -1957,7 +1976,7 @@
                 AND NVL(B.CHNL_CNT, 0) <![CDATA[> ]]> 0
                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */       
                 </if>  
-                 
+                AND I.PROD_CASE_CD != 'DP006306' 
                 AND C.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND O.LANG_CD= #{lang}          /* ko : 한국어 */
@@ -2202,6 +2221,8 @@
                                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
                                               WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
                                               WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+				                              WHEN I.PROD_CASE_CD='DP006305' THEN 'cashExchange'
+				                              WHEN I.PROD_CASE_CD='DP006306' THEN 'chargeCard'                                                
                                          END) AS PROD_CASE_CD                                 
                                          </if>
                                          <if test="specialTypeCd == 'DP007503'">
@@ -2292,6 +2313,7 @@
                                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                                AND I.PROD_CASE_CD != 'DP006306'
                                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                                 AND SYSDATE BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT 
@@ -2394,6 +2416,7 @@
                           AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                           AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                           AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                          AND I.PROD_CASE_CD != 'DP006306'
                           AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                           AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
                           AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
@@ -2519,6 +2542,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -2613,6 +2637,7 @@
                           AND SB.MENU_ID = MCD.MENU_ID
                           AND SB.BRAND_ID = PM.BRAND_ID
                           AND MC.USE_YN ='Y'
+                          AND (SB.CHARGE_CARD_YN IS NULL OR SB.CHARGE_CARD_YN ='N')
                           AND MCD.LANG_CD =#{langCd}
                           AND EXISTS (
                                SELECT
@@ -2658,6 +2683,7 @@
                                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                                AND I.PROD_CASE_CD != 'DP006306'
                                 AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                                 AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
                                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
@@ -2741,7 +2767,7 @@
                              ,TB_DP_MENU_CATEGORY_DESC MCD
                         WHERE SB.MENU_ID = MC.MENU_ID
                           AND SB.MENU_ID = MCD.MENU_ID
-     
+                          AND (SB.CHARGE_CARD_YN IS NULL OR SB.CHARGE_CARD_YN ='N')
                           <if test="brandId != null">
                           AND SB.BRAND_ID = #{brandId}
                           </if>       
@@ -2794,6 +2820,7 @@
                                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                                AND I.PROD_CASE_CD != 'DP006306'
                                 AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                                 AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
                                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
@@ -2955,6 +2982,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -3143,6 +3171,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -3327,6 +3356,7 @@
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD != 'DP006306'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
@@ -3415,6 +3445,8 @@
                         ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
                                WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
                                WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+                               WHEN I.PROD_CASE_CD='DP006305' THEN 'cashExchange'
+                               WHEN I.PROD_CASE_CD='DP006306' THEN 'chargeCard'                                 
                           END) AS PROD_CASE_CD  
                           </if>
                          <if test="req.specialTypeCd == 'DP007503' or req.specialTypeCd == 'DP007504'">
@@ -3487,6 +3519,7 @@
                 AND NVL(B.CHNL_CNT, 0) <![CDATA[> ]]> 0
                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */       
                 </if>                 
+                AND I.PROD_CASE_CD != 'DP006306'
                 AND C.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
@@ -3553,6 +3586,8 @@
                                 ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
                                        WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
                                        WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+		                               WHEN I.PROD_CASE_CD='DP006305' THEN 'cashExchange'
+		                               WHEN I.PROD_CASE_CD='DP006306' THEN 'chargeCard'                                         
                                   END) AS PROD_CASE_CD  
                                   </if>
                                  <if test="req.specialTypeCd == 'DP007503' or req.specialTypeCd == 'DP007504'">
@@ -3686,7 +3721,8 @@
                         <if test="req.includeProdStopStatus != null ">
                         AND NVL(B.CHNL_CNT, 0) <![CDATA[> ]]> 0
                         AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */       
-                        </if>                         
+                        </if>               
+                        AND I.PROD_CASE_CD != 'DP006306'          
                         AND C.LANG_CD= #{lang}          /* ko : 한국어 */
                         AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                         AND O.LANG_CD= #{lang}          /* ko : 한국어 */
@@ -3943,6 +3979,8 @@
                                 ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
                                        WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
                                        WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+		                               WHEN I.PROD_CASE_CD='DP006305' THEN 'cashExchange'
+		                               WHEN I.PROD_CASE_CD='DP006306' THEN 'chargeCard'                                         
                                   END) AS PROD_CASE_CD  
                                 ,NVL(N.MM_PROD_MAX_SALE_QTY, I.MM_MAX_SALE_QTY ) AS MTH_MAX_CNT     /* 월_최대_판매_수량 */
                                 ,NVL(N.DLY_PROD_MAX_SALE_QTY, I.DAY_MAX_SALE_QTY ) AS DLY_MAX_CNT   /* 일_최대_판매_수량 */
@@ -4048,7 +4086,8 @@
                         <if test="sellingOnly">
                         AND NVL(B.CHNL_CNT, 0) <![CDATA[> ]]> 0
                         AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */       
-                        </if>                         
+                        </if>                
+                        AND I.PROD_CASE_CD != 'DP006306'         
                         AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
                         AND F.LANG_CD= #{langCd}          /* ko : 한국어 */
                         AND O.LANG_CD= #{langCd}          /* ko : 한국어 */
@@ -4071,6 +4110,245 @@
            )
            WHERE DECODE(SPECIALSALE,'Y',NO1,NO) <![CDATA[ <= ]]> 1
     </select>            
+                  
+                  
+    <!-- 충전권 브랜드샵 조회-->
+    <select id="getShoppingBrandShopBrandList" parameterType="ShoppingReq" resultType="MetaInfo">
+       /* ShoppingMapper.xml.getShoppingBrandShopBrandList,충전권 브랜드샵 조회, 김형식/SK플래닛  , 2015-10-06 */
+       SELECT * FROM (
+           SELECT 
+                     KK.*
+                    ,COUNT(1) OVER() AS TOTALCOUNT
+                    ,ROWNUM AS RNUM         
+             FROM(
+                SELECT 
+                           BRAND_ID 
+                         , ORG_BRAND_ID
+                         , BRAND_NM AS catalogNm
+                         , MENU_ID 
+                         , MENU_NM 
+                         , TOP_MENU_ID 
+                         ,(SELECT MENU_NM
+                              FROM TB_DP_MENU_CATEGORY_DESC
+                             WHERE MENU_ID = TOP_MENU_ID
+                               AND LANG_CD = #{langCd}          /* ko : 한국어 */
+                               AND ROWNUM = 1
+                           ) AS TOP_MENU_NM                      
+                         ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
+                            WHERE PROD_ID = BRAND_ID AND IMG_CD =#{imageCd}
+                          ) AS FILE_PATH
+					     ,(
+				            SELECT C.REG_ID 
+				            FROM TB_DP_SHPG_BRAND A
+				                ,TB_DP_SHPG_CATALOG B
+				                ,TB_DP_PROD_CATALOG_MAPG C
+				            WHERE A.BRAND_ID = B.BRAND_ID
+				              AND B.CATALOG_ID = C.CATALOG_ID    
+				              AND A.BRAND_ID= AA.BRAND_ID
+                              AND C.BASE_YN='Y'
+                              AND C.USE_YN='Y'				              
+				              AND ROWNUM =1            
+					       )AS regId
+                 FROM (
+                    SELECT *
+                    FROM (
+                        SELECT  
+                              SB.BRAND_ID
+                             ,SB.ORG_BRAND_ID
+                             ,SB.BRAND_NM
+                             ,MC.MENU_ID
+                             ,MCD.MENU_NM
+                             ,MC.TOP_MENU_ID
+                        FROM  TB_DP_SHPG_BRAND SB
+                             ,TB_DP_MENU_CATEGORY MC
+                             ,TB_DP_MENU_CATEGORY_DESC MCD
+                        WHERE SB.MENU_ID = MC.MENU_ID
+                          AND SB.MENU_ID = MCD.MENU_ID
+                            <if test="brandId != null">
+                              AND SB.BRAND_ID = #{brandId}
+                            </if>                          
+                          AND SB.CHARGE_CARD_YN ='Y'
+                          AND MC.USE_YN ='Y'
+                          AND MCD.LANG_CD =#{langCd}
+                          AND EXISTS (
+                               SELECT
+                                        'X'
+                                 FROM 
+                                          TB_DP_SHPG_BRAND A
+                                         ,TB_DP_SHPG_CATALOG B
+                                         ,TB_DP_SHPG_CATALOG_DESC C
+                                         ,TB_DP_MENU_SHPG_MAPG D
+                                         ,TB_DP_MENU_CATEGORY E
+                                         ,TB_DP_MENU_CATEGORY_DESC F 
+                                         ,TB_DP_PROD_CATALOG_MAPG G 
+                                         ,TB_DP_PROD_RSHP H
+                                         ,TB_DP_SHPG_PROD I
+                                         ,TB_DP_PROD J
+                                         ,TB_DP_TENANT_PROD K
+                                         ,TB_DP_TENANT_PROD K1
+                                         ,TB_DP_TENANT_PROD_PRICE L
+
+                                WHERE 1=1
+                                AND A.BRAND_ID = B.BRAND_ID
+                                AND B.CATALOG_ID = C.CATALOG_ID
+                                AND C.CATALOG_ID = D.CATALOG_ID     
+                                AND D.MENU_ID = E.MENU_ID
+                                AND D.MENU_ID = F.MENU_ID
+                                AND B.CATALOG_ID = G.CATALOG_ID
+                                AND G.PROD_ID = H.PROD_ID
+                                AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
+                                AND H.PART_PROD_ID = I.PROD_ID
+                                AND I.PROD_ID = J.PROD_ID
+                                AND I.PROD_ID = K.PROD_ID
+                                AND I.PROD_ID = L.PROD_ID
+                                AND G.PROD_ID = K1.PROD_ID
+                                AND K.TENANT_ID = K1.TENANT_ID
+                                AND K.TENANT_ID = L.TENANT_ID 
+                                AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/ 
+                                AND NVL(B.CHNL_CNT, 0) > 0          
+                                AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
+                                AND F.LANG_CD= #{langCd}         /* ko : 한국어 */
+                                AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                                AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+                                AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+                                AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                                AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+                                AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                                AND I.PROD_CASE_CD = 'DP006306' 
+                                AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                                AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
+                                AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                                AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                                AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+                                AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
+                                AND A.BRAND_ID =SB.BRAND_ID
+                                AND  EXISTS (
+                                    SELECT 1 
+                                      FROM  TB_DP_SPRT_DEVICE DV  
+                                     WHERE PROD_ID = I.PROD_ID
+                                       AND DV.DEVICE_MODEL_CD  = #{deviceModelCd} 
+                                     UNION ALL
+                                    SELECT 1 
+                                      FROM  TB_DP_SPRT_DEVICE DV  
+                                     WHERE PROD_ID = I.PROD_ID                             
+                                       AND DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo} 
+                                )
+                          )
+                     )
+                    ORDER BY
+	                    MENU_ID , 
+	                    BRAND_NM
+                ) AA
+            )KK
+        )
+        WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select>            
+
+    <!-- 특정 브랜드샵 충전권 상품 조회-->
+    <select id="getShoppingBrandShopChargeCardList" parameterType="Map" resultType="ProductBasicInfo">
+       /* ShoppingMapper.xml.getShoppingBrandShopChargeCardList,특정 브랜드샵 충전권 상품 조회, 김형식/SK플래닛  , 2015-10-06 */
+        SELECT *
+         FROM ( 
+             SELECT 
+                    rownum AS RNUM        
+                   ,COUNT(CATALOG_ID) OVER() AS TOTALCOUNT      
+                   ,CATALOG_ID AS catalogId
+                   ,BRAND_ID AS brandId
+                   ,MENU_ID AS menuId
+                   ,TENANT_ID AS tenentId
+                   ,PROD_ID as prodId
+                   ,PART_PROD_ID as partProdId 
+                   ,#{channelContentTypeCd} as contentsTypeCd
+             FROM (
+                  SELECT  * 
+                   FROM (
+                          SELECT 
+                                 B.CATALOG_ID 
+                               ,C.CATALOG_NM 
+                               ,A.BRAND_ID  
+                               ,D.MENU_ID  
+                               ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
+                               ,K.TENANT_ID 
+                               ,H.PROD_ID 
+                               ,H.PART_PROD_ID
+                               ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT
+                          FROM 
+                                  TB_DP_SHPG_BRAND A
+                                 ,TB_DP_SHPG_CATALOG B
+                                 ,TB_DP_SHPG_CATALOG_DESC C
+                                 ,TB_DP_MENU_SHPG_MAPG D
+                                 ,TB_DP_MENU_CATEGORY E
+                                 ,TB_DP_MENU_CATEGORY_DESC F 
+                                 ,TB_DP_PROD_CATALOG_MAPG G 
+                                 ,TB_DP_PROD_RSHP H
+                                 ,TB_DP_SHPG_PROD I
+                                 ,TB_DP_PROD J
+                                 ,TB_DP_TENANT_PROD K
+                                 ,TB_DP_TENANT_PROD_PRICE L
+                                 ,(SELECT /*+ ORDERED */
+                                        B1.PROD_ID
+                                      , B1.SPRC_DC_RATE
+                                      , B1.SPRC_PRICE
+                                   FROM  TB_DP_PROD_RSHP A1
+                                        ,TB_DP_SPRC_PROD B1
+                                   WHERE 1=1
+                                     AND A1.PART_PROD_ID = B1.PROD_ID
+                                     AND B1.EXPO_YN ='Y'
+                                     AND B1.CPN_ID IS NOT NULL
+                                     AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
+                                  )N
+                        WHERE 1=1
+                        AND A.BRAND_ID = B.BRAND_ID
+                        AND B.CATALOG_ID = C.CATALOG_ID
+                        AND C.CATALOG_ID = D.CATALOG_ID     
+                        AND D.MENU_ID = E.MENU_ID
+                        AND D.MENU_ID = F.MENU_ID
+                        AND B.CATALOG_ID = G.CATALOG_ID
+                        AND G.PROD_ID = H.PROD_ID
+                        AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
+                        AND H.PART_PROD_ID = I.PROD_ID
+                        AND I.PROD_ID = J.PROD_ID
+                        AND I.PROD_ID = K.PROD_ID
+                        AND I.PROD_ID = L.PROD_ID
+                        AND K.TENANT_ID = L.TENANT_ID 
+                        AND I.PROD_ID = N.PROD_ID(+)  
+                        AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
+                        AND NVL(B.CHNL_CNT, 0) > 0          
+                        AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
+                        AND F.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
+                        AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                        AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+                        AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+                        AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                        AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+                        AND I.PROD_CASE_CD = 'DP006306' 
+                        AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
+                        AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                        AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+                        AND K.TENANT_ID = #{tenantHeader.tenantId}  /* INPUT 테넌트ID */
+                        AND A.BRAND_ID = #{req.brandId}        /* INPUT 브랜드ID */
+                        AND NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) = #{req.price} 
+                        AND EXISTS (
+                            SELECT /*+ UNNEST NL_SJ INDEX(H (DEVICE_MODEL_CD, PROD_ID)) */ 1    --ADDED BY 2014.10.14
+                            FROM  TB_DP_SPRT_DEVICE DV  
+                            WHERE 1=1
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                              AND PROD_ID = I.PROD_ID
+                            )                        
+                   ) 
+                 WHERE NO =1
+               ORDER BY 
+               <if test='req.orderedBy == "lowprice"'>
+                PROD_AMT ASC
+               </if>
+               <if test='req.orderedBy == "highprice"'>
+                 PROD_AMT DESC
+               </if>
+                 , CATALOG_NM ASC
+               ) 
+        ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
+    </select>         
                   
               
 </mapper>

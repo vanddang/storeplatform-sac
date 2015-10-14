@@ -28,6 +28,7 @@ public class DpBrandInfo extends BrandCatalogProdImgInfo {
 	private String txType; // 상품구분 브랜드 : bd, 카탈로그 : ct
 	private String cudType; // CUD
 	private String createBrandId; // 브랜드 생성 ID
+	private String chargeBrandYn; //충전권 브랜드
 	private List<String> fileNameList;
 	private List<byte[]> isList;
 
@@ -134,6 +135,20 @@ public class DpBrandInfo extends BrandCatalogProdImgInfo {
 	 */
 	public void setCreateBrandId(String createBrandId) {
 		this.createBrandId = createBrandId;
+	}
+
+	/**
+	 * @return the chargeBrandYn
+	 */
+	public String getChargeBrandYn() {
+		return chargeBrandYn;
+	}
+
+	/**
+	 * @param chargeBrandYn the chargeBrandYn to set
+	 */
+	public void setChargeBrandYn(String chargeBrandYn) {
+		this.chargeBrandYn = chargeBrandYn;
 	}
 
 	/**

@@ -293,4 +293,28 @@ public interface ShoppingService {
 	 * @return ShoppingRes
 	 */
 	public ShoppingDetailRes getShoppingDetailV2(SacRequestHeader header, ShoppingDetailReq req);
+	
+	/**
+	 * 충전권 브랜드샵 조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	public ShoppingRes getShoppingBrandShopChargeBrandList(SacRequestHeader header, ShoppingReq req);
+	
+	
+	/**
+	 * 충전권 상품 조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingBrandRes
+	 */
+	public ShoppingBrandRes getShoppingBrandShopChargeCardList(SacRequestHeader header, ShoppingReq req);
+	
 }

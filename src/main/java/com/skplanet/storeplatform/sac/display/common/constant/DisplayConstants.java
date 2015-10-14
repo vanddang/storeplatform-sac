@@ -97,6 +97,7 @@ public class DisplayConstants {
 	public static final String DP_CORPORATION_IDENTIFIER_CD = "corporation";
 	public static final String DP_FOREIGNER_IDENTIFIER_CD = "foreigner";
 	public static final String DP_BRAND_IDENTIFIER_CD = "brand";
+	public static final String DP_ORG_BRAND_IDENTIFIER_CD = "orgBrand";
 	public static final String DP_THEME_IDENTIFIER_CD = "theme";
 	public static final String DP_SONG_IDENTIFIER_CD = "song";
 	public static final String DP_OUTSDCONTENTS_ONE_CD = "oneday";
@@ -449,6 +450,8 @@ public class DisplayConstants {
 	public static final String DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION = "popular";
 
 	public static final String DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION = "lowprice";
+	
+	public static final String DP_SHOPPING_HIGHPRICE_DEFAULT_ORDERED_OPTION = "highprice";
 
 	public static final String DP_SHOPPING_CLOSINGTIME_DEFAULT_ORDERED_OPTION = "closingTime";
 

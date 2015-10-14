@@ -580,6 +580,10 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			identifierList.add(identifier);
 
 			if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+				if(metaInfo.getProdCaseCd().equals("chargeCard")){	//2015.10.06 jade 추가 (충전권일경우만)
+					identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
+					identifierList.add(identifier);				
+				}				
 				if (metaInfo.getCatalogId() != null) {
 					identifier = this.generateIdentifier(DisplayConstants.DP_CATALOG_IDENTIFIER_CD,
 							metaInfo.getCatalogId());

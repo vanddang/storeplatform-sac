@@ -304,7 +304,8 @@ public class MetaInfo extends CommonInfo {
 	private String specialSaleYn;
 	private String specialTypeCd;
 	private String catalogVodUrl;
-
+	private String orgBrandId;
+	private String regId;
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
 	private String tagNm;
@@ -4664,6 +4665,35 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setCatalogVodUrl(String catalogVodUrl) {
 		this.catalogVodUrl = catalogVodUrl;
+	}
+
+	/**
+	 * @return the orgBrandId
+	 */
+	public String getOrgBrandId() {
+		return orgBrandId;
+	}
+
+	/**
+	 * @param orgBrandId the orgBrandId to set
+	 */
+	public void setOrgBrandId(String orgBrandId) {
+		this.orgBrandId = orgBrandId;
+	}
+
+	
+	/**
+	 * @return the regId
+	 */
+	public String getRegId() {
+		return regId;
+	}
+
+	/**
+	 * @param regId the regId to set
+	 */
+	public void setRegId(String regId) {
+		this.regId = regId;
 	}
 
 	public String getBookTbctns() {

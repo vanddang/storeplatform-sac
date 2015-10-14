@@ -501,6 +501,7 @@ public class ShoppingCouponSacController {
 			brandInfo.setTxType(couponReq.getTxType());
 			brandInfo.setFileNameList(couponReq.getFileNameList());
 			brandInfo.setIsList(couponReq.getIsList());
+			brandInfo.setChargeBrandYn(couponReq.getChargeBrandYn());
 			
 			if (StringUtils.isEmpty(couponReq.getCudType())) {
 				result = false;
@@ -528,6 +529,14 @@ public class ShoppingCouponSacController {
 				result = false;
 				message="필수 파라미터 값이 없습니다. (brandImage)\n";
 			}
+//			if (StringUtils.isEmpty(couponReq.getChargeBrandYn())) {
+//				result = false;
+//				message="필수 파라미터 값이 없습니다. (chargeBrandYn)\n";
+//			}else if (!couponReq.getChargeBrandYn().equals("Y") && !couponReq.getChargeBrandYn().equals("N")) {
+//				message="chargeBrandYn 값은 Y or N 로만 가능합니다.\n";
+//				result = false;
+//			}
+			
 			if (!result) {
 				errorData.setErrorMsg(message);
 				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
@@ -904,8 +913,13 @@ public class ShoppingCouponSacController {
 				}
 			}
 
-			if (!couponInfo.getStoreSaleType().equals("1") && !couponInfo.getStoreSaleType().equals("2")
-					&& !couponInfo.getStoreSaleType().equals("3")) {
+			if (!couponInfo.getStoreSaleType().equals("1") 
+					&& !couponInfo.getStoreSaleType().equals("2")
+					&& !couponInfo.getStoreSaleType().equals("3")
+					&& !couponInfo.getStoreSaleType().equals("4")
+					&& !couponInfo.getStoreSaleType().equals("5")
+				) 
+			{
 				message = "유효성 검사 실패 [storeSaleType : 상품유형:" + couponInfo.getStoreSaleType() + "]";
 				result = false;
 			}
