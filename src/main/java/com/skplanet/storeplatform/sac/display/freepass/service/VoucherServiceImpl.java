@@ -128,7 +128,7 @@ public class VoucherServiceImpl implements VoucherService {
 			req.setCount(20);
 		}
 
-		// 페이지당 노출될 ROW 개수 Default 세팅
+		// 이용권 종류가 "ALL"일 경우 빈값으로 셋팅 (All : 전체, OR004301 : 정액권 (VOD/이북/코믹),	OR004302 : 시리즈 패스(VOD/이북/코믹), OR004305 : 게임 캐시 정액제)
 		if ("All".equals(req.getKind())) {
 			req.setKind("");
 		}
@@ -145,7 +145,7 @@ public class VoucherServiceImpl implements VoucherService {
 			}
 		}
 
-		// 19+ 파라미터가 없으면 "N"으로 기본 셋팅
+		// 19+ 상품여부 파라미터가 없으면 "N"으로 기본 셋팅
 		if (StringUtils.isEmpty(req.getPlus19Yn())) {
 			req.setPlus19Yn("N");
 		}
@@ -416,7 +416,7 @@ public class VoucherServiceImpl implements VoucherService {
 								} else
 									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
 
-								// 코믹
+							// 코믹
 							} else if ("DP14".equals(prodMap.getTopMenuId())) {
 								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
@@ -426,7 +426,7 @@ public class VoucherServiceImpl implements VoucherService {
 								} else
 									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
 
-								// 영화
+							// 영화
 							} else if ("DP17".equals(prodMap.getTopMenuId())) {
 								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
@@ -436,7 +436,7 @@ public class VoucherServiceImpl implements VoucherService {
 								} else
 									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
 
-								// TV 방송
+							// TV 방송
 							} else if ("DP18".equals(prodMap.getTopMenuId())) {
 								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
