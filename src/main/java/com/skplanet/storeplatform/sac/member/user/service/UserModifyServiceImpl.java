@@ -1491,20 +1491,20 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 * 2.1.62.	배송지 정보 등록/수정.
 	 * </pre>
 	 * 
-	 * @param header
+	 * @param sacHeader
 	 *            SacRequestHeader
 	 * @param req
 	 *            CreateDeliveryInfoSacReq
 	 * @return CreateDeliveryInfoSacRes
 	 */
 	@Override
-	public CreateDeliveryInfoSacRes createDeliveryInfo(SacRequestHeader header, CreateDeliveryInfoSacReq req) {
+	public CreateDeliveryInfoSacRes createDeliveryInfo(SacRequestHeader sacHeader, CreateDeliveryInfoSacReq req) {
 
 		CreateDeliveryInfoSacRes res = new CreateDeliveryInfoSacRes();
 
 		// 배송지 등록/수정 공통 셋팅
 		CreateDeliveryInfoRequest scReq = new CreateDeliveryInfoRequest();
-		scReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		scReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		scReq.setUserKey(req.getUserKey());
 		scReq.setDeliveryTypeCd(req.getDeliveryTypeCd());
 		scReq.setDeliveryNm(req.getDeliveryNm());
@@ -1538,21 +1538,21 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 * 2.1.63.	배송지 정보 삭제.
 	 * </pre>
 	 * 
-	 * @param header
+	 * @param sacHeader
 	 *            SacRequestHeader
 	 * @param req
 	 *            RemoveDeliveryInfoSacReq
 	 * @return RemoveDeliveryInfoSacRes
 	 */
 	@Override
-	public RemoveDeliveryInfoSacRes removeDeliveryInfo(SacRequestHeader header, RemoveDeliveryInfoSacReq req) {
+	public RemoveDeliveryInfoSacRes removeDeliveryInfo(SacRequestHeader sacHeader, RemoveDeliveryInfoSacReq req) {
 
 		RemoveDeliveryInfoSacRes res = new RemoveDeliveryInfoSacRes();
 
 		try {
 			// 배송지 삭제 셋팅
 			RemoveDeliveryInfoRequest scReq = new RemoveDeliveryInfoRequest();
-			scReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
+			scReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 			scReq.setUserKey(req.getUserKey());
 			scReq.setDeliverySeq(req.getDeliverySeq());
 			// 삭제 진행

@@ -2334,14 +2334,14 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * 2.1.64.	배송지 정보 조회.
 	 * </pre>
 	 * 
-	 * @param header
+	 * @param sacHeader
 	 *            SacRequestHeader
 	 * @param req
 	 *            SearchDeliveryInfoSacReq
 	 * @return SearchDeliveryInfoSacRes
 	 */
 	@Override
-	public SearchDeliveryInfoSacRes searchDeliveryInfo(SacRequestHeader header, SearchDeliveryInfoSacReq req) {
+	public SearchDeliveryInfoSacRes searchDeliveryInfo(SacRequestHeader sacHeader, SearchDeliveryInfoSacReq req) {
 
 		// 1. 응답 객체 셋팅
 		SearchDeliveryInfoSacRes res = new SearchDeliveryInfoSacRes();
@@ -2350,7 +2350,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		// 2. header, userKey 셋팅
 		SearchDeliveryInfoRequest scReq = new SearchDeliveryInfoRequest();
-		scReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		scReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		scReq.setUserKey(req.getUserKey());
 		scReq.setDeliveryTypeCd(req.getDeliveryTypeCd());
 
@@ -2384,7 +2384,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			if (e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				// 3-2-1. userKey변환이력 조회 : 모바일 > ID회원 전환자중 모바일회원의 userKey로 접근할수 있기 때문에 변환 이력에서 조회
 				SearchAfterUserKeyRequest scKeyReq = new SearchAfterUserKeyRequest();
-				scKeyReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
+				scKeyReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 				scKeyReq.setUserKey(req.getUserKey());
 
 				SearchAfterUserKeyResponse scKeyRes = this.userSCI.searchAfterUserKey(scKeyReq);
