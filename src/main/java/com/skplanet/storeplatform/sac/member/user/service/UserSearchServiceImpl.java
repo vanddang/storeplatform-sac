@@ -2352,6 +2352,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchDeliveryInfoRequest scReq = new SearchDeliveryInfoRequest();
 		scReq.setCommonRequest(this.mcc.getSCCommonRequest(header));
 		scReq.setUserKey(req.getUserKey());
+		scReq.setDeliveryTypeCd(req.getDeliveryTypeCd());
 
 		// 3. SC 배송지 조회 호출
 		try {
