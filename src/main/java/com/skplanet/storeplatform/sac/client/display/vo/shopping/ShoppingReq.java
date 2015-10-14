@@ -58,6 +58,7 @@ public class ShoppingReq extends CommonInfo {
 	private String bannerImgCd; // 배너이미지코드
 	private String promotionImgCd; // 프로모션이미지코드
 	private String promotionDetailImgCd; // 프로모션상세이미지코드
+	private String price; // 판매금액
 
 	/**
 	 * @return the tenantId
@@ -567,6 +568,20 @@ public class ShoppingReq extends CommonInfo {
 	 */
 	public void setPromotionDetailImgCd(String promotionDetailImgCd) {
 		this.promotionDetailImgCd = promotionDetailImgCd;
+	}
+
+	/**
+	 * @return the price
+	 */
+	public String getPrice() {
+		return price;
+	}
+
+	/**
+	 * @param price the price to set
+	 */
+	public void setPrice(String price) {
+		this.price = price;
 	}
 
 }
