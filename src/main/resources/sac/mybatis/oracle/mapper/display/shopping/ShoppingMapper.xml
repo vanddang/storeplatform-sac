@@ -4328,7 +4328,9 @@
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}  /* INPUT 테넌트ID */
                         AND A.BRAND_ID = #{req.brandId}        /* INPUT 브랜드ID */
-                        AND NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) = #{req.price} 
+                        <if test="req.price != null">
+                        AND NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) = #{req.price}
+                        </if> 
                         AND EXISTS (
                             SELECT /*+ UNNEST NL_SJ INDEX(H (DEVICE_MODEL_CD, PROD_ID)) */ 1    --ADDED BY 2014.10.14
                             FROM  TB_DP_SPRT_DEVICE DV  
