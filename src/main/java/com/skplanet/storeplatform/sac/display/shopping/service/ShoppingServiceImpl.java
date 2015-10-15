@@ -4407,7 +4407,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		
 		if (StringUtils.isEmpty(req.getPrice())) {
-			throw new StorePlatformException("SAC_DSP_0002", "price", req.getPrice());
+			req.setPrice(null);
 		}
 
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
