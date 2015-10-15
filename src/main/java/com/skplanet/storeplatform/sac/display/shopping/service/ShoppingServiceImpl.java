@@ -4408,6 +4408,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 		
 		if (StringUtils.isEmpty(req.getPrice())) {
 			req.setPrice(null);
+		}else{
+			Boolean isNum = req.getPrice().matches("^[0-9]+$");
+			if(!isNum){
+				throw new StorePlatformException("SAC_DSP_0003", "price", req.getPrice());
+			}
 		}
 
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
