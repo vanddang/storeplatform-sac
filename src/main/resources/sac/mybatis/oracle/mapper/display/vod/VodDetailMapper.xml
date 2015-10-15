@@ -556,7 +556,7 @@
                              , TP.TENANT_ID
                              , MP.CHAPTER
                              , MC.MENU_ID AS MENU_ID
-                             , MP.POSS_LEND_CLSF_CD
+                             , UP.POSS_LEND_CLSF_CD
                              , PD.DRM_YN
                              , UP.DWLD_STRM_CLSF_CD
                              , UP.USE_PERIOD_UNIT_CD
