@@ -493,30 +493,19 @@
     <!-- 에피소드 조회시 정보 조회-->   
     <select id="searchVocherProductInfo" parameterType="HashMap" resultType="metaInfo">
         SELECT /* VoucherMapper.xml, searchVocherProductInfo, 에피소드 조회시 정보 조회, SAC전시 김형식/지티소프트, 2015-08-18 */
-            CASE
-                WHEN A.SVC_TYPE_CD = 'DP001111'
-                THEN MU.POSS_LEND_CLSF_CD
-                WHEN A.SVC_TYPE_CD = 'DP001115'
-                THEN VO.POSS_LEND_CLSF_CD
-                WHEN A.SVC_TYPE_CD = 'DP001116'
-                THEN EB.POSS_LEND_CLSF_CD
-            END AS POSS_LEND_CLSF_CD
-           ,EB.BOOK_CLSF_CD
+	           UP.POSS_LEND_CLSF_CD
+	          ,EB.BOOK_CLSF_CD
         FROM TB_DP_PROD A
             , TB_DP_PROD_DESC B
             , TB_DP_TENANT_PROD C
-             , TB_DP_APP_PROD AP
             , TB_DP_EBOOK_PROD EB
-            , TB_DP_VOD_PROD VO
-            , TB_DP_MUSIC_PROD MU
+            , TB_DP_USE_POLICY UP
          WHERE A.PROD_ID = B.PROD_ID
           AND B.LANG_CD = #{langCd}
           AND A.PROD_ID = C.PROD_ID
           AND C.TENANT_ID = #{tenantId}
-          AND A.PROD_ID = AP.PROD_ID (+)
           AND A.PROD_ID = EB.PROD_ID (+)
-          AND A.PROD_ID = VO.PROD_ID (+)
-          AND A.PROD_ID = MU.PROD_ID (+)
+          AND A.USE_POLICY_ID = UP.USE_POLICY_ID
           AND A.PROD_ID = #{prodId}
     </select>
     
