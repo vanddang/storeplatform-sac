@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="CategorySpecificProduct">
-	<!-- 상품별 서비스 그룹 코드 조회-->
-	<select id="selectProductInfoList" resultType="ProductBasicInfo">
-		SELECT /* CategorySpecificProductMapper.xml, selectProductInfoList, SAC 전시, 2014-03-03*/		
+    <!-- 상품별 서비스 그룹 코드 조회-->
+    <select id="selectProductInfoList" resultType="ProductBasicInfo">
+        SELECT /* CategorySpecificProductMapper.xml, selectProductInfoList, SAC 전시, 2014-03-03*/        
              JA.PROD_ID,
              JA.SVC_GRP_CD,
              JA.SVC_TYPE_CD,
@@ -13,55 +13,55 @@
              JA.PROD_ID AS PART_PROD_ID,
              JA.PART_PARENT_CLSF_CD AS PART_PARENT_CLSF_CD,
              ROWNUM
-		FROM 
-		( 	 
-			 SELECT 
-			       TDP.PROD_ID,
-			       TDP.SVC_GRP_CD,
-			       TDP.SVC_TYPE_CD,
-			       TDP.CONTENTS_TYPE_CD,
-			       TDP.META_CLSF_CD,
-			       TDP.TOP_MENU_ID,
-			       TDP.PROD_ID AS PART_PROD_ID,
+        FROM 
+        (    
+             SELECT 
+                   TDP.PROD_ID,
+                   TDP.SVC_GRP_CD,
+                   TDP.SVC_TYPE_CD,
+                   TDP.CONTENTS_TYPE_CD,
+                   TDP.META_CLSF_CD,
+                   TDP.TOP_MENU_ID,
+                   TDP.PROD_ID AS PART_PROD_ID,
                    APP.PART_PARENT_CLSF_CD,
-			       ROWNUM
-		      FROM TB_DP_PROD TDP
+                   ROWNUM
+              FROM TB_DP_PROD TDP
               LEFT OUTER JOIN TB_DP_APP_PROD APP
                 ON APP.PROD_ID = TDP.PROD_ID
-		      WHERE TDP.PROD_ID IN
-		           <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
-		                #{item}
-		           </foreach>
-		     UNION ALL
-		     SELECT * FROM(
-			     SELECT 
-			           A.CATALOG_ID AS PROD_ID,
-			           C.SVC_GRP_CD,
-			           C.SVC_TYPE_CD,
-			           C.CONTENTS_TYPE_CD,
-			           C.META_CLSF_CD,
-			           C.TOP_MENU_ID,
-			           B.PROD_ID AS PART_PROD_ID,
+              WHERE TDP.PROD_ID IN
+                   <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
+                        #{item}
+                   </foreach>
+             UNION ALL
+             SELECT * FROM(
+                 SELECT 
+                       A.CATALOG_ID AS PROD_ID,
+                       C.SVC_GRP_CD,
+                       C.SVC_TYPE_CD,
+                       C.CONTENTS_TYPE_CD,
+                       C.META_CLSF_CD,
+                       C.TOP_MENU_ID,
+                       B.PROD_ID AS PART_PROD_ID,
                        null as PART_PARENT_CLSF_CD,
-			           ROW_NUMBER() OVER ( PARTITION BY A.CATALOG_ID ORDER BY B.PROD_ID) AS RNUM
-			      FROM TB_DP_PROD_CATALOG_MAPG A, 
-			           TB_DP_PROD_RSHP B, 
-			           TB_DP_PROD C
-			     WHERE A.CATALOG_ID IN  
-			          <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
-			               #{item}
-			          </foreach>
-			     AND   A.PROD_ID = B.PROD_ID
-			     AND   B.PROD_ID = C.PROD_ID
-			  ) LA
+                       ROW_NUMBER() OVER ( PARTITION BY A.CATALOG_ID ORDER BY B.PROD_ID) AS RNUM
+                  FROM TB_DP_PROD_CATALOG_MAPG A, 
+                       TB_DP_PROD_RSHP B, 
+                       TB_DP_PROD C
+                 WHERE A.CATALOG_ID IN  
+                      <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
+                           #{item}
+                      </foreach>
+                 AND   A.PROD_ID = B.PROD_ID
+                 AND   B.PROD_ID = C.PROD_ID
+              ) LA
                 WHERE LA.RNUM = 1   
-		 ) JA
-	    <if test = "list != null">  
-	     ORDER BY INSTR
-		     <foreach collection="list" item="item" index="index" open="(" separator="||" close=",PROD_ID)"> 
-		         #{item}
-		     </foreach>
-	    </if>   
+         ) JA
+        <if test = "list != null">  
+         ORDER BY INSTR
+             <foreach collection="list" item="item" index="index" open="(" separator="||" close=",PROD_ID)"> 
+                 #{item}
+             </foreach>
+        </if>   
     </select>
     
     <!-- 상품별 서비스 그룹 코드 조회-->
@@ -79,16 +79,16 @@
         FROM 
         (    
              SELECT 
-			     A.PROD_ID,
-			     A.SVC_GRP_CD,
-			     A.SVC_TYPE_CD,
-			     A.CONTENTS_TYPE_CD,
-			     A.META_CLSF_CD,
-			     A.TOP_MENU_ID,
-			     A.PROD_ID AS PART_PROD_ID,
-			     B.OUTSD_CONTENTS_ID
-			FROM TB_DP_PROD A
-			     , TB_DP_MUSIC_PROD B   
+                 A.PROD_ID,
+                 A.SVC_GRP_CD,
+                 A.SVC_TYPE_CD,
+                 A.CONTENTS_TYPE_CD,
+                 A.META_CLSF_CD,
+                 A.TOP_MENU_ID,
+                 A.PROD_ID AS PART_PROD_ID,
+                 B.OUTSD_CONTENTS_ID
+            FROM TB_DP_PROD A
+                 , TB_DP_MUSIC_PROD B   
               WHERE 1=1
               AND B.OUTSD_CONTENTS_ID IN
                    <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
@@ -188,8 +188,8 @@
                       , D.SVC_GRP_CD
                       , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{langCd}) AS SVC_GRP_NM
                       , D.EXPO_SELLER_NM
-					  , D.EXPO_SELLER_TELNO
-					  , D.EXPO_SELLER_EMAIL
+                      , D.EXPO_SELLER_TELNO
+                      , D.EXPO_SELLER_EMAIL
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -442,7 +442,8 @@
                            , I.PART_PROD_ID
                            , C.MENU_NM
                            , C.MENU_DESC
-                           , Q.POSS_LEND_CLSF_CD
+                           --, Q.POSS_LEND_CLSF_CD
+                           , R.POSS_LEND_CLSF_CD /* 채널에서 에피소드의 소장대여 코드를 조회하도록 변경 */
                            , D.META_CLSF_CD
                            , D.CONTENTS_TYPE_CD
                            , D.EXPO_SELLER_EMAIL
@@ -468,9 +469,9 @@
                            , L.CHAPTER
                            , L.SAMPL_URL
                            , L.SC_SAMPL_URL
-	                       , M.FILE_PATH
-	                       , M.FILE_NM
-	                       , M.FILE_SIZE          
+                           , M.FILE_PATH
+                           , M.FILE_NM
+                           , M.FILE_SIZE          
                            , O.PROD_AMT
                            , O.PROD_NET_AMT
                            , G.PROD_STATUS_CD
@@ -505,8 +506,8 @@
                            , E.BRDC_COMP_CD          
                            , E.GENRE_CD
                            , D.REG_DT
-                           , NVL(CASE WHEN L.POSS_LEND_CLSF_CD = 'DP010601' THEN J.DRM_YN END, 'N') AS STORE_DRM_YN
-                           , NVL(CASE WHEN L.POSS_LEND_CLSF_CD != 'DP010601' THEN J.DRM_YN END, 'N') AS PLAY_DRM_YN
+                           , NVL(CASE WHEN R.POSS_LEND_CLSF_CD = 'DP010601' THEN J.DRM_YN END, 'N') AS STORE_DRM_YN
+                           , NVL(CASE WHEN R.POSS_LEND_CLSF_CD != 'DP010601' THEN J.DRM_YN END, 'N') AS PLAY_DRM_YN
                         FROM TB_DP_MENU_CATEGORY           A
                            , TB_DP_MENU_CATEGORY_PROD_MAPG B
                            , TB_DP_MENU_CATEGORY_DESC      C
@@ -525,6 +526,7 @@
                            , TB_DP_TENANT_PROD             P
                            , TB_DP_PROD_PREFIX             EP_PF
                            , TB_DP_USE_POLICY              Q
+                           , TB_DP_USE_POLICY              R
                        WHERE A.MENU_ID = B.MENU_ID
                          AND A.MENU_ID = C.MENU_ID
                          AND B.PROD_ID = D.PROD_ID
@@ -533,8 +535,8 @@
                          AND B.PROD_ID = G.PROD_ID
                          AND B.PROD_ID = H.PROD_ID
                          AND B.PROD_ID = I.PROD_ID
-			             AND B.PROD_ID = M.PROD_ID
-			             AND D.PROD_ID = CH_PF.PROD_ID(+) /* 채널의 PREFIX */
+                         AND B.PROD_ID = M.PROD_ID
+                         AND D.PROD_ID = CH_PF.PROD_ID(+) /* 채널의 PREFIX */
                          AND G.TENANT_ID = H.TENANT_ID                      
                          AND G.TENANT_ID = N.TENANT_ID(+)
                          AND G.TENANT_ID = O.TENANT_ID           
@@ -545,7 +547,8 @@
                          AND I.PART_PROD_ID = O.PROD_ID
                          AND I.PART_PROD_ID = P.PROD_ID
                          AND J.PROD_ID = EP_PF.PROD_ID(+) /* 에피소드의 PREFIX */
-			             AND D.USE_POLICY_ID = Q.USE_POLICY_ID(+)
+                         AND D.USE_POLICY_ID = Q.USE_POLICY_ID(+) /* 채널의 사용 정책ID */
+                         AND J.USE_POLICY_ID = R.USE_POLICY_ID(+) /* 에피소드의 사용 정책ID */
                          AND A.USE_YN = 'Y'
                          AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                          AND C.LANG_CD = #{langCd}    /* ko : 한국어 */
@@ -735,7 +738,7 @@
              , TB.TOP_MENU_ID
              , TB.MENU_ID
              , TB.MENU_NM
-	             , TB.MENU_DESC
+                 , TB.MENU_DESC
              , TB.META_CLSF_CD
              , TB.PROD_ID
              , TB.PART_PROD_ID
@@ -752,7 +755,7 @@
              , TB.ISSUE_DAY
              , TB.CHNL_COMP_NM
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
-			 , NVL(SERIES_CONTENTS_CNT, 0) AS SERIAL_COUNT
+             , NVL(SERIES_CONTENTS_CNT, 0) AS SERIAL_COUNT
              , NVL(BOOK_CONTENTS_CNT, 0) AS BOOK_COUNT
              , NVL(MGZIN_CONTENTS_CNT, 0) AS MAGAZINE_COUNT
               <if test='contentsTypeCd == "PD002501"'>
@@ -856,9 +859,9 @@
                       , D.EXPO_SELLER_NM
                       , D.EXPO_SELLER_TELNO
                       , D.EXPO_SELLER_EMAIL
-					  , E.SERIES_CONTENTS_CNT
-            		  , E.BOOK_CONTENTS_CNT
-            		  , E.MGZIN_CONTENTS_CNT
+                      , E.SERIES_CONTENTS_CNT
+                      , E.BOOK_CONTENTS_CNT
+                      , E.MGZIN_CONTENTS_CNT
                       , J.CID AS EPSD_CID
                       , NVL(D.PLUS19_YN, 'N') AS PLUS19_YN
                       , CPP.PREFIX_TITLE
@@ -907,15 +910,15 @@
                       , TB_DP_PROD_PREFIX             CPP
                    <if test='contentsTypeCd == "PD002502"'>
                       ,( SELECT 
-							PROD_ID
-							, FILE_PATH
-							, FILE_NM, FILE_SIZE
-							FROM TB_DP_PROD_IMG
-							WHERE PROD_ID  = #{prodId}
-							AND IMG_CD = 'DP000194'                 /* 이미지코드 */
-							AND EXPO_ORD = 1                        /* 노출순서 */
-							AND LANG_CD = #{langCd}    /* KO : 한국어 */ ) M1 /* 에피소드 이미지 */
-					</if>
+                            PROD_ID
+                            , FILE_PATH
+                            , FILE_NM, FILE_SIZE
+                            FROM TB_DP_PROD_IMG
+                            WHERE PROD_ID  = #{prodId}
+                            AND IMG_CD = 'DP000194'                 /* 이미지코드 */
+                            AND EXPO_ORD = 1                        /* 노출순서 */
+                            AND LANG_CD = #{langCd}    /* KO : 한국어 */ ) M1 /* 에피소드 이미지 */
+                    </if>
                  WHERE A.MENU_ID = B.MENU_ID
                    AND A.MENU_ID = C.MENU_ID
                    AND B.PROD_ID = D.PROD_ID
@@ -1353,43 +1356,43 @@
     
     <!-- 이북/코믹 에피소드 건수/마지막 챕터 (단행/연재/잡지) -->
     <select id="getEbookComicEpisodeCount" parameterType="Map" resultType="MetaInfo">
-		SELECT  
-            	SUM( CASE WHEN T1.BOOK_CLSF_CD = 'DP004301' THEN 1 ELSE 0 END ) AS BOOK_COUNT
-		      , SUM( CASE WHEN T1.BOOK_CLSF_CD = 'DP004302' THEN 1 ELSE 0 END ) AS SERIAL_COUNT
-		      , SUM( CASE WHEN T1.BOOK_CLSF_CD = 'DP004303' THEN 1 ELSE 0 END ) AS MAGAZINE_COUNT
-		      , CASE WHEN T1.BOOK_CLSF_CD = 'DP004301' THEN MAX(CHAPTER) ELSE 0 END BOOK_LAST_CHAPTER      -- 단행
-		      , CASE WHEN T1.BOOK_CLSF_CD = 'DP004302' THEN MAX(CHAPTER) ELSE 0 END SERIAL_LAST_CHAPTER    -- 연재
-		      , CASE WHEN T1.BOOK_CLSF_CD = 'DP004303' THEN MAX(CHAPTER) ELSE 0 END MAGAZINE_LAST_CHAPTER  -- 잡지
-		FROM (
-      		SELECT EP.CHAPTER, EP.BOOK_CLSF_CD
-			 FROM  
-	           <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-			  (SELECT SA.PART_PROD_ID
-			    FROM TB_DP_PROD_RSHP SA
-			   WHERE SA.PROD_ID = #{productBasicInfo.prodId}
-			     AND SA.PROD_RSHP_CD = 'DP010802' 
-			   ) RSHP
-			   </if>
-			   <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-			  (SELECT R.PART_PROD_ID
-			    FROM TB_DP_PROD_RSHP SA
-			      JOIN TB_DP_PROD_RSHP R
-			        ON SA.PART_PROD_ID = #{productBasicInfo.partProdId} AND SA.PROD_RSHP_CD = 'DP010802' AND SA.PROD_ID = R.PROD_ID
-			   ) RSHP
-			   </if>
-			   JOIN TB_DP_PROD SB 
-			    ON RSHP.PART_PROD_ID = SB.PROD_ID AND SB.CONTENTS_TYPE_CD = 'PD002502'
-			   JOIN TB_DP_TENANT_PROD_PRICE SC 
-			    ON SB.PROD_ID = SC.PROD_ID AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
-			   JOIN TB_DP_TENANT_PROD SD
-			    ON SC.PROD_ID = SD.PROD_ID AND SD.PROD_STATUS_CD = 'PD000403'
-			   JOIN TB_DP_EBOOK_PROD EP
-			    ON SD.PROD_ID = EP.PROD_ID
-			 WHERE 1=1
-			   AND SC.TENANT_ID = #{tenantHeader.tenantId}
-			   AND SC.TENANT_ID = SD.TENANT_ID 
-			   GROUP BY EP.CHAPTER, EP.BOOK_CLSF_CD
-		) T1
-		GROUP BY T1.BOOK_CLSF_CD
+        SELECT  
+                SUM( CASE WHEN T1.BOOK_CLSF_CD = 'DP004301' THEN 1 ELSE 0 END ) AS BOOK_COUNT
+              , SUM( CASE WHEN T1.BOOK_CLSF_CD = 'DP004302' THEN 1 ELSE 0 END ) AS SERIAL_COUNT
+              , SUM( CASE WHEN T1.BOOK_CLSF_CD = 'DP004303' THEN 1 ELSE 0 END ) AS MAGAZINE_COUNT
+              , CASE WHEN T1.BOOK_CLSF_CD = 'DP004301' THEN MAX(CHAPTER) ELSE 0 END BOOK_LAST_CHAPTER      -- 단행
+              , CASE WHEN T1.BOOK_CLSF_CD = 'DP004302' THEN MAX(CHAPTER) ELSE 0 END SERIAL_LAST_CHAPTER    -- 연재
+              , CASE WHEN T1.BOOK_CLSF_CD = 'DP004303' THEN MAX(CHAPTER) ELSE 0 END MAGAZINE_LAST_CHAPTER  -- 잡지
+        FROM (
+            SELECT EP.CHAPTER, EP.BOOK_CLSF_CD
+             FROM  
+               <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+              (SELECT SA.PART_PROD_ID
+                FROM TB_DP_PROD_RSHP SA
+               WHERE SA.PROD_ID = #{productBasicInfo.prodId}
+                 AND SA.PROD_RSHP_CD = 'DP010802' 
+               ) RSHP
+               </if>
+               <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+              (SELECT R.PART_PROD_ID
+                FROM TB_DP_PROD_RSHP SA
+                  JOIN TB_DP_PROD_RSHP R
+                    ON SA.PART_PROD_ID = #{productBasicInfo.partProdId} AND SA.PROD_RSHP_CD = 'DP010802' AND SA.PROD_ID = R.PROD_ID
+               ) RSHP
+               </if>
+               JOIN TB_DP_PROD SB 
+                ON RSHP.PART_PROD_ID = SB.PROD_ID AND SB.CONTENTS_TYPE_CD = 'PD002502'
+               JOIN TB_DP_TENANT_PROD_PRICE SC 
+                ON SB.PROD_ID = SC.PROD_ID AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
+               JOIN TB_DP_TENANT_PROD SD
+                ON SC.PROD_ID = SD.PROD_ID AND SD.PROD_STATUS_CD = 'PD000403'
+               JOIN TB_DP_EBOOK_PROD EP
+                ON SD.PROD_ID = EP.PROD_ID
+             WHERE 1=1
+               AND SC.TENANT_ID = #{tenantHeader.tenantId}
+               AND SC.TENANT_ID = SD.TENANT_ID 
+               GROUP BY EP.CHAPTER, EP.BOOK_CLSF_CD
+        ) T1
+        GROUP BY T1.BOOK_CLSF_CD
     </select>
 </mapper>
