@@ -38,9 +38,7 @@
             ,MENU_ID
             ,BRAND_NM
             ,ORG_BRAND_ID
-            <if test="chargeBrandYn != null">
             ,CHARGE_CARD_YN
-            </if>
             ,REG_ID
             ,REG_DT
             ,UPD_ID
@@ -50,9 +48,7 @@
             ,#{dpCatNo}
             ,#{brandNm}
             ,#{brandId}
-            <if test="chargeBrandYn != null">  
             ,#{chargeBrandYn}
-            </if>
             ,'admin'
             ,SYSDATE
             ,'admin'
@@ -68,9 +64,7 @@
         SET 
             BRAND_NM  = #{brandNm}
           , MENU_ID = #{dpCatNo}
-          <if test="chargeBrandYn != null">  
           , CHARGE_CARD_YN = #{chargeBrandYn}
-          </if>
           , UPD_DT    = SYSDATE
         WHERE ORG_BRAND_ID = #{brandId}
     </update>    
