@@ -9,11 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.vo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -107,6 +107,8 @@ public class PurchaseOrderInfo extends CommonInfo {
 	// ------------------------------------------------------------------------
 	// 테넌트 - P/P ByPass 정보
 	private String offeringId; // 오퍼링ID
+	private String chargeMemberId; // 충전자ID
+	private String chargeMemberNm; // 충전자명
 
 	// 선물 수신자 명 & MDN
 	private String nmDelivery; // 선물수신자명
@@ -990,4 +992,41 @@ public class PurchaseOrderInfo extends CommonInfo {
 		this.noMdnDelivery = noMdnDelivery;
 	}
 
+	/**
+	 * Gets charge member id.
+	 *
+	 * @return the charge member id
+	 */
+	public String getChargeMemberId() {
+		return chargeMemberId;
+	}
+
+	/**
+	 * Sets charge member id.
+	 *
+	 * @param chargeMemberId
+	 *            the charge member id
+	 */
+	public void setChargeMemberId(String chargeMemberId) {
+		this.chargeMemberId = chargeMemberId;
+	}
+
+	/**
+	 * Gets charge member nm.
+	 *
+	 * @return the charge member nm
+	 */
+	public String getChargeMemberNm() {
+		return chargeMemberNm;
+	}
+
+	/**
+	 * Sets charge member nm.
+	 *
+	 * @param chargeMemberNm
+	 *            the charge member nm
+	 */
+	public void setChargeMemberNm(String chargeMemberNm) {
+		this.chargeMemberNm = chargeMemberNm;
+	}
 }

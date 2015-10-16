@@ -509,6 +509,9 @@ public class PurchaseOrderController {
 		purchaseOrderInfo.setMediaId(createPurchaseSacReq.getMediaId()); // CPS CPID
 
 		purchaseOrderInfo.setOfferingId(createPurchaseSacReq.getOfferingId()); // 오퍼링 ID
+		purchaseOrderInfo.setChargeMemberId(createPurchaseSacReq.getChargeMemberId()); // 충전자ID
+		purchaseOrderInfo.setChargeMemberNm(createPurchaseSacReq.getChargeMemberNm()); // 충전자명
+
 		// offeringId, resvCol01(암묵적 오퍼링 ID) 처리 : 오퍼링 서비스를 SAC가 수용 시 관련 컬럼 생성 및 예약필드 암묵적 사용 제거
 		// Biz쿠폰 경우 productList 없으니, 예외처리
 		if (CollectionUtils.isNotEmpty(createPurchaseSacReq.getProductList())

@@ -158,6 +158,10 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String SHOPPING_COUPON_PUBLISH_SYNC = "0"; // 즉시 발급
 	public static final String SHOPPING_COUPON_PUBLISH_ASYNC = "1"; // 비동기 발급
 
+	/** 상품권 취소 형태 */
+	public static final String SHOPPING_CANCEL_CHARGE_DEFAULT = "0"; // 일반 취소
+	public static final String SHOPPING_CANCEL_CHARGE_SYSTEM = "1"; // 망상 취소
+
 	/** 구매인증용 회원 정상/비정상 */
 	public static final String VERIFYORDER_USER_STATUS_ABNORMAL = "0"; // 비정상
 	public static final String VERIFYORDER_USER_STATUS_NORMAL = "1"; // 정상
@@ -392,6 +396,9 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String IF_DISPLAY_RES_ACML_DT = "acmlDt";
 	public static final String IF_DISPLAY_RES_PROM_FORCECLOSE_CD = "promForceCloseCd"; // 프로모션 강제 종료 코드
 
+	public static final String IF_DISPLAY_RES_COUPON_CODE = "couponCode"; // 쿠폰 상품 코드
+	public static final String IF_DISPLAY_RES_PROD_CASE_CD = "prodCaseCd"; // 상품 유형
+	public static final String IF_DISPLAY_RES_SELLER_MBRNO = "sellerMbrNo"; // 판매자 회원 번호
 	public static final String IF_DISPLAY_RES_PARENT_PROD_NM = "parentProdNm"; // InApp의 경우 부모 상품명
 	public static final String IF_DISPLAY_RES_SPECIALTYPE_CD = "specialTypeCd";
 	public static final String IF_DISPLAY_RES_PRIVATEACML_LIMIT = "privateAcmlLimit"; // 개인 적립 한도
@@ -399,5 +406,7 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String IF_DISPLAY_RES_DWLD_PERIOD_CNT = "dwldAvailableDayCnt"; // 다운로드 가능일 (현재는 전시의 사용일을 동일하게 세팅하여 사용)
 
 	/** 구매 요청 규격 **/
+	public static final String IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID = "chargeMemberId";
+	public static final String IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM = "chargeMemberNm";
 	public static final String IF_PUR_ORDER_REQ_FLAG = "flag";
 }

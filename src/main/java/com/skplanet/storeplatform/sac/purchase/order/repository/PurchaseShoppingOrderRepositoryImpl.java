@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
+import com.skplanet.storeplatform.external.client.shopping.vo.*;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -20,17 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishDetailEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -132,6 +123,55 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 				ReflectionToStringBuilder.toString(couponPublishEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		return couponPublishEcRes;
+	}
+
+	/**
+	 * <pre>
+	 * 상품권 충전.
+	 * </pre>
+	 *
+	 * @param couponCode
+	 * 		the prod id
+	 * @param prchsId
+	 * 		the prchs id
+	 * @param deviceId
+	 * 		the device id
+	 * @param memberId
+	 * 		the member id
+	 *
+	 * @return the coupon charge ec res
+	 */
+	@Override
+	public CouponChargeEcRes chargeGoods(String couponCode, String prchsId, String deviceId, String memberId) {
+		CouponChargeEcReq couponChargeEcReq = new CouponChargeEcReq();
+		couponChargeEcReq.setCouponCode(couponCode);
+		couponChargeEcReq.setPrchsId(prchsId);
+		couponChargeEcReq.setMdn(deviceId);
+		couponChargeEcReq.setMemberID(memberId);
+
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CHARGE,REQ,{}",
+				ReflectionToStringBuilder.toString(couponChargeEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+		CouponChargeEcRes couponChargeEcRes = this.shoppingSCI.chargeGoods(couponChargeEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CHARGE,RES,{}",
+				ReflectionToStringBuilder.toString(couponChargeEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		return couponChargeEcRes;
+	}
+
+	@Override
+	public CouponCancelChargeEcRes cancelGoods(String couponCode, String prchsId, String cancelType) {
+		CouponCancelChargeEcReq couponCancelChargeEcReq = new CouponCancelChargeEcReq();
+		couponCancelChargeEcReq.setCouponCode(couponCode);
+		couponCancelChargeEcReq.setPrchsId(prchsId);
+		couponCancelChargeEcReq.setCancelType(cancelType);
+
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CANCELCHARGE,REQ,{}",
+				ReflectionToStringBuilder.toString(couponCancelChargeEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+		CouponCancelChargeEcRes couponChargeEcRes = this.shoppingSCI.cancelGoods(couponCancelChargeEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CANCELCHARGE,RES,{}",
+				ReflectionToStringBuilder.toString(couponChargeEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		return couponChargeEcRes;
 	}
 
 	/**

@@ -795,8 +795,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append(useUser.getDeviceModelCd())
 							.append("&aid=")
 							.append(StringUtils.defaultString(product.getAid()))
-							.append("&couponCode=")
-							.append(StringUtils.defaultString(product.getCouponCode()))
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_COUPON_CODE, product.getCouponCode()))
 							.append("&itemCode=")
 							.append(StringUtils.defaultString(product.getItemCode()))
 							.append("&bonusPoint=")
@@ -813,8 +812,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append(StringUtils.defaultString(String.valueOf(product.getAutoPrchsPeriodValue()), "0"))
 							.append("&afterAutoPayDt=")
 							.append(StringUtils.defaultString(product.getAfterAutoPayDt()))
-							.append("&sellerMbrNo=")
-							.append(StringUtils.defaultString(product.getSellerMbrNo()))
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SELLER_MBRNO,product.getSellerMbrNo()))
 							.append("&mallCd=")
 							.append(StringUtils.defaultString(product.getMallCd()))
 							.append("&outsdContentsId=")
@@ -830,8 +828,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append(product.getSpecialCouponAmt())
 							.append("&possLendClsfCd=")
 							.append(StringUtils.defaultString(product.getPossLendClsfCd()))
-							.append("&prodCaseCd=")
-							.append(StringUtils.defaultString(product.getProdCaseCd()))
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROD_CASE_CD, product.getProdCaseCd()))
 							.append("&s2sAutoYn=")
 							.append(StringUtils.defaultString(product.getS2sAutoPrchsYn()))
 							.append("&s2sYn=")
@@ -883,7 +880,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 								.append(StringUtils.defaultString(product.getIapPostbackUrl())).append("&iapProdKind=")
 								.append(StringUtils.defaultString(product.getIapProdKind())).append("&iapProdCase=")
 								.append(StringUtils.defaultString(product.getIapProdCase()));
-						sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM, product.getParentProdNm()));
+						sbReserveData.append(
+								genResvData(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM, product.getParentProdNm()));
 						if (product.getIapUsePeriod() != null) {
 							sbReserveData.append("&iapUsePeriod=").append(product.getIapUsePeriod());
 						}
@@ -897,6 +895,14 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 								.append(StringUtils.defaultString(product.getCmpxProdClsfCd()))
 								.append("&cmpxProdBookClsfCd=")
 								.append(StringUtils.defaultString(product.getCmpxProdBookClsfCd()));
+					}
+
+					// 쇼핑-충전권
+					if(StringUtils.equals(product.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)){
+						sbReserveData.append(
+								genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID, purchaseOrderInfo.getChargeMemberId()));
+						sbReserveData.append(
+								genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM, purchaseOrderInfo.getChargeMemberNm()));
 					}
 
 					// 부정결제 참조용 데이터 추가
