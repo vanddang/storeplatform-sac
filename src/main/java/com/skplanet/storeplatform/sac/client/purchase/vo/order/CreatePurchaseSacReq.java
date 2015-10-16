@@ -9,17 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
-import java.util.List;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import java.util.List;
 
 /**
  * 
@@ -104,6 +102,10 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String mediaId; // CPS CPID
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String offeringId; // 오퍼링 ID
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String chargeMemberId; // 쇼핑 충전권-충전자ID
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String chargeMemberNm; // 쇼핑 충전권-충전자명
 
 	@Null(groups = { GroupCreateBizPurchase.class })
 	@NotEmpty(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreatePurchaseV2.class })
@@ -559,4 +561,41 @@ public class CreatePurchaseSacReq extends CommonInfo {
 		this.noMdnDelivery = noMdnDelivery;
 	}
 
+	/**
+	 * Gets charge member id.
+	 *
+	 * @return the charge member id
+	 */
+	public String getChargeMemberId() {
+		return chargeMemberId;
+	}
+
+	/**
+	 * Sets charge member id.
+	 *
+	 * @param chargeMemberId
+	 *            the charge member id
+	 */
+	public void setChargeMemberId(String chargeMemberId) {
+		this.chargeMemberId = chargeMemberId;
+	}
+
+	/**
+	 * Gets charge member nm.
+	 *
+	 * @return the charge member nm
+	 */
+	public String getChargeMemberNm() {
+		return chargeMemberNm;
+	}
+
+	/**
+	 * Sets charge member nm.
+	 *
+	 * @param chargeMemberNm
+	 *            the charge member nm
+	 */
+	public void setChargeMemberNm(String chargeMemberNm) {
+		this.chargeMemberNm = chargeMemberNm;
+	}
 }
