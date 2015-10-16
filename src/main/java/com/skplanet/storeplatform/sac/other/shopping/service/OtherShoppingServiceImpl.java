@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.other.shopping.service;
 
-import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
+import com.skplanet.storeplatform.external.client.shopping.sci.OtherShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.AllianceUserCheckEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.AllianceUserCheckEcRes;
 import com.skplanet.storeplatform.sac.client.other.vo.shopping.AllianceUserCheckReq;
@@ -22,14 +22,14 @@ public class OtherShoppingServiceImpl implements OtherShoppingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OtherShoppingServiceImpl.class);
 
     @Autowired
-    private ShoppingSCI shoppingSCI;
+    private OtherShoppingSCI otherShoppingSCI;
 
     @Override
     public AllianceUserCheckRes allianceUserCheck(SacRequestHeader sacHeader, AllianceUserCheckReq req) {
 
         AllianceUserCheckRes response = new AllianceUserCheckRes();
 
-        LOGGER.info("!!!!!!!!!!!!!쇼핑 충전권 연동한다....");
+        LOGGER.info("쇼핑 충전권 연동 Start...");
 
         AllianceUserCheckEcReq ecReq = new AllianceUserCheckEcReq();
         LOGGER.info("EC Req = {}", ecReq);
@@ -38,8 +38,10 @@ public class OtherShoppingServiceImpl implements OtherShoppingService {
         ecReq.setBrandSellerId(req.getBrandSellerId());
         ecReq.setDeviceId(req.getDeviceId());
         ecReq.setChargeId(req.getChargeId());
-        AllianceUserCheckEcRes ecRes =  shoppingSCI.allianceUserCheck(ecReq);
+        AllianceUserCheckEcRes ecRes =  otherShoppingSCI.allianceUserCheck(ecReq);
         LOGGER.info("EC Res = {}", ecRes);
+
+        LOGGER.info("쇼핑 충전권 연동 Start...");
 
         return response;
     }
