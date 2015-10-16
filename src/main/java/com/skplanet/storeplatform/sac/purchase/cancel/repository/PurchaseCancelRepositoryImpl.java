@@ -9,6 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.skplanet.storeplatform.external.client.arm.sci.ArmSCI;
 import com.skplanet.storeplatform.external.client.arm.vo.RemoveLicenseEcReq;
 import com.skplanet.storeplatform.external.client.arm.vo.RemoveLicenseEcRes;
@@ -23,30 +31,57 @@ import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcResPaymethod;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStorePaymentSCI;
-import com.skplanet.storeplatform.external.client.tstore.vo.*;
+import com.skplanet.storeplatform.external.client.tstore.vo.Pay;
+import com.skplanet.storeplatform.external.client.tstore.vo.PayCancelResult;
+import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancel;
+import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelResult;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSaveCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSaveCancelEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
-import com.skplanet.storeplatform.purchase.client.cancel.vo.*;
-import com.skplanet.storeplatform.purchase.client.common.vo.*;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.AutoPaymentScReq;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.AutoPaymentScRes;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelPaymentDetailScReq;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScReq;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScRes;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScReq;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes;
+import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
+import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
+import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.membership.sci.MembershipReserveSCI;
 import com.skplanet.storeplatform.purchase.client.product.count.sci.PurchaseCountSCI;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.InsertPurchaseProductCountScReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.*;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.*;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 구매 취소 repository implements.
@@ -367,7 +402,8 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_PAYPIN, paymentSacParam.getPaymentMtdCd())) {
 				// Paypin 결제이면
 				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
-			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SYRUP_PAY, paymentSacParam.getPaymentMtdCd())) {
+			} else if (StringUtils
+					.equals(PurchaseConstants.PAYMENT_METHOD_SYRUP_PAY, paymentSacParam.getPaymentMtdCd())) {
 				// Syrup Pay 결제이면
 				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_GAMECASH, paymentSacParam.getPaymentMtdCd())
@@ -484,58 +520,61 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 					specialSaleYn = true;
 				}
 
+				// 2015-10-16 결제무시인 경우 DB업데이트 안함(PP와 결제 내역이 달라지는 문제에 따른...)
 				// 2015-01-27 결제무시라도 DB에 취소로 업데이트 처리한다.
 				// 결제 취소 무시가 아니면 DB업데이트 진행.
-				// if (!purchaseCancelSacParam.getIgnorePayment()) {
+				if (!purchaseCancelSacParam.getIgnorePayment()) {
 
-				PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
-				purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
-				purchaseCancelPaymentDetailScReq.setSystemId(purchaseCancelSacParam.getSystemId());
-				purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-				purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
-				purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+					PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
+					purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
+					purchaseCancelPaymentDetailScReq.setSystemId(purchaseCancelSacParam.getSystemId());
+					purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+					purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
+					purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
 
-				// T Store 결제일 경우 처리
-				if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
-						&& purchaseCancelDetailSacParam.gettStorePayCancelResultList().size() > 0) {
-					for (PayCancelResult payCancelResult : purchaseCancelDetailSacParam.gettStorePayCancelResultList()) {
-						if (StringUtils.equals(payCancelResult.getPayCls(), paymentSacParam.getPaymentMtdCd())) {
-							if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
-									payCancelResult.getPayCancelResultCd())) {
-								// T Store 결제 취소 실패이면
-								purchaseCancelPaymentDetailScReq
-										.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
+					// T Store 결제일 경우 처리
+					if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
+							&& purchaseCancelDetailSacParam.gettStorePayCancelResultList().size() > 0) {
+						for (PayCancelResult payCancelResult : purchaseCancelDetailSacParam
+								.gettStorePayCancelResultList()) {
+							if (StringUtils.equals(payCancelResult.getPayCls(), paymentSacParam.getPaymentMtdCd())) {
+								if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
+										payCancelResult.getPayCancelResultCd())) {
+									// T Store 결제 취소 실패이면
+									purchaseCancelPaymentDetailScReq
+											.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
+								}
+								purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(payCancelResult
+										.getPayCancelResultCd());
 							}
-							purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(payCancelResult
-									.getPayCancelResultCd());
 						}
 					}
-				}
 
-				// Pay Planet 결제일 경우 처리 2014.09.01
-				if (purchaseCancelDetailSacParam.getPayPlanetCancelEcRes() != null
-						&& purchaseCancelDetailSacParam.getPayPlanetCancelEcRes().getResPaymethod().size() > 0) {
-					for (CancelEcResPaymethod cancelEcResPaymethod : purchaseCancelDetailSacParam
-							.getPayPlanetCancelEcRes().getResPaymethod()) {
-						if (StringUtils.equals(PaymethodUtil.convert2StoreCode(cancelEcResPaymethod.getCdPaymethod()),
-								paymentSacParam.getPaymentMtdCd())) {
-							if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYPLANET_CANCEL_SUCCESS,
-									cancelEcResPaymethod.getResultCode())
-									&& !StringUtils.equals(PurchaseConstants.TSTORE_PAYPLANET_CANCEL_PART_SUCCESS,
-											cancelEcResPaymethod.getResultCode())) {
-								// PayPlanet 결제 취소 실패이면
-								purchaseCancelPaymentDetailScReq
-										.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
+					// Pay Planet 결제일 경우 처리 2014.09.01
+					if (purchaseCancelDetailSacParam.getPayPlanetCancelEcRes() != null
+							&& purchaseCancelDetailSacParam.getPayPlanetCancelEcRes().getResPaymethod().size() > 0) {
+						for (CancelEcResPaymethod cancelEcResPaymethod : purchaseCancelDetailSacParam
+								.getPayPlanetCancelEcRes().getResPaymethod()) {
+							if (StringUtils.equals(
+									PaymethodUtil.convert2StoreCode(cancelEcResPaymethod.getCdPaymethod()),
+									paymentSacParam.getPaymentMtdCd())) {
+								if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYPLANET_CANCEL_SUCCESS,
+										cancelEcResPaymethod.getResultCode())
+										&& !StringUtils.equals(PurchaseConstants.TSTORE_PAYPLANET_CANCEL_PART_SUCCESS,
+												cancelEcResPaymethod.getResultCode())) {
+									// PayPlanet 결제 취소 실패이면
+									purchaseCancelPaymentDetailScReq
+											.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
+								}
+								purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(cancelEcResPaymethod
+										.getResultCode());
 							}
-							purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(cancelEcResPaymethod
-									.getResultCode());
 						}
 					}
+
+					purchaseCancelPaymentDetailScReqList.add(purchaseCancelPaymentDetailScReq);
+
 				}
-
-				purchaseCancelPaymentDetailScReqList.add(purchaseCancelPaymentDetailScReq);
-
-				// }
 
 			}
 		}
