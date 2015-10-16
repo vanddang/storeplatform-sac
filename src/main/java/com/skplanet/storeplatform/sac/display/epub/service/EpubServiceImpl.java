@@ -134,7 +134,6 @@ public class EpubServiceImpl implements EpubService {
         param.put("userKey", userKey);
         param.put("deviceKey", deviceKey);
 
-
 		EpubDetail epubDetail = this.getEpubChannel(param);
 		//logger.debug("epubDetail={}", epubDetail);
 
@@ -1000,6 +999,7 @@ public class EpubServiceImpl implements EpubService {
                 subProduct.setSourceList(this.mapSourceList(mapperVO, null));
                 subProduct.setBook(this.mapBook(mapperVO));
                 subProduct.setDateList(this.mapDateList(mapperVO, sdf));
+                subProduct.setVerticalYn(mapperVO.getVerticalYn());
                 subProjectList.add(subProduct);
 
             }
