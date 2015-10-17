@@ -39,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Authority;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Badge;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
@@ -143,6 +144,7 @@ public class VodServiceImpl implements VodService {
 		param.put("includeProdStopStatus", includeProdStopStatus);
 		param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
 		param.put("count", req.getCount() == null ? 20 : req.getCount());
+		param.put("baseYn", "Y");
 
 		// ###################################################################################
 		// 1. Channel 정보 조회
@@ -215,6 +217,129 @@ public class VodServiceImpl implements VodService {
 		}
 		return res;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.vod.service.VodService#searchVodV3(com.skplanet.storeplatform.sac.client
+	 * .display.vo.vod.VodDetailReq)
+	 */
+	public VodDetailRes searchVodV3(VodDetailReq req, boolean supportFhdVideo) {
+		VodDetailRes res = new VodDetailRes();
+		Product product = new Product();
+
+		final String channelId = req.getChannelId();
+
+		String userKey = StringUtils.defaultString(req.getUserKey());
+		String deviceKey = StringUtils.defaultString(req.getDeviceKey());
+
+		// OrderBy
+		final String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
+
+		// 판매 중지(다운로드 허용) 상품 포함 여부
+		// N (Default) : 판매중, Y : 판매중, 판매중지, 판매불가-다운허용
+		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
+
+		// [2.x fadeout] 상품 상세 요청 시 예외 처리
+		// 요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
+		String temp = StringUtils.defaultString(this.sc2xFadeOutDummyProductChannel);
+		if (temp.contains(channelId)) includeProdStopStatus = "Y";
+
+		// Parameter 셋팅
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("representImgCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD); // 이미지 코드
+		param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM); // 가상 프로비저닝 모델명 (멀티미디어).
+		param.put("deviceModel", req.getDeviceModel());
+		param.put("channelId", channelId);
+		param.put("langCd", req.getLangCd());
+		param.put("tenantId", req.getTenantId());
+		param.put("baseChapter", req.getBaseChapter());
+		param.put("orderedBy", orderedBy);
+		param.put("userKey", userKey);
+		param.put("deviceKey", deviceKey);
+		param.put("includeProdStopStatus", includeProdStopStatus);
+		param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
+		param.put("count", req.getCount() == null ? 20 : req.getCount());
+		param.put("baseYn", "N");
+
+		// ###################################################################################
+		// 1. Channel 정보 조회
+		// ###################################################################################
+		VodDetail vodDetail = this.getVodChanndel(param);
+		// ###################################################################################
+
+		if (vodDetail != null) {
+
+			// Screenshots
+			List<ProductImage> screenshotList = this.getScreenshotList(req.getChannelId(), req.getLangCd());
+
+			// 채널의 상품 이용정책 조회 (가장 최신 Chapter의 Episode 이용정책 조회)
+			List<VodDetail> usePolicyInfoList = this.getProdUsePolicyInfoV3(param);
+			if (usePolicyInfoList != null) {
+				// 조회된 이용정책 set (update by 이석희 2015.07.24)
+				Authority authority = this.mapAuthority(vodDetail, usePolicyInfoList, req, null);
+				product.setAuthority(authority);
+			}
+
+			/* Channel Product Mapping */
+			this.mapProductV3(req, product, vodDetail, screenshotList, supportFhdVideo);
+
+			// 좋아요 여부
+			product.setLikeYn(vodDetail.getLikeYn());
+
+			ExistenceListRes existenceListRes = null;
+			// orderedBy='nonPayment'
+			if (StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)
+					&& StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
+				List<String> episodeIdList = this.getEpisodeIdList(param);
+
+				// 상품 목록의 구매 내역 유무를 확인
+				existenceListRes = this.commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(),
+						req.getDeviceKey(), episodeIdList);
+				if (existenceListRes == null) {
+					existenceListRes = new ExistenceListRes();
+				}
+
+				List<String> paymentProdIdList = new ArrayList<String>();
+				for (ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
+					paymentProdIdList.add(existenceRes.getProdId());
+				}
+
+				// #24889 VOD/이북 전권 소장/대여 후 미구매로 정렬 시 대여/소장이 노출되는 문제 수정
+				// episode id 로 filter 하면 전권대여/소장 구매 시 대여소장 상품 모두 Filtering 되지 않기 때문에 content id 로 filter.
+				List<String> paymentContentIdList = this.getContentIdListByEpisodeIdList(paymentProdIdList);
+
+				param.put("paymentProdIdList", paymentProdIdList);
+				param.put("paymentContentIdList", paymentContentIdList);
+			}
+
+			// ###################################################################################
+			// 2. subProjectList
+			// ###################################################################################
+			List<VodDetail> subProductList = this.getSubProductListV3(param);
+			
+			// ###################################################################################
+
+			if (!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)
+					&& StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
+				// 정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
+				existenceListRes = this.getExistenceScReses(req, subProductList);
+			}
+			
+			// CID List 조회 SubProductList에는 회차별로 하나씩 상품이 count 되므로 CID의 갯수가 필요
+			// CID 로 CID에 mapping되어있는 소장, 대여 EP 상품들을 mapSubProductListV3 method에서 조회함
+			List<VodDetail> subProductCidList = this.getProductCid(param);
+
+			// Episode Product Mapping
+			this.mapSubProductListV3(req, product, subProductCidList, param ,existenceListRes, supportFhdVideo);
+
+			res.setProduct(product);
+		} else {
+			throw new StorePlatformException("SAC_DSP_0009");
+		}
+		return res;
+	}	
 
 	/**
 	 * Episode id List 로 Content Id 조회
@@ -258,7 +383,7 @@ public class VodServiceImpl implements VodService {
 	}
 
 	/**
-	 * Episode List
+	 * Episode List 
 	 * 
 	 * @param param
 	 * @return
@@ -266,6 +391,31 @@ public class VodServiceImpl implements VodService {
 	private List<VodDetail> getSubProjectList(Map<String, Object> param) {
 		List<VodDetail> subProductList = this.commonDAO.queryForList("VodDetail.selectVodSeries", param,
 				VodDetail.class);
+		return subProductList;
+	}
+	
+	/**
+	 * Update By 2015.10.15 이석희 I-S PLUS 
+	 * Episode의 CID List(CID 기준의 상품의 기본정보 및 화질정보 조회)
+	 * 
+	 * @param param
+	 * @return
+	 */
+	private List<VodDetail> getProductCid(Map<String, Object> param) {
+		List<VodDetail> subProductList = this.commonDAO.queryForList("VodDetail.getProductCid", param, VodDetail.class);
+		return subProductList;
+	}
+	
+	
+	/**
+	 * Update By 2015.10.15 이석희 I-S PLUS  
+	 * Episode List (CID기준의 Episode 상품조회 , 소장/대여 상품정보) 
+	 * 
+	 * @param param
+	 * @return
+	 */
+	private List<VodDetail> getSubProductListV3(Map<String, Object> param) {
+		List<VodDetail> subProductList = this.commonDAO.queryForList("VodDetail.selectVodSeriesV3", param, VodDetail.class);
 		return subProductList;
 	}
 
@@ -280,8 +430,7 @@ public class VodServiceImpl implements VodService {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("channelId", channelId);
 		param.put("langCd", langCd);
-		List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", param,
-				ProductImage.class);
+		List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", param, ProductImage.class);
 		return screenshotList;
 	}
 
@@ -382,7 +531,7 @@ public class VodServiceImpl implements VodService {
 		// rights
 		Rights rights = this.mapRights(mapperVO, req, null);
 		product.setRights(rights);
-
+		
 		// Accrual
 		Accrual accrual = this.mapAccrual(mapperVO);
 		product.setAccrual(accrual);
@@ -420,6 +569,89 @@ public class VodServiceImpl implements VodService {
 			product.setPointList(pointList);
 
 	}
+	
+	private void mapProductV3(VodDetailReq req, Product product, VodDetail mapperVO, List<ProductImage> screenshotList,
+			boolean supportFhdVideo) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
+
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifierList.add(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
+		product.setIdentifierList(identifierList);
+
+		product.setTitle(this.mapTitle(mapperVO));
+
+		List<Source> sourceList = this.mapSourceList(mapperVO, screenshotList);
+		product.setSourceList(sourceList);
+
+		// 상품 설명
+		product.setProductExplain(mapperVO.getProdBaseDesc());
+		product.setProductDetailExplain(mapperVO.getProdDtlDesc());
+		product.setProductIntroduction(mapperVO.getProdIntrDscr());
+
+		// 판매상태
+		product.setSalesStatus(mapperVO.getProdStatusCd());
+
+		// SvcGrpCd
+		product.setSvcGrpCd(mapperVO.getSvcGrpCd());
+
+		// SupportList
+		List<Support> supportList = this.mapSupportList(mapperVO);
+		product.setSupportList(supportList);
+
+		// MenuList
+		List<Menu> menuList = this.mapMenuList(mapperVO);
+		product.setMenuList(menuList);
+
+		// DateList
+		List<Date> dateList = this.mapDateList(mapperVO, sdf);
+		product.setDateList(dateList);
+
+		// Contributor
+		Contributor contributor = this.mapContributor(mapperVO);
+		product.setContributor(contributor);
+
+		// Distributor (판매자 정보)
+		Distributor distributor = this.mapDistributor(mapperVO);
+		product.setDistributor(distributor);
+
+		// Accrual
+		Accrual accrual = this.mapAccrual(mapperVO);
+		product.setAccrual(accrual);
+
+		Vod vod = this.mapVod(mapperVO, supportFhdVideo);
+		product.setVod(vod);
+
+		// Badge
+		Badge badge = this.getBadgeInfo(mapperVO);
+		product.setBadge(badge);
+		// tmembership 할인율
+		TmembershipDcInfo tmembershipDcInfo = this.commonService.getTmembershipDcRateForMenu(req.getTenantId(),
+				mapperVO.getTopMenuId());
+		List<Point> pointList = this.metaInfoGenerator.generatePoint(tmembershipDcInfo);
+		// Tstore멤버십 적립율 정보
+		if (StringUtils.isNotEmpty(req.getUserKey())) {
+			// 회원등급 조회
+			GradeInfoSac userGradeInfo = this.commonService.getUserGrade(req.getUserKey());
+			if (userGradeInfo != null) {
+				if (pointList == null)
+					pointList = new ArrayList<Point>();
+				String userGrade = userGradeInfo.getUserGradeCd();
+				Integer prodAmt = 0;
+				if (mapperVO.getStoreProdAmt() != null && mapperVO.getStoreProdAmt() > 0)
+					prodAmt = mapperVO.getStoreProdAmt();
+				else if (mapperVO.getPlayProdAmt() != null && mapperVO.getPlayProdAmt() > 0)
+					prodAmt = mapperVO.getPlayProdAmt();
+
+				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(), mapperVO.getMenuId(), req.getChannelId(), prodAmt);
+				mileageInfo = this.benefitService.checkFreeProduct(mileageInfo, prodAmt);
+				pointList.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
+			}
+		}
+		if (pointList.size() > 0)
+			product.setPointList(pointList);
+
+	}	
 
 	/**
 	 * Title
@@ -545,6 +777,180 @@ public class VodServiceImpl implements VodService {
 		}
 		return store;
 	}
+	
+	private Authority mapAuthority(VodDetail mapperVO, List<VodDetail> vodDetailList, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
+		Authority authority = new Authority();
+		authority.setGrade(mapperVO.getProdGrdCd());
+
+		// 영화,TV방송에 대한 allow 설정
+		if (StringUtils.equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID, mapperVO.getTopMenuId())
+				|| StringUtils.equals(DisplayConstants.DP_TV_TOP_MENU_ID, mapperVO.getTopMenuId())
+				|| StringUtils.equals(DisplayConstants.DP_VOD_TOP_MENU_ID, mapperVO.getTopMenuId())) {
+			if (StringUtils.equals(mapperVO.getDwldAreaLimtYn(), "Y")) {
+				authority.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_DOMESTIC);
+			}
+		}
+
+		// Preview
+		authority.setPreview(this.mapPreview(mapperVO));
+
+		if (vodDetailList != null && vodDetailList.size() > 0) {
+			List<Play> playList = new ArrayList<Play>();
+			List<Store> storeList = new ArrayList<Store>();
+			for (VodDetail vo : vodDetailList) {
+				// -------------------------------------------
+				// Store, Play
+				// -------------------------------------------
+				if(StringUtils.isNotEmpty(vo.getPlayProdId())){
+					/** play 정보 */
+					playList.add(this.mapAuthorityPlay(vo, vodDetailList, req, existenceMap));
+				}
+				
+				if(StringUtils.isNotEmpty(vo.getStoreProdId())){
+					/** Store 정보 */
+					storeList.add(this.mapAuthorityStore(vo, vodDetailList, req, existenceMap));
+				}
+			}
+			if(playList != null && playList.size() > 0) authority.setPlayList(playList);
+			if(storeList != null && storeList.size() > 0) authority.setStoreList(storeList); 
+		}
+
+		return authority;
+	}	
+	
+	/**
+	 * <pre>
+	 * Play Mapping
+	 * </pre>
+	 * 
+	 * @param mapperVO
+	 * @param req
+	 * @param existenceMap
+	 * @return
+	 */
+	private Play mapAuthorityPlay(VodDetail mapperVO, List<VodDetail> vodDetailList, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
+		Play play = null;
+		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
+			play = new Play();
+			List<Identifier> identifierList = new ArrayList<Identifier>();
+			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getPlayProdId()));
+			play.setIdentifierList(identifierList);
+
+			List<Support> supportList = new ArrayList<Support>();
+			supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
+			supportList.add(this.mapSupport(DisplayConstants.DP_DL_STRM_NM, mapperVO.getPlayDlStrmCd()));
+			play.setSupportList(supportList);
+
+			if (mapperVO.getPlayUsePeriod() != null) {
+				play.setDate(DisplayCommonUtil.makeDateUsagePeriod(mapperVO.getPlayUsePeriodUnitCd(),
+						mapperVO.getPlayUsePeriod(), mapperVO.getPlayUsePeriodUnitCdNm()));
+			}
+
+			// 가격
+			play.setPrice(this.mapPrice(mapperVO.getPlayProdAmt(), mapperVO.getPlayProdNetAmt()));
+
+			Source source = null;
+			if (StringUtils.isNotEmpty(mapperVO.getFilePath())) {
+				source = new Source();
+				source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getFilePath()));
+				source.setUrl(mapperVO.getFilePath());
+			}
+
+			if (mapperVO.getStrmNetworkCd() != null) {
+				play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
+			}
+
+			// 판매상태
+			play.setSalesStatus(mapperVO.getPlayProdStatusCd());
+
+			// 사용자 구매 가능 상태
+			if (existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId())
+					&& StringUtils.isNotBlank(req.getUserKey()) && StringUtils.isNotBlank(req.getDeviceKey())) {
+				String userPurStatus = this.getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
+				if (userPurStatus != null)
+					play.setUserPurStatus(userPurStatus);
+			}
+			
+			if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
+				// default 값 설정 "DP013002" : 구매시
+				String playUsagePeriod = this.displayCommonService.getUsePeriodSetCd(mapperVO.getTopMenuId(),
+						mapperVO.getPlayProdId(), mapperVO.getPlayDrmYn(), mapperVO.getSvcGrpCd());
+				if (StringUtils.isNotEmpty(playUsagePeriod)) {
+					if ("DP013001".equals(playUsagePeriod)) {
+						play.setUsagePeriod("download");
+					} else if ("DP013002".equals(playUsagePeriod)) {
+						play.setUsagePeriod("purchase");
+					}
+				}
+			}			
+
+		}
+		return play;
+	}
+	
+	/**
+	 * <pre>
+	 * Store Mapping
+	 * </pre>
+	 * 
+	 * @param mapperVO
+	 * @param req
+	 * @param existenceMap
+	 * @return
+	 */
+	private Store mapAuthorityStore(VodDetail mapperVO, List<VodDetail> vodDetailList, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
+		Store store = null;
+		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
+			store = new Store();
+			// Store.Identifier
+			List<Identifier> identifierList = new ArrayList<Identifier>();
+			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getStoreProdId()));
+			store.setIdentifierList(identifierList);
+
+			List<Support> supportList = new ArrayList<Support>();
+			supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
+			supportList.add(this.mapSupport(DisplayConstants.DP_DL_STRM_NM, mapperVO.getStoreDlStrmCd()));
+			store.setSupportList(supportList);
+
+			if (mapperVO.getStoreUsePeriod() != null) {
+				store.setDate(DisplayCommonUtil.makeDateUsagePeriodV2(mapperVO.getStoreUsePeriodUnitCd(),
+						mapperVO.getStoreUsePeriod(), mapperVO.getStoreUsePeriodUnitCdNm()));
+			} 
+			
+			// 가격
+			store.setPrice(this.mapPrice(mapperVO.getStoreProdAmt(), mapperVO.getStoreProdNetAmt()));
+
+			Source source = null;
+			if (StringUtils.isNotEmpty(mapperVO.getFilePath())) {
+				source = new Source();
+				source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getFilePath()));
+				source.setUrl(mapperVO.getFilePath());
+			}
+
+			// 네트워크 제한이 있을경우
+			if (mapperVO.getDwldNetworkCd() != null) {
+				store.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
+			}
+
+			// 판매상태
+			store.setSalesStatus(mapperVO.getStoreProdStatusCd());
+
+			// 이용 기간 기준(소장)
+			if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
+				// default 값 설정 "DP013002" : 구매시
+				String storeUsagePeriod = this.displayCommonService.getUsePeriodSetCd(mapperVO.getTopMenuId(),
+						mapperVO.getStoreProdId(), mapperVO.getStoreDrmYn(), mapperVO.getSvcGrpCd());
+				if (StringUtils.isNotEmpty(storeUsagePeriod)) {
+					if ("DP013001".equals(storeUsagePeriod)) {
+						store.setUsagePeriod("download");
+					} else if ("DP013002".equals(storeUsagePeriod)) {
+						store.setUsagePeriod("purchase");
+					}
+				}
+			}		
+		}
+		return store;
+	}	
 
 	/**
 	 * <pre>
@@ -933,8 +1339,7 @@ public class VodServiceImpl implements VodService {
 				// 이용 기간 기준(대여)
 				if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
 					// default 값 설정 "DP013002" : 구매시
-					String playUsagePeriod = this.displayCommonService.getUsePeriodSetCd(mapperVO.getTopMenuId(),
-							mapperVO.getPlayProdId(), mapperVO.getPlayDrmYn(), mapperVO.getSvcGrpCd());
+					String playUsagePeriod = this.displayCommonService.getUsePeriodSetCd(mapperVO.getTopMenuId(), mapperVO.getPlayProdId(), mapperVO.getPlayDrmYn(), mapperVO.getSvcGrpCd());
 					if (StringUtils.isNotEmpty(playUsagePeriod)) {
 						if ("DP013001".equals(playUsagePeriod)) {
 							rights.getPlay().setUsagePeriod("download");
@@ -983,6 +1388,105 @@ public class VodServiceImpl implements VodService {
 
 	}
 
+	/**
+	 * Update By 2015.10.15 이석희 I-S PLUS 
+	 * SubProduct Mapping V3
+	 * 
+	 * @param req
+	 *            요청 정보
+	 * @param product
+	 *            Channel 정보
+	 * @param vodDetailList
+	 *            VOD Episode List
+	 * @param existenceListRes
+	 *            기구매 체크 결과
+	 */
+	private void mapSubProductListV3(VodDetailReq req, Product product, List<VodDetail> subProductCidList , 
+			Map<String, Object> param ,	ExistenceListRes existenceListRes, boolean supportFhdVideo) {
+
+
+		List<Product> subProjectList = new ArrayList<Product>();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
+
+		if (subProductCidList != null && subProductCidList.size() > 0) {
+			// SubProduct TotalCount
+			VodDetail temp = subProductCidList.get(0);
+			product.setSubProductTotalCount(temp.getTotalCount());
+
+			// 기구매 체크
+			Map<String, ExistenceRes> existenceMap = new HashMap<String, ExistenceRes>();
+			if (existenceListRes != null) {
+				for (ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
+					existenceMap.put(existenceRes.getProdId(), existenceRes);
+				}
+			}
+			
+			
+			for (VodDetail cidVO : subProductCidList) {
+				Product subProduct = new Product();
+				
+				param.put("cid", cidVO.getCid());
+				List<VodDetail> productList = this.getSubProductListV3(param); // CID에 Mapping 되어 있는 소장, 대여 EP 상품 조회
+				// List<ProductImage> screenshotList = getScreenshotList(mapperVO.getProdId(), req.getLangCd());
+
+				List<Identifier> identifierList = new ArrayList<Identifier>();
+				identifierList.add(new Identifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, cidVO.getCid()));
+				subProduct.setIdentifierList(identifierList);				
+				subProduct.setTitle(this.mapTitle(cidVO));
+
+				// 상품 설명
+				subProduct.setProductExplain(cidVO.getProdBaseDesc()); 
+				subProduct.setProductDetailExplain(cidVO.getProdDtlDesc());
+				subProduct.setProductIntroduction(cidVO.getProdIntrDscr());
+
+				List<Source> sourceList = this.mapSourceList(cidVO, null);
+				subProduct.setSourceList(sourceList);
+
+				// SupportList
+				List<Support> supportList = this.mapSupportList(cidVO);
+				subProduct.setSupportList(supportList);
+
+				// MenuList
+				List<Menu> menuList = this.mapMenuList(cidVO);
+				subProduct.setMenuList(menuList);
+
+				// DateList
+				List<Date> dateList = this.mapDateList(cidVO, sdf);
+				subProduct.setDateList(dateList);
+
+				// Contributor
+				Contributor contributor = this.mapContributor(cidVO);
+				subProduct.setContributor(contributor);
+
+				// Distributor
+				Distributor distributor = this.mapDistributor(cidVO);
+				subProduct.setDistributor(distributor);
+
+				for (VodDetail mapperVO : subProductCidList) {
+					Authority authority = this.mapAuthority(mapperVO, productList, req, existenceMap);
+					subProduct.setAuthority(authority);					
+				}
+				
+				// NM:일반화질 (A), SD 고화질 (B), HD 화질 (C), HIHD 화질 (D)
+				subProduct.setVod(this.mapVodV3(cidVO, productList ,supportFhdVideo));
+				
+				// Accrual
+				Accrual accrual = this.mapAccrual(cidVO);
+				subProduct.setAccrual(accrual);
+
+				// Badge
+				Badge badge = this.getBadgeInfo(cidVO);
+				subProduct.setBadge(badge);
+
+				subProjectList.add(subProduct);
+			}
+		} else
+			product.setSubProductTotalCount(0);
+		product.setSubProductList(subProjectList);
+
+	}	
+	
 	/**
 	 * VOD 3.0
 	 * 
@@ -1108,6 +1612,75 @@ public class VodServiceImpl implements VodService {
 		return vod;
 	}
 
+	/**
+	 * VOD V3 4.0
+	 * 
+	 * @param mapperVO
+	 * @param supportFhdVideo
+	 * @return
+	 */
+	private Vod mapVodV3(VodDetail mapperVO, List<VodDetail> vodDetailList, boolean supportFhdVideo) {
+		Vod vod = new Vod();
+		List<VideoInfo> videoInfoList = new ArrayList<VideoInfo>();
+		Chapter chapter = new Chapter();
+		VideoInfo videoInfo = new VideoInfo();
+		
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		for (VodDetail vo : vodDetailList) {
+			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, vo.getProdId()));
+		}
+
+		if (mapperVO.getEpsdPlayTm() != null) {
+			Time runningTime = new Time();
+			runningTime.setText(String.valueOf(mapperVO.getEpsdPlayTm()));
+			vod.setRunningTime(runningTime);
+		}
+
+		if (StringUtils.isNotEmpty(mapperVO.getChapter())) {
+			chapter.setUnit(this.commonService.getVodChapterUnit());
+			chapter.setText(Integer.parseInt(mapperVO.getChapter()));
+			vod.setChapter(chapter);
+		}
+
+		videoInfo.setIdentifierList(identifierList);
+		videoInfoList.add(videoInfo);
+		// -------------------------------------------------------------
+		// 화질 정보
+		// NM:일반화질 (A), SD 고화질 (B), HD 화질 (C), HIHD 화질 (D)
+		// -------------------------------------------------------------
+		/** 일반화질 정보 */
+		if (StringUtils.isNotEmpty(mapperVO.getNmSubContsId())) {
+			videoInfo = this.getNmVideoInfo(mapperVO);
+			videoInfoList.add(videoInfo);
+		}
+		/** SD 고화질 정보 */
+		if (StringUtils.isNotEmpty(mapperVO.getSdSubContsId())) {
+			videoInfo = this.getSdVideoInfo(mapperVO);
+			videoInfoList.add(videoInfo);
+		}
+
+		/**
+		 * TB_CM_DEVICE.HDV_SPRT_YN ='N'이면 A,B 화질만 보이게 변경 Update By 2015.09.10 이석희 I-S PLUS
+		 */
+		if(!"N".equals(mapperVO.getHdvSprtYn())){
+			/** HD 화질 정보 */
+			if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId())) {
+				videoInfo = this.getHdVideoInfoV2(mapperVO);
+				videoInfoList.add(videoInfo);
+			}
+	
+			/** HIHD 화질 정보 */
+			if (StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
+				videoInfo = this.getHiHdVideoInfo(mapperVO);
+				videoInfoList.add(videoInfo);
+			}
+		}
+
+		if (videoInfoList.size() > 0)
+			vod.setVideoInfoList(videoInfoList);
+		return vod;
+	}	
+	
 	private VideoInfo getNmVideoInfo(VodDetail mapperVO) {
 		VideoInfo videoInfo = new VideoInfo();
 		videoInfo.setPictureSize(mapperVO.getNmDpPicRatio());
@@ -1278,7 +1851,7 @@ public class VodServiceImpl implements VodService {
 
 		return vodDetail;
 	}
-
+	
 	/**
 	 * 채널의 상품 이용정책 조회 (가장 최신 Chapter의 Episode 이용정책 조회)
 	 * 
@@ -1286,7 +1859,18 @@ public class VodServiceImpl implements VodService {
 	 * @return
 	 */
 	private VodDetail getProdUsePolicyInfo(Map<String, Object> param) {
-		logger.debug("param={}", param);
 		return this.commonDAO.queryForObject("VodDetail.getProdUsePolicyInfo", param, VodDetail.class);
 	}
+	
+	/**
+	 * Update By 2015.10.15 이석희 I-S PLUS 
+	 * 채널의 상품 이용정책 조회 (가장 최신 Chapter의 Episode 리스트 이용정책 조회) V3
+	 * 
+	 * @param param
+	 * @return
+	 */
+	private List<VodDetail> getProdUsePolicyInfoV3(Map<String, Object> param) {
+		List<VodDetail> prodUsePolicyInfoList = this.commonDAO.queryForList("VodDetail.getProdUsePolicyInfoV3", param, VodDetail.class);
+		return prodUsePolicyInfoList;
+	}	
 }

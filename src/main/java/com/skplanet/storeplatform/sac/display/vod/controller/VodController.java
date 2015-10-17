@@ -75,5 +75,21 @@ public class VodController {
 		return this.vodService.searchVod(req, true);
 
 	}
+	
+	
+    /**
+     * [I03000189] 2.6.7 VOD 상품 상세 조회 (V3)
+     * @param header SAC 헤더
+     * @param req   Parameter
+     * @return
+     */
+	@RequestMapping(value = "/detail/v3", method = RequestMethod.POST)
+	@ResponseBody
+	public VodDetailRes searchVodDetailV3(SacRequestHeader header, @Validated @RequestBody VodDetailReq req) {
+        req.setLangCd(header.getTenantHeader().getLangCd());
+        req.setTenantId(header.getTenantHeader().getTenantId());
+        req.setDeviceModel(header.getDeviceHeader().getModel());
+		return this.vodService.searchVodV3(req, true);
+	}	
 
 }
