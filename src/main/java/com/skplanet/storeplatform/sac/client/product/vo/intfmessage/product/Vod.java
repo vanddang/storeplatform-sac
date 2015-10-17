@@ -16,6 +16,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 
 /**
@@ -33,6 +34,7 @@ public class Vod extends CommonInfo implements Serializable {
 	private List<VideoInfo> videoInfoList; // 화질별 video 정보 List
 	private VodExplain vodExplain; // vod 정보 (삭제 예정)
 	private Date date; // 날짜 정보
+	private List<Identifier> identifierList; // 상품의 에피소드 ID 리스트
 	/**
 	 * 지원 >play >store.
 	 */
@@ -198,6 +200,19 @@ public class Vod extends CommonInfo implements Serializable {
 	public void setSupportList(List<Support> supportList) {
 		this.supportList = supportList;
 	}
-	
+
+	/**
+	 * @return the identifierList
+	 */
+	public List<Identifier> getIdentifierList() {
+		return identifierList;
+	}
+
+	/**
+	 * @param identifierList the identifierList to set
+	 */
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
+	}
 	
 }

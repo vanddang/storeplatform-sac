@@ -10,10 +10,12 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 
 /**
  * Interface Message VideoInfo Value Object.
@@ -27,6 +29,8 @@ public class VideoInfo extends CommonInfo implements Serializable {
 	/*
 	 * 타입 ( normal: normal, sd: sd, hd: hd)
 	 */
+	private Identifier identifier; // 상품의 에피소드 ID
+	private List<Identifier> identifierList; // 상품의 에피소드 ID 리스트
 	private String scid;
 	private String type; // 타입
 	private String pixel; // 픽셀수
@@ -171,5 +175,33 @@ public class VideoInfo extends CommonInfo implements Serializable {
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
+	
+	/**
+	 * @return the identifier
+	 */
+	public Identifier getIdentifier() {
+		return identifier;
+	}
 
+	/**
+	 * @param identifier the identifier to set
+	 */
+	public void setIdentifier(Identifier identifier) {
+		this.identifier = identifier;
+	}
+
+	/**
+	 * @return the identifierList
+	 */
+	public List<Identifier> getIdentifierList() {
+		return identifierList;
+	}
+
+	/**
+	 * @param identifierList the identifierList to set
+	 */
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
+	}
+	
 }

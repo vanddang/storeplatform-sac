@@ -132,6 +132,9 @@ public class Product extends CommonInfo implements Serializable, PromotionEventA
 	 * 권한 정보.
 	 */
 	private Rights rights;
+	
+	private Authority authority; // 추가
+	
 	/**
 	 * 앱 정보.
 	 */
@@ -1492,4 +1495,20 @@ public class Product extends CommonInfo implements Serializable, PromotionEventA
 	public void setBadge(Badge badge) {
 		this.badge = badge;
 	}
+
+	/**
+	 * @return the authority
+	 */
+	public Authority getAuthority() {
+		return authority;
+	}
+
+	/**
+	 * @param authority the authority to set
+	 */
+	public void setAuthority(Authority authority) {
+		this.authority = authority;
+	}
+	
+	
 }
