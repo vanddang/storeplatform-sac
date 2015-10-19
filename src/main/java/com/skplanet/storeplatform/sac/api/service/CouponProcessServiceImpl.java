@@ -326,6 +326,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dp.setRegId(couponInfo.getBpId());
 				dp.setUpdId(couponInfo.getBpId());
 				dp.setCudType(itemInfo.getCudType());
+				dp.setBaseYn("Y");   // 에피소드만 입력
 				tblDpProdList.add(dp);
 				IcmsJobPrint.printTblDpProd(dp, "TB_DP_PROD - ITEM::" + i);
 			}
