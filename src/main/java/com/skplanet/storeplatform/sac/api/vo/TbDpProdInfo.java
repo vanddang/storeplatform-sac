@@ -46,6 +46,7 @@ public class TbDpProdInfo extends CommonInfo {
 	private String updId; // 수정_ID
 	private String updDt; // 수정_일시
 	private String cudType; // CUD
+	private String baseYn;
 
 	/**
 	 * @return the prodId
@@ -435,6 +436,20 @@ public class TbDpProdInfo extends CommonInfo {
 	 */
 	public void setCudType(String cudType) {
 		this.cudType = cudType;
+	}
+
+	/**
+	 * @return the baseYn
+	 */
+	public String getBaseYn() {
+		return baseYn;
+	}
+
+	/**
+	 * @param baseYn the baseYn to set
+	 */
+	public void setBaseYn(String baseYn) {
+		this.baseYn = baseYn;
 	}
 
 }
