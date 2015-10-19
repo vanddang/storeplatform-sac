@@ -24,7 +24,6 @@
     
     <import resource="classpath:sac/runtime/context-runtime.xml"/>
     <import resource="classpath:sac/runtime/context-runtime-amqp.xml"/>
-    <import resource="classpath:sac/runtime/context-runtime-preprocess.xml"/> 
 	<import resource="classpath:sac/runtime/context-rest-sac.xml"/>    
 	
     <!-- JUnit Test TransactionManager -->
