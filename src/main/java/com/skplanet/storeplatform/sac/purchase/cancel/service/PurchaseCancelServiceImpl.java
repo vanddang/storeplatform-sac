@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -42,6 +43,7 @@ import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreateSapNotiScReq;
 import com.skplanet.storeplatform.purchase.client.transaction.sci.PurchaseTransactionSCI;
 import com.skplanet.storeplatform.purchase.client.transaction.vo.PurchaseTransactionScReq;
+import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
@@ -70,6 +72,7 @@ import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderMakeDataService;
 
 /**
  * 구매 취소 Service Implements.
@@ -83,45 +86,34 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	@Autowired
 	private PurchaseCancelRepository purchaseCancelRepository;
-
 	@Autowired
 	private MultiMessageSourceAccessor multiMessageSourceAccessor;
-
 	@Autowired
 	private HistoryInternalSCI historyInternalSCI;
-
 	@Autowired
 	private ShoppingInternalSCI shoppingInternalSCI;
-
 	@Autowired
 	private ShoppingSCI shoppingSCI;
-
 	@Autowired
 	private AutoPaymentCancelSacService autoPaymentCancelSacService;
-
 	@Autowired
 	private PaymentInfoSCI paymentInfoSCI;
-
 	@Autowired
 	private PurchaseUapsRepository purchaseUapsRespository;
-
 	@Autowired
 	private PayPlanetShopService payPlanetShopService;
-
 	@Autowired
 	private MembershipReserveSCI membershipReserveSCI;
-
 	@Autowired
 	private SapPurchaseSCI sapPurchaseSCI;
-
 	@Autowired
 	private PurchaseOrderSCI purchaseOrderSCI;
-
 	@Autowired
 	private PurchaseDisplayRepository purchaseDisplayRepository;
-
 	@Autowired
 	private PurchaseTransactionSCI purchaseTransactionSCI;
+	@Autowired
+	private PurchaseOrderMakeDataService purchaseOrderMakeDataService;
 
 	@Override
 	public PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam) {
@@ -404,7 +396,38 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 쇼핑 상품 처리. */
 		if (shoppingYn) {
-			this.executeCancelShoppingCoupon(purchaseCancelSacParam, purchaseCancelDetailSacParam);
+
+			// 예약 저장해둔 데이터 추출(상품유형을 조회하기 위함)
+			Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService
+					.parseReservedDataByMap(purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0)
+							.getPrchsResvDesc());
+			String prodCaseCd = reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROD_CASE_CD);
+
+			logger.info("## PurchaseCancelServiceImpl prodCaseCd {}",prodCaseCd);
+			
+			if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
+
+				// 상품권 타입구분(망상취소:1 그외:0)
+				String cancelType = "";
+				if (StringUtils.equals(PurchaseCDConstants.PRCHS_REQ_PATH_PAYMENT_ERROR_CANCEL,
+						purchaseCancelSacParam.getCancelReqPathCd())
+						|| StringUtils.equals(PurchaseCDConstants.PRCHS_REQ_PATH_TENANT_PAYMENT_ERROR_CANCEL,
+								purchaseCancelSacParam.getCancelReqPathCd())
+						|| StringUtils.equals(PurchaseCDConstants.PRCHS_REQ_PATH_OFFERING_PAYMENT_ERROR_CANCEL,
+								purchaseCancelSacParam.getCancelReqPathCd())) {
+
+					cancelType = PurchaseConstants.SHOPPING_CANCEL_CHARGE_SYSTEM;
+				} else {
+					cancelType = PurchaseConstants.SHOPPING_CANCEL_CHARGE_DEFAULT;
+				}
+
+				// 상품권 충전 취소 처리
+				this.purchaseCancelRepository.cancelGoods(purchaseCancelDetailSacParam.getPrchsId(), cancelType);
+			} else {
+
+				// 쇼핑쿠폰 취소 처리
+				this.executeCancelShoppingCoupon(purchaseCancelSacParam, purchaseCancelDetailSacParam);
+			}
 		}
 
 		if (!purchaseCancelSacParam.getIgnorePayment()) {

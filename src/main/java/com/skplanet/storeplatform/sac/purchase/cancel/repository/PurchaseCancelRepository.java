@@ -9,9 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.repository;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.*;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponCancelChargeEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.PayCancelResult;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
@@ -19,8 +26,6 @@ import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
-
-import java.util.List;
 
 /**
  * 구매 취소 repository Interface.
@@ -84,7 +89,7 @@ public interface PurchaseCancelRepository {
 
 	/**
 	 * 회원정보를 조회한다.
-	 *
+	 * 
 	 * @param tenantId
 	 *            the tenant id
 	 * @param userKey
@@ -184,7 +189,7 @@ public interface PurchaseCancelRepository {
 
 	/**
 	 * 구매 취소 시 Aom Message Push.
-	 *
+	 * 
 	 * @param deviceId
 	 *            the device id
 	 * @param appId
@@ -295,4 +300,15 @@ public interface PurchaseCancelRepository {
 	 * @return 특가쿠폰 사용 여부
 	 */
 	public boolean useSpecialCoupon(String tenantId, String prchsId);
+
+	/**
+	 * <pre>
+	 * 상품권 취소 요청.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 * @param cancelType
+	 * @return
+	 */
+	public CouponCancelChargeEcRes cancelGoods(String prchsId, String cancelType);
 }
