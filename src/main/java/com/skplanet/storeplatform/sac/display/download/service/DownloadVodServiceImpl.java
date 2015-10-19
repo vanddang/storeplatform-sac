@@ -9,30 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftConfirmInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
-import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.common.util.DateUtils;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import com.skplanet.storeplatform.sac.display.response.VodGenerator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +20,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodV3SacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftConfirmInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.display.response.VodGenerator;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -218,6 +225,134 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		return response;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.DownloadVodService#DownloadVodService(com.skplanet
+	 * .storeplatform.sac.client.product.vo.DownloadVodReqVO)
+	 */
+	@Override
+	public DownloadVodSacRes searchDownloadVodV3(SacRequestHeader requestheader, DownloadVodV3SacReq downloadVodV3SacReq, boolean supportFhdVideo) {
+
+        List<Encryption> encryptionList = new ArrayList<Encryption>();
+        StopWatch sw = new StopWatch();
+        sw.start();
+
+        TenantHeader tenantHeader = requestheader.getTenantHeader();
+		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+
+		MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "", MetaInfo.class); // 현재일시 및 요청만료일시 조회
+
+		String sysDate = downloadSystemDate.getSysDate(); // 현재 일시
+		String reqExpireDate = downloadSystemDate.getExpiredDate(); // 요청 만료 일시
+		setRequestV3(downloadVodV3SacReq, tenantHeader, deviceHeader);
+
+		String productId = downloadVodV3SacReq.getEpisodeId(); // 조회 상품 ID
+
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadVodServiceImpl] productId : {}", productId);
+		log.debug("[DownloadVodServiceImpl] deviceKey : {}", downloadVodV3SacReq.getDeviceKey());
+		log.debug("[DownloadVodServiceImpl] userKey : {}", downloadVodV3SacReq.getUserKey());
+		log.debug("----------------------------------------------------------------");
+
+		MetaInfo metaInfo = getVodMetaInfoV3(downloadVodV3SacReq); // VOD 상품 조회
+		Product product = new Product();
+		
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadVodServiceImpl] NORMAL scid : {}", metaInfo.getNmSubContsId());
+		log.debug("[DownloadVodServiceImpl] SD scid : {}", metaInfo.getSdSubContsId());
+		log.debug("[DownloadVodServiceImpl] HD scid : {}", metaInfo.getHdSubContsId());
+		log.debug("[DownloadVodServiceImpl] CID : {}", metaInfo.getCid());
+		log.debug("----------------------------------------------------------------");
+
+		if (StringUtils.isNotEmpty(downloadVodV3SacReq.getDeviceKey()) && StringUtils.isNotEmpty(downloadVodV3SacReq.getUserKey())) {
+			HistoryListSacInRes historyRes = null;
+			boolean purchaseFlag = true;
+
+			try {
+				List<ProductListSacIn> prodIdList = makeProdIdList(metaInfo); // 소장 , 대여 상품 ID List 
+				HistoryListSacInReq historyReq = makeHistoryListV3SacInReq(downloadVodV3SacReq, prodIdList); // 구매내역 조회 요청 Parameter Set
+				loggingParamsForPurchaseHistoryLocalSCI(prodIdList, historyReq); // 구매내역 조회 요청 Parameter Log
+				historyRes = historyInternalSCI.searchHistoryList(historyReq); // 구매내역 조회
+			} catch (Exception ex) {
+				purchaseFlag = false;
+				log.debug("[DownloadVodServiceImpl] Purchase History Search Exception : {}");
+				log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+			}
+
+			log.debug("---------------------------------------------------------------------");
+			log.debug("[DownloadVodServiceImpl] purchaseFlag :{}", purchaseFlag);
+			log.debug("[DownloadVodServiceImpl] historyRes :{}", historyRes);
+			if (purchaseFlag && historyRes != null) { // 정상적으로 구매내역이 조회되고, 구매내역이 존재 할때
+				log.debug("[DownloadVodServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
+				log.debug("---------------------------------------------------------------------");
+				List<Purchase> purchaseList = new ArrayList<Purchase>(); // 구매내역 List
+
+				for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
+                    String permitDeviceYn = historySacIn.getPermitDeviceYn(); // 허용단말여부
+					String prchsState = setPrchsState(historySacIn); // 구매 상태
+
+                    loggingResponseOfPurchaseHistoryLocalSCI(historySacIn, prchsState);
+					if (supportService.resetExprDtOfGift(historySacIn, requestheader, downloadVodV3SacReq.getUserKey(), downloadVodV3SacReq.getDeviceKey(),
+							historySacIn.getProdId(), sysDate, prchsState)) {
+						prchsState = setPrchsState(historySacIn); // 선물인경우 만료기한이 update 되었을 수 있어 만료여부 다시 체크
+					}
+					addPurchaseIntoList(purchaseList, historySacIn, prchsState); // 구매내역 List 생성 및 추가
+					/************************************************************************************************
+					 * 구매 정보에 따른 암호화 시작
+					 ************************************************************************************************/
+					log.debug("----------------------------------------------------------------");
+					log.debug("[DownloadVodServiceImpl] prchsState	:	{}", prchsState);
+					log.debug("----------------------------------------------------------------");
+
+					// 구매상태 만료 여부 확인
+					if (DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState) || !permitDeviceYn.equals("Y")) {
+						continue;
+					}
+
+					SearchDeviceIdSacRes deviceRes = null;
+					try {
+						SearchDeviceIdSacReq deviceReq = makeSearchDeviceIdV3SacReq(downloadVodV3SacReq, tenantHeader); // 회원 단말 정보 조회 Parameter Set
+						deviceRes = deviceSCI.searchDeviceId(deviceReq); // 회원 단말 정보 조회
+					} catch (Exception ex) {
+						log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+					}
+
+					log.debug("----------------------------------------------------------------");
+					log.debug("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
+					log.debug("----------------------------------------------------------------");
+
+					if (deviceRes == null || !"Y".equals(deviceRes.getAuthYn()))
+						break;
+
+					setMetaInfoV3(metaInfo, historySacIn, downloadVodV3SacReq, tenantHeader, reqExpireDate, prchsState, deviceRes); // Meta정보 Set
+
+					Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
+					encryptionList.add(encryption); // 암호화 규격 add
+					loggingEncResult(encryption); // 암화화 결과 log
+
+					// 구매 정보
+					product.setPurchaseList(purchaseList);
+
+					// 암호화 정보
+					if (!encryptionList.isEmpty()) {
+						log.debug("[DownloadVodServiceImpl]	setDl : {}");
+						product.setDl(encryptionList);
+					}
+					break;
+				}
+			}
+		}
+
+		setProduct(product, metaInfo, supportFhdVideo, downloadVodV3SacReq.getBaseYn());
+		DownloadVodSacRes response = makeResponse(product); // 응답결과 
+ 
+        sw.stop();
+        supportService.logDownloadResult(downloadVodV3SacReq.getUserKey(), downloadVodV3SacReq.getDeviceKey(), productId, encryptionList, sw.getTime()); // 다운로드 결과 log
+
+		return response;
+	}	
+	
 	private String setPrchsState(HistorySacIn historySacIn) {
 		String prchsState = getDownloadPurchaseStateByDbTime(historySacIn); // 구매 상태
 
@@ -240,6 +375,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		downloadVodSacReq.setLangCd(tenantHeader.getLangCd());
 		downloadVodSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 		downloadVodSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+	}
+	
+	private void setRequestV3(DownloadVodV3SacReq downloadVodV3SacReq, TenantHeader tenantHeader, DeviceHeader deviceHeader) {
+		downloadVodV3SacReq.setTenantId(tenantHeader.getTenantId());
+		downloadVodV3SacReq.setSystemId(tenantHeader.getSystemId());
+		downloadVodV3SacReq.setDeviceModelCd(deviceHeader.getModel());
+		downloadVodV3SacReq.setLangCd(tenantHeader.getLangCd());
+		downloadVodV3SacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+		downloadVodV3SacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 	}
 
 	private void setProduct(Product product, MetaInfo metaInfo, boolean supportFhdVideo, String baseYn) {
@@ -339,6 +483,39 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			
 		}
 	}
+	
+	private void setMetaInfoV3(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadVodV3SacReq downloadVodV3SacReq, TenantHeader tenantHeader,
+			String reqExpireDate, String prchsState, SearchDeviceIdSacRes deviceRes) {
+		String deviceId = deviceRes.getDeviceId();
+		String deviceIdType = commonService.getDeviceIdType(deviceId);
+
+		metaInfo.setPurchaseId(historySacIn.getPrchsId()); //구매 ID
+		metaInfo.setPurchaseProdId(historySacIn.getProdId()); // 구매 상품ID
+		metaInfo.setPurchaseDt(historySacIn.getPrchsDt()); // 구매일시
+		metaInfo.setPurchaseState(prchsState); // 구매상태
+		metaInfo.setPurchaseDwldExprDt(historySacIn.getDwldExprDt()); // 다운로드 만료일시
+		metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt())); // 구매상품 가격
+		metaInfo.setExpiredDate(reqExpireDate); // 요청 만료일시
+		metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
+		metaInfo.setUserKey(downloadVodV3SacReq.getUserKey()); 
+		metaInfo.setDeviceKey(downloadVodV3SacReq.getDeviceKey());
+		metaInfo.setDeviceType(deviceIdType); // 단말 유형
+		metaInfo.setDeviceSubKey(deviceId); 
+		metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
+		metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
+
+		mapProdChrg(metaInfo, historySacIn.getProdId()); // 구매 상품ID
+		mapDrmYn(metaInfo, historySacIn);
+
+		metaInfo.setSystemId(tenantHeader.getSystemId());
+		metaInfo.setTenantId(tenantHeader.getTenantId());
+
+        if ("Y".equals(historySacIn.getDrmYn()) &&	!supportService.isTfreemiumPurchase(historySacIn.getPrchsReqPathCd())) {
+			// 구매 경로가 Tfreemium 제외하고 호출되도록 수정한다.
+			supportService.mapPurchaseDrmInfo(metaInfo);
+			
+		}
+	}	
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {
 		Purchase p = commonGenerator.generatePurchase(prchsState, historySacIn);
@@ -354,11 +531,32 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				throw new StorePlatformException("SAC_DSP_0013"); //단품인 상품만 조회가능 합니다.
 		return metaInfo;
 	}
+	
+	private MetaInfo getVodMetaInfoV3(DownloadVodV3SacReq req) {
+		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadVodInfoV3", req, MetaInfo.class); // VOD 상품 조회
+		if (metaInfo == null)
+			throw new StorePlatformException("SAC_DSP_0009"); // 요청하신 자료가 존재하지 않습니다. 
+		return metaInfo;
+	}
 
 	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader) {
 		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
 		deviceReq.setUserKey(downloadVodSacReq.getUserKey());
 		deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
+		deviceReq.setTenantId(tenantHeader.getTenantId());
+		log.debug("----------------------------------------------------------------");
+		log.debug("*******************회원 단말 정보 조회 파라미터*********************");
+		log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
+		log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+		log.debug("----------------------------------------------------------------");
+		
+		return deviceReq;
+	}
+	
+	private SearchDeviceIdSacReq makeSearchDeviceIdV3SacReq(DownloadVodV3SacReq downloadVodV3SacReq, TenantHeader tenantHeader) {
+		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
+		deviceReq.setUserKey(downloadVodV3SacReq.getUserKey());
+		deviceReq.setDeviceKey(downloadVodV3SacReq.getDeviceKey());
 		deviceReq.setTenantId(tenantHeader.getTenantId());
 		log.debug("----------------------------------------------------------------");
 		log.debug("*******************회원 단말 정보 조회 파라미터*********************");
@@ -415,6 +613,22 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		historyReq.setTenantId(downloadVodSacReq.getTenantId());
 		historyReq.setUserKey(downloadVodSacReq.getUserKey());
 		historyReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
+		historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+		historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+		historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+		historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
+		historyReq.setEndDt("20991231235959");
+		historyReq.setOffset(1);
+		historyReq.setCount(1000);
+		historyReq.setProductList(productList);
+		return historyReq;
+	}
+	
+	private HistoryListSacInReq makeHistoryListV3SacInReq(DownloadVodV3SacReq downloadVodV3SacReq, List<ProductListSacIn> productList) {
+		HistoryListSacInReq historyReq = new HistoryListSacInReq();
+		historyReq.setTenantId(downloadVodV3SacReq.getTenantId());
+		historyReq.setUserKey(downloadVodV3SacReq.getUserKey());
+		historyReq.setDeviceKey(downloadVodV3SacReq.getDeviceKey());
 		historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
 		historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
 		historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);

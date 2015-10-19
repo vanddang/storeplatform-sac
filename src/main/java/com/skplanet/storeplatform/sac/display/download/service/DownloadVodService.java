@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.download.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodV3SacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -41,5 +42,5 @@ public interface DownloadVodService {
      *            FHD 화질 지원여부
 	 * @return DownloadVodRes
 	 */
-//	DownloadVodSacRes searchDownloadVodV3(SacRequestHeader requestheader, DownloadVodSacReq downloadVodReq, boolean supportFhdVideo);
+	DownloadVodSacRes searchDownloadVodV3(SacRequestHeader requestheader, DownloadVodV3SacReq downloadVodV3Req, boolean supportFhdVideo);
 }

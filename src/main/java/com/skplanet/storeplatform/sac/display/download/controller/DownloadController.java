@@ -153,9 +153,9 @@ public class DownloadController {
 	@RequestMapping(value = "/vod/detail/v3", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadVodSacRes downloadVodV3(SacRequestHeader requestheader,
-			@RequestBody @Validated DownloadVodSacReq downloadVodSacReq) {
-		downloadVodSacReq.setBaseYn("N"); // 화질별 가격분리 정책에 따른 기준 상품 구분값 추가
-		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodSacReq, true);
+			@RequestBody @Validated DownloadVodV3SacReq downloadVodV3SacReq) {
+		downloadVodV3SacReq.setBaseYn("N"); // 화질별 가격분리 정책에 따른 기준 상품 구분값 추가
+		return this.downloadVodService.searchDownloadVodV3(requestheader, downloadVodV3SacReq, true);
 	}	
 
 	/**
