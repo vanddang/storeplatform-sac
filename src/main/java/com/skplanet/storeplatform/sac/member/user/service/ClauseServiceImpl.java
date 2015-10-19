@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacReq;
@@ -83,14 +84,18 @@ public class ClauseServiceImpl implements ClauseService {
 	public DetailClauseSacRes detailClauseList(SacRequestHeader sacHeader, DetailClauseSacReq req) {
 		String clauseItemCd = req.getClauseItemCd();
 
+		// Header에 tenantId가 없는 경우 S01로 디폴트값 설정.
+		String tenantId = StringUtils.defaultIfBlank(sacHeader.getTenantHeader().getTenantId(),
+				MemberConstants.TENANT_ID_TSTORE);
+
 		/* Tenant에 등록된 코드인지 확인 */
-		Clause clauseCode = this.commService.getTenantClauseCode(clauseItemCd);
+		Clause clauseCode = this.commService.getTenantClauseCode(tenantId, clauseItemCd);
 		if (clauseCode == null) {
 			throw new StorePlatformException("SAC_MEM_1105", clauseItemCd);
 		}
 
 		/* Tenant에 등록된 코드면 TB_CM_CLAUSE 조회 */
-		List<Clause> clauseList = this.commService.getDetailClauseList(clauseItemCd);
+		List<Clause> clauseList = this.commService.getDetailClauseList(tenantId, clauseItemCd);
 
 		if (clauseList.size() == 0) {
 			throw new StorePlatformException("SAC_MEM_0002", req.getClauseItemCd());

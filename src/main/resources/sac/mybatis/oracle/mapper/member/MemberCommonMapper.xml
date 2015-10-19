@@ -4,12 +4,12 @@
 
     <!-- Tenant 약관코드 조회 -->
     <select id="getTenantClauseCode" parameterType="ClauseDTO" resultType="ClauseDTO">
-        SELECT    /* MemberCommonMapper.getTenantClauseCode, 테넌트약관조회, 강신완/부르칸, 2014-02-12 */
+        SELECT    /* MemberCommonMapper.getTenantClauseCode, 테넌트약관조회, incross_cmlee80, 2015-10-27 */
             clause_id           AS clauseId
 
         FROM TB_CM_TENANT_CLAUSE 
         WHERE 1=1
-        
+        AND tenant_id = #{tenantId}
         AND clause_id = #{clauseId}
         AND use_yn = 'Y'  
         ORDER BY clause_id ASC
@@ -17,7 +17,7 @@
     
     <!-- 약관 상세 조회 -->
     <select id="getClauseDetail" parameterType="ClauseDTO" resultType="ClauseDTO">
-		SELECT    /* MemberCommonMapper.getClauseDetail, 약관상세조회, 강신완/부르칸, 2014-02-12 */
+		SELECT    /* MemberCommonMapper.getClauseDetail, 약관상세조회, incross_cmlee80, 2015-10-27 */
             clause_id           AS clauseItemCd,
             clause_item_cd      AS clauseId,
             start_day           AS startDay,
@@ -36,13 +36,14 @@
             reagree_yn AS reAgreeYn             
          FROM TB_CM_CLAUSE 
         WHERE dp_yn='Y'
+        AND tenant_id = #{tenantId}
         AND clause_id = #{clauseId}
         ORDER BY start_day DESC
     </select>
     
     <!-- 약관 목록 조회 -->
     <select id="getClauseList" parameterType="ClauseDTO" resultType="ClauseDTO">
-        SELECT    /* MemberCommonMapper.getClauseList, 약관목록조회, 강신완/부르칸, 2014-04-29 */
+        SELECT    /* MemberCommonMapper.getClauseList, 약관목록조회, incross_cmlee80, 2015-10-27 */
             A.clause_id           AS clauseItemCd,
             A.clause_item_cd      AS clauseId,
             A.start_day           AS startDay,
@@ -61,10 +62,11 @@
             reagree_yn AS reAgreeYn             
          FROM TB_CM_CLAUSE A, TB_CM_TENANT_CLAUSE B
         WHERE A.dp_yn='Y'
+        AND A.tenant_id = B.tenant_id
         AND A.clause_id = B.clause_id
         AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[>=]]> a.start_day
         AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
-        AND B.tenant_id = #{tenantId}
+        AND B.tenant_id = #{tenantId}        
         AND B.use_yn = 'Y'
         ORDER BY A.clause_id ASC
     </select>
@@ -160,14 +162,16 @@
     
     <!-- 공통 약관 코드 정보 조회 -->
     <select id="getClauseItemInfo" parameterType="ClauseDTO" resultType="ClauseDTO">
-        SELECT /* MemberCommonMapper.getClauseItemInfo, 공통 약관 코드 정보 조회, 심대진/다모아, 2014-04-29 */
+        SELECT /* MemberCommonMapper.getClauseItemInfo, 공통 약관 코드 정보 조회, incross_cmlee80, 2015-10-27 */
                a.clause_id AS clauseId
              , a.start_day AS startDay
              , a.end_day AS endDay
              , a.clause_ver AS clauseVer
              , b.mand_agree_yn AS mandAgreeYn
          FROM TB_CM_CLAUSE a
-        INNER JOIN TB_CM_TENANT_CLAUSE b ON a.clause_id = b.clause_id
+        INNER JOIN TB_CM_TENANT_CLAUSE b 
+            ON a.clause_id = b.clause_id
+            AND a.tenant_id = b.tenant_id
         WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[>=]]> a.start_day
           AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
           AND b.use_yn = 'Y'
