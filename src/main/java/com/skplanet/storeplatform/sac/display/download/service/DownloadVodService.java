@@ -26,4 +26,20 @@ public interface DownloadVodService {
 	 * @return DownloadVodRes
 	 */
 	DownloadVodSacRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodSacReq downloadVodReq, boolean supportFhdVideo);
+	
+	/**
+	 * 
+	 * <pre>
+	 * Download Vod 정보 조회 V3(for download).
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param downloadVodReq
+	 *            downloadVodReq
+     * @param supportFhdVideo
+     *            FHD 화질 지원여부
+	 * @return DownloadVodRes
+	 */
+//	DownloadVodSacRes searchDownloadVodV3(SacRequestHeader requestheader, DownloadVodSacReq downloadVodReq, boolean supportFhdVideo);
 }

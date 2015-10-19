@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
@@ -129,6 +130,33 @@ public class VodGeneratorImpl implements VodGenerator {
 		return vod;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.VodGenerator#generateVod(com.skplanet.storeplatform.sac.display
+	 * .meta.vo.MetaInfo)
+	 */
+	@Override
+	public Vod generateVodV3(MetaInfo metaInfo, boolean supportFhdVideo) {
+		Vod vod = new Vod();
+		Chapter chapter = new Chapter();
+		Time time = new Time();
+		time.setText(metaInfo.getEpsdPlayTm());
+		chapter.setUnit(this.commonService.getVodChapterUnit());
+		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
+			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
+		}
+		if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd())
+				&& !DisplayConstants.DP_VOD_SHORT_STORY_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+			vod.setChapter(chapter);
+		}
+		vod.setRunningTime(time);
+		vod.setVideoInfoList(this.generateVideoInfoListV3(metaInfo, supportFhdVideo));
+		vod.setSupportList(this.generateSupportStorePlay(metaInfo));
+		return vod;
+	}
+	
 	/**
 	 * <pre>
 	 * method 설명.
@@ -284,8 +312,66 @@ public class VodGeneratorImpl implements VodGenerator {
 		// }
 		// }
 
+		//videoInfo.getIdentifierList().add(identifierList);
 		return videoInfoList;
 	}
+	
+	private List<VideoInfo> generateVideoInfoListV3(MetaInfo metaInfo, boolean supportFhdVideo) {
+		VideoInfo videoInfo = null;
+		List<VideoInfo> videoInfoList = new ArrayList<VideoInfo>();
+		List<Identifier> identifierList = null;		
+
+		/*
+		 * 일반화질 정보
+		 */
+		if (StringUtils.isNotEmpty(metaInfo.getNmSubContsId())) {
+			videoInfo = this.getNmVideoInfo(metaInfo);
+			identifierList = new ArrayList<Identifier>();
+			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getEspdProdId()));
+			videoInfo.setIdentifierList(identifierList);
+			videoInfoList.add(videoInfo);
+		}
+
+		/*
+		 * SD 고화질 정보
+		 */
+		if (StringUtils.isNotEmpty(metaInfo.getSdSubContsId())) {
+			videoInfo = this.getSdVideoInfo(metaInfo);
+			identifierList = new ArrayList<Identifier>();
+			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getEspdProdId()));
+			videoInfo.setIdentifierList(identifierList);
+			videoInfoList.add(videoInfo);
+		}
+
+		/*
+		 * 4.x I/F 일때
+		 */
+
+		if (supportFhdVideo) {
+			
+			// TB_CM_DEVICE.HDV_SPRT_YN ='N'이면 A,B 화질만 보이게 변경 Update By 2015.09.10 이석희 I-S PLUS
+			if(!"N".equals(metaInfo.getHdvSprtYn())){
+				if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
+					videoInfo = this.getHdVideoInfoV2(metaInfo);
+					identifierList = new ArrayList<Identifier>();
+					identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getEspdProdId()));
+					videoInfo.setIdentifierList(identifierList);
+					videoInfoList.add(videoInfo);
+				}
+	
+				if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+					videoInfo = this.getHiHdVideoInfo(metaInfo);
+					identifierList = new ArrayList<Identifier>();
+					identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getEspdProdId()));
+					videoInfo.setIdentifierList(identifierList);
+					videoInfoList.add(videoInfo);
+				}
+			}
+
+		}
+
+		return videoInfoList;
+	}	
 
 	@Override
 	public VideoInfo getNmVideoInfo(MetaInfo metaInfo) {

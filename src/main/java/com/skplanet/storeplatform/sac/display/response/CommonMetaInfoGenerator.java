@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Authority;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Badge;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
@@ -210,6 +211,17 @@ public interface CommonMetaInfoGenerator {
 	 * @return Rights
 	 */
 	public Rights generateRights(MetaInfo metaInfo);
+	
+	/**
+	 * <pre>
+	 * 공통 Authority 객체 생성(VOD 상품만 적용).
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Rights
+	 */
+	public Authority generateAuthority(MetaInfo metaInfo);	
 
 	/**
 	 * <pre>

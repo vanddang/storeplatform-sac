@@ -121,6 +121,7 @@ public class DownloadController {
 	@ResponseBody
 	public DownloadVodSacRes downloadVod(SacRequestHeader requestheader,
 			@RequestBody @Validated DownloadVodSacReq downloadVodSacReq) {
+		downloadVodSacReq.setBaseYn("Y"); // 화질별 가격분리 정책에 따른 기준 상품 구분값 추가
 		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodSacReq, false);
 	}
 
@@ -137,8 +138,25 @@ public class DownloadController {
 	@ResponseBody
 	public DownloadVodSacRes downloadVodV2(SacRequestHeader requestheader,
 			@RequestBody @Validated DownloadVodSacReq downloadVodSacReq) {
+		downloadVodSacReq.setBaseYn("Y"); // 화질별 가격분리 정책에 따른 기준 상품 구분값 추가
 		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodSacReq, true);
 	}
+	
+	/**
+	 * (V3) Download Vod 정보 조회(for download).
+	 * @param requestheader
+	 *            requestheader
+	 * @param downloadVodSacReq
+	 *            downloadVodSacReq
+	 * @return DownloadVodSacRes
+	 */
+	@RequestMapping(value = "/vod/detail/v3", method = RequestMethod.POST)
+	@ResponseBody
+	public DownloadVodSacRes downloadVodV3(SacRequestHeader requestheader,
+			@RequestBody @Validated DownloadVodSacReq downloadVodSacReq) {
+		downloadVodSacReq.setBaseYn("N"); // 화질별 가격분리 정책에 따른 기준 상품 구분값 추가
+		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodSacReq, true);
+	}	
 
 	/**
 	 * <pre>

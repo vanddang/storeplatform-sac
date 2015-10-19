@@ -61,14 +61,14 @@
 		    , A.AGENCY_NM
 		    , TO_CHAR(A.REG_DT,'YYYYMMDDHH24MISS') REG_DT
 		    , A.FILE_PATH
-            , A.STORE_PROD_ID ------------ 추가
-            , A.PLAY_PROD_ID ------------ 추가
-            , A.STORE_PROD_AMT ------------ 추가
-            , A.PLAY_PROD_AMT ------------ 추가
-            , A.STORE_PROD_NET_AMT ------------ 추가
-            , A.PLAY_PROD_NET_AMT ------------ 추가
-            , A.STORE_DRM_YN ------------ 추가
-            , A.PLAY_DRM_YN ------------ 추가
+            , A.STORE_PROD_ID 
+            , A.PLAY_PROD_ID 
+            , A.STORE_PROD_AMT 
+            , A.PLAY_PROD_AMT 
+            , A.STORE_PROD_NET_AMT 
+            , A.PLAY_PROD_NET_AMT 
+            , A.STORE_DRM_YN 
+            , A.PLAY_DRM_YN 
             , A.EPISODE_FILE_PATH
             , (CASE WHEN PLAY_DWLD_STRM='DP010501' THEN 'dl' WHEN PLAY_DWLD_STRM='DP010502' THEN 'strm' WHEN PLAY_DWLD_STRM='DP010503' THEN 'both' END) AS PLAY_DL_STRM_CD      
             , (CASE WHEN STORE_DWLD_STRM='DP010501' THEN 'dl' WHEN STORE_DWLD_STRM='DP010502' THEN 'strm' WHEN STORE_DWLD_STRM='DP010503' THEN 'both' END) AS STORE_DL_STRM_CD         
@@ -113,14 +113,14 @@
 	            , A.BRDC_COMP_CD
 	            , A.CHNL_COMP_NM
 	            , A.AGENCY_NM
-                , A.STORE_PROD_ID ------------ 추가
-                , A.PLAY_PROD_ID ------------ 추가
-                , A.STORE_PROD_AMT ------------ 추가
-                , A.PLAY_PROD_AMT ------------ 추가
-                , A.STORE_PROD_NET_AMT ------------ 추가
-                , A.PLAY_PROD_NET_AMT ------------ 추가
-                , A.STORE_DRM_YN ------------ 추가
-                , A.PLAY_DRM_YN ------------ 추가
+                , A.STORE_PROD_ID 
+                , A.PLAY_PROD_ID 
+                , A.STORE_PROD_AMT 
+                , A.PLAY_PROD_AMT 
+                , A.STORE_PROD_NET_AMT 
+                , A.PLAY_PROD_NET_AMT 
+                , A.STORE_DRM_YN 
+                , A.PLAY_DRM_YN 
 	            , A.NM_FILE_SIZE
 	            , A.NM_RSLTN_CD
 	            , A.NM_DP_PG_RATIO_CD
@@ -182,14 +182,14 @@
 		        , G.BRDC_COMP_CD
 		        , G.CHNL_COMP_NM
 		        , G.AGENCY_NM
-	            , A.STORE_PROD_ID ------------ 추가
-	            , A.PLAY_PROD_ID ------------ 추가
-	            , A.STORE_PROD_AMT ------------ 추가
-	            , A.PLAY_PROD_AMT ------------ 추가
-	            , A.STORE_PROD_NET_AMT ------------ 추가
-	            , A.PLAY_PROD_NET_AMT ------------ 추가
-	            , A.STORE_DRM_YN ------------ 추가
-	            , A.PLAY_DRM_YN ------------ 추가
+	            , A.STORE_PROD_ID 
+	            , A.PLAY_PROD_ID 
+	            , A.STORE_PROD_AMT 
+	            , A.PLAY_PROD_AMT 
+	            , A.STORE_PROD_NET_AMT 
+	            , A.PLAY_PROD_NET_AMT 
+	            , A.STORE_DRM_YN 
+	            , A.PLAY_DRM_YN 
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.FILE_SIZE)) OVER(PARTITION BY A.CID) NM_FILE_SIZE
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.RSLTN_CD)) OVER(PARTITION BY A.CID) NM_RSLTN_CD
 		        , MAX(DECODE(A.SUB_CONTENTS_ID, A.NM_SUB_CONTENTS_ID, A.DP_PG_RATIO_CD)) OVER(PARTITION BY A.CID) NM_DP_PG_RATIO_CD
@@ -260,75 +260,70 @@
                     , DECODE(I.POSS_LEND_CLSF_CD, 'DP010601', NULL, I.DWLD_STRM_CLSF_CD) AS PLAY_DWLD_STRM   
                     , DECODE(I.POSS_LEND_CLSF_CD, 'DP010601', I.DWLD_STRM_CLSF_CD) AS STORE_DWLD_STRM    
 		        FROM 
-			        TB_DP_PROD A /* 에피소드 기준 */
+			          TB_DP_PROD A /* 에피소드 기준 */
 			        , TB_DP_TENANT_PROD B
 			        , TB_DP_PROD_RSHP C
 			        , TB_DP_SPRT_DEVICE D
 			        , TB_CM_DEVICE E
 			        , TB_DP_SUB_CONTENTS F 
 			        , TB_DP_VOD_PROD G /* 에피소드 기준 */
-                    , TB_DP_TENANT_PROD_PRICE H ------------ 추가
+                    , TB_DP_TENANT_PROD_PRICE H /* 에피소드 기준 */
                     , TB_DP_USE_POLICY I
                     , TB_DP_PROD_IMG J
 		        WHERE A.PROD_ID = B.PROD_ID
-		        AND A.PROD_ID = C.PART_PROD_ID
-		        AND A.PROD_ID = D.PROD_ID
-		        AND A.PROD_ID = F.PROD_ID
-		        AND A.PROD_ID = G.PROD_ID
-                AND A.PROD_ID = H.PROD_ID ------------ 추가
-                AND B.TENANT_ID = H.TENANT_ID ------------ 추가
-                AND A.USE_POLICY_ID = I.USE_POLICY_ID(+)
-                AND B.PROD_ID = J.PROD_ID(+) 
-                AND J.IMG_CD(+) = #{imageCd} AND J.LANG_CD(+) = #{langCd}
-                AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT ------------ 추가
-		
-		        AND A.TOP_MENU_ID IN ('DP17','DP18') /* 탑 메뉴 ID */
-		        AND A.CONTENTS_TYPE_CD = 'PD002502' /* 컨텐츠 타입 코드 */
-		        AND B.TENANT_ID = #{tenantId} /* 테넌트 ID */
-		        AND B.PROD_STATUS_CD = 'PD000403' /* 상품 상태 코드 */
-		        AND C.PROD_RSHP_CD = 'DP010802' /* 상품 관계 코드 */
-                AND E.USE_YN = 'Y' /* 사용 여부 */
-		        AND F.SALE_YN = 'Y' /* 판매 여부 */
-		        
-	            AND CASE WHEN E.SD_VIDEO_SPRT_YN = 'Y' THEN 
-	                CASE WHEN F.DP_PG_QULT_CD IN ('PD009701','PD009702') THEN 1 
-	                ELSE 
-	                    CASE WHEN E.HDV_SPRT_YN = 'Y' THEN 1 
-	                    ELSE 0 
-	                    END 
-	                END
-	            ELSE 
-	                CASE WHEN F.DP_PG_QULT_CD = 'PD009701' THEN 1 
-	                ELSE 0 
-	                END
-	            END = 1
-            
-				AND CASE WHEN NVL(A.DRM_YN, 'N') = 'Y' AND NVL(E.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
-				    ELSE CASE WHEN NVL(E.SD_VIDEO_SPRT_YN, 'N') = 'Y' THEN 1 ELSE 0 END 
-				    END = 1
-				
-		        AND (D.DEVICE_MODEL_CD = #{deviceModelCd} OR D.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말 모델 코드 */
-                AND E.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말 모델 코드 */
-                AND C.PROD_ID IN /* 채널 ID */
+		          AND A.PROD_ID = C.PART_PROD_ID
+		          AND A.PROD_ID = D.PROD_ID
+		          AND A.PROD_ID = F.PROD_ID
+		          AND A.PROD_ID = G.PROD_ID
+                  AND A.PROD_ID = H.PROD_ID 
+                  AND B.TENANT_ID = H.TENANT_ID 
+                  AND A.USE_POLICY_ID = I.USE_POLICY_ID(+)
+                  AND B.PROD_ID = J.PROD_ID(+) 
+                  AND J.IMG_CD(+) = #{imageCd} AND J.LANG_CD(+) = #{langCd}
+                  AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT 
+		          AND A.TOP_MENU_ID IN ('DP17','DP18') /* 탑 메뉴 ID */
+		          AND A.CONTENTS_TYPE_CD = 'PD002502' /* 컨텐츠 타입 코드 */
+		          AND B.TENANT_ID = #{tenantId} /* 테넌트 ID */
+		          AND B.PROD_STATUS_CD = 'PD000403' /* 상품 상태 코드 */
+		          AND C.PROD_RSHP_CD = 'DP010802' /* 상품 관계 코드 */
+                  AND E.USE_YN = 'Y' /* 사용 여부 */
+		          AND F.SALE_YN = 'Y' /* 판매 여부 */
+	              AND CASE WHEN E.SD_VIDEO_SPRT_YN = 'Y' THEN 
+											                  CASE WHEN F.DP_PG_QULT_CD IN ('PD009701','PD009702') THEN 1 
+											                  ELSE 
+											                      CASE WHEN E.HDV_SPRT_YN = 'Y' THEN 1 
+											                      ELSE 0 
+											                       END 
+											                   END
+	                  ELSE 
+			                CASE WHEN F.DP_PG_QULT_CD = 'PD009701' THEN 1 
+			                ELSE 0 
+			                END
+	                   END = 1            
+				  AND CASE WHEN NVL(A.DRM_YN, 'N') = 'Y' AND NVL(E.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
+				      ELSE CASE WHEN NVL(E.SD_VIDEO_SPRT_YN, 'N') = 'Y' THEN 1 ELSE 0 END 
+				       END = 1
+		          AND (D.DEVICE_MODEL_CD = #{deviceModelCd} OR D.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말 모델 코드 */
+                  AND E.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말 모델 코드 */
+                  AND A.BASE_YN = 'Y' /* 화질별 가격정책에 따른 기준 상품 조회 조건 */
+                  AND C.PROD_ID IN /* 채널 ID */
                 <foreach collection="arrayChannelId" item="channelId" separator="," open="(" close=")">
                     #{channelId}
                 </foreach>
-		    
                 <if test="filteredBy == 'duration'">
-                /* 특정기간 이내 등록된 컨텐츠 */
-                AND A.REG_DT > SYSDATE - #{duration}
+                  /* 특정기간 이내 등록된 컨텐츠 */
+                  AND A.REG_DT > SYSDATE - #{duration}
                 </if>
                 
                 <if test="filteredBy == 'chapter'">
-                /* 특정 회차(chapter)기준 이후 회차 컨텐츠 */
-                AND G.CHAPTER > #{chapter}
+                  /* 특정 회차(chapter)기준 이후 회차 컨텐츠 */
+                  AND G.CHAPTER > #{chapter}
                 </if>
                 
                 <if test="filteredBy == 'regDate'">
-                /* 등록일 (regdate)이후 등록된 컨텐츠 */
-                AND A.REG_DT > TO_DATE( #{regDate},'YYYYMMDDHH24MISS')
+                  /* 등록일 (regdate)이후 등록된 컨텐츠 */
+                  AND A.REG_DT > TO_DATE( #{regDate},'YYYYMMDDHH24MISS')
                 </if>
-		     
 		    ) A
 		        , TB_DP_PROD_DESC D /* 에피소드 기준 */
 		        , TB_DP_MENU_CATEGORY_PROD_MAPG E
@@ -337,16 +332,16 @@
 		        , TB_DP_PROD_DESC H /* 채널 기준 */
                 , TB_DP_PROD_IMG I /* 채널 기준 */
 		    WHERE 1=1
-		    AND A.PROD_ID = D.PROD_ID
-		    AND A.CHNL_PROD_ID = E.PROD_ID
-		    AND A.CHNL_PROD_ID = F.PROD_ID
-		    AND A.CHNL_PROD_ID = G.PROD_ID
-		    AND A.CHNL_PROD_ID = H.PROD_ID
-		    AND A.CHNL_PROD_ID = I.PROD_ID(+)
-		    AND D.LANG_CD = H.LANG_CD
-		    AND D.LANG_CD = #{langCd} /* 언어 코드 */
-            AND I.LANG_CD(+) = #{langCd} /* 언어 코드 */
-            AND I.IMG_CD(+) = #{imageCd}
+		      AND A.PROD_ID = D.PROD_ID
+		      AND A.CHNL_PROD_ID = E.PROD_ID
+		      AND A.CHNL_PROD_ID = F.PROD_ID
+		      AND A.CHNL_PROD_ID = G.PROD_ID
+		      AND A.CHNL_PROD_ID = H.PROD_ID
+		      AND A.CHNL_PROD_ID = I.PROD_ID(+)
+		      AND D.LANG_CD = H.LANG_CD
+		      AND D.LANG_CD = #{langCd} /* 언어 코드 */
+              AND I.LANG_CD(+) = #{langCd} /* 언어 코드 */
+              AND I.IMG_CD(+) = #{imageCd}
 		    ) A
 		    WHERE A.RNUM = 1
 		) A

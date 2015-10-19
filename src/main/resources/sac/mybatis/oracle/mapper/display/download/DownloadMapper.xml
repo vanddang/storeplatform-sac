@@ -625,6 +625,9 @@
                                                <if test="idType == 'channel'">
                                                AND D.PROD_ID= #{productId}    /* 채널 Id조회 */
                                                </if>
+                                               <if test='baseYn == "Y"'>
+                                               AND J.BASE_YN = 'Y'    /* 에피소드 상품 BASE_YN 여부 */
+                                               </if>                                               
                                            ) IA
                                    )JA
                               GROUP BY JA.CID
@@ -637,7 +640,7 @@
           ) XA                       
      WHERE  XA.RNUM = 1         
     </select>
-    
+        
     <!-- for download 현재일시 및 요청만료일시 조회 -->
     <select id="selectDownloadSystemDate" resultType="MetaInfo">
         SELECT  /* DownloadMapper.selectDownloadSystemDate, for download 현재일시 및 요청만료일시 조회, 이태희/부르칸, 2014-03-17 */

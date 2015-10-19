@@ -70,6 +70,16 @@ public interface VodGenerator {
 	public Vod generateVod(MetaInfo metaInfo, boolean supportFhdVideo);
 
 	/**
+	 * VOD 상품 전용 Vod 객체 생성. FHD 지원 여부 파라미터 추가. 화질별 가격정보 상이에 따른 Identifier 규격추가
+	 * 
+	 * @param metaInfo
+	 * @param supportFhdVideo
+	 *            FHD 지원 여부
+	 * @return
+	 */
+	public Vod generateVodV3(MetaInfo metaInfo, boolean supportFhdVideo);	
+	
+	/**
 	 * <pre>
 	 * VOD 상품 전용 Support List 생성.
 	 * </pre>

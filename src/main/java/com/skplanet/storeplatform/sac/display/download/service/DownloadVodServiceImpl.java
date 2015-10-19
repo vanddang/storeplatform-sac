@@ -118,7 +118,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		MetaInfo metaInfo = getVodMetaInfo(downloadVodSacReq); // VOD 상품 조회
 		Product product = new Product();
 		
-
 		log.debug("----------------------------------------------------------------");
 		log.debug("[DownloadVodServiceImpl] NORMAL scid : {}", metaInfo.getNmSubContsId());
 		log.debug("[DownloadVodServiceImpl] SD scid : {}", metaInfo.getSdSubContsId());
@@ -210,14 +209,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			}
 		}
 
-		setProduct(product, metaInfo, supportFhdVideo);
+		setProduct(product, metaInfo, supportFhdVideo, downloadVodSacReq.getBaseYn());
 		DownloadVodSacRes response = makeResponse(product); // 응답결과 
+ 
         sw.stop();
         supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime()); // 다운로드 결과 log
 
 		return response;
 	}
-
+	
 	private String setPrchsState(HistorySacIn historySacIn) {
 		String prchsState = getDownloadPurchaseStateByDbTime(historySacIn); // 구매 상태
 
@@ -233,39 +233,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		return prchsState;
 	}
 
-/*	DownloadSupportServiceImpl로 옮김
-
-	// 선물인경우 다운로드 시점에 만료기간을 reset한다.
-	// 이는 선물 받은 상품이 다운로드 하는 시점에 만료가 되어 사용할 수 없게 되는 것을 방지하기 위함이다.
-	private void resetExprDtOfGift(HistorySacIn historySacIn, DownloadVodSacReq downloadVodSacReq, String sysDate, String prchsState) {
-		if(prchsState.equals("gift") && StringUtils.isEmpty(historySacIn.getRecvDt()) ){
-			GiftConfirmSacInReq req = makeGiftConfirmSacInReq(downloadVodSacReq, historySacIn, sysDate);
-			GiftConfirmSacInRes res = giftConfirmInternalSCI.modifyGiftConfirm(req);
-			copyStartDtAndExprDt(historySacIn, res);
-		}
-	}
-
-	private void copyStartDtAndExprDt(HistorySacIn historySacIn, GiftConfirmSacInRes giftConfirmSacInRes) {
-		historySacIn.setUseStartDt(giftConfirmSacInRes.getUseStartDt());
-		historySacIn.setUseExprDt(giftConfirmSacInRes.getUseExprDt());
-		historySacIn.setDwldStartDt(giftConfirmSacInRes.getDwldStartDt());
-		historySacIn.setDwldExprDt(giftConfirmSacInRes.getDwldExprDt());
-	}
-
-	private GiftConfirmSacInReq makeGiftConfirmSacInReq(DownloadVodSacReq downloadVodSacReq, HistorySacIn historySacIn, String sysDate) {
-		GiftConfirmSacInReq req = new GiftConfirmSacInReq();
-		req.setTenantId(downloadVodSacReq.getTenantId());
-		req.setSystemId(downloadVodSacReq.getSystemId());
-		req.setUserKey(downloadVodSacReq.getUserKey());
-        req.setDeviceKey(downloadVodSacReq.getDeviceKey());
-		req.setProdId(historySacIn.getProdId());
-		req.setPrchsId(historySacIn.getPrchsId());
-		req.setRecvDt(sysDate);
-		req.setRecvConfPathCd("OR003904");  // TODO 매핑룰 추가 필요.
-		return req;
-	}
-*/
-
 	private void setRequest(DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader, DeviceHeader deviceHeader) {
 		downloadVodSacReq.setTenantId(tenantHeader.getTenantId());
 		downloadVodSacReq.setSystemId(tenantHeader.getSystemId());
@@ -275,7 +242,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		downloadVodSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 	}
 
-	private void setProduct(Product product, MetaInfo metaInfo, boolean supportFhdVideo) {
+	private void setProduct(Product product, MetaInfo metaInfo, boolean supportFhdVideo, String baseYn) {
 		List<Identifier>  identifierList = new ArrayList<Identifier>();
 		Identifier identifier;
 
@@ -302,8 +269,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		product.setTitle(commonGenerator.generateTitle(metaInfo)); // 상품명
 		product.setMenuList(commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
 		product.setSourceList(commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
-		product.setVod(vodGenerator.generateVod(metaInfo, supportFhdVideo)); // VOD 정보
-		product.setRights(commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
+		
+		if("Y".equals(baseYn)){
+			product.setVod(vodGenerator.generateVod(metaInfo, supportFhdVideo)); // VOD 정보
+			product.setRights(commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
+		}else{
+			product.setVod(vodGenerator.generateVodV3(metaInfo, supportFhdVideo)); // VOD 정보
+			product.setAuthority(commonGenerator.generateAuthority(metaInfo)); // 이용등급 및 소장/대여 정보(V3)
+		}
+		
 		product.setDistributor(commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 
         // 보안을 위해 물리파일 경로는 API응답에서 삭제

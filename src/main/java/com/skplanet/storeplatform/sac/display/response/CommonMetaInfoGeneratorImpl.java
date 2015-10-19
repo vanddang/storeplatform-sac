@@ -35,10 +35,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Authority;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Badge;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
@@ -1053,4 +1055,68 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		badge.setText(metaInfo.getBadgeOptText());
 		return badge;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateAuthority(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Authority generateAuthority(MetaInfo metaInfo) {
+		Authority authority = new Authority();
+		authority.setGrade(metaInfo.getProdGrdCd());
+
+		// 영화,TV방송에 대한 allow 설정
+		if (StringUtils.equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID, metaInfo.getTopMenuId())
+				|| StringUtils.equals(DisplayConstants.DP_TV_TOP_MENU_ID, metaInfo.getTopMenuId())
+				|| StringUtils.equals(DisplayConstants.DP_VOD_TOP_MENU_ID, metaInfo.getTopMenuId())) {
+			if (StringUtils.equals(metaInfo.getDwldAreaLimtYn(), "Y")) {
+				authority.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_DOMESTIC);
+			}
+		}
+
+		// Preview
+		List<Source> sourceList = new ArrayList<Source>();
+		Preview preview = new Preview();
+		if (StringUtils.isNotEmpty(metaInfo.getScSamplUrl())) {
+			Source source = new Source();
+			source.setType(DisplayConstants.DP_PREVIEW_LQ);
+			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
+			sourceList.add(source);
+		}
+		if (StringUtils.isNotEmpty(metaInfo.getSamplUrl())) {
+			Source source = new Source();
+			source.setType(DisplayConstants.DP_PREVIEW_HQ);
+			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getSamplUrl()));
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
+			sourceList.add(source);
+		}
+		preview.setSourceList(sourceList);		
+		authority.setPreview(preview);
+
+		// -------------------------------------------
+		// Store, Play
+		// -------------------------------------------
+		
+		/** play 정보 */
+		List<Play> playList = null;
+		if(StringUtils.isNotEmpty(metaInfo.getPlayProdId())){
+			playList = new ArrayList<Play>();
+			playList.add(this.generatePlay(metaInfo));
+		}
+		authority.setPlayList(playList);
+
+		/** Store 정보 */
+		List<Store> storeList = null;
+		if(StringUtils.isNotEmpty(metaInfo.getStoreProdId())){
+			storeList = new ArrayList<Store>();
+			storeList.add(this.generateStore(metaInfo));
+		}
+		authority.setStoreList(storeList);
+		
+		return authority;
+	}	
 }
