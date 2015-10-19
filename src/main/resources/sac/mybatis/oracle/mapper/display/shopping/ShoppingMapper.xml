@@ -2795,7 +2795,7 @@
                                          ,TB_DP_TENANT_PROD_PRICE L
 
                                 WHERE 1=1
-                                AND A.BRAND_ID = B.BRAND_ID
+                                AND SB.BRAND_ID = B.BRAND_ID
                                 AND B.CATALOG_ID = C.CATALOG_ID
                                 AND C.CATALOG_ID = D.CATALOG_ID     
                                 AND D.MENU_ID = E.MENU_ID
@@ -2829,7 +2829,7 @@
                                 AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                 AND A.BRAND_ID =SB.BRAND_ID
                                 AND NOT EXISTS (
-                                     SELECT 'X'
+                                     SELECT /*+ no_unnest no_push_subq */ 'X'
                                        FROM  TB_DP_PROD_RSHP A2
                                             ,TB_DP_SPRC_PROD B2
                                             ,TB_DP_PROD_CATALOG_MAPG C2
