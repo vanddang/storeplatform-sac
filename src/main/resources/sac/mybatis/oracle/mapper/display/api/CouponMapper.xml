@@ -105,6 +105,9 @@
             ,REG_DT                 /* 등록_일시 */
             ,UPD_ID                 /* 수정_ID */
             ,UPD_DT                 /* 수정_일시 */
+            <if test="baseYn != null">  
+            ,BASE_YN                /* 기본_여부 (에피소드 상품 중 대표 에피소드를 지정)*/
+            </if>
         ) values (
              #{prodId}
             ,#{prodChrgYn}
@@ -124,6 +127,9 @@
             ,sysdate
             ,#{updId}
             ,sysdate
+            <if test="baseYn != null">  
+            ,#{baseYn}
+            </if>
         )
     </insert>
      <!--TB_DP_PROD 테이블에 UPDATE-->  
