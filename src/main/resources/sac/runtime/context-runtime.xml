@@ -14,8 +14,6 @@
         http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
         http://www.springframework.org/schema/spring/config       http://www.springframework.org/schema/spring/config/spring-config.xsd
         http://www.springframework.org/schema/util                http://www.springframework.org/schema/util/spring-util.xsd ">
-
-	<context:component-scan base-package="com.skplanet.storeplatform.framework.integration"	name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator" />
 	
 	<context:component-scan base-package="com.skplanet.storeplatform.sac.runtime" name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator" />
  
