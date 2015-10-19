@@ -42,6 +42,8 @@ public class DownloadVodSacReq extends CommonInfo {
 	private String prchsDt; // 구매일시
 	private String dwldStartDt; // 다운로드 시작일시
 	private String dwldExprDt; // 다운로드 만료일시
+	
+	private String baseYn; // EP상품의 기준화질 여부
 
 	/**
 	 *
@@ -361,5 +363,18 @@ public class DownloadVodSacReq extends CommonInfo {
 		this.additionalMsisdn = additionalMsisdn;
 	}
 
+	/**
+	 * @return the baseYn
+	 */
+	public String getBaseYn() {
+		return baseYn;
+	}
+
+	/**
+	 * @param baseYn the baseYn to set
+	 */
+	public void setBaseYn(String baseYn) {
+		this.baseYn = baseYn;
+	}
 
 }
