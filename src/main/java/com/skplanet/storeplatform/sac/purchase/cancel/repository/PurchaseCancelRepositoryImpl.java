@@ -527,9 +527,13 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 				}
 
 				// 2015-10-16 결제무시인 경우 DB업데이트 안함(PP와 결제 내역이 달라지는 문제에 따른...)
+				// S2S인 경우에는 결제취소 후 진행하는거라 업데이트 필요함
+
 				// 2015-01-27 결제무시라도 DB에 취소로 업데이트 처리한다.
 				// 결제 취소 무시가 아니면 DB업데이트 진행.
-				if (!purchaseCancelSacParam.getIgnorePayment()) {
+				if (!purchaseCancelSacParam.getIgnorePayment()
+						|| StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_S2S,
+								purchaseCancelSacParam.getCancelReqPathCd())) {
 
 					PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
 					purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
@@ -1099,6 +1103,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		return this.purchaseCancelSCI.useSpecialCoupon(req);
 	}
 
+	@Override
 	public CouponCancelChargeEcRes cancelGoods(String prchsId, String cancelType) {
 		CouponCancelChargeEcReq couponCancelChargeEcReq = new CouponCancelChargeEcReq();
 		couponCancelChargeEcReq.setPrchsId(prchsId);
