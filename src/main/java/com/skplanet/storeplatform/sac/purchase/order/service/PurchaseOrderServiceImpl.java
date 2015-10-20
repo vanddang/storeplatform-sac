@@ -1141,7 +1141,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				invokeCMSCharge(couponCode, prchsDtlMore.getPrchsId(), reservedDataMap.get("deviceId"),
 						reservedDataMap.get(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID));
 			} else {
-				invokeCMSStore(reservedDataMap, prchsDtlMore, prchsDtlMoreList, tstoreNotiPublishType,
+				shoppingCouponList = invokeCMSStore(reservedDataMap, prchsDtlMore, prchsDtlMoreList, tstoreNotiPublishType,
 						shoppingCouponList);
 			}
 		}
