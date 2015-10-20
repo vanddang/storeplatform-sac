@@ -81,11 +81,6 @@ public class Clause extends CommonInfo {
 	private String reAgreeYn;
 
 	/**
-	 * 모바일 약관 여부.
-	 */
-	private String isMobileYn;
-
-	/**
 	 * @return String : tenantId
 	 */
 	public String getTenantId() {
@@ -368,21 +363,6 @@ public class Clause extends CommonInfo {
 	 */
 	public void setReAgreeYn(String reAgreeYn) {
 		this.reAgreeYn = reAgreeYn;
-	}
-
-	/**
-	 * @return the isMobileYn
-	 */
-	public String getIsMobileYn() {
-		return this.isMobileYn;
-	}
-
-	/**
-	 * @param isMobileYn
-	 *            the isMobileYn to set
-	 */
-	public void setIsMobileYn(String isMobileYn) {
-		this.isMobileYn = isMobileYn;
 	}
 
 }

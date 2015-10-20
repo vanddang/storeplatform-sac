@@ -17,7 +17,7 @@
     
     <!-- 약관 상세 조회 -->
     <select id="getClauseDetail" parameterType="ClauseDTO" resultType="ClauseDTO">
-		SELECT    /* MemberCommonMapper.getClauseDetail, 약관상세조회, incross_cmlee80, 2015-10-27 */
+        SELECT    /* MemberCommonMapper.getClauseDetail, 약관상세조회, incross_cmlee80, 2015-10-27 */
             clause_id           AS clauseItemCd,
             clause_item_cd      AS clauseId,
             start_day           AS startDay,
@@ -38,12 +38,6 @@
         WHERE dp_yn='Y'
         AND tenant_id = #{tenantId}
         AND clause_id = #{clauseId}
-        <if test="isMobileYn != null and isMobileYn.equalsIgnoreCase('Y')">
-          AND mw_file_nm IS NOT NULL
-        </if>
-        <if test="isMobileYn != null and isMobileYn.equalsIgnoreCase('N')">
-          AND file_nm IS NOT NULL
-        </if>        
         ORDER BY start_day DESC
     </select>
     
@@ -74,86 +68,80 @@
         AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
         AND B.tenant_id = #{tenantId}        
         AND B.use_yn = 'Y'
-        <if test="isMobileYn != null and isMobileYn.equalsIgnoreCase('Y')">
-          AND A.mw_file_nm IS NOT NULL
-        </if>
-        <if test="isMobileYn != null and isMobileYn.equalsIgnoreCase('N')">
-          AND A.file_nm IS NOT NULL
-        </if>
         ORDER BY A.clause_id ASC
     </select>
     
     <!-- 폰 정보 조회 -->
     <select id="getPhoneInfo" parameterType="DeviceDTO" resultType="DeviceDTO">
-		SELECT /* MemberCommonMapper.getPhoneInfo, 폰정보 조회, 심대진/다모아, 2014-01-08 */
-		        device_model_cd
-		      , model_nm
-		      , eng_model_nm
-		      , rep_device_yn
-		      , ua_cd
-		      , list_img_path
-		      , dtl_img_path
-		      , cmnt_comp_cd
-		      , cpu_type_cd
-		      , vm_ver_cd
-		      , lcd_size_cd
-		      , color_cd
-		      , audio_type_cd
-		      , audio_poly_cd
-		      , giga_ver_cd
-		      , drm_ver_cd
-		      , v4_sprt_type_cd
-		      , device_type_cd
-		      , prchs_posb_type_cd
-		      , inner_mem_size
-		      , network_type
-		      , use_yn
-		      , dp_yn
-		      , feature_phone_yn
-		      , camera_sprt_yn
-		      , extrr_mem_yn
-		      , touch_screen_yn
-		      , bluetooth_sprt_yn
-		      , gps_sprt_yn
-		      , itopp_v4_sprt_yn
-		      , sound_3d_sprt_yn
-		      , virtual_key_yn
-		      , t_player_sprt_yn
-		      , video_drm_sprt_yn
-		      , cmf_sprt_yn
-		      , embedded_yn
-		      , wsl_sprt_yn
-		      , sd_video_sprt_yn
-		      , fr_dvc_yn
-		      , verify_dvc_yn
-		      , ebook_sprt_yn
-		      , comic_sprt_yn
-		      , hdv_sprt_yn
-		      , kpad_sprt_yn
-		      , kwac_sprt_yn
-		      , flash_sprt_yn
-		      , hdmi_sprt_yn
-		      , hdcp_sprt_yn
-		      , gift_sprt_yn
-		      , scl_shpg_sprt_yn
-		      , magazine_sprt_yn
-		      , music_sprt_yn
-		      , aom_sprt_yn
-		      , skt_drm_sprt_yn
-		      , strm_sprt_yn
-		      , wgtp_sprt_yn
-		      , arm_sprt_yn
-		      , vod_fixistt_sprt_yn
-		      , dolby_sprt_yn
-		      , webtoon_sprt_yn
-		      , reg_id
-		      , reg_dt
-		      , upd_id
-		      , upd_dt
-		      , (SELECT cd_nm FROM TB_CM_CD WHERE cd_id = mnft_comp_cd AND lang_cd = 'ko') AS MNFT_COMP_CD
-		      , (SELECT cd_nm FROM TB_CM_CD WHERE cd_id = vm_type_cd AND lang_cd = 'ko') AS VM_TYPE_CD
-		 FROM TB_CM_DEVICE
-		WHERE use_yn = 'Y'
+        SELECT /* MemberCommonMapper.getPhoneInfo, 폰정보 조회, 심대진/다모아, 2014-01-08 */
+                device_model_cd
+              , model_nm
+              , eng_model_nm
+              , rep_device_yn
+              , ua_cd
+              , list_img_path
+              , dtl_img_path
+              , cmnt_comp_cd
+              , cpu_type_cd
+              , vm_ver_cd
+              , lcd_size_cd
+              , color_cd
+              , audio_type_cd
+              , audio_poly_cd
+              , giga_ver_cd
+              , drm_ver_cd
+              , v4_sprt_type_cd
+              , device_type_cd
+              , prchs_posb_type_cd
+              , inner_mem_size
+              , network_type
+              , use_yn
+              , dp_yn
+              , feature_phone_yn
+              , camera_sprt_yn
+              , extrr_mem_yn
+              , touch_screen_yn
+              , bluetooth_sprt_yn
+              , gps_sprt_yn
+              , itopp_v4_sprt_yn
+              , sound_3d_sprt_yn
+              , virtual_key_yn
+              , t_player_sprt_yn
+              , video_drm_sprt_yn
+              , cmf_sprt_yn
+              , embedded_yn
+              , wsl_sprt_yn
+              , sd_video_sprt_yn
+              , fr_dvc_yn
+              , verify_dvc_yn
+              , ebook_sprt_yn
+              , comic_sprt_yn
+              , hdv_sprt_yn
+              , kpad_sprt_yn
+              , kwac_sprt_yn
+              , flash_sprt_yn
+              , hdmi_sprt_yn
+              , hdcp_sprt_yn
+              , gift_sprt_yn
+              , scl_shpg_sprt_yn
+              , magazine_sprt_yn
+              , music_sprt_yn
+              , aom_sprt_yn
+              , skt_drm_sprt_yn
+              , strm_sprt_yn
+              , wgtp_sprt_yn
+              , arm_sprt_yn
+              , vod_fixistt_sprt_yn
+              , dolby_sprt_yn
+              , webtoon_sprt_yn
+              , reg_id
+              , reg_dt
+              , upd_id
+              , upd_dt
+              , (SELECT cd_nm FROM TB_CM_CD WHERE cd_id = mnft_comp_cd AND lang_cd = 'ko') AS MNFT_COMP_CD
+              , (SELECT cd_nm FROM TB_CM_CD WHERE cd_id = vm_type_cd AND lang_cd = 'ko') AS VM_TYPE_CD
+         FROM TB_CM_DEVICE
+        WHERE use_yn = 'Y'
         <if test='deviceModelCd != null'>
           AND device_model_cd = #{deviceModelCd}
         </if>

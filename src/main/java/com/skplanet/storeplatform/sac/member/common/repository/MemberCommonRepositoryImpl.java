@@ -44,19 +44,17 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 	}
 
 	@Override
-	public List<Clause> searchClauseList(String tenantId, String isMobileYn) {
+	public List<Clause> searchClauseList(String tenantId) {
 		Clause dto = new Clause();
 		dto.setTenantId(tenantId);
-		dto.setIsMobileYn(isMobileYn);
 		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getClauseList", dto);
 	}
 
 	@Override
-	public List<Clause> searchClauseDetail(String tenantId, String clauseId, String isMobileYn) {
+	public List<Clause> searchClauseDetail(String tenantId, String clauseId) {
 		Clause dto = new Clause();
 		dto.setTenantId(tenantId);
 		dto.setClauseId(clauseId);
-		dto.setIsMobileYn(isMobileYn);
 		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getClauseDetail", dto);
 	}
 

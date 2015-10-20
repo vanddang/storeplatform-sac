@@ -47,14 +47,7 @@ public class ClauseServiceImpl implements ClauseService {
 	 */
 	@Override
 	public ListClauseSacRes listClause(SacRequestHeader sacHeader) {
-
-		String isMobileYn = MemberConstants.USE_Y;
-
-		if (MemberConstants.SYSTEM_ID_TSTORE_PORTAL_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
-			isMobileYn = MemberConstants.USE_N;
-		}
-
-		List<Clause> clauseList = this.commService.getListClause(sacHeader.getTenantHeader().getTenantId(), isMobileYn);
+		List<Clause> clauseList = this.commService.getListClause(sacHeader.getTenantHeader().getTenantId());
 
 		List<ClauseSacRes> clauseSacResList = new ArrayList<ClauseSacRes>();
 		for (Clause clause : clauseList) {
@@ -91,8 +84,6 @@ public class ClauseServiceImpl implements ClauseService {
 	public DetailClauseSacRes detailClauseList(SacRequestHeader sacHeader, DetailClauseSacReq req) {
 		String clauseItemCd = req.getClauseItemCd();
 
-		String isMobileYn = MemberConstants.USE_Y;
-
 		// Header에 tenantId가 없는 경우 S01로 디폴트값 설정.
 		String tenantId = StringUtils.defaultIfBlank(sacHeader.getTenantHeader().getTenantId(),
 				MemberConstants.TENANT_ID_TSTORE);
@@ -103,12 +94,8 @@ public class ClauseServiceImpl implements ClauseService {
 			throw new StorePlatformException("SAC_MEM_1105", clauseItemCd);
 		}
 
-		if (MemberConstants.SYSTEM_ID_TSTORE_PORTAL_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
-			isMobileYn = MemberConstants.USE_N;
-		}
-
 		/* Tenant에 등록된 코드면 TB_CM_CLAUSE 조회 */
-		List<Clause> clauseList = this.commService.getDetailClauseList(tenantId, clauseItemCd, isMobileYn);
+		List<Clause> clauseList = this.commService.getDetailClauseList(tenantId, clauseItemCd);
 
 		if (clauseList.size() == 0) {
 			throw new StorePlatformException("SAC_MEM_0002", req.getClauseItemCd());
