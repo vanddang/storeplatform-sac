@@ -314,6 +314,8 @@ public class VodDetail extends CommonInfo {
 	/** HDV 지원여부*/
 	private String hdvSprtYn;
 
+	/* 서브컨텐츠ID */
+	private String subContentsId;
 	public String getTopMenuId() {
 		return this.topMenuId;
 	}
@@ -1765,4 +1767,18 @@ public class VodDetail extends CommonInfo {
 		this.hdvSprtYn = hdvSprtYn;
 	}
 
+	/**
+	 * @return the subContentsId
+	 */
+	public String getSubContentsId() {
+		return subContentsId;
+	}
+
+	/**
+	 * @param subContentsId the subContentsId to set
+	 */
+	public void setSubContentsId(String subContentsId) {
+		this.subContentsId = subContentsId;
+	}
+	
 }
