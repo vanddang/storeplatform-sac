@@ -54,6 +54,9 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceI
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.sci.ShoppingInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusDetailSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInReq;
@@ -381,13 +384,38 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			}
 
+			// 북스캐쉬 충전 취소 처리 2015.10.20
+			// if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+			// PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE)) {
+			//
+			// TStoreCashChargeCancelEcReq tStoreCashChargeCancelEcReq = new TStoreCashChargeCancelEcReq();
+			// List<TStoreCashChargeCancelDetailEcReq> cashList = new ArrayList<TStoreCashChargeCancelDetailEcReq>();
+			//
+			// TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new
+			// TStoreCashChargeCancelDetailEcReq();
+			//
+			// tStoreCashChargeCancelDetailEcReq.setIdentifier("");
+			// tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
+			// tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsDtlSacParam.getPrchsId());
+			// tStoreCashChargeCancelDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_SHOPPING);
+			// cashList.add(tStoreCashChargeCancelDetailEcReq);
+			//
+			// tStoreCashChargeCancelEcReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+			// tStoreCashChargeCancelEcReq.setCashList(cashList);
+			//
+			// this.purchaseCancelRepository.cancelTCashCharge(tStoreCashChargeCancelEcReq);
+			// }
+
 			// 정액권 상품 체크 (이북/코믹 정액권 인 경우 체크 제외한다. 전권상품일 경우 )
 			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())) {
 
-				if (!StringUtils.equals(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE,
+				if (StringUtils.equals(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE,
 						prchsDtlSacParam.getTenantProdGrpCd())
-						&& !StringUtils.equals(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_COMIC_FIXRATE,
+						|| StringUtils.equals(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_COMIC_FIXRATE,
 								prchsDtlSacParam.getTenantProdGrpCd())) {
+					// 전권체크(구매ID가 다른 케이스가 발생하여 에피소드 상품 체크하는 부분 추가함. 2015.10.20)
+					this.updateProdTypeEbookFix(purchaseCancelSacParam, prchsDtlSacParam);
+				} else {
 					// 정액권 상품 처리.
 					this.updateProdTypeFix(purchaseCancelSacParam, prchsDtlSacParam);
 				}
@@ -403,8 +431,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 							.getPrchsResvDesc());
 			String prodCaseCd = reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROD_CASE_CD);
 
-			logger.info("## PurchaseCancelServiceImpl prodCaseCd {}",prodCaseCd);
-			
+			this.logger.info("## PurchaseCancelServiceImpl prodCaseCd {}", prodCaseCd);
+
 			if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
 
 				// 상품권 타입구분(망상취소:1 그외:0)
@@ -798,6 +826,50 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				this.logger.info("AutoPaymentCancelScRes data : {}", autoPaymentCancelScRes);
 				throw new StorePlatformException("SAC_PUR_8112");
 			}
+		}
+	}
+
+	private void updateProdTypeEbookFix(PurchaseCancelSacParam purchaseCancelSacParam, PrchsDtlSacParam prchsDtlSacParam) {
+
+		/** 정액권으로 산 상품이 존재하는지 체크. */
+		HistoryListSacInReq historyListSacInReq = new HistoryListSacInReq();
+
+		// 구매인지 선물인지 구분하여 조회.
+		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsDtlSacParam.getPrchsCaseCd())) {
+			// 정액권 선물일 경우 취소 불가!! 최상훈차장님 결정!! 2014.02.13
+			throw new StorePlatformException("SAC_PUR_8113");
+		}
+
+		// 정액제 상품으로 산 구매내역 조회.
+		historyListSacInReq.setTenantId(prchsDtlSacParam.getUseTenantId());
+		historyListSacInReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+		historyListSacInReq.setDeviceKey(prchsDtlSacParam.getUseInsdDeviceId());
+		historyListSacInReq.setStartDt(prchsDtlSacParam.getUseStartDt());
+		historyListSacInReq.setEndDt(prchsDtlSacParam.getUseExprDt());
+		historyListSacInReq.setPrchsCaseCd(prchsDtlSacParam.getPrchsCaseCd());
+		historyListSacInReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+		historyListSacInReq.setUseFixrateProdId(prchsDtlSacParam.getProdId());
+		historyListSacInReq.setPrchsProdHaveYn("Y");
+
+		// Device 기반 체크를 위해 셋팅해줌
+		if (StringUtils.isNotBlank(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 8))) {
+			historyListSacInReq.setTenantProdGrpCd(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 8));
+		} else {
+			historyListSacInReq.setTenantProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd());
+		}
+
+		HistoryListSacInRes historyListSacInRes = this.historyInternalSCI.searchHistoryList(historyListSacInReq);
+
+		boolean isEpsdProd = false;
+		for (HistorySacIn historySacin : historyListSacInRes.getHistoryList()) {
+			if (!StringUtils.equals(historySacin.getPrchsId(), prchsDtlSacParam.getPrchsId())) {
+				isEpsdProd = true;
+			}
+		}
+
+		if (isEpsdProd) {
+			// 정액권 상품으로 이용한 상품이 존재!
+			throw new StorePlatformException("SAC_PUR_8111");
 		}
 	}
 
