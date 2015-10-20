@@ -21,7 +21,7 @@ public interface MemberCommonRepository {
 	 * 
 	 * @return List<ClauseDTO>
 	 */
-	public List<Clause> searchClauseList(String tenantId);
+	public List<Clause> searchClauseList(String tenantId, String isMobileYn);
 
 	/**
 	 * <pre>
@@ -31,7 +31,7 @@ public interface MemberCommonRepository {
 	 * @param clauseItemCd
 	 * @return List<Clause>
 	 */
-	public List<Clause> searchClauseDetail(String tenantId, String clauseId);
+	public List<Clause> searchClauseDetail(String tenantId, String clauseId, String isMobileYn);
 
 	/**
 	 * <pre>

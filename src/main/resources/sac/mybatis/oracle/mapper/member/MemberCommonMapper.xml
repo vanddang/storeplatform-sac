@@ -38,6 +38,12 @@
         WHERE dp_yn='Y'
         AND tenant_id = #{tenantId}
         AND clause_id = #{clauseId}
+        <if test="isMobileYn != null and isMobileYn.equalsIgnoreCase('Y')">
+          AND mw_file_nm IS NOT NULL
+        </if>
+        <if test="isMobileYn != null and isMobileYn.equalsIgnoreCase('N')">
+          AND file_nm IS NOT NULL
+        </if>        
         ORDER BY start_day DESC
     </select>
     
@@ -68,6 +74,12 @@
         AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
         AND B.tenant_id = #{tenantId}        
         AND B.use_yn = 'Y'
+        <if test="isMobileYn != null and isMobileYn.equalsIgnoreCase('Y')">
+          AND A.mw_file_nm IS NOT NULL
+        </if>
+        <if test="isMobileYn != null and isMobileYn.equalsIgnoreCase('N')">
+          AND A.file_nm IS NOT NULL
+        </if>
         ORDER BY A.clause_id ASC
     </select>
     

@@ -47,7 +47,14 @@ public class ClauseServiceImpl implements ClauseService {
 	 */
 	@Override
 	public ListClauseSacRes listClause(SacRequestHeader sacHeader) {
-		List<Clause> clauseList = this.commService.getListClause(sacHeader.getTenantHeader().getTenantId());
+
+		String isMobileYn = MemberConstants.USE_Y;
+
+		if (MemberConstants.SYSTEM_ID_TSTORE_PORTAL_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
+			isMobileYn = MemberConstants.USE_N;
+		}
+
+		List<Clause> clauseList = this.commService.getListClause(sacHeader.getTenantHeader().getTenantId(), isMobileYn);
 
 		List<ClauseSacRes> clauseSacResList = new ArrayList<ClauseSacRes>();
 		for (Clause clause : clauseList) {
@@ -56,13 +63,13 @@ public class ClauseServiceImpl implements ClauseService {
 			clauseRes.setClauseItemCd(StringUtil.setTrim(clause.getClauseItemCd()));
 			clauseRes.setClauseVer(StringUtil.setTrim(clause.getClauseVer()));
 			clauseRes.setEndDay(StringUtil.setTrim(clause.getEndDay()));
-			// 모바일 웹, PC웹의 약관의 경로 systemId를 가지고 분기 처리.
-			if (MemberConstants.SYSTEM_ID_MOBILE_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
-				clauseRes.setFileNm(StringUtil.setTrim(clause.getMwFileNm()));
-				clauseRes.setFilePath(StringUtil.setTrim(clause.getMwFilePath()));
-			} else {
+			// 티스토어 포털 웹인경우와 아닌 경우의 약관의 경로 systemId를 가지고 분기 처리.
+			if (MemberConstants.SYSTEM_ID_TSTORE_PORTAL_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
 				clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
 				clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
+			} else {
+				clauseRes.setFileNm(StringUtil.setTrim(clause.getMwFileNm()));
+				clauseRes.setFilePath(StringUtil.setTrim(clause.getMwFilePath()));
 			}
 
 			clauseRes.setStartDay(StringUtil.setTrim(clause.getStartDay()));
@@ -84,6 +91,8 @@ public class ClauseServiceImpl implements ClauseService {
 	public DetailClauseSacRes detailClauseList(SacRequestHeader sacHeader, DetailClauseSacReq req) {
 		String clauseItemCd = req.getClauseItemCd();
 
+		String isMobileYn = MemberConstants.USE_Y;
+
 		// Header에 tenantId가 없는 경우 S01로 디폴트값 설정.
 		String tenantId = StringUtils.defaultIfBlank(sacHeader.getTenantHeader().getTenantId(),
 				MemberConstants.TENANT_ID_TSTORE);
@@ -94,8 +103,12 @@ public class ClauseServiceImpl implements ClauseService {
 			throw new StorePlatformException("SAC_MEM_1105", clauseItemCd);
 		}
 
+		if (MemberConstants.SYSTEM_ID_TSTORE_PORTAL_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
+			isMobileYn = MemberConstants.USE_N;
+		}
+
 		/* Tenant에 등록된 코드면 TB_CM_CLAUSE 조회 */
-		List<Clause> clauseList = this.commService.getDetailClauseList(tenantId, clauseItemCd);
+		List<Clause> clauseList = this.commService.getDetailClauseList(tenantId, clauseItemCd, isMobileYn);
 
 		if (clauseList.size() == 0) {
 			throw new StorePlatformException("SAC_MEM_0002", req.getClauseItemCd());
@@ -109,13 +122,13 @@ public class ClauseServiceImpl implements ClauseService {
 			clauseRes.setClauseVer(StringUtil.setTrim(clause.getClauseVer()));
 			clauseRes.setEndDay(StringUtil.setTrim(clause.getEndDay()));
 
-			// 모바일 웹, PC웹의 약관의 경로 systemId를 가지고 분기 처리.
-			if (MemberConstants.SYSTEM_ID_MOBILE_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
-				clauseRes.setFileNm(StringUtil.setTrim(clause.getMwFileNm()));
-				clauseRes.setFilePath(StringUtil.setTrim(clause.getMwFilePath()));
-			} else {
+			// 티스토어 포털 웹인경우와 아닌 경우의 약관의 경로 systemId를 가지고 분기 처리.
+			if (MemberConstants.SYSTEM_ID_TSTORE_PORTAL_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
 				clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
 				clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
+			} else {
+				clauseRes.setFileNm(StringUtil.setTrim(clause.getMwFileNm()));
+				clauseRes.setFilePath(StringUtil.setTrim(clause.getMwFilePath()));
 			}
 
 			clauseRes.setStartDay(StringUtil.setTrim(clause.getStartDay()));
