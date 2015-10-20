@@ -190,7 +190,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
-		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) { // T store
+//		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) { // T store
 
 			// PayPlanet 결제 건은 T store 측으로 구매완료 Noti: 이메일 발송, SMS / MMS 등등 처리
 			// T store 결제 건은 결제처리결과 알림 API 응답 항목에 추가
@@ -246,8 +246,10 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 						userKey, deviceKey, notiType, bGift, sbProdIdInfo.toString());
 			}
 
-		} else { // SAP
+//		}
 
+		// SAP
+		if (!StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
 			List<String> paymentMtdCdList = new ArrayList<String>();
 			for (PaymentInfo paymentNotiReq : notifyPaymentReq.getPaymentInfoList()) {
 				paymentMtdCdList.add(PaymethodUtil.convert2StoreCode(paymentNotiReq.getPaymentMtdCd()));
