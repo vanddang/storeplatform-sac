@@ -850,6 +850,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		historyListSacInReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 		historyListSacInReq.setUseFixrateProdId(prchsDtlSacParam.getProdId());
 		historyListSacInReq.setPrchsProdHaveYn("Y");
+		historyListSacInReq.setOffset(1);
+		historyListSacInReq.setCount(100);
 
 		// Device 기반 체크를 위해 셋팅해줌
 		if (StringUtils.isNotBlank(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 8))) {
