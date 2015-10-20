@@ -624,8 +624,6 @@
                                                </if>
                                                <if test="idType == 'channel'">
                                                AND D.PROD_ID= #{productId}    /* 채널 Id조회 */
-                                               </if>
-                                               <if test='baseYn == "Y"'>
                                                AND J.BASE_YN = 'Y'    /* 에피소드 상품 BASE_YN 여부 */
                                                </if>                                               
                                            ) IA
