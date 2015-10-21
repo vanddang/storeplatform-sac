@@ -240,8 +240,7 @@ public class PurchaseCancelController {
 						purchaseCancelSacParam.getCancelReqPathCd())) {
 			throw new StorePlatformException("SAC_PUR_8102");
 		}
-		if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_S2S,
-				purchaseCancelSacParam.getCancelReqPathCd()))
+		if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_S2S, purchaseCancelSacParam.getCancelReqPathCd()))
 			purchaseCancelSacParam.setIgnorePayment(true);
 		else
 			purchaseCancelSacParam.setIgnorePayment(false);
@@ -363,6 +362,12 @@ public class PurchaseCancelController {
 			purchaseCancelSacParam.setIgnorePayment(true); // 결제 취소 진행 안함
 		} else {
 			purchaseCancelSacParam.setIgnorePayment(false); // 결제 취소 진행함 (OR00400, OR00435)
+		}
+
+		// 환불 요청인 경우에는 Payment테이블 업데이트 진행하지 않음
+		if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_REFUND,
+				purchaseCancelSacParam.getCancelReqPathCd())) {
+			purchaseCancelSacParam.setIsPaymentUpdate(false);
 		}
 
 		// request admin type setting.
