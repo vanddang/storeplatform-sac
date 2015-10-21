@@ -27,21 +27,28 @@ public class OtherShoppingServiceImpl implements OtherShoppingService {
     @Override
     public AllianceUserCheckRes allianceUserCheck(SacRequestHeader sacHeader, AllianceUserCheckReq req) {
 
-        AllianceUserCheckRes response = new AllianceUserCheckRes();
-
-        LOGGER.info("쇼핑 충전권 연동 Start...");
-
+        /**
+         * 쇼핑 CMS EC 연동.
+         */
         AllianceUserCheckEcReq ecReq = new AllianceUserCheckEcReq();
-        LOGGER.info("EC Req = {}", ecReq);
         ecReq.setBrandId(req.getBrandId());
         ecReq.setCmsBrandId(req.getCmsBrandId());
         ecReq.setBrandSellerId(req.getBrandSellerId());
         ecReq.setDeviceId(req.getDeviceId());
         ecReq.setChargeId(req.getChargeId());
+        LOGGER.info("EC Req = {}", ecReq);
         AllianceUserCheckEcRes ecRes =  otherShoppingSCI.allianceUserCheck(ecReq);
         LOGGER.info("EC Res = {}", ecRes);
 
-        LOGGER.info("쇼핑 충전권 연동 Start...");
+        /**
+         * Response Setting.
+         */
+        AllianceUserCheckRes response = new AllianceUserCheckRes();
+        response.setBrandId(ecReq.getBrandId());
+        response.setAllianceUserYn(ecRes.getAllianceUserYn()); // EC 연동 데이타.
+        response.setChargeId(ecRes.getChargeId()); // EC 연동 데이타.
+        response.setChargeNm(ecRes.getChargeNm()); // EC 연동 데이타.
+        response.setCmsBrandId(ecReq.getCmsBrandId());
 
         return response;
     }
