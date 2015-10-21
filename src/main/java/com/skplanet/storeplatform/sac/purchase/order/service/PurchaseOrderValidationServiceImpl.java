@@ -392,7 +392,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		// 전시 연동 & 연동 결과 validation check
 		Map<String, PurchaseProduct> purchaseProductMap = this.purchaseDisplayRepository.searchPurchaseProductList(
-				tenantId, langCd, useDeviceModelCd, prodIdList, purchaseOrderInfo.isFlat());
+				tenantId, langCd, useDeviceModelCd, prodIdList, purchaseOrderInfo.getPurchaseUser().getUserKey(), purchaseOrderInfo.isFlat());
 		if (purchaseProductMap == null || purchaseProductMap.size() < 1) {
 			throw new StorePlatformException("SAC_PUR_5101");
 		}
@@ -631,7 +631,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					List<String> fullProdIdList = new ArrayList<String>();
 					fullProdIdList.add(iapInfo.getFullProdId());
 					Map<String, PurchaseProduct> fullProductMap = this.purchaseDisplayRepository
-							.searchPurchaseProductList(tenantId, langCd, useDeviceModelCd, fullProdIdList, false);
+							.searchPurchaseProductList(tenantId, langCd, useDeviceModelCd, fullProdIdList, purchaseOrderInfo.getPurchaseUser().getUserKey() ,false);
 					if (fullProductMap == null || fullProductMap.size() < 1) {
 						throw new StorePlatformException("SAC_PUR_5101", iapInfo.getFullProdId());
 					}

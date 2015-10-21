@@ -72,12 +72,13 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	 */
 	@Override
 	public Map<String, PurchaseProduct> searchPurchaseProductList(String tenantId, String langCd, String deviceModelCd,
-			List<String> prodIdList, boolean bFlat) {
+			List<String> prodIdList, String userKey, boolean bFlat) {
 		PaymentInfoSacReq req = new PaymentInfoSacReq();
 		req.setTenantId(tenantId);
 		req.setLangCd(langCd);
 		req.setDeviceModelCd(deviceModelCd);
 		req.setProdIdList(prodIdList);
+		req.setUserKey(StringUtils.defaultString(userKey, ""));
 
 		/** 전시 연동 **/
 		PaymentInfoSacRes res = this.purchaseProductSCI.searchPaymentInfo(req);

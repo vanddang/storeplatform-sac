@@ -287,7 +287,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 				// Map <상품ID,전시 조회 상품 상세 정보>
 				Map<String, PurchaseProduct> purchaseProductMap = this.purchaseDisplayRepository
 						.searchPurchaseProductList(prchsDtlMore.getTenantId(), prchsDtlMore.getCurrencyCd(), null,
-								prodIdList, false);
+								prodIdList, prchsDtlMore.getInsdUsermbrNo(), false);
 				if (purchaseProductMap != null && purchaseProductMap.get(prchsInfo.getProdId()) != null) {
 					purchaseProduct = purchaseProductMap.get(prchsInfo.getProdId());
 				}

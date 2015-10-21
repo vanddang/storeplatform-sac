@@ -1597,7 +1597,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		List<String> prodIdList = new ArrayList<String>();
 		prodIdList.add(purchase.getProdId());
 		Map<String, PurchaseProduct> purchaseProductMap = this.purchaseDisplayRepository.searchPurchaseProductList(
-				purchase.getTenantId(), purchase.getCurrencyCd(), null, prodIdList, false);
+				purchase.getTenantId(), purchase.getCurrencyCd(), null, prodIdList, null , false);
 		if (purchaseProductMap == null || purchaseProductMap.size() < 1) {
 			throw new StorePlatformException("SAC_PUR_5101", purchase.getProdId());
 		}

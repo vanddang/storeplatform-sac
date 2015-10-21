@@ -9,15 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
+
 import java.util.List;
 import java.util.Map;
-
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoList;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 
 /**
  * 
@@ -46,7 +42,7 @@ public interface PurchaseDisplayRepository {
 	 * @return 상품ID에 매핑되는 상품정보를 담은 Map
 	 */
 	public Map<String, PurchaseProduct> searchPurchaseProductList(String tenantId, String langCd, String deviceModelCd,
-			List<String> prodIdList, boolean bFlat);
+			List<String> prodIdList, String userKey, boolean bFlat);
 
 	/**
 	 * 
