@@ -385,26 +385,40 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			}
 
 			// 북스캐쉬 충전 취소 처리 2015.10.20
-			// if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
-			// PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE)) {
-			//
-			// TStoreCashChargeCancelEcReq tStoreCashChargeCancelEcReq = new TStoreCashChargeCancelEcReq();
-			// List<TStoreCashChargeCancelDetailEcReq> cashList = new ArrayList<TStoreCashChargeCancelDetailEcReq>();
-			//
-			// TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new
-			// TStoreCashChargeCancelDetailEcReq();
-			//
-			// tStoreCashChargeCancelDetailEcReq.setIdentifier("");
-			// tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
-			// tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsDtlSacParam.getPrchsId());
-			// tStoreCashChargeCancelDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_SHOPPING);
-			// cashList.add(tStoreCashChargeCancelDetailEcReq);
-			//
-			// tStoreCashChargeCancelEcReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
-			// tStoreCashChargeCancelEcReq.setCashList(cashList);
-			//
-			// this.purchaseCancelRepository.cancelTCashCharge(tStoreCashChargeCancelEcReq);
-			// }
+			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE)) {
+
+				String resvCol03 = prchsDtlSacParam.getResvCol03();
+				String tCashCash = StringUtils.substringBetween(resvCol03, "CASH=", ";");
+				String tCashPoint = StringUtils.substringBetween(resvCol03, "POINT=", ";");
+
+				TStoreCashChargeCancelEcReq tStoreCashChargeCancelEcReq = new TStoreCashChargeCancelEcReq();
+				List<TStoreCashChargeCancelDetailEcReq> cashList = new ArrayList<TStoreCashChargeCancelDetailEcReq>();
+
+				if (StringUtils.isNotBlank(tCashCash)) {
+					TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
+					tStoreCashChargeCancelDetailEcReq.setIdentifier(tCashCash);
+					tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
+					tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsDtlSacParam.getPrchsId());
+					tStoreCashChargeCancelDetailEcReq
+							.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_SHOPPING);
+					cashList.add(tStoreCashChargeCancelDetailEcReq);
+				}
+				if (StringUtils.isNotBlank(tCashPoint)) {
+					TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
+					tStoreCashChargeCancelDetailEcReq.setIdentifier(tCashPoint);
+					tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_POINT);
+					tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsDtlSacParam.getPrchsId());
+					tStoreCashChargeCancelDetailEcReq
+							.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_SHOPPING);
+					cashList.add(tStoreCashChargeCancelDetailEcReq);
+				}
+
+				tStoreCashChargeCancelEcReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+				tStoreCashChargeCancelEcReq.setCashList(cashList);
+
+				this.purchaseCancelRepository.cancelTCashCharge(tStoreCashChargeCancelEcReq);
+			}
 
 			// 정액권 상품 체크 (이북/코믹 정액권 인 경우 체크 제외한다. 전권상품일 경우 )
 			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())) {
