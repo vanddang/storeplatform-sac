@@ -1238,6 +1238,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(this.shoppingGenerator.generateRights(metaInfo));
 		product.setContributor(this.shoppingGenerator.generateContributor(metaInfo));
 		product.setSalesOption(this.shoppingGenerator.generateSalesOption(metaInfo));
+        product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 
         appendMileageInfo(metaInfo, product);

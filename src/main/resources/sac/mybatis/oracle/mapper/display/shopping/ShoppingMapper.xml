@@ -4017,7 +4017,8 @@
                                 ,I.B2B_PROD_YN                  /* B2B_상품_여부 */  
 					            ,C.CATALOG_DESC as prodBaseDesc
 					            ,C.CATALOG_DTL_DESC as prodDtlDesc                                                                                       
-                          FROM 
+					            ,J.SELLER_MBR_NO
+                          FROM
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
                                  ,TB_DP_SHPG_CATALOG_DESC C
