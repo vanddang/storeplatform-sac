@@ -596,6 +596,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		membershipReserve.setUpdId(prchsDtlMore.getSystemId());
 		membershipReserve.setPromId(mileageSubInfo.getPromId()); // 프로모션 ID
 		membershipReserve.setSaveDt(mileageSubInfo.getSaveDt());
+		membershipReserve.setPayMethodVdtyDt(mileageSubInfo.getPayMethodVdtyDt()); // 적립금 유효일
 
 		membershipReserveList.add(membershipReserve);
 
@@ -846,7 +847,9 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT,
 									product.getPrivateAcmlLimit())) // 개인 적립 한도
 							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_FORCECLOSE_CD,
-									product.getPromForceCloseCd())); // 프로모션 상태 코드 - 조기종료 사유 코드
+									product.getPromForceCloseCd())) // 프로모션 상태 코드 - 조기종료 사유 코드
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PAY_METHOD_VDTY_DT,
+									product.getPayMethodVdtyDt())); // 적립금 유효일
 
 					// 대여정보: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1

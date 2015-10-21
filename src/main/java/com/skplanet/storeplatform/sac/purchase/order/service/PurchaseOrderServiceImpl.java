@@ -1302,6 +1302,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							mileageSubInfo.setSaveResultAmt(limitAmt - preReserveAmt);
 							mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_PART);
 						}
+						// 적립금 유효일
+						mileageSubInfo.setPayMethodVdtyDt(NumberUtils.toInt(
+								reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PAY_METHOD_VDTY_DT), 0));
 					}
 				}
 			}

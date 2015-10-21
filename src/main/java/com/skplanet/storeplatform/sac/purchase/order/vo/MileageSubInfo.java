@@ -17,6 +17,7 @@ public class MileageSubInfo extends CommonInfo {
 	private String prodNm; // 상품명
 	private Integer promId; // 프로모션 ID
 	private String saveDt; // 적립예정일 - 전시 acmlDt매핑
+	private Integer payMethodVdtyDt; // 적립금 유효일
 
 	/**
 	 * @return the typeCd
@@ -204,5 +205,24 @@ public class MileageSubInfo extends CommonInfo {
 	 */
 	public void setPromId(Integer promId) {
 		this.promId = promId;
+	}
+
+	/**
+	 * Gets pay method vdty dt.
+	 *
+	 * @return the pay method vdty dt
+	 */
+	public Integer getPayMethodVdtyDt() {
+		return payMethodVdtyDt;
+	}
+
+	/**
+	 * Sets pay method vdty dt.
+	 *
+	 * @param payMethodVdtyDt
+	 *            the pay method vdty dt
+	 */
+	public void setPayMethodVdtyDt(Integer payMethodVdtyDt) {
+		this.payMethodVdtyDt = payMethodVdtyDt;
 	}
 }
