@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScRes;
+import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePass;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
@@ -705,6 +706,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			purchaseOrderInfo.setRealTotAmt(checkTotAmt);
+		}
+
+		if(StringUtils.contains(purchaseOrderInfo.getTenantProdGrpCd(), PurchaseCDConstants.TENANT_PRODUCT_GROUP_SUFFIX_CASH)){
+			purchaseOrderInfo.setPossibleDuplication(true); // 중복 구매 가능 여부
 		}
 	}
 

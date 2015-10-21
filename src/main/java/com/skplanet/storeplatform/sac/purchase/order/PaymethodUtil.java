@@ -45,6 +45,7 @@ public class PaymethodUtil extends PurchaseConstants
 		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT_28, PAYMENT_METHOD_GAMECASH_POINT); // 게임캐쉬 보너스 포인트
 		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_TSTORE_POINT_29, PAYMENT_METHOD_TSTORE_POINT); // T store Point
 		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30, PAYMENT_METHOD_TGAMEPASS); // T game pass
+		convert2StoreMap.put(PAYPLANET_PAYMENT_METHOD_BOOKS_CASH_31, PAYMENT_METHOD_BOOKS_CASH); // 북스캐쉬
 
 		convert2PayPlanetMap = new HashMap<String, String>();
 		convert2PayPlanetMap.put(PAYMENT_METHOD_SKT_CARRIER, PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11); // SKT후불
@@ -63,7 +64,9 @@ public class PaymethodUtil extends PurchaseConstants
 		convert2PayPlanetMap.put(PAYMENT_METHOD_GAMECASH_POINT, PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT_28); // 게임캐쉬 보너스 포인트
 		convert2PayPlanetMap.put(PAYMENT_METHOD_TSTORE_POINT, PAYPLANET_PAYMENT_METHOD_TSTORE_POINT_29); // T store Point
 		convert2PayPlanetMap.put(PAYMENT_METHOD_TGAMEPASS, PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30); // T game pass
+		convert2PayPlanetMap.put(PAYMENT_METHOD_BOOKS_CASH, PAYPLANET_PAYMENT_METHOD_BOOKS_CASH_31); // 북스 캐쉬
 		convert2PayPlanetMap.put(PAYMENT_METHOD_SKT_TEST_DEVICE, PAYPLANET_PAYMENT_METHOD_SKT_CARRIER_11); // 시험폰: T멤버쉽 QA테스트 지원
+
 	}
 
 	/**

@@ -204,6 +204,7 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH = "00"; // T store Cash
 	public static final String TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH = "01"; // T store GameCash
 	public static final String TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS = "02"; // T game pass
+	public static final String TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH = "03"; // Books Cash
 	/* 상품군 old */
 	public static final String TSTORE_CASH_PRODUCT_GROUP_ALL = "00"; // 전체
 	public static final String TSTORE_CASH_PRODUCT_GROUP_APP = "01"; // Application
@@ -292,6 +293,7 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT_28 = "28"; // 게임캐쉬 보너스 포인트
 	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_POINT_29 = "29"; // T store 포인트
 	public static final String PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30 = "30"; // T game pass 포인트
+	public static final String PAYPLANET_PAYMENT_METHOD_BOOKS_CASH_31 = "31"; // Books Cash
 
 	/** 결제 가능액 **/
 	public static final String PAYPLANET_PAYMENT_AMT_MAX = "MAXAMT"; // SKT 후불

@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.*;
 import com.skplanet.storeplatform.purchase.client.promotion.sci.PurchasePromotionSCI;
+import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
 import com.skplanet.storeplatform.purchase.order.service.PurchaseOrderSCService;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.BannerInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
@@ -31,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.common.service.MembershipReserveService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
+import com.skplanet.storeplatform.sac.purchase.common.util.AdjustValueUtil;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
@@ -787,7 +789,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// 캐쉬/포인트 잔액 통합 정보 : 게임 경우 통합조회 규격, 그 외는 T store Cash 단일 조회
 
-		String cashIntgAmtInf = "";
+		String tstoreCashValance = null;
 
 		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
 				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
@@ -798,33 +800,38 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27 + ":0:0")
 					&& StringUtils.contains(cdMaxAmtRateNoDouble,
 							PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30 + ":0:0")) {
-				cashIntgAmtInf = PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25
-						+ ":0;" // "25:0;27:0;30:0"
-						+ PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27 + ":0;"
-						+ PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30 + ":0";
 			} else {
-				cashIntgAmtInf = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(payUserKey);
+				ArrayList<String> productGroupList = new ArrayList<String>();
+				productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH);
+				productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH);
+				productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS);
+				tstoreCashValance = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(payUserKey,
+						productGroupList);
 			}
 
+		} else if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+				PurchaseCDConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
+			// 이북일 경우 Books Cash, Tstore 캐시 조회
+			if (StringUtils.contains(cdMaxAmtRateNoDouble, PurchaseConstants.PAYPLANET_PAYMENT_METHOD_BOOKS_CASH_31
+					+ ":0:0") == false) {
+				ArrayList<String> productGroupList = new ArrayList<String>();
+				if(!StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),PurchaseCDConstants.TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE))
+					productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH); // 북스 캐시 상품 구매시에는 잔여 포인트가 내려가지 않는다.
+				productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH);
+				tstoreCashValance = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(payUserKey,
+						productGroupList);
+			}
 		} else {
 			// T store Cash 조회
-			double tstoreCashAmt = 0;
-
-			if (StringUtils.contains(cdMaxAmtRateNoDouble, "25:0:0") == false) {
-				tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(payUserKey);
+			if (StringUtils.contains(cdMaxAmtRateNoDouble, PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25
+					+ ":0:0") == false) {
+				ArrayList<String> productGroupList = new ArrayList<String>();
+				productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH);
+				tstoreCashValance = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(payUserKey,
+						productGroupList);
 			}
-
-			// 캐쉬/포인트 잔액 통합 정보
-			StringBuffer sbCashPoint = new StringBuffer();
-			sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":")
-					.append(tstoreCashAmt).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27)
-					.append(":").append(0).append(";")
-					.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30).append(":").append(0);
-
-			cashIntgAmtInf = sbCashPoint.toString();
 		}
-
-		res.setCashPointList(cashIntgAmtInf);
+		res.setCashPointList(AdjustValueUtil.adjuestValue("25:0.0;27:0.0;30:0.0;31:0.0", tstoreCashValance));
 
 		// ------------------------------------------------------------------------------------------------
 		// T마일리지 적립 정보
@@ -1093,16 +1100,25 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		List<TStoreCashChargeReserveDetailEcRes> cashReserveResList = null;
 
 		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE) || StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE)) {
+
+			String productGroupCode = null;
+			if(StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE))
+				productGroupCode = PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH;
+			else
+				productGroupCode = PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH;
+
 			// 충전 예약
-			cashReserveResList = this.purchaseOrderTstoreService.reserveGameCashCharge(
-					prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getProdAmt().doubleValue(),
-					prchsDtlMore.getUseStartDt(), Double.parseDouble(reservedDataMap.get("bonusPoint")),
+			cashReserveResList = this.purchaseOrderTstoreService.reserveCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
+					prchsDtlMore.getProdAmt().doubleValue(), prchsDtlMore.getUseStartDt(),productGroupCode,
+					Double.parseDouble(reservedDataMap.get("bonusPoint")),
 					reservedDataMap.get("bonusPointUsePeriodUnitCd"), reservedDataMap.get("bonusPointUsePeriod"));
 
 			// 충전 확정
 			if (CollectionUtils.isNotEmpty(cashReserveResList)) {
-				this.purchaseOrderTstoreService.confirmGameCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
+				this.purchaseOrderTstoreService.confirmCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
 						prchsDtlMore.getPrchsId(), cashReserveResList);
 			}
 		}
@@ -1141,8 +1157,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				invokeCMSCharge(couponCode, prchsDtlMore.getPrchsId(), reservedDataMap.get("deviceId"),
 						reservedDataMap.get(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID));
 			} else {
-				shoppingCouponList = invokeCMSStore(reservedDataMap, prchsDtlMore, prchsDtlMoreList, tstoreNotiPublishType,
-						shoppingCouponList);
+				shoppingCouponList = invokeCMSStore(reservedDataMap, prchsDtlMore, prchsDtlMoreList,
+						tstoreNotiPublishType, shoppingCouponList);
 			}
 		}
 
@@ -1378,7 +1394,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			throw checkException;
 
 		} finally {
-			// 쇼핑쿠폰발급 취소, 게임캐쉬 충전 취소 등
+			// 쇼핑쿠폰발급 취소, 캐쉬 충전 취소 등
 			if (checkException != null) {
 				this.revertToPreConfirm(prchsDtlMoreList, cashReserveResList, prodCaseCd, couponCode);
 			}
@@ -1600,7 +1616,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		List<String> prodIdList = new ArrayList<String>();
 		prodIdList.add(purchase.getProdId());
 		Map<String, PurchaseProduct> purchaseProductMap = this.purchaseDisplayRepository.searchPurchaseProductList(
-				purchase.getTenantId(), purchase.getCurrencyCd(), null, prodIdList, null , false);
+				purchase.getTenantId(), purchase.getCurrencyCd(), null, prodIdList, null, false);
 		if (purchaseProductMap == null || purchaseProductMap.size() < 1) {
 			throw new StorePlatformException("SAC_PUR_5101", purchase.getProdId());
 		}
@@ -2001,7 +2017,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		if (CollectionUtils.isNotEmpty(cashReserveResList)) {
 			try {
-				this.purchaseOrderTstoreService.cancelGameCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
+				this.purchaseOrderTstoreService.cancelCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
 						prchsDtlMore.getPrchsId(), cashReserveResList);
 			} catch (Exception e) {
 				// 이 때 발생하는 예외는 로깅만.

@@ -25,24 +25,36 @@ import java.util.TreeSet;
  * Updated by : 황민규, SK 플래닛.
  */
 public class AdjustValueUtil {
+
+	public static void main(String []args)
+	{
+		String org = "11:0;12:0;13:0";
+
+		System.out.println(adjuestValue(org, "12:4000;11:300"));
+	}
+
+
 	/**
 	 * Extends value.
 	 *
-	 * @param parent the parent
-	 * @param child the child
+	 * @param orgContents the orgContents
+	 * @param replacementContent the replacementContent
 	 * @param separator the separator
 	 * @param delimiter the delimiter
 	 * @param sortKey the sort key
 	 * @return the string
 	 */
-	public static String extendsValue(String parent, String child, String separator, String delimiter, boolean sortKey){
+	public static String adjuestValue(String orgContents, String replacementContent, String separator, String delimiter, boolean sortKey){
+		if(replacementContent ==null)
+			return orgContents;
+
 		String result;
 		Map<String, String> resultMap;
 		Set<String> keySet;
 
-		// classify parent sample data
-		resultMap = classifyValuesToMap(parent, separator, delimiter);
-		resultMap.putAll(classifyValuesToMap(child, separator, delimiter));
+		// classify orgContents sample data
+		resultMap = classifyValuesToMap(orgContents, separator, delimiter);
+		resultMap.putAll(classifyValuesToMap(replacementContent, separator, delimiter));
 
 		if(sortKey) {
 			keySet = new TreeSet<String>();
@@ -54,16 +66,16 @@ public class AdjustValueUtil {
 		return StringUtils.defaultString(result);
 	}
 
-	public static String extendsValue(String parent, String child, String separator){
-		return extendsValue(parent, child, separator, PurchaseConstants.DELIMITER, false);
+	public static String adjuestValue(String orgContents, String replacementContent, String separator){
+		return adjuestValue(orgContents, replacementContent, separator, PurchaseConstants.DELIMITER, false);
 	}
 
-	public static String extendsValue(String parent, String child){
-		return extendsValue(parent, child, PurchaseConstants.SEPARATOR, PurchaseConstants.DELIMITER, false);
+	public static String adjuestValue(String orgContents, String replacementContent){
+		return adjuestValue(orgContents, replacementContent, PurchaseConstants.SEPARATOR, PurchaseConstants.DELIMITER, false);
 	}
 
-	public static String extendsValue(String parent, String child, boolean sortKey){
-		return extendsValue(parent, child, PurchaseConstants.SEPARATOR, PurchaseConstants.DELIMITER, sortKey);
+	public static String adjuestValue(String orgContents, String replacementContent, boolean sortKey){
+		return adjuestValue(orgContents, replacementContent, PurchaseConstants.SEPARATOR, PurchaseConstants.DELIMITER, sortKey);
 	}
 
 	/**
@@ -78,8 +90,12 @@ public class AdjustValueUtil {
 	{
 		Map<String, String> resultMap = new LinkedHashMap<String, String>();
 
-		for(String sample : StringUtils.splitPreserveAllTokens(StringUtils.defaultString(str), separator))
-			resultMap.put(StringUtils.substringBefore(sample, delimiter), StringUtils.substringAfter(sample, delimiter));
+		for(String sample : StringUtils.splitPreserveAllTokens(StringUtils.defaultString(str), separator)) {
+			String key = StringUtils.substringBefore(sample, delimiter);
+			if(StringUtils.isEmpty(key)) continue;
+			String value = StringUtils.substringAfter(sample, delimiter);
+			resultMap.put(key,value);
+		}
 		return resultMap;
 	}
 

@@ -245,7 +245,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 * @return T Store Cash 통합 잔액 정보
 	 */
 	@Override
-	public String searchTstoreCashIntegrationAmt(String userKey) {
+	public String searchTstoreCashIntegrationAmt(String userKey, List<String> cashProductGroupList) {
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
 		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
 		// return 0.0;
@@ -281,168 +281,180 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 				sbCashIntgAmt.append(";");
 			}
 			if (StringUtils.equals(cash.getProductGroup(), PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH)) {
-				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":")
-						.append(Double.parseDouble(cash.getAmt()));
+				if(cashProductGroupList.contains(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH)){
+					sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":")
+							.append(Double.parseDouble(cash.getAmt()));
+				}
 			} else if (StringUtils.equals(cash.getProductGroup(),
 					PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH)) {
-				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27).append(":")
-						.append(Double.parseDouble(cash.getAmt()));
+				if(cashProductGroupList.contains(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH)){
+					sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27).append(":")
+							.append(Double.parseDouble(cash.getAmt()));
+				}
 			} else if (StringUtils
 					.equals(cash.getProductGroup(), PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS)) {
-				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30).append(":")
-						.append(Double.parseDouble(cash.getAmt()));
+				if(cashProductGroupList.contains(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS)){
+					sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30).append(":")
+							.append(Double.parseDouble(cash.getAmt()));
+				}
+			} else if (StringUtils
+					.equals(cash.getProductGroup(), PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH)) {
+				if(cashProductGroupList.contains(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH)) {
+					sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_BOOKS_CASH_31).append(":")
+							.append(Double.parseDouble(cash.getAmt()));
+				}
 			}
 		}
 
 		return sbCashIntgAmt.toString();
 	}
 
+//	/**
+//	 *
+//	 * <pre>
+//	 * T Store Cash 잔액 조회.
+//	 * </pre>
+//	 *
+//	 * @param userKey
+//	 *            내부 회원 NO
+//	 *
+//	 * @return T Store Cash 잔액
+//	 */
+//	@Override
+//	public double searchTstoreCashAmt(String userKey) {
+//		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
+//		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
+//		// return 0.0;
+//		// }
+//
+//		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
+//		tStoreCashEcReq.setUserKey(userKey);
+//		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH); // 상품군 : T store Cash
+//
+//		TStoreCashBalanceEcRes tStoreCashEcRes = null;
+//		try {
+//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,SEARCH,REQ,{}",
+//					ReflectionToStringBuilder.toString(tStoreCashEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+//			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
+//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,SEARCH,RES,{}",
+//					ReflectionToStringBuilder.toString(tStoreCashEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+//		} catch (Exception e) {
+//			throw new StorePlatformException("SAC_PUR_7211", e);
+//		}
+//
+//		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+//			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
+//					tStoreCashEcRes.getResultMsg());
+//		}
+//
+//		List<TStoreCashBalanceDetailEcRes> tstoreCashList = tStoreCashEcRes.getCashList();
+//		double cashAmt = 0.0;
+//		for (TStoreCashBalanceDetailEcRes cash : tstoreCashList) {
+//			cashAmt += Double.parseDouble(cash.getAmt());
+//		}
+//
+//		return cashAmt;
+//	}
+
+//	/**
+//	 *
+//	 * <pre>
+//	 * T game pass 잔액 조회.
+//	 * </pre>
+//	 *
+//	 * @param userKey
+//	 *            내부 회원 NO
+//	 *
+//	 * @return T game pass 잔액
+//	 */
+//	@Override
+//	public double searchTgamepassAmt(String userKey) {
+//		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
+//		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
+//		// return 0.0;
+//		// }
+//
+//		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
+//		tStoreCashEcReq.setUserKey(userKey);
+//		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS); // 상품군 : T game pass
+//
+//		TStoreCashBalanceEcRes tStoreCashEcRes = null;
+//		try {
+//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,TGAMEPASS,SEARCH,REQ,{}",
+//					ReflectionToStringBuilder.toString(tStoreCashEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+//			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
+//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,TGAMEPASS,SEARCH,RES,{}",
+//					ReflectionToStringBuilder.toString(tStoreCashEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+//		} catch (Exception e) {
+//			throw new StorePlatformException("SAC_PUR_7211", e);
+//		}
+//
+//		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+//			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
+//					tStoreCashEcRes.getResultMsg());
+//		}
+//
+//		List<TStoreCashBalanceDetailEcRes> tstoreCashList = tStoreCashEcRes.getCashList();
+//		double cashAmt = 0.0;
+//		for (TStoreCashBalanceDetailEcRes cash : tstoreCashList) {
+//			cashAmt += Double.parseDouble(cash.getAmt());
+//		}
+//
+//		return cashAmt;
+//	}
+
+//	/**
+//	 *
+//	 * <pre>
+//	 * 게임캐쉬 잔액 조회.
+//	 * </pre>
+//	 *
+//	 * @param userKey
+//	 *            내부 회원 NO
+//	 *
+//	 * @return 게임캐쉬 잔액
+//	 */
+//	@Override
+//	public double searchGameCashAmt(String userKey) {
+//		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
+//		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
+//		// return 0.0;
+//		// }
+//
+//		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
+//		tStoreCashEcReq.setUserKey(userKey);
+//		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH); // 상품군 : T store
+//																									  // Gamecash
+//
+//		TStoreCashBalanceEcRes tStoreCashEcRes = null;
+//		try {
+//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,SEARCH,REQ,{}",
+//					ReflectionToStringBuilder.toString(tStoreCashEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+//			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
+//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,SEARCH,RES,{}",
+//					ReflectionToStringBuilder.toString(tStoreCashEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+//		} catch (Exception e) {
+//			throw new StorePlatformException("SAC_PUR_7211", e);
+//		}
+//
+//		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+//			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
+//					tStoreCashEcRes.getResultMsg());
+//		}
+//
+//		List<TStoreCashBalanceDetailEcRes> tstoreCashList = tStoreCashEcRes.getCashList();
+//		double cashAmt = 0.0;
+//		for (TStoreCashBalanceDetailEcRes cash : tstoreCashList) {
+//			cashAmt += Double.parseDouble(cash.getAmt());
+//		}
+//
+//		return cashAmt;
+//	}
+
 	/**
 	 * 
 	 * <pre>
-	 * T Store Cash 잔액 조회.
-	 * </pre>
-	 * 
-	 * @param userKey
-	 *            내부 회원 NO
-	 * 
-	 * @return T Store Cash 잔액
-	 */
-	@Override
-	public double searchTstoreCashAmt(String userKey) {
-		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
-		// return 0.0;
-		// }
-
-		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
-		tStoreCashEcReq.setUserKey(userKey);
-		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH); // 상품군 : T store Cash
-
-		TStoreCashBalanceEcRes tStoreCashEcRes = null;
-		try {
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,SEARCH,REQ,{}",
-					ReflectionToStringBuilder.toString(tStoreCashEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
-			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,SEARCH,RES,{}",
-					ReflectionToStringBuilder.toString(tStoreCashEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7211", e);
-		}
-
-		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
-			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
-					tStoreCashEcRes.getResultMsg());
-		}
-
-		List<TStoreCashBalanceDetailEcRes> tstoreCashList = tStoreCashEcRes.getCashList();
-		double cashAmt = 0.0;
-		for (TStoreCashBalanceDetailEcRes cash : tstoreCashList) {
-			cashAmt += Double.parseDouble(cash.getAmt());
-		}
-
-		return cashAmt;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * T game pass 잔액 조회.
-	 * </pre>
-	 * 
-	 * @param userKey
-	 *            내부 회원 NO
-	 * 
-	 * @return T game pass 잔액
-	 */
-	@Override
-	public double searchTgamepassAmt(String userKey) {
-		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
-		// return 0.0;
-		// }
-
-		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
-		tStoreCashEcReq.setUserKey(userKey);
-		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS); // 상품군 : T game pass
-
-		TStoreCashBalanceEcRes tStoreCashEcRes = null;
-		try {
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,TGAMEPASS,SEARCH,REQ,{}",
-					ReflectionToStringBuilder.toString(tStoreCashEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
-			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,TGAMEPASS,SEARCH,RES,{}",
-					ReflectionToStringBuilder.toString(tStoreCashEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7211", e);
-		}
-
-		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
-			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
-					tStoreCashEcRes.getResultMsg());
-		}
-
-		List<TStoreCashBalanceDetailEcRes> tstoreCashList = tStoreCashEcRes.getCashList();
-		double cashAmt = 0.0;
-		for (TStoreCashBalanceDetailEcRes cash : tstoreCashList) {
-			cashAmt += Double.parseDouble(cash.getAmt());
-		}
-
-		return cashAmt;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 게임캐쉬 잔액 조회.
-	 * </pre>
-	 * 
-	 * @param userKey
-	 *            내부 회원 NO
-	 * 
-	 * @return 게임캐쉬 잔액
-	 */
-	@Override
-	public double searchGameCashAmt(String userKey) {
-		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseCDConstants.ENV_SERVER_LEVEL_REAL)) {
-		// return 0.0;
-		// }
-
-		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
-		tStoreCashEcReq.setUserKey(userKey);
-		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH); // 상품군 : T store
-																									  // Gamecash
-
-		TStoreCashBalanceEcRes tStoreCashEcRes = null;
-		try {
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,SEARCH,REQ,{}",
-					ReflectionToStringBuilder.toString(tStoreCashEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
-			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,SEARCH,RES,{}",
-					ReflectionToStringBuilder.toString(tStoreCashEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7211", e);
-		}
-
-		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
-			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
-					tStoreCashEcRes.getResultMsg());
-		}
-
-		List<TStoreCashBalanceDetailEcRes> tstoreCashList = tStoreCashEcRes.getCashList();
-		double cashAmt = 0.0;
-		for (TStoreCashBalanceDetailEcRes cash : tstoreCashList) {
-			cashAmt += Double.parseDouble(cash.getAmt());
-		}
-
-		return cashAmt;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 게임캐쉬 충전 예약.
+	 * 캐쉬 충전 예약.
 	 * </pre>
 	 * 
 	 * @param userKey
@@ -466,13 +478,13 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 * @return 충전 예약 결과 정보 목록
 	 */
 	@Override
-	public List<TStoreCashChargeReserveDetailEcRes> reserveGameCashCharge(String userKey, double cashAmt,
-			String useStartDt, double bonusPointAmt, String bonusPointUsePeriodUnitCd, String bonusPointUsePeriod) {
+	public List<TStoreCashChargeReserveDetailEcRes> reserveCashCharge(String userKey, double cashAmt, String useStartDt, String productGroupCode,
+			double bonusPointAmt, String bonusPointUsePeriodUnitCd, String bonusPointUsePeriod) {
 		List<TStoreCashChargeReserveDetailEcReq> cashReserveList = new ArrayList<TStoreCashChargeReserveDetailEcReq>();
 
-		// 게임 Cash : Cash 유효기간은 5년
+		// Cash : Cash 유효기간은 5년
 		TStoreCashChargeReserveDetailEcReq tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
-		tStoreCashChargeReserveDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH);
+		tStoreCashChargeReserveDetailEcReq.setProductGroup(productGroupCode);
 		tStoreCashChargeReserveDetailEcReq.setAmt(String.valueOf((int) cashAmt));
 		tStoreCashChargeReserveDetailEcReq.setDate(this.purchaseOrderAssistService.calculateUseDate(useStartDt,
 				PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR, "5")); // 사용 유효기간(만료일시 - yyyyMMddHHmmss)
@@ -482,8 +494,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		// 보너스 Point
 		if (bonusPointAmt > 0.0) {
 			tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
-			tStoreCashChargeReserveDetailEcReq
-					.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH);
+			tStoreCashChargeReserveDetailEcReq.setProductGroup(productGroupCode);
 			tStoreCashChargeReserveDetailEcReq.setAmt(String.valueOf((int) bonusPointAmt));
 			tStoreCashChargeReserveDetailEcReq.setDate(this.purchaseOrderAssistService.calculateUseDate(useStartDt,
 					bonusPointUsePeriodUnitCd, bonusPointUsePeriod));
@@ -514,7 +525,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	/**
 	 * 
 	 * <pre>
-	 * 게임캐쉬 충전 확정.
+	 * 캐쉬 충전 확정.
 	 * </pre>
 	 * 
 	 * @param userKey
@@ -527,7 +538,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 *            충전예약 결과 정보 목록
 	 */
 	@Override
-	public void confirmGameCashCharge(String userKey, String prchsId,
+	public void confirmCashCharge(String userKey, String prchsId,
 			List<TStoreCashChargeReserveDetailEcRes> cashReserveResList) {
 		List<TStoreCashChargeConfirmDetailEcReq> cashConfirmList = new ArrayList<TStoreCashChargeConfirmDetailEcReq>();
 
@@ -544,11 +555,11 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreCashChargeConfirmEcReq.setUserKey(userKey);
 		tStoreCashChargeConfirmEcReq.setCashList(cashConfirmList);
 
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CONFIRM,REQ,{}",
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,CONFIRM,REQ,{}",
 				ReflectionToStringBuilder.toString(tStoreCashChargeConfirmEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 		TStoreCashChargeConfirmEcRes tStoreCashChargeConfirmEcRes = this.tStoreCashSCI
 				.confirmCharge(tStoreCashChargeConfirmEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CONFIRM,RES,{}",
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,CONFIRM,RES,{}",
 				ReflectionToStringBuilder.toString(tStoreCashChargeConfirmEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		if (StringUtils.equals(tStoreCashChargeConfirmEcRes.getResultCd(),
@@ -560,7 +571,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	/**
 	 * 
 	 * <pre>
-	 * 게임캐쉬 충전 취소.
+	 * 캐쉬 충전 취소.
 	 * </pre>
 	 * 
 	 * @param userKey
@@ -573,7 +584,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 *            충전예약 결과 정보 목록
 	 */
 	@Override
-	public void cancelGameCashCharge(String userKey, String prchsId,
+	public void cancelCashCharge(String userKey, String prchsId,
 			List<TStoreCashChargeReserveDetailEcRes> cashReserveResList) {
 
 		List<TStoreCashChargeCancelDetailEcReq> cashCancelList = new ArrayList<TStoreCashChargeCancelDetailEcReq>();
@@ -590,11 +601,11 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreCashChargeCancelEcReq.setUserKey(userKey);
 		tStoreCashChargeCancelEcReq.setCashList(cashCancelList);
 
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CANCEL,REQ,{}",
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,CANCEL,REQ,{}",
 				ReflectionToStringBuilder.toString(tStoreCashChargeCancelEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 		TStoreCashChargeCancelEcRes tStoreCashChargeCancelEcRes = this.tStoreCashSCI
 				.cancelCharge(tStoreCashChargeCancelEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CANCEL,RES,{}",
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,CANCEL,RES,{}",
 				ReflectionToStringBuilder.toString(tStoreCashChargeCancelEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		if (StringUtils.equals(tStoreCashChargeCancelEcRes.getResultCd(),

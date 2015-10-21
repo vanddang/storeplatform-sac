@@ -76,75 +76,71 @@ public interface PurchaseOrderTstoreService {
 	 * 
 	 * @return T Store Cash 통합 잔액 정보
 	 */
-	public String searchTstoreCashIntegrationAmt(String userKey);
+	public String searchTstoreCashIntegrationAmt(String userKey, List<String> productGroupList);
+
+//	/**
+//	 *
+//	 * <pre>
+//	 * T Store Cash 잔액 조회.
+//	 * </pre>
+//	 *
+//	 * @param userKey
+//	 *            내부 회원 NO
+//	 *
+//	 * @return T Store Cash 잔액
+//	 */
+//	public double searchTstoreCashAmt(String userKey);
+
+//	/**
+//	 *
+//	 * <pre>
+//	 * T game pass 잔액 조회.
+//	 * </pre>
+//	 *
+//	 * @param userKey
+//	 *            내부 회원 NO
+//	 *
+//	 * @return T game pass 잔액
+//	 */
+//	public double searchTgamepassAmt(String userKey);
+
+//	/**
+//	 *
+//	 * <pre>
+//	 * 게임캐쉬 잔액 조회.
+//	 * </pre>
+//	 *
+//	 * @param userKey
+//	 *            내부 회원 NO
+//	 *
+//	 * @return 게임캐쉬 잔액
+//	 */
+//	public double searchGameCashAmt(String userKey);
 
 	/**
-	 * 
 	 * <pre>
-	 * T Store Cash 잔액 조회.
+	 * 캐쉬 충전 예약.
 	 * </pre>
-	 * 
+	 *
 	 * @param userKey
-	 *            내부 회원 NO
-	 * 
-	 * @return T Store Cash 잔액
-	 */
-	public double searchTstoreCashAmt(String userKey);
-
-	/**
-	 * 
-	 * <pre>
-	 * T game pass 잔액 조회.
-	 * </pre>
-	 * 
-	 * @param userKey
-	 *            내부 회원 NO
-	 * 
-	 * @return T game pass 잔액
-	 */
-	public double searchTgamepassAmt(String userKey);
-
-	/**
-	 * 
-	 * <pre>
-	 * 게임캐쉬 잔액 조회.
-	 * </pre>
-	 * 
-	 * @param userKey
-	 *            내부 회원 NO
-	 * 
-	 * @return 게임캐쉬 잔액
-	 */
-	public double searchGameCashAmt(String userKey);
-
-	/**
-	 * 
-	 * <pre>
-	 * 게임캐쉬 충전 예약.
-	 * </pre>
-	 * 
-	 * @param userKey
-	 *            내부 회원 번호
-	 * 
+	 * 		내부 회원 번호
 	 * @param cashAmt
-	 *            충전할 Cash 금액
-	 * 
+	 * 		충전할 Cash 금액
 	 * @param useStartDt
-	 *            Cash 이용시작일시
-	 * 
+	 * 		Cash 이용시작일시
+	 * @param productGroupCode
+	 * 		충전 상품군
 	 * @param bonusPointAmt
-	 *            충전할 Point 금액
-	 * 
+	 * 		충전할 Point 금액
 	 * @param bonusPointUsePeriodUnitCd
-	 *            보너스 Point 이용기간단위
-	 * 
+	 * 		보너스 Point 이용기간단위
 	 * @param bonusPointUsePeriod
-	 *            보너스 Point 이용기간값
-	 * 
+	 * 		보너스 Point 이용기간값
+	 *
 	 * @return 충전 예약 결과 정보 목록
 	 */
-	public List<TStoreCashChargeReserveDetailEcRes> reserveGameCashCharge(String userKey, double cashAmt,
-			String useStartDt, double bonusPointAmt, String bonusPointUsePeriodUnitCd, String bonusPointUsePeriod);
+	public List<TStoreCashChargeReserveDetailEcRes> reserveCashCharge(String userKey, double cashAmt, String useStartDt,
+			String productGroupCode, double bonusPointAmt, String bonusPointUsePeriodUnitCd, String bonusPointUsePeriod);
 
 	/**
 	 * 
@@ -161,7 +157,7 @@ public interface PurchaseOrderTstoreService {
 	 * @param cashReserveResList
 	 *            충전예약 결과 정보 목록
 	 */
-	public void confirmGameCashCharge(String userKey, String prchsId,
+	public void confirmCashCharge(String userKey, String prchsId,
 			List<TStoreCashChargeReserveDetailEcRes> cashReserveResList);
 
 	/**
@@ -179,7 +175,7 @@ public interface PurchaseOrderTstoreService {
 	 * @param cashReserveResList
 	 *            충전예약 결과 정보 목록
 	 */
-	public void cancelGameCashCharge(String userKey, String prchsId,
+	public void cancelCashCharge(String userKey, String prchsId,
 			List<TStoreCashChargeReserveDetailEcRes> cashReserveResList);
 
 	/**

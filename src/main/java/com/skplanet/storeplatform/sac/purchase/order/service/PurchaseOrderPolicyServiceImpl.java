@@ -1644,7 +1644,7 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 				}
 
 				sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_CREDIT_CARD_13).append(":0.1;");// 신용카드,
-				sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_PAYPIN_14).append(":0.1;"); // PayPin
+//				sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_PAYPIN_14).append(":0.1;"); // PayPin
 				sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":0.1;"); // T store Cash
 				sbOcbAccum.append(PAYPLANET_PAYMENT_METHOD_SYRUPPAY_18).append(":0.1"); // Syrup Pay
 
