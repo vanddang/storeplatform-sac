@@ -6,6 +6,7 @@ import com.skplanet.storeplatform.external.client.shopping.vo.AllianceUserCheckE
 import com.skplanet.storeplatform.sac.client.other.vo.shopping.AllianceUserCheckReq;
 import com.skplanet.storeplatform.sac.client.other.vo.shopping.AllianceUserCheckRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.other.common.util.ObjectMapperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,8 @@ public class OtherShoppingServiceImpl implements OtherShoppingService {
         ecReq.setBrandSellerId(req.getBrandSellerId());
         ecReq.setDeviceId(req.getDeviceId());
         ecReq.setChargeId(req.getChargeId());
-        LOGGER.info("EC Req = {}", ecReq);
         AllianceUserCheckEcRes ecRes =  otherShoppingSCI.allianceUserCheck(ecReq);
-        LOGGER.info("EC Res = {}", ecRes);
+        LOGGER.info("EC Res = {}", ObjectMapperUtils.convertObjectToJson(ecRes));
 
         /**
          * Response Setting.
