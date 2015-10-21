@@ -1,13 +1,10 @@
 package com.skplanet.storeplatform.sac.client.other.vo.shopping;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
 /**
  * 제휴사 회원 유효성 체크 Value Object
  *
  * Updated on : 2015. 10. 07. Updated by : 심대진, 다모아 솔루션.
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class AllianceUserCheckRes {
 
     private static final long serialVersionUID = 1L;
