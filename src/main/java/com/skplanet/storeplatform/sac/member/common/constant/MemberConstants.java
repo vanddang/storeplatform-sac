@@ -378,6 +378,11 @@ public final class MemberConstants {
 	/** 회원 상태 휴면 처리 코드. */
 	public static final String USER_MOVE_TYPE_DORMANT = "US012302";
 
+	/** 등록. */
+	public static final String TYPE_CREATE = "CREATE";
+	/** 수정. */
+	public static final String TYPE_MODIFY = "UPDATE";
+
 	/**
 	 * 판매자 회원 상수들.
 	 * 

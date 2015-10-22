@@ -64,6 +64,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
@@ -406,7 +407,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		/**
 		 * SC Store 약관동의 등록/수정 연동.
 		 */
-		this.modAgreement(sacHeader, req.getUserKey(), req.getAgreementList());
+		this.modAgreement(sacHeader, req.getUserKey(), req.getAgreementList(), MemberConstants.TYPE_CREATE);
 
 		/**
 		 * 결과 setting.
@@ -423,7 +424,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		/**
 		 * SC Store 약관동의 등록/수정 연동.
 		 */
-		this.modAgreement(sacHeader, req.getUserKey(), req.getAgreementList());
+		this.modAgreement(sacHeader, req.getUserKey(), req.getAgreementList(), MemberConstants.TYPE_MODIFY);
 
 		/**
 		 * 결과 setting.
@@ -980,7 +981,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 * @param agreementList
 	 *            약관 동의 정보 리스트
 	 */
-	private void modAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreementList) {
+	private void modAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreementList,
+			String methodType) {
 
 		/**
 		 * 회원정보조회
@@ -989,8 +991,39 @@ public class UserModifyServiceImpl implements UserModifyService {
 		detailReq.setUserKey(userKey);
 		SearchExtentReq searchExtent = new SearchExtentReq();
 		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+
+		if (MemberConstants.TYPE_MODIFY.equals(methodType)) {
+			searchExtent.setAgreementInfoYn(MemberConstants.USE_Y);
+		}
+
 		detailReq.setSearchExtent(searchExtent);
 		DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
+
+		// 약관 수정일 경우 약관버전이 없을 때(조건) 기존에 등록된 약관과 파라미터로 입력된 약관 리스트를 비교해서
+		// 기존에 등록된 약관코드 일 경우 약관 버전을 기존에 등록된 약관 버전으로 사용.
+		// 수정에서 기존에 등록하지 않고 신규로 입력된 약관은 아래의 약관 맵핑정보 셋팅에서 최종 유효한 버전으로 맵핑 함.
+		if (MemberConstants.TYPE_MODIFY.equals(methodType)) {
+			List<Agreement> userCurrentAgreementList = detailRes.getAgreementList();
+
+			if (userCurrentAgreementList != null && userCurrentAgreementList.size() > 0) {
+				for (AgreementInfo agreementInfo : agreementList) {
+					// 수정으로 넘어온 약관의 버전 정보가 없을 경우
+					if (StringUtils.isBlank(agreementInfo.getExtraAgreementVersion())) {
+						for (Agreement userCurrentAgreement : userCurrentAgreementList) {
+							if (StringUtils.isNotBlank(userCurrentAgreement.getExtraAgreementId())
+									&& StringUtils.isNotBlank(userCurrentAgreement.getExtraAgreementVersion())) {
+
+								if (userCurrentAgreement.getExtraAgreementId().equals(agreementInfo.getExtraAgreementId())) {
+									agreementInfo.setExtraAgreementVersion(userCurrentAgreement.getExtraAgreementVersion());
+									break;
+								}
+
+							}
+						}
+					}
+				}
+			}
+		}
 
 		/**
 		 * 약관 맵핑정보 세팅.
