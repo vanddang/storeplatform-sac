@@ -53,6 +53,16 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 		identifier.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
 		identifier.setText(metaInfo.getBrandId());
 		identifierList.add(identifier);
+		
+		if("chargeCard".equals(metaInfo.getProdCaseCd())){		// 충전권일 경우만 조회
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_SELLER_KEY_IDENTIFIER_CD);
+			identifier.setText(metaInfo.getSellerMbrNo());
+			identifierList.add(identifier);		
+			contributor.setCompany(metaInfo.getChnlCompNm());
+		}
+		
+		
 		contributor.setIdentifierList(identifierList);
 		contributor.setName(metaInfo.getBrandNm()); // 브랜드명
 		return contributor;

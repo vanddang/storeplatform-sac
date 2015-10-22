@@ -4113,6 +4113,7 @@
     </select>            
                   
                   
+                  
     <!-- 충전권 브랜드샵 조회-->
     <select id="getShoppingBrandShopBrandList" parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getShoppingBrandShopBrandList,충전권 브랜드샵 조회, 김형식/SK플래닛  , 2015-10-06 */
@@ -4138,18 +4139,6 @@
                          ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
                             WHERE PROD_ID = BRAND_ID AND IMG_CD =#{imageCd}
                           ) AS FILE_PATH
-					     ,(
-				            SELECT C.REG_ID 
-				            FROM TB_DP_SHPG_BRAND A
-				                ,TB_DP_SHPG_CATALOG B
-				                ,TB_DP_PROD_CATALOG_MAPG C
-				            WHERE A.BRAND_ID = B.BRAND_ID
-				              AND B.CATALOG_ID = C.CATALOG_ID    
-				              AND A.BRAND_ID= AA.BRAND_ID
-                              AND C.BASE_YN='Y'
-                              AND C.USE_YN='Y'				              
-				              AND ROWNUM =1            
-					       )AS regId
                  FROM (
                     SELECT *
                     FROM (
@@ -4243,7 +4232,23 @@
             )KK
         )
         WHERE RNUM BETWEEN #{offset} AND #{count}
-    </select>            
+    </select>  
+    
+    
+    <!-- 충전권 브랜드샵 조회시 회원 정보 조회-->          
+    <select id="getShoppingBrandShopContrubutorList" parameterType="String" resultType="MetaInfo">
+    /* ShoppingMapper.xml.getShoppingBrandShopContrubutorList,충전권 브랜드샵 조회시 회원 정보 조회, 김형식/SK플래닛  , 2015-10-22 */
+     SELECT C.REG_ID 
+       FROM TB_DP_SHPG_BRAND A
+           ,TB_DP_SHPG_CATALOG B
+           ,TB_DP_PROD_CATALOG_MAPG C
+      WHERE A.BRAND_ID = B.BRAND_ID
+        AND B.CATALOG_ID = C.CATALOG_ID    
+        AND A.BRAND_ID= #{brandId}
+        AND C.BASE_YN='Y'
+        AND C.USE_YN='Y'     
+   GROUP BY C.REG_ID                       
+    </select>
 
     <!-- 특정 브랜드샵 충전권 상품 조회-->
     <select id="getShoppingBrandShopChargeCardList" parameterType="Map" resultType="ProductBasicInfo">
@@ -4332,6 +4337,7 @@
                         <if test="req.price != null">
                         AND NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) = #{req.price}
                         </if> 
+                        AND J.SELLER_MBR_NO = #{req.sellerKey}        /* INPUT 판매사key */
                         AND EXISTS (
                             SELECT /*+ UNNEST NL_SJ INDEX(H (DEVICE_MODEL_CD, PROD_ID)) */ 1    --ADDED BY 2014.10.14
                             FROM  TB_DP_SPRT_DEVICE DV  

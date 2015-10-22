@@ -901,7 +901,9 @@
                                ,I.B2B_PROD_YN
                                ,CONCAT(PI.FILE_PATH,PI.FILE_NM) FILE_PATH 
                                ,PI.FILE_NM
-                               ,PI.FILE_SIZE                               
+                               ,PI.FILE_SIZE           
+                               ,J.SELLER_MBR_NO
+                               ,I.CHNL_COMP_NM                    
                           FROM 
                                   TB_DP_SHPG_BRAND         A
                                  ,TB_DP_SHPG_CATALOG       B

@@ -111,6 +111,7 @@ public class DisplayConstants {
 	public static final String DP_PRODUCT_IDENTIFIER_CD = "product";
 	public static final String DP_ALBUM_IDENTIFIER_CD = "album";
 	public static final String DP_CONNECT_IDENTIFIER_CD = "connect";
+	public static final String DP_SELLER_KEY_IDENTIFIER_CD = "sellerKey";
 
 	// //////////////////////////////////// TOP MENU ID //////////////////////////////////////////
 	/**

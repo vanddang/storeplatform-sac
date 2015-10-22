@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.shopping.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,11 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
+import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandAnotherReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandReq;
@@ -43,6 +47,10 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSubReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
@@ -130,6 +138,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 	@Autowired
 	private UapsSCI uapsSCI;
+	
+	@Autowired
+	private SellerSearchSCI sellerSearchSCI;
 
 	/**
 	 * 쇼핑 추천/인기 상품 리스트 조회.
@@ -4297,6 +4308,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		ShoppingRes res = null;
 		CommonResponse commonResponse = new CommonResponse();
 		List<MetaInfo> resultList = null;
+		List<MetaInfo> contrubutorResult = null;
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		req.setTenantId(tenantHeader.getTenantId());
@@ -4304,7 +4316,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setImageCd(DisplayConstants.DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
-
+		List<Contributor> contributorList = new ArrayList<Contributor>();
+		
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
@@ -4345,20 +4358,32 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// SourceList 생성
 				List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
 
-				Contributor contributor = new Contributor();
-				Identifier identifier = new Identifier();
-				List<Identifier> contributorIdentifierList = new ArrayList<Identifier>();
-				identifier.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
-				identifier.setText(shopping.getRegId());
-				contributorIdentifierList.add(identifier);
-				contributor.setIdentifierList(contributorIdentifierList);
-				
+				contrubutorResult = this.commonDAO.queryForList("Shopping.getShoppingBrandShopContrubutorList", shopping.getBrandId(), MetaInfo.class);
+				Map<String, Object> contrubuterMap = null;
+				Identifier identifier = null;
+				for (int kk = 0; kk < contrubutorResult.size(); kk++) {
+					contrubuterMap = businessPartnerInfo(contrubutorResult.get(kk).getRegId());
+					Contributor contributor = new Contributor();
+					identifier = new Identifier();
+					List<Identifier> contributorIdentifierList = new ArrayList<Identifier>();
+					identifier.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
+					identifier.setText(contrubutorResult.get(kk).getRegId());
+					contributorIdentifierList.add(identifier);
+					identifier = new Identifier();
+					identifier.setType(DisplayConstants.DP_SELLER_KEY_IDENTIFIER_CD);
+					identifier.setText(contrubuterMap.get("MbrNo").toString());
+					contributorIdentifierList.add(identifier);
+					contributor.setIdentifierList(contributorIdentifierList);
+					contributor.setCompany(contrubuterMap.get("CompNm").toString());
+					contributorList.add(contributor);
+				}
+
 				// 데이터 매핑
 				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
 				product.setTitle(title);
 				product.setSourceList(sourceList);
-				product.setContributor(contributor);
+				product.setContributorList(contributorList);
 
 				productList.add(i, product);
 				commonResponse.setTotalCount(shopping.getTotalCount());
@@ -4406,6 +4431,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			throw new StorePlatformException("SAC_DSP_0002", "blandId", req.getBrandId());
 		}
 		
+		if (StringUtils.isEmpty(req.getSellerKey())) {
+			throw new StorePlatformException("SAC_DSP_0002", "sellerKey", req.getSellerKey());
+		}
+		
 		if (StringUtils.isEmpty(req.getPrice())) {
 			req.setPrice(null);
 		}else{
@@ -4414,7 +4443,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				throw new StorePlatformException("SAC_DSP_0003", "price", req.getPrice());
 			}
 		}
-
+		
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
 			req.setOrderedBy(DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION);
 		}
@@ -4553,6 +4582,52 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setCount(req.getCount() <= 0 ? 100 : req.getCount());
 	}
 
+	/**
+	 * 해당 업체 정보를 가져온다.
+	 * 
+	 * @param regId
+	 *            regId
+	 * @return boolean
+	 */
+	private Map<String, Object> businessPartnerInfo(String regId) {
+		this.log.info("■■■■■ validateBusinessPartner ■■■■■");
+		this.log.info("################ [SAC DP LocalSCI] SAC Member Stat : sellerSearchSCI.detailInformation : "+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+		DetailInformationSacRes detailInformationSacRes = null;
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		SellerMbrSac sellerMbrSac = new SellerMbrSac();
+		this.log.info("#########################################################");
+		this.log.info("sellerMbrId	:	" + regId);
+		this.log.info("#########################################################");
+		sellerMbrSac.setSellerId(regId);
+		sellerMbrSacList.add(sellerMbrSac);
+		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+
+		try {
+			detailInformationSacRes = this.sellerSearchSCI.detailInformation(detailInformationSacReq);
+			Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
+			List<SellerMbrSac> sellerMbrs = null;
+			while (it.hasNext()) {
+				String key = it.next();
+				sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
+				if (sellerMbrs != null) {
+					if (StringUtils.isBlank(sellerMbrs.get(0).getSellerCompany())) {
+						throw new StorePlatformException("SAC_DSP_1002");
+					}
+					resultMap.put("CompNm", sellerMbrs.get(0).getSellerCompany());
+					resultMap.put("MbrNo", sellerMbrs.get(0).getSellerKey());
+				} else {
+					throw new StorePlatformException("SAC_DSP_1002");
+				}
+			}
+			this.log.info("################ [SAC DP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation : "+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
+
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_DSP_1002");
+		}
+		return resultMap;
+	} // End validateBusinessPartner
 	/**
 	 * 팅요금제 여부 확인.
 	 * 

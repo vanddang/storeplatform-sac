@@ -894,7 +894,9 @@
                 EPROD.PROD_CHRG_YN,
                 SPROD.B2B_PROD_YN,
                 CONCAT(PI.FILE_PATH, PI.FILE_NM)                                                  FILE_PATH,
-                PI.FILE_NM
+                PI.FILE_NM,
+                EPROD.SELLER_MBR_NO,
+                SPROD.CHNL_COMP_NM   
             FROM TB_DP_SHPG_CATALOG SC
                 INNER JOIN TB_DP_SHPG_CATALOG_DESC SCD
                     ON SCD.CATALOG_ID = SC.CATALOG_ID
