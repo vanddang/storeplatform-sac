@@ -4247,6 +4247,7 @@
         AND A.BRAND_ID= #{brandId}
         AND C.BASE_YN='Y'
         AND C.USE_YN='Y'     
+        AND A.CHARGE_CARD_YN='Y'
    GROUP BY C.REG_ID                       
     </select>
 
