@@ -4354,8 +4354,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// SourceList 생성
 				List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
-
-				contrubutorResult = this.commonDAO.queryForList("Shopping.getShoppingBrandShopContrubutorList", shopping.getBrandId(), MetaInfo.class);
+				req.setBrandId(shopping.getBrandId());
+				contrubutorResult = this.commonDAO.queryForList("Shopping.getShoppingBrandShopContrubutorList", req, MetaInfo.class);
 				Map<String, Object> contrubuterMap = null;
 				Identifier identifier = null;
 				for (int kk = 0; kk < contrubutorResult.size(); kk++) {
