@@ -160,6 +160,12 @@ public class Product extends CommonInfo implements Serializable, PromotionEventA
 	 * 이벤트 상품 정보.
 	 */
 	private Promotion promotion;
+	
+	/**
+	 * 제작자 정보(List).
+	 */
+	private List<Contributor> contributorList;
+	
 	/**
 	 * 제작자 정보.
 	 */
@@ -843,6 +849,22 @@ public class Product extends CommonInfo implements Serializable, PromotionEventA
 	 */
 	public void setPromotion(Promotion promotion) {
 		this.promotion = promotion;
+	}
+
+	
+	
+	/**
+	 * @return the contributorList
+	 */
+	public List<Contributor> getContributorList() {
+		return contributorList;
+	}
+
+	/**
+	 * @param contributorList the contributorList to set
+	 */
+	public void setContributorList(List<Contributor> contributorList) {
+		this.contributorList = contributorList;
 	}
 
 	/**
