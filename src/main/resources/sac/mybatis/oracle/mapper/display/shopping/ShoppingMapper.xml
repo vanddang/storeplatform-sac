@@ -4236,19 +4236,83 @@
     
     
     <!-- 충전권 브랜드샵 조회시 회원 정보 조회-->          
-    <select id="getShoppingBrandShopContrubutorList" parameterType="String" resultType="MetaInfo">
+    <select id="getShoppingBrandShopContrubutorList" parameterType="ShoppingReq" resultType="MetaInfo">
     /* ShoppingMapper.xml.getShoppingBrandShopContrubutorList,충전권 브랜드샵 조회시 회원 정보 조회, 김형식/SK플래닛  , 2015-10-22 */
-     SELECT C.REG_ID 
-       FROM TB_DP_SHPG_BRAND A
-           ,TB_DP_SHPG_CATALOG B
-           ,TB_DP_PROD_CATALOG_MAPG C
-      WHERE A.BRAND_ID = B.BRAND_ID
-        AND B.CATALOG_ID = C.CATALOG_ID    
-        AND A.BRAND_ID= #{brandId}
-        AND C.BASE_YN='Y'
-        AND C.USE_YN='Y'     
-        AND A.CHARGE_CARD_YN='Y'
-   GROUP BY C.REG_ID                       
+     SELECT CC.REG_ID 
+       FROM TB_DP_SHPG_BRAND AA
+           ,TB_DP_SHPG_CATALOG BB
+           ,TB_DP_PROD_CATALOG_MAPG CC
+      WHERE AA.BRAND_ID = BB.BRAND_ID
+        AND BB.CATALOG_ID = CC.CATALOG_ID    
+        AND AA.BRAND_ID= #{brandId}
+        AND CC.BASE_YN='Y'
+        AND CC.USE_YN='Y'     
+        AND AA.CHARGE_CARD_YN='Y'
+        AND EXISTS (
+             SELECT
+                      'X'
+               FROM 
+                        TB_DP_SHPG_BRAND A
+                       ,TB_DP_SHPG_CATALOG B
+                       ,TB_DP_SHPG_CATALOG_DESC C
+                       ,TB_DP_MENU_SHPG_MAPG D
+                       ,TB_DP_MENU_CATEGORY E
+                       ,TB_DP_MENU_CATEGORY_DESC F 
+                       ,TB_DP_PROD_CATALOG_MAPG G 
+                       ,TB_DP_PROD_RSHP H
+                       ,TB_DP_SHPG_PROD I
+                       ,TB_DP_PROD J
+                       ,TB_DP_TENANT_PROD K
+                       ,TB_DP_TENANT_PROD K1
+                       ,TB_DP_TENANT_PROD_PRICE L
+
+              WHERE 1=1
+              AND A.BRAND_ID = B.BRAND_ID
+              AND B.CATALOG_ID = C.CATALOG_ID
+              AND C.CATALOG_ID = D.CATALOG_ID     
+              AND D.MENU_ID = E.MENU_ID
+              AND D.MENU_ID = F.MENU_ID
+              AND B.CATALOG_ID = G.CATALOG_ID
+              AND G.PROD_ID = H.PROD_ID
+              AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
+              AND H.PART_PROD_ID = I.PROD_ID
+              AND I.PROD_ID = J.PROD_ID
+              AND I.PROD_ID = K.PROD_ID
+              AND I.PROD_ID = L.PROD_ID
+              AND G.PROD_ID = K1.PROD_ID
+              AND K.TENANT_ID = K1.TENANT_ID
+              AND K.TENANT_ID = L.TENANT_ID 
+              AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/ 
+              AND NVL(B.CHNL_CNT, 0) > 0          
+              AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
+              AND F.LANG_CD= #{langCd}         /* ko : 한국어 */
+              AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+              AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+              AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+              AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+              AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+              AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+              AND I.PROD_CASE_CD = 'DP006306' 
+              AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+              AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
+              AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+              AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+              AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+              AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
+              AND B.CATALOG_ID =BB.CATALOG_ID
+              AND  EXISTS (
+                  SELECT 1 
+                    FROM  TB_DP_SPRT_DEVICE DV  
+                   WHERE PROD_ID = I.PROD_ID
+                     AND DV.DEVICE_MODEL_CD  = #{deviceModelCd} 
+                   UNION ALL
+                  SELECT 1 
+                    FROM  TB_DP_SPRT_DEVICE DV  
+                   WHERE PROD_ID = I.PROD_ID                             
+                     AND DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo} 
+              )
+        )        
+   GROUP BY CC.REG_ID                       
     </select>
 
     <!-- 특정 브랜드샵 충전권 상품 조회-->
