@@ -205,6 +205,9 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH = "01"; // T store GameCash
 	public static final String TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS = "02"; // T game pass
 	public static final String TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH = "03"; // Books Cash
+	/* 발생 타입 */
+	public static final String TSTORE_CASH_PROCTYPE_BOOKS_CASH = "OR003310"; // 북스캐쉬-현금성
+	public static final String TSTORE_CASH_PROCTYPE_BOOKS_CASH_POINT = "OR003350"; // 북스캐쉬-포인트성
 	/* 상품군 old */
 	public static final String TSTORE_CASH_PRODUCT_GROUP_ALL = "00"; // 전체
 	public static final String TSTORE_CASH_PRODUCT_GROUP_APP = "01"; // Application

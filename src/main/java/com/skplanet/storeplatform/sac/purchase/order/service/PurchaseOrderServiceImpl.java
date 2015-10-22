@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.shopping.vo.*;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
@@ -1097,7 +1096,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -------------------------------------------------------------------------------------------
 		// 게임캐쉬 충전 예약 및 확정
 
-		List<TStoreCashChargeReserveDetailEcRes> cashReserveResList = null;
+//		List<TStoreCashChargeReserveDetailEcRes> cashReserveResList = null;
+		TStoreCashDetailParam tStoreCashDetailParam = null;
 
 		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE) || StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
@@ -1110,17 +1110,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			else
 				productGroupCode = PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH;
 
-			// 충전 예약
-			cashReserveResList = this.purchaseOrderTstoreService.reserveCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
-					prchsDtlMore.getProdAmt().doubleValue(), prchsDtlMore.getUseStartDt(),productGroupCode,
+//			// 충전 예약
+//			cashReserveResList = this.purchaseOrderTstoreService.reserveCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
+//					prchsDtlMore.getProdAmt().doubleValue(), prchsDtlMore.getUseStartDt(),productGroupCode,
+//					Double.parseDouble(reservedDataMap.get("bonusPoint")),
+//					reservedDataMap.get("bonusPointUsePeriodUnitCd"), reservedDataMap.get("bonusPointUsePeriod"));
+//
+//			// 충전 확정
+//			if (CollectionUtils.isNotEmpty(cashReserveResList)) {
+//				this.purchaseOrderTstoreService.confirmCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
+//						prchsDtlMore.getPrchsId(), cashReserveResList);
+//			}
+			// 즉시 충전
+			tStoreCashDetailParam = this.purchaseOrderTstoreService.chargeCashImmediately(
+					prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getPrchsId(), prchsDtlMore.getProdAmt().doubleValue(),
+					prchsDtlMore.getUseStartDt(), reservedDataMap.get("bonusPoint"), productGroupCode,
 					Double.parseDouble(reservedDataMap.get("bonusPoint")),
 					reservedDataMap.get("bonusPointUsePeriodUnitCd"), reservedDataMap.get("bonusPointUsePeriod"));
-
-			// 충전 확정
-			if (CollectionUtils.isNotEmpty(cashReserveResList)) {
-				this.purchaseOrderTstoreService.confirmCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
-						prchsDtlMore.getPrchsId(), cashReserveResList);
-			}
 		}
 
 		// -------------------------------------------------------------------------------------------
@@ -1345,18 +1351,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			confirmPurchaseScReq.setNetworkTypeCd(prchsDtlMore.getNetworkTypeCd());
 			confirmPurchaseScReq.setOfferingId(offeringId);
 			confirmPurchaseScReq.setPrchsDt(currentDate);
-			if (CollectionUtils.isNotEmpty(cashReserveResList)) {
-				for (TStoreCashChargeReserveDetailEcRes chargeInfo : cashReserveResList) {
-					// T store Cash 충전형 - 01 : Point, 02 : Cash
-					if (StringUtils.equals(chargeInfo.getCashCls(), PurchaseConstants.TSTORE_CASH_CLASS_CASH)) {
-						confirmPurchaseScReq.setGameCashCashId(chargeInfo.getIdentifier());
-					} else if (StringUtils.equals(chargeInfo.getCashCls(), PurchaseConstants.TSTORE_CASH_CLASS_POINT)) {
-						confirmPurchaseScReq.setGameCashPointId(chargeInfo.getIdentifier());
-					}
-				}
-			}
+			confirmPurchaseScReq.setCashInfo(tStoreCashDetailParam.getCashIdToString()); // 캐시충전ID(북스캐시)
 			confirmPurchaseScReq.setMediaId(reservedDataMap.get("mediaId")); // CPS 매체ID 세팅
-
 			confirmPurchaseScReq.setPrchsProdCntList(prchsProdCntList); // 건수집계
 			confirmPurchaseScReq.setPaymentList(paymentList); // 결제
 			confirmPurchaseScReq.setAutoPrchsMoreList(autoPrchsMoreList); // 자동구매
@@ -1396,7 +1392,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		} finally {
 			// 쇼핑쿠폰발급 취소, 캐쉬 충전 취소 등
 			if (checkException != null) {
-				this.revertToPreConfirm(prchsDtlMoreList, cashReserveResList, prodCaseCd, couponCode);
+				this.revertToPreConfirm(prchsDtlMoreList, tStoreCashDetailParam, prodCaseCd, couponCode);
 			}
 
 			// 구매완료 TLog 상품 별 로깅
@@ -1985,7 +1981,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @param cashReserveResList 게임캐쉬 충전예약 결과 정보 목록
 	 */
 	private void revertToPreConfirm(List<PrchsDtlMore> prchsDtlMoreList,
-			List<TStoreCashChargeReserveDetailEcRes> cashReserveResList, String couponCode, String prodCaseCd) {
+			TStoreCashDetailParam tStoreCashDetailParam, String couponCode, String prodCaseCd) {
 		this.logger.info("PRCHS,ORDER,SAC,REVERT");
 
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
@@ -2013,18 +2009,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		// -------------------------------------------------------------------------------------
-		// 게임캐쉬 충전 취소
-
-		if (CollectionUtils.isNotEmpty(cashReserveResList)) {
+		// 캐쉬 충전 취소
+		if (tStoreCashDetailParam != null)
+		{
 			try {
 				this.purchaseOrderTstoreService.cancelCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
-						prchsDtlMore.getPrchsId(), cashReserveResList);
+						prchsDtlMore.getPrchsId(), tStoreCashDetailParam);
 			} catch (Exception e) {
 				// 이 때 발생하는 예외는 로깅만.
 				this.logger.info("PRCHS,ORDER,SAC,REVERT,GAMECASH,ERROR,{}", e.getMessage());
 			}
 		}
-
 	}
 
 	// =========================================================================================================================================================================

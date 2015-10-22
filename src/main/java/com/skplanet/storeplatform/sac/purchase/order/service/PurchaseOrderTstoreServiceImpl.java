@@ -16,6 +16,8 @@ import com.skplanet.storeplatform.external.client.tstore.sci.TStorePurchaseSCI;
 import com.skplanet.storeplatform.external.client.tstore.vo.*;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.vo.TStoreCashDetailParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.TStoreCashDetailSubParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -506,11 +508,11 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreCashChargeReserveEcReq.setUserKey(userKey);
 		tStoreCashChargeReserveEcReq.setCashList(cashReserveList);
 
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,RESERVE,REQ,{}",
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,RESERVE,REQ,{}",
 				ReflectionToStringBuilder.toString(tStoreCashChargeReserveEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 		TStoreCashChargeReserveEcRes tStoreCashChargeReserveEcRes = this.tStoreCashSCI
 				.reserveCharge(tStoreCashChargeReserveEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,RESERVE,RES,{}",
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,RESERVE,RES,{}",
 				ReflectionToStringBuilder.toString(tStoreCashChargeReserveEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		if (StringUtils.equals(tStoreCashChargeReserveEcRes.getResultCd(),
@@ -521,6 +523,56 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		// 충전 확정 용도
 		return tStoreCashChargeReserveEcRes.getCashList();
 	}
+
+	@Override
+	public TStoreCashDetailParam chargeCashImmediately(String userKey, String prchsId, double cashAmt, String useStartDt, String prodNm, String productGroupCode,
+			double bonusPointAmt, String bonusPointUsePeriodUnitCd, String bonusPointUsePeriod) {
+		TStoreCashDetailParam tStoreCashDetailParam = new TStoreCashDetailParam();
+
+		// Cash : Cash 유효기간은 5년
+		TStoreCashChargeEcReq tStoreCashChargeEcReq = new TStoreCashChargeEcReq();
+		tStoreCashChargeEcReq.setProductGroup(productGroupCode);
+		tStoreCashChargeEcReq.setAmt(String.valueOf((int) cashAmt));
+		tStoreCashChargeEcReq.setDate(this.purchaseOrderAssistService
+				.calculateUseDate(useStartDt, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR, "5")); // 사용 유효기간(만료일시 - yyyyMMddHHmmss)
+		tStoreCashChargeEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
+		tStoreCashChargeEcReq.setProcType(PurchaseConstants.TSTORE_CASH_PROCTYPE_BOOKS_CASH);
+		tStoreCashChargeEcReq.setOrderNo(prchsId);
+		tStoreCashChargeEcReq.setUserKey(userKey);
+		tStoreCashChargeEcReq.setAddCol1(prodNm);
+
+		tStoreCashDetailParam.addTstoreCashChargeEcReq(tStoreCashChargeEcReq, invokeChargeCash(tStoreCashChargeEcReq).getIdentifier());
+
+		// 보너스 Point
+		if (bonusPointAmt > 0.0) {
+			tStoreCashChargeEcReq.setAmt(String.valueOf((int) bonusPointAmt));
+			tStoreCashChargeEcReq.setDate(this.purchaseOrderAssistService.calculateUseDate(useStartDt,
+					bonusPointUsePeriodUnitCd, bonusPointUsePeriod));
+			tStoreCashChargeEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_POINT);
+			tStoreCashChargeEcReq.setProcType(PurchaseConstants.TSTORE_CASH_PROCTYPE_BOOKS_CASH);
+
+			tStoreCashDetailParam.addTstoreCashChargeEcReq(tStoreCashChargeEcReq, invokeChargeCash(tStoreCashChargeEcReq).getIdentifier());
+		}
+
+		return tStoreCashDetailParam;
+	}
+
+	private TStoreCashChargeEcRes invokeChargeCash(TStoreCashChargeEcReq tStoreCashChargeEcReq)
+	{
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,CHARGECASH,REQ,{}",
+				ReflectionToStringBuilder.toString(tStoreCashChargeEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+		TStoreCashChargeEcRes cashChargeEcRes = this.tStoreCashSCI.chargeCashImmediately(tStoreCashChargeEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,CHARGECASH,RES,{}",
+				ReflectionToStringBuilder.toString(cashChargeEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		if (cashChargeEcRes == null || StringUtils.equals(cashChargeEcRes.getResultCd(),
+				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+			throw new StorePlatformException("SAC_PUR_7213", cashChargeEcRes.getResultCd());
+		}
+		return cashChargeEcRes;
+	}
+
+
 
 	/**
 	 * 
@@ -579,21 +631,21 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 * 
 	 * @param prchsId
 	 *            구매ID
-	 * 
-	 * @param cashReserveResList
+	 *
+	 * @param tStoreCashDetailParam
 	 *            충전예약 결과 정보 목록
 	 */
 	@Override
 	public void cancelCashCharge(String userKey, String prchsId,
-			List<TStoreCashChargeReserveDetailEcRes> cashReserveResList) {
+			TStoreCashDetailParam tStoreCashDetailParam) {
 
 		List<TStoreCashChargeCancelDetailEcReq> cashCancelList = new ArrayList<TStoreCashChargeCancelDetailEcReq>();
-		for (TStoreCashChargeReserveDetailEcRes cashReserveRes : cashReserveResList) {
+		for (TStoreCashDetailSubParam tStoreCashDetailSubParam : tStoreCashDetailParam.getCashDetailParam()) {
 			TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
 			tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsId);
-			tStoreCashChargeCancelDetailEcReq.setIdentifier(cashReserveRes.getIdentifier());
-			tStoreCashChargeCancelDetailEcReq.setCashCls(cashReserveRes.getCashCls());
-			tStoreCashChargeCancelDetailEcReq.setProductGroup(cashReserveRes.getProductGroup());
+			tStoreCashChargeCancelDetailEcReq.setIdentifier(tStoreCashDetailSubParam.getIdentifier());
+			tStoreCashChargeCancelDetailEcReq.setCashCls(tStoreCashDetailSubParam.getCashCls());
+			tStoreCashChargeCancelDetailEcReq.setProductGroup(tStoreCashDetailSubParam.getProductGroup());
 			cashCancelList.add(tStoreCashChargeCancelDetailEcReq);
 		}
 

@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreJoinOfferingEcRes;
+import com.skplanet.storeplatform.sac.purchase.order.vo.TStoreCashDetailParam;
 
 import java.util.List;
 
@@ -143,6 +144,32 @@ public interface PurchaseOrderTstoreService {
 			String productGroupCode, double bonusPointAmt, String bonusPointUsePeriodUnitCd, String bonusPointUsePeriod);
 
 	/**
+	 * Tstore 캐시 즉시 충전
+	 *
+	 * @param userKey
+	 * 		the user key
+	 * @param cashAmt
+	 * 		the cash amt
+	 * @param useStartDt
+	 * 		the use start dt
+	 * @param prodNm
+	 * 		the prod nm
+	 * @param productGroupCode
+	 * 		the product group code
+	 * @param bonusPointAmt
+	 * 		the bonus point amt
+	 * @param bonusPointUsePeriodUnitCd
+	 * 		the bonus point use period unit cd
+	 * @param bonusPointUsePeriod
+	 * 		the bonus point use period
+	 *
+	 * @return the string
+	 */
+	TStoreCashDetailParam chargeCashImmediately(String userKey, String prchsId, double cashAmt, String useStartDt, String prodNm,
+			String productGroupCode, double bonusPointAmt, String bonusPointUsePeriodUnitCd,
+			String bonusPointUsePeriod);
+
+	/**
 	 * 
 	 * <pre>
 	 * 게임캐쉬 충전 확정.
@@ -172,11 +199,10 @@ public interface PurchaseOrderTstoreService {
 	 * @param prchsId
 	 *            구매ID
 	 * 
-	 * @param cashReserveResList
+	 * @param tStoreCashDetailParam
 	 *            충전예약 결과 정보 목록
 	 */
-	public void cancelCashCharge(String userKey, String prchsId,
-			List<TStoreCashChargeReserveDetailEcRes> cashReserveResList);
+	void cancelCashCharge(String userKey, String prchsId, TStoreCashDetailParam tStoreCashDetailParam);
 
 	/**
 	 * 
