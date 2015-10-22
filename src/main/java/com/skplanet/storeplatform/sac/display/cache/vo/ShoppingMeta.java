@@ -51,6 +51,8 @@ public class ShoppingMeta extends CommonInfo {
     private String b2bProdYn;
     private String filePath;
     private String fileNm;
+    private String sellerMbrNo;
+    private String chnlCompNm;
 
     public String getCatalogId() {
         return catalogId;
@@ -299,4 +301,34 @@ public class ShoppingMeta extends CommonInfo {
     public void setFileNm(String fileNm) {
         this.fileNm = fileNm;
     }
+
+	/**
+	 * @return the sellerMbrNo
+	 */
+	public String getSellerMbrNo() {
+		return sellerMbrNo;
+	}
+
+	/**
+	 * @param sellerMbrNo the sellerMbrNo to set
+	 */
+	public void setSellerMbrNo(String sellerMbrNo) {
+		this.sellerMbrNo = sellerMbrNo;
+	}
+
+	/**
+	 * @return the chnlCompNm
+	 */
+	public String getChnlCompNm() {
+		return chnlCompNm;
+	}
+
+	/**
+	 * @param chnlCompNm the chnlCompNm to set
+	 */
+	public void setChnlCompNm(String chnlCompNm) {
+		this.chnlCompNm = chnlCompNm;
+	}
+    
+    
 }
