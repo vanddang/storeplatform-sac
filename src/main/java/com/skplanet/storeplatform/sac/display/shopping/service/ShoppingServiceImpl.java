@@ -4584,7 +4584,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * 
 	 * @param regId
 	 *            regId
-	 * @return boolean
+	 * @return Map<String, Object>
 	 */
 	private Map<String, Object> businessPartnerInfo(String regId) {
 		this.log.info("■■■■■ validateBusinessPartner ■■■■■");
@@ -4624,7 +4624,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			throw new StorePlatformException("SAC_DSP_1002");
 		}
 		return resultMap;
-	} // End validateBusinessPartner
+	} // End businessPartnerInfo
 	/**
 	 * 팅요금제 여부 확인.
 	 * 
