@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -23,7 +24,10 @@ import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.promotion.PromotionEventDataService;
+import com.skplanet.storeplatform.sac.display.promotion.PromotionEventUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +69,9 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
     @Autowired
     private DisplayCommonService displayCommonService;
+
+    @Autowired
+    private PromotionEventDataService eventDataService;
 
     private static final Logger logger = LoggerFactory.getLogger(CachedExtraInfoManagerImpl.class);
 
@@ -188,7 +195,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
         // 조회할 대상들의 키를 생성한다.
         String tenantId = param.getTenantId();
 
-        final String[] keys = makeKeys(param.getChnlId(), param.getMenuId());
+        final String[] keys = PromotionEventUtils.makeKeys(param.getChnlId(), param.getMenuId());
 
         if(featureSwitch.get(FeatureKey.PROMO_EVENT_FORCE_DB) || connectionFactory == null) {
             RawPromotionEvent rawPromotionEvent = getRawPromotionEvent(tenantId, keys, true);
@@ -273,27 +280,6 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     }
 
     /**
-     * 프로모션 이벤트 조회에 필요한 키 파라메터를 생성한다.
-     * @param prodId
-     * @param menuId
-     * @return
-     */
-    private String[] makeKeys(String prodId, String menuId) {
-        String menuOrTopMenuId = "",
-                topMenuId = "";
-
-        if(!Strings.isNullOrEmpty(menuId)) {
-
-            menuOrTopMenuId = menuId;
-            if(menuId.length() > 4) {
-                topMenuId = menuOrTopMenuId.substring(0, 4);
-            }
-        }
-
-        return new String[]{prodId, menuOrTopMenuId, topMenuId};
-    }
-
-    /**
      * DB 에서 이벤트를 조회한다.
      * @param tenantId
      * @param keys
@@ -302,7 +288,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     @Override
     public RawPromotionEvent getRawPromotionEvent(String tenantId, String[] keys, boolean liveOnly) {
 
-        List<RawPromotionEvent> rawEventList = promotionEventSyncService.getRawEventList(tenantId, Arrays.asList(keys), PromotionEventSyncService.GET_RAW_EVENT_BY_ALL);
+        List<RawPromotionEvent> rawEventList = eventDataService.getRawEventList(tenantId, Arrays.asList(keys), PromotionEventDataService.GET_RAW_EVENT_BY_ALL);
         if (rawEventList.size() == 0)
             return null;
 
@@ -311,6 +297,6 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
     @Override
     public RawPromotionEvent getRawPromotionEvent(String tenantId, String chnlId, String menuId, boolean liveOnly) {
-        return getRawPromotionEvent(tenantId, makeKeys(chnlId, menuId), liveOnly);
+        return getRawPromotionEvent(tenantId, PromotionEventUtils.makeKeys(chnlId, menuId), liveOnly);
     }
 }

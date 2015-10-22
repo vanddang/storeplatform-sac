@@ -9,10 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
-
-import java.util.List;
 
 /**
  * <p>
@@ -21,19 +18,6 @@ import java.util.List;
  * Updated on : 2015. 07. 24 Updated by : 정희원, SK 플래닛.
  */
 public interface PromotionEventSyncService {
-
-    /**
-     * 모두
-     */
-    int GET_RAW_EVENT_BY_ALL = 0;
-    /**
-     * 진행중이거나 예정인 이벤트
-     */
-    int GET_RAW_EVENT_BY_READY = 1;
-    /**
-     * 라이브 상태의 이벤트
-     */
-    int GET_RAW_EVENT_BY_LIVE = 2;
 
     /**
      * 모든 프로모션 이벤트들을 동기화 한다.
@@ -45,16 +29,4 @@ public interface PromotionEventSyncService {
     SyncPromotionEventResult syncPromotionEvent(String tenantId, String key, boolean forceUpdate);
 
     SyncPromotionEventResult syncPromotionEvent(String tenantId, String key);
-
-    /**
-     *
-     * @param tenantId
-     * @param keys
-     * @param filterCode GET_RAW_EVENT_BY_ALL, GET_RAW_EVENT_BY_READY, GET_RAW_EVENT_BY_LIVE
-     * @return
-     */
-    List<RawPromotionEvent> getRawEventList(String tenantId, List<String> keys, int filterCode);
-
-    List<RawPromotionEvent> getRawEventList(String tenantId, List<Integer> promIdList);
-
 }

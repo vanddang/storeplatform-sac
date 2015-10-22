@@ -10,25 +10,19 @@
 package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.common.util.DefaultPartialProcessorHandler;
-import com.skplanet.storeplatform.sac.common.util.PartialProcessor;
-import com.skplanet.storeplatform.sac.common.util.PartialProcessorHandler;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
-import org.apache.commons.lang3.StringUtils;
+import com.skplanet.storeplatform.sac.display.promotion.PromotionEventDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -46,12 +40,11 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
     private static final Logger logger = LoggerFactory.getLogger(PromotionEventSyncServiceImpl.class);
     private static final int ERR_UPDT_CNT = -1;
 
-    @Autowired
-    @Qualifier("sac")
-    private CommonDAO commonDAO;
-
     @Autowired(required = false)
     private PlandasjConnectionFactory connectionFactory;
+
+    @Autowired
+    private PromotionEventDataService eventDataService;
 
     @Override
     public SyncPromotionEventResult syncPromotionEvent(final String tenantId, final String key, final boolean forceUpdate) {
@@ -150,7 +143,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
      */
     private Multimap<String, RawPromotionEvent> fetchEventDataFromDb(String tenantId, String key) {
 
-        List<RawPromotionEvent> promEventList = getRawEventList(tenantId, key != null ? Arrays.asList(key) : null, GET_RAW_EVENT_BY_READY);
+        List<RawPromotionEvent> promEventList = eventDataService.getRawEventList(tenantId, key != null ? Arrays.asList(key) : null, PromotionEventDataService.GET_RAW_EVENT_BY_READY);
 
         Multimap<String, RawPromotionEvent> onlineEventMap = LinkedHashMultimap.create();
         for (RawPromotionEvent e : promEventList) {
@@ -158,47 +151,6 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
         }
 
         return onlineEventMap;
-    }
-
-    @Override
-    public List<RawPromotionEvent> getRawEventList(String tenantId, List<String> keyList, int filterCd) {
-
-        Map<String, Object> req = Maps.newHashMap();
-
-        if(!Strings.isNullOrEmpty(tenantId))
-            req.put("tenantId", tenantId);
-
-        if(keyList != null)
-            req.put("keyList", keyList);
-
-        req.put("liveOnly", filterCd == GET_RAW_EVENT_BY_LIVE);
-        req.put("liveAndReserved", filterCd == GET_RAW_EVENT_BY_READY);
-        req.put("all", filterCd == GET_RAW_EVENT_BY_ALL);
-
-        return commonDAO.queryForList("PromotionEventMapper.getPromotionEventList", req, RawPromotionEvent.class);
-    }
-
-    @Override
-    public List<RawPromotionEvent> getRawEventList(String tenantId, List<Integer> promIdList) {
-
-        final Map<String, Object> req = Maps.newHashMap();
-        req.put("tenantId", tenantId);
-
-        final List<RawPromotionEvent> res = Lists.newArrayList();
-        PartialProcessor.process(promIdList, new PartialProcessorHandler<Integer>() {
-            @Override
-            public Integer processPaddingItem() {
-                return -1;
-            }
-
-            @Override
-            public void processPartial(List<Integer> partialList) {
-                req.put("promIdList", partialList);
-                res.addAll(commonDAO.queryForList("PromotionEventMapper.getPromotionEventList", req, RawPromotionEvent.class));
-            }
-        }, 20);
-
-        return res;
     }
 
     @Override

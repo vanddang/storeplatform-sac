@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.sac.display.common.service.ProductExtraInfoSer
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.MappedProduct;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.PaymentInfoContext;
+import com.skplanet.storeplatform.sac.display.promotion.PromotionEventDataService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     private ProductExtraInfoService productExtraInfoService;
 
     @Autowired
+    private PromotionEventDataService promotionEventDataService;
+
+    @Autowired
     private CachedExtraInfoManager extraInfoManager;
 
     /**
@@ -67,7 +71,8 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     public PaymentInfoSacRes searchPaymentInfo(PaymentInfoSacReq req) {
 
         List<String> prodIdList = req.getProdIdList();
-        String tenantId = req.getTenantId();
+        String tenantId = req.getTenantId(),
+                userKey = req.getUserKey();
 
         this.log.debug("##### prodIdList size : {}", prodIdList.size());
 
@@ -107,7 +112,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                 continue;
 
             // 멤버십 프로모션 정보 매핑
-            mapgPromotion(tenantId, baseInfo, paymentInfo);
+            mapgPromotion(tenantId, userKey, baseInfo, paymentInfo);
 
             // 허용 연령 정보
             paymentInfo.setAgeAllowedFrom(displayCommonService.getAllowedAge(paymentInfo.getTopMenuId(), paymentInfo.getProdGrdCd()));
@@ -315,7 +320,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         }
     }
 
-    private void mapgPromotion(String tenantId, ProductBaseInfo baseInfo, PaymentInfo paymentInfo) {
+    private void mapgPromotion(String tenantId, String userKey, ProductBaseInfo baseInfo, PaymentInfo paymentInfo) {
 
         // IAP상품은 부모 상품으로, 그 외의 상품은 chnlId로 조회
         String chnlId = "", menuId = "";
@@ -333,7 +338,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             menuId = StringUtils.defaultString(paymentInfo.getMenuId(), paymentInfo.getTopMenuId());
         }
 
-        RawPromotionEvent event = extraInfoManager.getRawPromotionEvent(tenantId, chnlId, menuId, false);
+        RawPromotionEvent event = promotionEventDataService.getLivePromotionEventForUser(tenantId, chnlId, menuId, userKey);
 
         Map<String, Integer> milMap = Maps.newHashMap();
         if (event != null) {

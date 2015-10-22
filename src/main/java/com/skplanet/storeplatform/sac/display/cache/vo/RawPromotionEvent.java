@@ -31,6 +31,8 @@ public class RawPromotionEvent {
     private Integer rateGrd1;
     private Integer rateGrd2;
     private Integer rateGrd3;
+    private Integer payMethodVdtyDt;
+    private String targetUserKind;
 
     private Date startDt;
     private Date endDt;
@@ -156,5 +158,21 @@ public class RawPromotionEvent {
 
     public void setPromForceCloseDt(Date promForceCloseDt) {
         this.promForceCloseDt = promForceCloseDt;
+    }
+
+    public Integer getPayMethodVdtyDt() {
+        return payMethodVdtyDt;
+    }
+
+    public void setPayMethodVdtyDt(Integer payMethodVdtyDt) {
+        this.payMethodVdtyDt = payMethodVdtyDt;
+    }
+
+    public String getTargetUserKind() {
+        return targetUserKind;
+    }
+
+    public void setTargetUserKind(String targetUserKind) {
+        this.targetUserKind = targetUserKind;
     }
 }

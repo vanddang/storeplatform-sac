@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Promot
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PromotionEventRes;
 import com.skplanet.storeplatform.sac.display.cache.service.PromotionEventSyncService;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
+import com.skplanet.storeplatform.sac.display.promotion.PromotionEventDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -34,7 +35,7 @@ import java.util.Map;
 public class PromotionEventSCIController implements PromotionEventSCI {
 
     @Autowired
-    private PromotionEventSyncService promotionEventSyncService;
+    private PromotionEventDataService eventDataService;
 
     @Override
     public PromotionEventRes getPromotionEvent(PromotionEventReq req) {
@@ -43,7 +44,7 @@ public class PromotionEventSCIController implements PromotionEventSCI {
         Preconditions.checkNotNull(req.getPromIdList());
 
         Map<Integer, PromotionEventItem> eventMap = Maps.newHashMap();
-        List<RawPromotionEvent> rawEventList = promotionEventSyncService.getRawEventList(req.getTenantId(), req.getPromIdList());
+        List<RawPromotionEvent> rawEventList = eventDataService.getRawEventList(req.getTenantId(), req.getPromIdList());
 
         for (RawPromotionEvent event : rawEventList) {
 
