@@ -16,6 +16,7 @@ public class AppDetailParam {
     private String userKey;
     private String deviceKey;
     private String osVersion;
+    private Integer sdkCd;
 
     public String getOsVersion() {
         return osVersion;
@@ -75,5 +76,13 @@ public class AppDetailParam {
 
     public String getStandardModel() {
         return DisplayConstants.DP_ANDROID_STANDARD2_NM;
+    }
+
+    public Integer getSdkCd() {
+        return sdkCd;
+    }
+
+    public void setSdkCd(Integer sdkCd) {
+        this.sdkCd = sdkCd;
     }
 }

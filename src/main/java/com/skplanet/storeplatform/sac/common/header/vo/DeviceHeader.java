@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.common.header.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * x-sac-network-info 헤더를 컨트롤러에서 제공하기 위한 Value Object
@@ -25,6 +26,7 @@ public class DeviceHeader extends CommonInfo {
 	private String dpi;
 	private String resolution;
 	private String os;
+	private String sdk;
 	private String pkg;
 	private String svc;
 
@@ -69,4 +71,22 @@ public class DeviceHeader extends CommonInfo {
 		this.svc = svc;
 	}
 
+    public String getSdk() {
+        return sdk;
+    }
+
+    public void setSdk(String sdk) {
+        this.sdk = sdk;
+    }
+
+    public Integer getSdkCdNum() {
+        if(StringUtils.isEmpty(this.sdk))
+            return null;
+        try {
+            return Integer.parseInt(this.sdk);
+        }
+        catch (NumberFormatException e) {
+            return null;
+        }
+    }
 }

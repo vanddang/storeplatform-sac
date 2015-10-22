@@ -10,11 +10,9 @@
 package com.skplanet.storeplatform.sac.display.app.service;
 
 import com.google.common.base.Function;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -32,11 +30,11 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.service.menu.MenuInfoService;
-import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -234,15 +232,7 @@ public class AppServiceImpl implements AppService {
         app.setDescriptionVideoUrl(appDetail.getDescVideoUrl());
 
         // App - Provisioning
-        String simpleOsVer = "_NOT_";
-        Matcher matcher = PATTERN_OSVER.matcher(param.getOsVersion());
-        if (matcher.matches()) {
-            simpleOsVer = matcher.group(1);
-        }
-        app.setIsDeviceSupported(appDetail.getVmVer() != null &&
-                param.getOsVersion() != null &&
-                appDetail.getVmVer().contains(simpleOsVer != null ? simpleOsVer : "") &&
-                appDetail.getIsDeviceSupp().equals("Y") ? "Y" : "N");
+        app.setIsDeviceSupported(checkAvailability(param.getSdkCd(), param.getOsVersion(), appDetail) ? "Y" : "N");
 
         // Update History
         History history = new History();
@@ -343,6 +333,30 @@ public class AppServiceImpl implements AppService {
         req.put("tenantIdList", ServicePropertyManager.getSupportTenantList());
 
         return commonDAO.queryForList("AppDetail.getTenantProductList", req, TenantProductInfo.class);
+    }
+
+    private boolean checkAvailability(Integer userSdkCd, String userOsVer, AppDetail appDetail) {
+        if(appDetail.getIsDeviceSupp().equals("N") || StringUtils.isEmpty(appDetail.getVmVer()))
+            return false;
+
+        if (userSdkCd != null) {
+            int min = appDetail.getSdkMin(),
+                max = appDetail.getSdkMax();
+
+            return min <= userSdkCd && userSdkCd <= max;
+        }
+
+        if (StringUtils.isNotEmpty(userOsVer)) {
+            String simpleOsVer = "_NOT_";
+            Matcher matcher = PATTERN_OSVER.matcher(userOsVer);
+            if (matcher.matches()) {
+                simpleOsVer = StringUtils.defaultString(matcher.group(1));
+            }
+
+            return appDetail.getVmVer().contains(simpleOsVer);
+        }
+
+        return false;
     }
 
     public static class TenantProductInfo {

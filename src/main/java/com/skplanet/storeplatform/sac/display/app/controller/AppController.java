@@ -43,6 +43,12 @@ public class AppController {
 //        dataBinder.setValidator(new AppDetailReqValidator());
 //    }
 
+    /**
+     * I03000038
+     * @param header
+     * @param req
+     * @return
+     */
     @RequestMapping(value = "/app/detail/v1", method = RequestMethod.POST)
     @ResponseBody
     public AppDetailRes getAppDetail(SacRequestHeader header, @Validated @RequestBody AppDetailReq req) {
@@ -53,6 +59,7 @@ public class AppController {
         request.setTenantId(header.getTenantHeader().getTenantId());
         request.setDeviceModelCd(header.getDeviceHeader().getModel());
         request.setOsVersion(header.getDeviceHeader().getOs());
+        request.setSdkCd(header.getDeviceHeader().getSdkCdNum());
         request.setUserKey(req.getUserKey());
         request.setDeviceKey(req.getDeviceKey());
 
@@ -66,6 +73,12 @@ public class AppController {
         return appDetail;
     }
 
+    /**
+     * ?
+     * @param header
+     * @param req
+     * @return
+     */
     @RequestMapping(value = "/app/detail/v2", method = RequestMethod.POST)
     @ResponseBody
     public AppDetailRes getAppDetailV2(SacRequestHeader header, @Validated @RequestBody AppDetailReq req) {
@@ -76,6 +89,7 @@ public class AppController {
         request.setTenantId(header.getTenantHeader().getTenantId());
         request.setDeviceModelCd(header.getDeviceHeader().getModel());
         request.setOsVersion(header.getDeviceHeader().getOs());
+        request.setSdkCd(header.getDeviceHeader().getSdkCdNum());
         request.setUserKey(req.getUserKey());
         request.setDeviceKey(req.getDeviceKey());
 

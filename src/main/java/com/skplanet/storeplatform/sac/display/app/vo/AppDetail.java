@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.app.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
@@ -42,6 +43,9 @@ public class AppDetail extends CommonInfo {
     private String menuNm;
     private String menuDesc;
     private String likeYn;
+    private String apkApiLevelCd;
+    private Integer sdkMin;
+    private Integer sdkMax;
 
     public String getPartParentClsfCd() {
         return partParentClsfCd;
@@ -84,7 +88,7 @@ public class AppDetail extends CommonInfo {
     }
 
     public String getIsDeviceSupp() {
-        return isDeviceSupp;
+        return StringUtils.defaultString(isDeviceSupp, "N");
     }
 
     public void setIsDeviceSupp(String isDeviceSupp) {
@@ -289,5 +293,29 @@ public class AppDetail extends CommonInfo {
 
     public void setMenuDesc(String menuDesc) {
         this.menuDesc = menuDesc;
+    }
+
+    public String getApkApiLevelCd() {
+        return apkApiLevelCd;
+    }
+
+    public void setApkApiLevelCd(String apkApiLevelCd) {
+        this.apkApiLevelCd = apkApiLevelCd;
+    }
+
+    public Integer getSdkMin() {
+        return sdkMin != null ? sdkMin : 0;
+    }
+
+    public void setSdkMin(Integer sdkMin) {
+        this.sdkMin = sdkMin;
+    }
+
+    public Integer getSdkMax() {
+        return sdkMax != null ? sdkMax : Integer.MAX_VALUE;
+    }
+
+    public void setSdkMax(Integer sdkMax) {
+        this.sdkMax = sdkMax;
     }
 }
