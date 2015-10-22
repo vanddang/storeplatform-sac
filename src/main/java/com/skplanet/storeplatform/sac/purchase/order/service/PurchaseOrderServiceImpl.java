@@ -940,10 +940,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setUseStartDt(prchsDtlMore.getUseStartDt());
 			res.setUseExprDt(prchsDtlMore.getUseExprDt());
 		}
-		// 게임캐쉬
-		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-			res.setBonusCashPoint(reservedDataMap.get("bonusPoint")); // 보너스 캐쉬 지급 Point
+		// 캐쉬(게임, 북스 캐쉬)
+		if (StringUtils.contains(prchsDtlMore.getTenantProdGrpCd(),
+				PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_CASH)) {
+			res.setBonusCashPoint(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT)); // 보너스 캐쉬 지급 Point
 			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		}
 		res.setDwldAvailableDayCnt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT)); // 다운로드
@@ -1124,9 +1124,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// 즉시 충전
 			tStoreCashDetailParam = this.purchaseOrderTstoreService.chargeCashImmediately(
 					prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getPrchsId(), prchsDtlMore.getProdAmt().doubleValue(),
-					prchsDtlMore.getUseStartDt(), reservedDataMap.get("bonusPoint"), productGroupCode,
-					Double.parseDouble(reservedDataMap.get("bonusPoint")),
-					reservedDataMap.get("bonusPointUsePeriodUnitCd"), reservedDataMap.get("bonusPointUsePeriod"));
+					prchsDtlMore.getUseStartDt(), reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM), productGroupCode,
+					Double.parseDouble(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT)),
+					reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD), reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD));
 		}
 
 		// -------------------------------------------------------------------------------------------

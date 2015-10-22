@@ -813,7 +813,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append(StringUtils.defaultString(String.valueOf(product.getAutoPrchsPeriodValue()), "0"))
 							.append("&afterAutoPayDt=")
 							.append(StringUtils.defaultString(product.getAfterAutoPayDt()))
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SELLER_MBRNO,product.getSellerMbrNo()))
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SELLER_MBRNO, product.getSellerMbrNo()))
 							.append("&mallCd=")
 							.append(StringUtils.defaultString(product.getMallCd()))
 							.append("&outsdContentsId=")
@@ -837,6 +837,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append("&svcGrpCd=")
 							.append(StringUtils.defaultString(product.getSvcGrpCd()))
 							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID, product.getPromId()))
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_NM, product.getProdNm()))
 							// 이벤트 프로모션 ID
 							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,
 									product.getAcmlMethodCd())) // 프로모션 적립 방법
@@ -964,9 +965,9 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		purchaseReservedData.setAid(reservedDataMap.get("aid"));
 		purchaseReservedData.setCouponCode(reservedDataMap.get("couponCode"));
 		purchaseReservedData.setItemCode(reservedDataMap.get("itemCode"));
-		purchaseReservedData.setBonusPoint(reservedDataMap.get("bonusPoint"));
-		purchaseReservedData.setBonusPointUsePeriodUnitCd(reservedDataMap.get("bonusPointUsePeriodUnitCd"));
-		purchaseReservedData.setBonusPointUsePeriod(reservedDataMap.get("bonusPointUsePeriod"));
+		purchaseReservedData.setBonusPoint(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT));
+		purchaseReservedData.setBonusPointUsePeriodUnitCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD));
+		purchaseReservedData.setBonusPointUsePeriod(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD));
 		purchaseReservedData.setBonusPointUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt"));
 		purchaseReservedData.setAutoPrchsPeriodUnitCd(reservedDataMap.get("autoPrchsPeriodUnitCd"));
 		purchaseReservedData.setAutoPrchsPeriodValue(reservedDataMap.get("autoPrchsPeriodValue"));

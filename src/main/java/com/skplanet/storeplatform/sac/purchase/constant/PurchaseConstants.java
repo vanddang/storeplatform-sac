@@ -397,6 +397,7 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	/** 전시 응답 규격 **/
 	/* 프로모션 관련 */
 	public static final String IF_DISPLAY_RES_PROM_ID = "promId";
+	public static final String IF_DISPLAY_RES_PROM_NM = "promNm";
 	public static final String IF_DISPLAY_RES_ACLMETHOD_CD = "acmlMethodCd"; // 적립 수단 코드 (OR020701-캐쉬,OR020702-게임캐쉬,OR020703-북스캐쉬)
 	public static final String IF_DISPLAY_RES_ACML_DT = "acmlDt";
 	public static final String IF_DISPLAY_RES_PROM_FORCECLOSE_CD = "promForceCloseCd"; // 프로모션 강제 종료 코드
@@ -410,6 +411,11 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String IF_DISPLAY_RES_PRIVATEACML_LIMIT = "privateAcmlLimit"; // 개인 적립 한도
 	public static final String IF_DISPLAY_RES_USE_PERIOD_CNT = "usePeriodCnt"; // 사용일
 	public static final String IF_DISPLAY_RES_DWLD_PERIOD_CNT = "dwldAvailableDayCnt"; // 다운로드 가능일 (현재는 전시의 사용일을 동일하게 세팅하여 사용)
+
+	/* 캐쉬 */
+	public static final String IF_DISPLAY_RES_BNS_CASH_AMT = "bnsCashAmt"; // 보너스 캐쉬
+	public static final String IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD = "bnsUsePeriodUnitCd"; // 보너스 이용기간 단위
+	public static final String IF_DISPLAY_RES_BNS_USE_PERIOD = "bnsUsePeriod"; // 보너스 이용기간 값
 
 	/** 구매 요청 규격 **/
 	public static final String IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID = "chargeMemberId";
