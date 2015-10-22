@@ -1046,18 +1046,18 @@
                                 , TP.PROD_STATUS_CD                                
                                 , DV.HDV_SPRT_YN
                           FROM TB_DP_PROD_RSHP PR
-                            , TB_DP_PROD PD
-                            , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
-                            , TB_DP_MENU_CATEGORY MC
-                            , TB_DP_PROD_DESC DSC
-                            , TB_DP_SUB_CONTENTS SC
-                            , TB_DP_TENANT_PROD TP
-                            , TB_DP_TENANT_PROD_PRICE PRC
-                            , TB_DP_VOD_PROD MP
-                            , TB_DP_SPRT_DEVICE SD
-                            , TB_CM_DEVICE DV
-                            , TB_DP_USE_POLICY UP
-                            , TB_DP_PROD_PREFIX PREFIX
+                             , TB_DP_PROD PD
+                             , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
+                             , TB_DP_MENU_CATEGORY MC
+                             , TB_DP_PROD_DESC DSC
+                             , TB_DP_SUB_CONTENTS SC
+                              , TB_DP_TENANT_PROD TP
+                             , TB_DP_TENANT_PROD_PRICE PRC
+                             , TB_DP_VOD_PROD MP
+                             , TB_DP_SPRT_DEVICE SD
+                             , TB_CM_DEVICE DV
+                             , TB_DP_USE_POLICY UP
+                             , TB_DP_PROD_PREFIX PREFIX
                           WHERE PR.PROD_ID = #{channelId}
                             AND PR.PART_PROD_ID = PD.PROD_ID
                             <if test="orderedBy == 'nonPayment'">
@@ -1133,10 +1133,11 @@
     <select id="getProdUsePolicyInfoV3" parameterType="map" resultType="VodDetail">
         SELECT /* VodDetailMapper.getProdUsePolicyInfoV3, VOD 상품 이용정책 조회, 이석희/I-S Plus, 2015-10-15 */
                T2.*
+            , 'channel' AS PRODUCT_INFO_TYPE 
             , (CASE WHEN PLAY_DWLD_STRM='DP010501' THEN 'dl' WHEN PLAY_DWLD_STRM='DP010502' THEN 'strm' WHEN PLAY_DWLD_STRM='DP010503' THEN 'both' END) AS PLAY_DL_STRM_CD      
             , (CASE WHEN STORE_DWLD_STRM='DP010501' THEN 'dl' WHEN STORE_DWLD_STRM='DP010502' THEN 'strm' WHEN STORE_DWLD_STRM='DP010503' THEN 'both' END) AS STORE_DL_STRM_CD
             , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = PLAY_USE_PERIOD_UNIT_CD AND LANG_CD = T2.LANG_CD) AS PLAY_USE_PERIOD_UNIT_CD_NM
-            , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = STORE_USE_PERIOD_UNIT_CD AND LANG_CD = T2.LANG_CD) AS STORE_USE_PERIOD_UNIT_CD_NM            
+            , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = STORE_USE_PERIOD_UNIT_CD AND LANG_CD = T2.LANG_CD) AS STORE_USE_PERIOD_UNIT_CD_NM                        
           FROM 
                (
                 SELECT T1.CID
@@ -1148,6 +1149,8 @@
                      , MAX(T1.LAST_DEPLOY_DT) AS LAST_DEPLOY_DT
                      , MAX( T1.TENANT_ID ) AS TENANT_ID
                      , MAX( T1.MENU_ID ) AS MENU_ID
+                     , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.PROD_AMT ) ) AS STORE_PROD_AMT
+                     , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.PROD_AMT ) ) AS PLAY_PROD_AMT
                      , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.PROD_ID ) ) AS STORE_PROD_ID
                      , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.PROD_ID ) ) AS PLAY_PROD_ID
                      , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.DRM_YN ) ) AS STORE_DRM_YN
@@ -1173,6 +1176,8 @@
                              , UP.USE_PERIOD_UNIT_CD
                              , UP.USE_PERIOD
                              , CD.LANG_CD
+                             , PRC.PROD_AMT
+                             , PRC.PROD_NET_AMT 
                           FROM TB_DP_PROD_RSHP PR
                              , TB_DP_PROD PD
                              , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
@@ -1228,7 +1233,8 @@
     </select>
     
     <select id="getSubContentsIdList" parameterType="map" resultType="VodDetail">
-	    SELECT SC.SUB_CONTENTS_ID
+	    SELECT /* VodDetailMapper.getSubContentsIdList, SUB_CONTENTS_ID LIST 조회(상품별 SUB_CONTENTS_ID), 이석희/I-S Plus, 2015-10-20 */
+	           SC.SUB_CONTENTS_ID
 		     , PD.PROD_ID      
 		  FROM TB_DP_PROD_RSHP PR
 		     , TB_DP_PROD PD

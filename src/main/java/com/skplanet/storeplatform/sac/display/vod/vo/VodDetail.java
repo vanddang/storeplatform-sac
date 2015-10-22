@@ -314,8 +314,10 @@ public class VodDetail extends CommonInfo {
 	/** HDV 지원여부*/
 	private String hdvSprtYn;
 
-	/* 서브컨텐츠ID */
+	/** 서브컨텐츠ID */
 	private String subContentsId;
+	/** 상품유형 구분(channel, episode) */
+	private String productInfoType;
 	public String getTopMenuId() {
 		return this.topMenuId;
 	}
@@ -1779,6 +1781,20 @@ public class VodDetail extends CommonInfo {
 	 */
 	public void setSubContentsId(String subContentsId) {
 		this.subContentsId = subContentsId;
+	}
+
+	/**
+	 * @return the productInfoType
+	 */
+	public String getProductInfoType() {
+		return productInfoType;
+	}
+
+	/**
+	 * @param productInfoType the productInfoType to set
+	 */
+	public void setProductInfoType(String productInfoType) {
+		this.productInfoType = productInfoType;
 	}
 	
 }
