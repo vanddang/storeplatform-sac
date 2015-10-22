@@ -349,7 +349,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				// 게임캐쉬 정액제 처리. - 게임캐쉬 충전 취소 처리.
 				String resvCol03 = prchsDtlSacParam.getResvCol03();
 				String tCashCash = StringUtils.substringBetween(resvCol03, "CASH=", ";");
-				String tCashPoint = StringUtils.substringBetween(resvCol03, "POINT=", ";");
+				String tCashPoint = StringUtils.substringAfter(resvCol03, "POINT=");
 
 				if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_REFUND,
 						purchaseCancelSacParam.getCancelReqPathCd())) {
