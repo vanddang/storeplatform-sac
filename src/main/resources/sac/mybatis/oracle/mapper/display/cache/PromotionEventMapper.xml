@@ -19,7 +19,8 @@
             END_DT,
             PROM_FORCE_CLOSE_CD,
             PROM_FORCE_CLOSE_DT,
-            TARGET_USER_KIND
+            TARGET_USER_KIND,
+            PAY_METHOD_VDTY_DT
         FROM TB_DP_PROM_POLICY
         WHERE 1=1
           <if test="liveOnly || liveAndReserved">AND PROM_FORCE_CLOSE_CD IS NULL</if>
@@ -54,7 +55,8 @@
                 PROM_FORCE_CLOSE_DT,
                 CASE WHEN TARGET_USER_KIND = #{targetUserAll} THEN '1' ELSE  NVL2(PU.USER_KEY, '1', '2') END AS JOIN_CD,
                 PROM_TYPE_CD,
-                PP.TARGET_USER_KIND
+                PP.TARGET_USER_KIND,
+                PAY_METHOD_VDTY_DT
             FROM TB_DP_PROM_POLICY PP
               LEFT OUTER JOIN TB_DP_PROM_USER PU
                 ON PU.PROM_ID = PP.PROM_ID AND PU.USER_KEY = #{userKey, jdbcType=VARCHAR}
