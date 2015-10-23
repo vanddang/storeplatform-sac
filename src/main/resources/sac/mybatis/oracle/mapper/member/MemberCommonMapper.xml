@@ -176,7 +176,7 @@
           AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
           AND b.use_yn = 'Y'
           AND b.tenant_id = #{tenantId}
-          AND a.clause_id = #{clauseId}
+          AND b.clause_id = #{clauseId}
           AND a.dp_yn='Y'
     </select>
     
