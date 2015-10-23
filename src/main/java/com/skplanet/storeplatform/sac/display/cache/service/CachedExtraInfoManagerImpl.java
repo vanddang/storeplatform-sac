@@ -253,9 +253,6 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
                 if(PromotionEventRedisHelper.checkTargetUsers(client, event, userKey))
                     return event;
             }
-
-            return event;
-
         }   ///// END OF FOR LOOP
 
         return null;
