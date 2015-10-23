@@ -9,13 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponCancelChargeEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponChargeEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
+
+import java.util.List;
 
 /**
  * 
@@ -92,8 +92,6 @@ public interface PurchaseShoppingOrderRepository {
 	/**
 	 * 상품권 취소
 	 * 
-	 * @param couponCode
-	 *            the coupon code
 	 * @param prchsId
 	 *            the prchs id
 	 * @param cancelType

@@ -1995,7 +1995,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
 				try {
-					this.purchaseShoppingOrderRepository.cancelGoods(couponCode, prchsDtlMore.getPrchsId(),
+					this.purchaseShoppingOrderRepository.cancelGoods(prchsDtlMore.getPrchsId(),
 							PurchaseConstants.SHOPPING_CANCEL_CHARGE_SYSTEM);
 				} catch (Exception e) {
 					// 이 때 발생하는 예외는 로깅만.
