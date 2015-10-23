@@ -1078,24 +1078,24 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		}
 
 		// Preview
-		List<Source> sourceList = new ArrayList<Source>();
-		Preview preview = new Preview();
-		if (StringUtils.isNotEmpty(metaInfo.getScSamplUrl())) {
-			Source source = new Source();
-			source.setType(DisplayConstants.DP_PREVIEW_LQ);
-			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
-			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
-			sourceList.add(source);
-		}
-		if (StringUtils.isNotEmpty(metaInfo.getSamplUrl())) {
-			Source source = new Source();
-			source.setType(DisplayConstants.DP_PREVIEW_HQ);
-			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getSamplUrl()));
-			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
-			sourceList.add(source);
-		}
-		preview.setSourceList(sourceList);		
-		authority.setPreview(preview);
+//		List<Source> sourceList = new ArrayList<Source>();
+//		Preview preview = new Preview();
+//		if (StringUtils.isNotEmpty(metaInfo.getScSamplUrl())) {
+//			Source source = new Source();
+//			source.setType(DisplayConstants.DP_PREVIEW_LQ);
+//			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
+//			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
+//			sourceList.add(source);
+//		}
+//		if (StringUtils.isNotEmpty(metaInfo.getSamplUrl())) {
+//			Source source = new Source();
+//			source.setType(DisplayConstants.DP_PREVIEW_HQ);
+//			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getSamplUrl()));
+//			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
+//			sourceList.add(source);
+//		}
+//		preview.setSourceList(sourceList);		
+//		authority.setPreview(preview);
 
 		// -------------------------------------------
 		// Store, Play
