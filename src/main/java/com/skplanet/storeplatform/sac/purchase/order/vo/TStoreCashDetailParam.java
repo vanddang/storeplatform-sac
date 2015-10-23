@@ -41,10 +41,10 @@ public class TStoreCashDetailParam {
 		StringBuffer sb = new StringBuffer();
 		for (TStoreCashDetailSubParam tStoreCashDetailSubParam : tStoreCashDetailSubParamList) {
 			if (StringUtils.equals(tStoreCashDetailSubParam.getCashCls(),
-					PurchaseConstants.TSTORE_CASH_CLASS_POINT)) {
+					PurchaseConstants.TSTORE_CASH_CLASS_CASH)) {
 				sb.append("CASH=").append(tStoreCashDetailSubParam.getIdentifier()).append(PurchaseConstants.SEPARATOR);
 			} else if (StringUtils
-					.equals(tStoreCashDetailSubParam.getCashCls(), PurchaseConstants.TSTORE_CASH_CLASS_CASH)) {
+					.equals(tStoreCashDetailSubParam.getCashCls(), PurchaseConstants.TSTORE_CASH_CLASS_POINT)) {
 				sb.append("POINT=").append(tStoreCashDetailSubParam.getIdentifier()).append(PurchaseConstants.SEPARATOR);
 			}
 		}
