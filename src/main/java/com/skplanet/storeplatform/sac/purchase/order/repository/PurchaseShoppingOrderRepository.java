@@ -9,13 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponCancelChargeEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponChargeEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
-
-import java.util.List;
 
 /**
  * 
@@ -73,35 +73,35 @@ public interface PurchaseShoppingOrderRepository {
 
 	/**
 	 * 상품권 충전
-	 *
+	 * 
 	 * @param prodId
-	 * 		the prod id
+	 *            the prod id
 	 * @param userKey
-	 * 		the user key
+	 *            the user key
 	 * @param prchsId
-	 * 		the prchs id
+	 *            the prchs id
 	 * @param deviceId
-	 * 		the device id
+	 *            the device id
 	 * @param memberId
-	 * 		the member id
-	 *
+	 *            the member id
+	 * 
 	 * @return the coupon charge ec res
 	 */
 	CouponChargeEcRes chargeGoods(String prodId, String userKey, String prchsId, String deviceId, String memberId);
 
 	/**
 	 * 상품권 취소
-	 *
+	 * 
 	 * @param couponCode
-	 * 		the coupon code
+	 *            the coupon code
 	 * @param prchsId
-	 * 		the prchs id
+	 *            the prchs id
 	 * @param cancelType
-	 * 		the cancel type
-	 *
+	 *            the cancel type
+	 * 
 	 * @return the coupon cancel charge ec res
 	 */
-	CouponCancelChargeEcRes cancelGoods(String couponCode, String prchsId, String cancelType);
+	CouponCancelChargeEcRes cancelGoods(String prchsId, String cancelType);
 
 	/**
 	 * 
