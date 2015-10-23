@@ -565,7 +565,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,CHARGECASH,RES,{}",
 				ReflectionToStringBuilder.toString(cashChargeEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
-		if (cashChargeEcRes == null || StringUtils.equals(cashChargeEcRes.getResultCd(),
+		if (StringUtils.equals(cashChargeEcRes.getResultCd(),
 				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
 			throw new StorePlatformException("SAC_PUR_7213", cashChargeEcRes.getResultCd());
 		}

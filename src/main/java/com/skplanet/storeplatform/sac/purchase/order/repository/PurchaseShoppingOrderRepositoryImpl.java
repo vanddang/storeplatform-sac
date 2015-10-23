@@ -142,9 +142,10 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 	 * @return the coupon charge ec res
 	 */
 	@Override
-	public CouponChargeEcRes chargeGoods(String couponCode, String prchsId, String deviceId, String memberId) {
+	public CouponChargeEcRes chargeGoods(String couponCode, String userKey, String prchsId, String deviceId, String memberId) {
 		CouponChargeEcReq couponChargeEcReq = new CouponChargeEcReq();
 		couponChargeEcReq.setCouponCode(couponCode);
+		couponChargeEcReq.setUserKey(userKey);
 		couponChargeEcReq.setPrchsId(prchsId);
 		couponChargeEcReq.setMdn(deviceId);
 		couponChargeEcReq.setMemberID(memberId);

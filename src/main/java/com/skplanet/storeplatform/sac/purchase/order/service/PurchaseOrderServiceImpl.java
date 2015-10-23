@@ -1166,7 +1166,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (prchsDtlMore.getTenantProdGrpCd().startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
 				couponCode = reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_COUPON_CODE);
-				invokeCMSCharge(couponCode, prchsDtlMore.getPrchsId(), reservedDataMap.get("deviceId"),
+				invokeCMSCharge(couponCode, prchsDtlMore.getUseInsdUsermbrNo() ,prchsDtlMore.getPrchsId(), reservedDataMap.get("deviceId"),
 						reservedDataMap.get(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID));
 			} else {
 				shoppingCouponList = invokeCMSStore(reservedDataMap, prchsDtlMore, prchsDtlMoreList,
@@ -1493,8 +1493,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		return prchsDtlMoreList;
 	}
 
-	private void invokeCMSCharge(String couponCode, String prchsId, String MDN, String chargeMemeberId) {
-		CouponChargeEcRes couponChargeEcRes = this.purchaseShoppingOrderRepository.chargeGoods(couponCode, prchsId,
+	private void invokeCMSCharge(String couponCode, String userKey, String prchsId, String MDN, String chargeMemeberId) {
+		CouponChargeEcRes couponChargeEcRes = this.purchaseShoppingOrderRepository.chargeGoods(couponCode, userKey, prchsId,
 				MDN, chargeMemeberId);
 		if (!StringUtils.equals(chargeMemeberId, couponChargeEcRes.getMemberID()))
 			throw new StorePlatformException("SAC_PUR_1812", chargeMemeberId, couponChargeEcRes.getMemberID());

@@ -76,6 +76,8 @@ public interface PurchaseShoppingOrderRepository {
 	 *
 	 * @param prodId
 	 * 		the prod id
+	 * @param userKey
+	 * 		the user key
 	 * @param prchsId
 	 * 		the prchs id
 	 * @param deviceId
@@ -85,7 +87,7 @@ public interface PurchaseShoppingOrderRepository {
 	 *
 	 * @return the coupon charge ec res
 	 */
-	CouponChargeEcRes chargeGoods(String prodId, String prchsId, String deviceId, String memberId);
+	CouponChargeEcRes chargeGoods(String prodId, String userKey, String prchsId, String deviceId, String memberId);
 
 	/**
 	 * 상품권 취소
