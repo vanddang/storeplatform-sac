@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
+import com.skplanet.storeplatform.external.client.shopping.vo.*;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -20,21 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishDetailEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponCancelChargeEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponCancelChargeEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponChargeEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponChargeEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -162,7 +149,7 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		couponChargeEcReq.setUserKey(userKey);
 		couponChargeEcReq.setPrchsId(prchsId);
 		couponChargeEcReq.setMdn(deviceId);
-		couponChargeEcReq.setMemberID(memberId);
+		couponChargeEcReq.setMemberId(memberId);
 
 		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CHARGE,REQ,{}",
 				ReflectionToStringBuilder.toString(couponChargeEcReq, ToStringStyle.SHORT_PREFIX_STYLE));

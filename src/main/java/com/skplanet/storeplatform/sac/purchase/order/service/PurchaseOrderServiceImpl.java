@@ -1493,8 +1493,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private void invokeCMSCharge(String couponCode, String userKey, String prchsId, String MDN, String chargeMemeberId) {
 		CouponChargeEcRes couponChargeEcRes = this.purchaseShoppingOrderRepository.chargeGoods(couponCode, userKey, prchsId,
 				MDN, chargeMemeberId);
-		if (!StringUtils.equals(chargeMemeberId, couponChargeEcRes.getMemberID()))
-			throw new StorePlatformException("SAC_PUR_1812", chargeMemeberId, couponChargeEcRes.getMemberID());
+		if (!StringUtils.equals(chargeMemeberId, couponChargeEcRes.getMemberId()))
+			throw new StorePlatformException("SAC_PUR_1812", chargeMemeberId, couponChargeEcRes.getMemberId());
 	}
 
 	private List<ShoppingCouponPublishInfo> invokeCMSStore(Map<String, String> reservedDataMap,
