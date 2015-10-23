@@ -33,6 +33,7 @@ public class Authority extends CommonInfo implements Serializable {
 	private List<Play> playList = null; // 대여상품 List
 	private Store store; // 소장 상품 정보
 	private Play play; // 대여 상품 정보
+	private String plus19Yn; // 19+ 상품 Yn
 	
 	/**
 	 * @return the allow
@@ -118,4 +119,17 @@ public class Authority extends CommonInfo implements Serializable {
 	public void setPlay(Play play) {
 		this.play = play;
 	}
+	/**
+	 * @return the plus19Yn
+	 */
+	public String getPlus19Yn() {
+		return plus19Yn;
+	}
+	/**
+	 * @param plus19Yn the plus19Yn to set
+	 */
+	public void setPlus19Yn(String plus19Yn) {
+		this.plus19Yn = plus19Yn;
+	}
+	
 }
