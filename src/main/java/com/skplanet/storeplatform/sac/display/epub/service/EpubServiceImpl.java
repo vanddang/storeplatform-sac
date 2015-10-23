@@ -409,6 +409,12 @@ public class EpubServiceImpl implements EpubService {
      */
     private ExistenceListRes getExistenceScReses(String tenantId, String userKey, String deviceKey, List<EpubDetail> subProductList) {
 
+    	if(StringUtils.isNotBlank(userKey) || StringUtils.isNotBlank(deviceKey)) {
+            ExistenceListRes res = new ExistenceListRes();
+            res.setExistenceListRes(new ArrayList<ExistenceRes>());
+    		return res;
+    	}    	
+    	
         ExistenceListRes res = null;
         if(subProductList != null && subProductList.size() > 0) {
             //기구매 체크
