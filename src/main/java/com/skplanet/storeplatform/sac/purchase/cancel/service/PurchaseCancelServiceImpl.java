@@ -390,7 +390,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 				String resvCol03 = prchsDtlSacParam.getResvCol03();
 				String tCashCash = StringUtils.substringBetween(resvCol03, "CASH=", ";");
-				String tCashPoint = StringUtils.substringBetween(resvCol03, "POINT=", ";");
+				String tCashPoint = StringUtils.substringAfter(resvCol03, "POINT=");
+				StringUtils.substringBetween(resvCol03, "POINT=", ";");
 
 				TStoreCashChargeCancelEcReq tStoreCashChargeCancelEcReq = new TStoreCashChargeCancelEcReq();
 				List<TStoreCashChargeCancelDetailEcReq> cashList = new ArrayList<TStoreCashChargeCancelDetailEcReq>();
