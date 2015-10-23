@@ -62,6 +62,7 @@
                 ON PU.PROM_ID = PP.PROM_ID AND PU.USER_KEY = #{userKey, jdbcType=VARCHAR}
             WHERE 1=1
               AND sysdate between START_DT AND END_DT
+              AND PROM_FORCE_CLOSE_CD IS NULL
               AND PP.TENANT_ID = #{tenantId}
               AND PP.PROM_TYPE_VALUE IN
               <foreach collection="keyList" separator="," open="(" close=")" item="v">#{v, jdbcType=VARCHAR}</foreach>
