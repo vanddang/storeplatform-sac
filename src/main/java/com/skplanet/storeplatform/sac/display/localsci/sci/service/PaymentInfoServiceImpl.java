@@ -351,6 +351,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             paymentInfo.setAcmlMethodCd(event.getAcmlMethodCd());
             paymentInfo.setPrivateAcmlLimit(event.getAcmlLimt());
             paymentInfo.setPromForceCloseCd(event.getPromForceCloseCd());
+            paymentInfo.setPayMethodVdtyDt(event.getPayMethodVdtyDt());
             if(Strings.isNullOrEmpty(event.getPromForceCloseCd()))
                 paymentInfo.setPromEndDt(DateUtils.format(event.getEndDt()));
             else
