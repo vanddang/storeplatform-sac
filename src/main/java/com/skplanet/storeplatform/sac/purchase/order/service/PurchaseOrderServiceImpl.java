@@ -814,10 +814,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			if (StringUtils.contains(cdMaxAmtRateNoDouble, PurchaseConstants.PAYPLANET_PAYMENT_METHOD_BOOKS_CASH_31
 					+ ":0:0") == false) {
 				ArrayList<String> productGroupList = new ArrayList<String>();
-				if (!StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-						PurchaseCDConstants.TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE))
-					productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH); // 북스 캐시 상품 구매시에는 잔여
-																								  // 포인트가 내려가지 않는다.
+				productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH);
 				productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH);
 				tstoreCashValance = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(payUserKey,
 						productGroupList);
