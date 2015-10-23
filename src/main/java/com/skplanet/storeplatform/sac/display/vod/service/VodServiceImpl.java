@@ -775,7 +775,7 @@ public class VodServiceImpl implements VodService {
 	private Authority mapAuthority(VodDetail mapperVO, List<VodDetail> vodDetailList, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
 		Authority authority = new Authority();
 		authority.setGrade(mapperVO.getProdGrdCd());
-
+		authority.setPlus19Yn(mapperVO.getPlus19Yn());
 		// 영화,TV방송에 대한 allow 설정
 		if (StringUtils.equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID, mapperVO.getTopMenuId())
 				|| StringUtils.equals(DisplayConstants.DP_TV_TOP_MENU_ID, mapperVO.getTopMenuId())
@@ -1814,11 +1814,11 @@ public class VodServiceImpl implements VodService {
 	private String getSalesStatus(VodDetail mapperVO, String userKey, String deviceKey) {
 		String salesStatus = null;
 		// 기구매 체크
-		if (!StringUtils.equals(mapperVO.getProdStatusCd(), DisplayConstants.DP_SALE_STAT_ING)) {
+		if (!StringUtils.equals(mapperVO.getPlayProdStatusCd(), DisplayConstants.DP_SALE_STAT_ING)) {
 			// 04, 09, 10의 경우 구매이력이 없으면 상품 없음을 표시한다.
-			if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getProdStatusCd())
-					|| DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getProdStatusCd())
-					|| DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(mapperVO.getProdStatusCd())) {
+			if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getPlayProdStatusCd())
+					|| DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getPlayProdStatusCd())
+					|| DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(mapperVO.getPlayProdStatusCd())) {
 				if (StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
 				} else
 					salesStatus = "restricted";
