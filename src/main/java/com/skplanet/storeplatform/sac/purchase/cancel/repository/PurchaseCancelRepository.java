@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponCancelChargeEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.PayCancelResult;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
@@ -301,14 +300,4 @@ public interface PurchaseCancelRepository {
 	 */
 	public boolean useSpecialCoupon(String tenantId, String prchsId);
 
-	/**
-	 * <pre>
-	 * 상품권 취소 요청.
-	 * </pre>
-	 * 
-	 * @param prchsId
-	 * @param cancelType
-	 * @return
-	 */
-	public CouponCancelChargeEcRes cancelGoods(String prchsId, String cancelType);
 }

@@ -30,8 +30,6 @@ import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcReq;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcResPaymethod;
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponCancelChargeEcReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponCancelChargeEcRes;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStorePaymentSCI;
 import com.skplanet.storeplatform.external.client.tstore.vo.Pay;
@@ -1105,11 +1103,4 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		return this.purchaseCancelSCI.useSpecialCoupon(req);
 	}
 
-	@Override
-	public CouponCancelChargeEcRes cancelGoods(String prchsId, String cancelType) {
-		CouponCancelChargeEcReq couponCancelChargeEcReq = new CouponCancelChargeEcReq();
-		couponCancelChargeEcReq.setPrchsId(prchsId);
-		couponCancelChargeEcReq.setCancelType(cancelType);
-		return this.shoppingSCI.cancelGoods(couponCancelChargeEcReq);
-	}
 }

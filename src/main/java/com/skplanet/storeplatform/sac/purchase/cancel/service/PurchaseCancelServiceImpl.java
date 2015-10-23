@@ -74,6 +74,7 @@ import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShoppingOrderRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderMakeDataService;
 
@@ -117,6 +118,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	private PurchaseTransactionSCI purchaseTransactionSCI;
 	@Autowired
 	private PurchaseOrderMakeDataService purchaseOrderMakeDataService;
+	@Autowired
+	private PurchaseShoppingOrderRepository purchaseShoppingOrderRepository;
 
 	@Override
 	public PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam) {
@@ -465,7 +468,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				}
 
 				// 상품권 충전 취소 처리
-				this.purchaseCancelRepository.cancelGoods(purchaseCancelDetailSacParam.getPrchsId(), cancelType);
+				this.purchaseShoppingOrderRepository.cancelGoods(purchaseCancelDetailSacParam.getPrchsId(), cancelType);
 			} else {
 
 				// 쇼핑쿠폰 취소 처리
