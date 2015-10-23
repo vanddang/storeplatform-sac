@@ -529,9 +529,10 @@ public class EpubServiceImpl implements EpubService {
         //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(mapperVO.getTenantId(), mapperVO.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
+
         //Tstore멤버십 적립율 정보
-        if (param.get("userKey") != null && StringUtils.isNotEmpty((String)param.get("userKey"))) {
-        	String userKey = (String)param.get("userKey");
+        String userKey = param.get("userKey") != null ? (String)param.get("userKey") : null;
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(userKey)) {
         	//회원등급 조회
         	GradeInfoSac userGradeInfo = commonService.getUserGrade(userKey);
         	if(userGradeInfo != null) {
@@ -542,7 +543,7 @@ public class EpubServiceImpl implements EpubService {
                     prodAmt = mapperVO.getStoreProdAmt();
                 else if(mapperVO.getPlayProdAmt() != null && mapperVO.getPlayProdAmt() > 0)
                      prodAmt = mapperVO.getPlayProdAmt();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(mapperVO.getTenantId(), mapperVO.getMenuId(), mapperVO.getProdId(), prodAmt);
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(mapperVO.getTenantId(), mapperVO.getMenuId(), mapperVO.getProdId(), userKey);
 	        	mileageInfo = benefitService.checkFreeProduct(mileageInfo, prodAmt);
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}

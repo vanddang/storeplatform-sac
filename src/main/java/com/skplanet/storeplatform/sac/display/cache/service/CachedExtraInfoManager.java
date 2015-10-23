@@ -53,15 +53,4 @@ public interface CachedExtraInfoManager {
      * @return 응답
      */
     PromotionEvent getPromotionEvent(GetPromotionEventParam param);
-
-    /**
-     * DB에서 프로모션 이벤트를 조회한다.
-     * @param tenantId 테넌트ID
-     * @param keys 이벤트 조회 키
-     * @param liveOnly 현재 시점에서 라이브 상태 이벤트만 조회하려는 경우
-     * @return
-     */
-    RawPromotionEvent getRawPromotionEvent(String tenantId, String[] keys, boolean liveOnly);
-
-    RawPromotionEvent getRawPromotionEvent(String tenantId, String chnlId, String menuId, boolean liveOnly);
 }

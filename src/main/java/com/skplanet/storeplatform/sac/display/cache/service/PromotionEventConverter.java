@@ -51,6 +51,7 @@ public class PromotionEventConverter {
         event.setEndDt(rawEvent.getEndDt());
         event.setTargetId(rawEvent.getPromTypeValue());
         event.setPrvAcmlLimt(rawEvent.getAcmlLimt());
+        event.setUserTargetTp(rawEvent.getTargetUserKind());
 
         return event;
     }

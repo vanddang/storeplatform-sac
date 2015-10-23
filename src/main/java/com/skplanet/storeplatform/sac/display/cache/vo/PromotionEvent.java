@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import org.springframework.data.annotation.Transient;
 
 import java.text.SimpleDateFormat;
@@ -20,6 +21,8 @@ import java.util.Date;
  * <p>
  * PromotionEvent
  * Redis에 저장되는 형태
+ * [98dc] 초기
+ * [cf17] add userTargetTp
  * </p>
  * Updated on : 2015. 07. 15 Updated by : 정희원, SK 플래닛.
  */
@@ -36,7 +39,8 @@ public class PromotionEvent {
     private Date startDt;
     private Date endDt;
 
-    private String targetId;
+    private String targetId;    // chnlId, menuId, topMenuId
+    private String userTargetTp;
 
     public Integer getPromId() {
         return promId;
@@ -118,6 +122,19 @@ public class PromotionEvent {
         this.prvAcmlLimt = prvAcmlLimt;
     }
 
+    public String getUserTargetTp() {
+        return userTargetTp;
+    }
+
+    public void setUserTargetTp(String userTargetTp) {
+        this.userTargetTp = userTargetTp;
+    }
+
+    @Transient
+    public boolean isNeedsUserTargetSync() {
+        return !StringUtils.equals(this.userTargetTp, DisplayConstants.PROM_TARGET_USER_ALL);
+    }
+
     @Transient
     public String getTargetTp() {
         return StringUtils.defaultString(targetId).startsWith("DP") ? "DP01160102" : "DP01160101";
@@ -149,6 +166,7 @@ public class PromotionEvent {
         if (prvAcmlLimt != null ? !prvAcmlLimt.equals(event.prvAcmlLimt) : event.prvAcmlLimt != null) return false;
         if (!startDt.equals(event.startDt)) return false;
         if (!endDt.equals(event.endDt)) return false;
+        if (!userTargetTp.equals(event.userTargetTp)) return false;
         return targetId.equals(event.targetId);
 
     }
@@ -165,6 +183,7 @@ public class PromotionEvent {
         result = 31 * result + startDt.hashCode();
         result = 31 * result + endDt.hashCode();
         result = 31 * result + targetId.hashCode();
+        result = 31 * result + userTargetTp.hashCode();
         return result;
     }
 }

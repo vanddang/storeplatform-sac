@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * <p>
  * PromotionEventDataService
+ * 프로모션 이벤트 처리에 필요한 DB Access를 담당합니다
  * </p>
  * Updated on : 2015. 10. 22 Updated by : 정희원, SK 플래닛.
  */
@@ -59,4 +60,5 @@ public interface PromotionEventDataService {
     List<RawPromotionEvent> getRawEventList(String tenantId, List<String> keys, int filterCode);
 
     List<RawPromotionEvent> getRawEventList(String tenantId, List<Integer> promIdList);
+
 }

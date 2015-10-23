@@ -98,7 +98,7 @@ public class MusicServiceImpl implements MusicService {
         	if(userGradeInfo != null) {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(param.getTenantId(), musicDetail.getMenuId(), param.getChannelId(), musicDetail.getProdAmt());
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(param.getTenantId(), musicDetail.getMenuId(), param.getChannelId(), param.getUserKey());
 	        	mileageInfo = benefitService.checkFreeProduct(mileageInfo, musicDetail.getProdAmt());
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}

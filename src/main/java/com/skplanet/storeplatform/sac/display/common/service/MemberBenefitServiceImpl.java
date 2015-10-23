@@ -84,10 +84,35 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
         return mileageInfo;
     }
 
+    @Override
+    public MileageInfo getMileageInfo(String tenantId, String menuId, String chnlId, String userKey) {
+        if (StringUtils.isEmpty(tenantId) || StringUtils.isEmpty(menuId) || StringUtils.isEmpty(chnlId))
+            return null;
+
+        MileageInfo mileageInfo = new MileageInfo();
+
+        if(!checkAvailable())
+            return mileageInfo;
+
+        GetPromotionEventParam param = new GetPromotionEventParam(tenantId, menuId, chnlId, userKey);
+        param.setUseDb(true);   // FIXME 2015-10-23 타게팅 기능이 목록 API까지 확산되기 전까지는 DB로 조회하도록 함
+        PromotionEvent event = cachedExtraInfoManager.getPromotionEvent(param);
+
+        if (event != null) {
+            mileageInfo = new MileageInfo();
+            mileageInfo.setPolicyTargetCd(event.getTargetTp());
+            mileageInfo.setRateLv1(event.getRateGrd1());
+            mileageInfo.setRateLv2(event.getRateGrd2());
+            mileageInfo.setRateLv3(event.getRateGrd3());
+        }
+
+        return mileageInfo;
+    }
+
     /* (non-Javadoc)
-         * @see com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService#checkFreeProduct(com.skplanet.storeplatform.sac.display.common.vo.MileageInfo)
-         * 상세 조회 API에서 참조
-         */
+             * @see com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService#checkFreeProduct(com.skplanet.storeplatform.sac.display.common.vo.MileageInfo)
+             * 상세 조회 API에서 참조
+             */
 	@Override
 	public MileageInfo checkFreeProduct(MileageInfo mileageInfo, Integer prodAmt) {
 		if(mileageInfo != null) {

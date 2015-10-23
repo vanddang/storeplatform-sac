@@ -98,9 +98,11 @@ public class AppServiceImpl implements AppService {
 	@Override
 	public AppDetailRes searchAppDetail(AppDetailParam param) {
 
+        String userKey = param.getUserKey();
+
         Map<String, Object> req = Maps.newHashMap();
         req.put("deviceModelCd", param.getDeviceModelCd());
-        req.put("userKey", param.getUserKey());
+        req.put("userKey", userKey);
         req.put("channelId", param.getChannelId());
         req.put("langCd", param.getLangCd());
         req.put("tenantId", param.getTenantId());
@@ -118,8 +120,8 @@ public class AppServiceImpl implements AppService {
             if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(appDetail.getProdStatusCd()) ||
                     DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(appDetail.getProdStatusCd()) ||
                     DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(appDetail.getProdStatusCd())) {
-                if (!StringUtils.isEmpty(param.getUserKey()) && !StringUtils.isEmpty(param.getDeviceKey()) &&
-                        !commonService.checkPurchase(param.getTenantId(), param.getUserKey(), param.getDeviceKey(), param.getChannelId())) {
+                if (!StringUtils.isEmpty(userKey) && !StringUtils.isEmpty(param.getDeviceKey()) &&
+                        !commonService.checkPurchase(param.getTenantId(), userKey, param.getDeviceKey(), param.getChannelId())) {
                     return null;
                 } else
                     res.getProduct().setUserPurStatus(DisplayConstants.DP_PURSTAT_RESTRICTED);
@@ -127,7 +129,7 @@ public class AppServiceImpl implements AppService {
                 res.getProduct().setUserPurStatus(DisplayConstants.DP_PURSTAT_RESTRICTED);
         }
 
-        if (!StringUtils.isEmpty(param.getUserKey()) && !StringUtils.isEmpty(param.getDeviceKey())) {
+        if (!StringUtils.isEmpty(userKey) && !StringUtils.isEmpty(param.getDeviceKey())) {
             res.getProduct().setUserPurStatus(DisplayConstants.DP_PURSTAT_AVAILABLE);
         }
 
@@ -172,14 +174,14 @@ public class AppServiceImpl implements AppService {
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), appDetail.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
         //Tstore멤버십 적립율 정보
-        if (StringUtils.isNotEmpty(param.getUserKey())) {
+        if (StringUtils.isNotEmpty(userKey)) {
             //회원등급 조회
-            GradeInfoSac userGradeInfo = commonService.getUserGrade(param.getUserKey());
+            GradeInfoSac userGradeInfo = commonService.getUserGrade(userKey);
             if (userGradeInfo != null) {
                 if (pointList == null) pointList = new ArrayList<Point>();
                 String userGrade = userGradeInfo.getUserGradeCd();
                 Integer prodAmt = appDetail.getProdAmt();
-                MileageInfo mileageInfo = benefitService.getMileageInfo(param.getTenantId(), appDetail.getMenuId(), param.getChannelId(), prodAmt);
+                MileageInfo mileageInfo = benefitService.getMileageInfo(param.getTenantId(), appDetail.getMenuId(), param.getChannelId(), userKey);
                 //benefitService.checkFreeProduct(mileageInfo, prodAmt); TODO 대체
 
                 //무료인 경우 예외처리

@@ -47,6 +47,11 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
     private PromotionEventDataService eventDataService;
 
     @Override
+    public SyncPromotionEventResult syncPromotionEvent(String tenantId, String key) {
+        return syncPromotionEvent(tenantId, key, false);
+    }
+
+    @Override
     public SyncPromotionEventResult syncPromotionEvent(final String tenantId, final String key, final boolean forceUpdate) {
 
         if(connectionFactory == null)
@@ -87,10 +92,13 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
                     continue;   // for inner loop
                 }
 
+                // 가장 처음 조회되는 데이터를 incommingEvent로 지정
                 if(incommingEvent == null)
                     incommingEvent = event;
 
                 PromotionEventRedisHelper.addReservedEvent(client, events.getKey(), event);
+                if(event.isNeedsUserTargetSync())
+                    storeTargetUsers(client, incommingEvent);
 
                 ++updtCnt;
             }
@@ -98,6 +106,7 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
 
             // 유효한 event가 없는 경우
             if(incommingEvent == null) {
+                // TODO 타겟 사용자 정보 제거
                 PromotionEventRedisHelper.removeLiveEvent(client, events.getKey());
                 continue; // for outer loop
             }
@@ -105,6 +114,9 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
             // 강제 업데이트 모드인 경우
             if(forceUpdate) {
                 PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEvent);
+                if(incommingEvent.isNeedsUserTargetSync())
+                    storeTargetUsers(client, incommingEvent);
+
                 continue; // for outer loop
             }
 
@@ -112,8 +124,11 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
             if(!PromotionEventRedisHelper.initLiveEvent(client, events.getKey(), incommingEvent)) {
                 PromotionEvent currentEvent = PromotionEventRedisHelper.getLiveEvent(client, events.getKey());
 
-                if(!incommingEvent.equals(currentEvent))
+                if(!incommingEvent.equals(currentEvent)) {
                     PromotionEventRedisHelper.saveLiveEvent(client, events.getKey(), incommingEvent);
+                    if(incommingEvent.isNeedsUserTargetSync())
+                        storeTargetUsers(client, incommingEvent);
+                }
             }
 
             PromotionEventRedisHelper.addEventSet(client, events.getKey());
@@ -128,8 +143,6 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
 
         stopwatch.stop();
         logger.debug("Event sync processing time = {}", stopwatch);
-
-        checkSyncedData();
 
         return new SyncPromotionEventResult(updtCnt, cntLiveRemoved, errorPromId, liveMap);
     }
@@ -153,13 +166,17 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
         return onlineEventMap;
     }
 
-    @Override
-    public SyncPromotionEventResult syncPromotionEvent(String tenantId, String key) {
-        return syncPromotionEvent(tenantId, key, false);
+    private void storeTargetUsers(Plandasj client, PromotionEvent event) {
+        int promId = event.getPromId();
+
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        PromotionEventRedisHelper.removeTargetUsers(client, event);
+
+        List<String> userList = eventDataService.getPromotionUserList(promId);
+        logger.debug("Fetch target users from DB #{}({}) - {} ms", promId, userList.size(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
+        if(userList.size() > 0)
+            PromotionEventRedisHelper.saveTargetUsers(client, event, userList);
+        logger.debug("Target users are stored to mem #{} - {} ms", promId, stopwatch.stop());
     }
 
-    /**
-     * TODO 동기화 처리된 데이터의 유효성 검증
-     */
-    private void checkSyncedData() {}
 }

@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.google.common.base.Objects;
+import com.skplanet.storeplatform.sac.common.support.redis.ObjectHashGenerator;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetPromotionEventParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
@@ -140,6 +141,11 @@ public class PromotionEventTest {
 
             dateTime = dateTime.plusMillis(500);
         }
+    }
+
+    @Test
+    public void test03() {
+        System.out.println(ObjectHashGenerator.hash(PromotionEvent.class));
     }
 
 

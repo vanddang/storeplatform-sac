@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.common.util.PartialProcessor;
 import com.skplanet.storeplatform.sac.common.util.PartialProcessorHandler;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,6 @@ import java.util.Map;
 @Service
 public class PromotionEventDataServiceImpl implements PromotionEventDataService {
 
-    public static final String TARGET_USER_ALL = "DP01400001";
     @Autowired
     @Qualifier("sac")
     private CommonDAO commonDAO;
@@ -42,7 +42,7 @@ public class PromotionEventDataServiceImpl implements PromotionEventDataService 
 
         Map<String, Object> req = Maps.newHashMap();
         req.put("tenantId", tenantId);
-        req.put("targetUserAll", TARGET_USER_ALL);
+        req.put("targetUserAll", DisplayConstants.PROM_TARGET_USER_ALL);
         req.put("userKey", userKey);
         req.put("keyList", PromotionEventUtils.makeKeys(chnlId, menuId));
 
@@ -103,4 +103,5 @@ public class PromotionEventDataServiceImpl implements PromotionEventDataService 
 
         return res;
     }
+
 }

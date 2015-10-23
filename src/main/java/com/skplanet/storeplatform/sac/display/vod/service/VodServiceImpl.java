@@ -554,7 +554,7 @@ public class VodServiceImpl implements VodService {
 				else if (mapperVO.getPlayProdAmt() != null && mapperVO.getPlayProdAmt() > 0)
 					prodAmt = mapperVO.getPlayProdAmt();
 
-				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(), mapperVO.getMenuId(), req.getChannelId(), prodAmt);
+				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(), mapperVO.getMenuId(), req.getChannelId(), req.getUserKey());
 				mileageInfo = this.benefitService.checkFreeProduct(mileageInfo, prodAmt);
 				pointList.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
 			}
@@ -637,7 +637,7 @@ public class VodServiceImpl implements VodService {
 				else if (mapperVO.getPlayProdAmt() != null && mapperVO.getPlayProdAmt() > 0)
 					prodAmt = mapperVO.getPlayProdAmt();
 
-				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(), mapperVO.getMenuId(), req.getChannelId(), prodAmt);
+				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(), mapperVO.getMenuId(), req.getChannelId(), req.getUserKey());
 				mileageInfo = this.benefitService.checkFreeProduct(mileageInfo, prodAmt);
 				pointList.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
 			}

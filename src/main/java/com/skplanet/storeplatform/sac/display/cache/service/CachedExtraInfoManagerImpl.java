@@ -189,19 +189,84 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
                 });
     }
 
+    ////////// 프로모션 이벤트에 대한 부분은 차후 독립 예정 //////////
     @Override
     public PromotionEvent getPromotionEvent(GetPromotionEventParam param) {
 
         // 조회할 대상들의 키를 생성한다.
-        String tenantId = param.getTenantId();
+        String tenantId = param.getTenantId(),
+                userKey = param.getUserKey();
 
         final String[] keys = PromotionEventUtils.makeKeys(param.getChnlId(), param.getMenuId());
 
-        if(featureSwitch.get(FeatureKey.PROMO_EVENT_FORCE_DB) || connectionFactory == null) {
-            RawPromotionEvent rawPromotionEvent = getRawPromotionEvent(tenantId, keys, true);
+        if(featureSwitch.get(FeatureKey.PROMO_EVENT_FORCE_DB) || param.isUseDb() || connectionFactory == null) {
+            RawPromotionEvent rawPromotionEvent = eventDataService.getLivePromotionEventForUser(tenantId, param.getChnlId(), param.getMenuId(), userKey);
             return PromotionEventConverter.convert(rawPromotionEvent);
         }
 
+        Date now = getNow(param);
+
+        Plandasj client = connectionFactory.getConnectionPool().getClient();
+
+        List<byte[]> liveEvents = PromotionEventRedisHelper.getLiveEventDatas(client, tenantId, keys);
+
+        // 조회된 liveEvent 순서대로 유효한 이벤트 정보를 찾아 응답한다.
+        for (int i = 0; i < liveEvents.size(); ++i) {
+
+            // PromotionEvent 변경 후에는 먼저 동기화가 수행되어야 한다.
+            // FIXME 기존 데이터도 사용이 가능 해야 한다. "해시코드:키" 를 이용하는 방법에 문제가 있음!
+            // 데이터 조회 후 해시코드를 확인하여 다른 경우 재 동기화 하는 방법을 활용
+
+            byte[] data = liveEvents.get(i);
+            if(data == null)
+                continue;
+
+            String key = keys[i];
+            PromotionEvent event = PromotionEventConverter.convert(data);
+
+            // 정상적인 데이터가 아닌 경우 다시 동기화 처리를 수행한다
+            if(event == null) {
+                SyncPromotionEventResult eventResult = promotionEventSyncService.syncPromotionEvent(tenantId, key);
+                if(eventResult.getUpdtCnt() > 0) {
+                    event = eventResult.getLiveEventMap().get(tenantId + ":" + key);
+                }
+                else
+                    continue;
+            }
+
+            // now > liveEvent.endDt 이면 다음 이벤트를 설정
+            if (now.compareTo(event.getEndDt()) > 0) {
+                event = findNextIncommingEvent(client, tenantId, key, event, now);
+            }
+
+            ///// 유효한 이벤트인지 판단 /////
+            if(event == null)
+                continue;
+
+            if(!event.isLiveFor(now))
+                continue;
+
+            if(event.getUserTargetTp().equals("DP01400001"))
+                return event;
+
+            if(StringUtils.isNotEmpty(userKey)) {
+                if(PromotionEventRedisHelper.checkTargetUsers(client, event, userKey))
+                    return event;
+            }
+
+            return event;
+
+        }   ///// END OF FOR LOOP
+
+        return null;
+    }
+
+    /**
+     * 현재 시간을 구한다.
+     * @param param
+     * @return
+     */
+    private Date getNow(GetPromotionEventParam param) {
         Date now = param.getNowDt();
         if(now == null) {
             if (featureSwitch.get(FeatureKey.PROMO_EVENT_USE_SYSTIME))
@@ -212,91 +277,45 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
         else
             now = DateUtils.truncate(now, Calendar.MILLISECOND);
 
-        Plandasj client = connectionFactory.getConnectionPool().getClient();
+        return now;
+    }
 
-        List<byte[]> liveEvents = PromotionEventRedisHelper.getLiveEventDatas(client, tenantId, keys);
+    private PromotionEvent findNextIncommingEvent(Plandasj client, String tenantId, String key, PromotionEvent event, Date now) {
+        // TODO jitter에 의한 의도하지 않은 이벤트 transition 처리 방안 => 임계치를 적용하여 처리함
+        // TODO eventTransition:[beforePromId]:[afterPromId] => numeric
 
-        // 조회된 liveEvent 순서대로 유효한 이벤트 정보를 찾아 응답한다.
-        for (int i = 0; i < liveEvents.size(); ++i) {
+        String prevDatetimeKey = event.makeDatetimeKey(),
+                       fullKey = tenantId + ":" + key;
 
-            byte[] data = liveEvents.get(i);
-            String key = keys[i];
+        PromotionEvent incommingEvent = PromotionEventRedisHelper.getEventFromReserved(client, tenantId, key, now);
 
-            // 해당하는 이벤트가 없는 경우
-            if(data == null)
-                continue;
+        if (incommingEvent != null) {
 
-            // 이벤트는 등록되었지만 liveEvent에 아직 적재되지 않은 경우
-            String fullKey = tenantId + ":" + key;
-            PromotionEvent event = PromotionEventConverter.convert(data);
-
-            if(event == null) {
-                SyncPromotionEventResult eventResult = promotionEventSyncService.syncPromotionEvent(tenantId, key);
-                if(eventResult.getUpdtCnt() > 0) {
-                    event = eventResult.getLiveEventMap().get(fullKey);
+            if(featureSwitch.get(FeatureKey.PROMO_EVENT_SKIP_TRANSITION_THRESHOLD))
+                PromotionEventRedisHelper.saveLiveEvent(client, fullKey, incommingEvent);
+            else {
+                if (PromotionEventRedisHelper.tryEventTransition(client, fullKey, prevDatetimeKey, event.makeDatetimeKey()) >= TRANSITION_THRESHOLD) {
+                    PromotionEventRedisHelper.resetEventTransition(client, fullKey, prevDatetimeKey, event.makeDatetimeKey());
+                    PromotionEventRedisHelper.saveLiveEvent(client, fullKey, incommingEvent);
                 }
-                else
-                    continue;
             }
 
-            if (now.compareTo(event.getEndDt()) <= 0) {
-                return event.isLiveFor(now) ? event : null;
-            } else {
-                // TODO jitter에 의한 의도하지 않은 이벤트 transition 처리 방안 => 임계치를 적용하여 처리함
-                // TODO eventTransition:[beforePromId]:[afterPromId] => numeric
-                String prevDatetimeKey = event.makeDatetimeKey();
-                PromotionEvent incommingEvent = PromotionEventRedisHelper.getEventFromReserved(client, tenantId, key, now);
+            return incommingEvent;
+        }
 
-                if (incommingEvent != null) {
+        // 더이상의 이벤트가 없는 경우
+        PromotionEventRedisHelper.addEventEndLog(client, fullKey, now);
 
-                    if(featureSwitch.get(FeatureKey.PROMO_EVENT_SKIP_TRANSITION_THRESHOLD))
-                        PromotionEventRedisHelper.saveLiveEvent(client, fullKey, incommingEvent);
-                    else {
-                        if (PromotionEventRedisHelper.tryEventTransition(client, fullKey, prevDatetimeKey, event.makeDatetimeKey()) >= TRANSITION_THRESHOLD) {
-                            PromotionEventRedisHelper.resetEventTransition(client, fullKey, prevDatetimeKey, event.makeDatetimeKey());
-                            PromotionEventRedisHelper.saveLiveEvent(client, fullKey, incommingEvent);
-                        }
-                    }
-
-                    return incommingEvent.isLiveFor(now) ? incommingEvent : null;
-                } else {
-
-                    // 더이상의 이벤트가 없는 경우
-                    PromotionEventRedisHelper.addEventEndLog(client, fullKey, now);
-
-                    if(featureSwitch.get(FeatureKey.PROMO_EVENT_SKIP_TRANSITION_THRESHOLD))
-                        PromotionEventRedisHelper.removeLiveEvent(client, fullKey);
-                    else {
-                        if (PromotionEventRedisHelper.tryEventTransition(client, fullKey, prevDatetimeKey, null) >= TRANSITION_THRESHOLD) {
-                            PromotionEventRedisHelper.resetEventTransition(client, fullKey, prevDatetimeKey, null);
-                            PromotionEventRedisHelper.removeLiveEvent(client, fullKey);
-                        }
-                    }
-                }
+        if(featureSwitch.get(FeatureKey.PROMO_EVENT_SKIP_TRANSITION_THRESHOLD))
+            PromotionEventRedisHelper.removeLiveEvent(client, fullKey);
+        else {
+            if (PromotionEventRedisHelper.tryEventTransition(client, fullKey, prevDatetimeKey, null) >= TRANSITION_THRESHOLD) {
+                PromotionEventRedisHelper.resetEventTransition(client, fullKey, prevDatetimeKey, null);
+                PromotionEventRedisHelper.removeLiveEvent(client, fullKey);
             }
         }
 
         return null;
     }
 
-    /**
-     * DB 에서 이벤트를 조회한다.
-     * @param tenantId
-     * @param keys
-     * @return
-     */
-    @Override
-    public RawPromotionEvent getRawPromotionEvent(String tenantId, String[] keys, boolean liveOnly) {
-
-        List<RawPromotionEvent> rawEventList = eventDataService.getRawEventList(tenantId, Arrays.asList(keys), PromotionEventDataService.GET_RAW_EVENT_BY_ALL);
-        if (rawEventList.size() == 0)
-            return null;
-
-        return rawEventList.get(0);
-    }
-
-    @Override
-    public RawPromotionEvent getRawPromotionEvent(String tenantId, String chnlId, String menuId, boolean liveOnly) {
-        return getRawPromotionEvent(tenantId, PromotionEventUtils.makeKeys(chnlId, menuId), liveOnly);
-    }
 }

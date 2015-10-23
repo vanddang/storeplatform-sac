@@ -82,6 +82,19 @@ public class PromotionEventRedisHelper {
         client.hset(SacRedisKeys.livePromoEvent().getBytes(), fullKey.getBytes(), convert(event));
     }
 
+    //////////////////// 타겟 사용자 관리 ////////////////////
+    public static boolean checkTargetUsers(Plandasj client, PromotionEvent event, String userKey) {
+        return client.sismember(SacRedisKeys.targetUserSet(event.getPromId()).getBytes(), userKey.getBytes());
+    }
+
+    public static void saveTargetUsers(Plandasj client, PromotionEvent event, List<String> userKeys) {
+        client.sadd(SacRedisKeys.targetUserSet(event.getPromId()), userKeys.toArray(new String[0]));
+    }
+
+    public static void removeTargetUsers(Plandasj client, PromotionEvent event) {
+        client.del(SacRedisKeys.targetUserSet(event.getPromId()));
+    }
+
     /**
      * Drop된 데이터들을 찾아 라이브 이벤트에서 제거한다.
      * @param redis

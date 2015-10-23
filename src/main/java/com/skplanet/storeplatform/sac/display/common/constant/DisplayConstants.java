@@ -859,4 +859,6 @@ public class DisplayConstants {
 
 	/** AppCodi 서비스 그룹 명 */
 	public static final String APP_CODI_SVC_GRP_NM = "APPCODI"; // 앱 코디 서비스 그룹명
+
+    public static final String PROM_TARGET_USER_ALL = "DP01400001";
 }
