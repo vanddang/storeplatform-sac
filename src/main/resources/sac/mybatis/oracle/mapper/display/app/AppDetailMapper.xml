@@ -16,6 +16,9 @@
             SC.APK_VER_NM,
             SC.VM_VER,
             SC.FILE_SIZE,
+            SC.APK_API_LEVEL_CD,
+            (SELECT ADD_FIELD_01 FROM TB_CM_CD C1 WHERE C1.CD_ID = SC.APK_API_LEVEL_CD) AS SDK_MIN,
+            (SELECT ADD_FIELD_01 FROM TB_CM_CD C2 WHERE C2.CD_ID = SC.APK_API_MAX_LEVEL_CD) AS SDK_MAX,
             DECODE( NVL( TP.PROD_CLSF_CD, 'PD000601' )
             , 'PD000601', 'paid'
             , 'PD000602', 'library'
