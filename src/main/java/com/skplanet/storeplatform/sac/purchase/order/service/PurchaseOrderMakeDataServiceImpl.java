@@ -799,14 +799,10 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_COUPON_CODE, product.getCouponCode()))
 							.append("&itemCode=")
 							.append(StringUtils.defaultString(product.getItemCode()))
-							.append("&bonusPoint=")
-							.append(StringUtils.defaultString(product.getBnsCashAmt(), "0"))
-							.append("&bonusPointUsePeriodUnitCd=")
-							.append(StringUtils.defaultString(product.getBnsUsePeriodUnitCd()))
-							.append("&bonusPointUsePeriod=")
-							.append(StringUtils.defaultString(String.valueOf(product.getBnsUsePeriod()), "0"))
-							.append("&bonusPointUsableDayCnt=")
-							.append(StringUtils.defaultString(String.valueOf(product.getBnsUsePeriod()), "0"))
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT,
+									StringUtils.defaultString(product.getBnsCashAmt(), "0")))
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD,product.getBnsUsePeriodUnitCd()))
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD,StringUtils.defaultString(String.valueOf(product.getBnsUsePeriod()), "0")))
 							.append("&autoPrchsPeriodUnitCd=")
 							.append(StringUtils.defaultString(product.getAutoPrchsPeriodUnitCd()))
 							.append("&autoPrchsPeriodValue=")
@@ -837,7 +833,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append("&svcGrpCd=")
 							.append(StringUtils.defaultString(product.getSvcGrpCd()))
 							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID, product.getPromId()))
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_NM, product.getProdNm()))
+							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROD_NM, product.getProdNm()))
 							// 이벤트 프로모션 ID
 							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,
 									product.getAcmlMethodCd())) // 프로모션 적립 방법

@@ -397,12 +397,12 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	/** 전시 응답 규격 **/
 	/* 프로모션 관련 */
 	public static final String IF_DISPLAY_RES_PROM_ID = "promId";
-	public static final String IF_DISPLAY_RES_PROM_NM = "promNm";
 	public static final String IF_DISPLAY_RES_ACLMETHOD_CD = "acmlMethodCd"; // 적립 수단 코드 (OR020701-캐쉬,OR020702-게임캐쉬,OR020703-북스캐쉬)
 	public static final String IF_DISPLAY_RES_ACML_DT = "acmlDt";
 	public static final String IF_DISPLAY_RES_PROM_FORCECLOSE_CD = "promForceCloseCd"; // 프로모션 강제 종료 코드
 	public static final String IF_DISPLAY_RES_PAY_METHOD_VDTY_DT = "payMethodVdtyDt"; // 적립금 유효일
 
+	public static final String IF_DISPLAY_RES_PROD_NM = "prodNm";
 	public static final String IF_DISPLAY_RES_COUPON_CODE = "couponCode"; // 쿠폰 상품 코드
 	public static final String IF_DISPLAY_RES_PROD_CASE_CD = "prodCaseCd"; // 상품 유형
 	public static final String IF_DISPLAY_RES_SELLER_MBRNO = "sellerMbrNo"; // 판매자 회원 번호
