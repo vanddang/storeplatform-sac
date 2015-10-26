@@ -59,7 +59,8 @@ public class AppController {
         request.setTenantId(header.getTenantHeader().getTenantId());
         request.setDeviceModelCd(header.getDeviceHeader().getModel());
         request.setOsVersion(header.getDeviceHeader().getOs());
-        request.setSdkCd(header.getDeviceHeader().getSdkCdNum());
+//        request.setSdkCd(header.getDeviceHeader().getSdkCdNum());
+        request.setSdkCd(null);
         request.setUserKey(req.getUserKey());
         request.setDeviceKey(req.getDeviceKey());
 
@@ -89,7 +90,8 @@ public class AppController {
         request.setTenantId(header.getTenantHeader().getTenantId());
         request.setDeviceModelCd(header.getDeviceHeader().getModel());
         request.setOsVersion(header.getDeviceHeader().getOs());
-        request.setSdkCd(header.getDeviceHeader().getSdkCdNum());
+//        request.setSdkCd(header.getDeviceHeader().getSdkCdNum());
+        request.setSdkCd(null);
         request.setUserKey(req.getUserKey());
         request.setDeviceKey(req.getDeviceKey());
 
