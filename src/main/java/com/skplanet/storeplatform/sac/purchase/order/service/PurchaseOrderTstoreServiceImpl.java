@@ -549,7 +549,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			tStoreCashChargeEcReq.setDate(this.purchaseOrderAssistService.calculateUseDate(useStartDt,
 					bonusPointUsePeriodUnitCd, bonusPointUsePeriod));
 			tStoreCashChargeEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_POINT);
-			tStoreCashChargeEcReq.setProcType(PurchaseConstants.TSTORE_CASH_PROCTYPE_BOOKS_CASH);
+			tStoreCashChargeEcReq.setProcType(PurchaseConstants.TSTORE_CASH_PROCTYPE_BOOKS_CASH_POINT);
 
 			tStoreCashDetailParam.addTstoreCashChargeEcReq(tStoreCashChargeEcReq, invokeChargeCash(tStoreCashChargeEcReq).getIdentifier());
 		}
