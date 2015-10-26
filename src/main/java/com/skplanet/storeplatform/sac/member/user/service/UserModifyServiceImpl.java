@@ -1007,40 +1007,48 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 			// DB에 약관 정보가 있을 경우.
 			if (userCurrentAgreementList != null && userCurrentAgreementList.size() > 0) {
+
 				for (AgreementInfo agreementInfo : agreementList) {
 					for (Agreement userCurrentAgreement : userCurrentAgreementList) {
 
-						if (StringUtils.isBlank(userCurrentAgreement.getExtraAgreementId())
-								|| StringUtils.isBlank(userCurrentAgreement.getExtraAgreementVersion())) {
-							break;
-						}
+						if (StringUtils.isNotBlank(agreementInfo.getExtraAgreementId())
+								&& StringUtils.isNotBlank(userCurrentAgreement.getExtraAgreementId())) {
 
-						if (agreementInfo.getExtraAgreementId().equals(userCurrentAgreement.getExtraAgreementId())) {
-							if (StringUtils.isBlank(agreementInfo.getExtraAgreementVersion())) {
+							if (agreementInfo.getExtraAgreementId().equals(userCurrentAgreement.getExtraAgreementId())) {
+
 								// 수정으로 넘어온 약관의 버전 정보가 없을 경우, DB의 약관 버전 정보를 셋팅.
-								agreementInfo.setExtraAgreementVersion(userCurrentAgreement.getExtraAgreementVersion());
-							} else {
-								// 수정으로 넘어온 약관의 버전 정보가 있을 경우, DB의 약관 버전 정보와 비교하여 높은 버전으로 유지.
-								try {
-									if (StringUtils.isNotBlank(userCurrentAgreement.getExtraAgreementVersion())
-											&& StringUtils.isNotBlank(agreementInfo.getExtraAgreementVersion())) {
-										if (Double.parseDouble(userCurrentAgreement.getExtraAgreementVersion()) > Double
-												.parseDouble(agreementInfo.getExtraAgreementVersion())) {
-											agreementInfo.setExtraAgreementVersion(userCurrentAgreement
-													.getExtraAgreementVersion());
-										}
+								if (StringUtils.isBlank(agreementInfo.getExtraAgreementVersion())) {
+
+									if (StringUtils.isNotBlank(userCurrentAgreement.getExtraAgreementVersion())) {
+										agreementInfo.setExtraAgreementVersion(userCurrentAgreement
+												.getExtraAgreementVersion());
 									}
-								} catch (Exception ex) {
-									// 약관 버전 정보가 Double 타입이 아닌경우. 로그 출력만하고 pass
-									LOGGER.info("약관 버전이 Double 형식이 아닙니다. [{}]", ex);
+
+								} else {
+									// 수정으로 넘어온 약관의 버전 정보가 있을 경우, DB의 약관 버전 정보와 비교하여 높은 버전으로 유지.
+									try {
+										if (StringUtils.isNotBlank(userCurrentAgreement.getExtraAgreementVersion())
+												&& StringUtils.isNotBlank(agreementInfo.getExtraAgreementVersion())) {
+											if (Double.parseDouble(userCurrentAgreement.getExtraAgreementVersion()) > Double
+													.parseDouble(agreementInfo.getExtraAgreementVersion())) {
+												agreementInfo.setExtraAgreementVersion(userCurrentAgreement
+														.getExtraAgreementVersion());
+											}
+										}
+									} catch (Exception ex) {
+										// 약관 버전 정보가 Double 타입이 아닌경우. 로그 출력만하고 pass
+										LOGGER.info("약관 버전이 Double 형식이 아닙니다. [{}]", ex);
+									}
 								}
+								break;
+
 							}
-							break;
 
 						}
 
 					}
 				}
+
 			}
 		}
 
