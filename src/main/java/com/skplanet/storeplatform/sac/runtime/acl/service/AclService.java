@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.runtime.acl.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.integration.annotation.Header;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
@@ -52,7 +51,7 @@ public class AclService {
 	/**
 	 * Tenant를 인증한다. (등록된 Tenant인지 확인)
 	 */
-	public boolean authenticate(@Header("httpHeaders") HttpHeaders headers) {
+	public boolean authenticate(HttpHeaders headers) {
 		if (!this.authentication) return true;
 
 		// Step 1) Tenant 인증
@@ -64,7 +63,7 @@ public class AclService {
 	/**
 	 * Interface를 인가한다. (호출하는 API에 권한이 있는지 확인)
 	 */
-	public boolean authorize(@Header("httpHeaders") HttpHeaders headers) {
+	public boolean authorize(HttpHeaders headers) {
 		if (!this.authorization) return true;
 		
 		if (CommonConstants.EXPRESS_INTERFACE_ID.equals(headers.getInterfaceId())) {

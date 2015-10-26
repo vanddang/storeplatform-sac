@@ -13,7 +13,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.integration.annotation.Headers;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -31,7 +30,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 public class HttpHeaderEnricher implements HttpHeaderEnrichIF {
 
 	@Override
-	public HttpHeaders enrichHeader(@Headers Map<String, Object> headers) {
+	public HttpHeaders enrichHeader(Map<String, Object> headers) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 
 		// Spring Integration에서 headers 객체를 null로 보내는 것에 대한 방어 로직

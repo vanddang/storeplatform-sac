@@ -575,7 +575,7 @@ public class DisplayConstants {
 	/*
 	 * 배너 그룹 코드
 	 */
-	public static final String DP_BANNER_MOBILE_CLIENT_CD = "MBI000000003"; // 배너관리 > 모바일 클라이언트
+	public static final String DP_BANNER_MOBILE_CLIENT_CD = "MB3"; // 배너관리 > 모바일 클라이언트
 
 	// ////////////////////////////////////// rights //////////////////////////////////////////
 	public static final String DP_RIGHTS_ALLOW_FREEPASS = "freepass";
