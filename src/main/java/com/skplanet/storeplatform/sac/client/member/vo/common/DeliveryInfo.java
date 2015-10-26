@@ -25,7 +25,7 @@ public class DeliveryInfo extends CommonInfo implements Serializable {
 	private String deliveryNm;
 
 	/** 받는 사람. */
-	private String receverNm;
+	private String receiverNm;
 
 	/** 보내는 사람. */
 	private String senderNm;
@@ -95,20 +95,20 @@ public class DeliveryInfo extends CommonInfo implements Serializable {
 	/**
 	 * 받는 사람을 리턴한다.
 	 * 
-	 * @return receverNm - 받는 사람
+	 * @return receiverNm - 받는 사람
 	 */
-	public String getReceverNm() {
-		return this.receverNm;
+	public String getReceiverNm() {
+		return this.receiverNm;
 	}
 
 	/**
 	 * 받는 사람을 셋팅한다.
 	 * 
-	 * @param receverNm
+	 * @param receiverNm
 	 *            받는 사람
 	 */
-	public void setReceverNm(String receverNm) {
-		this.receverNm = receverNm;
+	public void setReceiverNm(String receiverNm) {
+		this.receiverNm = receiverNm;
 	}
 
 	/**
