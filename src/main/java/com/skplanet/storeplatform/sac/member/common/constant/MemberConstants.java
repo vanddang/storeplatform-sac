@@ -193,6 +193,7 @@ public final class MemberConstants {
 	public static final String DEVICE_ID_TYPE_MSISDN = "msisdn";
 	public static final String DEVICE_ID_TYPE_UUID = "uuid";
 	public static final String DEVICE_ID_TYPE_MACADDRESS = "macaddress";
+	public static final String DEVICE_ID_TYPE_IMEI = "imei";
 
 	/** 실명인증 수단 코드 판단 값. */
 	public static final String REAL_NAME_AUTH_TYPE_MOBILE = "1"; // 휴대폰

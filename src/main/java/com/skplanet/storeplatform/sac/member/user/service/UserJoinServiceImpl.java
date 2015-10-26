@@ -1152,7 +1152,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.) [MAC-yyyyMMdd] MBR_NO (26)
 		 */
-		userMbr.setImMbrNo(this.getFixMbrNo()); // 고정된 MBR_NO 세팅함.
+		userMbr.setImMbrNo(this.getFixMbrNo(req.getDeviceIdType())); // 고정된 MBR_NO 세팅함.
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
@@ -1181,11 +1181,17 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *  MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정).
 	 * </pre>
 	 * 
+	 * @param deviceType
+	 *            String
 	 * @return fix MBR_NO {MAC}{yyyyMMddHHmmssSSS}{난수} (21자리)
 	 */
-	private String getFixMbrNo() {
+	private String getFixMbrNo(String deviceType) {
 		StringBuffer fixMbrNo = new StringBuffer();
-		fixMbrNo.append("MAC");
+		if (StringUtils.equals(deviceType, MemberConstants.DEVICE_ID_TYPE_MACADDRESS)) {
+			fixMbrNo.append("MAC");
+		} else {
+			fixMbrNo.append("IMEI");
+		}
 		fixMbrNo.append(DateUtil.getToday("yyyyMMddHHmmssSSS"));
 		Random random = new Random();
 		fixMbrNo.append(String.valueOf(random.nextInt(10)));
