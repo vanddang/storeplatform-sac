@@ -2365,7 +2365,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					DeliveryInfo deliveryInfo = new DeliveryInfo();
 					deliveryInfo.setDeliveryTypeCd(tempDeliveryInfo.getDeliveryTypeCd());
 					deliveryInfo.setDeliveryNm(tempDeliveryInfo.getDeliveryNm());
-					deliveryInfo.setReceverNm(tempDeliveryInfo.getReceverNm());
+					deliveryInfo.setReceiverNm(tempDeliveryInfo.getReceiverNm());
 					deliveryInfo.setSenderNm(tempDeliveryInfo.getSenderNm());
 					deliveryInfo.setZip(tempDeliveryInfo.getZip());
 					deliveryInfo.setAddr(tempDeliveryInfo.getAddr());
@@ -2400,7 +2400,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 							DeliveryInfo deliveryInfo = new DeliveryInfo();
 							deliveryInfo.setDeliveryTypeCd(tempDeliveryInfo.getDeliveryTypeCd());
 							deliveryInfo.setDeliveryNm(tempDeliveryInfo.getDeliveryNm());
-							deliveryInfo.setReceverNm(tempDeliveryInfo.getReceverNm());
+							deliveryInfo.setReceiverNm(tempDeliveryInfo.getReceiverNm());
 							deliveryInfo.setSenderNm(tempDeliveryInfo.getSenderNm());
 							deliveryInfo.setZip(tempDeliveryInfo.getZip());
 							deliveryInfo.setAddr(tempDeliveryInfo.getAddr());
