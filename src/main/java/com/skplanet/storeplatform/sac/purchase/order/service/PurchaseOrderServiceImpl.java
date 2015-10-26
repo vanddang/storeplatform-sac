@@ -53,6 +53,8 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
@@ -959,8 +961,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			iapProdInfo.setPostbackUrl(reservedDataMap.get("iapPostbackUrl"));
 			iapProdInfo.setProdKind(reservedDataMap.get("iapProdKind"));
 			iapProdInfo.setProdCase(reservedDataMap.get("iapProdCase"));
-			iapProdInfo.setParentProdNm(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM));
-			if (StringUtils.isNotBlank(reservedDataMap.get("iapUsePeriod"))) {
+			try {
+				iapProdInfo.setParentProdNm(URLDecoder.decode(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM),PurchaseConstants.DEFAULT_ENCODING));
+			} catch (UnsupportedEncodingException e) {
+				throw new StorePlatformException("SAC_PUR_7223", e);
+			} if (StringUtils.isNotBlank(reservedDataMap.get("iapUsePeriod"))) {
 				iapProdInfo.setUsePeriod(Integer.parseInt(reservedDataMap.get("iapUsePeriod")));
 			}
 
@@ -1121,15 +1126,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// if (CollectionUtils.isNotEmpty(cashReserveResList)) {
 			// this.purchaseOrderTstoreService.confirmCashCharge(prchsDtlMore.getUseInsdUsermbrNo(),
 			// prchsDtlMore.getPrchsId(), cashReserveResList);
-			// }
+			//
+
 			// 즉시 충전
-			tStoreCashDetailParam = this.purchaseOrderTstoreService.chargeCashImmediately(prchsDtlMore
-					.getUseInsdUsermbrNo(), prchsDtlMore.getPrchsId(), prchsDtlMore.getProdAmt().doubleValue(),
-					prchsDtlMore.getUseStartDt(), reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROD_NM),
-					productGroupCode, Double.parseDouble(reservedDataMap.get(
-							PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT)),
-					reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD),
-					reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD));
+			try {
+				tStoreCashDetailParam = this.purchaseOrderTstoreService.chargeCashImmediately(prchsDtlMore
+						.getUseInsdUsermbrNo(), prchsDtlMore.getPrchsId(), prchsDtlMore.getProdAmt().doubleValue(),
+						prchsDtlMore.getUseStartDt(), URLDecoder.decode(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROD_NM), PurchaseConstants.DEFAULT_ENCODING), productGroupCode,
+								Double.parseDouble(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT)),
+								reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD),
+								reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD));
+			} catch (UnsupportedEncodingException e) {
+				throw new StorePlatformException("SAC_PUR_7202", e);
+			}
 		}
 
 		// -------------------------------------------------------------------------------------------

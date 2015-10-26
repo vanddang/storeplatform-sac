@@ -30,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -789,126 +791,139 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 					sbReserveData.setLength(commonReserveDataLen);
 
-					sbReserveData
-							.append("&useDeviceId=")
-							.append(useUser.getDeviceId())
-							.append("&useDeviceModelCd=")
-							.append(useUser.getDeviceModelCd())
-							.append("&aid=")
-							.append(StringUtils.defaultString(product.getAid()))
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_COUPON_CODE, product.getCouponCode()))
-							.append("&itemCode=")
-							.append(StringUtils.defaultString(product.getItemCode()))
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT,
-									StringUtils.defaultString(product.getBnsCashAmt(), "0")))
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD,product.getBnsUsePeriodUnitCd()))
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD,StringUtils.defaultString(String.valueOf(product.getBnsUsePeriod()), "0")))
-							.append("&autoPrchsPeriodUnitCd=")
-							.append(StringUtils.defaultString(product.getAutoPrchsPeriodUnitCd()))
-							.append("&autoPrchsPeriodValue=")
-							.append(StringUtils.defaultString(String.valueOf(product.getAutoPrchsPeriodValue()), "0"))
-							.append("&afterAutoPayDt=")
-							.append(StringUtils.defaultString(product.getAfterAutoPayDt()))
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SELLER_MBRNO, product.getSellerMbrNo()))
-							.append("&mallCd=")
-							.append(StringUtils.defaultString(product.getMallCd()))
-							.append("&outsdContentsId=")
-							.append(StringUtils.defaultString(product.getOutsdContentsId()))
-							.append("&autoPrchsYn=")
-							.append(StringUtils.defaultString(product.getAutoPrchsYN()))
-							.append("&autoLastPeriod=")
-							.append(product.getAutoPrchsLastPeriodValue() == null ? 0 : product
-									.getAutoPrchsLastPeriodValue())
-							.append("&specialCouponId=")
-							.append(StringUtils.defaultString(product.getSpecialSaleCouponId()))
-							.append("&specialCouponAmt=")
-							.append(product.getSpecialCouponAmt())
-							.append("&possLendClsfCd=")
-							.append(StringUtils.defaultString(product.getPossLendClsfCd()))
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROD_CASE_CD, product.getProdCaseCd()))
-							.append("&s2sAutoYn=")
-							.append(StringUtils.defaultString(product.getS2sAutoPrchsYn()))
-							.append("&s2sYn=")
-							.append(StringUtils.isNotBlank(product.getSearchPriceUrl()) ? "Y" : "N")
-							.append("&svcGrpCd=")
-							.append(StringUtils.defaultString(product.getSvcGrpCd()))
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID, product.getPromId()))
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROD_NM, product.getProdNm()))
-							// 이벤트 프로모션 ID
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,
-									product.getAcmlMethodCd())) // 프로모션 적립 방법
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT,
-									product.getAcmlDt())) // 프로모션 적립일
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD,
-									product.getSpecialTypeCd())) // 특가상품 유형코드, 팅요금제 상품 유형 코드
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT,
-									product.getPrivateAcmlLimit())) // 개인 적립 한도
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_FORCECLOSE_CD,
-									product.getPromForceCloseCd())) // 프로모션 상태 코드 - 조기종료 사유 코드
-							.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PAY_METHOD_VDTY_DT,
-									product.getPayMethodVdtyDt())); // 적립금 유효일
+					try {
+						sbReserveData
+								.append("&useDeviceId=")
+								.append(useUser.getDeviceId())
+								.append("&useDeviceModelCd=")
+								.append(useUser.getDeviceModelCd())
+								.append("&aid=")
+								.append(StringUtils.defaultString(product.getAid()))
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_COUPON_CODE,
+										product.getCouponCode()))
+								.append("&itemCode=")
+								.append(StringUtils.defaultString(product.getItemCode()))
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT,
+										StringUtils.defaultString(product.getBnsCashAmt(), "0")))
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD,
+										product.getBnsUsePeriodUnitCd()))
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD,
+										StringUtils.defaultString(String.valueOf(product.getBnsUsePeriod()), "0")))
+								.append("&autoPrchsPeriodUnitCd=")
+								.append(StringUtils.defaultString(product.getAutoPrchsPeriodUnitCd()))
+								.append("&autoPrchsPeriodValue=")
+								.append(StringUtils.defaultString(String.valueOf(product.getAutoPrchsPeriodValue()),
+										"0"))
+								.append("&afterAutoPayDt=")
+								.append(StringUtils.defaultString(product.getAfterAutoPayDt()))
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SELLER_MBRNO,
+										product.getSellerMbrNo()))
+								.append("&mallCd=")
+								.append(StringUtils.defaultString(product.getMallCd()))
+								.append("&outsdContentsId=")
+								.append(StringUtils.defaultString(product.getOutsdContentsId()))
+								.append("&autoPrchsYn=")
+								.append(StringUtils.defaultString(product.getAutoPrchsYN()))
+								.append("&autoLastPeriod=")
+								.append(product.getAutoPrchsLastPeriodValue() == null ? 0 : product
+										.getAutoPrchsLastPeriodValue())
+								.append("&specialCouponId=")
+								.append(StringUtils.defaultString(product.getSpecialSaleCouponId()))
+								.append("&specialCouponAmt=")
+								.append(product.getSpecialCouponAmt())
+								.append("&possLendClsfCd=")
+								.append(StringUtils.defaultString(product.getPossLendClsfCd()))
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROD_CASE_CD,
+										product.getProdCaseCd()))
+								.append("&s2sAutoYn=")
+								.append(StringUtils.defaultString(product.getS2sAutoPrchsYn()))
+								.append("&s2sYn=")
+								.append(StringUtils.isNotBlank(product.getSearchPriceUrl()) ? "Y" : "N")
+								.append("&svcGrpCd=")
+								.append(StringUtils.defaultString(product.getSvcGrpCd()))
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID, product.getPromId()))
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROD_NM,
+										URLEncoder.encode(product.getProdNm(), PurchaseConstants.DEFAULT_ENCODING)))
+								// 이벤트 프로모션 ID
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,
+										product.getAcmlMethodCd())) // 프로모션 적립 방법
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACML_DT, product.getAcmlDt())) // 프로모션
+																													// 적립일
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD,
+										product.getSpecialTypeCd())) // 특가상품 유형코드, 팅요금제 상품 유형 코드
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT,
+										product.getPrivateAcmlLimit())) // 개인 적립 한도
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_FORCECLOSE_CD,
+										product.getPromForceCloseCd())) // 프로모션 상태 코드 - 조기종료 사유 코드
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PAY_METHOD_VDTY_DT,
+										product.getPayMethodVdtyDt())); // 적립금 유효일
 
-					// 대여정보: VOD/이북 단건, 유료 결제 요청 시
-					if (purchaseOrderInfo.getPurchaseProductList().size() == 1
-							&& purchaseOrderInfo.getRealTotAmt() > 0.0
-							&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
-							&& purchaseOrderInfo.isFlat() == false) {
+						// 대여정보: VOD/이북 단건, 유료 결제 요청 시
+						if (purchaseOrderInfo.getPurchaseProductList().size() == 1
+								&& purchaseOrderInfo.getRealTotAmt() > 0.0
+								&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
+								&& purchaseOrderInfo.isFlat() == false) {
 
-						if (StringUtils.equals(product.getPossLendClsfCd(),
-								PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)
-								|| StringUtils.equals(product.getPossLendClsfCd(),
-										PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL)
-								|| StringUtils.equals(product.getPossLendClsfCd(),
-										PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_ALL)) {
-							sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT,
-									product.getUsePeriod()));
-							sbReserveData.append(
-									genResvData(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT, product.getUsePeriod()));
+							if (StringUtils.equals(product.getPossLendClsfCd(),
+									PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)
+									|| StringUtils.equals(product.getPossLendClsfCd(),
+											PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL)
+									|| StringUtils.equals(product.getPossLendClsfCd(),
+											PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_ALL)) {
+								sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT,
+										product.getUsePeriod()));
+								sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT,
+										product.getUsePeriod()));
+							} else {
+								sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT, ""));
+								sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT, ""));
+							}
+
 						} else {
 							sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT, ""));
 							sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT, ""));
 						}
 
-					} else {
-						sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT, ""));
-						sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT, ""));
-					}
-
-					// IAP P/P 처리
-					if (purchaseOrderInfo.isIap()) {
-						sbReserveData.append("&iapYn=Y").append("&iapPostbackUrl=")
-								.append(StringUtils.defaultString(product.getIapPostbackUrl())).append("&iapProdKind=")
-								.append(StringUtils.defaultString(product.getIapProdKind())).append("&iapProdCase=")
-								.append(StringUtils.defaultString(product.getIapProdCase()));
-						sbReserveData.append(
-								genResvData(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM, product.getParentProdNm()));
-						if (product.getIapUsePeriod() != null) {
-							sbReserveData.append("&iapUsePeriod=").append(product.getIapUsePeriod());
+						// IAP P/P 처리
+						if (purchaseOrderInfo.isIap()) {
+							sbReserveData.append("&iapYn=Y").append("&iapPostbackUrl=")
+									.append(StringUtils.defaultString(product.getIapPostbackUrl()))
+									.append("&iapProdKind=")
+									.append(StringUtils.defaultString(product.getIapProdKind()))
+									.append("&iapProdCase=")
+									.append(StringUtils.defaultString(product.getIapProdCase()));
+							sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM,
+									URLEncoder.encode(product.getParentProdNm(), PurchaseConstants.DEFAULT_ENCODING)));
+							if (product.getIapUsePeriod() != null) {
+								sbReserveData.append("&iapUsePeriod=").append(product.getIapUsePeriod());
+							}
 						}
-					}
 
-					// 정액제 상품
-					if (purchaseOrderInfo.isFlat()) {
-						sbReserveData.append("&packagePrchsYn=")
-								.append(StringUtils.defaultString(product.getPackagePrchsYn()))
-								.append("&cmpxProdClsfCd=")
-								.append(StringUtils.defaultString(product.getCmpxProdClsfCd()))
-								.append("&cmpxProdBookClsfCd=")
-								.append(StringUtils.defaultString(product.getCmpxProdBookClsfCd()));
-					}
+						// 정액제 상품
+						if (purchaseOrderInfo.isFlat()) {
+							sbReserveData.append("&packagePrchsYn=")
+									.append(StringUtils.defaultString(product.getPackagePrchsYn()))
+									.append("&cmpxProdClsfCd=")
+									.append(StringUtils.defaultString(product.getCmpxProdClsfCd()))
+									.append("&cmpxProdBookClsfCd=")
+									.append(StringUtils.defaultString(product.getCmpxProdBookClsfCd()));
+						}
 
-					// 쇼핑-충전권
-					if(StringUtils.equals(product.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)){
-						sbReserveData.append(
-								genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID, purchaseOrderInfo.getChargeMemberId()));
-						sbReserveData.append(
-								genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM, purchaseOrderInfo.getChargeMemberNm()));
-					}
+						// 쇼핑-충전권
+						if (StringUtils.equals(product.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
+							sbReserveData.append(genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID,
+									purchaseOrderInfo.getChargeMemberId()));
+							sbReserveData.append(genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM,
+									purchaseOrderInfo.getChargeMemberNm()));
+						}
 
-					// 부정결제 참조용 데이터 추가
-					sbReserveData.append(
-							genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_FLAG, purchaseOrderInfo.getFlag()));
-					prchsDtlMoreList.get(idx++).setPrchsResvDesc(sbReserveData.toString());
+						// 부정결제 참조용 데이터 추가
+						sbReserveData.append(genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_FLAG,
+								purchaseOrderInfo.getFlag()));
+						prchsDtlMoreList.get(idx++).setPrchsResvDesc(sbReserveData.toString());
+					} catch (UnsupportedEncodingException e) {
+						throw new StorePlatformException("SAC_PUR_7201", e);
+					}
 				}
 			}
 		}
@@ -962,8 +977,10 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		purchaseReservedData.setCouponCode(reservedDataMap.get("couponCode"));
 		purchaseReservedData.setItemCode(reservedDataMap.get("itemCode"));
 		purchaseReservedData.setBonusPoint(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT));
-		purchaseReservedData.setBonusPointUsePeriodUnitCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD));
-		purchaseReservedData.setBonusPointUsePeriod(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD));
+		purchaseReservedData.setBonusPointUsePeriodUnitCd(reservedDataMap
+				.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD));
+		purchaseReservedData.setBonusPointUsePeriod(reservedDataMap
+				.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD));
 		purchaseReservedData.setBonusPointUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt"));
 		purchaseReservedData.setAutoPrchsPeriodUnitCd(reservedDataMap.get("autoPrchsPeriodUnitCd"));
 		purchaseReservedData.setAutoPrchsPeriodValue(reservedDataMap.get("autoPrchsPeriodValue"));
