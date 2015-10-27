@@ -234,7 +234,14 @@
 		  <artifactId>storeplatform-sac-mq-client</artifactId>
 		  <version>1.0.0-SNAPSHOT</version>
 		</dependency>
-		
+
+        <!-- Spring AMQP (Integration 제거 후 추가) -->
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>1.2.0.RELEASE</version>
+        </dependency>
+
 	</dependencies>
     
 </project>
