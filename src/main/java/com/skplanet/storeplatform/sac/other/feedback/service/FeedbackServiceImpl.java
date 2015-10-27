@@ -781,7 +781,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
 
 		if (notiTot <= 0) {
-			throw new StorePlatformException("SAC_OTH_9001");
+			return emptyResponse();
 		}
 
 		// 사용후기 목록.
@@ -791,7 +791,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<ProdNoti> getMyProdNotiList = this.feedbackRepository.getMyProdNotiList(prodNoti);
 
 		if (CollectionUtils.isEmpty(getMyProdNotiList)) {
-			throw new StorePlatformException("SAC_OTH_9001");
+			return emptyResponse();
 		}
 
 		List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
@@ -875,7 +875,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
 
 		if (notiTot <= 0) {
-			throw new StorePlatformException("SAC_OTH_9001");
+			return emptyResponse();
 		}
 
 		// 사용후기 목록.
@@ -885,7 +885,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<ProdNoti> getMyProdNotiList = this.feedbackRepository.getMyProdNotiList(prodNoti);
 
 		if (CollectionUtils.isEmpty(getMyProdNotiList)) {
-			throw new StorePlatformException("SAC_OTH_9001");
+			return emptyResponse();
 		}
 
 		List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
@@ -1618,6 +1618,21 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 
 		return nonUser;
+
+	}
+
+	/**
+	 * 자기가작성한 사용후기 v1, v2 Error 로 Response 되었으나 정상 Response 로 변경함. (By 백승현)
+	 * throw new StorePlatformException("SAC_OTH_9001"); -->  정상 응답으로 변경.
+	 * @return
+	 */
+	private ListMyFeedbackSacRes emptyResponse() {
+
+		ListMyFeedbackSacRes listMyFeedbackSacRes = new ListMyFeedbackSacRes();
+		listMyFeedbackSacRes.setNotiTot("0");
+		listMyFeedbackSacRes.setNotiList(new ArrayList<FeedbackMy>());
+
+		return listMyFeedbackSacRes;
 
 	}
 
