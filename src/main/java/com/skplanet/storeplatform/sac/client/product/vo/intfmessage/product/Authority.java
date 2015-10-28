@@ -15,7 +15,6 @@ import java.util.List;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 
 /**
  * Interface Message Accrual Value Object.
