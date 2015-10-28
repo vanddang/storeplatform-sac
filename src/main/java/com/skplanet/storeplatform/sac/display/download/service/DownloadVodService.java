@@ -31,13 +31,13 @@ public interface DownloadVodService {
 	/**
 	 * 
 	 * <pre>
-	 * Download Vod 정보 조회 V3(for download).
+	 * Download Vod V3 정보 조회 V3(for download).
 	 * </pre>
 	 * 
 	 * @param requestheader
 	 *            requestheader
-	 * @param downloadVodReq
-	 *            downloadVodReq
+	 * @param downloadVodV3Req
+	 *            downloadVodV3Req
      * @param supportFhdVideo
      *            FHD 화질 지원여부
 	 * @return DownloadVodRes

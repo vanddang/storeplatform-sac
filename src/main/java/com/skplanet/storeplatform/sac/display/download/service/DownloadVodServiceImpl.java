@@ -110,13 +110,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		String idType = downloadVodSacReq.getIdType(); // 조회 상품 ID 유형
 		String productId = downloadVodSacReq.getProductId(); // 조회 상품 ID
-		// ID유형 유효값 체크
+		
+		// ID유형 유효값 체크 
+		// Episode만 조회하도록 변경 2015.10.28 update by 이석희, I-S PLUS
 		if (!DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
 			throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
 		}
 
 		log.debug("----------------------------------------------------------------");
-		log.debug("[DownloadVodServiceImpl] idType : {}", idType);
 		log.debug("[DownloadVodServiceImpl] productId : {}", productId);
 		log.debug("[DownloadVodServiceImpl] deviceKey : {}", downloadVodSacReq.getDeviceKey());
 		log.debug("[DownloadVodServiceImpl] userKey : {}", downloadVodSacReq.getUserKey());
@@ -192,12 +193,16 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					if (deviceRes == null || !"Y".equals(deviceRes.getAuthYn()))
 						break;
 
-					// CJ E&M 케이블 자유이용권 구매상품 DRM 만료 여부 - 2015.8월 CJ E&M 요청 사항
-					// CJ E&M 케이블 자유이용권 구매한 상품이고, DRM이 Y이고, 소장상품일 경우 true 아닐 경우 false
+					/**
+					 * CJ E&M 케이블 자유이용권 구매상품 DRM 만료 여부 - 2015.8월 CJ E&M 요청 사항
+					 * CJ E&M 케이블 자유이용권 구매한 상품이고, DRM이 Y이고, 소장상품일 경우 true 아닐 경우 false
+					 */
 //					boolean unlimitedDrmExpireDt = (StringUtils.isNotEmpty(historySacIn.getUseFixrateProdId()) && "Y".equals(historySacIn.getDrmYn()) && StringUtils.isNotEmpty(metaInfo.getStoreProdId()));
 					setMetaInfo(metaInfo, historySacIn, downloadVodSacReq, tenantHeader, reqExpireDate, prchsState, deviceRes); // Meta정보 Set
 
-					// unlimitedDrmExpireDt 값이 true 이면 DL 규격의 ExpirationDate 값이 99991231T125959Z 값으로 내려감  - 2015.8월 CJ E&M 요청 사항
+					/**
+					 * unlimitedDrmExpireDt 값이 true 이면 DL 규격의 ExpirationDate 값이 99991231T125959Z 값으로 내려감  - 2015.8월 CJ E&M 요청 사항
+					 */ 
 //					Encryption encryption = supportService.generateEncryptionV2(metaInfo, historySacIn.getProdId(), supportFhdVideo, unlimitedDrmExpireDt);
 					Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
 					encryptionList.add(encryption); // 암호화 규격 add

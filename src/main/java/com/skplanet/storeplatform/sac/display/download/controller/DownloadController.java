@@ -1,24 +1,38 @@
 package com.skplanet.storeplatform.sac.display.download.controller;
 
-import com.google.common.base.Strings;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.download.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.download.service.*;
-import com.skplanet.storeplatform.sac.display.download.vo.SearchDownloadAppResult;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import com.google.common.base.Strings;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodV3SacReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.download.service.DownloadAppService;
+import com.skplanet.storeplatform.sac.display.download.service.DownloadComicService;
+import com.skplanet.storeplatform.sac.display.download.service.DownloadEbookService;
+import com.skplanet.storeplatform.sac.display.download.service.DownloadMusicService;
+import com.skplanet.storeplatform.sac.display.download.service.DownloadSupportService;
+import com.skplanet.storeplatform.sac.display.download.service.DownloadVodService;
+import com.skplanet.storeplatform.sac.display.download.vo.SearchDownloadAppResult;
 
 /**
  * 상품 정보 요청(for download)
@@ -146,8 +160,8 @@ public class DownloadController {
 	 * (V3) Download Vod 정보 조회(for download).
 	 * @param requestheader
 	 *            requestheader
-	 * @param downloadVodSacReq
-	 *            downloadVodSacReq
+	 * @param downloadVodV3SacReq
+	 *            downloadVodV3SacReq
 	 * @return DownloadVodSacRes
 	 */
 	@RequestMapping(value = "/vod/detail/v3", method = RequestMethod.POST)
