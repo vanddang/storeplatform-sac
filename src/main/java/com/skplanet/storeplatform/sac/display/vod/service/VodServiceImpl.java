@@ -1746,31 +1746,6 @@ public class VodServiceImpl implements VodService {
 	}
 
 	/**
-	 * 판매 상태 조회
-	 * 
-	 * @param mapperVO
-	 * @param userKey
-	 * @param deviceKey
-	 * @return
-	 */
-	private String getSalesStatus(VodDetail mapperVO, String userKey, String deviceKey) {
-		String salesStatus = null;
-		// 기구매 체크
-		if (!StringUtils.equals(mapperVO.getPlayProdStatusCd(), DisplayConstants.DP_SALE_STAT_ING)) {
-			// 04, 09, 10의 경우 구매이력이 없으면 상품 없음을 표시한다.
-			if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getPlayProdStatusCd())
-					|| DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getPlayProdStatusCd())
-					|| DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(mapperVO.getPlayProdStatusCd())) {
-				if (StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
-				} else
-					salesStatus = "restricted";
-			} else
-				salesStatus = "restricted";
-		}
-		return salesStatus;
-	}
-
-	/**
 	 * Badge 정보 리턴
 	 * 
 	 * @param mapperVO
