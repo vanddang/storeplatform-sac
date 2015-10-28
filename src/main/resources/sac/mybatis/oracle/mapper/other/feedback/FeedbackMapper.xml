@@ -1207,4 +1207,18 @@
                FC_SEND_MQ_DATA(#{returnType}, #{tenantId}, #{prodId}, #{oldScore, jdbcType=VARCHAR})
           FROM DUAL
     </select>
+
+    <!-- 상품이 존재하는지 여부를 체크한다. -->
+    <select id="getProdCheck" parameterType="TenantProdStats" resultType="int">
+        SELECT /* FeedbackMapper.xml, getProdCheck, SAC : 심대진, 2015-10-28 */
+               COUNT(1)
+          FROM DUAL
+         WHERE 1 = 1
+              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@substring(prodId, 0, 2) != 'CL'">
+                AND EXISTS(SELECT PROD_ID FROM TB_DP_PROD WHERE PROD_ID = #{prodId})
+              </if>
+              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@substring(prodId, 0, 2) == 'CL'">
+                AND EXISTS(SELECT CATALOG_ID FROM TB_DP_SHPG_CATALOG WHERE CATALOG_ID = #{prodId})
+              </if>
+    </select>
 </mapper>

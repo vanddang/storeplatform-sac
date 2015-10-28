@@ -247,4 +247,11 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	public String getSendMqData(SendMqData data) {
 		return this.commonDAO.queryForObject("Feedback.getFcSendMqData", data, String.class);
 	}
+
+	@Override
+	public int getProdCheck(String prodId) {
+		TenantProdStats tenantProdStats = new TenantProdStats();
+		tenantProdStats.setProdId(prodId);
+		return this.commonDAO.queryForObject("Feedback.getProdCheck", tenantProdStats, Integer.class);
+	}
 }

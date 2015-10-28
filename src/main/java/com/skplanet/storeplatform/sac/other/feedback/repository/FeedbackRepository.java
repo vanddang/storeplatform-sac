@@ -463,4 +463,11 @@ public interface FeedbackRepository {
 	 * @return
 	 */
 	public String getSendMqData(SendMqData data);
+
+	/**
+	 * 상품 테이블에 존재하는지 확인.
+	 * @param tenantProdStats
+	 * @return
+	 */
+	public int getProdCheck(String prodId);
 }

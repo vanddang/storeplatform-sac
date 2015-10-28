@@ -1079,6 +1079,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Override
 	public GetScoreSacRes getScore(GetScoreSacReq getScoreSacReq, SacRequestHeader sacRequestHeader) {
+
+		/**
+		 * 존재하지 않는 상품 체크. (By 백승현.)
+		 */
+		if(this.feedbackRepository.getProdCheck(getScoreSacReq.getProdId()) <= 0) {
+			LOGGER.error("존재하지 않는 상품 입니다. ({})", getScoreSacReq.getProdId());
+			throw new StorePlatformException("SAC_OTH_9001");
+		}
+
 		TenantProdStats tenantProdStats = new TenantProdStats();
 
 		tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
@@ -1097,7 +1106,13 @@ public class FeedbackServiceImpl implements FeedbackService {
 			getScoreRes.setAvgEvluScorePct(res.getAvgEvluScorePct());
 			getScoreRes.setPaticpersCnt(res.getPaticpersCnt());
 		} else {
-			throw new StorePlatformException("SAC_OTH_9001");
+			getScoreRes = new GetScoreSacRes();
+
+			getScoreRes.setProdId(getScoreSacReq.getProdId());
+			getScoreRes.setTotEvluScore("0");
+			getScoreRes.setAvgEvluScore("0");
+			getScoreRes.setAvgEvluScorePct("0");
+			getScoreRes.setPaticpersCnt("0");
 		}
 
 		return getScoreRes;
