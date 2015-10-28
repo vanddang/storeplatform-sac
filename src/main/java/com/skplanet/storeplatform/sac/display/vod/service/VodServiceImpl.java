@@ -202,14 +202,8 @@ public class VodServiceImpl implements VodService {
 			List<VodDetail> subProductList = this.getSubProjectList(param);
 			// ###################################################################################
 
-			if (!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)
-					&& StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
-				// 정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
-				existenceListRes = this.getExistenceScReses(req, subProductList);
-			}
-
 			// Episode Product Mapping
-			this.mapSubProductList(req, product, subProductList, existenceListRes, supportFhdVideo);
+			this.mapSubProductList(req, product, subProductList, supportFhdVideo);
 
 			res.setProduct(product);
 		} else {
@@ -278,7 +272,7 @@ public class VodServiceImpl implements VodService {
 			List<VodDetail> usePolicyInfoList = this.getProdUsePolicyInfoV3(param);
 			if (usePolicyInfoList != null) {
 				// 조회된 이용정책 set (update by 이석희 2015.07.24)
-				Authority authority = this.mapAuthority(vodDetail, usePolicyInfoList, req, null);
+				Authority authority = this.mapAuthority(vodDetail, usePolicyInfoList, req);
 				product.setAuthority(authority);
 			}
 
@@ -322,16 +316,9 @@ public class VodServiceImpl implements VodService {
 			List<VodDetail> subProductCidList = this.getProductCid(param);						
 			
 			// ###################################################################################
-
-			if (!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT)
-					&& StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
-				// 정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
-				List<VodDetail> subProductList = this.getSubProductListV3(param);
-				existenceListRes = this.getExistenceScReses(req, subProductList);
-			}
 			
 			// Episode Product Mapping
-			this.mapSubProductListV3(req, product, subProductCidList, param ,existenceListRes, supportFhdVideo);
+			this.mapSubProductListV3(req, product, subProductCidList, param , supportFhdVideo);
 
 			res.setProduct(product);
 		} else {
@@ -523,7 +510,7 @@ public class VodServiceImpl implements VodService {
 		product.setDistributor(distributor);
 
 		// rights
-		Rights rights = this.mapRights(mapperVO, req, null);
+		Rights rights = this.mapRights(mapperVO, req);
 		product.setRights(rights);
 		
 		// Accrual
@@ -680,10 +667,9 @@ public class VodServiceImpl implements VodService {
 	 * 
 	 * @param mapperVO
 	 * @param req
-	 * @param existenceMap
 	 * @return
 	 */
-	private Rights mapRights(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
+	private Rights mapRights(VodDetail mapperVO, VodDetailReq req) {
 		Rights rights = new Rights();
 		rights.setGrade(mapperVO.getProdGrdCd());
 
@@ -714,10 +700,10 @@ public class VodServiceImpl implements VodService {
 		// Store, Play
 		// -------------------------------------------
 		/** play 정보 */
-		rights.setPlay(this.mapPlay(mapperVO, req, existenceMap));
+		rights.setPlay(this.mapPlay(mapperVO, req));
 
 		/** Store 정보 */
-		rights.setStore(this.mapStore(mapperVO, req, existenceMap));
+		rights.setStore(this.mapStore(mapperVO, req));
 		return rights;
 	}
 
@@ -728,10 +714,9 @@ public class VodServiceImpl implements VodService {
 	 * 
 	 * @param mapperVO
 	 * @param req
-	 * @param existenceMap
 	 * @return
 	 */
-	private Store mapStore(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
+	private Store mapStore(VodDetail mapperVO, VodDetailReq req) {
 		Store store = null;
 		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
 			store = new Store();
@@ -772,7 +757,7 @@ public class VodServiceImpl implements VodService {
 		return store;
 	}
 	
-	private Authority mapAuthority(VodDetail mapperVO, List<VodDetail> vodDetailList, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
+	private Authority mapAuthority(VodDetail mapperVO, List<VodDetail> vodDetailList, VodDetailReq req) {
 		Authority authority = new Authority();
 		authority.setGrade(mapperVO.getProdGrdCd());
 		authority.setPlus19Yn(mapperVO.getPlus19Yn());
@@ -797,12 +782,12 @@ public class VodServiceImpl implements VodService {
 				// -------------------------------------------
 				if(StringUtils.isNotEmpty(vo.getPlayProdId())){
 					/** play 정보 */
-					playList.add(this.mapAuthorityPlay(vo, vodDetailList, req, existenceMap));
+					playList.add(this.mapAuthorityPlay(vo, vodDetailList, req));
 				}
 				
 				if(StringUtils.isNotEmpty(vo.getStoreProdId())){
 					/** Store 정보 */
-					storeList.add(this.mapAuthorityStore(vo, vodDetailList, req, existenceMap));
+					storeList.add(this.mapAuthorityStore(vo, vodDetailList, req));
 				}
 			}
 			if(playList != null && playList.size() > 0) authority.setPlayList(playList);
@@ -818,11 +803,11 @@ public class VodServiceImpl implements VodService {
 	 * </pre>
 	 * 
 	 * @param mapperVO
-	 * @param req
-	 * @param existenceMap
+	 * @param vodDetailList
+	 * @param VodDetailReq
 	 * @return
 	 */
-	private Play mapAuthorityPlay(VodDetail mapperVO, List<VodDetail> vodDetailList, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
+	private Play mapAuthorityPlay(VodDetail mapperVO, List<VodDetail> vodDetailList, VodDetailReq req) {
 		Play play = null;
 		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
 			play = new Play();
@@ -857,13 +842,6 @@ public class VodServiceImpl implements VodService {
 			// 판매상태
 			play.setSalesStatus(mapperVO.getPlayProdStatusCd());
 
-			// 사용자 구매 가능 상태
-			if (existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId())
-					&& StringUtils.isNotBlank(req.getUserKey()) && StringUtils.isNotBlank(req.getDeviceKey())) {
-				String userPurStatus = this.getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
-				if (userPurStatus != null)
-					play.setUserPurStatus(userPurStatus);
-			}
 			
 			if (StringUtils.isNotEmpty(mapperVO.getPlayProdId()) && !DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(mapperVO.getProductInfoType())) {
 				// default 값 설정 "DP013002" : 구매시
@@ -889,10 +867,9 @@ public class VodServiceImpl implements VodService {
 	 * 
 	 * @param mapperVO
 	 * @param req
-	 * @param existenceMap
 	 * @return
 	 */
-	private Store mapAuthorityStore(VodDetail mapperVO, List<VodDetail> vodDetailList, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
+	private Store mapAuthorityStore(VodDetail mapperVO, List<VodDetail> vodDetailList, VodDetailReq req) {
 		Store store = null;
 		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
 			store = new Store();
@@ -953,10 +930,9 @@ public class VodServiceImpl implements VodService {
 	 * 
 	 * @param mapperVO
 	 * @param req
-	 * @param existenceMap
 	 * @return
 	 */
-	private Play mapPlay(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
+	private Play mapPlay(VodDetail mapperVO, VodDetailReq req) {
 		Play play = null;
 		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
 			play = new Play();
@@ -990,14 +966,6 @@ public class VodServiceImpl implements VodService {
 
 			// 판매상태
 			play.setSalesStatus(mapperVO.getPlayProdStatusCd());
-
-			// 사용자 구매 가능 상태
-			if (existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId())
-					&& StringUtils.isNotBlank(req.getUserKey()) && StringUtils.isNotBlank(req.getDeviceKey())) {
-				String userPurStatus = this.getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
-				if (userPurStatus != null)
-					play.setUserPurStatus(userPurStatus);
-			}
 
 		}
 		return play;
@@ -1258,17 +1226,12 @@ public class VodServiceImpl implements VodService {
 	/**
 	 * SubProduct Mapping
 	 * 
-	 * @param req
-	 *            요청 정보
-	 * @param product
-	 *            Channel 정보
-	 * @param vodDetailList
-	 *            VOD Episode List
-	 * @param existenceListRes
-	 *            기구매 체크 결과
+	 * @param req : 요청 정보
+	 * @param product : Channel 정보
+	 * @param vodDetailList : Episode List
+	 * @param supportFhdVideo : Full HD 화질 지원 여부
 	 */
-	private void mapSubProductList(VodDetailReq req, Product product, List<VodDetail> vodDetailList,
-			ExistenceListRes existenceListRes, boolean supportFhdVideo) {
+	private void mapSubProductList(VodDetailReq req, Product product, List<VodDetail> vodDetailList, boolean supportFhdVideo) {
 
 		List<Product> subProjectList = new ArrayList<Product>();
 
@@ -1278,14 +1241,6 @@ public class VodServiceImpl implements VodService {
 			// SubProduct TotalCount
 			VodDetail temp = vodDetailList.get(0);
 			product.setSubProductTotalCount(temp.getTotalCount());
-
-			// 기구매 체크
-			Map<String, ExistenceRes> existenceMap = new HashMap<String, ExistenceRes>();
-			if (existenceListRes != null) {
-				for (ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
-					existenceMap.put(existenceRes.getProdId(), existenceRes);
-				}
-			}
 
 			for (VodDetail mapperVO : vodDetailList) {
 				Product subProduct = new Product();
@@ -1328,7 +1283,7 @@ public class VodServiceImpl implements VodService {
 				subProduct.setDistributor(distributor);
 
 				// rights
-				Rights rights = this.mapRights(mapperVO, req, existenceMap);
+				Rights rights = this.mapRights(mapperVO, req);
 
 				// 이용 기간 기준(대여)
 				if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
@@ -1386,17 +1341,12 @@ public class VodServiceImpl implements VodService {
 	 * Update By 2015.10.15 이석희 I-S PLUS 
 	 * SubProduct Mapping V3
 	 * 
-	 * @param req
-	 *            요청 정보
-	 * @param product
-	 *            Channel 정보
-	 * @param vodDetailList
-	 *            VOD Episode List
-	 * @param existenceListRes
-	 *            기구매 체크 결과
+	 * @param req : 요청 정보
+	 * @param product : Channel 정보
+	 * @param subProductCidList  : Episode List
+	 * @param supportFhdVideo : Full HD 화질 지원 여부
 	 */
-	private void mapSubProductListV3(VodDetailReq req, Product product, List<VodDetail> subProductCidList , 
-			Map<String, Object> param ,	ExistenceListRes existenceListRes, boolean supportFhdVideo) {
+	private void mapSubProductListV3(VodDetailReq req, Product product, List<VodDetail> subProductCidList ,  Map<String, Object> param , boolean supportFhdVideo) {
 
 
 		List<Product> subProjectList = new ArrayList<Product>();
@@ -1408,15 +1358,7 @@ public class VodServiceImpl implements VodService {
 			VodDetail temp = subProductCidList.get(0);
 			product.setSubProductTotalCount(temp.getTotalCount());
 
-			// 기구매 체크
-			Map<String, ExistenceRes> existenceMap = new HashMap<String, ExistenceRes>();
-			if (existenceListRes != null) {
-				for (ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
-					existenceMap.put(existenceRes.getProdId(), existenceRes);
-				}
-			}
-			
-			
+
 			for (VodDetail cidVO : subProductCidList) {
 				Product subProduct = new Product();
 				
@@ -1458,7 +1400,7 @@ public class VodServiceImpl implements VodService {
 				subProduct.setDistributor(distributor);
 
 				for (VodDetail mapperVO : subProductCidList) {
-					Authority authority = this.mapAuthority(mapperVO, productList, req, existenceMap);
+					Authority authority = this.mapAuthority(mapperVO, productList, req);
 					subProduct.setAuthority(authority);					
 				}
 				
