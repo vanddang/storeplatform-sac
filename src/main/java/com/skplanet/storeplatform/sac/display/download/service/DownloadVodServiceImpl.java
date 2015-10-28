@@ -111,7 +111,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		String idType = downloadVodSacReq.getIdType(); // 조회 상품 ID 유형
 		String productId = downloadVodSacReq.getProductId(); // 조회 상품 ID
 		// ID유형 유효값 체크
-		if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType) && !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
+		if (!DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
 			throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
 		}
 
