@@ -1116,7 +1116,7 @@
                   AND NVL(T3.CHAPTER, 999) > #{baseChapter}
                     </if>
                 </if>
-                ) WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+                ) 
             ) T4
         ) T
         , TB_DP_MENU_CATEGORY_DESC MCD
