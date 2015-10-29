@@ -336,6 +336,10 @@
                  , ( CASE WHEN TA.STORE_PROD_ID is not null THEN 'Y' ELSE 'N' END ) AS SUPPORT_STORE
                  , ( CASE WHEN TA.PLAY_PROD_ID is not null THEN 'Y' ELSE 'N' END ) AS SUPPORT_PLAY
                  , HDV_SPRT_YN
+                 , PREFIX_TITLE
+                 , VOD_TITL_NM                 
+                 , BADGE_OPT_TEXT
+                 , BADGE_CD                    
             FROM
                  (
                    SELECT  ROWNUM AS RNUM
@@ -385,6 +389,10 @@
                          , STRM_NETWORK_CD
                          , FILE_PATH
                          , HDV_SPRT_YN
+                         , PREFIX_TITLE
+                         , VOD_TITL_NM                         
+                         , BADGE_OPT_TEXT
+                         , BADGE_CD                                
                      FROM
                           (
                             SELECT  JA.CID
@@ -444,6 +452,10 @@
                                   , MAX( JA.STRM_NETWORK_CD ) AS STRM_NETWORK_CD
                                   , MAX( JA.FILE_PATH ) AS FILE_PATH
                                   , MAX( JA.HDV_SPRT_YN) AS HDV_SPRT_YN
+                                  , MAX( JA.PREFIX_TITLE ) AS PREFIX_TITLE 
+                                  , MAX( JA.VOD_TITL_NM ) AS VOD_TITL_NM                                  
+                                  , MAX( JA.BADGE_OPT_TEXT ) AS BADGE_OPT_TEXT
+                                  , MAX( JA.BADGE_CD ) AS BADGE_CD                                    
                               FROM
                                    (
                                     SELECT  IA.MENU_ID
@@ -494,6 +506,10 @@
                                           , IA.STRM_NETWORK_CD
                                           , IA.FILE_PATH
                                           , IA.HDV_SPRT_YN
+                                          , IA.PREFIX_TITLE
+                                          , IA.VOD_TITL_NM                                          
+                                          , IA.BADGE_OPT_TEXT
+                                          , IA.BADGE_CD                                          
                                       FROM
                                            (
                                             SELECT A.MENU_ID
@@ -503,8 +519,10 @@
                                                  , E.HDV_YN
                                                  , P.DWLD_AREA_LIMT_YN
                                                  , E.DOLBY_SPRT_YN                                         
-                                                 , E.DWLD_NETWORK_CD 
-                                                 , E.STRM_NETWORK_CD                                          
+                                                 , E.DWLD_NETWORK_CD AS CH_DWLD_NETWORK_CD /* 채널 다운로드_네트워크 제한 코드*/ 
+                                                 , E.STRM_NETWORK_CD AS CH_STRM_NETWORK_CD /* 채널 스트리밍_네트워크 제한 코드*/
+                                                 , P.DWLD_NETWORK_CD /* 에피소드 다운로드_네트워크 제한 코드*/ 
+                                                 , P.STRM_NETWORK_CD /* 에피소드 스트리밍_네트워크 제한 코드*/                                                                                          
                                                  , Q.PROD_NM 
                                                  , J.CID
                                                  , J.PROD_ID                           
@@ -565,6 +583,16 @@
                                                  , M.EPSD_PLAY_TM
                                                  , M.FILE_PATH
                                                  , L.HDV_SPRT_YN
+                                                 , PREFIX.PREFIX_TITLE AS PREFIX_TITLE
+                                                 , PREFIX.PREFIX_TITLE AS VOD_TITL_NM                                                 
+	                                             , (SELECT /*+ INDEX_JOIN(TB_CM_CD) */
+	                                                       CASE WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NULL) THEN  Y.CD_NM  
+	                                                            WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NOT NULL) THEN  PREFIX.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM 
+	                                                            ELSE NULL END
+	                                                  FROM TB_CM_CD Y
+	                                                 WHERE PREFIX.BADGE_CD = Y.CD_ID(+)
+	                                                   AND Y.LANG_CD(+) = #{langCd}) AS BADGE_OPT_TEXT
+	                                             , PREFIX.BADGE_CD                                                          
                                               FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
                                                  , TB_DP_MENU_CATEGORY           B
                                                  , TB_DP_PROD                    D
@@ -580,6 +608,7 @@
                                                  , TB_DP_VOD_PROD                P
                                                  , TB_DP_PROD_DESC               Q
                                                  , TB_DP_USE_POLICY              U
+                                                 , TB_DP_PROD_PREFIX             PREFIX
                                              WHERE A.MENU_ID = B.MENU_ID
                                                AND A.PROD_ID = D.PROD_ID
                                                AND D.PROD_ID = E.PROD_ID  
@@ -622,10 +651,7 @@
                                                <if test="idType == 'episode'">
                                                AND J.PROD_ID = #{productId} /* 에피소드 ID 조회 */
                                                </if>
-                                               <if test="idType == 'channel'">
-                                               AND D.PROD_ID= #{productId}    /* 채널 Id조회 */
-                                               AND J.BASE_YN = 'Y'    /* 에피소드 상품 BASE_YN 여부 */
-                                               </if>                                               
+                                               AND J.PROD_ID  = PREFIX.PROD_ID(+)  /* 에피소드 상품의 PREFIX 및 BADGE 정보 */                                              
                                            ) IA
                                    )JA
                               GROUP BY JA.CID
@@ -727,6 +753,10 @@
                  , ( CASE WHEN TA.STORE_PROD_ID is not null THEN 'Y' ELSE 'N' END ) AS SUPPORT_STORE
                  , ( CASE WHEN TA.PLAY_PROD_ID is not null THEN 'Y' ELSE 'N' END ) AS SUPPORT_PLAY
                  , HDV_SPRT_YN
+                 , PREFIX_TITLE
+                 , VOD_TITL_NM                 
+                 , BADGE_OPT_TEXT
+                 , BADGE_CD                       
             FROM
                  (
                    SELECT  ROWNUM AS RNUM
@@ -776,6 +806,10 @@
                          , STRM_NETWORK_CD
                          , FILE_PATH
                          , HDV_SPRT_YN
+                         , PREFIX_TITLE
+                         , VOD_TITL_NM                         
+                         , BADGE_OPT_TEXT
+                         , BADGE_CD                               
                      FROM
                           (
                             SELECT  JA.CID
@@ -835,6 +869,10 @@
                                   , MAX( JA.STRM_NETWORK_CD ) AS STRM_NETWORK_CD
                                   , MAX( JA.FILE_PATH ) AS FILE_PATH
                                   , MAX( JA.HDV_SPRT_YN) AS HDV_SPRT_YN
+                                  , MAX( JA.PREFIX_TITLE ) AS PREFIX_TITLE 
+                                  , MAX( JA.VOD_TITL_NM ) AS VOD_TITL_NM                                  
+                                  , MAX( JA.BADGE_OPT_TEXT ) AS BADGE_OPT_TEXT
+                                  , MAX( JA.BADGE_CD ) AS BADGE_CD                                       
                               FROM
                                    (
                                     SELECT  IA.MENU_ID
@@ -885,6 +923,10 @@
                                           , IA.STRM_NETWORK_CD
                                           , IA.FILE_PATH
                                           , IA.HDV_SPRT_YN
+                                          , IA.PREFIX_TITLE
+                                          , IA.VOD_TITL_NM                                          
+                                          , IA.BADGE_OPT_TEXT
+                                          , IA.BADGE_CD                                              
                                       FROM
                                            (
                                             SELECT A.MENU_ID
@@ -894,8 +936,10 @@
                                                  , E.HDV_YN
                                                  , P.DWLD_AREA_LIMT_YN
                                                  , E.DOLBY_SPRT_YN                                         
-                                                 , E.DWLD_NETWORK_CD 
-                                                 , E.STRM_NETWORK_CD                                          
+                                                 , E.DWLD_NETWORK_CD AS CH_DWLD_NETWORK_CD /* 채널 다운로드_네트워크 제한 코드*/ 
+                                                 , E.STRM_NETWORK_CD AS CH_STRM_NETWORK_CD /* 채널 스트리밍_네트워크 제한 코드*/
+                                                 , P.DWLD_NETWORK_CD /* 에피소드 다운로드_네트워크 제한 코드*/ 
+                                                 , P.STRM_NETWORK_CD /* 에피소드 스트리밍_네트워크 제한 코드*/                                                                                    
                                                  , Q.PROD_NM 
                                                  , J.CID
                                                  , J.PROD_ID                           
@@ -956,6 +1000,16 @@
                                                  , M.EPSD_PLAY_TM
                                                  , M.FILE_PATH
                                                  , L.HDV_SPRT_YN
+                                                 , PREFIX.PREFIX_TITLE AS PREFIX_TITLE
+                                                 , PREFIX.PREFIX_TITLE AS VOD_TITL_NM                                                 
+                                                 , (SELECT /*+ INDEX_JOIN(TB_CM_CD) */
+                                                           CASE WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NULL) THEN  Y.CD_NM  
+                                                                WHEN (PREFIX.BADGE_CD IS NOT NULL AND PREFIX.BADGE_OPT_TEXT IS NOT NULL) THEN  PREFIX.BADGE_OPT_TEXT || Y.ADD_FIELD_01 ||' '|| Y.CD_NM 
+                                                                ELSE NULL END
+                                                      FROM TB_CM_CD Y
+                                                     WHERE PREFIX.BADGE_CD = Y.CD_ID(+)
+                                                       AND Y.LANG_CD(+) = #{langCd}) AS BADGE_OPT_TEXT
+                                                 , PREFIX.BADGE_CD                                                       
                                               FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
                                                  , TB_DP_MENU_CATEGORY           B
                                                  , TB_DP_PROD                    D
@@ -971,6 +1025,7 @@
                                                  , TB_DP_VOD_PROD                P
                                                  , TB_DP_PROD_DESC               Q
                                                  , TB_DP_USE_POLICY              U
+                                                 , TB_DP_PROD_PREFIX             PREFIX
                                              WHERE A.MENU_ID = B.MENU_ID
                                                AND A.PROD_ID = D.PROD_ID
                                                AND D.PROD_ID = E.PROD_ID  
@@ -1011,6 +1066,7 @@
                                                                           AND PR.PROD_ID = O.PROD_ID)
                                                AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */                                               
                                                AND J.PROD_ID = #{episodeId} /* 에피소드 ID 조회 */
+                                               AND J.PROD_ID  = PREFIX.PROD_ID(+)
                                            ) IA
                                    )JA
                               GROUP BY JA.CID
