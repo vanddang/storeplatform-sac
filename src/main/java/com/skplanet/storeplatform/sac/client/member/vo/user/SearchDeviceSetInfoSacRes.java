@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * 2.1.48. 휴대기기 설정 정보 조회. [RESPONSE]
  * 
- * Updated on : 2014. 10. 31. Updated by : Rejoice, Burkhan
+ * Updated on : 2015. 10. 29. Updated by : 최진호, 보고지티.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SearchDeviceSetInfoSacRes extends CommonInfo {
@@ -39,6 +39,10 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	private String isDownloadWifiOnly;
 	/** ICAS 인증 여부. */
 	private String isIcasAuth;
+	/** 실명인증 일자. */
+	private String realNameDate;
+	/** 실명인증 MDN. */
+	private String realNameMdn;
 
 	/**
 	 * @return the isPin
@@ -218,6 +222,44 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	 */
 	public void setIsIcasAuth(String isIcasAuth) {
 		this.isIcasAuth = isIcasAuth;
+	}
+
+	/**
+	 * 실명인증 일자(을)를 리턴한다.
+	 * 
+	 * @return realNameDate - realNameDate
+	 */
+	public String getRealNameDate() {
+		return this.realNameDate;
+	}
+
+	/**
+	 * 실명인증 일자(을)를 셋팅한다.
+	 * 
+	 * @param realNameDate
+	 *            realNameDate
+	 */
+	public void setRealNameDate(String realNameDate) {
+		this.realNameDate = realNameDate;
+	}
+
+	/**
+	 * 실명인증 MDN(을)를 리턴한다.
+	 * 
+	 * @return realNameMdn - realNameMdn
+	 */
+	public String getRealNameMdn() {
+		return this.realNameMdn;
+	}
+
+	/**
+	 * 실명인증 MDN(을)를 셋팅한다.
+	 * 
+	 * @param realNameMdn
+	 *            realNameMdn
+	 */
+	public void setRealNameMdn(String realNameMdn) {
+		this.realNameMdn = realNameMdn;
 	}
 
 }
