@@ -37,7 +37,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceSetService;
 /**
  * 휴대기기 설정 관련 Controller
  * 
- * Updated on : 2014. 10. 28. Updated by : Rejoice, Burkhan
+ * Updated on : 2015. 10. 29. Updated by : 최진호, 보고지티.
  */
 @RequestMapping(value = "/member/user")
 @Controller
@@ -155,7 +155,7 @@ public class DeviceSetController {
 
 	/**
 	 * <pre>
-	 * 2.1.48. 휴대기기 설정 정보 조회.
+	 * 2.1.47. 휴대기기 설정 정보 조회.
 	 * </pre>
 	 * 
 	 * @param header
@@ -177,7 +177,7 @@ public class DeviceSetController {
 
 	/**
 	 * <pre>
-	 * 2.1.49. 휴대기기 설정 정보 등록/수정.
+	 * 2.1.48. 휴대기기 설정 정보 등록/수정.
 	 * </pre>
 	 * 
 	 * @param header

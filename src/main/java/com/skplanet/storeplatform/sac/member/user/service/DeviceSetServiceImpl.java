@@ -55,7 +55,7 @@ import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 /**
  * 휴대기기 설정 정보 관련 ServiceImpl
  * 
- * Updated on : 2014. 10. 28. Updated by : Rejoice, Burkhan
+ * Updated on : 2015. 10. 29. Updated by : 최진호, 보고지티.
  */
 @Service
 public class DeviceSetServiceImpl implements DeviceSetService {
@@ -618,6 +618,9 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		// Default=N, ICAS_AUTH_YN 컬럼은 디폴트 값이 없고 기존 데이터는 NULL로 되어 있으므로 주의.
 		res.setIsIcasAuth(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsIcasAuth(),
 				"N"));
+		res.setRealNameDate(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getRealNameDate());
+		res.setRealNameMdn(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getRealNameMdn());
+
 		return res;
 	}
 
@@ -665,6 +668,9 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		userMbrDeviceSet.setIsAdultLock(req.getIsAdultLock());
 		userMbrDeviceSet.setIsDownloadWifiOnly(req.getIsDownloadWifiOnly());
 		userMbrDeviceSet.setIsIcasAuth(req.getIsIcasAuth());
+		userMbrDeviceSet.setRealNameDate(req.getRealNameDate());
+		userMbrDeviceSet.setRealNameMdn(req.getRealNameMdn());
+
 		modifyDeviceSetInfoRequest.setUserMbrDeviceSet(userMbrDeviceSet);
 
 		// SC Call
