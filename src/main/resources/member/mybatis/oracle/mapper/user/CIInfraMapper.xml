@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="CIInfra">
+
+    <select id="getUserKeyInfo" parameterType="CIInfraSearchUserInfoRequest" resultType="CIInfraUserInfo">
+	    /* CIInfraMapper.getUserKeyInfo, 사용자 회원키 조회, 반범진, 2014-10-08*/
+		SELECT INTG_SVC_NO AS imSvcNo,
+		       MBR_ID AS userId,
+		       USERMBR_NO AS imMbrNo,
+		       INSD_USERMBR_NO AS userKey
+		  FROM SPMBR.TB_US_USERMBR
+		 WHERE TENANT_ID = #{commonRequest.tenantID}
+		  AND INTG_SVC_NO = #{imSvcNo} 
+		  AND MBR_STATUS_MAIN_CD = 'US010201'
+    </select>
+    
+    <select id="getListUserKey" parameterType="CIInfraListUserKeyRequest" resultType="CIInfraUserInfo">
+        /* CIInfraMapper.getListUserKey, 회원키 리스트 조회, 반범진, 2014-10-08*/
+	    SELECT USERMBR_NO AS imMbrNo,
+	       INSD_USERMBR_NO AS userKey,
+	       MBR_CLAS_CD AS userType,
+	       PROC_DT AS lastTime
+		  FROM SPMBR.TB_US_CIINFRA_USERMBR
+		 WHERE SEARCH_TYPE = #{searchType} AND PROC_DAY = #{searchDay}
+    </select>
+    
+    <select id="getUserDetailInfo" parameterType="CIInfraDetailUserRequest" resultType="CIInfraUserInfo">
+        /* CIInfraMapper.getUserDetailInfo, 사용자 정보 상세 조회, 반범진, 2014-10-08*/
+		SELECT MBR_ID AS userId,
+		       USERMBR_NO AS imMbrNo,
+		       INSD_USERMBR_NO AS userKey,
+		       TEL_NO AS phone,
+		       MBR_NM AS name,
+		       BIRTH AS birth,
+		       SEX AS sex,
+		       CI AS ci,
+		       DI AS di,
+		       TO_CHAR(AUTH_DT, 'YYYYMMDDHH24MISS') AS lastTime,
+		       '' AS mdn
+		  FROM (  SELECT A.MBR_ID,
+		                 A.USERMBR_NO,
+		                 A.INSD_USERMBR_NO,
+		                 A.TEL_NO,
+		                 B.MBR_NM,
+		                 B.BIRTH,
+		                 B.SEX,
+		                 B.CI,
+		                 B.DI,
+		                 B.AUTH_DT
+		            FROM    (SELECT MBR_ID,
+		                            USERMBR_NO,
+		                            INSD_USERMBR_NO,
+		                            TEL_NO
+		                       FROM SPMBR.TB_US_USERMBR
+		                      WHERE     TENANT_ID = #{commonRequest.tenantID}
+<if test="keyType.equalsIgnoreCase('K01')">  AND INTG_SVC_NO = #{key} </if>
+<if test="keyType.equalsIgnoreCase('K02')">  AND INSD_USERMBR_NO = #{key} </if>
+<if test="keyType.equalsIgnoreCase('K03')">  AND MBR_ID = #{key} </if>
+		                            AND MBR_STATUS_MAIN_CD = 'US010201'
+		                            AND MBR_CLAS_CD = 'US011503') A
+		                 LEFT JOIN
+		                    SPMBR.TB_US_MBR_AUTH B
+		                 ON A.INSD_USERMBR_NO = B.INSD_USERMBR_NO
+		        ORDER BY B.AUTH_SEQ DESC)
+		 WHERE ROWNUM = 1
+    </select>
+    
+</mapper>

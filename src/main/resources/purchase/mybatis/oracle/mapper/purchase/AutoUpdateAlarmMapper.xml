@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="PurchaseAlarm">
+
+    <!-- 1. update SQL-->
+    <update id="updateAlarm" parameterType="autoUpdateAlarm">
+        /* PurchaseAlarm.updateAlarm, 자동업데이트 거부/거부취소, 조용진/엔텔스, 2014-02-25 */
+        UPDATE  tb_pr_prchs_dtl
+           SET  alarm_yn =  #{alarmYn, jdbcType=VARCHAR}  /* 알람여부 N거부,Y거부취소*/
+           <if test='alarmYn == "Y"'>
+                , USE_HIDING_YN = 'N' /* 거부취소일경우 숨김처리 해제 */
+           </if>
+              , upd_id = #{systemId, jdbcType=VARCHAR}  /* 업데이트시스템ID */
+              , upd_dt = SYSDATE  /* 업데이트일시 */
+         WHERE  use_tenant_id = #{tenantId} 
+           AND  use_insd_usermbr_no = #{userKey}
+           AND  prod_id = #{prodId}
+    </update>  
+
+</mapper>

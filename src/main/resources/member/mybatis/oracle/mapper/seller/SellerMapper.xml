@@ -1,0 +1,3005 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="Seller">
+
+
+
+<!-- 판매자회원 전환신청시 전환신청 테이블 추가  -->
+    <update id="upgradeSellerChanged" parameterType="sellerUpgrade">
+        INSERT INTO tb_us_sellermbr_changed_aplc (  /* SellerMapper.upgradeSellerChanged,판매자 전환신청, wisestone_mikepark, 2013-12-23 */
+			changed_aplc_id,
+            <if test="charger  != null"> chrgpers_nm  , </if>
+            <if test="repEmail  != null"> chrgpers_email  , </if>
+            <if test="repWebsite  != null"> rep_website  , </if>
+            <if test="cordedTelephone  != null"> chrgpers_wire_tel_no  , </if>
+            <if test="sellerPhone  != null"> chrgpers_wils_tel_no  , </if>
+            <if test="isRecvSMS  != null"> sms_recv_yn  , </if>            
+            <if test="isOfficialAuth  != null"> pub_auth_yn  , </if>
+            acct_no  ,
+            <if test="bankCode  != null"> bank_cd  , </if>
+            <if test="bankAcctName  != null"> depstr_nm  , </if>            
+            <if test="isAccountReal  != null"> acct_auth_yn  , </if>
+            <if test="sellerCompany  != null"> comp_nm  , </if>
+            <if test="sellerBizNumber  != null"> biz_reg_no  , </if>
+            <if test="sellerBizCategory  != null"> cond_nm  , </if>            
+            <if test="sellerBizType  != null"> indt_nm  , </if>
+            <if test="sellerClassTo  != null"> biz_kind_cd  , </if>
+            <if test="isBizTaxable  != null"> easy_txnpers_yn  , </if>
+            <if test="customerPhone  != null"> rep_tel_no  , </if>            
+
+            <if test="ceoName  != null"> ceo_nm  , </if>
+            <if test="sellerBizCorpNumber  != null"> corp_reg_no  , </if>
+            <if test="sellerBizZip  != null"> enprpl_zip  , </if>            
+            <if test="sellerBizAddress  != null"> enprpl_addr  , </if>
+            <if test="sellerBizDetailAddress  != null"> enprpl_addr_dtl  , </if>
+            <if test="isBizRegistered  != null"> cmnt_salbiz_decl_yn  , </if>
+            <if test="bizRegNumber  != null"> cmnt_salbiz_decl_no  , </if>            
+            <if test="bizUnregReason  != null"> cmnt_salbiz_undecl_reason_cd  , </if>
+            <if test="changedCd  != null"> changed_case_cd  , </if>
+             appr_req_day ,
+            <if test="sellerTelecom  != null"> mno_cd  , </if>
+            <if test="bankName  != null"> fr_bank_nm  , </if>
+            <if test="bankBranchCode  != null"> fr_brch_cd  , </if>
+            <if test="bankBranch  != null"> fr_brch_nm  , </if>
+            <if test="swiftCode  != null"> intl_swift_cd  , </if>
+            <if test="abaCode  != null"> intl_aba  , </if>            
+            <if test="ibanCode  != null"> intl_iban  , </if>
+            <if test="bankAddress  != null"> fr_bank_addr  , </if>
+            <if test="bankLocation  != null"> fr_bank_loc  , </if>
+            <if test="ceoBirthDay  != null"> ceo_birth  , </if>            
+            <if test="sellerLanguage  != null"> lang_cd  , </if>
+            <if test="tpinCode  != null"> fr_tin_no  , </if>
+            <if test="vendorCode  != null"> vendor_cd  , </if>            
+            <if test="repPhoneArea  != null"> rep_tel_nation_no  , </if>
+            
+            <if test="bizGrade  != null"> delib_grd_cd  , </if>
+            <if test="isDeductible  != null"> auto_ded_posb_target_yn  , </if>  
+            <if test="marketCode  != null"> lnchg_mall_cd  , </if>
+            <if test="marketStatus  != null"> lnchg_mbr_status_cd  , </if>
+            <if test="accountRealDate != null"> acct_auth_dt  , </if>
+            <if test="isTaxable != null"> vat_yn  , </if>
+            <if test="bankBsb != null"> fr_bsb  , </if>
+            insd_sellermbr_no   
+            
+        ) VALUES (
+            sq_us_sellermbr_changed_aplc.NEXTVAL,
+            <if test="charger  != null"> #{charger}  , </if>
+            <if test="repEmail  != null"> #{repEmail}  , </if>
+            <if test="repWebsite  != null"> #{repWebsite}  , </if>
+            <if test="cordedTelephone  != null"> #{cordedTelephone}  , </if>
+            <if test="sellerPhone  != null"> #{sellerPhone}  , </if>
+            <if test="isRecvSMS  != null"> #{isRecvSMS}  , </if>            
+            <if test="isOfficialAuth  != null"> #{isOfficialAuth}  , </if>
+            PKG_CRYPTO.ENCRYPT(#{bankAccount})  , 
+            <if test="bankCode  != null"> #{bankCode}  , </if>
+            <if test="bankAcctName  != null"> #{bankAcctName}  , </if>            
+            <if test="isAccountReal  != null"> #{isAccountReal}  , </if>
+            <if test="sellerCompany  != null"> #{sellerCompany}  , </if>
+            <if test="sellerBizNumber  != null"> #{sellerBizNumber}  , </if>
+            <if test="sellerBizCategory  != null"> #{sellerBizCategory}  , </if>            
+            <if test="sellerBizType  != null"> #{sellerBizType}  , </if>
+            <if test="sellerClassTo  != null"> #{sellerClassTo}  , </if>
+            <if test="isBizTaxable  != null"> #{isBizTaxable}  , </if>
+            <if test="customerPhone  != null"> #{customerPhone}  , </if>            
+            
+            <if test="ceoName  != null"> #{ceoName}  , </if>
+            <if test="sellerBizCorpNumber  != null"> PKG_CRYPTO.ENCRYPT(#{sellerBizCorpNumber})  , </if>
+            <if test="sellerBizZip  != null"> #{sellerBizZip}  , </if>            
+            <if test="sellerBizAddress  != null"> #{sellerBizAddress}  , </if>
+            <if test="sellerBizDetailAddress  != null"> #{sellerBizDetailAddress}  , </if>
+            <if test="isBizRegistered  != null"> #{isBizRegistered}  , </if>
+            <if test="bizRegNumber  != null"> #{bizRegNumber}  , </if>            
+            <if test="bizUnregReason  != null"> #{bizUnregReason}  , </if>
+            <if test="changedCd  != null"> #{changedCd}  , </if>
+            
+            TO_CHAR(SYSDATE, 'YYYYMMDD'),   
+            <if test="sellerTelecom  != null"> #{sellerTelecom}  , </if>
+            <if test="bankName  != null"> #{bankName}  , </if>
+            <if test="bankBranchCode  != null"> #{bankBranchCode}  , </if>
+            <if test="bankBranch  != null"> #{bankBranch}  , </if>
+            <if test="swiftCode  != null"> #{swiftCode}  , </if>
+            <if test="abaCode  != null"> #{abaCode}  , </if>            
+            <if test="ibanCode  != null"> #{ibanCode}  , </if>
+            <if test="bankAddress  != null"> #{bankAddress}  , </if>
+            <if test="bankLocation  != null"> #{bankLocation}  , </if>
+            <if test="ceoBirthDay  != null"> #{ceoBirthDay}  , </if>            
+            <if test="sellerLanguage  != null"> #{sellerLanguage}  , </if>
+            <if test="tpinCode  != null"> #{tpinCode}  , </if>
+            <if test="vendorCode  != null"> #{vendorCode}  , </if>            
+            <if test="repPhoneArea  != null"> #{repPhoneArea}  , </if>
+            
+            <if test="bizGrade  != null"> #{bizGrade}  , </if>
+            <if test="isDeductible  != null"> #{isDeductible}  , </if>  
+            <if test="marketCode  != null"> #{marketCode}  , </if>
+            <if test="marketStatus  != null"> #{marketStatus}  , </if>
+            <if test="accountRealDate != null"> #{accountRealDate} ,  </if>
+            <if test="isTaxable != null"> #{isTaxable} , </if>
+            <if test="bankBsb != null">  #{bankBsb}  , </if>
+            #{sellerKey}  
+        )
+    </update>
+    
+    
+
+  
+  
+
+<!-- 판매자회원 전환신청시 판매자 테이블 업데이트 -->
+    <update id="upgradeSellerMbr" parameterType="sellerMbr">
+       UPDATE tb_us_sellermbr   /* SellerMapper.upgradeSellerMbr, 판매자회원 전환신청시 판매자 테이블 업데이트, wisestone_jloveonly, 2013-12-24 */
+          SET prsn_corp_clsf_cd          =  #{sellerClass},
+              chrg_free_clsf_cd          =  #{sellerCategory},
+              seller_status_main_cd      =  #{sellerMainStatus},
+              seller_status_sub_cd       =  #{sellerSubStatus}, 
+              start_dt                      = SYSDATE ,
+              upd_dt                        = SYSDATE 
+       WHERE 
+            insd_sellermbr_no = #{sellerKey}   
+       AND  sellermbr_id      = #{sellerID}
+    </update>
+
+
+
+<!-- 판매자회원 정산정보 업데이트 서류문서 테이블 -->
+    <update id="updateAccountSellerDocument" parameterType="document">
+        MERGE INTO tb_us_sellermbr_doc u   /* SellerMapper.updateAccountSellerDocument, 판매자회원 정산정보 업데이트 서류문서 테이블, wisestone_jloveonly, 2013-12-24 */
+        USING DUAL ON (
+              u.changed_aplc_id    = (      
+                                            SELECT changed_aplc_id FROM 
+                                            ( 
+                                                SELECT 
+                                                    changed_aplc_id 
+                                                FROM 
+                                                    tb_us_sellermbr_changed_aplc 
+                                                WHERE 
+                                                    insd_sellermbr_no =  #{sellerKey}  
+                                                    ORDER BY changed_aplc_id DESC 
+                                            )a 
+                                            WHERE ROWNUM=1 
+                                     )                  AND        
+              u.doc_cd              = #{documentCode}   AND                                              
+              u.insd_sellermbr_no   = #{sellerKey}
+        )
+        WHEN MATCHED THEN
+        UPDATE SET 
+            <if test="documentPath != null">   reg_doc_file_path = #{documentPath},   </if>
+            <if test="documentName != null">   reg_doc_file_nm = #{documentName},   </if>
+            <if test="documentSize != null">   reg_doc_size = #{documentSize},   </if>
+            <if test="updateID != null">   upd_id = #{updateID},   </if>
+            <if test="isUsed != null">   use_yn = #{isUsed},   </if>
+            upd_dt = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT (
+            changed_aplc_id,
+            <if test="documentCode != null">   doc_cd,   </if>
+            <if test="sellerKey != null">   insd_sellermbr_no,   </if>
+            <if test="documentPath != null">   reg_doc_file_path,   </if>
+            <if test="documentName != null">   reg_doc_file_nm,   </if>
+            <if test="documentSize != null">   reg_doc_size,   </if>
+            reg_dt,
+            <if test="regID != null">   reg_id,   </if>
+            <if test="updateID != null">   upd_id,   </if>
+            <if test="isUsed != null">   use_yn,   </if>
+            upd_dt
+        ) VALUES (
+            (
+                SELECT changed_aplc_id FROM 
+	            ( 
+	                SELECT 
+	                    changed_aplc_id 
+	                FROM 
+	                    tb_us_sellermbr_changed_aplc 
+	                WHERE 
+	                    insd_sellermbr_no =  #{sellerKey}  
+	                    ORDER BY changed_aplc_id DESC 
+	            )A 
+	            WHERE ROWNUM=1 
+            ),
+            <if test="documentCode != null">   #{documentCode},   </if>
+            <if test="sellerKey != null">   #{sellerKey},   </if>
+            <if test="documentPath != null">   #{documentPath},   </if>
+            <if test="documentName != null">   #{documentName},   </if>
+            <if test="documentSize != null">   #{documentSize},   </if>
+            SYSDATE,
+            <if test="regID != null">   #{regID},   </if>
+            <if test="updateID != null">   #{updateID},   </if>
+            <if test="isUsed != null">   #{isUsed},   </if>
+            SYSDATE
+        )
+    </update>
+     
+    
+    
+    <!-- 판매자회원 정산정보 업데이트 정산 테이블 History -->
+    <update id="updateAccountSellerAccountHistory" parameterType="sellerAccount">
+       UPDATE tb_us_sellermbr_chrg_sett_acct   /* SellerMapper.updateAccountSellerAccountHistory, 판매자회원 정산정보 업데이트 정산 테이블 History, wisestone_jloveonly, 2013-12-24 */
+          SET 
+              end_day = TO_CHAR( SYSDATE , 'YYYYMMDD') 
+       WHERE insd_sellermbr_no = #{sellerKey}
+       AND seq = (
+            SELECT seq FROM ( SELECT seq FROM tb_us_sellermbr_chrg_sett_acct WHERE insd_sellermbr_no =  #{sellerKey}  ORDER BY seq DESC )a 
+            WHERE ROWNUM=1 
+       )
+
+    </update>
+    
+       
+    
+    <!-- 판매자회원 정산정보 업데이트 전 복사  테이블 -->
+    <update id="insertAccountSellerAccount" parameterType="sellerAccount">
+    <![CDATA[
+        INSERT /* SellerMapper.insertAccountSellerAccount, 판매자회원 정산정보 업데이트 전 복사  , incross_cmlee80, 2015-08-26 */
+               INTO tb_us_sellermbr_chrg_sett_acct (
+                   seq, start_day, end_day,
+                   acct_auth_dt, acct_no, bank_cd, 
+				   depstr_nm, erp_err_msg, 
+				   fr_bank_addr, fr_bank_loc, fr_bank_nm, 
+				   fr_brch_cd, fr_brch_nm, fr_bsb, 
+				   fr_tpin_no, insd_sellermbr_no, intl_aba, 
+				   intl_iban, intl_swift_cd, 
+				   reason
+               )
+        SELECT     
+                   sq_us_sellermbr_chrg_sett_acct.NEXTVAL,
+                   TO_CHAR(SYSDATE, 'YYYYMMDD'),
+                   TO_CHAR( TO_DATE('29991231235959','YYYYMMDDHH24MISS') , 'YYYYMMDD') ,
+                   acct_auth_dt, acct_no, bank_cd, 
+                   depstr_nm, erp_err_msg, 
+                   fr_bank_addr, fr_bank_loc, fr_bank_nm, 
+                   fr_brch_cd, fr_brch_nm, fr_bsb, 
+                   fr_tpin_no, insd_sellermbr_no, intl_aba, 
+                   intl_iban, intl_swift_cd, 
+                   CASE WHEN ( SELECT COUNT(*) 
+                                         FROM tb_us_sellermbr_chrg_sett_acct 
+                                       WHERE insd_sellermbr_no = #{sellerKey}
+                                           AND TRIM(ACCT_NO) IS NOT NULL) > 0 
+                         THEN '변경'
+                         ELSE '최초 등록'
+                   END reason
+          FROM tb_us_sellermbr_chrg_sett_acct
+         WHERE insd_sellermbr_no = #{sellerKey}
+         AND seq = (
+            SELECT seq FROM ( SELECT seq FROM tb_us_sellermbr_chrg_sett_acct WHERE insd_sellermbr_no =  #{sellerKey}  ORDER BY seq DESC )a 
+            WHERE ROWNUM=1 
+       )
+    ]]>
+    </update>
+    
+    
+    
+    
+    <!-- 판매자회원 정산정보 업데이트 정산 테이블 -->
+    <update id="updateAccountSellerAccount" parameterType="sellerAccount">
+        MERGE INTO tb_us_sellermbr_chrg_sett_acct u   /* SellerMapper.updateAccountSellerAccount, 판매자회원 정산정보 업데이트 판매자 테이블 , wisestone_jloveonly, 2013-12-24 */
+        USING DUAL ON (
+              u.insd_sellermbr_no       = #{sellerKey}   AND
+              u.start_day               = TO_CHAR(SYSDATE, 'YYYYMMDD')    AND
+              u.end_day                 = TO_CHAR( TO_DATE('29991231235959','YYYYMMDDHH24MISS') , 'YYYYMMDD') 
+        )
+        WHEN MATCHED THEN
+        UPDATE SET 
+            <if test="bankName != null">   fr_bank_nm = #{bankName},   </if>
+            <if test="accountRealDate != null">   acct_auth_dt = #{accountRealDate},   </if>
+            <if test="bankBranch != null">   fr_brch_nm = #{bankBranch},   </if>
+            <if test="bankBranchCode != null">   fr_brch_cd = #{bankBranchCode},   </if>
+            <if test="swiftCode != null">   intl_swift_cd = #{swiftCode},   </if>
+            <if test="abaCode != null">   intl_aba = #{abaCode},   </if>
+            <if test="ibanCode != null">   intl_iban = #{ibanCode},   </if>
+            <if test="tpinCode != null">   fr_tpin_no = #{tpinCode},   </if>
+            <if test="bankAccount != null">   acct_no = PKG_CRYPTO.ENCRYPT(#{bankAccount}),   </if>
+            <if test="bankAcctName != null">   depstr_nm = #{bankAcctName},   </if>
+            <if test="bankCode != null">   bank_cd = #{bankCode},   </if>
+            <if test="bankBsb != null">   fr_bsb   = #{bankBsb},   </if>
+            reason = u.reason
+        WHEN NOT MATCHED THEN
+        INSERT (
+            seq,
+            start_day,
+            end_day,
+            <if test="bankCode != null">    bank_cd, </if>
+            <if test="bankName != null">    fr_bank_nm, </if>
+            <if test="accountRealDate != null">    acct_auth_dt, </if>
+            <if test="bankBranch != null">    fr_brch_nm, </if>
+            <if test="bankBranchCode != null">    fr_brch_cd, </if>
+            <if test="swiftCode != null">    intl_swift_cd, </if>
+            <if test="abaCode != null">    intl_aba, </if>
+            <if test="ibanCode != null">    intl_iban, </if>
+            <if test="tpinCode != null">    fr_tpin_no, </if>
+            <if test="bankAccount != null">    acct_no, </if>
+            <if test="bankAcctName != null">    depstr_nm, </if>
+            <if test="bankBsb != null">   fr_bsb ,   </if>
+            insd_sellermbr_no ,
+            reason
+        ) VALUES (
+            sq_us_sellermbr_chrg_sett_acct.NEXTVAL ,
+            TO_CHAR(SYSDATE, 'YYYYMMDD'),
+            TO_CHAR( TO_DATE('29991231235959','YYYYMMDDHH24MISS') , 'YYYYMMDD'),              
+            <if test="bankCode != null">    #{bankCode},    </if>
+            <if test="bankName != null">    #{bankName},    </if>
+            <if test="accountRealDate != null">    #{accountRealDate}, </if>
+            <if test="bankBranch != null">    #{bankBranch},  </if>
+            <if test="bankBranchCode != null">    #{bankBranchCode},  </if>
+            <if test="swiftCode != null">    #{swiftCode},   </if>
+            <if test="abaCode != null">    #{abaCode}, </if>
+            <if test="ibanCode != null">    #{ibanCode},    </if>
+            <if test="tpinCode != null">    #{tpinCode},    </if>
+            <if test="bankAccount != null">    PKG_CRYPTO.ENCRYPT(#{bankAccount}), </if>
+            <if test="bankAcctName != null">    #{bankAcctName},  </if>
+            <if test="bankBsb != null">   #{bankBsb},   </if>
+            #{sellerKey},
+             CASE WHEN ( SELECT COUNT(*) 
+                                   FROM tb_us_sellermbr_chrg_sett_acct 
+                                 WHERE insd_sellermbr_no = #{sellerKey}) > 0 
+                   THEN '변경'
+                   ELSE '최초 등록'
+             END
+        )
+    </update>
+    
+    
+    <!-- 판매자회원 정산정보 업데이트 판매자 테이블 -->
+    <update id="updateAccountSellerMbr" parameterType="sellerMbr">
+       UPDATE tb_us_sellermbr   /* SellerMapper.xml, updateAccountSellerMbr, SAC(SC), 김경복, 2015-05-27 */
+          SET
+              <if test="sellerBizType != null">    indt_nm = #{sellerBizType},  </if>
+              <if test="sellerBizCategory != null">    cond_nm = #{sellerBizCategory},  </if>
+              <if test="sellerBizCorpNumber != null">    corp_reg_no = PKG_CRYPTO.ENCRYPT(#{sellerBizCorpNumber}),  </if>
+              <if test="repPhoneArea != null">    rep_tel_nation_no = #{repPhoneArea},  </if>
+              <if test="repPhone != null">    rep_tel_no = #{repPhone},  </if>
+              <if test="repEmail != null">    rep_email = #{repEmail},  </if>              
+              <if test="sellerZip != null">    zip = #{sellerZip},  </if>
+              <if test="sellerAddress != null">    addr = PKG_CRYPTO.ENCRYPT(#{sellerAddress}),  </if>
+              <if test="sellerDetailAddress != null">    dtl_addr = PKG_CRYPTO.ENCRYPT(#{sellerDetailAddress}),  </if>              
+              <if test="sellerBizZip != null">    enprpl_zip = #{sellerBizZip},  </if>
+              <if test="sellerBizAddress != null">    enprpl_addr = #{sellerBizAddress},  </if>
+              <if test="sellerBizDetailAddress != null">    enprpl_addr_dtl = #{sellerBizDetailAddress},  </if>
+              <if test="chargerPhone != null">    chrgpers_wils_tel_no    = #{chargerPhone},  </if>              
+              <if test="vendorCode != null">    vendor_cd = #{vendorCode},  </if>
+              <if test="isBizRegistered != null">    msalbiz_decl_yn = #{isBizRegistered},  </if>
+              <if test="bizRegNumber != null">    msalbiz_decl_no = #{bizRegNumber},  </if>
+              <if test="bizUnregReason != null">    msalbiz_undecl_reason_cd = #{bizUnregReason},  </if>
+              <if test="isBizTaxable != null">    easy_txn_yn = #{isBizTaxable},  </if>
+              <if test="bizGrade != null">    delib_grd_cd = #{bizGrade},  </if>
+              <if test="isDeductible != null">    auto_ded_posb_target_yn = #{isDeductible},  </if>
+              <if test="marketCode != null">    lnchg_mall_cd = #{marketCode},  </if>
+              <if test="marketStatus != null">    lnchg_mbr_status_cd = #{marketStatus},  </if>
+              <if test="isAccountReal != null">    acct_auth_yn = #{isAccountReal},  </if>
+              <if test="isOfficialAuth  != null"> pub_auth_yn  = #{isOfficialAuth},  </if>
+              <if test="isTaxable != null"> vat_yn    =  #{isTaxable} , </if>               
+              <if test="ceoName  != null"> ceo_nm  = #{ceoName},  </if>
+              <if test="ceoBirthDay != null"> ceo_birth    =  #{ceoBirthDay} , </if>  
+              <if test="website != null"> frpers_website    =  #{website} , </if>
+              <if test="sellerSSNumber != null"> ctz_reg_no    =  #{sellerSSNumber} , </if>
+              <if test="sellerCategory != null"> chrg_free_clsf_cd    =  #{sellerCategory} , </if>
+              start_dt                      = SYSDATE ,
+              upd_dt                        = SYSDATE 
+       WHERE insd_sellermbr_no = #{sellerKey} 
+    </update>
+
+
+    <!-- 판매자회원 비밀번호 초기화. -->
+    <update id="resetPasswordSeller" parameterType="mbrPwd">
+       UPDATE tb_us_sellermbr_pwd    /* SellerMapper.resetPasswordSeller, 판매자회원 비밀번호 초기화, wisestone_jloveonly, 2013-12-24 */
+          SET pwd = #{memberPW},
+              upd_dt = SYSDATE
+       WHERE insd_sellermbr_no = (SELECT insd_sellermbr_no FROM tb_us_sellermbr WHERE sellermbr_id =  #{memberID} AND seller_status_main_cd IN ('US010201' ,'US010203','US010204') AND up_insd_sellermbr_no IS NULL  )
+    </update>
+
+
+
+    <!-- 판매자회원 비밀번호 변경. -->
+    <update id="updatePasswordSeller" parameterType="mbrPwd">
+       UPDATE tb_us_sellermbr_pwd   /* SellerMapper.updatePasswordSeller, 판매자회원 비밀번호 변경, wisestone_jloveonly, 2013-12-24 */
+          SET pwd = #{memberPW},
+              upd_dt = SYSDATE
+       WHERE insd_sellermbr_no = (SELECT insd_sellermbr_no FROM tb_us_sellermbr WHERE sellermbr_id =  #{memberID} AND seller_status_main_cd IN ('US010201' ,'US010203','US010204')   )
+       <if test="oldPW != null"> AND pwd    =  #{oldPW} </if>       
+           
+    </update>
+    
+
+    <!-- 판매자회원 비밀번호 sellerKey 로 변경 . -->
+    <update id="updatePasswordSellerKey" parameterType="mbrPwd">
+       UPDATE tb_us_sellermbr_pwd   /* SellerMapper.updatePasswordSeller, 판매자회원 비밀번호 sellerKey 로 변경, wisestone_jloveonly, 2013-12-24 */
+          SET pwd = #{memberPW},
+              upd_dt = SYSDATE
+          <if test="encType != null">, enc_type    =  #{encType} </if> 
+       WHERE insd_sellermbr_no = #{memberKey}
+    </update>
+    
+
+
+    
+    
+    <!-- 비밀번호 보안질문 확인 -->
+    <select id="checkPasswordReminderSeller" parameterType="pWReminder" resultType="checkPasswordReminderSellerResponse">
+        SELECT /* SellerMapper.checkPasswordReminderSeller, 비밀번호 보안질문 확인, wisestone_jloveonly, 2013-12-24 */
+            tus.insd_sellermbr_no            insd_sellermbr_no,
+            (
+                 SELECT
+                     'Y' 
+                 FROM 
+                     tb_us_sellermbr_pwd_hint_ans 
+                 WHERE
+                     insd_sellermbr_no = tus.insd_sellermbr_no
+                     AND pwd_qust_id =  #{questionID}
+                     AND hint_ans = #{answerString}
+            )   isCorrect
+        FROM tb_us_sellermbr tus
+        WHERE sellermbr_id = #{sellerID}
+        AND seller_status_main_cd IN ('US010201' ,'US010203','US010204') 
+        AND up_insd_sellermbr_no IS NULL 
+    </select>
+    
+    
+    
+    
+    <!-- 판매자회원 가입시  SellerID Wd 확인 -->
+    <select id="checkSellerMbrWd" parameterType="sellerMbr" resultType="sellerMbr">
+        SELECT    /* SellerMapper.checkSellerMbrWd, 판매자회원 가입시  SellerID Wd 확인, wisestone_jloveonly, 2013-12-24 */
+            insd_sellermbr_no            insd_sellermbr_no,
+            sellermbr_id                 sellerID,
+            'Y'                          isRegistered
+        FROM tb_us_sellermbr_wd
+        WHERE
+        sellermbr_id =  #{sellerID}        
+        AND bolter_day > TO_CHAR (SYSDATE - 185, 'YYYYMMDD' ) 
+        AND seller_status_sub_cd != 'US010317' 
+        AND ROWNUM =1
+    </select>
+    
+    
+    
+    
+    <!-- 판매자회원 ID/EMAIL 존재여부 Wd 확인 -->
+    <select id="checkDuplicationSellerWd" parameterType="checkDuplicationSellerRequest" resultType="checkDuplicationSellerResponse">
+        SELECT /* SellerMapper.checkDuplicationSellerWd, 판매자회원 ID/EMAIL 존재여부 Wd 확인 , wisestone_jloveonly, 2013-12-24 */
+            insd_sellermbr_no            insd_sellermbr_no,
+            sellermbr_id                 sellerID,
+            'Y'                          isRegistered
+        FROM tb_us_sellermbr_wd
+        WHERE 1=1
+        <if test="keySearchList != null">  
+            <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+                <if test=" keySearch.keyType.equals('SELLERMBR_ID') "> sellermbr_id =  #{keySearch.keyString} </if>
+            </foreach>
+        </if>
+        AND bolter_day > TO_CHAR (SYSDATE - 185, 'YYYYMMDD' ) 
+        AND seller_status_sub_cd != 'US010317' 
+        AND ROWNUM =1
+    </select>
+    
+    
+    
+    <!-- 판매자회원 ID/EMAIL 존재여부 확인 -->
+    <select id="checkDuplicationSeller" parameterType="checkDuplicationSellerRequest" resultMap="checkDuplicationSellerResponseResultMap">
+        SELECT /* SellerMapper.checkDuplicationSeller, 판매자회원 ID/EMAIL 존재여부 확인  , wisestone_jloveonly, 2013-12-24 */
+            insd_sellermbr_no            insd_sellermbr_no,
+            sellermbr_id                 sellermbr_id,
+            'Y'                          isRegistered
+        FROM tb_us_sellermbr
+        WHERE 1=1
+        <if test="keySearchList != null">  
+            <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+                 <if test=" keySearch.keyType.equals('EMAIL') "> ( email =  #{keySearch.keyString}  AND  up_insd_sellermbr_no IS NULL   )</if>
+                 <if test=" keySearch.keyType.equals('INSD_SELLERMBR_NO') "> insd_sellermbr_no =  #{keySearch.keyString} </if>
+                 <if test=" keySearch.keyType.equals('SELLERMBR_ID') "> sellermbr_id =  #{keySearch.keyString} </if>         
+                 <if test=" keySearch.keyType.equals('WILS_TEL_NO') "> wils_tel_no =  #{keySearch.keyString} </if>
+                 <if test=" keySearch.keyType.equals('BIZ_REG_NO') "> biz_reg_no =  #{keySearch.keyString} </if>
+            </foreach>
+        </if>
+        AND ROWNUM =1
+    </select>
+    <resultMap id="checkDuplicationSellerResponseResultMap" type="checkDuplicationSellerResponse" >
+        <result property="isRegistered"       column="isRegistered"      jdbcType="VARCHAR"  />
+        <result property="sellerID"       column="sellermbr_id"      jdbcType="VARCHAR"  />
+        <association
+            property="sellerMbr"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="sellerMbr"
+            select="searchSellerMbr"/>
+    </resultMap>
+    
+    
+    
+    
+    <!-- 판매자회원 ID 찾기 -->
+    <select id="searchIDSeller" parameterType="searchIDSellerRequest" resultType="sellerMbr">
+        SELECT   /* SellerMapper.xml, searchIDSeller, SAC(SC) 김경복, 2015-05-27 */ 
+            insd_sellermbr_no            sellerKey,
+            up_insd_sellermbr_no         parentSellerKey,
+            prsn_corp_clsf_cd            sellerClass,
+            chrg_free_clsf_cd            sellerCategory,
+            ictry_sellermbr_yn           isDomestic,
+            seller_status_main_cd        sellerMainStatus,
+            seller_status_sub_cd         sellerSubStatus,
+            sellermbr_id                 sellerID,
+            nation_cd                    sellerCountry,
+            lang_cd                      sellerLanguage,
+            entry_day                    regDate,
+            bolter_day                   secedeDate,
+            bolter_reason_cd             secedeReasonCode,
+            bolter_reason_desc           secedeReasonMessage,
+            appr_day                     approveDate,
+            mbr_nm                       sellerName,
+            chrgpers_nm                  charger,
+            email                        sellerEmail,
+            email_recv_yn                isRecvEmail,
+            wire_nation_no               cordedTelephoneCountry,
+            wire_tel_no                  cordedTelephone,
+            wils_nation_no               sellerPhoneCountry,
+            wils_tel_no                  sellerPhone,
+            sms_recv_yn                  isRecvSMS,
+            realnm_auth_yn               isRealName,
+            sex                          sellerSex,
+            zip                          sellerZip,
+            PKG_CRYPTO.DECRYPT(addr)                         sellerAddress,
+            PKG_CRYPTO.DECRYPT(dtl_addr)                     sellerDetailAddress,
+            vat_yn                       isTaxable,
+            frpers_website               website,
+            
+            chrgpers_wils_tel_no         chargerPhone,
+            enprpl_zip                   sellerBizZip,
+            enprpl_addr                  sellerBizAddress,
+            enprpl_addr_dtl              sellerBizDetailAddress,
+            
+            fr_city                      sellerCity,
+            fr_area                      sellerState,
+            vendor_cd                    vendorCode,
+            comp_nm                      sellerCompany,
+            shpg_expo_nm                 sellerNickName,
+            ctz_reg_no                   sellerSSNumber,
+            biz_reg_no                   sellerBizNumber,
+            biz_kind_cd                  bizKindCd,
+            PKG_CRYPTO.DECRYPT(corp_reg_no)                  sellerBizCorpNumber,
+            cond_nm                      sellerBizCategory,
+            indt_nm                      sellerBizType,
+            rep_tel_nation_no            repPhoneArea,
+            rep_tel_no                   repPhone,
+        
+            rep_email                    repEmail,
+            msalbiz_decl_yn              isBizRegistered,
+            msalbiz_decl_no              bizRegNumber,
+            msalbiz_undecl_reason_cd     bizUnregReason,
+            easy_txn_yn                  isBizTaxable,
+            delib_grd_cd                 bizGrade,
+            auto_ded_posb_target_yn      isDeductible,
+            lnchg_mall_cd                marketCode,
+            lnchg_mbr_status_cd          marketStatus,
+            entry_bolter_path_cd         secedePathCd,
+            sub_acct_desc                subSellerMemo,
+            cust_cors_email              customerEmail,
+            cust_cors_tel_nation_no      customerPhoneCountry,
+            cust_cors_tel_no             customerPhone,
+            mno_cd                       sellerTelecom,
+            birth                        sellerBirthDay,
+            lgl_agent_agree_yn           isParent,
+            acct_auth_yn                 isAccountReal,
+            ceo_nm                       ceoName,
+            ceo_birth                    ceoBirthDay,
+            category_list                rightProfileList,
+            pub_auth_yn                  isOfficialAuth,
+            start_dt                     startDate,
+            end_dt                       endDate,
+            upd_dt                       updateDate
+            
+        FROM tb_us_sellermbr
+        WHERE 1=1
+        <if test="sellerEmail != null"> AND email = #{sellerEmail} </if>
+        <if test="sellerCompany != null"> AND comp_nm = #{sellerCompany} </if>
+        <if test="sellerBizNumber != null"> AND biz_reg_no  = #{sellerBizNumber} </if>
+        <if test="sellerPhone != null"> AND wils_tel_no = #{sellerPhone} </if>
+        AND seller_status_main_cd IN ('US010201' ,'US010203','US010204') 
+        AND  up_insd_sellermbr_no IS NULL 
+        ORDER BY entry_day ASC
+        
+    </select>
+    
+
+
+
+    
+    <!-- 판매자 정산 조회 상태 확인 -->
+    <select id="searchAccountSellerCheck" parameterType="String" resultType="sellerMbr">
+        SELECT   /* SellerMapper.searchAccountSellerCheck, 판매자 정산 조회 상태 확인, wisestone_jloveonly, 2014-01-09 */ 
+               seller_status_main_cd        sellerMainStatus,
+               seller_status_sub_cd         sellerSubStatus,
+               sellermbr_id                 sellerID,
+               chrg_free_clsf_cd            sellerCategory
+        FROM tb_us_sellermbr
+        WHERE insd_sellermbr_no = #{sellerKey}
+        AND seller_status_main_cd IN ('US010201' ,'US010203','US010204') 
+    </select>
+     
+     
+    <!-- 판매자 정산 조회 승인전 -->
+    <select id="searchAccountSellerStandBy" parameterType="searchAccountSellerRequest" resultMap="searchAccountSellerStandByResponseResultMap">
+        SELECT /* SellerMapper.xml, searchAccountSellerStandBy, SAC(SC), 김경복, 2015-05-27 */ 
+               a.insd_sellermbr_no                insd_sellermbr_no,
+               #{commonRequest.tenantID}        tenant_id,
+               a.insd_sellermbr_no            sellerKey,
+               a.up_insd_sellermbr_no         parentSellerKey,
+               a.prsn_corp_clsf_cd            sellerClass,
+               a.chrg_free_clsf_cd            sellerCategory,
+               a.ictry_sellermbr_yn           isDomestic,
+               a.seller_status_main_cd        sellerMainStatus,
+               a.seller_status_sub_cd         sellerSubStatus,
+               a.sellermbr_id                 sellerID,
+               a.nation_cd                    sellerCountry,
+               a.entry_day                    regDate,
+               a.bolter_day                   secedeDate,
+               a.bolter_reason_cd             secedeReasonCode,
+               a.bolter_reason_desc           secedeReasonMessage,
+               a.appr_day                     approveDate,
+               a.mbr_nm                       sellerName,
+               a.email_recv_yn                isRecvEmail,         
+               a.realnm_auth_yn               isRealName,
+               a.sex                          sellerSex,
+               a.fr_city                      sellerCity,
+               a.fr_area                      sellerState,
+               a.shpg_expo_nm                 sellerNickName,
+               a.ctz_reg_no                   sellerSSNumber,
+               a.rep_email                    repEmail,
+               b.easy_txnpers_yn              isBizTaxable,
+               a.entry_bolter_path_cd         secedePathCd,
+               a.sub_acct_desc                subSellerMemo,
+               a.cust_cors_email              customerEmail,
+               b.rep_tel_nation_no            customerPhoneCountry,              
+               a.birth                        sellerBirthDay,
+               a.lgl_agent_agree_yn           isParent,
+               a.category_list                rightProfileList,
+               a.start_dt                     startDate,
+               a.end_dt                       endDate,
+               a.upd_dt                       updateDate,
+               a.frpers_website               website   ,
+               
+               b.chrgpers_nm                      charger,
+               b.chrgpers_email                   sellerEmail,
+               b.chrgpers_wire_tel_no             cordedTelephone,
+               b.chrgpers_wils_tel_no             sellerPhone,
+               b.sms_recv_yn                      isRecvSMS,
+               b.pub_auth_yn                      isOfficialAuth,
+               b.acct_auth_yn                     isAccountReal,
+               b.comp_nm                          sellerCompany,
+               b.biz_reg_no                       sellerBizNumber,
+               b.cond_nm                          sellerBizCategory,
+               b.indt_nm                          sellerBizType,
+               b.biz_kind_cd                      bizKindCd,
+               b.easy_txnpers_yn                  ,  
+               b.rep_tel_no                       customerPhone ,
+               
+               b.ceo_nm                           ceoName,
+               PKG_CRYPTO.DECRYPT(b.corp_reg_no)                      sellerBizCorpNumber,
+               b.enprpl_zip                       sellerBizZip,
+               b.enprpl_addr                      sellerBizAddress,
+               b.enprpl_addr_dtl                  sellerBizDetailAddress,
+               b.cmnt_salbiz_decl_yn              isBizRegistered,
+               b.cmnt_salbiz_decl_no              bizRegNumber,
+               b.cmnt_salbiz_undecl_reason_cd     bizUnregReason,
+               b.mno_cd                           sellerTelecom,
+               b.ceo_birth                        ceoBirthDay,
+               b.lang_cd                          sellerLanguage,
+               b.vendor_cd                        vendorCode,
+                                
+               b.delib_grd_cd                     bizGrade,         
+               b.auto_ded_posb_target_yn          isDeductible,
+               b.lnchg_mall_cd                    marketCode,
+               b.lnchg_mbr_status_cd              marketStatus,
+               
+               PKG_CRYPTO.DECRYPT(b.acct_no)                          bankAccount,
+               b.bank_cd                          bankCode,
+               b.depstr_nm                        bankAcctName,
+               b.fr_bank_nm                       bankName,
+               b.fr_brch_cd                       bankBranchCode,
+               b.fr_brch_nm                       bankBranch,
+               b.intl_swift_cd                    swiftCode,
+               b.intl_aba                         abaCode,
+               b.intl_iban                        ibanCode,
+               b.fr_bank_addr                     bankAddress,
+               b.fr_bank_loc                      bankLocation,
+               b.fr_tin_no                        tpinCode,
+               b.reason                           reason,
+               b.acct_auth_dt                     accountRealDate,
+               b.vat_yn                           isTaxable,
+
+               b.changed_case_cd                  changedCd,
+               b.chrg_changed_day                 chargedDate,
+               b.appr_req_day                     approveReqDate,
+               b.appr_compt_day                   approveComptDate,
+               b.appr_deny_day                    approveDenyDate,
+               b.proc_status_cd                   procStatusCd,
+               b.upd_id                           updateDate,
+               b.fr_bsb                           bankBsb,
+               b.changed_aplc_id 
+        FROM tb_us_sellermbr a,
+             tb_us_sellermbr_changed_aplc b 
+        WHERE a.insd_sellermbr_no = #{sellerKey}
+        AND a.insd_sellermbr_no = b.insd_sellermbr_no
+        AND b.changed_aplc_id = (
+            SELECT changed_aplc_id FROM ( SELECT changed_aplc_id FROM tb_us_sellermbr_changed_aplc WHERE insd_sellermbr_no =  #{sellerKey}  ORDER BY changed_aplc_id DESC )
+            WHERE ROWNUM=1 
+       )
+                                            
+         
+        
+    </select>
+    <resultMap id="searchAccountSellerStandByResponseResultMap" type="searchAccountSellerResponse" >
+        <result property="sellerKey"       column="insd_sellermbr_no"      jdbcType="VARCHAR"  />
+        <association property="sellerMbr"               javaType="sellerMbr" >
+            <result property="sellerKey"                column="sellerKey"/>
+            <result property="parentSellerKey"          column="parentSellerKey"/>
+            <result property="sellerClass"              column="sellerClass"/>
+            <result property="sellerCategory"           column="sellerCategory"/>
+            <result property="isDomestic"                column="isDomestic"/>
+            <result property="sellerMainStatus"         column="sellerMainStatus"/>
+            <result property="sellerSubStatus"          column="sellerSubStatus"/>
+            <result property="sellerID"              column="sellerID"/>
+            <result property="sellerCountry"              column="sellerCountry"/>
+            <result property="regDate"              column="regDate"/>
+            <result property="secedeDate"              column="secedeDate"/>
+            <result property="secedeReasonCode"              column="secedeReasonCode"/>
+            <result property="secedeReasonMessage"              column="secedeReasonMessage"/>
+            <result property="approveDate"              column="approveDate"/>
+            <result property="sellerName"              column="sellerName"/>
+            <result property="isRecvEmail"              column="isRecvEmail"/>
+            <result property="isRealName"              column="isRealName"/>
+            <result property="sellerSex"              column="sellerSex"/>
+            <result property="sellerCity"              column="sellerCity"/>
+            <result property="sellerState"              column="sellerState"/>
+            <result property="sellerNickName"              column="sellerNickName"/>
+            <result property="sellerSSNumber"              column="sellerSSNumber"/>
+            <result property="repEmail"              column="repEmail"/>
+            <result property="isBizTaxable"              column="isBizTaxable"/>
+            <result property="secedePathCd"              column="secedePathCd"/>
+            <result property="subSellerMemo"              column="subSellerMemo"/>
+            <result property="customerEmail"              column="customerEmail"/>
+            <result property="customerPhoneCountry"              column="customerPhoneCountry"/>
+            <result property="sellerBirthDay"              column="sellerBirthDay"/>
+            <result property="isParent"              column="isParent"/>
+            <result property="rightProfileList"              column="rightProfileList"/>
+            <result property="charger"              column="charger"/>
+            <result property="sellerEmail"              column="sellerEmail"/>
+            <result property="cordedTelephone"              column="cordedTelephone"/>
+            <result property="sellerPhone"              column="sellerPhone"/>
+            <result property="isRecvSMS"              column="isRecvSMS"/>
+            <result property="isAccountReal"              column="isAccountReal"/>
+            <result property="sellerCompany"              column="sellerCompany"/>
+            <result property="sellerBizNumber"              column="sellerBizNumber"/>
+            <result property="sellerBizCategory"              column="sellerBizCategory"/>
+            <result property="sellerBizType"              column="sellerBizType"/>
+            <result property="bizKindCd"              column="bizKindCd"/>
+            <result property="customerPhone"              column="customerPhone"/>
+            
+            <result property="ceoName"              column="ceoName"/>
+            <result property="sellerBizCorpNumber"              column="sellerBizCorpNumber"/>
+            <result property="sellerBizZip"              column="sellerBizZip"/>
+            <result property="sellerBizAddress"              column="sellerBizAddress"/>
+            <result property="sellerBizDetailAddress"              column="sellerBizDetailAddress"/>
+            <result property="isBizRegistered"              column="isBizRegistered"/>
+            <result property="bizRegNumber"              column="bizRegNumber"/>
+            <result property="bizUnregReason"              column="bizUnregReason"/>
+            <result property="sellerTelecom"              column="sellerTelecom"/>
+            <result property="ceoBirthDay"              column="ceoBirthDay"/>
+            <result property="sellerLanguage"              column="sellerLanguage"/>
+            <result property="vendorCode"              column="vendorCode"/>
+            <result property="repPhoneArea"              column="repPhoneArea"/>
+            
+            <result property="bizGrade"              column="bizGrade"/>
+            <result property="isDeductible"              column="isDeductible"/>
+            <result property="marketCode"              column="marketCode"/>
+            <result property="marketStatus"              column="marketStatus"/>
+            <result property="startDate"              column="startDate"/>
+            <result property="endDate"              column="endDate"/>
+            <result property="updateDate"              column="updateDate"/>
+            <result property="website"              column="website"/>
+            <result property="isOfficialAuth"              column="isOfficialAuth"/>
+            
+        </association>
+        <association property="sellerAccount"           javaType="sellerAccount" >
+            <result property="bankAccount"              column="bankAccount"/>
+            <result property="bankCode"              column="bankCode"/>
+            <result property="bankAcctName"              column="bankAcctName"/>
+            <result property="bankName"              column="bankName"/>
+            <result property="bankBranchCode"              column="bankBranchCode"/>
+            <result property="bankBranch"              column="bankBranch"/>
+            <result property="swiftCode"              column="swiftCode"/>
+            <result property="abaCode"              column="abaCode"/>
+            <result property="ibanCode"              column="ibanCode"/>
+            <result property="bankAddress"              column="bankAddress"/>
+            <result property="bankLocation"              column="bankLocation"/>
+            <result property="tpinCode"              column="tpinCode"/>
+            <result property="reason"              column="reason"/>
+            <result property="accountRealDate"              column="accountRealDate"/>
+            <result property="isTaxable"              column="isTaxable"/>
+            <result property="bankBsb"              column="bankBsb"/>
+            <result property="changedCd"              column="changedCd"/>
+            
+            
+        </association>
+        <collection
+            property="document"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="java.util.ArrayList"
+            ofType="document"
+            select="searchDocument"/>
+        <collection
+            property="extraRight"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="java.util.ArrayList"
+            ofType="extraRight"
+            select="searchExtraRight"/>                  
+    </resultMap>
+    
+    
+    <!-- 판매자 정산 조회 -->
+    <select id="searchAccountSeller" parameterType="searchAccountSellerRequest" resultMap="searchAccountSellerResponseResultMap">
+        SELECT /* SellerMapper.searchAccountSeller, 판매자 정산 조회, wisestone_jloveonly, 2014-01-09 */ 
+               insd_sellermbr_no,
+               #{commonRequest.tenantID}         tenant_id
+        FROM tb_us_sellermbr
+        WHERE insd_sellermbr_no = #{sellerKey}
+    </select>
+    <resultMap id="searchAccountSellerResponseResultMap" type="searchAccountSellerResponse" >
+        <result property="sellerKey"       column="insd_sellermbr_no"      jdbcType="VARCHAR"  />
+        <association
+            property="sellerMbr"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="sellerMbr"
+            select="searchSellerMbr"/>
+        <association
+            property="sellerAccount"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="sellerAccount"
+            select="searchSellerAccount"/>
+        <association
+            property="sellerBp"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="sellerBp"
+            select="searchSellerBp"/>
+        <collection
+            property="document"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="java.util.ArrayList"
+            ofType="document"
+            select="searchDocumentUpgrade"/>
+        <collection
+            property="extraRight"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="java.util.ArrayList"
+            ofType="extraRight"
+            select="searchExtraRight"/>                  
+    </resultMap>
+    
+    <!-- 판매자 정산 조회 -->
+    <select id="searchAccountSellerUpgrade" parameterType="searchAccountSellerRequest" resultMap="searchAccountSellerUpgradeResponseResultMap">
+        SELECT /* SellerMapper.searchAccountSellerUpgrade, 판매자 정산 조회, wisestone_jloveonly, 2014-01-09 */ 
+               insd_sellermbr_no,
+               #{commonRequest.tenantID}         tenant_id,
+               prsn_corp_clsf_cd
+        FROM tb_us_sellermbr
+        WHERE insd_sellermbr_no = #{sellerKey}
+    </select>
+    <resultMap id="searchAccountSellerUpgradeResponseResultMap" type="searchAccountSellerResponse" >
+        <result property="sellerKey"       column="insd_sellermbr_no"      jdbcType="VARCHAR"  />
+        <result property="sellerMbr.sellerClass"     column="prsn_corp_clsf_cd"      jdbcType="VARCHAR"  />
+        <association
+            property="sellerMbr"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="sellerMbr"
+            select="searchSellerMbr"/>
+        <association
+            property="sellerAccount"
+            column="{insd_sellermbr_no=insd_sellermbr_no, prsn_corp_clsf_cd=prsn_corp_clsf_cd}"
+            javaType="sellerAccount"
+            select="searchSellerAccountUpgrade"/>
+        <association
+            property="sellerBp"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="sellerBp"
+            select="searchSellerBp"/>
+        <collection
+            property="document"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="java.util.ArrayList"
+            ofType="document"
+            select="searchDocumentUpgrade"/>
+        <collection
+            property="extraRight"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="java.util.ArrayList"
+            ofType="extraRight"
+            select="searchExtraRight"/>                  
+    </resultMap>
+    
+     <!-- 정산테이블 조회 -->
+    <select id="searchSellerAccount" resultType="sellerAccount"> 
+        SELECT  /* SellerMapper.searchSellerAccount, 정산테이블 조회, wisestone_jloveonly, 2014-01-09 */ 
+                sellerKey,
+                startDate,
+                endDate,
+                accountRealDate,
+                bankAccount,
+                bankAcctName,
+                bankCode,
+                reason,
+                bankName,
+                bankBranchCode,
+                bankBranch,
+                swiftCode,
+                ibanCode,
+                abaCode,
+                bankAddress,
+                bankLocation,
+                tpinCode,
+                bankBsb
+        FROM
+         (SELECT   
+                    insd_sellermbr_no  sellerKey,
+                    start_day          startDate,
+                    end_day            endDate,
+                    acct_auth_dt       accountRealDate,
+                    PKG_CRYPTO.DECRYPT(acct_no)            bankAccount,
+                    depstr_nm          bankAcctName,
+                    bank_cd            bankCode,
+                    reason             reason,
+                    fr_bank_nm         bankName,
+                    fr_brch_cd         bankBranchCode,
+                    fr_brch_nm         bankBranch,
+                    intl_swift_cd      swiftCode,
+                    intl_iban          ibanCode,
+                    intl_aba           abaCode,
+                    fr_bank_addr       bankAddress,
+                    fr_bank_loc        bankLocation,
+                    fr_tpin_no         tpinCode,
+                    fr_bsb             bankBsb 
+                FROM tb_us_sellermbr_chrg_sett_acct
+                WHERE insd_sellermbr_no = #{insd_sellermbr_no}
+                ORDER BY seq DESC) m
+         WHERE  ROWNUM=1
+    </select>
+    
+    <!-- 정산테이블 조회 -->
+    <select id="searchSellerAccountUpgrade" resultType="sellerAccount"> 
+		SELECT /* SellerMapper.xml, searchSellerAccountUpgrade, SAC(SC), 김경복, 2015-05-27 */
+		      m.sellerKey,
+		       m.startDate,
+		       m.endDate,
+		       m.accountRealDate,
+		       m.bankAccount,
+		       m.bankAcctName,
+		       m.bankCode,
+		       m.reason,
+		       m.bankName,
+		       m.bankBranchCode,
+		       m.bankBranch,
+		       m.swiftCode,
+		       m.ibanCode,
+		       m.abaCode,
+		       m.bankAddress,
+		       m.bankLocation,
+		       m.tpinCode,
+		       m.bankBsb,
+		       (SELECT changedCd
+		          FROM (  SELECT insd_sellermbr_no sellerKey, changed_case_cd changedCd
+		                    FROM tb_us_sellermbr_changed_aplc
+		                   WHERE insd_sellermbr_no = #{insd_sellermbr_no}
+		                   AND (PROC_STATUS_CD NOT IN ('US001602', 'US001603')OR PROC_STATUS_CD IS NULL)
+		                ORDER BY changed_aplc_id DESC)
+		         WHERE ROWNUM = 1)
+		          changedCd
+		  FROM (SELECT *
+		          FROM (  SELECT insd_sellermbr_no sellerKey,
+		                         start_day startDate,
+		                         end_day endDate,
+		                         acct_auth_dt accountRealDate,
+		                         PKG_CRYPTO.DECRYPT (acct_no) bankAccount,
+		                         depstr_nm bankAcctName,
+		                         bank_cd bankCode,
+		                         reason reason,
+		                         fr_bank_nm bankName,
+		                         fr_brch_cd bankBranchCode,
+		                         fr_brch_nm bankBranch,
+		                         intl_swift_cd swiftCode,
+		                         intl_iban ibanCode,
+		                         intl_aba abaCode,
+		                         fr_bank_addr bankAddress,
+		                         fr_bank_loc bankLocation,
+		                         fr_tpin_no tpinCode,
+		                         fr_bsb bankBsb
+		                    FROM tb_us_sellermbr_chrg_sett_acct
+		                   WHERE insd_sellermbr_no = #{insd_sellermbr_no}
+		                ORDER BY seq DESC)
+		         WHERE ROWNUM = 1) m
+    </select>
+    
+       <!-- 정산BP 조회 -->
+    <select id="searchSellerBp" resultType="sellerBp"> 
+        SELECT   /* SellerMapper.searchSellerBp, 정산Bp 조회, wisestone_jloveonly, 2014-01-09 */ 
+            insd_sellermbr_no  sellerKey,
+			BP_IMG_FILE_PATH    bpImgPath,
+			BP_TBNAIL_IMG_PATH  bpTbnailPath,
+			BP_DESC bpMessage,
+			BP_FILE_PATH  bpFilePath,
+			BP_FILE_NM  bpFileName,
+			BP_EMAIL_AUTH_PATH  bpEmailAuthPath,
+			BP_CLAUSE_AGREE_YN  isClause,
+			FTP_USE_YN  isFtp,
+			FTP_ACCT    ftpAcct,
+			BP_CLSF bpClsf
+        FROM TB_US_SELLERMBR_BP
+        WHERE insd_sellermbr_no =  #{insd_sellermbr_no}
+    </select>
+    
+    
+    <select id="searchDocument" resultType="document"> 
+	    SELECT  /* SellerMapper.searchDocument, 판매자 문서검색, wisestone_jloveonly, 2014-01-15 */ 
+	        m.*
+	    FROM 
+	    (
+	        SELECT
+	            changed_aplc_id    accountChangeKey,
+	            doc_cd             documentCode,
+	            insd_sellermbr_no  sellerKey,
+	            reg_doc_file_path  documentPath,
+	            reg_doc_file_nm    documentName,
+	            reg_doc_size       documentSize,
+	            TO_CHAR( reg_dt,'YYYYMMDDHH24MISS')              regDate, 
+	            reg_id             regID,
+	            TO_CHAR( upd_dt ,'YYYYMMDDHH24MISS')            updateDate,
+	            upd_id             updateID,
+	            use_yn             isUsed, 
+	            MAX(changed_aplc_id) OVER (PARTITION BY insd_sellermbr_no) max_accountChangeKey
+	        FROM tb_us_sellermbr_doc
+	        WHERE insd_sellermbr_no =  #{insd_sellermbr_no}
+	    ) m          
+	    WHERE accountChangeKey=max_accountChangeKey
+    </select>
+    
+    <select id="searchDocumentUpgrade" resultType="document"> 
+        SELECT  /* SellerMapper.searchDocumentUpgrade, 판매자 문서검색, wisestone_jloveonly, 2014-01-15 */ 
+            m.*
+        FROM 
+        (
+            SELECT
+                changed_aplc_id    accountChangeKey,
+                doc_cd             documentCode,
+                insd_sellermbr_no  sellerKey,
+                reg_doc_file_path  documentPath,
+                reg_doc_file_nm    documentName,
+                reg_doc_size       documentSize,
+                TO_CHAR( reg_dt,'YYYYMMDDHH24MISS')              regDate, 
+                reg_id             regID,
+                TO_CHAR( upd_dt ,'YYYYMMDDHH24MISS')            updateDate,
+                upd_id             updateID,
+                use_yn             isUsed, 
+                (select MAX(changed_aplc_id)
+                       FROM tb_us_sellermbr_changed_aplc
+                       WHERE insd_sellermbr_no = #{insd_sellermbr_no}
+                         AND PROC_STATUS_CD = 'US001602') max_accountChangeKey
+            FROM tb_us_sellermbr_doc
+            WHERE insd_sellermbr_no =  #{insd_sellermbr_no}
+        ) m          
+        WHERE accountChangeKey=max_accountChangeKey
+    </select>
+    
+    
+    <!-- 판매자 기본정보만 조회 (탈퇴 아닌것만 조회)-->
+    <select id="searchMbrSellerOld" parameterType="searchMbrSellerRequest" resultType="sellerMbr"> 
+        <if test="keySearchList != null">
+            <foreach collection="keySearchList" item="keySearch"   open="" close="" separator="UNION ALL">
+            SELECT /* SellerMapper.xml, searchMbrSeller, SAC(SC), 김경복, 2015-05-27 */
+                    #{keySearch.keyString}            keyString ,                    
+		            #{commonRequest.tenantID}         tenant_id,
+		            insd_sellermbr_no            sellerKey,
+		            up_insd_sellermbr_no         parentSellerKey,
+		            prsn_corp_clsf_cd            sellerClass,
+		            chrg_free_clsf_cd            sellerCategory,
+		            ictry_sellermbr_yn           isDomestic,
+		            seller_status_main_cd        sellerMainStatus,
+		            seller_status_sub_cd         sellerSubStatus,
+		            login_status_cd              loginStatusCode,
+		            ofauth_stop_status_cd        stopStatusCode,
+		            sellermbr_id                 sellerID,
+		            nation_cd                    sellerCountry,
+		            lang_cd                      sellerLanguage,
+		            entry_day                    regDate,
+		            bolter_day                   secedeDate,
+		            bolter_reason_cd             secedeReasonCode,
+		            bolter_reason_desc           secedeReasonMessage,
+		            appr_day                     approveDate,
+		            mbr_nm                       sellerName,
+		            chrgpers_nm                  charger,
+		            email                        sellerEmail,
+		            email_recv_yn                isRecvEmail,
+		            wire_nation_no               cordedTelephoneCountry,
+		            wire_tel_no                  cordedTelephone,
+		            wils_nation_no               sellerPhoneCountry,
+		            wils_tel_no                  sellerPhone,
+		            sms_recv_yn                  isRecvSMS,
+		            realnm_auth_yn               isRealName,
+		            sex                          sellerSex,
+		            zip                          sellerZip,
+		            PKG_CRYPTO.DECRYPT(addr)                         sellerAddress,
+		            PKG_CRYPTO.DECRYPT(dtl_addr)                     sellerDetailAddress,
+		            fr_city                      sellerCity,
+		            fr_area                      sellerState,
+		            vendor_cd                    vendorCode,
+		            comp_nm                      sellerCompany,
+		            shpg_expo_nm                 sellerNickName,
+		            ctz_reg_no                   sellerSSNumber,
+		            biz_reg_no                   sellerBizNumber,
+		            biz_kind_cd                  bizKindCd,
+		            PKG_CRYPTO.DECRYPT(corp_reg_no)                  sellerBizCorpNumber,
+		            cond_nm                      sellerBizCategory,
+		            indt_nm                      sellerBizType,
+		            rep_tel_nation_no            repPhoneArea,
+		            rep_tel_no                   repPhone,
+		            
+		            
+		            rep_email                    repEmail,
+		            msalbiz_decl_yn              isBizRegistered,
+		            msalbiz_decl_no              bizRegNumber,
+		            msalbiz_undecl_reason_cd     bizUnregReason,
+		            easy_txn_yn                  isBizTaxable,
+		            delib_grd_cd                 bizGrade,
+		            auto_ded_posb_target_yn      isDeductible,
+		            lnchg_mall_cd                marketCode,
+		            lnchg_mbr_status_cd          marketStatus,
+		            entry_bolter_path_cd         secedePathCd,
+		            sub_acct_desc                subSellerMemo,
+		            cust_cors_email              customerEmail,
+		            cust_cors_tel_nation_no      customerPhoneCountry,
+		            cust_cors_tel_no             customerPhone,
+		            mno_cd                       sellerTelecom,
+		            birth                        sellerBirthDay,
+		            lgl_agent_agree_yn           isParent,
+		            acct_auth_yn                 isAccountReal,
+		            ceo_nm                       ceoName,
+		            ceo_birth                    ceoBirthDay,
+		            category_list                rightProfileList,
+		            pub_auth_yn                  isOfficialAuth,
+		            vat_yn                       isTaxable,
+		            frpers_website               website,
+		            
+		            enprpl_zip                   sellerBizZip,
+		            enprpl_addr                  sellerBizAddress,
+		            enprpl_addr_dtl              sellerBizDetailAddress,
+		            chrgpers_wils_tel_no         chargerPhone,
+		            start_dt                     startDate,
+		            end_dt                       endDate,
+		            upd_dt                       updateDate
+		        FROM tb_us_sellermbr
+		        WHERE
+                <if test=" keySearch.keyType.equals('INSD_SELLERMBR_NO') "> insd_sellermbr_no =  #{keySearch.keyString} </if>
+                <if test=" keySearch.keyType.equals('SELLERMBR_ID') "> sellermbr_id =  #{keySearch.keyString} </if>
+                <if test=" keySearch.keyType.equals('EMAIL') "> email =  #{keySearch.keyString} </if>
+                <if test=" keySearch.keyType.equals('WILS_TEL_NO') "> wils_tel_no =  #{keySearch.keyString} </if>
+                <if test=" keySearch.keyType.equals('BIZ_REG_NO') "> biz_reg_no =  #{keySearch.keyString} </if>
+                 AND seller_status_main_cd != 'US010202'
+            </foreach>
+        </if>
+       
+    </select>
+
+    <!-- 판매자 기본정보만 조회 (탈퇴 아닌것만 조회)-->
+    <select id="searchMbrSeller" parameterType="searchMbrSellerRequest" resultType="sellerMbr"> 
+        <if test="keySearchList != null">
+        SELECT /* SellerMapper.xml, searchMbrSeller, SAC(SC), 김경복, 2015-05-27 */
+                    #{commonRequest.tenantID}    tenant_id,
+                    insd_sellermbr_no            sellerKey,
+                    up_insd_sellermbr_no         parentSellerKey,
+                    prsn_corp_clsf_cd            sellerClass,
+                    chrg_free_clsf_cd            sellerCategory,
+                    ictry_sellermbr_yn           isDomestic,
+                    seller_status_main_cd        sellerMainStatus,
+                    seller_status_sub_cd         sellerSubStatus,
+                    login_status_cd              loginStatusCode,
+                    ofauth_stop_status_cd        stopStatusCode,
+                    sellermbr_id                 sellerID,
+                    nation_cd                    sellerCountry,
+                    lang_cd                      sellerLanguage,
+                    entry_day                    regDate,
+                    bolter_day                   secedeDate,
+                    bolter_reason_cd             secedeReasonCode,
+                    bolter_reason_desc           secedeReasonMessage,
+                    appr_day                     approveDate,
+                    mbr_nm                       sellerName,
+                    chrgpers_nm                  charger,
+                    email                        sellerEmail,
+                    email_recv_yn                isRecvEmail,
+                    wire_nation_no               cordedTelephoneCountry,
+                    wire_tel_no                  cordedTelephone,
+                    wils_nation_no               sellerPhoneCountry,
+                    wils_tel_no                  sellerPhone,
+                    sms_recv_yn                  isRecvSMS,
+                    realnm_auth_yn               isRealName,
+                    sex                          sellerSex,
+                    zip                          sellerZip,
+                    PKG_CRYPTO.DECRYPT(addr)                         sellerAddress,
+                    PKG_CRYPTO.DECRYPT(dtl_addr)                     sellerDetailAddress,
+                    fr_city                      sellerCity,
+                    fr_area                      sellerState,
+                    vendor_cd                    vendorCode,
+                    comp_nm                      sellerCompany,
+                    shpg_expo_nm                 sellerNickName,
+                    ctz_reg_no                   sellerSSNumber,
+                    biz_reg_no                   sellerBizNumber,
+                    biz_kind_cd                  bizKindCd,
+                    PKG_CRYPTO.DECRYPT(corp_reg_no)                  sellerBizCorpNumber,
+                    cond_nm                      sellerBizCategory,
+                    indt_nm                      sellerBizType,
+                    rep_tel_nation_no            repPhoneArea,
+                    rep_tel_no                   repPhone,
+                    
+                    
+                    rep_email                    repEmail,
+                    msalbiz_decl_yn              isBizRegistered,
+                    msalbiz_decl_no              bizRegNumber,
+                    msalbiz_undecl_reason_cd     bizUnregReason,
+                    easy_txn_yn                  isBizTaxable,
+                    delib_grd_cd                 bizGrade,
+                    auto_ded_posb_target_yn      isDeductible,
+                    lnchg_mall_cd                marketCode,
+                    lnchg_mbr_status_cd          marketStatus,
+                    entry_bolter_path_cd         secedePathCd,
+                    sub_acct_desc                subSellerMemo,
+                    cust_cors_email              customerEmail,
+                    cust_cors_tel_nation_no      customerPhoneCountry,
+                    cust_cors_tel_no             customerPhone,
+                    mno_cd                       sellerTelecom,
+                    birth                        sellerBirthDay,
+                    lgl_agent_agree_yn           isParent,
+                    acct_auth_yn                 isAccountReal,
+                    ceo_nm                       ceoName,
+                    ceo_birth                    ceoBirthDay,
+                    category_list                rightProfileList,
+                    pub_auth_yn                  isOfficialAuth,
+                    vat_yn                       isTaxable,
+                    frpers_website               website,
+                    
+                    enprpl_zip                   sellerBizZip,
+                    enprpl_addr                  sellerBizAddress,
+                    enprpl_addr_dtl              sellerBizDetailAddress,
+                    chrgpers_wils_tel_no         chargerPhone,
+                    start_dt                     startDate,
+                    end_dt                       endDate,
+                    upd_dt                       updateDate
+                FROM tb_us_sellermbr
+                WHERE 1=1
+                <foreach collection="keySearchList" item="keySearch" open="" close="" separator="" index="index">
+                <if test="index == 0">
+                <if test=" keySearch.keyType.equals('INSD_SELLERMBR_NO') ">AND insd_sellermbr_no IN ( </if>
+                <if test=" keySearch.keyType.equals('SELLERMBR_ID') ">AND sellermbr_id IN ( </if>
+                <if test=" keySearch.keyType.equals('EMAIL') ">AND email IN ( </if>
+                <if test=" keySearch.keyType.equals('WILS_TEL_NO') ">AND wils_tel_no IN ( </if>
+                <if test=" keySearch.keyType.equals('BIZ_REG_NO') ">AND biz_reg_no IN ( </if>
+                </if>
+                <if test="index != 0">,</if> #{keySearch.keyString}
+                </foreach>
+                )
+                 AND seller_status_main_cd != 'US010202'
+        </if>
+       
+    </select>    
+
+    <!-- 판매자 기본정보 조회 (탈퇴 아닌것만 조회)-->
+    <select id="searchSeller" parameterType="searchSellerRequest" resultMap="searchSellerResponseResultMap">
+        SELECT /* SellerMapper.searchSeller, 판매자 기본정보 조회, wisestone_jloveonly, 2014-01-15 */
+               insd_sellermbr_no,
+               #{commonRequest.tenantID}         tenant_id
+        FROM tb_us_sellermbr
+        WHERE 1=1
+        <if test="keySearchList != null">
+            <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+                <if test=" keySearch.keyType.equals('INSD_SELLERMBR_NO') "> insd_sellermbr_no =  #{keySearch.keyString} </if>
+                <if test=" keySearch.keyType.equals('SELLERMBR_ID') "> sellermbr_id =  #{keySearch.keyString} </if>
+                <if test=" keySearch.keyType.equals('EMAIL') "> email =  #{keySearch.keyString} </if>
+                <if test=" keySearch.keyType.equals('WILS_TEL_NO') "> wils_tel_no =  #{keySearch.keyString} </if>
+                <if test=" keySearch.keyType.equals('BIZ_REG_NO') "> biz_reg_no =  #{keySearch.keyString} </if>
+            </foreach>
+        </if>
+        AND seller_status_main_cd != 'US010202'
+    </select>
+    <resultMap id="searchSellerResponseResultMap" type="searchSellerResponse" >
+        <result property="sellerKey"       column="insd_sellermbr_no"      jdbcType="VARCHAR"  />
+        <association
+            property="sellerMbr"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="sellerMbr"
+            select="searchSellerMbr"/>
+        <association
+            property="mbrPwd"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="mbrPwd"
+            select="searchMbrPwd"/>
+        <association
+            property="mbrAuth"
+            column="{insd_sellermbr_no=insd_sellermbr_no,tenant_id=tenant_id}"
+            javaType="mbrAuth"
+            select="searchMbrAuth"/>
+        <association
+            property="mbrLglAgent"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="mbrLglAgent"
+            select="searchMbrLglAgent"/>
+        <collection
+            property="tabAuthList"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="java.util.ArrayList"
+            ofType="tabAuthList"
+            select="searchTabAuth"/>    
+        <collection
+            property="extraRightList"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="java.util.ArrayList"
+            ofType="extraRightList"
+            select="searchExtraRight"/>
+        <collection
+            property="pWReminderList"
+            column="{insd_sellermbr_no=insd_sellermbr_no}"
+            javaType="java.util.ArrayList"
+            ofType="pWReminderList"
+            select="searchPWReminder"/>
+    </resultMap>
+    <select id="searchPWReminder" resultType="pWReminder">
+        SELECT   /* SellerMapper.searchPWReminder, 비밀번호 질문 답변 조회, wisestone_jloveonly, 2014-01-15 */
+            pwd_qust_id     questionID,
+            hint_ans        answerString,
+            TO_CHAR( UPD_DT,'YYYYMMDDHH24MISS')  ,
+            qust_dirc_ins
+        FROM 
+            tb_us_sellermbr_pwd_hint_ans
+        WHERE
+            insd_sellermbr_no = #{insd_sellermbr_no}
+    </select>    
+    <select id="searchSellerMbr" resultType="sellerMbr"> 
+        SELECT   /* SellerMapper.xml, searchSellerMbr, SAC(SC), 김경복, 2015-05-27 */
+            insd_sellermbr_no            sellerKey,
+            up_insd_sellermbr_no         parentSellerKey,
+            prsn_corp_clsf_cd            sellerClass,
+            chrg_free_clsf_cd            sellerCategory,
+            ictry_sellermbr_yn           isDomestic,
+            seller_status_main_cd        sellerMainStatus,
+            seller_status_sub_cd         sellerSubStatus,
+            login_status_cd              loginStatusCode,
+            ofauth_stop_status_cd        stopStatusCode,
+            sellermbr_id                 sellerID,
+            nation_cd                    sellerCountry,
+            lang_cd                      sellerLanguage,
+            entry_day                    regDate,
+            bolter_day                   secedeDate,
+            bolter_reason_cd             secedeReasonCode,
+            bolter_reason_desc           secedeReasonMessage,
+            appr_day                     approveDate,
+            mbr_nm                       sellerName,
+            chrgpers_nm                  charger,
+            email                        sellerEmail,
+            email_recv_yn                isRecvEmail,
+            wire_nation_no               cordedTelephoneCountry,
+            wire_tel_no                  cordedTelephone,
+            wils_nation_no               sellerPhoneCountry,
+            wils_tel_no                  sellerPhone,
+            sms_recv_yn                  isRecvSMS,
+            realnm_auth_yn               isRealName,
+            sex                          sellerSex,
+            zip                          sellerZip,
+            PKG_CRYPTO.DECRYPT(addr)                         sellerAddress,
+            PKG_CRYPTO.DECRYPT(dtl_addr)                     sellerDetailAddress,
+            fr_city                      sellerCity,
+            fr_area                      sellerState,
+            vendor_cd                    vendorCode,
+            comp_nm                      sellerCompany,
+            shpg_expo_nm                 sellerNickName,
+            ctz_reg_no                   sellerSSNumber,
+            biz_reg_no                   sellerBizNumber,
+            biz_kind_cd                  bizKindCd,
+            PKG_CRYPTO.DECRYPT(corp_reg_no)                  sellerBizCorpNumber,
+            cond_nm                      sellerBizCategory,
+            indt_nm                      sellerBizType,
+            rep_tel_nation_no            repPhoneArea,
+            rep_tel_no                   repPhone,
+            rep_website                 repWebsite,
+            rep_email                    repEmail,
+            msalbiz_decl_yn              isBizRegistered,
+            msalbiz_decl_no              bizRegNumber,
+            msalbiz_undecl_reason_cd     bizUnregReason,
+            easy_txn_yn                  isBizTaxable,
+            delib_grd_cd                 bizGrade,
+            auto_ded_posb_target_yn      isDeductible,
+            lnchg_mall_cd                marketCode,
+            lnchg_mbr_status_cd          marketStatus,
+            entry_bolter_path_cd         secedePathCd,
+            sub_acct_desc                subSellerMemo,
+            cust_cors_email              customerEmail,
+            cust_cors_tel_nation_no      customerPhoneCountry,
+            cust_cors_tel_no             customerPhone,
+            mno_cd                       sellerTelecom,
+            birth                        sellerBirthDay,
+            lgl_agent_agree_yn           isParent,
+            acct_auth_yn                 isAccountReal,
+            ceo_nm                       ceoName,
+            ceo_birth                    ceoBirthDay,
+            category_list                rightProfileList,
+            pub_auth_yn                  isOfficialAuth,
+            vat_yn                       isTaxable,
+            frpers_website               website,
+            
+            enprpl_zip                   sellerBizZip,
+            enprpl_addr                  sellerBizAddress,
+            enprpl_addr_dtl              sellerBizDetailAddress,
+            chrgpers_wils_tel_no         chargerPhone,
+            start_dt                     startDate,
+            end_dt                       endDate,
+            TO_CHAR(   upd_dt ,'YYYYMMDDHH24MISS')                       updateDate
+            
+        FROM tb_us_sellermbr
+        WHERE insd_sellermbr_no = #{insd_sellermbr_no}
+    </select>
+    <select id="searchMbrPwd" resultType="mbrPwd"> 
+        SELECT    /* SellerMapper.searchMbrPwd, 판매자 비밀번호  조회, wisestone_jloveonly, 2014-01-15 */
+            insd_sellermbr_no            memberKey,
+            pwd                          memberPW,
+            TO_CHAR(   upd_dt ,'YYYYMMDDHH24MISS')                       pwRegDate,
+            fail_cnt                     loginFailCount
+        FROM tb_us_sellermbr_pwd
+        WHERE insd_sellermbr_no = #{insd_sellermbr_no}
+    </select>
+    <select id="searchMbrAuth"  resultType="mbrAuth"> 
+          SELECT  /* SellerMapper.searchMbrAuth, 판매자 실명인증 조회, wisestone_jloveonly, 2014-01-15 */
+                m.*
+          FROM  (    
+			        SELECT 
+			            a.auth_seq                sequence,
+			            a.ci                      ci,    
+			            a.di                      di,
+			            a.auth_mtd_cd             realNameMethod,
+			            a.mno_cd                  telecom,
+			            a.wils_tel_no             phone,
+			            a.birth                   birthDay,
+			            a.sex                     sex,
+			            a.mbr_nm                  name,
+			            a.system_id        realNameSite,
+			            TO_CHAR( a.auth_dt,'YYYYMMDDHH24MISS')                  realNameDate,
+			            TO_CHAR( a.upd_dt,'YYYYMMDDHH24MISS')                   updateDate,
+			            a.mbr_clsf_cd             memberCategory,
+			            a.tenant_id               tenantID,
+			            a.insd_usermbr_no         ,   
+			            a.insd_sellermbr_no       memberKey,
+			            a.ictry_yn                isDomestic
+			        FROM tb_us_mbr_auth a , tb_us_sellermbr b
+			        WHERE a.insd_sellermbr_no = #{insd_sellermbr_no}
+			        AND a.insd_sellermbr_no = b.insd_sellermbr_no 
+			        AND b.realnm_auth_yn ='Y'
+			        ORDER  BY a.auth_seq DESC
+                ) m 
+         WHERE  ROWNUM=1
+    </select>    
+    
+    <select id="searchTabAuth"  resultType="tabAuth"> 
+        SELECT  /* SellerMapper.searchTabAuth, 탭권한 조회, wisestone_jloveonly, 2014-01-28 */
+            tenant_id                            tenantID,
+            insd_sellermbr_no               sellerKey,
+            tab_cd                      tabCode,
+            pmt_yn                      isPmt,
+            TO_CHAR(reg_dt,'YYYYMMDDHH24MISS')                               regDate,
+            TO_CHAR(upd_dt,'YYYYMMDDHH24MISS')                               updateDate,
+            reg_id                   regID,
+            upd_id                    updateID 
+        FROM tb_us_sellermbr_tab_auth
+        WHERE insd_sellermbr_no = #{insd_sellermbr_no}
+        AND pmt_yn = 'Y'
+    </select>
+
+
+    <select id="searchMbrLglAgent"  resultType="mbrLglAgent">
+
+    SELECT  /* SellerMapper.searchMbrLglAgent, 판매자 법정대리인 조회, wisestone_jloveonly, 2014-01-15 */
+                m.*
+          FROM  (    
+			        SELECT  
+			            a.auth_seq                            sequence,
+			            a.lgl_agent_auth_mtd_cd               parentRealNameMethod,
+			            a.lgl_agent_flnm                      parentName,
+			            a.lgl_agent_rshp                      parentType,
+			            TO_CHAR(a.lgl_agent_agree_dt ,'YYYYMMDDHH24MISS')                  parentDate,
+			            a.lgl_agent_email                     parentEmail,
+			            a.lgl_agent_birth                     parentBirthDay,
+			            a.mno_cd                              parentTelecom,
+			            a.lgl_agent_hp_no                     parentMDN,
+			            a.ci                                  parentCI,
+			            TO_CHAR(a.reg_dt,'YYYYMMDDHH24MISS')                               parentRealNameDate,
+			            a.insd_sellermbr_no                   sellerKey,
+			            a.system_id                    parentRealNameSite,
+			            a.ictry_yn                            isDomestic
+			        FROM tb_us_sellermbr_lgl_agent a , tb_us_sellermbr b
+			        WHERE a.insd_sellermbr_no = #{insd_sellermbr_no}
+			        AND a.insd_sellermbr_no = b.insd_sellermbr_no 
+			        AND b.lgl_agent_agree_yn ='Y'
+			        ORDER BY a.auth_seq DESC
+                ) m 
+         WHERE  ROWNUM=1
+    </select>
+    
+     
+         
+
+
+    <select id="searchExtraRight"  resultType="extraRight"> 
+        SELECT /* SellerMapper.searchExtraRight, 판매자 멀티미디어  조회, wisestone_jloveonly, 2014-01-15 */
+            tenant_id                   tenantID,
+            insd_sellermbr_no           sellerKey,
+            multimda_cd                 rightProfileCode,
+            TO_CHAR( start_dt,'YYYYMMDDHH24MISS')                     startDate,
+            TO_CHAR( end_dt ,'YYYYMMDDHH24MISS')                     endDate,
+            sellermbr_sett_rate         sellerRate,            
+            tenant_sett_rate            tenantRate,
+            TO_CHAR( reg_dt,'YYYYMMDDHH24MISS')                       regDate,
+            TO_CHAR( upd_dt  ,'YYYYMMDDHH24MISS')                     updateDate
+        FROM tb_us_sellermbr_multimda_auth
+        WHERE insd_sellermbr_no = #{insd_sellermbr_no}
+        AND END_DT <![CDATA[>]]> SYSDATE
+        ORDER BY reg_dt DESC
+    </select>
+ 
+
+    
+
+    <!-- 서브계정 목록 조회 -->
+    <select id="searchSubSellerList" parameterType="searchSubSellerListRequest" resultMap="searchSubSellerListResultMap">
+        SELECT /* SellerMapper.searchSubSellerList, 서브계정 목록 조회, wisestone_jloveonly, 2014-01-15 */
+               insd_sellermbr_no sellerKey,
+               sellermbr_id      sellerID,
+               insd_sellermbr_no parentSellerKey,
+               #{loginSort} loginSort
+          FROM tb_us_sellermbr
+         WHERE insd_sellermbr_no = #{parentSellerKey}
+         AND seller_status_main_cd IN ('US010201' ,'US010203','US010204') 
+    </select>
+
+    <!-- 서브계정 목록 조회 Result Map -->
+    <resultMap id="searchSubSellerListResultMap" type="searchSubSellerListResponse" >
+        <result property="sellerKey"             column="insd_sellermbr_no"    jdbcType="VARCHAR"  />
+        <result property="sellerID"              column="sellermbr_id"         jdbcType="VARCHAR"  />
+        <association
+            property="subAccountCount"
+            column="{parentSellerKey=parentSellerKey}"
+            javaType="java.lang.Integer"
+            select="getSubSellerCount"/>
+        <collection
+            property="subSellerList"
+            column="{parentSellerKey=parentSellerKey,loginSort=loginSort}"
+            javaType="java.util.ArrayList"
+            ofType="sellerMbr"
+            select="getSubSellerList"/>
+    </resultMap>
+
+    <!-- 등록된 서브계정개수 조회 -->
+    <select id="getSubSellerCount" resultType="java.lang.Integer">
+        SELECT /* SellerMapper.getSubSellerCount, 등록된 서브계정개수 조회, wisestone_jloveonly, 2014-01-15 */
+               count(*)
+          FROM tb_us_sellermbr
+         WHERE up_insd_sellermbr_no = #{parentSellerKey}
+         AND seller_status_main_cd IN ('US010201' ,'US010203','US010204') 
+    </select>
+
+    <!-- 등록된 서브계정목록 조회 --> 
+    <select id="getSubSellerList" resultType="sellerMbr">
+        SELECT  /* SellerMapper.xml, getSubSellerList, SAC(SC), 김경복, 2015-05-27 */
+            a.insd_sellermbr_no            sellerKey,
+            a.up_insd_sellermbr_no         parentSellerKey,
+            a.prsn_corp_clsf_cd            sellerClass,
+            a.chrg_free_clsf_cd            sellerCategory,
+            a.ictry_sellermbr_yn           isDomestic,
+            a.seller_status_main_cd        sellerMainStatus,
+            a.seller_status_sub_cd         sellerSubStatus,
+            a.sellermbr_id                 sellerID,
+            a.nation_cd                    sellerCountry,
+            a.lang_cd                      sellerLanguage,
+            a.entry_day                    regDate,
+            a.bolter_day                   secedeDate,
+            a.bolter_reason_cd             secedeReasonCode,
+            a.bolter_reason_desc           secedeReasonMessage,
+            a.appr_day                     approveDate,
+            a.mbr_nm                       sellerName,
+            a.chrgpers_nm                  charger,
+            a.email                        sellerEmail,
+            a.email_recv_yn                isRecvEmail,
+            a.wire_nation_no               cordedTelephoneCountry,
+            a.wire_tel_no                  cordedTelephone,
+            a.wils_nation_no               sellerPhoneCountry,
+            a.wils_tel_no                  sellerPhone,
+            a.sms_recv_yn                  isRecvSMS,
+            a.realnm_auth_yn               isRealName,
+            a.sex                          sellerSex,
+            a.zip                          sellerZip,
+            PKG_CRYPTO.DECRYPT(a.addr)                         sellerAddress,
+            PKG_CRYPTO.DECRYPT(a.dtl_addr)                     sellerDetailAddress,
+            a.fr_city                      sellerCity,
+            a.fr_area                      sellerState,
+            a.vendor_cd                    vendorCode,
+            a.comp_nm                      sellerCompany,
+            a.shpg_expo_nm                 sellerNickName,
+            a.ctz_reg_no                   sellerSSNumber,
+            a.biz_reg_no                   sellerBizNumber,
+            a.biz_kind_cd                  bizKindCd,
+            PKG_CRYPTO.DECRYPT(a.corp_reg_no)                  sellerBizCorpNumber,
+            a.cond_nm                      sellerBizCategory,
+            a.indt_nm                      sellerBizType,
+            a.rep_tel_nation_no            repPhoneArea,
+            a.rep_tel_no                   repPhone,
+        
+            a.rep_email                    repEmail,
+            a.msalbiz_decl_yn              isBizRegistered,
+            a.msalbiz_decl_no              bizRegNumber,
+            a.msalbiz_undecl_reason_cd     bizUnregReason,
+            a.easy_txn_yn                  isBizTaxable,
+            a.delib_grd_cd                 bizGrade,
+            a.auto_ded_posb_target_yn      isDeductible,
+            a.lnchg_mall_cd                marketCode,
+            a.lnchg_mbr_status_cd          marketStatus,
+            a.entry_bolter_path_cd         secedePathCd,
+            a.sub_acct_desc                subSellerMemo,
+            a.cust_cors_email              customerEmail,
+            a.cust_cors_tel_nation_no      customerPhoneCountry,
+            a.cust_cors_tel_no             customerPhone,
+            a.mno_cd                       sellerTelecom,
+            a.birth                        sellerBirthDay,
+            a.lgl_agent_agree_yn           isParent,
+            a.acct_auth_yn                 isAccountReal,
+            a.ceo_nm                       ceoName,
+            a.ceo_birth                    ceoBirthDay,
+            a.category_list                rightProfileList,
+            a.pub_auth_yn                  isOfficialAuth,
+            a.vat_yn                       isTaxable,
+            a.frpers_website               website,
+            
+            a.enprpl_zip                   sellerBizZip,
+            a.enprpl_addr                  sellerBizAddress,
+            a.enprpl_addr_dtl              sellerBizDetailAddress,
+            a.chrgpers_wils_tel_no         chargerPhone,
+            a.start_dt                     startDate,
+            a.end_dt                       endDate,
+            TO_CHAR(   a.upd_dt ,'YYYYMMDDHH24MISS')                       updateDate ,
+            ( select TO_CHAR( b.reg_dt ,'YYYYMMDDHH24MISS') from  tb_us_sellermbr_login_info b where  b.insd_sellermbr_no = a.insd_sellermbr_no ) as loginDate
+          FROM tb_us_sellermbr a
+         WHERE a.up_insd_sellermbr_no = #{parentSellerKey}
+           AND a.seller_status_main_cd IN ('US010201' ,'US010203','US010204') 
+           <if test="loginSort != null">  
+                <if test=" loginSort.equals('ASC') "> ORDER BY loginDate ASC </if>
+                <if test=" loginSort.equals('DESC') "> ORDER BY loginDate DESC </if>
+           </if>
+           
+    </select>
+ 
+
+    <!-- 서브계정 상세 조회 요청 -->
+    <select id="searchSubSeller" parameterType="searchSubSellerRequest" resultMap="searchSubSellerResultMap">
+        SELECT /* SellerMapper.searchSubSeller, 서브계정 상세 조회 요청, wisestone_jloveonly, 2014-01-15 */
+               insd_sellermbr_no sellerKey
+          FROM tb_us_sellermbr
+         WHERE insd_sellermbr_no = #{sellerKey}
+         AND seller_status_main_cd IN ('US010201' ,'US010203','US010204') 
+         AND up_insd_sellermbr_no IS NOT NULL 
+    </select>
+    
+    <!-- 서브계정 상세 조회 요청 Result Map -->
+    <resultMap id="searchSubSellerResultMap" type="searchSubSellerResponse" >
+        <association
+            property="sellerMbr"
+            column="{sellerKey=sellerKey}"
+            javaType="sellerMbr"
+            select="getSubSeller"/>
+    </resultMap>
+
+    <!-- 서브계정 상세 조회 -->
+    <select id="getSubSeller" resultType="sellerMbr">
+        SELECT /* SellerMapper.xml, getSubSeller, SAC(SC), 김경복, 2015-05-27 */
+            a.insd_sellermbr_no            sellerKey,
+            a.up_insd_sellermbr_no         parentSellerKey,
+            a.prsn_corp_clsf_cd            sellerClass,
+            a.chrg_free_clsf_cd            sellerCategory,
+            a.ictry_sellermbr_yn           isDomestic,
+            a.seller_status_main_cd        sellerMainStatus,
+            a.seller_status_sub_cd         sellerSubStatus,
+            a.sellermbr_id                 sellerID,
+            a.nation_cd                    sellerCountry,
+            a.lang_cd                      sellerLanguage,
+            a.entry_day                    regDate,
+            a.bolter_day                   secedeDate,
+            a.bolter_reason_cd             secedeReasonCode,
+            a.bolter_reason_desc           secedeReasonMessage,
+            a.appr_day                     approveDate,
+            a.mbr_nm                       sellerName,
+            a.chrgpers_nm                  charger,
+            a.email                        sellerEmail,
+            a.email_recv_yn                isRecvEmail,
+            a.wire_nation_no               cordedTelephoneCountry,
+            a.wire_tel_no                  cordedTelephone,
+            a.wils_nation_no               sellerPhoneCountry,
+            a.wils_tel_no                  sellerPhone,
+            a.sms_recv_yn                  isRecvSMS,
+            a.realnm_auth_yn               isRealName,
+            a.sex                          sellerSex,
+            a.zip                          sellerZip,
+            PKG_CRYPTO.DECRYPT(a.addr)                         sellerAddress,
+            PKG_CRYPTO.DECRYPT(a.dtl_addr)                     sellerDetailAddress,
+            a.fr_city                      sellerCity,
+            a.fr_area                      sellerState,
+            a.vendor_cd                    vendorCode,
+            a.comp_nm                      sellerCompany,
+            a.shpg_expo_nm                 sellerNickName,
+            a.ctz_reg_no                   sellerSSNumber,
+            a.biz_reg_no                   sellerBizNumber,
+            a.biz_kind_cd                  bizKindCd,
+            PKG_CRYPTO.DECRYPT(a.corp_reg_no)                  sellerBizCorpNumber,
+            a.cond_nm                      sellerBizCategory,
+            a.indt_nm                      sellerBizType,
+            a.rep_tel_nation_no            repPhoneArea,
+            a.rep_tel_no                   repPhone,
+       
+            a.rep_email                    repEmail,
+            a.msalbiz_decl_yn              isBizRegistered,
+            a.msalbiz_decl_no              bizRegNumber,
+            a.msalbiz_undecl_reason_cd     bizUnregReason,
+            a.easy_txn_yn                  isBizTaxable,
+            a.delib_grd_cd                 bizGrade,
+            a.auto_ded_posb_target_yn      isDeductible,
+            a.lnchg_mall_cd                marketCode,
+            a.lnchg_mbr_status_cd          marketStatus,
+            a.entry_bolter_path_cd         secedePathCd,
+            a.sub_acct_desc                subSellerMemo,
+            a.cust_cors_email              customerEmail,
+            a.cust_cors_tel_nation_no      customerPhoneCountry,
+            a.cust_cors_tel_no             customerPhone,
+            a.mno_cd                       sellerTelecom,
+            a.birth                        sellerBirthDay,
+            a.lgl_agent_agree_yn           isParent,
+            a.acct_auth_yn                 isAccountReal,
+            a.ceo_nm                       ceoName,
+            a.ceo_birth                    ceoBirthDay,
+            a.category_list                rightProfileList,
+            a.pub_auth_yn                  isOfficialAuth,
+            a.vat_yn                       isTaxable,
+            a.frpers_website               website,
+
+            a.enprpl_zip                   sellerBizZip,
+            a.enprpl_addr                  sellerBizAddress,
+            a.enprpl_addr_dtl              sellerBizDetailAddress,
+            a.chrgpers_wils_tel_no         chargerPhone,
+            a.start_dt                     startDate,
+            a.end_dt                       endDate,
+            TO_CHAR(   a.upd_dt ,'YYYYMMDDHH24MISS')                       updateDate ,
+            ( select TO_CHAR( b.reg_dt ,'YYYYMMDDHH24MISS') from  tb_us_sellermbr_login_info b where  b.insd_sellermbr_no = a.insd_sellermbr_no ) as loginDate
+          FROM tb_us_sellermbr a
+         WHERE a.insd_sellermbr_no = #{sellerKey}
+         AND a.seller_status_main_cd IN ('US010201' ,'US010203','US010204') 
+    </select>
+
+    <resultMap id="getSubSellerResultMap" type="sellerMbr" >
+        <result property="sellerKey"          column="insd_sellermbr_no"    jdbcType="VARCHAR"  />
+        <result property="sellerID"           column="sellermbr_id"         jdbcType="VARCHAR"  />
+    </resultMap>
+
+    <!-- 판매자 상태 변경 -->
+    <update id="updateStatus" parameterType="sellerMbr">
+        /* SellerMapper.updateStatus, 판매자 상태 변경, wisestone_mikepark, 2013-12-23 */
+       UPDATE tb_us_sellermbr
+          SET 
+            insd_sellermbr_no = #{sellerKey}
+            <if test="sellerMainStatus != null">,seller_status_main_cd = #{sellerMainStatus}</if>
+            <if test="sellerSubStatus != null">,seller_status_sub_cd = #{sellerSubStatus}</if>
+            <if test="loginStatusCode != null">,login_status_cd = #{loginStatusCode}</if>
+            <if test="stopStatusCode != null">,ofauth_stop_status_cd = #{stopStatusCode}</if>
+            <if test="regDate != null">,entry_day = TO_CHAR(SYSDATE, 'YYYYMMDD') </if>
+            <if test="regDate != null">,appr_day = TO_CHAR(SYSDATE, 'YYYYMMDD') </if>
+            , start_dt                      = SYSDATE 
+            , upd_dt                        = SYSDATE 
+            
+       WHERE insd_sellermbr_no = #{sellerKey}
+    </update>
+
+    
+    
+    
+     <select id="isRegisteredParent" parameterType="sellerMbr" resultType="String">
+        SELECT /* SellerMapper.isRegistered, 서브 판매자 ID 조회, wisestone_jloveonly, 2013-02-13 */
+              up_insd_sellermbr_no as parentSellerKey
+        FROM tb_us_sellermbr
+        WHERE sellermbr_id = #{sellerID} AND up_insd_sellermbr_no IS NOT NULL
+    </select>
+    
+    <select id="isRegistered" parameterType="sellerMbr" resultType="String">
+        SELECT /* SellerMapper.isRegistered, 판매자 ID 조회, wisestone_mikepark, 2013-12-23 */
+              insd_sellermbr_no as sellerKey
+        FROM tb_us_sellermbr
+        WHERE sellermbr_id = #{sellerID}
+    </select>
+    
+    <select id="isRegisteredKey" parameterType="sellerMbr" resultType="String">
+        SELECT /* SellerMapper.isRegisteredKey, 판매자 key 조회, wisestone_mikepark, 2013-12-23 */
+              insd_sellermbr_no as sellerKey
+        FROM tb_us_sellermbr
+        WHERE insd_sellermbr_no = #{sellerKey}
+    </select>
+    
+   <select id="isRegisteredRemoveKey" parameterType="sellerMbr" resultType="String">
+        SELECT /* SellerMapper.isRegisteredRemoveKey, 판매자 삭제 key 조회, wisestone_mikepark, 2013-12-23 */
+              insd_sellermbr_no as sellerKey
+        FROM tb_us_sellermbr
+        WHERE insd_sellermbr_no = #{sellerKey}
+        AND  seller_status_sub_cd NOT IN ('US010302','US010303' ) 
+    </select>
+    
+    
+    <select id="isRegisteredID" parameterType="sellerMbr" resultType="String">
+        SELECT /* SellerMapper.isRegisteredKey, 판매자 ID 조회, wisestone_mikepark, 2013-12-23 */
+              sellermbr_id as sellerID
+        FROM tb_us_sellermbr
+        WHERE insd_sellermbr_no = #{sellerKey}
+    </select>
+    
+
+    <select id="searchSubSellerMbr" resultType="sellerMbr"> 
+        SELECT  /* SellerMapper.searchSubSellerMbr, 서브 판매자 조회, wisestone_mikepark, 2013-12-23 */
+            insd_sellermbr_no            sellerKey,
+            prsn_corp_clsf_cd            sellerClass,
+            chrg_free_clsf_cd            sellerCategory,
+            seller_status_main_cd        sellerMainStatus,
+            seller_status_sub_cd         sellerSubStatus,
+            login_status_cd              loginStatusCode,
+            ofauth_stop_status_cd        stopStatusCode
+        FROM tb_us_sellermbr
+        WHERE insd_sellermbr_no = #{parentSellerKey}
+        AND seller_status_main_cd IN ('US010201','US010203','US010204')
+    </select>
+    
+
+    
+    <select id="isSubRegisteredKey" parameterType="sellerMbr" resultType="String">
+        SELECT /* SellerMapper.isSubRegisteredKey, 서브 판매자 key 조회, wisestone_mikepark, 2013-12-23 */
+              insd_sellermbr_no as subSellerKey
+        FROM tb_us_sellermbr
+        WHERE insd_sellermbr_no = #{sellerKey}
+             AND up_insd_sellermbr_no = #{parentSellerKey}
+    </select>
+    
+    <!-- Key에 사용할 시퀀스 조회(판매자) -->
+    <select id="getSellerSequence" resultType="Integer">
+        SELECT /* SellerMapper.getUserSequence, 시퀀스 조회, wisestone_mikepark, 2013-12-23 */
+               sq_us_sellermbr.NEXTVAL as NEXTVAL
+        FROM DUAL
+    </select>
+    
+    <!--  회원 비밀번호 로그인 success. -->
+    <update id="updateLoginSuccess" parameterType="mbrPwd">
+        /* SellerMapper.updateLoginSuccess,  회원 비밀번호 success, wisestone_mikepark, 2013-12-26 */
+       UPDATE tb_us_sellermbr_pwd
+          SET fail_cnt = 0
+       WHERE insd_sellermbr_no = #{memberKey}
+    </update>
+    
+    <!--  회원 비밀번호 로그인 fail. -->
+    <update id="updateLoginFail" parameterType="mbrPwd">
+        /* SellerMapper.updateLoginFail,  회원 비밀번호 fail, wisestone_mikepark, 2013-12-26 */
+       UPDATE tb_us_sellermbr_pwd
+          SET fail_cnt = fail_cnt+1
+       WHERE insd_sellermbr_no = #{memberKey}
+    </update>
+    
+    <select id="isLogin" parameterType="mbrPwd" resultType="String">
+        SELECT /* SellerMapper.isLogin, 판매자 ID 로그인, wisestone_mikepark, 2013-12-23 */
+               insd_sellermbr_no as userKey
+        FROM tb_us_sellermbr_pwd
+        WHERE PWD = #{memberPW}
+              AND insd_sellermbr_no = (SELECT insd_sellermbr_no FROM tb_us_sellermbr 
+                WHERE sellermbr_id =  #{memberID}
+                AND (seller_status_main_cd = 'US010201'
+                or seller_status_main_cd = 'US010205') )
+    </select>
+
+ 
+ 
+     
+    <!-- 판매자 탈퇴 -->
+    <update id="removeSeller" parameterType="sellerMbr">
+        /* SellerMapper.removeSeller, 판매자 탈퇴, wisestone_mikepark, 2013-12-23 */
+       UPDATE tb_us_sellermbr
+          SET bolter_reason_cd = #{secedeReasonCode},
+              <if test="secedeReasonMessage != null">  bolter_reason_desc = #{secedeReasonMessage},</if>
+              seller_status_main_cd = #{sellerMainStatus},
+              seller_status_sub_cd = #{sellerSubStatus},
+              <if test="secedePathCd != null">  entry_bolter_path_cd = #{secedePathCd},</if>
+              start_dt                      = SYSDATE ,
+              end_dt                        = SYSDATE ,
+              upd_dt                        = SYSDATE 
+       WHERE insd_sellermbr_no = #{sellerKey}
+    </update>
+     
+    
+    
+     
+    
+    
+    <!-- 서브계정 히스토리 추가 -->
+    <update id="updateSubSellerHistory" parameterType="sellermbr">
+        INSERT /* SellerMapper.updateSubSellerHistory, 판매자 수정 히스토리 추가, wisestone_jloveonly, 2014-01-15 */
+               INTO tb_us_sellermbr_his (
+                   seq, insd_sellermbr_no, up_insd_sellermbr_no, 
+                   prsn_corp_clsf_cd, chrg_free_clsf_cd, ictry_sellermbr_yn, 
+                   seller_status_main_cd, seller_status_sub_cd, sellermbr_id,
+                   login_status_cd, ofauth_stop_status_cd,
+                   nation_cd, lang_cd, entry_day, 
+                   bolter_day, bolter_reason_cd, bolter_reason_desc, 
+                   appr_day, mbr_nm, chrgpers_nm, 
+                   email, wire_nation_no, wire_tel_no, 
+                   wils_nation_no, wils_tel_no, realnm_auth_yn, 
+                   sex, zip, addr, 
+                   dtl_addr, fr_city, fr_area, 
+                   vendor_cd, comp_nm, shpg_expo_nm, 
+                   ctz_reg_no, biz_reg_no, biz_kind_cd, 
+                   corp_reg_no, cond_nm, indt_nm, 
+                   rep_tel_nation_no, rep_tel_no,   rep_email, msalbiz_decl_yn, 
+                   msalbiz_decl_no, msalbiz_undecl_reason_cd, easy_txn_yn, 
+                   delib_grd_cd, auto_ded_posb_target_yn, lnchg_mall_cd, 
+                   lnchg_mbr_status_cd, entry_bolter_path_cd, sub_acct_desc, 
+                   cust_cors_email, cust_cors_tel_nation_no, cust_cors_tel_no, 
+                   ins_dt, email_recv_yn, sms_recv_yn  , start_dt, end_dt , upd_dt ,  
+                   pub_auth_yn ,acct_auth_yn ,mno_cd ,birth ,lgl_agent_agree_yn ,ceo_nm ,ceo_birth , category_list ,vat_yn ,frpers_website
+               )
+        SELECT sq_us_sellermbr_his.NEXTVAL as SEQ,
+               insd_sellermbr_no, up_insd_sellermbr_no, 
+                   prsn_corp_clsf_cd, chrg_free_clsf_cd, ictry_sellermbr_yn, 
+                   seller_status_main_cd, seller_status_sub_cd, sellermbr_id,
+                   login_status_cd, ofauth_stop_status_cd,
+                   nation_cd, lang_cd, entry_day, 
+                   bolter_day, bolter_reason_cd, bolter_reason_desc, 
+                   appr_day, mbr_nm, chrgpers_nm, 
+                   email, wire_nation_no, wire_tel_no, 
+                   wils_nation_no, wils_tel_no, realnm_auth_yn, 
+                   sex, zip, addr, 
+                   dtl_addr, fr_city, fr_area, 
+                   vendor_cd, comp_nm, shpg_expo_nm, 
+                   ctz_reg_no, biz_reg_no, biz_kind_cd, 
+                   corp_reg_no, cond_nm, indt_nm, 
+                   rep_tel_nation_no, rep_tel_no,   rep_email, msalbiz_decl_yn, 
+                   msalbiz_decl_no, msalbiz_undecl_reason_cd, easy_txn_yn, 
+                   delib_grd_cd, auto_ded_posb_target_yn, lnchg_mall_cd, 
+                   lnchg_mbr_status_cd, entry_bolter_path_cd, sub_acct_desc, 
+                   cust_cors_email, cust_cors_tel_nation_no, cust_cors_tel_no, 
+                   SYSDATE, email_recv_yn, sms_recv_yn , start_dt , SYSDATE  , SYSDATE ,
+                   pub_auth_yn ,acct_auth_yn ,mno_cd ,birth ,lgl_agent_agree_yn ,ceo_nm ,ceo_birth , category_list ,vat_yn ,frpers_website
+          FROM tb_us_sellermbr
+         WHERE up_insd_sellermbr_no = #{parentSellerKey}
+
+    </update>
+    
+    
+    
+       <!-- 서브계정 탈퇴 -->
+    <delete id="removeSubSeller" parameterType="sellerMbr">
+        DELETE   /* SellerMapper.removeSubSeller, 서브계정 탈퇴 , wisestone_mikepark, 2013-12-23 */
+          FROM tb_us_sellermbr 
+         WHERE 
+            1=1
+          <if test="sellerKey != null"> AND insd_sellermbr_no = #{sellerKey} </if>   
+          <if test="parentSellerKey != null"> AND up_insd_sellermbr_no = #{parentSellerKey} </if>   
+          
+    </delete>
+    
+    
+    <!-- 판매자 가입 -->
+    <update id="createSeller" parameterType="sellerMbr">
+        INSERT INTO tb_us_sellermbr (   /* SellerMapper.xml, createSeller, SAC(SC), 김경복, 2015-05-27 */
+               insd_sellermbr_no,
+               prsn_corp_clsf_cd,
+               chrg_free_clsf_cd,
+               <if test="isDomestic != null">ictry_sellermbr_yn ,</if>
+               seller_status_main_cd,
+               seller_status_sub_cd,
+               login_status_cd,
+               ofauth_stop_status_cd,
+               sellermbr_id,
+               entry_day
+               <if test="sellerCountry != null">,nation_cd </if>
+               <if test="sellerLanguage != null">,lang_cd </if>
+	           <if test="secedeDate != null">,bolter_day </if>
+	           <if test="secedeReasonCode != null">,bolter_reason_cd  </if>
+	           <if test="secedeReasonMessage != null">,bolter_reason_desc  </if>
+	           <if test="approveDate != null">,appr_day </if>
+	           <if test="sellerName != null">,mbr_nm  </if>
+	           <if test="charger != null">, chrgpers_nm  </if>
+	           <if test="sellerEmail != null">,email  </if>
+	           <if test="isRecvEmail != null">,email_recv_yn  </if>
+	           <if test="cordedTelephoneCountry != null">,wire_nation_no  </if>
+	           <if test="cordedTelephone != null">, wire_tel_no  </if>
+	           <if test="sellerPhoneCountry != null">,wils_nation_no  </if>
+	           <if test="isRecvSMS != null">,sms_recv_yn </if>
+	           <if test="isRealName != null">,realnm_auth_yn  </if>
+	           <if test="sellerSex != null">,sex    </if>
+	           <if test="sellerZip != null">,zip   </if>
+	           <if test="sellerAddress != null">,addr  </if>
+	           <if test="sellerDetailAddress != null">,dtl_addr  </if>
+	           <if test="sellerCity != null">,fr_city  </if>
+	           <if test="sellerState != null">,fr_area  </if>
+	           <if test="vendorCode != null">,vendor_cd  </if>
+	           <if test="sellerCompany != null">,comp_nm  </if>
+	           <if test="sellerNickName != null">,shpg_expo_nm  </if>
+	           <if test="sellerSSNumber != null">,ctz_reg_no </if>
+	           <if test="sellerBizNumber != null">,biz_reg_no  </if>
+	           <if test="bizKindCd != null">, biz_kind_cd </if>
+	           <if test="sellerBizCorpNumber != null">,corp_reg_no  </if>
+	           <if test="sellerBizCategory != null">, cond_nm </if>
+	           <if test="sellerBizType != null">, indt_nm </if>
+	           <if test="repPhoneArea != null">, rep_tel_nation_no  </if>
+	           <if test="repPhone != null">, rep_tel_no  </if>
+	           
+	   
+	           <if test="repWebsite != null">,rep_website  </if>
+	           <if test="repEmail != null">,rep_email  </if>
+	           <if test="isBizRegistered!= null">,msalbiz_decl_yn  </if>
+	           <if test="bizRegNumber != null">,msalbiz_decl_no  </if>
+	           <if test="bizUnregReason != null">,msalbiz_undecl_reason_cd  </if>
+	           <if test="isBizTaxable != null">,easy_txn_yn  </if>
+	           <if test="bizGrade != null">,delib_grd_cd  </if>
+	           <if test="isDeductible!= null">,auto_ded_posb_target_yn  </if>
+	           <if test="marketCode != null">,lnchg_mall_cd </if>
+	           <if test="marketStatus != null">, lnchg_mbr_status_cd  </if>
+	           <if test="secedePathCd != null">, entry_bolter_path_cd  </if>
+	           <if test="subSellerMemo != null">, sub_acct_desc </if>
+	           <if test="customerEmail != null">, cust_cors_email  </if>
+	           <if test="customerPhoneCountry!= null">, cust_cors_tel_nation_no </if>
+	           <if test="customerPhone != null">, cust_cors_tel_no  </if>
+	           <if test="sellerTelecom != null">, mno_cd  </if>
+	           <if test="sellerBirthDay!= null">,birth  </if>
+	           <if test="isParent != null">,lgl_agent_agree_yn  </if>
+	           <if test="isAccountReal != null">, acct_auth_yn </if>
+	           <if test="ceoName != null">,ceo_nm  </if>
+	           <if test="ceoBirthDay!= null">, ceo_birth  </if>
+	           <if test="rightProfileList != null">, category_list </if>
+
+               <if test="sellerBizZip != null">, enprpl_zip </if>
+               <if test="sellerBizAddress != null">,enprpl_addr   </if>
+               <if test="sellerBizDetailAddress != null">, enprpl_addr_dtl   </if>
+               <if test="chargerPhone != null">, chrgpers_wils_tel_no    </if>
+               <if test="isOfficialAuth != null">, pub_auth_yn    </if>
+               <if test="sellerPhone != null">, wils_tel_no    </if>
+               <if test="isTaxable != null">, vat_yn    </if>
+               <if test="website != null">, frpers_website    </if>
+               ,start_dt 
+               ,end_dt
+               ,upd_dt   
+        ) VALUES (
+            #{sellerKey},
+            #{sellerClass},
+            #{sellerCategory},
+            <if test="isDomestic != null">#{isDomestic}, </if>
+            #{sellerMainStatus},
+            #{sellerSubStatus},
+            #{loginStatusCode},
+            #{stopStatusCode},
+            #{sellerID},
+            TO_CHAR(SYSDATE, 'YYYYMMDD')
+            <if test="sellerCountry != null">,#{sellerCountry} </if>
+            <if test="sellerLanguage != null">,#{sellerLanguage} </if>
+            <if test="secedeDate != null">, #{secedeDate}</if>
+            <if test="secedeReasonCode != null">, #{secedeReasonCode}</if>
+            <if test="secedeReasonMessage != null">, #{secedeReasonMessage}</if>
+            <if test="approveDate != null">,#{approveDate}</if>
+            <if test="sellerName != null">, #{sellerName}</if>
+            <if test="charger != null">, #{charger}</if>
+            <if test="sellerEmail != null">, #{sellerEmail}</if>
+            <if test="isRecvEmail != null">, #{isRecvEmail}</if>
+            <if test="cordedTelephoneCountry != null">, #{cordedTelephoneCountry}</if>
+            <if test="cordedTelephone != null">,  #{cordedTelephone}</if>
+            <if test="sellerPhoneCountry != null">, #{sellerPhoneCountry}</if>
+            <if test="isRecvSMS != null">, #{isRecvSMS}</if>
+            <if test="isRealName != null">, #{isRealName}</if>
+            <if test="sellerSex != null">, #{sellerSex}</if>
+            <if test="sellerZip != null">, #{sellerZip}</if>
+            <if test="sellerAddress != null">, PKG_CRYPTO.ENCRYPT(#{sellerAddress})</if>
+            <if test="sellerDetailAddress != null">, PKG_CRYPTO.ENCRYPT(#{sellerDetailAddress})</if>
+            <if test="sellerCity != null">, #{sellerCity}</if>
+            <if test="sellerState != null">, #{sellerState}</if>
+            <if test="vendorCode != null">,#{vendorCode}</if>
+            <if test="sellerCompany != null">, #{sellerCompany}</if>
+            <if test="sellerNickName != null">, #{sellerNickName}</if>
+            <if test="sellerSSNumber != null">, #{sellerSSNumber}</if>
+            <if test="sellerBizNumber != null">, #{sellerBizNumber}</if>
+            <if test="bizKindCd != null">, #{bizKindCd}</if>
+            <if test="sellerBizCorpNumber != null">, PKG_CRYPTO.ENCRYPT(#{sellerBizCorpNumber})</if>
+            <if test="sellerBizCategory != null">, #{sellerBizCategory}</if>
+            <if test="sellerBizType != null">,  #{sellerBizType}</if>
+            <if test="repPhoneArea != null">,  #{repPhoneArea}</if>
+            <if test="repPhone != null">, #{repPhone}</if>
+       
+            <if test="repWebsite != null">,#{repWebsite}</if>
+            <if test="repEmail != null">, #{repEmail}</if>
+            <if test="isBizRegistered!= null">,#{isBizRegistered}</if>
+            <if test="bizRegNumber != null">,#{bizRegNumber}</if>
+            <if test="bizUnregReason != null">, #{bizUnregReason}</if>
+            <if test="isBizTaxable != null">,#{isBizTaxable}</if>
+            <if test="bizGrade != null">, #{bizGrade}</if>
+            <if test="isDeductible!= null">, #{isDeductible}</if>
+            <if test="marketCode != null">,#{marketCode}</if>
+            <if test="marketStatus != null">,  #{marketStatus}</if>
+            <if test="secedePathCd != null">, #{secedePathCd}</if>
+            <if test="subSellerMemo != null">,  #{subSellerMemo}</if>
+            <if test="customerEmail != null">,  #{customerEmail}</if>
+            <if test="customerPhoneCountry!= null">, #{customerPhoneCountry}</if>
+            <if test="customerPhone != null">, #{customerPhone}</if>
+            <if test="sellerTelecom != null">,  #{sellerTelecom}</if>
+            <if test="sellerBirthDay!= null">, #{sellerBirthDay}</if>
+            <if test="isParent != null">,#{isParent}</if>
+            <if test="isAccountReal != null">, #{isAccountReal}</if>
+            <if test="ceoName != null">, #{ceoName}</if>
+            <if test="ceoBirthDay!= null">, #{ceoBirthDay}</if>
+            <if test="rightProfileList != null">,  #{rightProfileList}</if>
+            
+            <if test="sellerBizZip != null">,  #{sellerBizZip}</if>
+            <if test="sellerBizAddress != null">,  #{sellerBizAddress}</if>
+            <if test="sellerBizDetailAddress != null">,  #{sellerBizDetailAddress}</if>
+            <if test="chargerPhone != null">,  #{chargerPhone}</if>
+            <if test="isOfficialAuth  != null"> , #{isOfficialAuth}  </if>
+            <if test="sellerPhone != null">, #{sellerPhone}     </if>
+            <if test="isTaxable != null">, #{isTaxable}    </if>
+            <if test="website != null">, #{website}   </if>
+            ,SYSDATE
+            ,TO_DATE('29991231235959','YYYYMMDDHH24MISS') 
+            ,SYSDATE 
+        )
+    </update>
+    
+    
+    
+    <!-- 판매자 수정 히스토리 추가 -->
+    <update id="updateSellerHistory" parameterType="sellermbr">
+        INSERT /* SellerMapper.updateSellerHistory, 판매자 수정 히스토리 추가 , wisestone_jloveonly, 2014-01-15 */
+               INTO tb_us_sellermbr_his (
+                   seq, insd_sellermbr_no, up_insd_sellermbr_no, 
+				   prsn_corp_clsf_cd, chrg_free_clsf_cd, ictry_sellermbr_yn, 
+				   seller_status_main_cd, seller_status_sub_cd, sellermbr_id,
+				   login_status_cd, ofauth_stop_status_cd,
+				   nation_cd, lang_cd, entry_day, 
+				   bolter_day, bolter_reason_cd, bolter_reason_desc, 
+				   appr_day, mbr_nm, chrgpers_nm, 
+				   email, wire_nation_no, wire_tel_no, 
+				   wils_nation_no, wils_tel_no, realnm_auth_yn, 
+				   sex, zip, addr, 
+				   dtl_addr, fr_city, fr_area, 
+				   vendor_cd, comp_nm, shpg_expo_nm, 
+				   ctz_reg_no, biz_reg_no, biz_kind_cd, 
+				   corp_reg_no, cond_nm, indt_nm, 
+				   rep_tel_nation_no, rep_tel_no,   rep_email, msalbiz_decl_yn, 
+				   msalbiz_decl_no, msalbiz_undecl_reason_cd, easy_txn_yn, 
+				   delib_grd_cd, auto_ded_posb_target_yn, lnchg_mall_cd, 
+				   lnchg_mbr_status_cd, entry_bolter_path_cd, sub_acct_desc, 
+				   cust_cors_email, cust_cors_tel_nation_no, cust_cors_tel_no, 
+				   ins_dt, email_recv_yn, sms_recv_yn  , start_dt, end_dt , upd_dt ,
+				   pub_auth_yn ,acct_auth_yn ,mno_cd ,birth ,lgl_agent_agree_yn ,ceo_nm ,ceo_birth , category_list ,vat_yn,frpers_website,
+				   rep_website
+               )
+        SELECT sq_us_sellermbr_his.NEXTVAL as seq,
+               insd_sellermbr_no, up_insd_sellermbr_no, 
+                   prsn_corp_clsf_cd, chrg_free_clsf_cd, ictry_sellermbr_yn, 
+                   seller_status_main_cd, seller_status_sub_cd, sellermbr_id,
+                   login_status_cd, ofauth_stop_status_cd,
+                   nation_cd, lang_cd, entry_day, 
+                   bolter_day, bolter_reason_cd, bolter_reason_desc, 
+                   appr_day, mbr_nm, chrgpers_nm, 
+                   email, wire_nation_no, wire_tel_no, 
+                   wils_nation_no, wils_tel_no, realnm_auth_yn, 
+                   sex, zip, addr, 
+                   dtl_addr, fr_city, fr_area, 
+                   vendor_cd, comp_nm, shpg_expo_nm, 
+                   ctz_reg_no, biz_reg_no, biz_kind_cd, 
+                   corp_reg_no, cond_nm, indt_nm, 
+                   rep_tel_nation_no, rep_tel_no,  rep_email, msalbiz_decl_yn, 
+                   msalbiz_decl_no, msalbiz_undecl_reason_cd, easy_txn_yn, 
+                   delib_grd_cd, auto_ded_posb_target_yn, lnchg_mall_cd, 
+                   lnchg_mbr_status_cd, entry_bolter_path_cd, sub_acct_desc, 
+                   cust_cors_email, cust_cors_tel_nation_no, cust_cors_tel_no, 
+                   SYSDATE, email_recv_yn, sms_recv_yn , start_dt, SYSDATE , SYSDATE ,
+                   pub_auth_yn ,acct_auth_yn ,mno_cd ,birth ,lgl_agent_agree_yn ,ceo_nm ,ceo_birth , category_list ,vat_yn,frpers_website,
+                   rep_website
+          FROM tb_us_sellermbr
+         WHERE insd_sellermbr_no = #{sellerKey}
+
+    </update>
+    
+    <!-- 판매자 수정 -->
+    <update id="updateSeller" parameterType="sellerMbr">
+        UPDATE tb_us_sellermbr    /* SellerMapper.xml, updateSeller, SAC(SC), 김경복, 2015-05-27 */
+           SET insd_sellermbr_no = #{sellerKey}
+            <if test="sellerClass != null">,prsn_corp_clsf_cd = #{sellerClass}</if>
+            <if test="sellerCategory != null">,chrg_free_clsf_cd = #{sellerCategory}</if>
+            <if test="isDomestic != null">,ictry_sellermbr_yn = #{isDomestic}</if>
+            <if test="sellerMainStatus != null">,seller_status_main_cd = #{sellerMainStatus}</if>
+            <if test="sellerSubStatus != null">,seller_status_sub_cd = #{sellerSubStatus}</if>
+            <if test="loginStatusCode != null">,login_status_cd = #{loginStatusCode}</if>
+            <if test="stopStatusCode != null">,ofauth_stop_status_cd = #{stopStatusCode}</if>
+            <if test="sellerID != null">,sellermbr_id = #{sellerID}</if>
+            <if test="sellerCountry != null">,nation_cd = #{sellerCountry}</if>
+            <if test="sellerLanguage != null">,lang_cd = #{sellerLanguage}</if>
+            <if test="regDate != null">,entry_day = #{regDate}</if>
+            <if test="secedeDate != null">,bolter_day = #{secedeDate}</if>
+            <if test="secedeReasonCode != null">,bolter_reason_cd = #{secedeReasonCode}</if>
+            <if test="secedeReasonMessage != null">,bolter_reason_desc = #{secedeReasonMessage}</if>
+            <if test="approveDate != null">,appr_day= #{approveDate}</if>
+            <if test="sellerName != null">,mbr_nm = #{sellerName}</if>
+            <if test="charger != null">, chrgpers_nm =#{charger}</if>
+            <if test="sellerEmail != null">,email = #{sellerEmail}</if>
+            <if test="isRecvEmail != null">,email_recv_yn = #{isRecvEmail}</if>
+            <if test="cordedTelephoneCountry != null">,wire_nation_no = #{cordedTelephoneCountry}</if>
+            <if test="cordedTelephone != null">, wire_tel_no = #{cordedTelephone}</if>
+            <if test="sellerPhone != null">,wils_tel_no = #{sellerPhone}</if>
+            <if test="sellerPhoneCountry != null">,wils_nation_no = #{sellerPhoneCountry}</if>
+            <if test="isRecvSMS != null">,sms_recv_yn = #{isRecvSMS}</if>
+            <if test="isRealName != null">,realnm_auth_yn = #{isRealName}</if>
+            <if test="sellerSex != null">,sex = #{sellerSex}</if>
+            <if test="sellerZip != null">,zip = #{sellerZip}</if>
+            <if test="sellerAddress != null">,addr = PKG_CRYPTO.ENCRYPT(#{sellerAddress})</if>
+            <if test="sellerDetailAddress != null">,dtl_addr = PKG_CRYPTO.ENCRYPT(#{sellerDetailAddress})</if>
+            <if test="sellerCity != null">,fr_city = #{sellerCity}</if>
+            <if test="sellerState != null">,fr_area = #{sellerState}</if>
+            <if test="vendorCode != null">,vendor_cd =#{vendorCode}</if>
+            <if test="sellerCompany != null">,comp_nm = #{sellerCompany}</if>
+            <if test="sellerNickName != null">,shpg_expo_nm = #{sellerNickName}</if>
+            <if test="sellerSSNumber != null">,ctz_reg_no = #{sellerSSNumber}</if>
+            <if test="sellerBizNumber != null">,biz_reg_no = #{sellerBizNumber}</if>
+            <if test="bizKindCd != null">, biz_kind_cd= #{bizKindCd}</if>
+            <if test="sellerBizCorpNumber != null">,corp_reg_no = PKG_CRYPTO.ENCRYPT(#{sellerBizCorpNumber})</if>
+            <if test="sellerBizCategory != null">, cond_nm= #{sellerBizCategory}</if>
+            <if test="sellerBizType != null">, indt_nm = #{sellerBizType}</if>
+            <if test="repPhoneArea != null">, rep_tel_nation_no = #{repPhoneArea}</if>
+            <if test="repPhone != null">, rep_tel_no=#{repPhone}</if>
+            <if test="repWebsite != null">,rep_website = #{repWebsite}</if>
+            <if test="repEmail != null">,rep_email = #{repEmail}</if>
+            <if test="isBizRegistered!= null">,msalbiz_decl_yn =#{isBizRegistered}</if>
+            <if test="bizRegNumber != null">,msalbiz_decl_no =#{bizRegNumber}</if>
+            <if test="bizUnregReason != null">,msalbiz_undecl_reason_cd = #{bizUnregReason}</if>
+            <if test="isBizTaxable != null">,easy_txn_yn =#{isBizTaxable}</if>
+            <if test="bizGrade != null">,delib_grd_cd = #{bizGrade}</if>
+            <if test="isDeductible!= null">,auto_ded_posb_target_yn = #{isDeductible}</if>
+            <if test="marketCode != null">,lnchg_mall_cd =#{marketCode}</if>
+            <if test="marketStatus != null">, lnchg_mbr_status_cd = #{marketStatus}</if>
+            <if test="secedePathCd != null">, entry_bolter_path_cd =#{secedePathCd}</if>
+            <if test="subSellerMemo != null">, sub_acct_desc = #{subSellerMemo}</if>
+            <if test="customerEmail != null">, cust_cors_email = #{customerEmail}</if>
+            <if test="customerPhoneCountry!= null">, cust_cors_tel_nation_no =#{customerPhoneCountry}</if>
+            <if test="customerPhone != null">, cust_cors_tel_no =#{customerPhone}</if>
+            <if test="sellerTelecom != null">, mno_cd = #{sellerTelecom}</if>
+            <if test="sellerBirthDay!= null">,birth = #{sellerBirthDay}</if>
+            <if test="isParent != null">,lgl_agent_agree_yn =#{isParent}</if>
+            <if test="isAccountReal != null">, acct_auth_yn =#{isAccountReal}</if>
+            <if test="ceoName != null">,ceo_nm = #{ceoName}</if>
+            <if test="ceoBirthDay!= null">, ceo_birth =#{ceoBirthDay}</if>
+            <if test="rightProfileList != null">, category_list = #{rightProfileList}</if>
+            
+            <if test="sellerBizZip != null">, enprpl_zip = #{sellerBizZip}</if>
+            <if test="sellerBizAddress != null">, enprpl_addr = #{sellerBizAddress}</if>
+            <if test="sellerBizDetailAddress != null">, enprpl_addr_dtl  = #{sellerBizDetailAddress}</if>
+            <if test="chargerPhone != null">, chrgpers_wils_tel_no   = #{chargerPhone}</if>
+            <if test="isOfficialAuth  != null">, pub_auth_yn  = #{isOfficialAuth}  </if>
+            <if test="isTaxable  != null">, vat_yn  = #{isTaxable}  </if>
+            <if test="website  != null">, frpers_website  = #{website}  </if>
+            , start_dt                      = SYSDATE 
+            , upd_dt                        = SYSDATE 
+            
+            
+        WHERE insd_sellermbr_no = #{sellerKey}
+    </update>
+    
+    <!-- 서브계정 가입 -->
+    <update id="createSubSeller" parameterType="sellerMbr">
+        INSERT INTO tb_us_sellermbr (   /* SellerMapper.createSubSeller, 서브계정 가입 , wisestone_jloveonly, 2014-01-15 */
+               insd_sellermbr_no,
+               up_insd_sellermbr_no,               
+               prsn_corp_clsf_cd,
+               chrg_free_clsf_cd,
+               seller_status_main_cd,
+               seller_status_sub_cd,
+               sellermbr_id,
+               entry_day
+               <if test="sellerEmail != null">,email </if>
+               <if test="sellerPhoneCountry != null">,wils_nation_no </if>
+               <if test="sellerPhone != null">,wils_tel_no </if>
+               <if test="subSellerMemo != null">,sub_acct_desc </if>
+               <if test="rightProfileList != null">,category_list </if>               
+               ,login_status_cd
+               ,ofauth_stop_status_cd          
+               ,start_dt 
+               ,upd_dt 
+                 
+        ) VALUES (
+            #{sellerKey},
+            #{parentSellerKey},
+            #{sellerClass},
+            #{sellerCategory},
+            #{sellerMainStatus},
+            #{sellerSubStatus},
+            #{sellerID},
+             TO_CHAR(SYSDATE, 'YYYYMMDD')
+            <if test="sellerEmail != null">,#{sellerEmail} </if>
+            <if test="sellerPhoneCountry != null">,#{sellerPhoneCountry} </if>
+            <if test="sellerPhone != null">,#{sellerPhone} </if>
+            <if test="subSellerMemo != null">,#{subSellerMemo} </if>
+            <if test="rightProfileList != null">,#{rightProfileList} </if>
+            ,#{loginStatusCode}
+            ,#{stopStatusCode}
+            ,SYSDATE 
+            ,SYSDATE 
+        )
+    </update>
+    
+    <!-- 판매자 실명인증 수정(실제로는 insert를 수행한다) -->
+    <insert id="updateRealName" parameterType="updateRealNameSellerRequest">
+        <selectKey keyProperty="AUTH_SEQ" resultType="int" >
+            SELECT auth_seq.NEXTVAL from dual
+        </selectKey>    
+    
+        <if test="isOwn != null and isOwn.equalsIgnoreCase('OWN')">
+        INSERT /* SellerMapper.updateRealName, 판매자 실명인증 수정, wisestone_jloveonly, 2014-01-15 */
+               INTO tb_us_mbr_auth (
+               auth_seq
+                ,insd_sellermbr_no
+                ,mbr_clsf_cd
+            <if test="mbrAuth.ci != null"> ,ci </if>
+            <if test="mbrAuth.di != null"> ,di </if>
+            <if test="mbrAuth.realNameMethod != null"> ,auth_mtd_cd </if>
+            <if test="mbrAuth.telecom != null"> ,mno_cd </if>
+            <if test="mbrAuth.phone != null"> ,wils_tel_no </if>
+            <if test="mbrAuth.birthDay != null"> ,birth </if>
+            <if test="mbrAuth.sex != null"> ,sex </if>
+            <if test="mbrAuth.name != null"> ,mbr_nm </if>
+            <if test="mbrAuth.realNameSite != null"> , system_id </if>
+            <if test="mbrAuth.realNameDate != null"> ,auth_dt </if>
+             ,upd_dt 
+            <if test="mbrAuth.tenantID != null"> ,tenant_id </if>
+            <if test="mbrAuth.isDomestic != null">          ,ictry_yn </if>
+		) VALUES (
+            sq_us_mbr_auth.NEXTVAL
+            ,#{sellerKey}
+            ,'US010802'
+            <if test="mbrAuth.ci != null"> ,#{mbrAuth.ci} </if>
+            <if test="mbrAuth.di != null"> ,#{mbrAuth.di} </if>
+            <if test="mbrAuth.realNameMethod != null"> ,#{mbrAuth.realNameMethod} </if>
+            <if test="mbrAuth.telecom != null"> ,#{mbrAuth.telecom} </if>
+            <if test="mbrAuth.phone != null"> ,#{mbrAuth.phone} </if>
+            <if test="mbrAuth.birthDay != null"> ,#{mbrAuth.birthDay} </if>
+            <if test="mbrAuth.sex != null"> ,#{mbrAuth.sex} </if>
+            <if test="mbrAuth.name != null"> ,#{mbrAuth.name} </if>
+            <if test="mbrAuth.realNameSite != null"> ,#{mbrAuth.realNameSite} </if>
+            <if test="mbrAuth.realNameDate != null"> ,TO_DATE(#{mbrAuth.realNameDate},'YYYYMMDDHH24MISS')</if>
+            ,SYSDATE
+            <if test="mbrAuth.tenantID != null"> ,#{mbrAuth.tenantID} </if>
+            <if test="mbrAuth.isDomestic != null">          ,#{mbrAuth.isDomestic} </if>
+		)
+       </if>
+
+        <if test="isOwn != null and isOwn.equalsIgnoreCase('PARENT')">
+        INSERT  /* SellerMapper.updateRealName, 판매자 실명인증 수정, wisestone_jloveonly, 2014-01-15 */
+               INTO tb_us_sellermbr_lgl_agent (
+												                auth_seq
+												                ,reg_dt
+			<if test="mbrLglAgent.parentCI != null">            ,ci    </if>
+			<if test="mbrLglAgent.parentRealNameMethod != null">,lgl_agent_auth_mtd_cd </if>
+                                                                ,insd_sellermbr_no
+            <if test="mbrLglAgent.parentType != null">          ,lgl_agent_rshp </if>
+            <if test="mbrLglAgent.parentEmail != null">         ,lgl_agent_email </if>
+            <if test="mbrLglAgent.parentDate != null">          ,lgl_agent_agree_dt </if>
+            <if test="mbrLglAgent.parentRealNameSite != null">  ,system_id </if>
+            <if test="mbrLglAgent.parentTelecom != null">       ,mno_cd </if>
+            <if test="mbrLglAgent.parentMDN != null">           ,lgl_agent_hp_no </if>
+            <if test="mbrLglAgent.parentName != null">          ,lgl_agent_flnm </if>
+            <if test="mbrLglAgent.parentBirthDay != null">      ,lgl_agent_birth </if>
+            <if test="mbrLglAgent.isDomestic != null">          ,ictry_yn </if>
+		) VALUES (
+                                                                sq_us_sellermbr_lgl_agent.NEXTVAL
+                                                                ,SYSDATE
+            <if test="mbrLglAgent.parentCI != null">            ,#{mbrLglAgent.parentCI}    </if>
+            <if test="mbrLglAgent.parentRealNameMethod != null">,#{mbrLglAgent.parentRealNameMethod} </if>
+													            ,#{sellerKey}
+            <if test="mbrLglAgent.parentType != null">          ,#{mbrLglAgent.parentType} </if>
+            <if test="mbrLglAgent.parentEmail != null">         ,#{mbrLglAgent.parentEmail} </if>
+            <if test="mbrLglAgent.parentDate != null">          ,TO_DATE(#{mbrLglAgent.parentDate},'YYYYMMDDHH24MISS') </if>
+            <if test="mbrLglAgent.parentRealNameSite != null">  ,#{mbrLglAgent.parentRealNameSite} </if>
+            <if test="mbrLglAgent.parentTelecom != null">       ,#{mbrLglAgent.parentTelecom} </if>
+            <if test="mbrLglAgent.parentMDN != null">           ,#{mbrLglAgent.parentMDN} </if>
+            <if test="mbrLglAgent.parentName != null">          ,#{mbrLglAgent.parentName} </if>
+            <if test="mbrLglAgent.parentBirthDay != null">      ,#{mbrLglAgent.parentBirthDay} </if>
+            <if test="mbrLglAgent.isDomestic != null">          ,#{mbrLglAgent.isDomestic} </if>
+		)
+       </if>
+    </insert>
+
+<!-- 사용자 실명인증 수정(실제로는 insert를 수행한다) -->
+    <insert id="updateOwnRealName" parameterType="mbrAuth">
+        INSERT  /* SellerMapper.updateOwnRealName , 사용자 실명인증 수정, wisestone_jloveonly, 2013-12-20 */
+                INTO tb_us_mbr_auth (
+                auth_seq
+                ,insd_sellermbr_no
+                <if test="memberCategory != null"> ,mbr_clsf_cd </if>
+                <if test="ci != null"> ,ci </if>
+                <if test="di != null"> ,di </if>
+                <if test="realNameMethod != null"> ,auth_mtd_cd </if>
+                <if test="telecom != null"> ,mno_cd </if>
+                <if test="phone != null"> ,wils_tel_no </if>
+                <if test="birthDay != null"> ,birth </if>
+                <if test="sex != null"> ,sex </if>
+                <if test="name != null"> ,mbr_nm </if>
+                <if test="realNameSite != null"> , system_id </if>
+                <if test="realNameDate != null"> ,auth_dt </if>
+                ,upd_dt
+                <if test="tenantID != null"> ,tenant_id </if>
+                <if test="isDomestic != null">          ,ictry_yn </if>
+        ) VALUES (
+                sq_us_mbr_auth.NEXTVAL
+                ,#{memberKey}
+                <if test="memberCategory != null"> ,'US010802' </if>
+                <if test="ci != null"> ,#{ci} </if>
+                <if test="di != null"> ,#{di} </if>
+                <if test="realNameMethod != null"> ,#{realNameMethod} </if>
+                <if test="telecom != null"> ,#{telecom} </if>
+                <if test="phone != null"> ,#{phone} </if>
+                <if test="birthDay != null"> ,#{birthDay} </if>
+                <if test="sex != null"> ,#{sex} </if>
+                <if test="name != null"> ,#{name} </if>
+                <if test="realNameSite != null"> ,#{realNameSite} </if>
+                <if test="realNameDate != null"> ,TO_DATE(#{realNameDate},'YYYYMMDDHH24MISS')</if>  
+                ,SYSDATE
+                <if test="tenantID != null"> ,#{tenantID} </if>
+                <if test="isDomestic != null">          ,#{isDomestic} </if>
+        )
+    </insert>
+    
+    <!-- 판매자 법정대리인 수정(실제로는 insert를 수행한다) -->
+    <insert id="updateAgentRealName" parameterType="mbrLglAgent">
+        <selectKey keyProperty="AUTH_SEQ" resultType="int" >
+            SELECT auth_seq.NEXTVAL from dual
+        </selectKey>    
+    
+        INSERT /* SellerMapper.updateAgentRealName, 판매자 법정대리인 수정, wisestone_jloveonly, 2013-12-20 */
+               INTO tb_us_sellermbr_lgl_agent (
+                                                                auth_seq
+                                                                ,reg_dt
+            <if test="parentCI != null">            ,ci    </if>
+            <if test="parentRealNameMethod != null">,lgl_agent_auth_mtd_cd </if>
+                                                    ,insd_sellermbr_no
+            <if test="parentType != null">          ,lgl_agent_rshp </if>
+            <if test="parentEmail != null">         ,lgl_agent_email </if>
+            <if test="parentDate != null">          ,lgl_agent_agree_dt </if>
+            <if test="parentRealNameSite != null">  ,system_id </if>
+            <if test="parentTelecom != null">       ,mno_cd </if>
+            <if test="parentMDN != null">           ,lgl_agent_hp_no </if>
+            <if test="parentName != null">          ,lgl_agent_flnm </if>
+            <if test="parentBirthDay != null">      ,lgl_agent_birth </if>
+            <if test="isDomestic != null">          ,ictry_yn </if>
+        ) VALUES (
+                                                    sq_us_sellermbr_lgl_agent.NEXTVAL
+                                                    ,SYSDATE
+            <if test="parentCI != null">            ,#{parentCI}    </if>
+            <if test="parentRealNameMethod != null">,#{parentRealNameMethod} </if>   
+                                                    ,#{memberKey}
+            <if test="parentType != null">          ,#{parentType} </if>
+            <if test="parentEmail != null">         ,#{parentEmail} </if>
+            <if test="parentDate != null">          ,TO_DATE(#{parentDate},'YYYYMMDDHH24MISS')</if>  
+            <if test="parentRealNameSite != null">  ,#{parentRealNameSite} </if>
+            <if test="parentTelecom != null">       ,#{parentTelecom} </if>
+            <if test="parentMDN != null">           ,#{parentMDN} </if>
+            <if test="parentName != null">          ,#{parentName} </if>
+            <if test="parentBirthDay != null">      ,#{parentBirthDay} </if>
+            <if test="isDomestic != null">          ,#{isDomestic} </if>
+        )
+    </insert>
+    
+    
+    <!-- 보안질문 삭제 -->
+    <delete id="removePWReminder" parameterType="sellerMbr">
+        DELETE   /* SellerMapper.removePWReminder, 보안질문 삭제 , wisestone_jloveonly, 2014-03-12 */
+          FROM tb_us_sellermbr_pwd_hint_ans 
+         WHERE insd_sellermbr_no = #{sellerKey} 
+    </delete>
+    
+    
+    <!-- 보안질문 등록 -->
+    <insert id="insertPWReminder" parameterType="pWReminder">
+        INSERT INTO tb_us_sellermbr_pwd_hint_ans (  /* SellerMapper.insertPWReminder, 보안질문 등록 , wisestone_mikepark, 2014-01-13 */
+               insd_sellermbr_no,
+               pwd_qust_id,
+               hint_ans,
+               upd_dt
+               <if test="questionMessage != null">,qust_dirc_ins </if>
+        ) VALUES (
+            #{sellerKey},
+            #{questionID},
+            #{answerString},
+            SYSDATE
+            <if test="questionMessage != null">,#{questionMessage} </if>
+        )
+    </insert>
+    
+    <!-- Password 등록 -->
+    <insert id="insertPassword" parameterType="mbrPwd">
+        INSERT INTO tb_us_sellermbr_pwd (  /* SellerMapper.insertPassword, Password 등록 , wisestone_jloveonly, 2014-01-15 */
+               insd_sellermbr_no,
+               pwd,
+               fail_cnt,
+               upd_dt ,
+               enc_type  
+        ) VALUES (
+            #{memberKey},
+            #{memberPW},
+            0,
+            SYSDATE,
+            #{encType}  
+        )
+    </insert>
+    
+    <!-- 비밀번호 힌트 목록 목록 조회 -->
+    <select id="searchPwdHintList" parameterType="searchPwdHintListRequest" resultMap="searchPwdHintListResultMap">
+        SELECT  /* SellerMapper.searchPwdHintList, 비밀번호 힌트 목록 목록 조회 , wisestone_jloveonly, 2014-01-15 */
+               #{sellerKey}  sellerKey
+                ,#{questionID}  questionID
+                ,#{languageCode} languageCode
+          FROM DUAL
+    </select>
+     
+    <!-- 비밀번호 힌트 목록 목록 조회 -->
+    <resultMap id="searchPwdHintListResultMap" type="searchPwdHintListResponse" >
+        <collection
+            property="pWReminderList"
+            column="{sellerKey=sellerKey,questionID=questionID,languageCode=languageCode}"
+            javaType="java.util.ArrayList"
+            ofType="pWReminderList"
+            select="getPWReminderList"/>
+    </resultMap>
+
+    <!-- 비밀번호 힌트 답변 목록 조회 -->
+    <select id="getPWReminderList" resultType="pWReminder">
+        SELECT /* SellerMapper.getsellerMbrPwdHintList, 비밀번호 힌트 답변 목록 조회 , wisestone_jloveonly, 2014-02-03 */
+               a.insd_sellermbr_no        sellerKey,
+               a.pwd_qust_id         questionID,
+               TO_CHAR(  a.upd_dt,'YYYYMMDDHH24MISS')               updateDate,
+               CASE WHEN a.pwd_qust_id = 'QUE016'    
+                 THEN a.qust_dirc_ins
+                 ELSE c.pwd_qust_nm
+               END  questionName ,
+               c.pwd_qust_desc  questionMessage ,
+               a.hint_ans    answerString
+          FROM tb_us_sellermbr_pwd_hint_ans A , tb_us_sellermbr B , tb_us_sellermbr_pwd_hint c
+         WHERE a.insd_sellermbr_no = b.insd_sellermbr_no
+          AND a.insd_sellermbr_no = #{sellerKey}
+          AND b.up_insd_sellermbr_no IS NULL 
+          AND c.pwd_qust_id = a.pwd_qust_id 
+          AND c.lang_cd = #{languageCode}
+          <if test="!questionID.equals('return')"> AND  a.pwd_qust_id =  #{questionID} </if>
+          order by c.dp_ord desc 
+          
+          
+                 
+    </select>  
+
+
+    <!-- 부모 판매자 회원정보 + 비밀번호 -->
+    <select id="getSellerMbrRetrieveParentPWD" resultType="sellerMbrRetrievePWD"> 
+        SELECT  /* SellerMapper.xml, getSellerMbrRetrievePWD, SAC(SC), 김경복, 2015-05-27 */
+            b.insd_sellermbr_no            subSellerKey,
+            a.insd_sellermbr_no            sellerKey,
+            a.up_insd_sellermbr_no         parentSellerKey,
+            a.prsn_corp_clsf_cd            sellerClass,
+            a.chrg_free_clsf_cd            sellerCategory,
+            a.ictry_sellermbr_yn           isDomestic,
+            a.seller_status_main_cd        sellerMainStatus,
+            a.seller_status_sub_cd         sellerSubStatus,
+            a.login_status_cd              loginStatusCode,
+            a.ofauth_stop_status_cd        stopStatusCode,
+            a.sellermbr_id                 sellerID,
+            a.nation_cd                    sellerCountry,
+            a.lang_cd                      sellerLanguage,
+            a.entry_day                    regDate,
+            a.bolter_day                   secedeDate,
+            a.bolter_reason_cd             secedeReasonCode,
+            a.bolter_reason_desc           secedeReasonMessage,
+            a.appr_day                     approveDate,
+            a.mbr_nm                       sellerName,
+            a.chrgpers_nm                  charger,
+            a.email                        sellerEmail,
+            a.email_recv_yn                isRecvEmail,
+            a.wire_nation_no               cordedTelephoneCountry,
+            a.wire_tel_no                  cordedTelephone,
+            a.wils_nation_no               sellerPhoneCountry,
+            a.wils_tel_no                  sellerPhone,
+            a.sms_recv_yn                  isRecvSMS,
+            a.realnm_auth_yn               isRealName,
+            a.sex                          sellerSex,
+            a.zip                          sellerZip,
+            PKG_CRYPTO.DECRYPT(a.addr)                         sellerAddress,
+            PKG_CRYPTO.DECRYPT(a.dtl_addr)                     sellerDetailAddress,
+            a.fr_city                      sellerCity,
+            a.fr_area                      sellerState,
+            a.vendor_cd                    vendorCode,
+            a.comp_nm                      sellerCompany,
+            a.shpg_expo_nm                 sellerNickName,
+            a.ctz_reg_no                   sellerSSNumber,
+            a.biz_reg_no                   sellerBizNumber,
+            a.biz_kind_cd                  bizKindCd,
+            PKG_CRYPTO.DECRYPT(a.corp_reg_no)                  sellerBizCorpNumber,
+            a.cond_nm                      sellerBizCategory,
+            a.indt_nm                      sellerBizType,
+            a.rep_tel_nation_no            repPhoneArea,
+            a.rep_tel_no                   repPhone,
+
+            a.rep_email                    repEmail,
+            a.msalbiz_decl_yn              isBizRegistered,
+            a.msalbiz_decl_no              bizRegNumber,
+            a.msalbiz_undecl_reason_cd     bizUnregReason,
+            a.easy_txn_yn                  isBizTaxable,
+            a.delib_grd_cd                 bizGrade,
+            a.auto_ded_posb_target_yn      isDeductible,
+            a.lnchg_mall_cd                marketCode,
+            a.lnchg_mbr_status_cd          marketStatus,
+            a.entry_bolter_path_cd         secedePathCd,
+            a.sub_acct_desc                subSellerDes,
+            a.cust_cors_email              customerEmail,
+            a.cust_cors_tel_nation_no      customerPhoneCountry,
+            a.cust_cors_tel_no             customerPhone,
+            a.mno_cd                       sellerTelecom,
+            a.birth                        sellerBirthDay,
+            a.lgl_agent_agree_yn           isParent,
+            a.acct_auth_yn                 isAccountReal,
+            a.ceo_nm                       ceoName,
+            a.ceo_birth                    ceoBirthDay,
+            a.category_list                rightProfileList,
+            
+            a.acct_auth_yn                 isAccountReal,
+            a.ceo_nm                       ceoName,
+            a.ceo_birth                    ceoBirthDay,
+            a.category_list                rightProfileList,
+            
+            a.enprpl_zip              sellerBizZip,
+            a.enprpl_addr             sellerBizAddress,
+            a.enprpl_addr_dtl         sellerBizDetailAddress,
+            a.chrgpers_wils_tel_no    chargerPhone,
+            a.pub_auth_yn             isOfficialAuth,
+    
+            c.pwd                          pwd,
+            c.enc_type                          encType,
+            TO_CHAR(C.upd_dt ,'YYYYMMDDHH24MISS')                       updateDate,
+            C.fail_cnt                     failCnt
+         FROM tb_us_sellermbr a ,
+             (
+                 SELECT insd_sellermbr_no, up_insd_sellermbr_no FROM ( SELECT  insd_sellermbr_no ,up_insd_sellermbr_no FROM tb_us_sellermbr WHERE sellermbr_id = #{sellerID} ORDER BY insd_sellermbr_no DESC )a 
+                 WHERE ROWNUM=1
+             )b ,
+             tb_us_sellermbr_pwd c 
+          WHERE
+          a.insd_sellermbr_no = #{parentSellerKey} 
+          AND a.insd_sellermbr_no = b.up_insd_sellermbr_no
+          AND b.insd_sellermbr_no = c.insd_sellermbr_no
+          AND a.seller_status_main_cd IN ('US010201','US010203','US010204')
+    </select>
+    
+    
+
+
+    <!-- 사용자 아이디의 중복/제한단여 여부 정보 조회 -->
+    <select id="checkExistLimitWord" parameterType="sellerMbr" resultType="existLimitWordMemberID">
+        SELECT   /* SellerMapper.checkExistLimitWord, 판매자 아이디의 중복/제한단여 여부 정보 조회, wisestone_jloveonly, 2014-01-15 */
+        ( 
+            SELECT sellermbr_id
+            FROM tb_us_sellermbr
+            WHERE sellermbr_id = #{sellerID}
+            AND rownum =1
+            /*AND seller_status_sub_cd != 'US010303'  US010202 : 탈퇴   US010303  : 탈퇴완료*/    
+        ) AS existWordID ,
+        (
+            SELECT limt_word
+            FROM tb_us_limt_word
+            WHERE limt_word_cd = 'US003602'
+            AND limt_word = #{sellerID}
+        ) AS limitWordID
+        FROM DUAL
+    </select>
+    
+    <!-- 판매자 로그인정보 수정 -->
+    <update id="updateLoginInfo" parameterType="loginInfo">
+        MERGE INTO tb_us_sellermbr_login_info u     /* SellerMapper.updateLoginInfo, 판매자 로그인정보 수정, wisestone_mikepark, 2013-12-10 */
+        USING DUAL ON (
+              u.insd_sellermbr_no = #{sellerKey}
+        )
+         WHEN MATCHED THEN
+       UPDATE SET 
+              u.reg_dt          = SYSDATE
+              <if test="ipAddress != null">, u.ip_addr = #{ipAddress}</if>
+              <if test="sessionKey != null">, u.session_key = #{sessionKey}</if>
+              <if test="expireDate != null">, u.expr_dt = TO_DATE(#{expireDate},'YYYYMMDDHH24MISS')</if>
+         WHEN NOT MATCHED THEN
+       INSERT (
+              insd_sellermbr_no, 
+              reg_dt
+              <if test="ipAddress != null">, ip_addr</if>
+              <if test="sessionKey != null">, session_key</if>
+              <if test="expireDate != null">, expr_dt</if>
+       ) VALUES (
+              #{sellerKey},
+              SYSDATE
+              <if test="ipAddress != null">, #{ipAddress}</if>
+              <if test="sessionKey != null">, #{sessionKey}</if>
+              <if test="expireDate != null">, TO_DATE(#{expireDate},'YYYYMMDDHH24MISS')</if>
+       )
+    </update>
+    
+    <!-- 판매자 로그인정보 조회-->
+    <select id="searchLoginInfo" parameterType="searchLoginInfoRequest" resultMap="searchLoginInfoResponseMap">
+        SELECT /* SellerMapper.searchLoginInfo, 판매자 로그인정보 조회, wisestone_mikepark, 2013-01-23 */
+                insd_sellermbr_no       sellerKey,
+                ip_addr                 ipAddress,
+                session_key             sessionKey,
+                TO_CHAR( reg_dt,'YYYYMMDDHH24MISS')                  regDate,
+                TO_CHAR( expr_dt,'YYYYMMDDHH24MISS')                 expireDate
+           FROM tb_us_sellermbr_login_info
+          WHERE 1=1
+          <if test="sessionKey != null">AND session_key = #{sessionKey}</if>
+          <if test="sellerKey != null">AND insd_sellermbr_no = #{sellerKey}</if>
+    </select>
+    <resultMap id="searchLoginInfoResponseMap" type="searchLoginInfoResponse" >
+        <association property="loginInfo"           javaType="loginInfo" >
+            <result property="sellerKey"              column="sellerKey"/>
+            <result property="ipAddress"              column="ipAddress"/>
+            <result property="sessionKey"              column="sessionKey"/>
+            <result property="regDate"              column="regDate"/>
+            <result property="expireDate"              column="expireDate"/>
+        </association>
+    </resultMap>
+    
+    <!-- 판매자 로그인정보 삭제 -->
+    <update id="removeLoginInfo" parameterType="loginInfo">
+        UPDATE tb_us_sellermbr_login_info     /* SellerMapper.removeLoginInfo, 판매자 로그인정보 삭제, wisestone_mikepark, 2013-12-23 */
+        SET EXPR_DT = SYSDATE , session_key = ''
+        WHERE insd_sellermbr_no = #{sellerKey} AND session_key IS NOT NULL
+    </update>
+       
+    
+    <!-- 개인 보안질문 목록 조회 -->
+    <select id="searchPasswordReminderList" parameterType="searchPwdHintListRequest" resultType="pWReminder">
+        SELECT /* SellerMapper.searchPasswordReminderList, 개인 보안질문 목록 조회 , wisestone_mikepark, 2014-02-10 */
+               insd_sellermbr_no        sellerKey,
+               pwd_qust_id         questionID,
+               TO_CHAR(  upd_dt,'YYYYMMDDHH24MISS')               updateDate,
+               qust_dirc_ins           questionMessage
+          FROM tb_us_sellermbr_pwd_hint_ans 
+         WHERE insd_sellermbr_no = #{sellerKey}
+               <if test="!questionID.equals('return')"> AND  pwd_qust_id =  #{questionID} </if>
+    </select>  
+    
+    <!-- 전체 보안질문 목록 조회 -->
+    <select id="searchPasswordReminderListAll" parameterType="searchPwdHintListAllRequest" resultType="pWReminderAll">
+        SELECT /* SellerMapper.searchPasswordReminderListAll, 전체 보안질문 목록 조회 , wisestone_mikepark, 2014-02-10 */
+               pwd_qust_id        questionID,
+               pwd_qust_nm         questionName,
+               pwd_qust_desc         questionMessage,
+               dp_yn         isDisplay,
+               dp_ord         displayOrder,
+               TO_CHAR(  reg_dt,'YYYYMMDDHH24MISS')               regDate,
+               TO_CHAR(  upd_dt,'YYYYMMDDHH24MISS')               updateDate,
+               reg_id         regID,
+               upd_id         updateID,
+               lang_cd           languageCode
+          FROM tb_us_sellermbr_pwd_hint 
+         WHERE lang_cd = #{languageCode} order by dp_ord desc
+    </select>  
+    
+    
+    
+    <!-- 판매자 회원정보 + 비밀번호 -->
+    <select id="getSellerMbrRetrievePWD" resultType="sellerMbrRetrievePWD"> 
+        SELECT  /* SellerMapper.xml, getSellerMbrRetrievePWD, SAC(SC), 김경복, 2015-05-27 */
+            a.insd_sellermbr_no            sellerKey,
+            a.up_insd_sellermbr_no         parentSellerKey,
+            a.prsn_corp_clsf_cd            sellerClass,
+            a.chrg_free_clsf_cd            sellerCategory,
+            a.ictry_sellermbr_yn           isDomestic,
+            a.seller_status_main_cd        sellerMainStatus,
+            a.seller_status_sub_cd         sellerSubStatus,
+            a.login_status_cd              loginStatusCode,
+            a.ofauth_stop_status_cd        stopStatusCode,
+            a.sellermbr_id                 sellerID,
+            a.nation_cd                    sellerCountry,
+            a.lang_cd                      sellerLanguage,
+            a.entry_day                    regDate,
+            a.bolter_day                   secedeDate,
+            a.bolter_reason_cd             secedeReasonCode,
+            a.bolter_reason_desc           secedeReasonMessage,
+            a.appr_day                     approveDate,
+            a.mbr_nm                       sellerName,
+            a.chrgpers_nm                  charger,
+            a.email                        sellerEmail,
+            a.email_recv_yn                isRecvEmail,
+            a.wire_nation_no               cordedTelephoneCountry,
+            a.wire_tel_no                  cordedTelephone,
+            a.wils_nation_no               sellerPhoneCountry,
+            a.wils_tel_no                  sellerPhone,
+            a.sms_recv_yn                  isRecvSMS,
+            a.realnm_auth_yn               isRealName,
+            a.sex                          sellerSex,
+            a.zip                          sellerZip,
+            PKG_CRYPTO.DECRYPT(a.addr)                         sellerAddress,
+            PKG_CRYPTO.DECRYPT(a.dtl_addr)                     sellerDetailAddress,
+            a.fr_city                      sellerCity,
+            a.fr_area                      sellerState,
+            a.vendor_cd                    vendorCode,
+            a.comp_nm                      sellerCompany,
+            a.shpg_expo_nm                 sellerNickName,
+            a.ctz_reg_no                   sellerSSNumber,
+            a.biz_reg_no                   sellerBizNumber,
+            a.biz_kind_cd                  bizKindCd,
+            PKG_CRYPTO.DECRYPT(a.corp_reg_no)                  sellerBizCorpNumber,
+            a.cond_nm                      sellerBizCategory,
+            a.indt_nm                      sellerBizType,
+            a.rep_tel_nation_no            repPhoneArea,
+            a.rep_tel_no                   repPhone,
+
+            a.rep_email                    repEmail,
+            a.msalbiz_decl_yn              isBizRegistered,
+            a.msalbiz_decl_no              bizRegNumber,
+            a.msalbiz_undecl_reason_cd     bizUnregReason,
+            a.easy_txn_yn                  isBizTaxable,
+            a.delib_grd_cd                 bizGrade,
+            a.auto_ded_posb_target_yn      isDeductible,
+            a.lnchg_mall_cd                marketCode,
+            a.lnchg_mbr_status_cd          marketStatus,
+            a.entry_bolter_path_cd         secedePathCd,
+            a.sub_acct_desc                subSellerDes,
+            a.cust_cors_email              customerEmail,
+            a.cust_cors_tel_nation_no      customerPhoneCountry,
+            a.cust_cors_tel_no             customerPhone,
+            a.mno_cd                       sellerTelecom,
+            a.birth                        sellerBirthDay,
+            a.lgl_agent_agree_yn           isParent,
+            a.acct_auth_yn                 isAccountReal,
+            a.ceo_nm                       ceoName,
+            a.ceo_birth                    ceoBirthDay,
+            a.category_list                rightProfileList,
+            
+            a.enprpl_zip              sellerBizZip,
+            a.enprpl_addr             sellerBizAddress,
+            a.enprpl_addr_dtl         sellerBizDetailAddress,
+            a.chrgpers_wils_tel_no    chargerPhone,
+            a.start_dt                     startDate,
+            a.end_dt                       endDate,
+            a.pub_auth_yn                  isOfficialAuth,
+            
+            b.pwd                          pwd,
+            b.enc_type                          encType,
+            TO_CHAR(   b.upd_dt ,'YYYYMMDDHH24MISS')                       updateDate,
+            b.fail_cnt                     failCnt
+         FROM tb_us_sellermbr A
+    LEFT JOIN tb_us_sellermbr_pwd B ON a.insd_sellermbr_no = b.insd_sellermbr_no
+          <if test="sellerID != null">
+          WHERE a.sellermbr_id         = #{sellerID}
+          AND a.seller_status_main_cd IN ('US010201','US010203','US010204')
+          </if>
+    </select>
+    
+    
+    <!-- MQ 등록 (테이블 변경, CMS - MQ, 2015-07-28) --> 
+    <update id="insertBatCmsSellerMbr" parameterType="batCmsSellerMbr">
+        MERGE INTO tb_us_mq_sellermbr   /* SellerMapper.xml, insertBatCmsSellerMbr, SAC(SC), 김경복, 2015-07-28 */
+        USING DUAL
+            ON ( insd_sellermbr_no = #{sellerKey} )
+        WHEN MATCHED THEN
+        UPDATE
+        SET status_type = #{statusType},
+            attempt_cnt = 0,
+            result_cd = #{resultCode},
+            reg_dt = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT (insd_sellermbr_no,
+           status_type,
+           attempt_cnt,
+           result_cd,
+           reg_dt,
+           upd_dt)
+        VALUES(#{sellerKey},
+            #{statusType},
+            0,
+            #{resultCode},
+            SYSDATE,
+            SYSDATE
+        )
+                
+    </update>  
+
+    <!-- 2014-09-17 추가 -->
+    <select id="isRegisteredParentKey" parameterType="String" resultType="String">
+        SELECT /* SellerMapper.isRegisteredParentKey, 부모 판매자키 조회, , 2014-09-17 */
+              up_insd_sellermbr_no as parentSellerKey
+        FROM tb_us_sellermbr
+        WHERE insd_sellermbr_no = #{sellerKey}
+        AND up_insd_sellermbr_no IS NOT NULL
+    </select>    
+
+    <!-- 판매자 약관동의 등록/수정 -->
+    <update id="updateAgreementSeller">
+        MERGE  /* SellerMapper.updateAgreementSeller, 판매자 약관 등록/수정, burkhan_rejoice, 2015-03-06 */
+               INTO tb_us_sellermbr_clause_agree u 
+        USING  DUAL ON 
+               (
+                   u.INSD_SELLERMBR_NO = #{memberKey}    AND
+                   u.CLAUSE_ID       = #{extraAgreementID}
+               )
+
+         WHEN MATCHED THEN
+       UPDATE  SET
+               u.upd_dt            = SYSDATE
+          <if test="isExtraAgreement != null">
+               ,u.agree_yn         = #{isExtraAgreement}
+          </if>
+          <if test="isMandatory != null">
+               ,u.mand_agree_yn    = #{isMandatory}
+          </if>
+          <if test="extraAgreementVersion != null">
+               ,u.clause_ver       = #{extraAgreementVersion}
+          </if>
+
+         WHEN NOT MATCHED THEN
+       INSERT  (            
+                   insd_sellermbr_no
+                   ,clause_id
+                   ,agree_yn
+                   ,reg_dt
+          <if test="isMandatory != null">
+                   ,mand_agree_yn
+          </if>
+          <if test="extraAgreementVersion != null">
+                   ,clause_ver
+          </if>
+               )
+       VALUES
+               (
+                  #{memberKey}
+                  ,#{extraAgreementID}
+                  ,#{isExtraAgreement}
+                  ,SYSDATE
+          <if test="isMandatory != null">
+                  ,#{isMandatory}
+          </if>
+          <if test="extraAgreementVersion != null">
+                  ,#{extraAgreementVersion}
+          </if>
+               )
+    </update>
+    
+    <!-- 판매자 약관동의 목록 조회 -->
+    <select id="searchAgreementListSeller" parameterType="searchAgreementListSellerRequest" resultMap="searchAgreementListSellerResultMap">
+        SELECT  /* SellerMapper.searchAgreementListSeller, 판매자 약관동의 목록 조회, burkhan_rejoice, 2015-03-06 */
+                #{sellerKey} AS sellerKey,
+                #{commonRequest.tenantID} AS tenantID
+          FROM  tb_us_sellermbr
+         WHERE  ROWNUM = 1
+    </select>
+
+    <!-- 판매자 약관동의 목록 조회, MbrClauseAgree -->
+    <resultMap id="searchAgreementListSellerResultMap" type="searchAgreementListSellerResponse" >
+        <result property="sellerKey"            column="sellerKey" />
+        <collection
+            property="mbrClauseAgreeList"
+            column="{sellerKey=sellerKey}"
+            javaType="java.util.ArrayList"
+            ofType="mbrClauseAgree"
+            select="getClauseAgreeListSeller"/>
+    </resultMap>
+    
+    <!-- 판매자 약관동의 조회-->
+    <select id="getClauseAgreeListSeller" resultType="mbrClauseAgree">
+        SELECT  /* SellerMapper.getClauseAgreeListSeller, 판매자 약관동의 조회, burkhan_rejoice, 2015-03-06 */
+                clause_id        extraAgreementID,
+                agree_yn         isExtraAgreement,
+                TO_CHAR( reg_dt,'YYYYMMDDHH24MISS') regDate,
+                TO_CHAR( upd_dt ,'YYYYMMDDHH24MISS') updateDate,
+                mand_agree_yn    isMandatory,
+                clause_ver       extraAgreementVersion
+          FROM  tb_us_sellermbr_clause_agree
+         WHERE  insd_sellermbr_no = #{sellerKey}
+    </select>    
+</mapper>

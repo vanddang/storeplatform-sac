@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+====================================================================  
+# Important
+# CONSOLE APPENDER NAME : CONSOLE
+# CUSTOM APPENDER NAMING RULE : ${projectName}_APPEND_NAME
+# ex) PURCHASE_FILE_APPENDER
+====================================================================
+-->
+<configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="SIMPLE_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SERVICE_STORECOMPONENT-PURCHASE_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${catalina.home}/logs/sc/purchase/svc/service_storecomponent-purchase.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.home}/logs/sc/purchase/svc/service_storecomponent-purchase_%d{yyyyMMdd_HH}.log</FileNamePattern>            
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="ERROR_SERVICE_STORECOMPONENT-PURCHASE_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${catalina.home}/logs/sc/purchase/err/error_storecomponent-purchase.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.home}/logs/sc/purchase/err/error_storecomponent-purchase_%d{yyyyMMdd_HH}.log</FileNamePattern>            
+        </rollingPolicy> 
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>           
+        </filter>
+    </appender>
+    
+    <appender name="TLOG_STORECOMPONENT-PURCHASE_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${catalina.home}/logs/sc/purchase/tlog/tlog.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.home}/logs/sc/purchase/tlog/tlog_%d{yyyyMMdd_HH}.log</FileNamePattern>            
+        </rollingPolicy> 
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- ADD ASYNC APPENDER -->
+    <appender name="SERVICE_STORECOMPONENT-PURCHASE_ROLLINGFILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SERVICE_STORECOMPONENT-PURCHASE_ROLLINGFILE" />
+    </appender>
+    <appender name="ERROR_SERVICE_STORECOMPONENT-PURCHASE_ROLLINGFILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ERROR_SERVICE_STORECOMPONENT-PURCHASE_ROLLINGFILE" />
+    </appender>
+    <appender name="TLOG_STORECOMPONENT-PURCHASE_ROLLINGFILE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="TLOG_STORECOMPONENT-PURCHASE_ROLLINGFILE" />
+    </appender>
+    
+    <!-- SERVICE LOGGER -->
+    <logger name="com.skplanet.storeplatform.purchase" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="SERVICE_STORECOMPONENT-PURCHASE_ROLLINGFILE_ASYNC" />
+        <appender-ref ref="ERROR_SERVICE_STORECOMPONENT-PURCHASE_ROLLINGFILE_ASYNC" />
+    </logger>
+    
+    <!-- TLOG LOGGER -->
+    <logger name="TLOG_PURCHASE_LOGGER" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="SIMPLE_CONSOLE" />
+        <appender-ref ref="TLOG_STORECOMPONENT-PURCHASE_ROLLINGFILE_ASYNC" />
+    </logger>
+    
+</configuration>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MembershipReserve">
+
+
+    <!-- 멤버쉽 적립 이력 생성 -->
+    <insert id="insertMembershipReserve" parameterType="MembershipReserve">
+        INSERT /* MembershipReserveMapper.insertMembershipReserve, 멤버쉽 적립 이력 생성, 이승택/nTels, 2014-08-08 */
+          INTO  tb_pr_membership_reserve
+        (
+          tenant_id
+        , type_cd
+        , prchs_id
+        , status_cd
+        , insd_usermbr_no
+        , insd_device_id
+        , target_dt
+        , save_dt
+        , prchs_dt
+        , cancel_dt
+        , currency_cd
+        , tot_amt
+        , prchs_prod_cnt
+        , prod_id
+        , prod_amt
+        , prod_qty
+        , user_grd_cd
+        , prod_save_rate
+        , target_payment_amt
+        , save_expect_amt
+        , save_result_amt
+        , prchs_req_path_cd
+        , save_type_cd
+        , proc_status_cd
+        , reg_id
+        , reg_dt
+        , upd_id
+        , upd_dt
+        , prod_nm
+        , prom_id
+        , pay_method_vdty_dt
+        )
+        VALUES
+        (
+          #{tenantId}
+        , #{typeCd}
+        , #{prchsId}
+        , #{statusCd}
+        , #{insdUsermbrNo}
+        , #{insdDeviceId}
+        , TO_DATE(#{targetDt, jdbcType=VARCHAR}, 'YYYYMMDDHH24MISS')
+        , TO_DATE(#{saveDt, jdbcType=VARCHAR}, 'YYYYMMDDHH24MISS')
+        , TO_DATE(#{prchsDt, jdbcType=VARCHAR}, 'YYYYMMDDHH24MISS')
+        , TO_DATE(#{cancelDt, jdbcType=VARCHAR}, 'YYYYMMDDHH24MISS')
+        , #{currencyCd}
+        , #{totAmt}
+        , #{prchsProdCnt}
+        , #{prodId}
+        , #{prodAmt}
+        , #{prodQty}
+        , #{userGrdCd}
+        , #{prodSaveRate}
+        , #{targetPaymentAmt}
+        , #{saveExpectAmt}
+        , #{saveResultAmt}
+        , #{prchsReqPathCd, jdbcType=VARCHAR}
+        , #{saveTypeCd, jdbcType=VARCHAR}
+        , #{procStatusCd}
+        , #{regId}
+        , SYSDATE
+        , #{updId}
+        , SYSDATE
+        , #{prodNm, jdbcType=VARCHAR}
+        , #{promId, jdbcType=NUMERIC}
+        , #{payMethodVdtyDt, jdbcType=NUMERIC}
+        )
+    </insert>
+
+
+    <!-- 마일리지 적립 예상 총 금액 조회 -->
+    <select id="searchSaveExpectTotalAmt" parameterType="MembershipReserve" resultType="java.lang.Integer">
+        SELECT /* MembershipReserveMapper.searchSaveExpectAmt, 마일리지 적립 예상 총 금액 조회, 이승택/nTels, 2014-08-08 */
+                NVL(SUM(save_result_amt), 0)
+          FROM  tb_pr_membership_reserve
+         WHERE  tenant_id = #{tenantId}
+           AND  insd_usermbr_no = #{insdUsermbrNo}
+           AND  prom_id = #{promId, jdbcType=NUMERIC}
+           AND  proc_status_cd = #{procStatusCd}
+           AND  status_cd = 'OR000301'
+    </select>
+
+    <!-- 구매 취소시 상품 적립 정보 조회 -->
+    <select id="getSaveInfo" parameterType="MembershipReserve" resultType="MembershipReserve">
+		SELECT  tenant_id
+		      , type_cd
+		      , prchs_id
+		      , status_cd
+		      , insd_usermbr_no
+		      , insd_device_id
+		      , target_dt
+		      , save_dt
+		      , prchs_dt
+		      , cancel_dt
+		      , currency_cd
+		      , tot_amt
+		      , prchs_prod_cnt
+		      , prod_id
+		      , prod_amt
+		      , prod_qty
+		      , user_grd_cd
+		      , prod_save_rate
+		      , target_payment_amt
+		      , save_expect_amt
+		      , save_result_amt
+		      , prchs_req_path_cd
+		      , save_type_cd
+		      , proc_status_cd
+		      , reg_id
+		      , reg_dt
+		      , upd_id
+		      , upd_dt
+		      , point_id
+		      , prom_id
+		  FROM  tb_pr_membership_reserve
+		 WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId}
+           AND  status_cd = #{statusCd}
+    </select>
+
+    <!-- 마일리지 처리 상태 업데이트 -->
+    <update id="updateProcStatus" parameterType="MembershipReserve">
+    UPDATE  tb_pr_membership_reserve
+	   SET  proc_status_cd = #{procStatusCd}
+	      , status_cd = 'OR000302'
+	      , cancel_dt = SYSDATE
+	      , upd_id = #{updId}
+	      , upd_dt = SYSDATE
+	 WHERE  tenant_id = #{tenantId}
+       AND  type_cd = #{typeCd}
+       AND  prchs_id = #{prchsId}
+       AND  status_cd = #{statusCd}
+    </update>
+
+</mapper>

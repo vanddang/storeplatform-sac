@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+    "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration> 
+    <!-- Definition of myBatis Configuration -->
+    <settings>
+        <!-- 설정에서 각 mapper 에 설정된 캐시를 전역적으로 사용할지 말지에 대한 여부 -->
+        <setting name="cacheEnabled" value="true" />
+        <!-- 생성키에 대한 JDBC 지원을 허용 -->
+        <setting name="useGeneratedKeys" value="true" />
+        <!-- REUSE 실행자는 PreparedStatement 를 재사용한다. -->
+        <setting name="defaultExecutorType" value="REUSE" />
+        <setting name="safeResultHandlerEnabled" value="false" />
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!-- Definition of MAPPER Alias -->
+    <typeAliases>
+         <!-- Common -->
+        <typeAlias alias="AutoPrchs"          type="com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs" />
+        <typeAlias alias="Payment"            type="com.skplanet.storeplatform.purchase.client.common.vo.Payment" />
+        <typeAlias alias="Prchs"              type="com.skplanet.storeplatform.purchase.client.common.vo.Prchs" />
+        <typeAlias alias="PrchsDtl"           type="com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl" />
+        <typeAlias alias="PrchsProdCnt"       type="com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt" />
+        <typeAlias alias="UniqueTid"          type="com.skplanet.storeplatform.purchase.client.common.vo.UniqueTid" />
+        <typeAlias alias="MembershipReserve"  type="com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve" />
+        <typeAlias alias="SapNoti"            type="com.skplanet.storeplatform.purchase.client.common.vo.SapNoti" />
+        <typeAlias alias="PayPlanetProperty"  type="com.skplanet.storeplatform.purchase.client.common.vo.PpProperty" />
+
+        <typeAlias alias="TenantSalePolicy"   type="com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy" />
+        <typeAlias alias="PurchaseCommonCode" type="com.skplanet.storeplatform.purchase.client.common.vo.PurchaseCommonCode" />
+        <typeAlias alias="PaymentPromotion"   type="com.skplanet.storeplatform.purchase.client.common.vo.PaymentPromotion" />
+        
+        <!-- 구매요청 -->
+        <typeAlias alias="AutoPrchsMore"    type="com.skplanet.storeplatform.purchase.client.order.vo.AutoPrchsMore" />
+        <typeAlias alias="PrchsDtlMore"     type="com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore" />
+        <typeAlias alias="SearchSktPayment" type="com.skplanet.storeplatform.purchase.client.order.vo.SearchSktPaymentScReq" />
+        <typeAlias alias="SearchPurchaseSequenceAndDateRes" type="com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseSequenceAndDateRes" />
+        
+        <!-- 구매내역숨김 -->
+        <typeAlias alias="hiding"                   type="com.skplanet.storeplatform.purchase.history.vo.Hiding" />
+        <typeAlias alias="hidingScRes"              type="com.skplanet.storeplatform.purchase.client.history.vo.HidingScRes" />
+        <typeAlias alias="hidingDeviceScRes"        type="com.skplanet.storeplatform.purchase.client.history.vo.HidingDeviceScRes" />
+        <!-- 기구매체크 -->
+        <typeAlias alias="exist"                    type="com.skplanet.storeplatform.purchase.history.vo.Exist" />
+        <typeAlias alias="existenceScRes"           type="com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes" />
+        
+        <typeAlias alias="ExistenceScV2Req"         type="com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScV2Req" />
+        
+        <!-- 선물수신확인 -->
+        <typeAlias alias="giftReceiveScReq"        type="com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScReq" />
+        <typeAlias alias="giftReceiveScRes"        type="com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScRes" />
+        <!-- 선물수신처리 -->
+        <typeAlias alias="giftConfirmScReq"        type="com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScReq" />
+        <typeAlias alias="giftConfirmScRes"        type="com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRes" />
+        <!-- <typeAlias alias="giftUser"                 type="com.skplanet.storeplatform.purchase.history.vo.GiftUser" /> -->
+        <!-- 자동결제 해지예약/해지예약취소 -->
+        <typeAlias alias="autoPaymentCancelScReq"   type="com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq" />
+        <typeAlias alias="autoPaymentCancelScRes"   type="com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes" />
+        <!-- 결제내역조회 -->
+        <typeAlias alias="paymentScReq"             type="com.skplanet.storeplatform.purchase.client.history.vo.PaymentScReq" />
+        <typeAlias alias="paymentScRes"             type="com.skplanet.storeplatform.purchase.client.history.vo.PaymentScRes" />
+        <typeAlias alias="paymentListScRes"         type="com.skplanet.storeplatform.purchase.client.history.vo.PaymentListScRes" />
+        
+        <!-- 구매내역조회(이용자별) -->
+        <typeAlias alias="historyListRequest"       type="com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScReq" />
+        <typeAlias alias="historyList"              type="com.skplanet.storeplatform.purchase.client.history.vo.HistorySc" />
+        
+        <!-- 구매건수조회 -->
+        <typeAlias alias="historyCountRequest"          type="com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountScReq" />
+        <typeAlias alias="historyCountList"             type="com.skplanet.storeplatform.purchase.client.history.vo.ProductCountSc" />
+        
+        <!-- 구매내역조회(상품별) -->
+        <typeAlias alias="HistoryProdClsiRequest"           type="com.skplanet.storeplatform.purchase.client.history.vo.HistoryProdClsiScReq" />
+        <typeAlias alias="historyProdClsiList"                  type="com.skplanet.storeplatform.purchase.client.history.vo.HistoryProdClsiSc" />
+        
+        <typeAlias alias="shoppingAsyncItemSc"           type="com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncItemSc" />
+        
+        
+        <!-- 구매취소 관련 -->
+        <typeAlias alias="PurchaseScReq"        type="com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScReq"/>
+        <typeAlias alias="PurchaseScRes"        type="com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes"/>
+        <typeAlias alias="PurchaseCancelScReq"  type="com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScReq"/>
+        <typeAlias alias="PurchaseCancelPaymentDetailScReq"  type="com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelPaymentDetailScReq"/>
+        <typeAlias alias="PurchaseCancelScRes"  type="com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScRes"/>
+                
+         <!-- 자동업데이트 거부/거부취소 -->
+        <typeAlias alias="autoUpdateAlarmScReq"    type="com.skplanet.storeplatform.purchase.client.history.vo.AutoUpdateAlarmScReq" />
+        <typeAlias alias="autoUpdateAlarmScRes"    type="com.skplanet.storeplatform.purchase.client.history.vo.AutoUpdateAlarmScRes" />
+        <typeAlias alias="autoUpdateAlarm"         type="com.skplanet.storeplatform.purchase.history.vo.AutoUpdateAlarm" />
+        
+        <!-- 이용자별 당월 SKT후불 결제금액 조회 -->
+        <typeAlias alias="CheckBillingForSktCarrierScReq"    type="com.skplanet.storeplatform.purchase.client.payment.vo.CheckBillingForSktCarrierScReq" />
+        <typeAlias alias="CheckBillingForSktCarrierScRes"    type="com.skplanet.storeplatform.purchase.client.payment.vo.CheckBillingForSktCarrierScRes" />
+        
+        <!-- 인터파크 및 씨네21 연동 -->
+        <typeAlias alias="interworkingScReq"    type="com.skplanet.storeplatform.purchase.client.interworking.vo.InterworkingScReq" />
+        
+        <!-- 구매 상품 건수 업데이트 -->
+        <typeAlias alias="UpdatePrchsProdCntProcStatusScReq"    type="com.skplanet.storeplatform.purchase.client.product.count.vo.UpdatePrchsProdCntProcStatusScReq" />
+        <typeAlias alias="GetPrchsProdCntScReq"    type="com.skplanet.storeplatform.purchase.client.product.count.vo.GetPrchsProdCntScReq" />
+        
+        <!-- 자동결제 관련 -->
+        <typeAlias alias="AutoPaymentScReq"    type="com.skplanet.storeplatform.purchase.client.cancel.vo.AutoPaymentScReq" />
+        <typeAlias alias="AutoPaymentScRes"    type="com.skplanet.storeplatform.purchase.client.cancel.vo.AutoPaymentScRes" />
+
+        <!-- 회원정보 변경 deviceKey 조회 -->
+        <typeAlias alias="userInfoScReq"    type="com.skplanet.storeplatform.purchase.client.history.vo.UserInfoScReq" />
+        
+        <!-- 즉시 이용정지 -->
+        <typeAlias alias="ImmediatelyUseStopScReq"        type="com.skplanet.storeplatform.purchase.client.cancel.vo.ImmediatelyUseStopScReq"/>
+        <typeAlias alias="ImmediatelyUseStopScRes"        type="com.skplanet.storeplatform.purchase.client.cancel.vo.ImmediatelyUseStopScRes"/>
+        
+        <!-- 마일리지 적립정보 조회 -->
+        <typeAlias alias="MileageSaveRequest"           type="com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveScReq" />
+        <typeAlias alias="MileageSave"                  type="com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveSc" />
+        
+        <typeAlias alias="MileageSaveGetRequest"           type="com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveGetScReq" />
+        <typeAlias alias="MileageSaveGetResponse"           type="com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveGetScRes" />
+        
+        <!-- 쇼핑쿠폰 -->
+        <typeAlias alias="ShoppingScReq"           type="com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingScReq" />
+        
+        <!-- SAP 구매내역이관 -->
+        <typeAlias alias="PurchaseTransferScReq" type="com.skplanet.storeplatform.purchase.client.order.vo.PurchaseTransferScReq" />
+        
+        <!-- DRM업데이트 -->
+        <typeAlias alias="PurchaseDrmInfoScReq" type="com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScReq" />
+        <typeAlias alias="PurchaseDrmInfoSc" type="com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoSc" />
+        <typeAlias alias="PurchaseDrmInfoScRes" type="com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScRes" />
+        
+        <!-- 트랜잭션처리 -->
+        <typeAlias alias="PurchaseTransactionScReq"        type="com.skplanet.storeplatform.purchase.client.transaction.vo.PurchaseTransactionScReq"/>
+        <typeAlias alias="PurchaseTransactionScRes"        type="com.skplanet.storeplatform.purchase.client.transaction.vo.PurchaseTransactionScRes"/>
+        
+	</typeAliases>
+</configuration>

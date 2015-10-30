@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PurchaseProductCount">
+
+    <!-- 1. SELECT SQL -->
+    <select id="getPrchsProdCnt" parameterType="GetPrchsProdCntScReq" resultType="PrchsProdCnt">
+        SELECT  /* PurchaseProductCountMapper.getPrchsProdCnt, 구매 상품 건수 조회, cswoo8101/nTels, 2014-03-27 */
+                tenant_id
+               ,prod_id
+               ,status_cd
+               ,prchs_dt
+               ,sprc_prod_yn
+               ,SUM(prod_qty) AS prodQty
+          FROM  tb_pr_prchs_prod_cnt
+         WHERE  CNT_PROC_STATUS = #{newProcStatus}
+           AND  UPD_ID = #{updId}
+         GROUP  BY tenant_id
+                  ,prod_id
+                  ,status_cd
+                  ,prchs_dt
+                  ,sprc_prod_yn
+    </select>
+
+    <!-- 2. INSERT SQL -->
+    <!-- 구매 이력 생성 -->
+    <insert id="insertPurchaseProductCount" parameterType="PrchsProdCnt">
+        INSERT /* PurchaseProductCountMapper.insertPurchaseProductCount, 구매 상품 건수 정보 생성, 이승택/nTels, 2014-03-25 */
+          INTO  tb_pr_prchs_prod_cnt
+        (
+          tenant_id
+        , insd_usermbr_no
+        , insd_device_id
+        , prod_grp_info
+        , prod_id 
+        , prod_qty 
+        , status_cd
+        , prchs_dt 
+        , sprc_prod_yn 
+        , cnt_proc_status
+        , reg_id
+        , reg_dt
+        , upd_id
+        , upd_dt
+        , prchs_id
+        , prchs_clas
+        , prod_amt
+        , use_fixrate_prod_id 
+        )
+        VALUES
+        (
+          #{tenantId}
+        , #{useUserKey}
+        , #{useDeviceKey}
+        , #{prodGrpCd}
+        , #{prodId}
+        , #{prodQty}
+        , #{statusCd}
+        , SUBSTR(#{prchsDt}, 1, 8)
+        , #{sprcProdYn}
+        , NVL(#{cntProcStatus, jdbcType=VARCHAR}, 'N')
+        , #{regId}
+        , SYSDATE
+        , #{updId}
+        , SYSDATE
+        , #{prchsId, jdbcType=VARCHAR}
+        , #{prchsClas, jdbcType=VARCHAR}
+        , #{prodAmt, jdbcType=DOUBLE}
+        , #{useFixrateProdId, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!-- 3. UPDATE SQL -->
+    <update id="updatePrchsProdCnt" parameterType="UpdatePrchsProdCntProcStatusScReq">
+        UPDATE /* PurchaseProductCountMapper.updatePrchsProdCnt, 구매 상품 건수 상태 업데이트, cswoo8101/nTels, 2014-03-27 */
+        tb_pr_prchs_prod_cnt
+        SET cnt_proc_status = #{newProcStatus}
+        ,upd_id = #{updId}
+        ,upd_dt = SYSDATE
+        WHERE cnt_proc_status = #{currProcStatus}
+        <if test='currProcStatus != "N"'>
+            AND upd_id = #{updId}
+        </if>
+        <if test='currProcStatus == "N"'>
+            AND ROWNUM &lt;= 100000
+        </if>
+    </update>
+
+    <!-- tb_pr_prchs_prod_cnt 의 경우 delete,update는 전시쪽 OGG 안되게 막혀 있음 -->
+    <update id="updatePrchsProdCntByGroupBy" parameterType="GetPrchsProdCntScReq">
+        UPDATE  tb_pr_prchs_prod_cnt 
+           SET  cnt_proc_status = #{newProcStatus}
+               ,upd_id = #{updId}
+               ,upd_dt = SYSDATE
+         WHERE (tenant_id
+               ,prod_id
+               ,status_cd
+               ,prchs_dt
+               ,sprc_prod_yn
+               ,cnt_proc_status
+               ,upd_id) IN (
+                                  SELECT  tenant_id
+                                         ,prod_id
+                                         ,status_cd
+                                         ,prchs_dt
+                                         ,sprc_prod_yn
+                                         ,cnt_proc_status
+                                         ,upd_id
+                                    FROM (
+                                          SELECT  tenant_id
+                                                 ,prod_id
+                                                 ,status_cd
+                                                 ,prchs_dt
+                                                 ,sprc_prod_yn
+                                                 ,cnt_proc_status
+                                                 ,upd_id
+                                            FROM  tb_pr_prchs_prod_cnt
+                                           WHERE  cnt_proc_status = #{currProcStatus}
+                                             AND  upd_id = #{updId}
+                                           GROUP  BY tenant_id
+                                                    ,prod_id
+                                                    ,status_cd
+                                                    ,prchs_dt
+                                                    ,sprc_prod_yn
+                                                    ,cnt_proc_status
+                                                    ,upd_id ) 
+                                   WHERE  ROWNUM  &lt;= #{disPurCnt} )
+         
+    </update>
+
+    <!-- 4. DELETE SQL -->
+    <!-- tb_pr_prchs_prod_cnt 의 경우 delete,update는 전시쪽 OGG 안되게 막혀 있음 -->
+    <delete id="deletePrchsProdCnt" parameterType="PrchsProdCnt">
+        DELETE  /* PurchaseProductCountMapper.deletePrchsProdCnt, 구매 상품 건수 삭제, skp1002448/SK플래닛, 2015-06-10 */
+        FROM  tb_pr_prchs_prod_cnt
+        WHERE TENANT_ID = #{tenantId}
+          AND INSD_USERMBR_NO = #{useUserKey}
+          AND INSD_DEVICE_ID = #{useDeviceKey}
+          AND PROD_ID = #{prodId}
+    </delete>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="PurchasePayPlanet">
+
+    <!-- Pay Planet 가맹점 정보 조회 -->
+    <select id="searchPayPlanetShopInfoDetail" parameterType="PayPlanetProperty" resultType="PayPlanetProperty">
+        SELECT /* PurchasePayPlanetMapper.searchPayPlanetShopInfoDetail, Pay Planet 가맹점 정보 조회, 이승택/nTels, 2015-03-20 */
+		        *
+		  FROM  (
+		            SELECT 
+		                    mid
+		                  , auth_key
+		                  , enc_key
+		                  , url
+		              FROM  <choose>
+			                    <when test="@com.skplanet.storeplatform.purchase.common.ActvieProfileProvider@getActiveProfile() == 'stg'">
+			                        tb_pr_pp_property_stg$
+			                    </when>
+			                    <otherwise>
+			                        tb_pr_pp_property
+			                    </otherwise>
+			                </choose>
+		             WHERE  tenant_id = #{tenantId}
+		               AND  api_type_cd = #{apiTypeCd}
+		               AND  #{reqPathCd} LIKE CONCAT(req_path_cd, '%')
+		               AND  SYSDATE BETWEEN start_dt AND expr_dt
+		          ORDER BY  NVL(LENGTH(req_path_cd), 0) DESC
+		        )
+		 WHERE  ROWNUM = 1
+    </select>
+
+    <!-- SYSTEM DIVISION 조회 -->
+    <select id="searchDcbSystemDivisionDetail" parameterType="PayPlanetProperty" resultType="PayPlanetProperty">
+      SELECT  /* PurchasePayPlanetMapper.searchDcbSystemDivisionDetail, SYSTEM DIVISION 조회, 이승택/nTels, 2015-03-20 */
+              *
+        FROM  (
+            <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(prodId)">
+               SELECT  
+                       sys_div
+                      ,cncl_sys_div
+                 FROM  <choose>
+                           <when test="@com.skplanet.storeplatform.purchase.common.ActvieProfileProvider@getActiveProfile() == 'stg'">
+                               tb_pr_pp_property_stg$
+                           </when>
+                           <otherwise>
+                               tb_pr_pp_property
+                           </otherwise>
+                       </choose> 
+                WHERE  tenant_id = #{tenantId}
+                  AND  api_type_cd = #{apiTypeCd}
+                  AND  prod_info = #{prodId, jdbcType=VARCHAR}
+                  AND  SYSDATE BETWEEN start_dt AND expr_dt
+            UNION ALL
+            </if>
+            <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(parentProdId)">
+               SELECT  
+                       sys_div
+                      ,cncl_sys_div
+                 FROM  <choose>
+                           <when test="@com.skplanet.storeplatform.purchase.common.ActvieProfileProvider@getActiveProfile() == 'stg'">
+                               tb_pr_pp_property_stg$
+                           </when>
+                           <otherwise>
+                               tb_pr_pp_property
+                           </otherwise>
+                       </choose> 
+                WHERE  tenant_id = #{tenantId}
+                  AND  api_type_cd = #{apiTypeCd}
+                  AND  prod_info = #{parentProdId, jdbcType=VARCHAR}
+                  AND  SYSDATE BETWEEN start_dt AND expr_dt
+            UNION ALL
+            </if>
+               SELECT
+                       sys_div
+                      ,cncl_sys_div
+                 FROM  (SELECT
+                                sys_div
+                               ,cncl_sys_div
+                          FROM  <choose>
+                                    <when test="@com.skplanet.storeplatform.purchase.common.ActvieProfileProvider@getActiveProfile() == 'stg'">
+                                        tb_pr_pp_property_stg$
+                                    </when>
+                                    <otherwise>
+                                        tb_pr_pp_property
+                                    </otherwise>
+                                </choose>
+                         WHERE  tenant_id = #{tenantId}
+	                       AND  api_type_cd = #{apiTypeCd}
+	                       AND  (prod_info IS NULL OR #{tenantProdGrpCd, jdbcType=VARCHAR} LIKE CONCAT(prod_info, '%'))
+	                       AND  SYSDATE BETWEEN start_dt AND expr_dt
+	                  ORDER BY  NVL(LENGTH(prod_info), 0) DESC
+                       )
+              )
+       WHERE ROWNUM = 1
+    </select>
+    
+</mapper>

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="Cancel">
+
+    <!-- 1. ResultMap-->  
+    
+    <resultMap id="resultPrchs" type="Prchs" > 
+        <result property="tenantId"         column="tenant_id"          jdbcType="VARCHAR" />
+        <result property="prchsId"          column="prchs_id"           jdbcType="VARCHAR" />
+        <result property="insdUsermbrNo"    column="insd_usermbr_no"    jdbcType="VARCHAR" />
+        <result property="insdDeviceId"     column="insd_device_id"     jdbcType="VARCHAR" />
+        <result property="prchsDt"          column="prchs_dt"           jdbcType="VARCHAR" />
+        <result property="statusCd"         column="status_cd"          jdbcType="VARCHAR" />
+        <result property="totAmt"           column="tot_amt"            jdbcType="VARCHAR" />
+        <result property="prchsReqPathCd"   column="prchs_req_path_cd"  jdbcType="VARCHAR" />
+        <result property="currencyCd"       column="currency_cd"        jdbcType="VARCHAR" />
+        <result property="cancelReqPathCd"  column="cancel_req_path_cd" jdbcType="VARCHAR" />
+        <result property="cancelDt"         column="cancel_dt"          jdbcType="VARCHAR" />
+        <result property="clientIp"         column="client_ip"          jdbcType="VARCHAR" />
+        <result property="prchsCaseCd"      column="prchs_case_cd"      jdbcType="VARCHAR" />
+        <result property="networkTypeCd"    column="network_type_cd"    jdbcType="VARCHAR" />
+        <result property="regId"            column="reg_id"             jdbcType="VARCHAR" />
+        <result property="regDt"            column="reg_dt"             jdbcType="VARCHAR" />
+        <result property="updId"            column="upd_id"             jdbcType="VARCHAR" />
+        <result property="updDt"            column="upd_dt"             jdbcType="VARCHAR" />
+        <result property="resvCol01"        column="resv_col_01"        jdbcType="VARCHAR" />
+        <result property="resvCol02"        column="resv_col_02"        jdbcType="VARCHAR" />
+        <result property="resvCol03"        column="resv_col_03"        jdbcType="VARCHAR" />
+        <result property="resvCol04"        column="resv_col_04"        jdbcType="VARCHAR" />
+        <result property="resvCol05"        column="resv_col_05"        jdbcType="VARCHAR" />
+    </resultMap>
+      
+    <resultMap id="resultPrchsDtl" type="PrchsDtl" > 
+        <result property="tenantId"          column="tenant_id"            jdbcType="VARCHAR" />
+        <result property="prchsId"           column="prchs_id"             jdbcType="VARCHAR" />
+        <result property="prchsDtlId"        column="prchs_dtl_id"         jdbcType="NUMERIC" />
+        <result property="useTenantId"       column="use_tenant_id"        jdbcType="VARCHAR" />
+        <result property="useInsdUsermbrNo"  column="use_insd_usermbr_no"  jdbcType="VARCHAR" />
+        <result property="useInsdDeviceId"   column="use_insd_device_id"   jdbcType="VARCHAR" />
+        <result property="prchsDt"           column="prchs_dt"             jdbcType="VARCHAR" />
+        <result property="totAmt"            column="tot_amt"              jdbcType="VARCHAR" />
+        <result property="currencyCd"        column="currency_cd"          jdbcType="VARCHAR" />
+        <result property="prchsReqPathCd"    column="prchs_req_path_cd"    jdbcType="VARCHAR" />
+        <result property="clientIp"          column="client_ip"            jdbcType="VARCHAR" />
+        <result property="sendInsdUsermbrNo" column="send_insd_usermbr_no" jdbcType="VARCHAR" />
+        <result property="sendInsdDeviceId"  column="send_insd_device_id"  jdbcType="VARCHAR" />
+        <result property="recvDt"            column="recv_dt"              jdbcType="VARCHAR" />
+        <result property="recvConfPathCd"    column="recv_conf_path_cd"    jdbcType="VARCHAR" />
+        <result property="prodId"            column="prod_id"              jdbcType="VARCHAR" />
+        <result property="prodAmt"           column="prod_amt"             jdbcType="VARCHAR" />
+        <result property="prodQty"           column="prod_qty "            jdbcType="NUMERIC" />
+        <result property="tenantProdGrpCd"   column="tenant_prod_grp_cd"   jdbcType="VARCHAR" />
+        <result property="statusCd"          column="status_cd"            jdbcType="VARCHAR" />
+        <result property="cancelReqPathCd"   column="cancel_req_path_cd"   jdbcType="VARCHAR" />
+        <result property="cancelDt"          column="cancel_dt"            jdbcType="VARCHAR" />
+        <result property="prchsCaseCd"       column="prchs_case_cd"        jdbcType="VARCHAR" />
+        <result property="drmYn"             column="drm_yn"               jdbcType="VARCHAR" />
+        <result property="useStartDt"        column="use_start_dt"         jdbcType="VARCHAR" />
+        <result property="useExprDt"         column="use_expr_dt"          jdbcType="VARCHAR" />
+        <result property="dwldStartDt"       column="dwld_start_dt"        jdbcType="VARCHAR" />
+        <result property="dwldExprDt"        column="dwld_expr_dt"         jdbcType="VARCHAR" />
+        <result property="prchsProdType"     column="prchs_prod_type"      jdbcType="VARCHAR" />
+        <result property="useHidingYn"       column="use_hiding_yn"        jdbcType="VARCHAR" />
+        <result property="sendHidingYn"      column="send_hiding_yn"       jdbcType="VARCHAR" />
+        <result property="useFixrateProdId"  column="use_fixrate_prod_id"  jdbcType="VARCHAR" />
+        <result property="cpnPublishCd"      column="cpn_publish_cd"       jdbcType="VARCHAR" />
+        <result property="cpnDlvUrl"         column="cpn_dlv_url"          jdbcType="VARCHAR" />
+        <result property="cpnAddInfo"        column="cpn_add_info"         jdbcType="VARCHAR" />
+        <result property="cpnBizProdSeq"     column="cpn_biz_prod_seq"     jdbcType="VARCHAR" />
+        <result property="cpnBizOrderNo"     column="cpn_biz_order_no"     jdbcType="VARCHAR" />
+        <result property="regId"             column="reg_id"               jdbcType="VARCHAR" />
+        <result property="regDt"             column="reg_dt"               jdbcType="VARCHAR" />
+        <result property="updId"             column="upd_id"               jdbcType="VARCHAR" />
+        <result property="updDt"             column="upd_dt"               jdbcType="VARCHAR" />
+        <result property="resvCol01"         column="resv_col_01"          jdbcType="VARCHAR" />
+        <result property="resvCol02"         column="resv_col_02"          jdbcType="VARCHAR" />
+        <result property="resvCol03"         column="resv_col_03"          jdbcType="VARCHAR" />
+        <result property="resvCol04"         column="resv_col_04"          jdbcType="VARCHAR" />
+        <result property="resvCol05"         column="resv_col_05"          jdbcType="VARCHAR" />
+        <result property="prchsResvDesc"     column="prchs_resv_desc"      jdbcType="VARCHAR" />
+        <result property="couponCmsPrchsId"  column="coupon_cms_prchs_id"  jdbcType="VARCHAR" />
+        <result property="contentsType"      column="contents_type"  jdbcType="VARCHAR" />
+        
+    </resultMap>
+    
+    <resultMap id="resultPayment" type="Payment" > 
+        <result property="tenantId"        column="tenant_id"          jdbcType="VARCHAR" />
+        <result property="prchsId"         column="prchs_id"           jdbcType="VARCHAR" />
+        <result property="paymentDtlId"    column="payment_dtl_id"     jdbcType="NUMERIC" />
+        <result property="insdUsermbrNo"   column="insd_usermbr_no"    jdbcType="VARCHAR" />
+        <result property="insdDeviceId"    column="insd_device_id"     jdbcType="VARCHAR" />
+        <result property="prchsDt"         column="prchs_dt"           jdbcType="VARCHAR" />
+        <result property="totAmt"          column="tot_amt"            jdbcType="NUMERIC" />
+        <result property="paymentMtdCd"    column="payment_mtd_cd"     jdbcType="VARCHAR" />
+        <result property="statusCd"        column="status_cd"          jdbcType="VARCHAR" />
+        <result property="tid"             column="tid"                jdbcType="VARCHAR" />
+        <result property="apprNo"          column="appr_no"            jdbcType="VARCHAR" />
+        <result property="billKey"         column="bill_key"           jdbcType="VARCHAR" />
+        <result property="paymentAmt"      column="payment_amt"        jdbcType="NUMERIC" />
+        <result property="paymentDt"       column="payment_dt"         jdbcType="VARCHAR" />
+        <result property="paymentCancelDt" column="payment_cancel_dt"  jdbcType="VARCHAR" />
+        <result property="cpnId"           column="cpn_id"             jdbcType="VARCHAR" />
+        <result property="moid"            column="moid"               jdbcType="VARCHAR" />
+        <result property="regId"           column="reg_id"             jdbcType="VARCHAR" />
+        <result property="regDt"           column="reg_dt"             jdbcType="VARCHAR" />
+        <result property="updId"           column="upd_id"             jdbcType="VARCHAR" />
+        <result property="updDt"           column="upd_dt"             jdbcType="VARCHAR" />
+        <result property="resvCol01"       column="resv_col_01"        jdbcType="VARCHAR" />
+        <result property="resvCol02"       column="resv_col_02"        jdbcType="VARCHAR" />
+        <result property="resvCol03"       column="resv_col_03"        jdbcType="VARCHAR" />
+        <result property="resvCol04"       column="resv_col_04"        jdbcType="VARCHAR" />
+        <result property="resvCol05"       column="resv_col_05"        jdbcType="VARCHAR" />
+        <result property="cpnType"         column="cpn_type"           jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <resultMap id="resultAutoPrchs" type="AutoPrchs" > 
+        <result property="lastPrchsId"         column="last_prchs_id"          jdbcType="VARCHAR" />
+        <result property="lastPrchsDtlId"      column="last_prchs_dtl_id"      jdbcType="NUMERIC" />
+        <result property="autoPaymentStatusCd" column="auto_payment_status_cd" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <!-- 2. SELECT SQL -->         
+    <select id="getPrchs" parameterType="PurchaseScReq" resultMap="resultPrchs">
+        SELECT  /* CancelMapper.getPrchs, 구매 내역 조회, nTels_cswoo81/nTels, 2014-02-12 */
+                tenant_id                        
+              , prchs_id           
+              , insd_usermbr_no    
+              , insd_device_id     
+              , TO_CHAR(prchs_dt, 'YYYYMMDDHH24MISS') AS prchs_dt          
+              , status_cd    
+              , tot_amt            
+              , prchs_req_path_cd  
+              , currency_cd        
+              , cancel_req_path_cd 
+              , TO_CHAR(cancel_dt, 'YYYYMMDDHH24MISS') AS cancel_dt
+              , client_ip          
+              , prchs_case_cd      
+              , network_type_cd    
+              , reg_id             
+              , TO_CHAR(reg_dt, 'YYYYMMDDHH24MISS') AS reg_dt             
+              , upd_id             
+              , TO_CHAR(upd_dt, 'YYYYMMDDHH24MISS') AS upd_dt             
+              , resv_col_01        
+              , resv_col_02        
+              , resv_col_03        
+              , resv_col_04        
+              , resv_col_05        
+          FROM tb_pr_prchs
+         WHERE 1=1 
+           AND tenant_id = #{tenantId}
+           AND prchs_id = #{prchsId}
+    </select>
+    
+    <select id="getPrchsDtlList" parameterType="PurchaseScReq" resultMap="resultPrchsDtl">
+        SELECT  /* Cancel.getPrchsDtlList, 구매 상세 내역 조회 nTels_cswoo81/nTels, 2014-02-12 */
+                a.tenant_id           
+              , a.prchs_id            
+              , a.prchs_dtl_id        
+              , a.use_tenant_id       
+              , a.use_insd_usermbr_no 
+              /*, a.use_insd_device_id*/  
+              , DECODE(a.use_insd_usermbr_no,'NONMEMBER',
+                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+                        a.use_insd_device_id
+                        ,'Ab','0')
+                        ,'cDe','5')
+                        ,'Fg','2')
+                        ,'HiJk','6')
+                        ,'Lm','4')
+                        ,'NoP','1')
+                        ,'qR','8')
+                        ,'sTu','7')
+                        ,'Vw','3')
+                        ,'XyZ','9')
+                    ,a.use_insd_device_id) AS use_insd_device_id
+              , TO_CHAR(a.prchs_dt, 'YYYYMMDDHH24MISS') AS prchs_dt
+              , a.tot_amt             
+              , a.prchs_req_path_cd   
+              , a.client_ip           
+              , a.send_insd_usermbr_no
+              , a.send_insd_device_id 
+              , TO_CHAR(a.recv_dt, 'YYYYMMDDHH24MISS') AS recv_dt             
+              , a.recv_conf_path_cd   
+              , a.prod_id             
+              , a.prod_amt            
+              , a.prod_qty            
+              , a.tenant_prod_grp_cd  
+              , a.status_cd           
+              , TO_CHAR(a.use_start_dt, 'YYYYMMDDHH24MISS') AS use_start_dt        
+              , TO_CHAR(a.use_expr_dt, 'YYYYMMDDHH24MISS') AS use_expr_dt                    
+              , a.cancel_req_path_cd  
+              , TO_CHAR(a.cancel_dt, 'YYYYMMDDHH24MISS') AS cancel_dt            
+              , a.cpn_publish_cd      
+              , a.cpn_dlv_url
+              , a.cpn_add_info
+              , a.cpn_biz_prod_seq
+              , a.cpn_biz_order_no         
+              , a.prchs_case_cd           
+              , TO_CHAR(a.dwld_start_dt, 'YYYYMMDDHH24MISS') AS dwld_start_dt       
+              , TO_CHAR(a.dwld_expr_dt, 'YYYYMMDDHH24MISS') AS dwld_expr_dt        
+              , a.reg_id              
+              , TO_CHAR(a.reg_dt, 'YYYYMMDDHH24MISS') AS reg_dt              
+              , a.upd_id              
+              , TO_CHAR(a.upd_dt, 'YYYYMMDDHH24MISS') AS upd_dt              
+              , a.resv_col_01         
+              , a.resv_col_02         
+              , a.resv_col_03         
+              , a.resv_col_04         
+              , a.resv_col_05         
+              , a.prchs_prod_type     
+              , a.use_fixrate_prod_id 
+              , a.prchs_resv_desc
+              , CASE WHEN SUBSTR(recv_prchs_id, 0, 1) = 'G' THEN recv_prchs_id 
+                ELSE prchs_id END AS coupon_cms_prchs_id
+              , contents_type
+          FROM  tb_pr_prchs_dtl a
+         WHERE  1=1 
+           AND  a.tenant_id = #{tenantId}
+           AND  a.prchs_id = #{prchsId}
+           <if test="userKey != null and userKey != ''">
+           AND  a.use_tenant_id = #{tenantId} 
+           AND  a.use_insd_usermbr_no = #{userKey}
+           </if>
+    </select>
+    
+    <select id="getPaymentList" parameterType="PurchaseScReq" resultMap="resultPayment">
+        SELECT  /* CancelMapper.getPaymentList, 결제 내역 조회, nTels_cswoo81/nTels, 2014-02-12 */
+                tenant_id                        
+              , prchs_id
+              , payment_dtl_id           
+              , insd_usermbr_no    
+              , insd_device_id     
+              , TO_CHAR(prchs_dt, 'YYYYMMDDHH24MISS') AS prchs_dt
+              , tot_amt            
+              , payment_mtd_cd  
+              , status_cd   
+              , tid           
+              , appr_no
+              , bill_key
+              , payment_amt
+              , TO_CHAR(NVL(payment_dt, prchs_dt), 'YYYYMMDDHH24MISS') AS payment_dt /* PP결제일이 없을 경우 구매일시로 대체 2014.05.30 최상훈C */
+              , TO_CHAR(payment_cancel_dt, 'YYYYMMDDHH24MISS') AS payment_cancel_dt           
+              , cpn_id
+              , moid
+              , reg_id    
+              , TO_CHAR(reg_dt, 'YYYYMMDDHH24MISS') AS reg_dt             
+              , upd_id             
+              , TO_CHAR(upd_dt, 'YYYYMMDDHH24MISS') AS upd_dt              
+              , resv_col_01        
+              , resv_col_02        
+              , resv_col_03        
+              , resv_col_04        
+              , resv_col_05  
+              , cpn_type      
+          FROM tb_pr_payment
+         WHERE 1=1 
+           AND tenant_id = #{tenantId}
+           AND prchs_id = #{prchsId}
+    </select>
+    
+    <select id="getAutoPrchs" parameterType="AutoPaymentScReq" resultMap="resultAutoPrchs" >
+        SELECT  /* Cancel.getAutoPrchs, 자동구매 조회, nTels_cswoo81/nTels, 2014-05-15 */
+                last_prchs_id 
+              , last_prchs_dtl_id
+              , auto_payment_status_cd
+          FROM  tb_pr_auto_prchs    
+         WHERE  tenant_id = #{tenantId} 
+           AND  insd_usermbr_no = #{userKey}
+           AND  last_prchs_id = #{prchsId}
+           AND  last_prchs_dtl_id = #{prchsDtlId}
+    </select>
+    
+    <select id="getNowDate" resultType="java.lang.String" >
+        SELECT TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS nowDate FROM DUAL
+    </select>
+    
+    <!-- 2. UPDATE SQL -->         
+    <update id="updatePayment" parameterType="PurchaseCancelPaymentDetailScReq">
+        UPDATE  tb_pr_payment /* Cancel.updatePayment, 결제 내역 취소 업데이트, nTels_cswoo81/nTels, 2014-02-12 */
+           SET  status_cd = #{paymentStatusCd} 
+              , payment_cancel_dt = TO_DATE(#{cancelDt}, 'YYYYMMDDHH24MISS')
+              , resv_col_02 = #{tStorePaymentStatusCd, jdbcType=VARCHAR}
+              , upd_id = #{systemId}
+              , upd_dt = SYSDATE
+         WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId}
+           AND  payment_dtl_id = #{paymentDtlId}
+           AND  status_cd = #{currPrchsStatusCd} /* currPrchsStatusCd에 null이 들어오면 안됨. */
+    </update>
+    
+    <update id="updatePrchsDtl" parameterType="PurchaseCancelScReq">
+        UPDATE  tb_pr_prchs_dtl /* Cancel.updatePrchsDtl, 구매 상세 내역 취소 업데이트 nTels_cswoo81/nTels, 2014-02-12 */
+           SET  status_cd = #{prchsStatusCd}
+              , cancel_req_path_cd = #{cancelReqPathCd}
+              , cancel_dt = TO_DATE(#{cancelDt}, 'YYYYMMDDHH24MISS')
+              , upd_id = #{systemId}
+              , upd_dt = SYSDATE
+         WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId}
+           AND  status_cd = #{currPrchsStatusCd}
+           <if test="userKey != null and userKey != ''">
+           AND  use_tenant_id = #{tenantId}
+           AND  use_insd_usermbr_no = #{userKey} 
+           </if>
+           
+    </update>
+    
+    <update id="updateAutoPrchs" parameterType="PurchaseCancelScReq">
+        UPDATE  tb_pr_auto_prchs /* Cancel.updateAutoPrchs, 자동 구매 취소 업데이트 nTels_cswoo81/nTels, 2014-07-04 */
+           SET  status_cd = #{prchsStatusCd} 
+              , upd_id = #{systemId}
+              , upd_dt = SYSDATE
+         WHERE  tenant_id = #{tenantId}
+           AND  last_prchs_id = #{prchsId}
+           AND  status_cd = #{currPrchsStatusCd}
+    </update>
+    
+    <update id="updatePrchs" parameterType="PurchaseCancelScReq">
+        UPDATE  tb_pr_prchs /* Cancel.updatePrchs, 구매 내역 취소 업데이트 nTels_cswoo81/nTels, 2014-01-21 */
+           SET  status_cd = #{prchsStatusCd} 
+              , cancel_req_path_cd = #{cancelReqPathCd}
+              , cancel_dt = TO_DATE(#{cancelDt}, 'YYYYMMDDHH24MISS')
+              , upd_id = #{systemId}
+              , upd_dt = SYSDATE
+         WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId}
+           AND  status_cd = #{currPrchsStatusCd}
+    </update>
+
+    <!-- 특가 쿠폰 이용 건수 조회 -->
+    <select id="getSpecialCouponUseCount" parameterType="PurchaseScReq" resultType="java.lang.Integer">
+        SELECT  /* Cancel.getSpecialCouponUseCount, 특가 쿠폰 이용 건수 조회, skp1002448/SKP, 2015-04-17 */
+                COUNT(*)
+          FROM  tb_pr_payment
+         WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId}
+           AND  cpn_type IN ('OR002406','PD015104')
+    </select>
+    
+    
+     <!-- 2. UPDATE SQL -->         
+    <update id="updatePaymentError" parameterType="PurchaseCancelScReq">
+        UPDATE  tb_pr_payment /* Cancel.updatePayment, 결제 내역 취소 업데이트, nTels_cswoo81/nTels, 2014-02-12 */
+           SET  resv_col_02 = #{paymentErrorCode, jdbcType=VARCHAR}
+              , upd_id = #{systemId}
+              , upd_dt = SYSDATE
+         WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId}
+    </update>
+    
+</mapper>

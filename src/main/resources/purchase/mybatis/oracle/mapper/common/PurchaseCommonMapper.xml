@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="PurchaseCommon">
+
+    <!-- 공통 코드 정보 조회 -->
+    <select id="searchCommonCodeList" parameterType="java.util.Map" resultType="PurchaseCommonCode">
+        SELECT /* PurchaseCommonMapper.searchCommonCodeList, 공통 코드 조회, 이승택/nTels, 2014-12-03 */
+                cd_id
+              , cd_nm
+              , add_field_01
+              , add_field_02
+              , cd_desc
+              , indc_rank
+          FROM  tb_cm_cd
+         WHERE  cd_id IN <foreach collection="cdIdList" separator="," item="cdId" open="(" close=")">#{cdId}</foreach>
+           AND  lang_cd = #{langCd}
+           AND  use_yn = 'Y'
+    </select>
+    
+     <!-- 공통 코드 정보 조회 -->
+    <select id="searchCommonCodeListByGrpCdId" parameterType="PurchaseCommonCode" resultType="PurchaseCommonCode">
+        SELECT /* PurchaseCommonMapper.searchCommonCodeListByGrpCdId, 공통 코드 조회, 이승택/nTels, 2014-12-03 */
+                cd_id
+              , cd_nm
+              , add_field_01
+              , add_field_02
+              , cd_desc
+              , indc_rank
+          FROM  tb_cm_cd
+         WHERE  grp_cd_id = #{grpCdId}
+           AND  lang_cd = #{langCd}
+           AND  use_yn = 'Y'
+    </select>
+
+</mapper>

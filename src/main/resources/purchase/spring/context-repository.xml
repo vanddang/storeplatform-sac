@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.2.xsd
+                           http://www.springframework.org/schema/jee
+                           http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+    <tx:advice id="transactionAdviceForScPurchase" transaction-manager="transactionManagerForScPurchase" >
+        <tx:attributes>
+           <tx:method name="create*" propagation="REQUIRED" read-only="false" /> <!-- 생성 -->
+           <tx:method name="insert*" propagation="REQUIRED" read-only="false" /> <!-- 생성 -->
+
+           <tx:method name="update*" propagation="REQUIRED" read-only="false" /> <!-- 수정 -->
+           <tx:method name="modify*" propagation="REQUIRED" read-only="false" /> <!-- 수정 -->
+
+           <tx:method name="remove*" propagation="REQUIRED" read-only="false" /> <!-- 삭제 -->
+           <tx:method name="delete*" propagation="REQUIRED" read-only="false" /> <!-- 삭제 -->
+
+           <tx:method name="execute*" propagation="REQUIRED" read-only="false" /> <!-- 생성,수정,삭제등 복합 비지니스 -->
+        </tx:attributes>
+    </tx:advice>
+    
+    <aop:config>
+       <aop:advisor advice-ref="transactionAdviceForScPurchase" pointcut-ref="customTransactionPointcutForScPurchase" />
+    </aop:config>
+    <bean id="customTransactionPointcutForScPurchase" class="com.skplanet.storeplatform.framework.core.aop.support.CustomTransactionPointcut" >
+        <constructor-arg type="java.lang.String" value="execution(* com.skplanet.storeplatform.purchase..*ServiceImpl.*(..))" />
+        <property name="qualifierName" value="scPurchase" />
+    </bean>
+
+	<bean id="transactionManagerForScPurchase" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="defaultDataSourceForScPurchase" />
+		<property name="nestedTransactionAllowed" value="false" />
+	</bean> 
+
+</beans>

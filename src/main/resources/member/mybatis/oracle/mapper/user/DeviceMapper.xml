@@ -1,0 +1,1116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="Device">
+
+
+    <!-- 사용자 정보 조회 -->
+    <select id="getUsermbr" parameterType="userMbr" resultType="userMbr">
+            SELECT  /* DeviceMapper.getUsermbr, 사용자 정보(키,아이디) 조회, 황정택/와이즈스톤, 2013-12-09 */
+                    insd_usermbr_no AS userKey
+                    , mbr_id AS userID
+              FROM  tb_us_usermbr
+             WHERE  tenant_id = #{tenantID}
+            <if test="userKey != null">
+               AND  insd_usermbr_no = #{userKey}
+            </if>
+            <if test="userID != null">
+               AND  mbr_id = #{userID}
+            </if>
+            <if test="imMbrNo != null">
+               AND  usermbr_no = #{imMbrNo}
+            </if>
+    </select>
+
+    <!-- 휴대기기 목록 조회 -->
+    <select id="searchDeviceList" parameterType="searchDeviceListRequest" resultType="userMbr">
+            SELECT  /* DeviceMapper.searchDeviceList, 휴대기기 목록 조회, 황정택/와이즈스톤, 2013-12-05 */
+                    DISTINCT(l.userKey) AS userKey
+                 ,  l.userID
+            FROM (
+                    SELECT  a.insd_usermbr_no AS userKey
+                         ,  a.mbr_id AS userID
+                      FROM  tb_us_usermbr a
+                     WHERE  a.tenant_id = #{commonRequest.tenantID}
+                     AND    a.mbr_status_main_cd != 'US010202'
+               <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+                   <if test="keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO')">
+                       a.insd_usermbr_no = #{keySearch.keyString}
+                   </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('MBR_ID')">
+                       a.mbr_id = #{keySearch.keyString}
+                   </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('USERMBR_NO')">
+                       a.usermbr_no = #{keySearch.keyString}
+                   </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('INTG_SVC_NO')">
+                       a.intg_svc_no = #{keySearch.keyString}
+                   </if>                      
+               </foreach>
+                ) l
+    </select>
+
+
+    <!-- 휴대기기 목록 조회(휴대기기 정보로 조회) -->
+    <select id="searchDeviceListD" parameterType="searchDeviceListRequest" resultType="userMbr">
+            SELECT  /* DeviceMapper.searchDeviceListD, 휴대기기 목록 조회(휴대기기 정보로 조회), 황정택/와이즈스톤, 2013-12-05 */
+                    DISTINCT(l.userKey) AS userKey,
+                    l.userID AS userID
+                      FROM ( SELECT  a.insd_usermbr_no AS userKey
+                         ,  a.mbr_id AS userID
+                      FROM  tb_us_usermbr a
+                 LEFT JOIN  tb_us_usermbr_device b 
+                        ON  a.insd_usermbr_no = b.insd_usermbr_no
+                       AND  a.tenant_id = b.tenant_id
+                     WHERE  a.tenant_id = #{commonRequest.tenantID}
+                       AND  b.auth_yn = 'Y'
+               <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+                   <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID')">
+                       b.device_id = #{keySearch.keyString}
+                   </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID')">
+                       b.insd_device_id = #{keySearch.keyString}
+                   </if>                        
+               </foreach>
+                ORDER BY b.auth_dt DESC) l
+                WHERE ROWNUM = 1
+    </select>
+    
+    <!-- 휴대기기 목록 조회 -->
+    <select id="searchDeviceList2" parameterType="searchDeviceListRequest" resultMap="searchDeviceListResultMap">
+            SELECT  /* DeviceMapper.searchDeviceList2, 휴대기기 목록 조회, 황정택/와이즈스톤, 2013-12-05 */
+                    DISTINCT(l.userKey) AS userKey
+                    , #{commonRequest.systemID} AS userID
+                    , #{commonRequest.tenantID} AS tenantID
+                    , #{isMainDevice} AS isMainDevice
+              FROM  (
+                      SELECT  a.insd_usermbr_no AS userKey
+                        FROM  tb_us_usermbr a
+                       WHERE  a.tenant_id = #{commonRequest.tenantID}
+                       AND    a.mbr_status_main_cd != 'US010202'
+               <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+                   <if test="keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO')">
+                       a.insd_usermbr_no = #{keySearch.keyString}
+                   </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('MBR_ID')">
+                       a.mbr_id = #{keySearch.keyString}
+                   </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('USERMBR_NO')">
+                       a.usermbr_no = #{keySearch.keyString}
+                   </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('INTG_SVC_NO')">
+                       a.intg_svc_no = #{keySearch.keyString}
+                   </if>                      
+               </foreach>
+                ) l
+    </select>
+    
+    <!-- 휴대기기 목록 조회(휴대기기 정보로 조회) -->
+    <select id="searchDeviceList2D" parameterType="searchDeviceListRequest" resultMap="searchDeviceListResultMap">
+            SELECT  /* DeviceMapper.searchDeviceList2D, 휴대기기 목록 조회(휴대기기 정보로 조회), 황정택/와이즈스톤, 2013-12-05 */
+                      DISTINCT(l.userKey) AS userKey
+                      , #{commonRequest.systemID} AS userID
+                      , #{commonRequest.tenantID} AS tenantID
+                      , #{isMainDevice} AS isMainDevice
+                      FROM ( SELECT  a.insd_usermbr_no AS userKey
+                        FROM  tb_us_usermbr a
+                   LEFT JOIN  tb_us_usermbr_device b 
+                          ON  a.insd_usermbr_no = b.insd_usermbr_no
+                         AND  a.tenant_id = b.tenant_id
+                       WHERE  a.tenant_id = #{commonRequest.tenantID}
+                         AND  b.auth_yn = 'Y'
+                         AND  b.tenant_id = #{commonRequest.tenantID}
+               <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+                   <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID')">
+                       b.device_id = #{keySearch.keyString}
+                   </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID')">
+                       b.insd_device_id = #{keySearch.keyString}
+                   </if>                        
+               </foreach>
+                ORDER BY b.auth_dt DESC) l
+                WHERE ROWNUM = 1
+    </select>
+
+
+    <!-- 휴대기기 목록 조회 맵 -->
+    <resultMap id="searchDeviceListResultMap" type="searchDeviceListResponse" >
+        <result property="userKey"            column="userKey"   />
+        <result property="userID"             column="userID"   />
+
+        <collection
+            property="userMbrDevice"
+            column="{tenantID=tenantID, userKey=userKey, isMainDevice=isMainDevice}"
+            javaType="java.util.ArrayList"
+            ofType="userMbrDevice"
+            select="getDevice"/>
+    </resultMap>
+
+
+    <!-- 휴대기기 단건 조회 -->
+    <select id="getDevice" resultMap="getDeviceResultMap">
+            SELECT  /* DeviceMapper.getDevice, 휴대기기 단건 조회, 황정택/와이즈스톤, 2013-12-05 */
+                    tenant_id
+                    , insd_usermbr_no
+                    , insd_device_id
+                    , device_id
+                    , device_model_cd
+                    , mno_cd
+                    , device_alias
+                    , rep_device_yn
+                    , TO_CHAR( auth_dt,'YYYYMMDDHH24MISS') AS auth_dt
+                    , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS')
+                    , sms_recv_yn
+                    , device_natv_id
+                    , device_acct
+                    , svc_mang_no
+                    , entry_chnl_cd
+              FROM  tb_us_usermbr_device
+             WHERE  tenant_id = #{tenantID}
+               AND  auth_yn = 'Y'
+                AND insd_usermbr_no = #{userKey}
+            <if test="isMainDevice != null and isMainDevice.equalsIgnoreCase('Y')">
+               AND rep_device_yn = #{isMainDevice}
+            </if>
+            <if test="keyType != null and keyType.equals('INSD_DEVICE_ID')">
+                AND insd_device_id = #{keyString}
+            </if>
+            <if test="keyType != null and keyType.equals('DEVICE_ID')">
+                AND device_id = #{keyString}
+            </if>
+            <if test="keyType != null and keyType.equals('SVC_MANG_NO')">
+                AND svc_mang_no = #{keyString}
+            </if>
+    </select>
+    
+    <!-- 이전 휴대기기 단건 조회 -->
+    <select id="getAllDevice" resultMap="getDeviceResultMap">
+            SELECT  /* DeviceMapper.getAllDevice, 이전 휴대기기 단건 조회, 황정택/와이즈스톤, 2013-12-05 */
+                    tenant_id
+                    , insd_usermbr_no
+                    , insd_device_id
+                    , device_id
+                    , device_model_cd
+                    , mno_cd
+                    , device_alias
+                    , rep_device_yn
+                    , TO_CHAR( auth_dt,'YYYYMMDDHH24MISS') AS auth_dt
+                    , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS')
+                    , sms_recv_yn
+                    , device_natv_id
+                    , device_acct
+                    , svc_mang_no
+                    , entry_chnl_cd
+                    , auth_yn
+              FROM  tb_us_usermbr_device
+             WHERE  tenant_id = #{tenantID}
+                AND insd_usermbr_no = #{userKey}
+                AND insd_device_id = #{deviceKey}
+    </select>
+
+
+    <!-- 휴대기기 단건 조회 맵 -->
+    <resultMap id="getDeviceResultMap" type="userMbrDevice" >
+        <result property="deviceKey"            column="insd_device_id"     jdbcType="VARCHAR"  /> 
+        <result property="deviceID"             column="device_id"          jdbcType="VARCHAR"  /> 
+        <result property="deviceModelNo"        column="device_model_cd"    jdbcType="VARCHAR"  /> 
+        <result property="deviceTelecom"        column="mno_cd"             jdbcType="VARCHAR"  /> 
+        <result property="deviceNickName"       column="device_alias"       jdbcType="VARCHAR"  /> 
+        <result property="isPrimary"            column="rep_device_yn"      jdbcType="VARCHAR"  /> 
+        <result property="authenticationDate"   column="auth_dt"            jdbcType="DATE"     /> 
+        <result property="updateDate"           column="upd_dt"             jdbcType="DATE"     /> 
+        <result property="isRecvSMS"            column="sms_recv_yn"        jdbcType="VARCHAR"  /> 
+        <result property="nativeID"             column="device_natv_id"     jdbcType="VARCHAR"  /> 
+        <result property="deviceAccount"        column="device_acct"        jdbcType="VARCHAR"  /> 
+        <result property="svcMangNum"           column="svc_mang_no"        jdbcType="VARCHAR"  />
+        <result property="userKey"              column="insd_usermbr_no"    jdbcType="VARCHAR"  />
+        <result property="tenantID"             column="tenant_id"          jdbcType="VARCHAR"  />
+        <result property="joinId"               column="entry_chnl_cd"      jdbcType="VARCHAR"  />
+        <result property="isUsed"               column="auth_yn"            jdbcType="VARCHAR"  />
+        <collection
+            property="userMbrDeviceDetail"
+            column="{tenantID=tenant_id, userKey=insd_usermbr_no, deviceKey=insd_device_id}"
+            javaType="java.util.ArrayList"
+            ofType="userMbrDeviceDetail"
+            select="getExtraProfile"/>
+    </resultMap>
+
+    <!-- 휴대기기 부가정보 조회 -->
+    <select id="getExtraProfile" resultType="userMbrDeviceDetail">
+		SELECT  /* DeviceMapper.xml, getExtraProfile, SAC(SC), 김경복, 2015-05-27 */
+		       device_mang_item_cd extraProfile,
+		       reg_value extraProfileValue,
+		       TO_CHAR (reg_dt +7, 'YYYYMMDDHH24MISS') AS regDatePlus7,
+		       TO_CHAR (upd_dt +7, 'YYYYMMDDHH24MISS') AS updateDatePlue7,
+		       TO_CHAR (SYSDATE, 'YYYYMMDDHH24MISS') AS nowDate
+		  FROM tb_us_usermbr_device_dtl
+		 WHERE tenant_id = #{tenantID} 
+			 AND insd_usermbr_no = #{userKey}
+			 AND insd_device_id = #{deviceKey}
+    </select>
+
+    <!-- 휴대기기 개별 조회 -->
+    <select id="searchDevice" resultMap="searchDeviceResultMap">
+        SELECT  /* DeviceMapper.searchDevice, 휴대기기 개별 조회, 황정택/와이즈스톤, 2013-12-05 */
+                #{userKey} AS userKey
+             , (
+                    SELECT  mbr_id
+                      FROM  tb_us_usermbr
+                     WHERE  insd_usermbr_no = #{userKey}
+                       AND  tenant_id = #{commonRequest.tenantID}
+                ) AS userID
+             ,  #{commonRequest.tenantID} AS tenantID
+             ,  'INSD_DEVICE_ID' AS keyType
+             ,  u.insd_device_id AS keyString
+          FROM  
+                (
+                 SELECT  insd_device_id
+                   FROM  tb_us_usermbr_device
+                  WHERE  tenant_id = #{commonRequest.tenantID}
+                    AND  insd_usermbr_no = #{userKey}
+                    AND  auth_yn = 'Y' 
+               <foreach collection="keySearchList" item="keySearch"   open="" close="" separator="">
+                   <if test="keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') ">AND insd_device_id =  #{keySearch.keyString} </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID') ">AND device_id =  #{keySearch.keyString} </if>
+               </foreach>
+                ) u
+    </select>
+
+    <!-- 이전 휴대기기 개별 조회 -->
+    <select id="searchAllDevice" resultMap="searchAllDeviceResultMap">
+        SELECT  /* DeviceMapper.searchAllDevice, 이전 휴대기기 개별 조회, 황정택/와이즈스톤, 2013-12-05 */
+                #{userKey} AS userKey
+             , (
+                    SELECT  mbr_id
+                      FROM  tb_us_usermbr
+                     WHERE  insd_usermbr_no = #{userKey}
+                       AND  tenant_id = #{commonRequest.tenantID}
+                ) AS userID
+             ,  #{commonRequest.tenantID} AS tenantID
+             ,  #{deviceKey} AS deviceKey
+         FROM DUAL
+    </select>
+
+    <!-- 휴대기기 개별 조회(서비스 관리번호) -->
+    <select id="searchDeviceSvcMangNo" resultMap="searchDeviceResultMap">
+        SELECT  /* DeviceMapper.searchDeviceSvcMangNo, (서비스 관리번호), 황정택/와이즈스톤, 2013-12-05 */
+                l.insd_usermbr_no AS userKey
+                ,  l.mbr_id AS userID
+                ,  #{commonRequest.tenantID} AS tenantID
+                ,  'SVC_MANG_NO' AS keyType
+                ,  l.svc_mang_no AS keyString
+                FROM (
+                 SELECT  b.insd_device_id AS insd_device_id
+                      ,  a.mbr_id AS mbr_id
+                      ,  a.insd_usermbr_no AS insd_usermbr_no
+                      ,  b.svc_mang_no as svc_mang_no
+                   FROM  tb_us_usermbr_device b
+                   		 JOIN tb_us_usermbr a
+                         ON b.tenant_id = a.tenant_id 
+                         AND b.insd_usermbr_no = a.insd_usermbr_no
+                  WHERE  1=1
+                    AND  b.tenant_id = #{commonRequest.tenantID}
+                    AND  b.auth_yn = 'Y'
+               <foreach collection="keySearchList" item="keySearch"   open="" close="" separator="">
+                   <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') ">AND b.svc_mang_no =  #{keySearch.keyString} </if>
+               </foreach>
+                ORDER BY b.auth_dt DESC) l
+                WHERE ROWNUM = 1
+    </select>
+    
+     <!-- 휴대기기 개별 조회(Device ID only) -->
+    <select id="searchDeviceIDOnly" resultMap="searchDeviceResultMap">
+        SELECT  /* DeviceMapper.searchDeviceIDOnly, (Device ID only), 황정택/와이즈스톤, 2013-12-05 */
+                      l.insd_usermbr_no AS userKey
+                      ,  l.mbr_id AS userID
+                      ,  #{commonRequest.tenantID} AS tenantID
+                      ,  'DEVICE_ID' AS keyType
+                      ,  l.device_id AS keyString
+                 FROM ( SELECT  b.insd_device_id AS insd_device_id
+                      ,  a.mbr_id AS mbr_id
+                      ,  a.insd_usermbr_no AS insd_usermbr_no
+                      ,  b.device_id as device_id
+                   FROM  tb_us_usermbr a, tb_us_usermbr_device b
+                  WHERE  a.insd_usermbr_no = b.insd_usermbr_no
+                    AND  a.tenant_id = #{commonRequest.tenantID}
+                    AND  b.tenant_id = #{commonRequest.tenantID}
+                    AND  b.auth_yn = 'Y'
+               <foreach collection="keySearchList" item="keySearch"   open="" close="" separator="">
+                   <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> AND  b.device_id =  #{keySearch.keyString} </if>
+               </foreach>
+                ORDER BY b.auth_dt DESC) l
+                WHERE ROWNUM = 1
+    </select>
+
+
+    <!-- 휴대기기 개별 조회 맵 -->
+    <resultMap id="searchDeviceResultMap" type="searchDeviceResponse" >
+        <result property="userKey"            column="userKey"   />
+        <result property="userID"             column="userID"   />
+
+        <!-- 휴대기기 단건 조회 -->
+        <association
+            property="userMbrDevice"
+            column="{tenantID=tenantID, userKey=userKey, keyType=keyType, keyString=keyString}"
+            javaType="userMbrDevice"
+            select="getDevice"/>
+    </resultMap>
+    
+    <!-- 이전 휴대기기 개별 조회 맵 -->
+    <resultMap id="searchAllDeviceResultMap" type="searchAllDeviceResponse" >
+        <result property="userKey"            column="userKey"   />
+        <result property="deviceKey"          column="deviceKey"   />
+        <result property="userID"             column="userID"   />
+
+        <!-- 휴대기기 단건 조회 -->
+        <association
+            property="userMbrDevice"
+            column="{tenantID=tenantID, userKey=userKey, deviceKey=deviceKey}"
+            javaType="userMbrDevice"
+            select="getAllDevice"/>
+    </resultMap>
+
+    <!-- 휴대기기 속성의 rep_device_yn = N -->
+    <update id="unsetDeviceYn" parameterType="userMbrDevice">
+       UPDATE /* DeviceMapper.unsetDeviceYn, 속성의 rep_device_yn = N, 황정택/와이즈스톤, 2013-12-05 */
+       tb_us_usermbr_device
+          SET rep_device_yn = 'N',
+              start_dt = SYSDATE,
+              end_dt = TO_DATE('29991231235959', 'YYYYMMDDHH24MISS'),
+              upd_dt = SYSDATE
+        WHERE tenant_id = #{tenantID}
+           AND insd_usermbr_no = #{userKey}
+           AND device_id = #{deviceID}
+          AND auth_yn = 'Y'
+    </update>
+
+    <!-- 휴대기기 대표 설정 -->
+    <update id="setMainDevice" parameterType="setMainDeviceRequest">
+       UPDATE /* DeviceMapper.setMainDevice, 속성의 rep_device_yn = Y, 황정택/와이즈스톤, 2013-12-05 */
+       tb_us_usermbr_device
+          SET rep_device_yn = 'Y'
+        WHERE tenant_id = #{commonRequest.tenantID}
+          AND insd_usermbr_no = #{userKey}
+          AND insd_device_id  = #{deviceKey}
+          AND auth_yn = 'Y'
+    </update>
+    
+    <!-- 휴대기기 삭제 -->
+    <update id="removeDevice" parameterType="userMbrDevice">
+       UPDATE /* DeviceMapper.removeDevice, 휴대기기 삭제, 황정택/와이즈스톤, 2013-12-20 */
+       tb_us_usermbr_device
+          SET auth_yn = #{isUsed},
+              rep_device_yn = 'N',
+              start_dt = SYSDATE,
+              end_dt = SYSDATE,
+              upd_dt = SYSDATE
+        WHERE tenant_id = #{tenantID}
+          AND insd_usermbr_no = #{userKey}
+          AND insd_device_id = #{deviceKey}
+          AND auth_yn = 'Y'
+    </update>
+    
+    <!-- 도토리 인증여부 초기화 -->
+    <update id="removeDotori" parameterType="userMbrDeviceDetail">
+       UPDATE /* DeviceMapper.removeDotori, 도토리 인증여부 초기화, 황정택/와이즈스톤, 2013-12-20 */
+       tb_us_usermbr_device_dtl
+          SET reg_value = #{extraProfileValue}
+            , upd_dt = SYSDATE
+        WHERE tenant_id = #{tenantID}
+          AND insd_usermbr_no = #{userKey}
+          AND insd_device_id = #{deviceKey}
+          AND device_mang_item_cd = #{extraProfile}
+    </update>
+    
+    <select id="isRegisteredUser" parameterType="CreateDeviceRequest" resultType="userMbrDevice">
+        SELECT /* DeviceMapper.isRegisteredUser, 사용자 ID 조회, 황정택/와이즈스톤, 2013-12-23 */
+               insd_usermbr_no AS userKey,
+               insd_device_id AS deviceKey,
+               rep_device_yn AS isPrimary,
+               tenant_id AS tenantID,
+               device_id AS deviceID,
+               auth_yn AS isUsed
+        FROM  tb_us_usermbr_device
+        WHERE tenant_id = #{commonRequest.tenantID}
+          AND device_id = #{userMbrDevice.deviceID}
+        ORDER BY auth_dt
+    </select>
+    
+    <select id="isRegistered" parameterType="CreateDeviceRequest" resultType="String">
+        SELECT /* DeviceMapper.isRegistered, 사용자 ID 조회, 황정택/와이즈스톤, 2013-12-23 */
+               insd_device_id AS deviceKey
+        FROM tb_us_usermbr_device
+        WHERE tenant_id = #{commonRequest.tenantID}
+               AND device_id = #{userMbrDevice.deviceID}
+               AND auth_yn = 'Y'
+               AND insd_usermbr_no = #{userKey}
+    </select>
+        
+    <!-- 휴대기기 Key 조회(userKey, deviceKey로 조회) -->
+    <select id="isRegisteredKey" parameterType="userMbrDevice" resultType="String">
+        SELECT /* DeviceMapper.isRegisteredKey, 휴대기기 Key 조회(userKey, deviceKey로 조회), 황정택/와이즈스톤, 2013-12-23 */
+               insd_device_id AS deviceKey
+        FROM tb_us_usermbr_device
+        WHERE tenant_id = #{tenantID}
+               AND insd_device_id = #{deviceKey}
+               AND auth_yn = 'Y'
+        <if test="userKey != null">AND insd_usermbr_no = #{userKey}</if>
+    </select>
+    
+    <!-- 휴대기기 Key 조회(userKey, deviceKey로 조회) -->
+    <select id="isRegisteredKeyAndID" parameterType="userMbrDevice" resultType="userMbrDevice">
+        SELECT  /* DeviceMapper.isRegisteredKeyAndID, 휴대기기 Key 조회(userKey, deviceKey로 조회), 황정택/와이즈스톤, 2013-12-23 */
+                    DISTINCT(l.nativeID) AS nativeID
+                 ,  l.deviceKey AS deviceKey
+                 ,  l.deviceID AS deviceID
+            FROM (
+                    SELECT  a.mbr_id AS nativeID
+                         ,  b.insd_device_id AS deviceKey
+                         ,  b.device_id AS deviceID
+                      FROM  tb_us_usermbr a
+                 LEFT JOIN  tb_us_usermbr_device b 
+                        ON  a.insd_usermbr_no = b.insd_usermbr_no
+                       AND  a.tenant_id = b.tenant_id
+                     WHERE  a.tenant_id = #{tenantID}
+                       AND  b.insd_device_id = #{deviceKey}
+                       AND  b.auth_yn = 'Y'
+                <if test="userKey != null">AND b.insd_usermbr_no = #{userKey}</if>
+                ) l
+    </select>
+    
+    
+    <!-- 서브상태가 변동처리대상인지 여부 확인 -->
+    <select id="isSubCodeChangeManagement" parameterType="reviveUserRequest" resultType="userMbr">
+       SELECT  /* DeviceMapper.isSubCodeChangeManagement, 서브상태가 변동처리대상인지 여부 확인, 황정택/와이즈스톤, 2014-03-11 */
+               insd_usermbr_no AS userKey,
+               usermbr_no AS imMbrNo,
+               mbr_id AS userID
+         FROM  tb_us_usermbr
+        WHERE  tenant_id = #{commonRequest.tenantID}
+          AND  insd_usermbr_no = #{userKey}
+          AND  mbr_status_sub_cd = 'US010314' /* 변동처리대상 */
+    </select>
+    
+    
+    <!-- Key에 사용할 시퀀스 조회(휴대기기) -->
+    <select id="getUserSequence" resultType="Integer">
+        SELECT /* DeviceMapper.getUserSequence, 시퀀스 조회, 황정택/와이즈스톤, 2013-12-23 */
+               sq_us_usermbr_device.NEXTVAL AS nextval
+        FROM DUAL
+    </select>
+    
+    <!-- 휴대기기 등록 -->
+    <update id="createDevice" parameterType="userMbrDevice">
+        INSERT /* DeviceMapper.createDevice, 휴대기기 등록, 황정택/와이즈스톤, 2013-12-23 */
+        INTO tb_us_usermbr_device (
+               tenant_id,
+               insd_usermbr_no,
+               insd_device_id,
+               device_id,
+               device_model_cd,
+               start_dt,
+               upd_dt,
+               reg_dt,
+               auth_dt,
+               auth_yn
+               <if test="deviceTelecom != null">,mno_cd </if>
+               <if test="deviceNickName != null">,device_alias </if>
+               <if test="isPrimary != null">,rep_device_yn </if>
+               <if test="isRecvSMS != null">,sms_recv_yn </if>
+               <if test="nativeID != null">,device_natv_id </if>
+               <if test="deviceAccount != null">,device_acct </if>
+               <if test="svcMangNum != null">,svc_mang_no </if>
+               <if test="joinId != null">,entry_chnl_cd </if>
+               <if test="changeCaseCode != null">,chg_case_cd </if>
+        ) VALUES (
+            #{tenantID},
+            #{userKey},
+            #{deviceKey},
+            #{deviceID},
+            #{deviceModelNo},
+            SYSDATE,
+            SYSDATE,
+            SYSDATE,
+            SYSDATE,
+            'Y'
+            <if test="deviceTelecom != null">,#{deviceTelecom} </if>
+            <if test="deviceNickName != null">,#{deviceNickName} </if>
+            <if test="isPrimary != null">,#{isPrimary} </if>
+            <if test="isRecvSMS != null">,#{isRecvSMS} </if>
+            <if test="nativeID != null">,#{nativeID} </if>
+            <if test="deviceAccount != null">,#{deviceAccount} </if>
+            <if test="svcMangNum != null">,#{svcMangNum} </if>
+            <if test="joinId != null">,#{joinId} </if>
+            <if test="changeCaseCode != null">,#{changeCaseCode} </if>
+        )
+    </update>
+    
+    <!-- 휴대기기 속성 등록/수정 -->
+    <update id="updateDeviceDetail" parameterType="userMbrDeviceDetail">
+        MERGE /* DeviceMapper.xml, updateDeviceDetail, SAC(SC), 김경복, 2015-05-27 */
+        INTO tb_us_usermbr_device_dtl l 
+        USING DUAL ON (
+              l.tenant_id       = #{tenantID}   AND
+              l.insd_usermbr_no = #{userKey}    AND
+              l.insd_device_id  = #{deviceKey}  AND
+              l.device_mang_item_cd  = #{extraProfile}
+        )
+         WHEN MATCHED THEN
+       UPDATE SET 
+              l.reg_value        = #{extraProfileValue},
+              <if test="updateDate != null">
+              l.upd_dt        = to_date(#{updateDate}, 'YYYYMMDDHH24MISS'),
+              </if>
+              <if test="updateDate == null">
+              l.upd_dt        = SYSDATE,
+              </if>
+              l.system_id   = #{systemID}
+              <if test="regID != null">, l.upd_id = #{regID}, l.reg_id = #{regID} </if>
+         WHEN NOT MATCHED THEN
+       INSERT (
+              tenant_id, 
+              insd_usermbr_no, 
+              insd_device_id,
+              device_mang_item_cd,
+              reg_value,
+              reg_dt,
+              system_id
+              <if test="regID != null">, reg_id, upd_id</if>
+       ) VALUES (
+              #{tenantID},
+              #{userKey},
+              #{deviceKey},
+              #{extraProfile},
+              #{extraProfileValue},
+              <if test="regDate != null">
+              to_date(#{regDate}, 'YYYYMMDDHH24MISS'),
+              </if>
+              <if test="regDate == null">
+              SYSDATE,
+              </if>
+              #{systemID}
+              <if test="regID != null">, #{regID}, #{regID}</if>
+       )
+    </update>
+    
+    <!-- 휴대기기 수정 -->
+    <update id="updateDevice" parameterType="userMbrDevice">
+        UPDATE /* DeviceMapper.updateDevice, 휴대기기 등록, 황정택/와이즈스톤, 2013-12-23 */
+        tb_us_usermbr_device 
+               SET upd_dt = SYSDATE,
+               start_dt = SYSDATE
+               <if test="deviceTelecom != null">,mno_cd = #{deviceTelecom} </if>
+               <if test="deviceNickName != null">,device_alias = #{deviceNickName} </if>
+               <if test="isPrimary != null">,rep_device_yn = #{isPrimary} </if>
+               <if test="authenticationDate != null">,auth_dt = TO_DATE(#{authenticationDate},'YYYYMMDDHH24MISS') </if>
+               <if test="isRecvSMS != null">,sms_recv_yn = #{isRecvSMS} </if>
+               <if test="nativeID != null">,device_natv_id = #{nativeID} </if>
+               <if test="deviceAccount != null">,device_acct = #{deviceAccount} </if>
+               <if test="svcMangNum != null">,svc_mang_no = #{svcMangNum} </if>
+               <if test="joinId != null">,entry_chnl_cd = #{joinId} </if>
+               <if test="deviceID != null">,device_id = #{deviceID} </if>
+               <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
+               <choose>
+               <when test="changeCaseCode != null">,chg_case_cd = #{changeCaseCode} </when>
+               <otherwise>,chg_case_cd = 'US012001' </otherwise>
+               </choose>
+        WHERE tenant_id = #{tenantID}
+          AND insd_usermbr_no = #{userKey}
+          AND insd_device_id = #{deviceKey}
+          AND auth_yn = 'Y'
+    </update>
+    
+    <!-- 휴대기기 수정 -->
+    <update id="updateDeviceCode" parameterType="userMbrDevice">
+        UPDATE /* DeviceMapper.updateDeviceCode, 휴대기기 등록, 황정택/와이즈스톤, 2013-12-23 */
+        tb_us_usermbr_device 
+               SET upd_dt = SYSDATE,
+               start_dt = SYSDATE,
+               chg_case_cd = null
+               <if test="deviceTelecom != null">,mno_cd = #{deviceTelecom} </if>
+               <if test="deviceNickName != null">,device_alias = #{deviceNickName} </if>
+               <if test="isPrimary != null">,rep_device_yn = #{isPrimary} </if>
+               <if test="authenticationDate != null">,auth_dt = TO_DATE(#{authenticationDate},'YYYYMMDDHH24MISS') </if>
+               <if test="isRecvSMS != null">,sms_recv_yn = #{isRecvSMS} </if>
+               <if test="nativeID != null">,device_natv_id = #{nativeID} </if>
+               <if test="deviceAccount != null">,device_acct = #{deviceAccount} </if>
+               <if test="svcMangNum != null">,svc_mang_no = #{svcMangNum} </if>
+               <if test="joinId != null">,entry_chnl_cd = #{joinId} </if>
+               <if test="deviceID != null">,device_id = #{deviceID} </if>
+               <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
+        WHERE tenant_id = #{tenantID}
+          AND insd_usermbr_no = #{userKey}
+          AND insd_device_id = #{deviceKey}
+          AND auth_yn = 'Y'
+    </update>
+    
+    <!-- 휴대기기 이력 테이블 insert -->
+    <update id="insertUpdateDeviceHistory" parameterType="userMbrDevice">
+        INSERT /* DeviceMapper.insertUpdateDeviceHistory, device 변경 히스토리 추가, 황정택/와이즈스톤, 2014-01-15 */
+               INTO tb_us_usermbr_device_his (
+                   seq, 
+                   tenant_id, 
+                   insd_usermbr_no, 
+                   insd_device_id,
+                   start_dt,
+                   end_dt,
+                   device_id, 
+                   device_model_cd, 
+                   mno_cd, 
+                   device_alias,
+                   rep_device_yn, 
+                   auth_yn,
+                   auth_dt,
+                   upd_dt,
+                   sms_recv_yn,
+                   device_natv_id, 
+                   device_acct, 
+                   entry_chnl_cd,
+                   ins_dt, 
+                   svc_mang_no, 
+                   reg_dt,
+                   chg_case_cd
+               )
+        SELECT sq_us_usermbr_device_his.NEXTVAL AS seq,
+               tenant_id, 
+               insd_usermbr_no, 
+               insd_device_id,
+               start_dt,
+               SYSDATE, /* end_dt */
+               device_id, 
+               device_model_cd, 
+               mno_cd, 
+               device_alias,
+               rep_device_yn, 
+               auth_yn,
+               auth_dt,
+               SYSDATE, /* upd_dt */
+               sms_recv_yn,
+               device_natv_id, 
+               device_acct, 
+               entry_chnl_cd,
+               SYSDATE, 
+               svc_mang_no, 
+               reg_dt,
+               chg_case_cd
+          FROM tb_us_usermbr_device 
+         WHERE insd_usermbr_no = #{userKey}
+           AND insd_device_id = #{deviceKey}
+           AND tenant_id = #{tenantID}
+    </update>
+    
+    <!-- 휴대기기 이력 테이블 insert -->
+    <update id="insertUpdateDeviceHistoryCode" parameterType="userMbrDevice">
+        INSERT /* DeviceMapper.insertUpdateDeviceHistoryCode, device 변경 히스토리 추가, 황정택/와이즈스톤, 2014-01-15 */
+               INTO tb_us_usermbr_device_his (
+                   seq, 
+                   tenant_id, 
+                   insd_usermbr_no, 
+                   insd_device_id,
+                   start_dt,
+                   end_dt,
+                   device_id, 
+                   pre_device_id, 
+                   device_model_cd, 
+                   mno_cd, 
+                   device_alias,
+                   rep_device_yn, 
+                   auth_yn,
+                   auth_dt,
+                   upd_dt,
+                   sms_recv_yn,
+                   device_natv_id, 
+                   device_acct, 
+                   entry_chnl_cd,
+                   ins_dt, 
+                   svc_mang_no,
+                   reg_dt, 
+                   chg_case_cd
+               )
+        SELECT sq_us_usermbr_device_his.NEXTVAL AS seq,
+               tenant_id, 
+               insd_usermbr_no, 
+               insd_device_id,
+               start_dt,
+               SYSDATE, /* end_dt */
+               device_id,
+               device_id, 
+               device_model_cd, 
+               mno_cd, 
+               device_alias,
+               rep_device_yn, 
+               auth_yn,
+               auth_dt,
+               SYSDATE, /* upd_dt */
+               sms_recv_yn,
+               device_natv_id, 
+               device_acct, 
+               entry_chnl_cd,
+               SYSDATE, 
+               svc_mang_no,
+               reg_dt,
+               #{changeCaseCode}
+          FROM tb_us_usermbr_device 
+         WHERE insd_usermbr_no = #{userKey}
+           <if test="deviceKey != null"> AND insd_device_id = #{deviceKey}</if>
+           AND tenant_id = #{tenantID}
+    </update>
+    
+    <select id="retrieveUserInfo" parameterType="CreateDeviceRequest" resultType="userMbr">
+        SELECT /* DeviceMapper.retrieveUserInfo, 사용자 정보 조회, 황정택/와이즈스톤, 2013-12-23 */
+                tenant_id               tenantID,
+                insd_usermbr_no         userKey,
+                usermbr_no              imMbrNo,
+                intg_svc_no             imSvcNo,
+                mbr_clas_cd             userType,
+                mbr_status_main_cd      userMainStatus,
+                mbr_status_sub_cd       userSubStatus,
+                login_status_cd         loginStatusCode,
+                ofauth_stop_status_cd   stopStatusCode,
+                device_reg_cnt          deviceCount,
+                mbr_id                  userID
+           FROM tb_us_usermbr
+          WHERE tenant_id = #{tenantID}
+          AND insd_usermbr_no = #{userKey}
+          AND mbr_status_main_cd != 'US010202'
+    </select>
+    
+    <select id="findMainDevice" parameterType="UserMbr" resultType="userMbrDevice">
+        SELECT /* DeviceMapper.findMainDevice, 대표기기 조회, 황정택/와이즈스톤, 2013-12-23 */
+               tenant_id AS tenantID,
+               insd_device_id AS deviceKey,
+               device_id AS deviceID,
+               insd_usermbr_no AS userKey
+          FROM tb_us_usermbr_device
+         WHERE tenant_id = #{tenantID}
+           AND rep_device_yn = 'Y'
+           AND auth_yn = 'Y'
+           AND insd_usermbr_no = #{userKey}
+    </select>
+    
+    <!-- 휴대기기 보유 카운트 증가 -->
+    <update id="updateCountPlus" parameterType="CreateDeviceRequest">
+       UPDATE /* DeviceMapper.updateCountPlus,  휴대기기 보유 카운트 증가, 황정택/와이즈스톤, 2013-12-26 */
+       tb_us_usermbr
+          SET device_reg_cnt = device_reg_cnt+1,
+              upd_dt = SYSDATE
+       WHERE tenant_id = #{commonRequest.tenantID}
+             AND insd_usermbr_no = #{userKey}
+    </update>
+    
+    <!-- 휴대기기 보유 카운트 감소 -->
+    <update id="updateCountMinus" parameterType="userMbrDevice">
+       UPDATE /* DeviceMapper.updateCountMinus,  휴대기기 보유 카운트 감소, 황정택/와이즈스톤, 2013-12-26 */
+       tb_us_usermbr
+          SET device_reg_cnt = device_reg_cnt-1,
+              upd_dt = SYSDATE
+       WHERE tenant_id = #{tenantID}
+             AND insd_usermbr_no = #{userKey}
+    </update>
+    
+    <!-- 휴대기기 보유 카운트 업데이트 -->
+    <update id="updateCountDevice" parameterType="CreateDeviceRequest">
+       UPDATE /* DeviceMapper.updateCountDevice,  휴대기기 보유 카운트 증가, 황정택/와이즈스톤, 2013-12-26 */
+       tb_us_usermbr
+          SET device_reg_cnt = (SELECT COUNT(*)
+                                FROM tb_us_usermbr_device 
+                                WHERE tenant_id = #{commonRequest.tenantID} 
+                                      AND insd_usermbr_no = #{userKey} 
+                                      AND auth_yn = 'Y'),
+              upd_dt = SYSDATE
+       WHERE tenant_id = #{commonRequest.tenantID}
+             AND insd_usermbr_no = #{userKey}
+    </update>
+    
+    <!-- 휴대기기 보유 카운트 업데이트 -->
+    <update id="updateCountDevice2" parameterType="userMbrDevice">
+       UPDATE /* DeviceMapper.updateCountDevice2,  휴대기기 보유 카운트 증가, 황정택/와이즈스톤, 2013-12-26 */
+       tb_us_usermbr
+          SET device_reg_cnt = (SELECT COUNT(*)
+                                FROM tb_us_usermbr_device 
+                                WHERE tenant_id = #{tenantID} 
+                                      AND insd_usermbr_no = #{userKey} 
+                                      AND auth_yn = 'Y'),
+              upd_dt = SYSDATE
+       WHERE tenant_id = #{tenantID}
+             AND insd_usermbr_no = #{userKey}
+    </update>
+    
+    <!-- 휴대기기 속성의 auth_yn = N -->
+    <update id="doCancelDevice" parameterType="userMbrDevice">
+       UPDATE /* DeviceMapper.doCancelDevice, 속성의 auth_yn = N, 황정택/와이즈스톤, 2013-12-05 */
+       tb_us_usermbr_device
+          SET auth_yn = 'N',
+              <!-- start_dt = SYSDATE, 빼기로 함. 매니저 요청사항 -->
+              <!-- end_dt = TO_DATE('29991231235959', 'YYYYMMDDHH24MISS'), 빼기로 함. 매니저 요청사항 -->
+              end_dt = SYSDATE,
+              upd_dt = SYSDATE
+        WHERE tenant_id = #{tenantID}
+          AND insd_usermbr_no = #{userKey}
+          AND device_id = #{deviceID}
+    </update>
+    
+    <!-- 휴대기기 속성의 rep_device_yn = Y -->
+    <update id="doActivateDevice" parameterType="userMbrDevice">
+       UPDATE /* DeviceMapper.doActivateDevice, 속성의 rep_device_yn = N, 황정택/와이즈스톤, 2013-12-05 */
+       tb_us_usermbr_device
+          SET auth_yn = 'Y',
+          	  auth_dt = SYSDATE,
+              start_dt = SYSDATE,
+              end_dt = TO_DATE('29991231235959', 'YYYYMMDDHH24MISS'),
+              upd_dt = SYSDATE
+              <if test="isPrimary != null">,rep_device_yn = #{isPrimary} </if>
+              <if test="deviceTelecom != null">,mno_cd = #{deviceTelecom} </if>
+               <if test="deviceNickName != null">,device_alias = #{deviceNickName} </if>
+               <if test="authenticationDate != null">,auth_dt = TO_DATE(#{authenticationDate},'YYYYMMDDHH24MISS') </if>
+               <if test="isRecvSMS != null">,sms_recv_yn = #{isRecvSMS} </if>
+               <if test="nativeID != null">,device_natv_id = #{nativeID} </if>
+               <if test="deviceAccount != null">,device_acct = #{deviceAccount} </if>
+               <if test="svcMangNum != null">,svc_mang_no = #{svcMangNum} </if>
+               <if test="joinId != null">,entry_chnl_cd = #{joinId} </if>
+               <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
+        WHERE tenant_id = #{tenantID}
+          AND insd_usermbr_no = #{userKey}
+          AND insd_device_id = #{deviceKey}
+    </update>
+    
+    <!-- 사용자 탈퇴 -->
+    <update id="removeOwner" parameterType="userMbr">
+       UPDATE /* DeviceMapper.removeOwner, 사용자 탈퇴, 황정택/와이즈스톤, 2013-12-23 */
+       tb_us_usermbr
+         SET  bolter_case_cd = #{secedeTypeCode},
+              mbr_status_main_cd = #{userMainStatus},
+              mbr_status_sub_cd = #{userSubStatus},
+              bolter_day = #{secedeDate},
+              start_dt = SYSDATE,
+              end_dt = SYSDATE,
+              device_reg_cnt = 0,        /* 휴대기기 보유 카운트 초기화 */
+              upd_dt = SYSDATE
+       WHERE  tenant_id = #{tenantID}
+         AND  insd_usermbr_no = #{userKey}
+    </update>
+
+    <!-- 변환추적 등록 -->
+    <!-- 암호화 적용(device_id:enc_device_id) 변경, 2014-09-17 -->
+    <insert id="insertUserkeyTrack" parameterType="userkeyTrack">
+        INSERT  /* DeviceMapper.insertUserkeyTrack, 변환추적 등록, 황정택/와이즈스톤, 2014-01-28 */
+                INTO tb_us_usermbr_idmbr_trfm_chas (
+                seq
+                ,pre_tenant_id
+                ,pre_insd_usermbr_no
+                ,after_tenant_id
+                ,after_insd_usermbr_no
+                ,enc_device_id
+                ,reg_dt
+                ,reg_id
+        ) VALUES (
+                sq_us_usermbr_idmbr_trfm_chas.NEXTVAL
+                ,#{preTenantID}
+                ,#{preUserKey}
+                ,#{afterTenantID}
+                ,#{afterUserKey}
+                ,PKG_CRYPTO.ENCRYPT(#{deviceID})
+                ,SYSDATE
+	            ,#{regID}
+        )
+    </insert>
+    
+    <!-- 최신등록기기 대표기기 설정 -->
+    <update id="updatePrimary" parameterType="userMbrDevice">
+       UPDATE /* DeviceMapper.updatePrimary, 최신등록기기 대표기기 설정, 황정택/와이즈스톤, 2014-02-03 */
+       tb_us_usermbr_device
+          SET   rep_device_yn = 'Y'
+          WHERE tenant_id = #{tenantID}
+            AND insd_usermbr_no = #{userKey}
+            AND insd_device_id = 
+          ( 
+          SELECT l.insd_device_id FROM
+              ( 
+              SELECT insd_device_id 
+                  FROM tb_us_usermbr_device
+                 WHERE auth_yn = 'Y'
+                   AND insd_usermbr_no = #{userKey}
+                   AND tenant_id = #{tenantID}
+              ORDER BY start_dt DESC
+              ) l 
+          WHERE ROWNUM = 1
+          )
+    </update>
+    
+    <!-- savensync 조회 -->
+    <select id="checkSaveNSync" parameterType="checkSaveNSyncRequest" resultType="checkSaveNSyncResponse">
+        SELECT /* DeviceMapper.checkSaveNSync, savensync 조회,wisestone_mikepark, 2014-03-10 */
+               insd_device_id AS deviceKey,
+               device_id AS deviceID, 
+               pre_device_id AS preDeviceID,
+               insd_usermbr_no AS userKey,
+               chg_case_cd AS code,
+               upd_dt,
+               mbr_status_main_cd AS isActive,
+               mbr_status_sub_cd AS userSubStatus,
+               usermbr_no AS imMbrNo
+          FROM (SELECT 
+               t1.insd_device_id,
+               t1.device_id,
+               t1.pre_device_id,
+               t1.insd_usermbr_no,
+               t1.chg_case_cd,
+               t1.upd_dt,
+               t2.mbr_status_main_cd,
+               t2.mbr_status_sub_cd,
+               t2.usermbr_no
+          FROM tb_us_usermbr_device_his t1
+          JOIN tb_us_usermbr t2
+           ON t1.tenant_id = t2.tenant_id
+           AND t1.insd_usermbr_no=t2.insd_usermbr_no 
+           WHERE t1.tenant_id=#{commonRequest.tenantID} 
+           AND t1.pre_device_id = #{deviceID}
+           AND t1.auth_yn = 'Y'
+           AND t1.upd_dt > (SYSDATE-15)           
+           AND t1.chg_case_cd in ('US012003', 'US012012')
+           AND t2.mbr_clas_cd = 'US011501'
+         ORDER BY t1.upd_dt DESC
+           ) l
+         WHERE ROWNUM = 1
+    </select>
+    
+    <!-- savensync 조회 -->
+    <select id="checkRealSaveNSync" parameterType="checkSaveNSyncRequest" resultType="checkSaveNSyncResponse">
+        SELECT
+		/* DeviceMapper.checkRealSaveNSync, savensync 조회,wisestone_mikepark, 2014-03-10 */
+		               deviceKey,
+		               deviceID,
+		               preDeviceID,
+		               userKey,
+		               changeCaseCode,
+		               svcMangNo,
+		               upd_dt,
+		               isActive,
+		               userSubStatus,
+		               imMbrNo
+		FROM
+		    (
+		    SELECT
+		            t1.insd_device_id AS deviceKey,
+		            t1.device_id AS deviceID,
+		            t1.pre_device_id AS preDeviceID,
+		            t1.insd_usermbr_no AS userKey,
+		            t1.chg_case_cd AS changeCaseCode,
+		            t1.svc_mang_no AS svcMangNo,
+		            t1.upd_dt,
+		            t2.mbr_status_main_cd AS isActive,
+		            t2.mbr_status_sub_cd AS userSubStatus,
+		            t2.usermbr_no AS imMbrNo
+		    FROM spmbr.tb_us_usermbr_device_his t1
+		        JOIN spmbr.tb_us_usermbr t2 ON t1.tenant_id = t2.tenant_id AND t1.insd_usermbr_no=t2.insd_usermbr_no
+		    WHERE 1=1
+		        AND t1.tenant_id = #{commonRequest.tenantID}
+		        AND t1.pre_device_id = #{deviceID}
+		        AND t1.upd_dt > (SYSDATE-15)          
+		        AND t2.mbr_clas_cd = 'US011501'
+		    ORDER BY UPD_DT DESC
+		    ) L
+		WHERE ROWNUM=1
+    </select>
+    
+        
+    <!-- 휴대기기의 소유자이력을 조회 -->
+    <select id="searchDeviceOwner" parameterType="searchDeviceOwnerRequest" resultType="searchDeviceOwnerResponse">
+		SELECT /* DeviceMapper.searchDeviceOwner, 휴대기기의 소유자이력을 조회, wisestone_mikepark, 2014-06-24 */
+		      userKey AS userKey,
+		       deviceKey AS deviceKey,
+		       auth_dt AS authenticationDate,
+		       isUsed AS isUsed,
+		       srcName AS tableName
+		  FROM (  SELECT *
+		            FROM (SELECT insd_usermbr_no AS userKey,
+		                         insd_device_id AS deviceKey,
+		                         auth_dt AS auth_dt,
+		                         AUTH_YN AS isUsed,
+		                         'TB_US_USERMBR_DEVICE' AS srcName,
+		                         start_dt
+		                    FROM tb_us_usermbr_device
+		                   WHERE tenant_id = #{commonRequest.tenantID}
+		                         AND device_id = #{deviceID}
+		                         AND TO_DATE (#{regDate}, 'YYYYMMDDHH24MISS') BETWEEN start_dt
+		                                                                        AND end_dt
+                    <if test="isDormant.equalsIgnoreCase('N')">
+		                  UNION ALL
+		                  SELECT insd_usermbr_no AS userKey,
+		                         insd_device_id AS deviceKey,
+		                         auth_dt AS auth_dt,
+		                         AUTH_YN AS isUsed,
+		                         'TB_US_USERMBR_DEVICE' AS srcName,
+		                         start_dt
+		                    FROM tb_us_usermbr_device_his
+		                   WHERE tenant_id = #{commonRequest.tenantID}
+                                 AND device_id = #{deviceID}
+		                         AND TO_DATE (#{regDate}, 'YYYYMMDDHH24MISS') BETWEEN start_dt
+                                                                                AND end_dt
+                    </if>
+		                  UNION ALL
+		                  SELECT insd_usermbr_no AS userKey,
+		                         insd_device_id AS deviceKey,
+		                         auth_dt AS auth_dt,
+		                         AUTH_YN AS isUsed,
+		                         'TB_US_USERMBR_DEVICE_WD' AS srcName,
+		                         start_dt
+		                    FROM tb_us_usermbr_device_wd
+		                   WHERE tenant_id = #{commonRequest.tenantID}
+                                 AND device_id = #{deviceID}
+		                         AND TO_DATE (#{regDate}, 'YYYYMMDDHH24MISS') BETWEEN start_dt
+                                                                                AND end_dt)
+		        ORDER BY DECODE (isUsed, 'Y', '1', '2'), start_dt DESC)
+		 WHERE ROWNUM = 1
+    </select>
+    
+    <!-- 휴대기기의 소유자이력을 조회 -->
+    <select id="searchDeviceOwnerHis" parameterType="searchDeviceOwnerRequest" resultType="searchDeviceOwnerResponse">
+        SELECT /* DeviceMapper.searchDeviceOwnerHis, 휴대기기의 소유자이력을 조회, wisestone_mikepark, 2014-06-24 */
+               userKey AS userKey,
+               deviceKey AS deviceKey,
+               auth_dt AS authenticationDate
+        FROM (
+        SELECT insd_usermbr_no AS userKey,
+               insd_device_id AS deviceKey,
+               TO_CHAR( auth_dt,'YYYYMMDDHH24MISS') AS auth_dt
+        FROM  tb_us_usermbr_device_his
+        WHERE tenant_id = #{commonRequest.tenantID}
+          AND device_id = #{deviceID}
+          AND auth_yn = 'Y'
+          AND start_dt <![CDATA[<=]]> TO_DATE(#{regDate},'YYYYMMDDHH24MISS')
+          AND end_dt <![CDATA[>=]]> TO_DATE(#{regDate},'YYYYMMDDHH24MISS')
+        ORDER BY auth_dt DESC)
+        WHERE ROWNUM = 1
+    </select>
+
+    <!-- LocalSCI : 등록된 단말 정보 조회 (2014-10-02) -->
+    <select id="searchOrderDevice" parameterType="searchOrderDeviceRequest" resultType="searchOrderDeviceResponse">
+		SELECT /* DeviceMapper.searchOrderDevice, 등록 단말 정보 조회, burkhan_rejoice, 2014-10-02 */
+		       deviceId,
+		       deviceTelecom,
+		       authYn,
+		       tableName,
+		       tenantID
+		  FROM (SELECT device_id AS deviceId,
+		               mno_cd AS deviceTelecom,
+		               auth_yn AS authYn,
+		               'TB_US_USERMBR_DEVICE' AS tableName,
+		               tenant_id AS tenantID
+		          FROM tb_us_usermbr_device
+		         WHERE tenant_id = #{commonRequest.tenantID}
+		         AND insd_usermbr_no = #{userKey}
+		         AND insd_device_id  = #{deviceKey}
+		        UNION ALL
+		        SELECT device_id AS deviceId,
+		               mno_cd AS deviceTelecom,
+		               auth_yn AS authYn,
+		               'TB_US_USERMBR_DEVICE_WD' AS srcName,
+		               tenant_id AS tenantID
+		          FROM tb_us_usermbr_device_wd
+		         WHERE tenant_id = #{commonRequest.tenantID}
+		         AND insd_usermbr_no = #{userKey}
+		         AND insd_device_id  = #{deviceKey}
+		         )
+    </select>    
+    
+</mapper>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PurchaseGift">
+
+    <!-- 1. ResultMap-->
+    <resultMap id="PurchaseGiftReceiveMap" type="giftReceiveScRes">
+        <result property="recvDt" column="RECV_DT" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="PurchaseGiftConfirmMap" type="giftConfirmScRes">
+        <result property="recvDt" column="RECV_DT" jdbcType="VARCHAR"/>
+        <result property="prodId" column="PROD_ID" jdbcType="VARCHAR"/>
+        <result property="prchsId" column="PRCHS_ID" jdbcType="VARCHAR"/>
+        <result property="prchsDtlId" column="PRCHS_DTL_ID" jdbcType="NUMERIC"/>
+        <result property="prchsReqPathCd" column="PRCHS_REQ_PATH_CD" jdbcType="VARCHAR"/>
+        <result property="prchsCaseCd" column="PRCHS_CASE_CD" jdbcType="VARCHAR"/>
+        <result property="prodAmt" column="PROD_AMT" jdbcType="NUMERIC"/>
+        <result property="useStartDt" column="USE_START_DT" jdbcType="VARCHAR"/>
+        <result property="useExprDt" column="USE_EXPR_DT" jdbcType="VARCHAR"/>
+        <result property="dwldExprDt" column="DWLD_EXPR_DT" jdbcType="VARCHAR"/>
+        <result property="dwldStartDt" column="DWLD_START_DT" jdbcType="VARCHAR"/>
+        <result property="cpnPublishCd" column="CPN_PUBLISH_CD" jdbcType="VARCHAR"/>
+        <result property="prodQty" column="PROD_QTY" jdbcType="NUMERIC"/>
+        <result property="recvConfPathCd" column="RECV_CONF_PATH_CD" jdbcType="VARCHAR"/>
+        <result property="sendInsdUsermbrNo" column="SEND_INSD_USERMBR_NO" jdbcType="VARCHAR"/>
+        <result property="sendInsdDeviceId" column="SEND_INSD_DEVICE_ID" jdbcType="VARCHAR"/>
+        <result property="useInsdDeviceId" column="USE_INSD_DEVICE_ID" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 2. SELECT SQL-->
+    <select id="searchGiftReceive" parameterType="giftReceiveScReq" resultMap="PurchaseGiftReceiveMap">
+        SELECT  /* PurchaseGift.searchGiftReceive, 선물수신 여부 조회, 조용진/엔텔스, 2013-12-10 */
+		        recv_dt  /* 선물수신일시 */
+	      FROM  tb_pr_prchs_dtl
+		 WHERE  tenant_id = #{tenantId} 
+		   AND  send_insd_usermbr_no = #{userKey} 
+		   AND  send_insd_device_id = #{deviceKey} 
+           AND  prod_id = #{prodId}
+           AND  prchs_id = #{prchsId}
+    </select>
+
+    <select id="getGiftConfirm" parameterType="giftConfirmScReq" resultMap="PurchaseGiftConfirmMap">
+        SELECT /* PurchaseGift.searchGiftReceive, 선물수신 여부 조회, 조용진/엔텔스, 2013-12-10 */
+        TO_CHAR(recv_dt,'YYYYMMDDHH24MISS') AS recv_dt /* 선물수신일시 */
+        , prod_id
+        , prchs_id
+        , prchs_dtl_id
+        , prchs_req_path_cd
+        , prchs_case_cd
+        , prod_amt
+        , to_char(use_start_dt,'yyyyMMddHH24miss') as use_start_dt
+        , to_char(use_expr_dt,'yyyyMMddHH24miss') as use_expr_dt
+        , to_char(dwld_expr_dt,'yyyyMMddHH24miss') as dwld_expr_dt
+        , cpn_publish_cd
+        , prod_qty
+        , recv_conf_path_cd
+        , send_insd_usermbr_no
+        , send_insd_device_id
+        , use_insd_device_id
+        FROM tb_pr_prchs_dtl
+        WHERE use_tenant_id = #{tenantId}
+        AND use_insd_usermbr_no = #{userKey}
+        <!-- 수신MDN 체크에 대한 오류메세지 처리를 위해 주석처리
+        AND  use_insd_device_id = #{deviceKey}
+         -->
+        AND prod_id = #{prodId}
+        AND prchs_id = #{prchsId}
+        AND prchs_case_cd = 'OR020302' /* 선물인 경우에만 선물수신확인 */
+    </select>
+
+    <!-- 3. update SQL-->
+    <update id="updateGiftConfirm" parameterType="giftConfirmScReq">
+        /* PurchaseGift.modifyGiftConfirm, 선물수신, 조용진/엔텔스, 2013-12-10 */
+        UPDATE  tb_pr_prchs_dtl
+           SET  recv_dt = to_date(#{recvDt, jdbcType=DATE},'YYYYMMDDHH24MISS')  /* 선물수신일시 */
+              , recv_conf_path_cd = #{recvConfPathCd, jdbcType=VARCHAR}         /* 선물수신경로코드 */
+              , use_start_dt  = CASE WHEN TO_CHAR(use_expr_dt,'YYYY')      = '9999'     THEN use_start_dt /* 무제한 */    
+                                     WHEN SUBSTR( tenant_prod_grp_cd, 0,8) = 'OR006221' THEN use_start_dt /* 쇼핑 */ 
+                                     WHEN use_period_set_cd IS NULL THEN TO_DATE(#{recvDt, jdbcType=DATE},'YYYYMMDDHH24MISS')
+                                     WHEN use_period_set_cd = 'DP013002' OR use_period_set_cd = 'DP013001' THEN TO_DATE(#{recvDt, jdbcType=DATE},'YYYYMMDDHH24MISS')
+                                     ELSE use_start_dt
+                                 END
+              , use_expr_dt   = CASE WHEN TO_CHAR(use_expr_dt,'YYYY')      = '9999'     THEN use_expr_dt /* 무제한 */    
+                                     WHEN SUBSTR( tenant_prod_grp_cd, 0,8) = 'OR006221' THEN use_expr_dt /* 쇼핑 */
+                                     WHEN use_period_set_cd IS NULL THEN TO_DATE(SUBSTR(#{recvDt, jdbcType=DATE},0,8),'YYYYMMDD')
+                                                                      + (TO_DATE(TO_CHAR(use_expr_dt, 'YYYYMMDD'),'YYYYMMDD') -  TO_DATE(TO_CHAR(use_start_dt, 'YYYYMMDD'),'YYYYMMDD') + 1)
+                                                                      - (1 / (24 * 60 * 60))
+                                     WHEN use_period_set_cd = 'DP013002' OR use_period_set_cd = 'DP013001'  THEN FN_PRCHS_EXPR_DT(TO_DATE(#{recvDt, jdbcType=DATE},'YYYYMMDDHH24MISS'), use_period_unit_cd, use_period, decode(prchs_prod_type,'OR020202','Y','N'))
+                                     ELSE use_expr_dt
+                                 END
+              , dwld_start_dt = CASE WHEN TO_CHAR(use_expr_dt,'YYYY')      = '9999'     THEN dwld_start_dt /* 무제한 */    
+                                     WHEN SUBSTR( tenant_prod_grp_cd, 0,8) = 'OR006221' THEN dwld_start_dt /* 쇼핑 */
+                                     WHEN use_period_set_cd IS NULL THEN TO_DATE(#{recvDt, jdbcType=DATE},'YYYYMMDDHH24MISS')
+                                     WHEN use_period_set_cd = 'DP013002' OR use_period_set_cd = 'DP013001'  THEN TO_DATE(#{recvDt, jdbcType=DATE},'YYYYMMDDHH24MISS')
+                                     ELSE dwld_start_dt
+                                 END
+              , dwld_expr_dt  = CASE WHEN TO_CHAR(use_expr_dt,'YYYY')      = '9999'     THEN dwld_expr_dt /* 무제한 */    
+                                     WHEN SUBSTR( tenant_prod_grp_cd, 0,8) = 'OR006221' THEN dwld_expr_dt /* 쇼핑 */
+                                     WHEN use_expr_dt = TO_DATE('99991231235959','YYYYMMDDHH24MISS') THEN use_expr_dt
+                                     WHEN use_period_set_cd IS NULL THEN TO_DATE(SUBSTR(#{recvDt, jdbcType=DATE},0,8),'YYYYMMDD')
+                                                                      + (TO_DATE(TO_CHAR(use_expr_dt, 'YYYYMMDD'),'YYYYMMDD') -  TO_DATE(TO_CHAR(use_start_dt, 'YYYYMMDD'),'YYYYMMDD') + 1)
+                                                                      - (1 / (24 * 60 * 60))
+                                     WHEN use_period_set_cd = 'DP013002' OR use_period_set_cd = 'DP013001'  THEN FN_PRCHS_EXPR_DT(TO_DATE(#{recvDt, jdbcType=DATE},'YYYYMMDDHH24MISS'), use_period_unit_cd, use_period, decode(prchs_prod_type,'OR020202','Y','N'))
+                                     ELSE dwld_expr_dt
+                                 END             
+              , use_period_redate_cd = 'OR021102' /* 처리완료 */
+              , upd_id = #{systemId}  /* 업데이트시스템ID */
+              , upd_dt = sysdate      /* 업데이트일시 */
+         WHERE  use_tenant_id = #{tenantId} 
+           AND  use_insd_usermbr_no = #{userKey}
+           AND  use_insd_device_id = #{deviceKey} 
+           AND  prod_id = #{prodId}
+           AND  prchs_id = #{prchsId}
+           AND  prchs_case_cd = 'OR020302' /* 선물인 경우에만 선물수신확인 */
+           AND  status_cd = 'OR000301'
+           AND  recv_dt is null
+    </update>
+
+
+    <!-- 4. SELECT SQL-->
+    <select id="retrieveUpdatedGiftDtl" parameterType="giftConfirmScReq" resultMap="PurchaseGiftConfirmMap">
+        SELECT  /* PurchaseGift.getUpdatedGiftDtl, 선물수신 처리 결과 조회, 황민규/SK플래닛, 2015-06-01 */
+              dtl.PRCHS_ID
+              , dtl.prod_id
+              , TO_CHAR(dtl.use_start_dt,'YYYYMMDDHH24MISS') AS use_start_dt  /* 이용 시작 일시 */
+              , TO_CHAR(dtl.use_expr_dt,'YYYYMMDDHH24MISS') AS use_expr_dt /* 이용 만료 일시 */
+              , TO_CHAR(dtl.dwld_start_dt,'YYYYMMDDHH24MISS') AS dwld_start_dt /* 다운로드 시작 일시 */
+              , TO_CHAR(dtl.dwld_expr_dt,'YYYYMMDDHH24MISS') AS dwld_expr_dt /* 다운로드 만료 일시 */
+        FROM  tb_pr_prchs_dtl dtl
+        WHERE  dtl.use_tenant_id = #{tenantId}
+        AND  dtl.use_insd_usermbr_no = #{userKey}
+        AND  dtl.prod_id = #{prodId}
+        AND  dtl.prchs_id = #{prchsId}
+    </select>
+</mapper>

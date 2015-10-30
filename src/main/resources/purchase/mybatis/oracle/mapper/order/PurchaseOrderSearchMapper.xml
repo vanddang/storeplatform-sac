@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="PurchaseOrderSearch">
+
+    <!-- 구매ID 생성을 위한 (Next) 시퀀스 값 및 현재일시 조회 -->
+    <select id="searchPurchaseSequenceAndDate" resultType="SearchPurchaseSequenceAndDateRes">
+        SELECT /* PurchaseOrderSearchMapper.searchPurchaseSequenceAndDate, 구매ID 생성을 위한 (Next) 시퀀스 값 및 현재일시 조회, 이승택/nTels, 2014-01-22 */
+                sq_pr_prchs_id.NEXTVAL AS nextSequence
+               ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS nowDate
+          FROM
+                DUAL
+    </select>
+
+    <!-- 매 달 구매건수 조회 (쇼핑상품 구매건수 조회 용도) -->
+    <select id="searchMonthlyPrchsCntDetail" resultType="java.lang.Double" parameterType="SearchSktPayment">
+        SELECT /* PurchaseOrderSearchMapper.searchMonthlyPrchsCntDetail, 매 달 구매건수 조회 (쇼핑상품 구매건수 조회 용도), 이승택/nTels, 2014-04-22 */
+                1
+          FROM (
+                SELECT  ia.*
+                       ,COUNT(1) AS condVal
+                  FROM (
+                        SELECT  use_insd_usermbr_no AS insd_usermbr_no
+                               ,use_insd_device_id AS insd_device_id
+                               ,TO_CHAR(prchs_dt, 'YYYYMM') AS prchs_mm
+                          FROM  tb_pr_prchs_dtl
+                         WHERE  use_tenant_id = #{tenantId}
+                           AND  use_insd_usermbr_no = #{userKey}
+                           AND  use_insd_device_id = #{deviceKey}
+                           AND  prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1 * #{condPeriodValue}), 'MM') AND TRUNC(SYSDATE, 'MM') - (1 / (24 * 60 * 60))
+                           <trim prefix="AND">
+		                      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(tenantProdGrpCd)">
+		                          tenant_prod_grp_cd LIKE CONCAT(#{tenantProdGrpCd, jdbcType=VARCHAR}, '%')
+		                      </if>
+		                   </trim>
+                           AND  status_cd = 'OR000301'
+		                   AND  prchs_case_cd = 'OR020301'
+                     UNION ALL
+                        SELECT  send_insd_usermbr_no AS insd_usermbr_no
+                               ,send_insd_device_id AS insd_device_id
+                               ,TO_CHAR(prchs_dt, 'YYYYMM') AS prchs_mm
+                          FROM  tb_pr_prchs_dtl
+                         WHERE  tenant_id = #{tenantId}
+                           AND  send_insd_usermbr_no = #{userKey}
+                           AND  send_insd_device_id = #{deviceKey}
+                           AND  prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1 * #{condPeriodValue}), 'MM') AND TRUNC(SYSDATE, 'MM') - (1 / (24 * 60 * 60))
+                           <trim prefix="AND">
+                              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(tenantProdGrpCd)">
+                                  tenant_prod_grp_cd LIKE CONCAT(#{tenantProdGrpCd, jdbcType=VARCHAR}, '%')
+                              </if>
+                           </trim>
+                           AND  status_cd = 'OR000301'
+                           AND  prchs_case_cd = 'OR020302'
+                       ) ia
+              GROUP BY  insd_usermbr_no
+                       ,insd_device_id
+                       ,prchs_mm
+                HAVING  COUNT(1) >= 1
+               ) a
+      GROUP BY insd_usermbr_no, insd_device_id
+        HAVING COUNT(1) = #{condPeriodValue}
+    </select>
+        
+    <!-- [Not Use] SKT 후불 결제 제한 조건구분값 조회 (구매상세 테넌트상품그룹코드 조건) -->
+    <select id="searchSktLimitCondDetail" resultType="java.lang.Double" parameterType="SearchSktPayment">
+        SELECT /* PurchaseOrderSearchMapper.searchSktLimitCondDetail, SKT 후불 결제 제한 조건구분값 조회 (구매상세 테넌트상품그룹코드 조건), 이승택/nTels, 2014-01-22 */
+                <choose>
+                    <when test="condClsfUnitCd == 'CM011501'">COUNT(a.prchs_id)  AS condVal /* 건 */</when>
+                    <when test="condClsfUnitCd == 'CM011502'">NVL(SUM(a.payment_amt), 0) AS condVal /* 금액 */</when>
+                </choose>
+          FROM ( 
+		        SELECT  ia.prchs_id
+		              , ib.payment_amt
+		          FROM  tb_pr_prchs_dtl ia
+		              , tb_pr_payment ib
+		         WHERE  ia.tenant_id = ib.tenant_id
+		           AND  ia.prchs_id = ib.prchs_id
+		           AND  ia.use_tenant_id = #{tenantId}
+		           AND  ia.use_insd_usermbr_no = #{userKey}
+		           AND  ia.use_insd_device_id = #{deviceKey}
+		           AND  ia.prchs_case_cd = 'OR020301'
+		           <trim prefix="AND">
+		               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(condPeriodUnitCd)">
+				           <choose>
+				               <when test="condPeriodUnitCd == 'CM011411'"> ia.prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1 * #{condPeriodValue, jdbcType=NUMERIC}), 'MM') AND TRUNC(SYSDATE, 'MM') - (1 / (24 * 60 * 60)) /* 전월 */</when>
+				               <when test="condPeriodUnitCd == 'CM011408'"> ia.prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -1 * (#{condPeriodValue, jdbcType=NUMERIC} - 1)), 'MM') /* 당월 */</when>
+				               <when test="condPeriodUnitCd == 'CM011407'"> ia.prchs_dt >= TRUNC(SYSDATE - (#{condPeriodValue, jdbcType=NUMERIC}-1), 'DD') /* 당일 */</when>
+				               <when test="condPeriodUnitCd == 'CM011409'"> ia.prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -12 * (#{condPeriodValue, jdbcType=NUMERIC} - 1)), 'YY') /* 당년 */</when>
+				               <when test="condPeriodUnitCd == 'CM011412'"> ia.prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -12 * #{condPeriodValue, jdbcType=NUMERIC}), 'YY') AND TRUNC(SYSDATE, 'YY') - (1 / (24 * 60 * 60)) /* 전년 */</when>
+				               <when test="condPeriodUnitCd == 'CM011410'"> ia.prchs_dt BETWEEN TRUNC(SYSDATE - #{condPeriodValue, jdbcType=NUMERIC}, 'DD') AND TRUNC(SYSDATE, 'DD') - (1 / (24 * 60 * 60)) /* 전일 */</when>
+				           </choose>
+				       </if>
+				   </trim>
+		           AND  ia.status_cd = 'OR000301'
+		           AND  ib.payment_mtd_cd = 'OR000605'
+				   <trim prefix="AND">
+				      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(tenantProdGrpCd)">
+				          ia.tenant_prod_grp_cd LIKE #{tenantProdGrpCd, jdbcType=VARCHAR} || '%'
+				      </if>
+				   </trim>
+		      GROUP BY  ia.prchs_id
+		              , ib.payment_amt
+		     UNION ALL
+				SELECT  ia.prchs_id
+                      , ib.payment_amt
+		          FROM  tb_pr_prchs_dtl ia
+		              , tb_pr_payment ib
+		         WHERE  ia.tenant_id = ib.tenant_id
+		           AND  ia.prchs_id = ib.prchs_id
+		           AND  ia.tenant_id = #{tenantId}
+		           AND  ia.send_insd_usermbr_no = #{userKey}
+		           AND  ia.send_insd_device_id = #{deviceKey}
+		           AND  ia.prchs_case_cd = 'OR020302'
+		           <trim prefix="AND">
+		               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(condPeriodUnitCd)">
+		                   <choose>
+		                       <when test="condPeriodUnitCd == 'CM011411'"> ia.prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1 * #{condPeriodValue, jdbcType=NUMERIC}), 'MM') AND TRUNC(SYSDATE, 'MM') - (1 / (24 * 60 * 60)) /* 전월 */</when>
+		                       <when test="condPeriodUnitCd == 'CM011408'"> ia.prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -1 * (#{condPeriodValue, jdbcType=NUMERIC} - 1)), 'MM') /* 당월 */</when>
+		                       <when test="condPeriodUnitCd == 'CM011407'"> ia.prchs_dt >= TRUNC(SYSDATE - (#{condPeriodValue, jdbcType=NUMERIC}-1), 'DD') /* 당일 */</when>
+		                       <when test="condPeriodUnitCd == 'CM011409'"> ia.prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -12 * (#{condPeriodValue, jdbcType=NUMERIC} - 1)), 'YY') /* 당년 */</when>
+		                       <when test="condPeriodUnitCd == 'CM011412'"> ia.prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -12 * #{condPeriodValue, jdbcType=NUMERIC}), 'YY') AND TRUNC(SYSDATE, 'YY') - (1 / (24 * 60 * 60)) /* 전년 */</when>
+		                       <when test="condPeriodUnitCd == 'CM011410'"> ia.prchs_dt BETWEEN TRUNC(SYSDATE - #{condPeriodValue, jdbcType=NUMERIC}, 'DD') AND TRUNC(SYSDATE, 'DD') - (1 / (24 * 60 * 60)) /* 전일 */</when>
+		                   </choose>
+		               </if>
+		           </trim>
+		           AND  ia.status_cd = 'OR000301'
+		           AND  ib.payment_mtd_cd = 'OR000605'
+		           <trim prefix="AND">
+		              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(tenantProdGrpCd)">
+		                  ia.tenant_prod_grp_cd LIKE #{tenantProdGrpCd, jdbcType=VARCHAR} || '%'
+		              </if>
+		           </trim>
+		      GROUP BY  ia.prchs_id
+                      , ib.payment_amt
+		       ) a
+    </select>
+    
+    <!-- [Not Use] SKT 후불 결제 제한 조건구분값 조회 (결제내역 기준) -->
+    <select id="searchSktLimitCondOnPaymentDetail" resultType="java.lang.Double" parameterType="SearchSktPayment">
+        SELECT /* PurchaseOrderSearchMapper.searchSktLimitCondOnPaymentDetail, SKT 후불 결제 제한 조건구분값 조회 (결제내역 기준), 이승택/nTels, 2014-01-22 */
+                <choose>
+                    <when test="condClsfUnitCd == 'CM011501'">COUNT(tenant_id)  AS condVal /* 건 */</when>
+                    <when test="condClsfUnitCd == 'CM011502'">NVL(SUM(payment_amt), 0) AS condVal /* 금액 */</when>
+                </choose>
+          FROM  tb_pr_payment
+         WHERE  tenant_id = #{tenantId}
+           AND  insd_usermbr_no = #{userKey}
+           AND  insd_device_id = #{deviceKey}
+           <trim prefix="AND">
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(condPeriodUnitCd)">
+                   <choose>
+                       <when test="condPeriodUnitCd == 'CM011411'"> prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1 * #{condPeriodValue, jdbcType=NUMERIC}), 'MM') AND TRUNC(SYSDATE, 'MM') - (1 / (24 * 60 * 60)) /* 전월 */</when>
+                       <when test="condPeriodUnitCd == 'CM011408'"> prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -1 * (#{condPeriodValue, jdbcType=NUMERIC} - 1)), 'MM') /* 당월 */</when>
+                       <when test="condPeriodUnitCd == 'CM011407'"> prchs_dt >= TRUNC(SYSDATE - (#{condPeriodValue, jdbcType=NUMERIC}-1), 'DD') /* 당일 */</when>
+                       <when test="condPeriodUnitCd == 'CM011409'"> prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -12 * (#{condPeriodValue, jdbcType=NUMERIC} - 1)), 'YY') /* 당년 */</when>
+                       <when test="condPeriodUnitCd == 'CM011412'"> prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -12 * #{condPeriodValue, jdbcType=NUMERIC}), 'YY') AND TRUNC(SYSDATE, 'YY') - (1 / (24 * 60 * 60)) /* 전년 */</when>
+                       <when test="condPeriodUnitCd == 'CM011410'"> prchs_dt BETWEEN TRUNC(SYSDATE - #{condPeriodValue, jdbcType=NUMERIC}, 'DD') AND TRUNC(SYSDATE, 'DD') - (1 / (24 * 60 * 60)) /* 전일 */</when>
+                   </choose>
+               </if>
+           </trim>
+           AND  status_cd = 'OR000301'
+           AND  payment_mtd_cd = 'OR000605'
+    </select>
+    
+    <!-- SKT 후불 결제 금액 조회 (구매상세 테넌트상품그룹코드 조건) -->
+    <select id="searchSktAmountDetail" resultType="java.lang.Double" parameterType="SearchSktPayment">
+        SELECT  /* PurchaseOrderSearchMapper."searchSktAmountDetail", SKT 후불 결제 금액 조회 (구매상세 테넌트상품그룹코드 조건), 이승택/nTels, 2014-01-22 */
+                 <choose>
+                     <when test="applyUnitCd == 'CM011301'">NVL(SUM(a.payment_amt), 0) AS amount /* 금액 */</when>
+                 </choose>
+          FROM  tb_pr_payment a
+              , tb_pr_prchs_dtl b
+         WHERE  a.tenant_id = b.tenant_id
+           AND  a.prchs_id = b.prchs_id
+           AND  a.moid = #{svcMangNo}
+           <trim prefix="AND">
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(condUnitCd)">
+                   <choose>
+                       <when test="condUnitCd == 'CM011408'"> a.prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -1 * (#{condValue, jdbcType=NUMERIC} - 1)), 'MM') /* 당월 */</when>
+                       <when test="condUnitCd == 'CM011411'"> a.prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1 * #{condValue, jdbcType=NUMERIC}), 'MM') AND TRUNC(SYSDATE, 'MM') - (1 / (24 * 60 * 60)) /* 전월 */</when>
+                       <when test="condUnitCd == 'CM011407'"> a.prchs_dt >= TRUNC(SYSDATE - (#{condValue, jdbcType=NUMERIC}-1), 'DD') /* 당일 */</when>
+                       <when test="condUnitCd == 'CM011409'"> a.prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -12 * (#{condValue, jdbcType=NUMERIC} - 1)), 'YY') /* 당년 */</when>
+                       <when test="condUnitCd == 'CM011412'"> a.prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -12 * #{condValue, jdbcType=NUMERIC}), 'YY') AND TRUNC(SYSDATE, 'YY') - (1 / (24 * 60 * 60)) /* 전년 */</when>
+                       <when test="condUnitCd == 'CM011410'"> a.prchs_dt BETWEEN TRUNC(SYSDATE - #{condValue, jdbcType=NUMERIC}, 'DD') AND TRUNC(SYSDATE, 'DD') - (1 / (24 * 60 * 60)) /* 전일 */</when>
+                   </choose>
+               </if>
+           </trim>
+           AND  a.tenant_id = #{tenantId}
+           AND  a.payment_mtd_cd = 'OR000605'
+           AND  a.status_cd = 'OR000301'
+           <trim prefix="AND">
+              <choose>
+                  <when test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(tenantProdGrpCd)">
+                      b.tenant_prod_grp_cd LIKE CONCAT(#{tenantProdGrpCd, jdbcType=VARCHAR}, '%')
+                  </when>
+                  <when test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(exceptTenantProdGrpCd)">
+                      <choose>
+                          <when test="@com.skplanet.storeplatform.framework.core.util.StringUtils@startsWith(exceptTenantProdGrpCd, 'OR006321')">
+                              (b.tenant_prod_grp_cd NOT LIKE CONCAT(#{exceptTenantProdGrpCd, jdbcType=VARCHAR}, '%') OR a.tid LIKE 'TSTORE%' OR a.tid LIKE 'SKTstore%')  
+                          </when>
+                          <otherwise>
+                              b.tenant_prod_grp_cd NOT LIKE CONCAT(#{exceptTenantProdGrpCd, jdbcType=VARCHAR}, '%')
+                          </otherwise>
+                      </choose>
+                  </when>
+              </choose>
+           </trim>
+           AND b.prchs_dtl_id = 1
+    </select>
+    
+    <!-- SKT 후불 결제 금액 조회 (결제내역 기준) -->
+    <select id="searchSktAmountOnPaymentDetail" resultType="java.lang.Double" parameterType="SearchSktPayment">
+        SELECT /* PurchaseOrderSearchMapper."searchSktAmountOnPaymentDetail", SKT 후불 결제 금액 조회 (결제내역 기준), 이승택/nTels, 2014-01-22 */
+                <choose>
+                    <when test="applyUnitCd == 'CM011301'">NVL(SUM(payment_amt), 0) AS amount /* 금액 */</when>
+                </choose>
+          FROM  tb_pr_payment
+         WHERE  moid = #{svcMangNo}
+           <trim prefix="AND">
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(condUnitCd)">
+                   <choose>
+                       <when test="condUnitCd == 'CM011408'"> prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -1 * (#{condValue, jdbcType=NUMERIC} - 1)), 'MM') /* 당월 */</when>
+                       <when test="condUnitCd == 'CM011411'"> prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1 * #{condValue, jdbcType=NUMERIC}), 'MM') AND TRUNC(SYSDATE, 'MM') - (1 / (24 * 60 * 60)) /* 전월 */</when>
+                       <when test="condUnitCd == 'CM011407'"> prchs_dt >= TRUNC(SYSDATE - (#{condValue, jdbcType=NUMERIC}-1), 'DD') /* 당일 */</when>
+                       <when test="condUnitCd == 'CM011409'"> prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -12 * (#{condValue, jdbcType=NUMERIC} - 1)), 'YY') /* 당년 */</when>
+                       <when test="condUnitCd == 'CM011412'"> prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -12 * #{condValue, jdbcType=NUMERIC}), 'YY') AND TRUNC(SYSDATE, 'YY') - (1 / (24 * 60 * 60)) /* 전년 */</when>
+                       <when test="condUnitCd == 'CM011410'"> prchs_dt BETWEEN TRUNC(SYSDATE - #{condValue, jdbcType=NUMERIC}, 'DD') AND TRUNC(SYSDATE, 'DD') - (1 / (24 * 60 * 60)) /* 전일 */</when>
+                   </choose>
+               </if>
+           </trim>
+           AND  tenant_id = #{tenantId}
+           AND  payment_mtd_cd = 'OR000605'
+           AND  status_cd = 'OR000301'
+    </select>
+    
+    <!-- SKT 후불 결제 선물수신 금액 조회 -->
+    <select id="searchSktRecvAmountDetail" resultType="java.lang.Double" parameterType="SearchSktPayment">
+        SELECT /* PurchaseOrderSearchMapper."searchSktAmountDetail", SKT 후불 결제 선물수신 금액 조회, 이승택/nTels, 2014-01-22 */
+                <choose>
+                    <when test="applyUnitCd == 'CM011301'">NVL(SUM(a.payment_amt), 0) AS amount /* 금액 */</when>
+                </choose>
+          FROM (
+                SELECT  ia.prchs_id
+                      , ib.payment_amt
+                  FROM  tb_pr_prchs_dtl ia
+                      , tb_pr_payment ib
+                 WHERE  ia.tenant_id = ib.tenant_id
+                   AND  ia.prchs_id = ib.prchs_id
+                   AND  ia.use_tenant_id = #{tenantId}
+                   AND  ia.use_insd_usermbr_no = #{userKey}
+                   AND  ia.use_insd_device_id = #{deviceKey}
+                   AND  ia.prchs_case_cd = 'OR020302'
+                   <trim prefix="AND">
+                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(condUnitCd)">
+                           <choose>
+                               <when test="condUnitCd == 'CM011408'"> ia.prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -1 * (#{condValue, jdbcType=NUMERIC} - 1)), 'MM') /* 당월 */</when>
+                               <when test="condUnitCd == 'CM011411'"> ia.prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1 * #{condValue, jdbcType=NUMERIC}), 'MM') AND TRUNC(SYSDATE, 'MM') - (1 / (24 * 60 * 60)) /* 전월 */</when>
+                               <when test="condUnitCd == 'CM011407'"> ia.prchs_dt >= TRUNC(SYSDATE - (#{condValue, jdbcType=NUMERIC}-1), 'DD') /* 당일 */</when>
+                               <when test="condUnitCd == 'CM011409'"> ia.prchs_dt >= TRUNC(ADD_MONTHS(SYSDATE, -12 * (#{condValue, jdbcType=NUMERIC} - 1)), 'YY') /* 당년 */</when>
+                               <when test="condUnitCd == 'CM011412'"> ia.prchs_dt BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -12 * #{condValue, jdbcType=NUMERIC}), 'YY') AND TRUNC(SYSDATE, 'YY') - (1 / (24 * 60 * 60)) /* 전년 */</when>
+                               <when test="condUnitCd == 'CM011410'"> ia.prchs_dt BETWEEN TRUNC(SYSDATE - #{condValue, jdbcType=NUMERIC}, 'DD') AND TRUNC(SYSDATE, 'DD') - (1 / (24 * 60 * 60)) /* 전일 */</when>
+                           </choose>
+                       </if>
+                   </trim>
+                   AND  ia.status_cd = 'OR000301'
+                   AND  ib.payment_mtd_cd = 'OR000605'
+                   <trim prefix="AND">
+                      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(tenantProdGrpCd)">
+                          ia.tenant_prod_grp_cd LIKE #{tenantProdGrpCd, jdbcType=VARCHAR} || '%'
+                      </if>
+                   </trim>
+              GROUP BY  ia.prchs_id
+                      , ib.payment_amt
+               ) a
+    </select>
+    
+    <!-- 쇼핑 특가상품 구매된 건수 조회: 금일, 금일 사용자, 당월, 당월 사용자 구매 건수 -->
+    <select id="searchShoppingSpecialPurchaseCount" parameterType="PrchsDtl" resultType="java.lang.Integer">
+        SELECT /* PurchaseOrderSearchMapper.searchShoppingSpecialPurchaseCount, 쇼핑 특가상품 구매된 건수 조회, 이승택/nTels, 2014-01-22 */
+		        NVL(SUM(CEIL(payment_amt / #{specialCouponAmt})), 0) AS cnt
+		  FROM  tb_pr_payment
+		 WHERE  tenant_id = #{tenantId}
+		   AND  prchs_dt >= TRUNC(SYSDATE, 'DD')
+		   AND  payment_mtd_cd = 'OR000606'
+		   AND  cpn_id = #{specialCouponId}
+		   AND  status_cd = 'OR000301'
+		UNION ALL
+		SELECT
+		        NVL(SUM(CEIL(payment_amt / #{specialCouponAmt})), 0) AS cnt
+		  FROM  tb_pr_payment
+		 WHERE  tenant_id = #{tenantId}
+		   AND  insd_usermbr_no = #{userKey}
+		   AND  insd_device_id = #{deviceKey}
+		   AND  prchs_dt >= TRUNC(SYSDATE, 'DD')
+		   AND  payment_mtd_cd = 'OR000606'
+		   AND  cpn_id = #{specialCouponId}
+		   AND  status_cd = 'OR000301'
+		UNION ALL
+		SELECT
+		        NVL(SUM(CEIL(payment_amt / #{specialCouponAmt})), 0) AS cnt
+		  FROM  tb_pr_payment
+		 WHERE  tenant_id = #{tenantId}
+		   AND  prchs_dt >= TRUNC(SYSDATE, 'MM')
+		   AND  payment_mtd_cd = 'OR000606'
+		   AND  cpn_id = #{specialCouponId}
+		   AND  status_cd = 'OR000301'
+		UNION ALL
+		SELECT
+		        NVL(SUM(CEIL(payment_amt / #{specialCouponAmt})), 0) AS cnt
+		  FROM  tb_pr_payment
+		 WHERE  tenant_id = #{tenantId}
+		   AND  insd_usermbr_no = #{userKey}
+		   AND  insd_device_id = #{deviceKey}
+		   AND  prchs_dt >= TRUNC(SYSDATE, 'MM')
+		   AND  payment_mtd_cd = 'OR000606'
+		   AND  cpn_id = #{specialCouponId}
+		   AND  status_cd = 'OR000301'
+    </select>
+
+    <!-- ############################# TAKTODO 구매내역 이용 #################################### -->
+    
+    <!-- 구매상세 목록 조회 (예약된 구매정보 조회 등) -->
+    <select id="searchPurchaseDtlListByStatus" parameterType="PrchsDtl" resultType="PrchsDtlMore">
+        SELECT /* PurchaseOrderSearchMapper.searchPurchaseDtlListByStatus, 구매상세 목록 조회, 이승택/nTels, 2014-01-22 */
+                tenant_id
+              , prchs_id
+              , prchs_dtl_id
+              , use_tenant_id
+              , use_insd_usermbr_no
+              , use_insd_device_id
+              , tot_amt
+              , currency_cd
+              , prchs_req_path_cd
+              , client_ip
+              , send_insd_usermbr_no
+              , send_insd_device_id
+              , recv_conf_path_cd
+              , prod_id
+              , prod_amt
+              , prod_qty
+              , tenant_prod_grp_cd
+              , status_cd
+              , use_hiding_yn
+              , cancel_req_path_cd
+              , prchs_case_cd
+              , drm_yn
+              , TO_CHAR(prchs_dt,      'YYYYMMDDHH24MISS') AS prchs_dt
+              , TO_CHAR(use_start_dt,  'YYYYMMDDHH24MISS') AS use_start_dt
+              , TO_CHAR(use_expr_dt,   'YYYYMMDDHH24MISS') AS use_expr_dt
+              , TO_CHAR(dwld_start_dt, 'YYYYMMDDHH24MISS') AS dwld_start_dt
+              , TO_CHAR(dwld_expr_dt,  'YYYYMMDDHH24MISS') AS dwld_expr_dt
+              , TO_CHAR(cancel_dt,     'YYYYMMDDHH24MISS') AS cancel_dt
+              , TO_CHAR(recv_dt,       'YYYYMMDDHH24MISS') AS recv_dt
+              , reg_id
+              , upd_id
+              , resv_col_01
+              , resv_col_02
+              , resv_col_03
+              , resv_col_04
+              , resv_col_05
+              , prchs_prod_type
+              , part_chrg_prod_nm
+              , prchs_resv_desc
+              , contents_type
+              , use_fixrate_prod_id
+              , cpn_dlv_url
+          FROM  tb_pr_prchs_dtl 
+         WHERE  1 = 1
+         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(useInsdUsermbrNo)">
+           AND  use_tenant_id = #{useTenantId}
+           AND  use_insd_usermbr_no = #{useInsdUsermbrNo}
+         </if>
+           AND  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId}
+         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(statusCd)">
+           AND  status_cd = #{statusCd, jdbcType=VARCHAR}
+         </if>
+      ORDER BY  prchs_dtl_id
+    </select>
+</mapper>

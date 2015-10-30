@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="HistoryProdClsi">
+
+    <resultMap id="resultHistory" type="historyProdClsiList" > 
+        <result property="tenantId"           column="TENANT_ID"              jdbcType="VARCHAR" />
+        <result property="prchsId"            column="PRCHS_ID"               jdbcType="VARCHAR" />
+        <result property="prchsDtlId"         column="PRCHS_DTL_ID"           jdbcType="NUMERIC" />
+        <result property="useTenantId"        column="USE_TENANT_ID"          jdbcType="VARCHAR" />
+        <result property="useUserKey"         column="USE_INSD_USERMBR_NO"    jdbcType="VARCHAR" />
+        <result property="useDeviceKey"       column="USE_INSD_DEVICE_ID"     jdbcType="VARCHAR" />
+        <result property="recvTenantId"       column="RECV_TENANT_ID"         jdbcType="VARCHAR" />
+        <result property="recvUserKey"        column="RECV_INSD_USERMBR_NO"   jdbcType="VARCHAR" />
+        <result property="recvDeviceKey"      column="RECV_INSD_DEVICE_ID"    jdbcType="VARCHAR" />
+        <result property="prchsReqPathCd"     column="PRCHS_REQ_PATH_CD"      jdbcType="VARCHAR" />
+        <result property="prchsDt"            column="PRCHS_DT"               jdbcType="VARCHAR" />
+        <result property="totAmt"             column="TOT_AMT"                jdbcType="NUMERIC" />
+        <result property="sendUserKey"        column="SEND_INSD_USERMBR_NO"   jdbcType="VARCHAR" />
+        <result property="sendDeviceKey"      column="SEND_INSD_DEVICE_ID"    jdbcType="VARCHAR" />
+        <result property="recvDt"             column="RECV_DT"                jdbcType="VARCHAR" />
+        <result property="recvConfPathCd"     column="RECV_CONF_PATH_CD"      jdbcType="VARCHAR" />
+        <result property="tenantProdGrpCd"    column="TENANT_PROD_GRP_CD"     jdbcType="VARCHAR" />
+        <result property="prodId"             column="PROD_ID"                jdbcType="VARCHAR" />
+        <result property="prodAmt"            column="PROD_AMT"               jdbcType="NUMERIC" />
+        <result property="prodQty"            column="PROD_QTY"               jdbcType="NUMERIC" />
+        <result property="statusCd"           column="STATUS_CD"              jdbcType="VARCHAR" />
+        <result property="useStartDt"         column="USE_START_DT"           jdbcType="VARCHAR" />
+        <result property="useExprDt"          column="USE_EXPR_DT"            jdbcType="VARCHAR" />
+        <result property="hidingYn"           column="USE_HIDING_YN"         jdbcType="VARCHAR" />
+        <result property="cancelReqPathCd"    column="CANCEL_REQ_PATH_CD"     jdbcType="VARCHAR" />
+        <result property="cancelDt"           column="CANCEL_DT"              jdbcType="VARCHAR" />
+        <result property="prchsCaseCd"        column="PRCHS_CASE_CD"          jdbcType="VARCHAR" />
+        <result property="dwldStartDt"        column="DWLD_START_DT"          jdbcType="VARCHAR" />
+        <result property="dwldExprDt"         column="DWLD_EXPR_DT"           jdbcType="VARCHAR" />
+        <result property="cpnPublishCd"       column="CPN_PUBLISH_CD"         jdbcType="VARCHAR" />
+        <result property="cpnDlvUrl"          column="CPN_DLV_URL"            jdbcType="VARCHAR" />
+        <result property="useFixrateProdId"   column="USE_FIXRATE_PROD_ID"    jdbcType="VARCHAR" />
+        <result property="prchsProdType"      column="PRCHS_PROD_TYPE"        jdbcType="VARCHAR" />
+        <result property="drmYn"              column="DRM_YN"                 jdbcType="VARCHAR" />
+        <result property="alarmYn"            column="ALARM_YN"               jdbcType="VARCHAR" />
+        <result property="cpnAddinfo"         column="CPN_ADD_INFO"           jdbcType="VARCHAR" />
+        <result property="cpnBizProdSeq"      column="CPN_BIZ_PROD_SEQ"       jdbcType="VARCHAR" />
+        <result property="cpnBizOrderNo"      column="CPN_BIZ_ORDER_NO"       jdbcType="VARCHAR" />        
+        <!-- 예비컬럼 -->
+        <result property="resvCol01"          column="RESV_COL_01"            jdbcType="VARCHAR" />
+        <result property="resvCol02"          column="RESV_COL_02"            jdbcType="VARCHAR" />
+        <result property="resvCol03"          column="RESV_COL_03"            jdbcType="VARCHAR" />
+        <result property="resvCol04"          column="RESV_COL_04"            jdbcType="VARCHAR" />
+        <result property="resvCol05"          column="RESV_COL_05"            jdbcType="VARCHAR" />
+        
+    </resultMap>
+    
+	<sql id="puchaseSearchParam">
+	
+        WHERE tenant_id = #{tenantId}
+          AND prod_id = #{prodId}
+	       
+        <!-- 조회요청일자 체크(구매일) -->
+        <choose>
+            <when
+                test="startDt != null and startDt != '' and endDt != null and endDt != ''">
+                AND prchs_dt BETWEEN TO_DATE(#{startDt}, 'yyyymmddhh24miss') AND
+                TO_DATE(#{endDt}, 'yyyymmddhh24miss')
+            </when>
+            <when
+                test="startDt != null and startDt != '' and (endDt == null or endDt == '')">
+                AND prchs_dt &gt;= TO_DATE(#{startDt}, 'yyyymmddhh24miss')
+            </when>
+            <when
+                test="(startDt == null or startDt == '') and endDt != null and endDt != ''">
+                AND prchs_dt &lt;= TO_DATE(#{endDt}, 'yyyymmddhh24miss')
+            </when>
+        </choose>
+    </sql>
+	
+	
+	<!-- 보유상품조회 -->     
+    <select id="searchHistoryProdClsiList" parameterType="HistoryProdClsiRequest" resultMap="resultHistory">
+    
+        <include refid="CommonOracle.pagingStart"/>
+      
+                SELECT  ROW_NUMBER() OVER(ORDER BY prchs_dt DESC, prchs_id, prchs_dtl_id) AS num
+                      , tenant_id
+                      , prchs_id
+                      , prchs_dtl_id
+                      , use_tenant_id
+                      , use_insd_usermbr_no
+                      , use_insd_device_id
+                      , TO_CHAR(prchs_dt, 'yyyymmddhh24miss') AS prchs_dt
+                      , tot_amt
+                      , send_insd_usermbr_no
+                      , send_insd_device_id
+                      , prchs_req_path_cd
+                      , recv_dt
+                      , recv_conf_path_cd
+                      , prod_id
+                      , prod_amt
+                      , prod_qty
+                      , tenant_prod_grp_cd
+                      , status_cd
+                      , use_hiding_yn
+                      , TO_CHAR(use_start_dt, 'yyyymmddhh24miss') AS use_start_dt
+                      , TO_CHAR(use_expr_dt, 'yyyymmddhh24miss') AS use_expr_dt
+                      , cancel_req_path_cd
+                      , cancel_dt
+                      , cpn_publish_cd
+                      , cpn_dlv_url
+                      , prchs_case_cd
+                      , TO_CHAR(dwld_start_dt, 'yyyymmddhh24miss') AS dwld_start_dt
+                      , TO_CHAR(dwld_expr_dt, 'yyyymmddhh24miss') AS dwld_expr_dt
+                      , prchs_prod_type
+                      , use_fixrate_prod_id
+                      , drm_yn
+                      , alarm_yn
+                      , cpn_add_info
+                      , cpn_biz_prod_seq 
+                      , cpn_biz_order_no                      
+                      , resv_col_01
+                      , resv_col_02
+                      , resv_col_03
+                      , resv_col_04
+                      , resv_col_05
+                      
+                  FROM  tb_pr_prchs_dtl a
+                      
+                <!-- 조회조건 -->
+                <include refid="puchaseSearchParam"/>
+                
+        <include refid="CommonOracle.pagingEnd"/>  
+    </select>
+    
+    <!-- 보유상품건수조회 -->     
+    <select id="searchHistoryProdClsiCount" parameterType="HistoryProdClsiRequest" resultType="Integer">
+        SELECT /* HistoryMapper.searchHistoryProdClsiCount, 보유상품건수조회, 양주원/엔텔스, 2013-12-10 */ 
+                COUNT(*)
+          FROM  tb_pr_prchs_dtl
+           <!-- 조회조건 -->
+           <include refid="puchaseSearchParam"/>
+    </select>
+    
+    
+         
+         
+</mapper>
