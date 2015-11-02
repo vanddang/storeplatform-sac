@@ -44,7 +44,7 @@ public class Store extends CommonInfo implements Serializable {
 	private String salesStatus; // 판매 상태(restrict)
 	private List<Source> sourceList;
 	private String usagePeriod; // 이용기간 기준
-
+	private String baseYn; // 에피소드 상품 기준 여부
 	/**
 	 * 사용자 구매 가능 상태
 	 * <ul>
@@ -312,6 +312,21 @@ public class Store extends CommonInfo implements Serializable {
 	 */
 	public void setUsagePeriod(String usagePeriod) {
 		this.usagePeriod = usagePeriod;
+	}
+
+	/**
+	 * @return the baseYn
+	 */
+	public String getBaseYn() {
+		return baseYn;
+	}
+
+	/**
+	 * @param baseYn
+	 *            the baseYn to set
+	 */
+	public void setBaseYn(String baseYn) {
+		this.baseYn = baseYn;
 	}
 
 }

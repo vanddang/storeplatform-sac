@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * Interface Message Accrual Value Object.
  * 
- * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
+ * Updated on : 2015. 10. 15. Updated by : 이석희, I-S PLUS.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Authority extends CommonInfo implements Serializable {
@@ -33,6 +33,7 @@ public class Authority extends CommonInfo implements Serializable {
 	private Store store; // 소장 상품 정보
 	private Play play; // 대여 상품 정보
 	private String plus19Yn; // 19+ 상품 Yn
+	private String baseYn; // 기준 상품 여부(에피소드 상품)
 	
 	/**
 	 * @return the allow
@@ -130,5 +131,18 @@ public class Authority extends CommonInfo implements Serializable {
 	public void setPlus19Yn(String plus19Yn) {
 		this.plus19Yn = plus19Yn;
 	}
-	
+
+	/**
+	 * @return the baseYn
+	 */
+	public String getBaseYn() {
+		return baseYn;
+	}
+
+	/**
+	 * @param baseYn the baseYn to set
+	 */
+	public void setBaseYn(String baseYn) {
+		this.baseYn = baseYn;
+	}
 }
