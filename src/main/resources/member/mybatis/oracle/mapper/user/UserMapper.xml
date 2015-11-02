@@ -3867,8 +3867,12 @@
       FROM  tb_us_gift_chrg_info
       WHERE tenant_id = #{commonRequest.tenantID}
         AND insd_usermbr_no = #{userKey}
-        AND insd_sellermbr_no = #{sellerKey}
-        AND brand_nm = #{brandName}
+        <if test="sellerKey != null">
+            AND insd_sellermbr_no = #{sellerKey}
+        </if>
+        <if test="brandName != null">
+            AND brand_nm = #{brandName}
+        </if>
    </select>
    
     <!-- 상품권 충전정보 등록/수정 -->
