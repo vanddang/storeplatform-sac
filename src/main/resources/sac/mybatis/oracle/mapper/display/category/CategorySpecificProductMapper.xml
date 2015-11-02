@@ -1034,6 +1034,7 @@
              , TB.EXPO_SELLER_NM
              , TB.EXPO_SELLER_TELNO
              , TB.EXPO_SELLER_EMAIL
+             , TB.VERTICAL_YN
           FROM (
                  SELECT ROW_NUMBER() OVER ( PARTITION BY B.PROD_ID ORDER BY DECODE(ETPP.PROD_STATUS_CD, 'PD000403', 0, 1), J.LAST_DEPLOY_DT DESC ) AS RN
                       , A.UP_MENU_ID
@@ -1075,6 +1076,7 @@
                    <if test='contentsTypeCd == "PD002501"'>
                       , E.CHAPTER    
                       , E.BOOK_CLSF_CD
+                      , E.VERTICAL_YN
                       , M.FILE_PATH
                       , M.FILE_NM
                       , M.FILE_SIZE      
@@ -1082,6 +1084,7 @@
                    <if test='contentsTypeCd == "PD002502"'>
                       , L.CHAPTER    
                       , L.BOOK_CLSF_CD
+                      , L.VERTICAL_YN
                       , NVL(M1.FILE_PATH, M.FILE_PATH) AS FILE_PATH
                       , NVL(M1.FILE_NM, M.FILE_NM) AS FILE_NM
                       , NVL(M1.FILE_SIZE, M.FILE_SIZE) AS FILE_SIZE
