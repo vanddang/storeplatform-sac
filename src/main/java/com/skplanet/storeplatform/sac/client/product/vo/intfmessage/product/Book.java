@@ -126,6 +126,7 @@ public class Book extends CommonInfo implements Serializable {
 	private Integer bookLastChapter;
 	private Integer serialLastChapter;
 	private Integer magazineLastChapter;
+    private String verticalYn;
 	
 	
 	/**
@@ -520,5 +521,13 @@ public class Book extends CommonInfo implements Serializable {
 
     public void setBookType(String bookType) {
         this.bookType = bookType;
+    }
+
+    public String getVerticalYn() {
+        return verticalYn;
+    }
+
+    public void setVerticalYn(String verticalYn) {
+        this.verticalYn = verticalYn;
     }
 }
