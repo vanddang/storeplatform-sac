@@ -39,10 +39,14 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	private String isDownloadWifiOnly;
 	/** ICAS 인증 여부. */
 	private String isIcasAuth;
+
 	/** 실명인증 일자. */
-	private String realNameDate;
-	/** 실명인증 MDN. */
-	private String realNameMdn;
+	/*
+	 * private String realNameDate;
+	 *//** 실명인증 MDN. */
+	/*
+	 * private String realNameMdn;
+	 */
 
 	/**
 	 * @return the isPin
@@ -229,37 +233,31 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	 * 
 	 * @return realNameDate - realNameDate
 	 */
-	public String getRealNameDate() {
-		return this.realNameDate;
-	}
-
-	/**
+	/*
+	 * public String getRealNameDate() { return this.realNameDate; }
+	 *//**
 	 * 실명인증 일자(을)를 셋팅한다.
 	 * 
 	 * @param realNameDate
 	 *            realNameDate
 	 */
-	public void setRealNameDate(String realNameDate) {
-		this.realNameDate = realNameDate;
-	}
-
-	/**
+	/*
+	 * public void setRealNameDate(String realNameDate) { this.realNameDate = realNameDate; }
+	 *//**
 	 * 실명인증 MDN(을)를 리턴한다.
 	 * 
 	 * @return realNameMdn - realNameMdn
 	 */
-	public String getRealNameMdn() {
-		return this.realNameMdn;
-	}
-
-	/**
+	/*
+	 * public String getRealNameMdn() { return this.realNameMdn; }
+	 *//**
 	 * 실명인증 MDN(을)를 셋팅한다.
 	 * 
 	 * @param realNameMdn
 	 *            realNameMdn
 	 */
-	public void setRealNameMdn(String realNameMdn) {
-		this.realNameMdn = realNameMdn;
-	}
+	/*
+	 * public void setRealNameMdn(String realNameMdn) { this.realNameMdn = realNameMdn; }
+	 */
 
 }
