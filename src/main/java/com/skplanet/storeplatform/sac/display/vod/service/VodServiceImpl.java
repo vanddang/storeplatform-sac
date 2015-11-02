@@ -121,13 +121,12 @@ public class VodServiceImpl implements VodService {
 
 		// 판매 중지(다운로드 허용) 상품 포함 여부
 		// N (Default) : 판매중, Y : 판매중, 판매중지, 판매불가-다운허용
-		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
+//		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
 
 		// [2.x fadeout] 상품 상세 요청 시 예외 처리
 		// 요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
 		String temp = StringUtils.defaultString(this.sc2xFadeOutDummyProductChannel);
-		if (temp.contains(channelId))
-			includeProdStopStatus = "Y";
+//		if (temp.contains(channelId)) includeProdStopStatus = "Y";
 
 		// Parameter 셋팅
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -141,7 +140,7 @@ public class VodServiceImpl implements VodService {
 		param.put("orderedBy", orderedBy);
 		param.put("userKey", userKey);
 		param.put("deviceKey", deviceKey);
-		param.put("includeProdStopStatus", includeProdStopStatus);
+//		param.put("includeProdStopStatus", includeProdStopStatus);
 		param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
 		param.put("count", req.getCount() == null ? 20 : req.getCount());
 		param.put("baseYn", "Y");
@@ -233,12 +232,12 @@ public class VodServiceImpl implements VodService {
 
 		// 판매 중지(다운로드 허용) 상품 포함 여부
 		// N (Default) : 판매중, Y : 판매중, 판매중지, 판매불가-다운허용
-		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
+//		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
 
 		// [2.x fadeout] 상품 상세 요청 시 예외 처리
 		// 요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
 		String temp = StringUtils.defaultString(this.sc2xFadeOutDummyProductChannel);
-		if (temp.contains(channelId)) includeProdStopStatus = "Y";
+//		if (temp.contains(channelId)) includeProdStopStatus = "Y";
 
 		// Parameter 셋팅
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -252,7 +251,7 @@ public class VodServiceImpl implements VodService {
 		param.put("orderedBy", orderedBy);
 		param.put("userKey", userKey);
 		param.put("deviceKey", deviceKey);
-		param.put("includeProdStopStatus", includeProdStopStatus);
+//		param.put("includeProdStopStatus", includeProdStopStatus);
 		param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
 		param.put("count", req.getCount() == null ? 20 : req.getCount());
 		param.put("baseYn", "N");
@@ -855,7 +854,7 @@ public class VodServiceImpl implements VodService {
 					}
 				}
 			}			
-
+			play.setBaseYn(mapperVO.getBaseYn());
 		}
 		return play;
 	}
@@ -918,7 +917,8 @@ public class VodServiceImpl implements VodService {
 						store.setUsagePeriod("purchase");
 					}
 				}
-			}		
+			}
+			store.setBaseYn(mapperVO.getBaseYn());
 		}
 		return store;
 	}	

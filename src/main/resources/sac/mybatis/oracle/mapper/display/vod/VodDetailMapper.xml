@@ -126,18 +126,12 @@
 		            AND D.USE_POLICY_ID = M.USE_POLICY_ID(+)
 		            AND D.SVC_GRP_CD = 'DP000203'  AND D.CONTENTS_TYPE_CD = 'PD002502' AND D.SVC_TYPE_CD IN ('DP001112', 'DP001115') 
 		            AND D.PROD_ID = G.PROD_ID AND G.TENANT_ID = #{tenantId}
-					<choose>
-	                <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
-	                AND G.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-	                </when>
-	                <otherwise>
 	                AND G.PROD_STATUS_CD = 'PD000403'
-	                </otherwise>
-	                </choose>
 		            AND G.EXPO_YN = 'Y'
 		            AND D.PROD_ID = SC.PROD_ID AND SC.SALE_YN = 'Y'
 		            AND D.PROD_ID = K.PROD_ID AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 				   	AND L.DEVICE_MODEL_CD = #{deviceModel} AND L.USE_YN = 'Y'
+					AND D.BASE_YN = 'Y'
 		          GROUP BY RSHP.PROD_ID, G.TENANT_ID, C.LANG_CD
             ) P 
 		    , TB_DP_PROD P2 
@@ -466,14 +460,7 @@
 		                    AND MP.PROD_ID = PD.PROD_ID
 		                    AND PD.PROD_ID = PREFIX.PROD_ID(+) 
 		                    AND TP.TENANT_ID = #{tenantId} AND TP.EXPO_YN = 'Y'
-		                    <choose>
-			                <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
-			                AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-			                </when>
-			                <otherwise>
 			                AND TP.PROD_STATUS_CD = 'PD000403'
-			                </otherwise>
-			                </choose>
 		                    AND DSC.PROD_ID = PD.PROD_ID AND DSC.LANG_CD = #{langCd}
 		                    AND PD.PROD_ID = CPM.PROD_ID
 		                    AND CPM.MENU_ID = MC.MENU_ID AND MC.USE_YN = 'Y'
@@ -583,14 +570,7 @@
                            AND MP.PROD_ID = PD.PROD_ID
                            AND TP.TENANT_ID = #{tenantId}
                            AND TP.EXPO_YN = 'Y'
-                           <choose>
-                           <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
-                           AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-                           </when>
-                           <otherwise>
                            AND TP.PROD_STATUS_CD = 'PD000403'
-                           </otherwise>
-                           </choose>
                            AND PD.PROD_ID = CPM.PROD_ID
                            AND CPM.MENU_ID = MC.MENU_ID
                            AND CPM.MENU_ID = CD.MENU_ID AND CD.LANG_CD = #{langCd}
@@ -847,14 +827,7 @@
 								                              AND MP.PROD_ID = PD.PROD_ID
 								                              AND PD.PROD_ID = PREFIX.PROD_ID(+) 
 								                              AND TP.TENANT_ID = #{tenantId} AND TP.EXPO_YN = 'Y'
-								                              <choose>
-								                              <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
-								                              AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-								                              </when>
-								                              <otherwise>
 								                              AND TP.PROD_STATUS_CD = 'PD000403'
-								                              </otherwise>
-								                              </choose>
 								                              AND DSC.PROD_ID = PD.PROD_ID AND DSC.LANG_CD = #{langCd}
 								                              AND PD.PROD_ID = CPM.PROD_ID
 								                              AND CPM.MENU_ID = MC.MENU_ID AND MC.USE_YN = 'Y'
@@ -942,7 +915,8 @@
                    WHEN PLAY_DWLD_STRM='DP010502' THEN 'strm'
                    WHEN PLAY_DWLD_STRM='DP010503' THEN 'both' END
               ) AS PLAY_DL_STRM_CD                  
-            , HDV_SPRT_YN              
+            , HDV_SPRT_YN
+			, BASE_YN
         FROM
         (
             SELECT  
@@ -964,6 +938,7 @@
                , PLAY_PROD_ID, PLAY_PROD_AMT, PLAY_PROD_NET_AMT, PLAY_DRM_YN, PLAY_PROD_STATUS_CD, PLAY_USE_PERIOD, PLAY_USE_PERIOD_UNIT_CD
                , STORE_DWLD_STRM, PLAY_DWLD_STRM                     
                , HDV_SPRT_YN
+			   , BASE_YN
              FROM
                   (
                 SELECT * FROM (
@@ -1017,6 +992,7 @@
                           , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
                           , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD                                                     
                           , MAX( T1.HDV_SPRT_YN ) AS HDV_SPRT_YN
+						  , MAX( T1.BASE_YN) AS BASE_YN
                         FROM
                            (
                             SELECT
@@ -1045,6 +1021,7 @@
                                 , PRC.PROD_AMT, PRC.PROD_NET_AMT, PD.DRM_YN
                                 , TP.PROD_STATUS_CD                                
                                 , DV.HDV_SPRT_YN
+								, PD.BASE_YN
                           FROM TB_DP_PROD_RSHP PR
                              , TB_DP_PROD PD
                              , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
@@ -1074,14 +1051,7 @@
                             AND MP.PROD_ID = PD.PROD_ID
                             AND PD.PROD_ID = PREFIX.PROD_ID(+) 
                             AND TP.TENANT_ID = #{tenantId} AND TP.EXPO_YN = 'Y'
-                            <choose>
-                            <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
-                            AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-                            </when>
-                            <otherwise>
                             AND TP.PROD_STATUS_CD = 'PD000403'
-                            </otherwise>
-                            </choose>
                             AND DSC.PROD_ID = PD.PROD_ID AND DSC.LANG_CD = #{langCd}
                             AND PD.PROD_ID = CPM.PROD_ID
                             AND CPM.MENU_ID = MC.MENU_ID AND MC.USE_YN = 'Y'
@@ -1144,9 +1114,9 @@
                      , T1.CHAPTER
                      , T1.LANG_CD
                      , RANK() OVER (ORDER BY T1.CHAPTER DESC) AS RNK
-                     , MAX(CHNL_PROD_ID) AS CHNL_PROD_ID
-                     , MAX(PROD_ID) AS PROD_ID
-                     , MAX(T1.LAST_DEPLOY_DT) AS LAST_DEPLOY_DT
+                     , MAX( CHNL_PROD_ID) AS CHNL_PROD_ID
+                     , MAX( PROD_ID) AS PROD_ID
+                     , MAX( T1.LAST_DEPLOY_DT) AS LAST_DEPLOY_DT
                      , MAX( T1.TENANT_ID ) AS TENANT_ID
                      , MAX( T1.MENU_ID ) AS MENU_ID
                      , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.PROD_AMT ) ) AS STORE_PROD_AMT
@@ -1177,7 +1147,8 @@
                              , UP.USE_PERIOD
                              , CD.LANG_CD
                              , PRC.PROD_AMT
-                             , PRC.PROD_NET_AMT 
+                             , PRC.PROD_NET_AMT
+                             , PD.BASE_YN
                           FROM TB_DP_PROD_RSHP PR
                              , TB_DP_PROD PD
                              , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
@@ -1199,14 +1170,7 @@
                            AND MP.PROD_ID = PD.PROD_ID
                            AND TP.TENANT_ID = #{tenantId}
                            AND TP.EXPO_YN = 'Y'
-                           <choose>
-                           <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
-                           AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-                           </when>
-                           <otherwise>
                            AND TP.PROD_STATUS_CD = 'PD000403'
-                           </otherwise>
-                           </choose>
                            AND PD.PROD_ID = CPM.PROD_ID
                            AND CPM.MENU_ID = MC.MENU_ID
                            AND CPM.MENU_ID = CD.MENU_ID AND CD.LANG_CD = #{langCd}

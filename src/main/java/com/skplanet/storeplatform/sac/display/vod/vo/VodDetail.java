@@ -318,6 +318,9 @@ public class VodDetail extends CommonInfo {
 	private String subContentsId;
 	/** 상품유형 구분(channel, episode) */
 	private String productInfoType;
+	/** 기준 에피소드 상품 여부 */
+	private String baseYn;
+
 	public String getTopMenuId() {
 		return this.topMenuId;
 	}
@@ -1796,5 +1799,12 @@ public class VodDetail extends CommonInfo {
 	public void setProductInfoType(String productInfoType) {
 		this.productInfoType = productInfoType;
 	}
-	
+
+	public String getBaseYn() {
+		return baseYn;
+	}
+
+	public void setBaseYn(String baseYn) {
+		this.baseYn = baseYn;
+	}
 }
