@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.proxy.SCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.CreateGiftChargeInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.CreateGiftChargeInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.RemoveSSOCredentialSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.RemoveSSOCredentialSacRes;
 
@@ -30,4 +32,17 @@ public interface UserSCI {
 	@RequestMapping(value = "/removeSSOCredential", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveSSOCredentialSacRes removeSSOCredential(@RequestBody @Validated RemoveSSOCredentialSacReq request);
+
+	/**
+	 * <pre>
+	 * 2.1.16.	회원 상품권 충전 정보 등록
+	 * </pre>
+	 * 
+	 * @param request
+	 *            CreateGiftChargeInfoSacRes
+	 * @return CreateGiftChargeInfoSacReq
+	 */
+	@RequestMapping(value = "/createGiftChargeInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateGiftChargeInfoSacRes createGiftChargeInfo(@RequestBody @Validated CreateGiftChargeInfoSacReq request);
 }

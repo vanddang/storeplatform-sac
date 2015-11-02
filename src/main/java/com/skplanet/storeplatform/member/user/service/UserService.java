@@ -29,6 +29,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceR
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateGiftChargeInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateGiftChargeInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
@@ -779,5 +781,16 @@ public interface UserService {
 	 * @return TransferDeliveryResponse
 	 */
 	public TransferDeliveryResponse excuteTransferDelivery(TransferDeliveryRequest transferDeliveryRequest);
+
+	/**
+	 * <pre>
+	 * 상품권 충전 정보 등록.
+	 * </pre>
+	 * 
+	 * @param createGiftChargeInfoRequest
+	 *            CreateGiftChargeInfoRequest
+	 * @return CreateGiftChargeInfoResponse
+	 */
+	public CreateGiftChargeInfoResponse createGiftChargeInfo(CreateGiftChargeInfoRequest createGiftChargeInfoRequest);
 
 }

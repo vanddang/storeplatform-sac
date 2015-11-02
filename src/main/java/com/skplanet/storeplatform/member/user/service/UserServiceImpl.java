@@ -63,6 +63,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceR
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateGiftChargeInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateGiftChargeInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
@@ -71,6 +73,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceMbrStatus;
 import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceSystemStats;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.GiftChargeInfo;
 import com.skplanet.storeplatform.member.client.user.sci.vo.Grade;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantResponse;
@@ -4161,6 +4164,32 @@ public class UserServiceImpl implements UserService {
 				"response.ResultMessage.success"));
 
 		return transferDeliveryResponse;
+	}
+
+	@Override
+	public CreateGiftChargeInfoResponse createGiftChargeInfo(CreateGiftChargeInfoRequest createGiftChargeInfoRequest) {
+		CreateGiftChargeInfoResponse createGiftChargeInfoResponse = new CreateGiftChargeInfoResponse();
+		Integer row = 0;
+
+		// 01. 브랜드에 매핑되는 제휴사 아이디 5개 초과 여부 체크
+		@SuppressWarnings("unchecked")
+		List<GiftChargeInfo> giftChargeInfoList = (List<GiftChargeInfo>) this.commonDAO.queryForList(
+				"User.searchGiftChargeInfoList", createGiftChargeInfoRequest);
+		if (giftChargeInfoList != null && giftChargeInfoList.size() >= 5) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.exceedMaxCount", ""));
+		}
+
+		// 02. 상품권 충전 정보 등록/수정 (중복체크 항목 : tenantId, userKey, sellerKey, 브랜드, 제휴사 ID)
+		row = this.commonDAO.update("User.updateGiftChargeInfo", createGiftChargeInfoRequest);
+		if (row <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+		}
+
+		createGiftChargeInfoResponse.setUserKey(createGiftChargeInfoRequest.getUserKey());
+		createGiftChargeInfoResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+
+		return createGiftChargeInfoResponse;
 	}
 
 }

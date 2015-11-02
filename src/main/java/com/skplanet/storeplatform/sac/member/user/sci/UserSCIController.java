@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.UserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.CreateGiftChargeInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.CreateGiftChargeInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.RemoveSSOCredentialSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.RemoveSSOCredentialSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -49,6 +51,23 @@ public class UserSCIController implements UserSCI {
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		RemoveSSOCredentialSacRes response = this.userSCIService.removeSSOCredential(requestHeader, request);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
+		return response;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.UserSCI#createGiftChargeInfo(com.skplanet.
+	 * storeplatform.sac.client.internal.member.user.vo.CreateGiftChargeInfoSacReq)
+	 */
+	@Override
+	@RequestMapping(value = "/createGiftChargeInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateGiftChargeInfoSacRes createGiftChargeInfo(@RequestBody @Validated CreateGiftChargeInfoSacReq request) {
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		CreateGiftChargeInfoSacRes response = this.userSCIService.createGiftChargeInfo(requestHeader, request);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
 		return response;
 	}

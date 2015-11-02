@@ -52,6 +52,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceR
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateGiftChargeInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateGiftChargeInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
@@ -3765,6 +3767,49 @@ public class UserSCIController implements UserSCI {
 		}
 
 		return transferDeliveryResponse;
+	}
+
+	@Override
+	public CreateGiftChargeInfoResponse createGiftChargeInfo(CreateGiftChargeInfoRequest createGiftChargeInfoRequest) {
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - 상품권 충전소정보 저장 ");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		CreateGiftChargeInfoResponse createGiftChargeInfoResponse = null;
+
+		// 입력 파라미터가 없음
+		if (createGiftChargeInfoRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (createGiftChargeInfoRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 테넌트 아이디 없음
+		if (createGiftChargeInfoRequest.getCommonRequest().getTenantID() == null
+				|| createGiftChargeInfoRequest.getCommonRequest().getTenantID().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
+		}
+
+		// 필수 파라미터, 회원 키, 판매자 키, 제휴사 브랜드명, 제휴사 회원 아이디, 충전자 이름
+		if (StringUtils.isEmpty(createGiftChargeInfoRequest.getUserKey())
+				|| StringUtils.isEmpty(createGiftChargeInfoRequest.getSellerKey())
+				|| StringUtils.isEmpty(createGiftChargeInfoRequest.getBrandName())
+				|| StringUtils.isEmpty(createGiftChargeInfoRequest.getBrandSiteId())
+				|| StringUtils.isEmpty(createGiftChargeInfoRequest.getChargerName())) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+			createGiftChargeInfoResponse = this.service.createGiftChargeInfo(createGiftChargeInfoRequest);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return createGiftChargeInfoResponse;
 	}
 
 }

@@ -3851,4 +3851,66 @@
                    <if test="regDate != null">,TO_DATE(#{regDate}, 'YYYYMMDDHH24MISS')</if>
 	              ) 
     </insert>
+    
+   <!-- 상품권충전소 조회 -->
+   <select id="searchGiftChargeInfoList" parameterType="createGiftChargeInfoRequest" resultType="giftChargeInfo">
+     SELECT /* UserMapper.xml, searchGiftChargeInfoList, SAC(SC), 윤보영, 2015-11-11 */
+            seq,
+            tenant_id       AS tenantId,
+            insd_usermbr_no AS userKey,
+            insd_sellermbr_no AS sellerKey,
+            brand_nm          AS brandNm,
+            brand_site_id     AS brandSiteId,
+            charger_nm        AS chargerNm,
+            TO_CHAR (reg_dt, 'YYYYMMDDHH24MISS') AS regDt,
+            TO_CHAR (upd_dt, 'YYYYMMDDHH24MISS') AS updDt
+      FROM  tb_us_gift_chrg_info
+      WHERE tenant_id = #{commonRequest.tenantID}
+        AND insd_usermbr_no = #{userKey}
+        AND insd_sellermbr_no = #{sellerKey}
+        AND brand_nm = #{brandName}
+   </select>
+   
+    <!-- 상품권 충전정보 등록/수정 -->
+    <update id="updateGiftChargeInfo" parameterType="createGiftChargeInfoRequest">
+       MERGE  /* UserMapper.xml, updateGiftChargeInfo, SAC(SC), 윤보영, 2015-11-11 */
+              INTO tb_us_gift_chrg_info u
+              USING DUAL ON 
+              (
+                      u.tenant_id        = #{commonRequest.tenantID}
+                  AND u.insd_usermbr_no  = #{userKey}
+                  AND u.insd_sellermbr_no  = #{sellerKey}
+                  AND u.brand_nm  = #{brandName}
+                  AND u.brand_site_id  = #{brandSiteId}
+              )
+      /* 상품권 충전정보가 존재할 경우 수정 처리 */
+      WHEN MATCHED THEN
+         UPDATE
+            SET  upd_dt = SYSDATE,
+                 charger_nm = #{chargerName}
+
+      /* 상품권 충전정보가 없는 경우 등록 처리 */
+      WHEN NOT MATCHED THEN
+         INSERT 
+                 (
+                      seq
+                     ,tenant_id
+                     ,insd_usermbr_no
+                     ,insd_sellermbr_no
+                     ,brand_nm
+                     ,brand_site_id
+                     ,charger_nm
+                     ,reg_dt
+                 )
+         VALUES  (
+                      sq_us_gift_chrg_info.NEXTVAL
+                     ,#{commonRequest.tenantID}
+                     ,#{userKey}
+                     ,#{sellerKey}
+                     ,#{brandName}
+                     ,#{brandSiteId}
+                     ,#{chargerName}
+                     ,SYSDATE
+                 )
+    </update>
 </mapper>
