@@ -1203,11 +1203,15 @@
 		  FROM TB_DP_PROD_RSHP PR
 		     , TB_DP_PROD PD
 		     , TB_DP_SUB_CONTENTS SC
+		     , TB_DP_TENANT_PROD TP
 		 WHERE PR.PROD_ID = #{channelId}
 		   AND PD.PROD_ID = PR.PART_PROD_ID
 		   AND PD.PROD_ID = SC.PROD_ID
 		   AND PD.CID = #{cid}
-		 ORDER BY SC.SUB_CONTENTS_ID   
+		   AND TP.TENANT_ID = #{tenantId}
+		   AND PD.PROD_ID = TP.PROD_ID
+		   AND TP.PROD_STATUS_CD = 'PD000403'
+		 ORDER BY SC.SUB_CONTENTS_ID  , PD.LAST_DEPLOY_DT DESC
     </select>    
     
 </mapper>
