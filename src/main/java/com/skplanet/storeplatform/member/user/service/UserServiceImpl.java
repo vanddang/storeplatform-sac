@@ -4171,18 +4171,33 @@ public class UserServiceImpl implements UserService {
 		CreateGiftChargeInfoResponse createGiftChargeInfoResponse = new CreateGiftChargeInfoResponse();
 		Integer row = 0;
 
-		// 01. 브랜드에 매핑되는 제휴사 아이디 5개 초과 여부 체크
-		@SuppressWarnings("unchecked")
-		List<GiftChargeInfo> giftChargeInfoList = (List<GiftChargeInfo>) this.commonDAO.queryForList(
-				"User.searchGiftChargeInfoList", createGiftChargeInfoRequest);
-		if (giftChargeInfoList != null && giftChargeInfoList.size() >= 5) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.exceedMaxCount", ""));
-		}
+		// 중복체크 항목 : tenantId, userKey, sellerKey, 브랜드, 제휴사 ID
+		GiftChargeInfo giftChargeInfo = (GiftChargeInfo) this.commonDAO.queryForObject("User.searchGiftChargeInfo",
+				createGiftChargeInfoRequest);
 
-		// 02. 상품권 충전 정보 등록/수정 (중복체크 항목 : tenantId, userKey, sellerKey, 브랜드, 제휴사 ID)
-		row = this.commonDAO.update("User.updateGiftChargeInfo", createGiftChargeInfoRequest);
-		if (row <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+		// 신규 등록 시
+		if (giftChargeInfo == null) {
+			// 01-01. 브랜드에 매핑되는 제휴사 아이디 5개 초과 여부 체크
+			@SuppressWarnings("unchecked")
+			List<GiftChargeInfo> giftChargeInfoList = (List<GiftChargeInfo>) this.commonDAO.queryForList(
+					"User.searchGiftChargeInfoList", createGiftChargeInfoRequest);
+
+			if (giftChargeInfoList != null && giftChargeInfoList.size() >= 5) {
+				throw new StorePlatformException(this.getMessage("response.ResultCode.exceedMaxCount", ""));
+			}
+
+			// 01-02. 상품권 충전 정보 등록
+			row = this.commonDAO.update("User.insertGiftChargeInfo", createGiftChargeInfoRequest);
+			if (row <= 0) {
+				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+			}
+
+		} else {// 수정 시
+			// 02-01. 상품권 충전 정보 수정
+			row = this.commonDAO.update("User.updateGiftChargeInfo", createGiftChargeInfoRequest);
+			if (row <= 0) {
+				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+			}
 		}
 
 		createGiftChargeInfoResponse.setUserKey(createGiftChargeInfoRequest.getUserKey());
