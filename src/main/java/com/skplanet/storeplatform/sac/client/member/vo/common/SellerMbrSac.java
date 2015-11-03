@@ -101,6 +101,8 @@ public class SellerMbrSac extends CommonInfo {
 	private String bizRegNumber;
 	/** 통신판매업 미신고사유 코드. */
 	private String bizUnregReason;
+	/** CEO 이름. */
+	private String ceoName;
 
 	/**
 	 * @return the sellerKey
@@ -730,6 +732,21 @@ public class SellerMbrSac extends CommonInfo {
 	 */
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	/**
+	 * @return the ceoName
+	 */
+	public String getCeoName() {
+		return this.ceoName;
+	}
+
+	/**
+	 * @param ceoName
+	 *            the ceoName to set
+	 */
+	public void setCeoName(String ceoName) {
+		this.ceoName = ceoName;
 	}
 
 }
