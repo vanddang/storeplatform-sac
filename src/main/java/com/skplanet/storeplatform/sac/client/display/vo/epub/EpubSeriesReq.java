@@ -72,7 +72,7 @@ public class EpubSeriesReq extends CommonInfo {
      * </ul>
      * 
      */
-    private String includeProdStopStatus;
+//    private String includeProdStopStatus;
     
 	/**
 	 * @return the channelId
@@ -221,14 +221,14 @@ public class EpubSeriesReq extends CommonInfo {
 	/**
 	 * @return the includeProdStopStatus
 	 */
-	public String getIncludeProdStopStatus() {
+/*	public String getIncludeProdStopStatus() {
 		return includeProdStopStatus;
-	}
+	}*/
 	/**
 	 * @param includeProdStopStatus the includeProdStopStatus to set
 	 */
-	public void setIncludeProdStopStatus(String includeProdStopStatus) {
+/*	public void setIncludeProdStopStatus(String includeProdStopStatus) {
 		this.includeProdStopStatus = includeProdStopStatus;
-	}
+	}*/
 	
 }
