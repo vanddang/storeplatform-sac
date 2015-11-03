@@ -257,6 +257,8 @@ public class AppServiceImpl implements AppService {
         distributor.setName(appDetail.getExpoSellerNm());
         distributor.setTel(appDetail.getExpoSellerTelno());
         distributor.setEmail(appDetail.getExpoSellerEmail());
+        distributor.setSellerWebUrl(appDetail.getExpoSellerWebUrl());
+        distributor.setPolicyInfoUrl(appDetail.getPolicyInfoUrl());
         product.setDistributor(distributor);
 
         res.setProduct(product);

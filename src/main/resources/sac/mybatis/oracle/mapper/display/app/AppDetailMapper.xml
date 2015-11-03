@@ -44,7 +44,9 @@
             MCM.MENU_ID,
             MD.MENU_NM,
             MD.MENU_DESC,
-            NVL2(SSML.STATS_KEY, 'Y', 'N') AS LIKE_YN
+            NVL2(SSML.STATS_KEY, 'Y', 'N') AS LIKE_YN,
+            PD.EXPO_SELLER_WEB_URL,
+            APP.POLICY_INFO_URL
             ]]>
         FROM
             TB_DP_PROD PD

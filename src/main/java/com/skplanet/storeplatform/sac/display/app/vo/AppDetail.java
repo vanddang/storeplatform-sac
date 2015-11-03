@@ -46,6 +46,8 @@ public class AppDetail extends CommonInfo {
     private String apkApiLevelCd;
     private Integer sdkMin;
     private Integer sdkMax;
+    private String expoSellerWebUrl;
+    private String policyInfoUrl;
 
     public String getPartParentClsfCd() {
         return partParentClsfCd;
@@ -317,5 +319,21 @@ public class AppDetail extends CommonInfo {
 
     public void setSdkMax(Integer sdkMax) {
         this.sdkMax = sdkMax;
+    }
+
+    public String getExpoSellerWebUrl() {
+        return expoSellerWebUrl;
+    }
+
+    public void setExpoSellerWebUrl(String expoSellerWebUrl) {
+        this.expoSellerWebUrl = expoSellerWebUrl;
+    }
+
+    public String getPolicyInfoUrl() {
+        return policyInfoUrl;
+    }
+
+    public void setPolicyInfoUrl(String policyInfoUrl) {
+        this.policyInfoUrl = policyInfoUrl;
     }
 }
