@@ -3876,7 +3876,7 @@
    </select>
    
    <!-- 상품권충전소 정보 조회 -->
-   <select id="searchGiftChargeInfo" parameterType="createGiftChargeInfoRequest" resultType="giftChargeInfo">
+   <select id="searchGiftChargeInfo" parameterType="searchGiftChargeInfoRequest" resultType="giftChargeInfo">
      SELECT /* UserMapper.xml, searchGiftChargeInfo, SAC(SC), 윤보영, 2015-11-11 */
             seq,
             tenant_id       AS tenantId,
