@@ -184,9 +184,7 @@ public class EpubServiceImpl implements EpubService {
                 	param.put("representImgCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD); //코믹 에피소드 대표이미지
 
 				List<EpubDetail> subProductList = this.getEpubSeries(param);
-
-                ExistenceListRes existenceListRes = this.getExistenceScReses(req.getTenantId(), userKey, deviceKey, subProductList);
-				this.mapSubProductList(param, product, subProductList, existenceListRes);
+				this.mapSubProductList(param, product, subProductList);
 			}
             res.setProduct(product);
         } else {
@@ -306,11 +304,7 @@ public class EpubServiceImpl implements EpubService {
             if(StringUtils.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID, epubDetail.getTopMenuId()))
             	param.put("representImgCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD); //코믹 에피소드 대표이미지
             List<EpubDetail> subProductList = this.getEpubSeries(param);
-            if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
-            	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
-            	existenceListRes = this.getExistenceScReses(req.getTenantId(), userKey, deviceKey, subProductList);
-            }
-            this.mapSubProductList(param, product, subProductList, existenceListRes);
+            this.mapSubProductList(param, product, subProductList);
 
             res.setProduct(product);
         } else {
@@ -510,7 +504,7 @@ public class EpubServiceImpl implements EpubService {
 		}
 
         // 이용권한 정보
-        product.setRights(this.mapRights(mapperVO, param, null));
+        product.setRights(this.mapRights(mapperVO, param));
 
 		// 메뉴 정보
 		product.setMenuList(this.mapMenuList(mapperVO));
@@ -782,10 +776,9 @@ public class EpubServiceImpl implements EpubService {
      * Mapping  rights
      * @param mapperVO
      * @param param
-     * @param existenceMap
      * @return
 	 */
-	private Rights mapRights(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceRes> existenceMap) {
+	private Rights mapRights(EpubDetail mapperVO, Map<String, Object> param) {
 		Rights rights = new Rights();
 		//rights.setAllow(mapperVO.getDwldAreaLimtYn());
 
@@ -803,11 +796,11 @@ public class EpubServiceImpl implements EpubService {
 	
 		// 소장 정보
 		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
-			rights.setStore(this.mapStore(mapperVO, param, existenceMap));
+			rights.setStore(this.mapStore(mapperVO, param));
 		}
 		// 대여 정보
 		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
-			rights.setPlay(this.mapPlay(mapperVO, param, existenceMap));
+			rights.setPlay(this.mapPlay(mapperVO, param));
 		}
 
 		// 미리보기
@@ -854,10 +847,9 @@ public class EpubServiceImpl implements EpubService {
 	 * Mapping Play
      * @param mapperVO
      * @param param
-     * @param existenceMap
      * @return
 	 */
-	private Play mapPlay(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceRes> existenceMap) {
+	private Play mapPlay(EpubDetail mapperVO, Map<String, Object> param) {
 		Play play = new Play();
 
 		List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -885,12 +877,6 @@ public class EpubServiceImpl implements EpubService {
 		// 판매상태
 		play.setSalesStatus(mapperVO.getPlayProdStatusCd());
 
-        // 사용자 구매 가능 상태
-        if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && param.containsKey("userKey")  && param.containsKey("deviceKey")) {
-            String userPurStatus = this.getSalesStatus(mapperVO, (String) param.get("userKey"), (String) param.get("deviceKey"));
-            if(userPurStatus != null)  play.setUserPurStatus(userPurStatus);
-        }
-
 		return play;
 	}
 
@@ -899,10 +885,9 @@ public class EpubServiceImpl implements EpubService {
 	 * Mapping Store
      * @param mapperVO
      * @param param
-     * @param existenceMap
      * @return
 	 */
-	private Store mapStore(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceRes> existenceMap) {
+	private Store mapStore(EpubDetail mapperVO, Map<String, Object> param) {
 		Store store = new Store();
 
 		List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -927,13 +912,6 @@ public class EpubServiceImpl implements EpubService {
 
 		// 판매상태
 		store.setSalesStatus(mapperVO.getStoreProdStatusCd());
-
-        // 사용자 구매 가능 상태
-        if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && param.containsKey("userKey")  && param.containsKey("deviceKey")) {
-            String userPurStatus = this.getSalesStatus(mapperVO, (String) param.get("userKey"), (String) param.get("deviceKey"));
-            if(userPurStatus != null)  store.setUserPurStatus(userPurStatus);
-        }
-
 
 		return store;
 	}
@@ -963,23 +941,14 @@ public class EpubServiceImpl implements EpubService {
      * @param param
      * @param product
      * @param epubSeriesList
-     * @param existenceListRes
      */
-	private void mapSubProductList(Map<String, Object> param, Product product, List<EpubDetail> epubSeriesList, ExistenceListRes existenceListRes) {
+	private void mapSubProductList(Map<String, Object> param, Product product, List<EpubDetail> epubSeriesList) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
         List<Product> subProjectList = new ArrayList<Product>();
 
         if(epubSeriesList != null && epubSeriesList.size() > 0) {
             EpubDetail temp = epubSeriesList.get(0);
             product.setSubProductTotalCount(temp.getTotalCount());
-
-            //기구매 체크
-            Map<String, ExistenceRes> existenceMap = new HashMap<String, ExistenceRes>();
-            if(existenceListRes != null) {
-	            for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
-	                existenceMap.put(existenceRes.getProdId(), existenceRes);
-	            }
-            }
 
             for(EpubDetail mapperVO : epubSeriesList) {
                 Product subProduct = new Product();
@@ -996,7 +965,7 @@ public class EpubServiceImpl implements EpubService {
                 subProduct.setProductDetailExplain(mapperVO.getProdDtlDesc());
                 subProduct.setProductIntroduction(mapperVO.getProdIntrDscr());
                 subProduct.setMenuList(this.mapMenuList(mapperVO));
-                subProduct.setRights(this.mapRights(mapperVO, param, existenceMap));
+                subProduct.setRights(this.mapRights(mapperVO, param));
                 subProduct.setSourceList(this.mapSourceList(mapperVO, null));
                 subProduct.setBook(this.mapBook(mapperVO));
                 subProduct.setDateList(this.mapDateList(mapperVO, sdf));
@@ -1035,32 +1004,6 @@ public class EpubServiceImpl implements EpubService {
 		return dateList;
 	}
 
-    /**
-     * 판매 상태 조회
-     * @param mapperVO
-     * @param userKey
-     * @param deviceKey
-     * @return
-     */
-    private String getSalesStatus(EpubDetail mapperVO, String userKey, String deviceKey) {
-        String salesStatus = null;
-        //기구매 체크
-        if (!mapperVO.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
-            // 04, 09, 10의 경우 구매이력이 없으면 상품 없음을 표시한다.
-            if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getProdStatusCd()) ||
-                    DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getProdStatusCd()) ||
-                    DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(mapperVO.getProdStatusCd())) {
-                if (!com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(userKey) && !com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(deviceKey)) {
-                }
-                else
-                    salesStatus = "restricted";
-            }
-            else
-                salesStatus = "restricted";
-        }
-        return salesStatus;
-    }
-    
 	/**
 	 * 이용정책 set (최신 Chapter Episode의 이용정책)
 	 * 
