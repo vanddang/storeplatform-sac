@@ -47,15 +47,6 @@ public class Play extends CommonInfo implements Serializable {
 	private String baseYn; // 에피소드 상품 기준 여부
 
 	/**
-	 * 사용자 구매 가능 상태
-	 * <ul>
-	 * <li>available 구매 가능</li>
-	 * <li>restricted 구매 제한</li>
-	 * </ul>
-	 */
-	private String userPurStatus;
-
-	/**
 	 * Play().
 	 */
 	public Play() {
@@ -284,21 +275,6 @@ public class Play extends CommonInfo implements Serializable {
 	 */
 	public void setSourceList(List<Source> sourceList) {
 		this.sourceList = sourceList;
-	}
-
-	/**
-	 * @return the userPurStatus
-	 */
-	public String getUserPurStatus() {
-		return this.userPurStatus;
-	}
-
-	/**
-	 * @param userPurStatus
-	 *            the userPurStatus to set
-	 */
-	public void setUserPurStatus(String userPurStatus) {
-		this.userPurStatus = userPurStatus;
 	}
 
 	/**
