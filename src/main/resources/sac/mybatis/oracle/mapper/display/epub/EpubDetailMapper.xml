@@ -161,16 +161,8 @@
 	                    AND D.PROD_ID = #{channelId}
 	                    AND C.LANG_CD = #{langCd}
 	                    AND D.SVC_GRP_CD = 'DP000203' AND D.CONTENTS_TYPE_CD = 'PD002501' AND D.SVC_TYPE_CD = 'DP001116'
-						<choose>
-		                <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
-		                AND G.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-		                AND CTP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-		                </when>
-		                <otherwise>
 		                AND G.PROD_STATUS_CD = 'PD000403'
 		                AND CTP.PROD_STATUS_CD = 'PD000403'
-		                </otherwise>
-		                </choose>
 	                    AND G.EXPO_YN = 'Y'
 	                    AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
 						AND RSHP.PROD_ID = D.PROD_ID
@@ -352,15 +344,8 @@
 		                      AND PRC.PROD_ID  = PD.PROD_ID AND PRC.TENANT_ID = TP.TENANT_ID
 		                      AND MP.PROD_ID = PD.PROD_ID
 		                      AND TP.TENANT_ID = #{tenantId} 
-		                      AND TP.EXPO_YN = 'Y'
-		                   	  <choose>
-			                  <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
-			                  AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-			                  </when>
-			                  <otherwise>
+		                      AND TP.EXPO_YN = 'Y'	                   	  
 			                  AND TP.PROD_STATUS_CD = 'PD000403'
-			                  </otherwise>
-			                  </choose>
 		                      AND DSC.PROD_ID = PD.PROD_ID AND DSC.LANG_CD = #{langCd}
 		                      AND PD.PROD_ID = CPM.PROD_ID
 		                      AND CPM.MENU_ID = MC.MENU_ID AND MC.USE_YN = 'Y'
@@ -495,14 +480,7 @@
 		                                    AND MP.PROD_ID = PD.PROD_ID
 		                                    AND TP.TENANT_ID = #{tenantId}
 		                                    AND TP.EXPO_YN = 'Y'
-				                            <choose>
-				                            <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
-				                            AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-				                            </when>
-				                            <otherwise>
 				                            AND TP.PROD_STATUS_CD = 'PD000403'
-				                            </otherwise>
-				                            </choose>
 		                                    AND PD.PROD_ID = CPM.PROD_ID
 		                                    AND CPM.MENU_ID = MC.MENU_ID
 		                                    AND MC.USE_YN = 'Y'

@@ -115,16 +115,16 @@ public class EpubServiceImpl implements EpubService {
 		// 1. Channel 정보 조회
 		// --------------------------------------------------------
 		final String channelId = req.getChannelId();
-		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
+//		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
 
 		//[2.x fadeout] 상품 상세 요청 시 예외 처리
 		//요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
 		String temp = StringUtils.defaultString(this.sc2xFadeOutDummyProductChannel);
-		if(temp.contains(channelId)) includeProdStopStatus = "Y";
+//		if(temp.contains(channelId)) includeProdStopStatus = "Y";
 
 
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("includeProdStopStatus", includeProdStopStatus);
+//        param.put("includeProdStopStatus", includeProdStopStatus);
         param.put("tenantId", req.getTenantId());
         param.put("channelId", req.getChannelId());
         param.put("langCd", req.getLangCd());
@@ -214,7 +214,7 @@ public class EpubServiceImpl implements EpubService {
 
 		// 1. Channel 정보 조회
 		final String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);		
-		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
+//		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
 		
 		String userKey = StringUtils.defaultString(req.getUserKey());
 		String deviceKey = StringUtils.defaultString(req.getDeviceKey());
@@ -222,13 +222,10 @@ public class EpubServiceImpl implements EpubService {
 		//[2.x fadeout] 상품 상세 요청 시 예외 처리
 		//요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
 		String temp = StringUtils.defaultString(this.sc2xFadeOutDummyProductChannel);
-		if(temp.contains(channelId)) includeProdStopStatus = "Y";
-		
-		// #47384 판매중인 상품만 내려가도록 수정
-		includeProdStopStatus = "N";
+//		if(temp.contains(channelId)) includeProdStopStatus = "Y";
 
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("includeProdStopStatus", includeProdStopStatus);
+//        param.put("includeProdStopStatus", includeProdStopStatus);
         param.put("tenantId", req.getTenantId());
         param.put("channelId", channelId);
         param.put("langCd", req.getLangCd());
