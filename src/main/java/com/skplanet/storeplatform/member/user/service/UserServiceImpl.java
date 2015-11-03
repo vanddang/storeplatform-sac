@@ -146,6 +146,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.TlogRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TlogResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
@@ -4251,4 +4253,51 @@ public class UserServiceImpl implements UserService {
 
 		return searchGiftChargeInfoResponse;
 	}
+
+	@Override
+	public TransferGiftChrgInfoResponse excuteTransferGiftChrgInfo(
+			TransferGiftChrgInfoRequest transferGiftChrgInfoRequest) {
+		TransferGiftChrgInfoResponse transferGiftChrgInfoResponse = new TransferGiftChrgInfoResponse();
+		Integer row = 0;
+
+		// 모바일 회원(preUserKey) 상품권 충전소 정보 조회
+		SearchGiftChargeInfoRequest userGiftChrgInfoReq = new SearchGiftChargeInfoRequest();
+		userGiftChrgInfoReq.setCommonRequest(new CommonRequest());
+		userGiftChrgInfoReq.getCommonRequest()
+				.setTenantID(transferGiftChrgInfoRequest.getCommonRequest().getTenantID());
+		userGiftChrgInfoReq.setUserKey(transferGiftChrgInfoRequest.getPreUserKey());
+
+		@SuppressWarnings("unchecked")
+		List<GiftChargeInfo> preUserGiftChargeInfoList = (List<GiftChargeInfo>) this.commonDAO.queryForList(
+				"User.searchGiftChargeInfoList", userGiftChrgInfoReq);
+
+		// 모바일 회원(preUserKey) 상품권 충전소 정보가 존재할 경우
+		if (preUserGiftChargeInfoList != null && preUserGiftChargeInfoList.size() > 0) {
+			// ID 회원(userKey) 상품권 충전소 정보 조회
+			userGiftChrgInfoReq.setUserKey(transferGiftChrgInfoRequest.getUserKey());
+			@SuppressWarnings("unchecked")
+			List<GiftChargeInfo> userGiftChargeInfoList = (List<GiftChargeInfo>) this.commonDAO.queryForList(
+					"User.searchGiftChargeInfoList", userGiftChrgInfoReq);
+
+			// ID 회원 상품권 충전소 정보가 없을 경우 모바일 회원 상품권 충전소 정보 이관
+			if (userGiftChargeInfoList == null || userGiftChargeInfoList.size() <= 0) {
+				for (GiftChargeInfo preUserGiftCharInfo : preUserGiftChargeInfoList) {
+					preUserGiftCharInfo.setTenantId(transferGiftChrgInfoRequest.getCommonRequest().getTenantID());
+					preUserGiftCharInfo.setUserKey(transferGiftChrgInfoRequest.getUserKey());
+
+					row = this.commonDAO.update("User.insertGiftChargeInfo", preUserGiftCharInfo);
+					if (row <= 0) {
+						throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+					}
+				}
+			}
+		}
+
+		transferGiftChrgInfoResponse.setUserKey(transferGiftChrgInfoRequest.getUserKey());
+		transferGiftChrgInfoResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+
+		return transferGiftChrgInfoResponse;
+	}
+
 }

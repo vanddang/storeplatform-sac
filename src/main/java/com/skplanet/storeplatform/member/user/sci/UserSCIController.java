@@ -124,6 +124,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.TlogRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TlogResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
@@ -3855,4 +3857,44 @@ public class UserSCIController implements UserSCI {
 
 		return searchGiftChargeInfoResponse;
 	}
+
+	@Override
+	public TransferGiftChrgInfoResponse transferGiftChrgInfo(TransferGiftChrgInfoRequest transferGiftChrgInfoRequest) {
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - 상품권 충전소 정보 이관 ");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		TransferGiftChrgInfoResponse transferGiftChrgInfoResponse = null;
+
+		// 입력 파라미터가 없음
+		if (transferGiftChrgInfoRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (transferGiftChrgInfoRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 테넌트 아이디 없음
+		if (transferGiftChrgInfoRequest.getCommonRequest().getTenantID() == null
+				|| transferGiftChrgInfoRequest.getCommonRequest().getTenantID().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
+		}
+
+		// 필수 파라미터, userKey
+		if (transferGiftChrgInfoRequest.getUserKey() == null || transferGiftChrgInfoRequest.getPreUserKey() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+			transferGiftChrgInfoResponse = this.service.excuteTransferGiftChrgInfo(transferGiftChrgInfoRequest);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return transferGiftChrgInfoResponse;
+	}
+
 }

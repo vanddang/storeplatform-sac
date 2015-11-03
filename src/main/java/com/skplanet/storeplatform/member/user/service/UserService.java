@@ -101,6 +101,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.TlogRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TlogResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
@@ -805,5 +807,17 @@ public interface UserService {
 	 * @return SearchGiftChargeInfoResponse
 	 */
 	public SearchGiftChargeInfoResponse searchGiftChargeInfo(SearchGiftChargeInfoRequest searchGiftChargeInfoRequest);
+
+	/**
+	 * <pre>
+	 * 상품권 충전소 정보 이관 기능을 제공한다.
+	 * </pre>
+	 * 
+	 * @param transferGiftChrgInfoRequest
+	 *            TransferGiftChrgInfoRequest
+	 * @return TransferGiftChrgInfoResponse
+	 */
+	public TransferGiftChrgInfoResponse excuteTransferGiftChrgInfo(
+			TransferGiftChrgInfoRequest transferGiftChrgInfoRequest);
 
 }
