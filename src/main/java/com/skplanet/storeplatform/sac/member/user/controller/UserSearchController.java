@@ -44,6 +44,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
@@ -429,4 +431,24 @@ public class UserSearchController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 2.1.65.	회원 상품권 충전 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchGiftChargeInfoSacReq
+	 * @return SearchGiftChargeInfoSacRes
+	 */
+	@RequestMapping(value = "/member/user/searchGiftChargeInfo/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchGiftChargeInfoSacRes searchGiftChargeInfo(SacRequestHeader header,
+			@RequestBody @Validated SearchGiftChargeInfoSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		SearchGiftChargeInfoSacRes res = this.svc.searchGiftChargeInfo(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
 }

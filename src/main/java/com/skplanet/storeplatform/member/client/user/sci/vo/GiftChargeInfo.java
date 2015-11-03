@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.member.client.user.sci.vo;
 import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 
 /**
  * 사용자 상품권 충전 정보.
@@ -42,6 +43,9 @@ public class GiftChargeInfo extends CommonInfo implements Serializable {
 
 	/** 수정일시. */
 	private String updDt;
+
+	/** 판매자 정보. */
+	private SellerMbr sellerMbr;
 
 	/**
 	 * @return the seq
@@ -177,4 +181,20 @@ public class GiftChargeInfo extends CommonInfo implements Serializable {
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
+
+	/**
+	 * @return the sellerMbr
+	 */
+	public SellerMbr getSellerMbr() {
+		return this.sellerMbr;
+	}
+
+	/**
+	 * @param sellerMbr
+	 *            the sellerMbr to set
+	 */
+	public void setSellerMbr(SellerMbr sellerMbr) {
+		this.sellerMbr = sellerMbr;
+	}
+
 }

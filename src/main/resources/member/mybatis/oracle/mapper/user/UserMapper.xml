@@ -3853,7 +3853,7 @@
     </insert>
     
    <!-- 상품권충전소 목록 조회 -->
-   <select id="searchGiftChargeInfoList" parameterType="createGiftChargeInfoRequest" resultType="giftChargeInfo">
+   <select id="searchGiftChargeInfoList" parameterType="searchGiftChargeInfoRequest" resultType="giftChargeInfo">
      SELECT /* UserMapper.xml, searchGiftChargeInfoList, SAC(SC), 윤보영, 2015-11-11 */
             seq,
             tenant_id       AS tenantId,

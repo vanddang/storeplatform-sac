@@ -53,6 +53,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceMbrStatus;
 import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceSystemStats;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.GiftChargeInfo;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAfterUserKeyRequest;
@@ -70,6 +71,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest;
@@ -102,9 +105,11 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeliveryInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.GiftChargeInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.GradeInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SocialAccountInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.TenantInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
@@ -137,6 +142,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSac;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
@@ -2420,5 +2427,53 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		return res;
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#searchGiftChargeInfo(com.skplanet.storeplatform
+	 * .sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacReq)
+	 */
+	@Override
+	public SearchGiftChargeInfoSacRes searchGiftChargeInfo(SacRequestHeader header, SearchGiftChargeInfoSacReq req) {
+
+		SearchGiftChargeInfoRequest searchGiftChargeInfoRequest = new SearchGiftChargeInfoRequest();
+		searchGiftChargeInfoRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		searchGiftChargeInfoRequest.setUserKey(req.getUserKey());
+		SearchGiftChargeInfoResponse searchGiftChargeInfoResponse = this.userSCI
+				.searchGiftChargeInfo(searchGiftChargeInfoRequest);
+
+		SearchGiftChargeInfoSacRes res = new SearchGiftChargeInfoSacRes();
+		List<GiftChargeInfoSac> giftChargeInfoList = new ArrayList<GiftChargeInfoSac>();
+		GiftChargeInfoSac giftChargeInfoSac = null;
+		SellerMbrSac sellerMbrSac = null;
+		for (GiftChargeInfo giftChargeInfo : searchGiftChargeInfoResponse.getGiftChargeInfoList()) {
+			giftChargeInfoSac = new GiftChargeInfoSac();
+			giftChargeInfoSac.setBrandName(giftChargeInfo.getBrandNm());
+			giftChargeInfoSac.setBrandSiteId(giftChargeInfo.getBrandSiteId());
+			giftChargeInfoSac.setChargerName(giftChargeInfo.getChargerNm());
+			giftChargeInfoSac.setRegDate(giftChargeInfo.getRegDt());
+			giftChargeInfoSac.setUpdateDate(giftChargeInfo.getUpdDt());
+
+			if (giftChargeInfo.getSellerMbr() != null) {
+				sellerMbrSac = new SellerMbrSac();
+				sellerMbrSac.setSellerKey(giftChargeInfo.getSellerMbr().getSellerKey());
+				sellerMbrSac.setSellerId(giftChargeInfo.getSellerMbr().getSellerID());
+				sellerMbrSac.setSellerName(giftChargeInfo.getSellerMbr().getSellerName());
+				sellerMbrSac.setCharger(giftChargeInfo.getSellerMbr().getCharger());
+				sellerMbrSac.setSellerCompany(giftChargeInfo.getSellerMbr().getSellerCompany());
+				sellerMbrSac.setCeoName(giftChargeInfo.getSellerMbr().getCeoName());
+				sellerMbrSac.setSellerNickName(giftChargeInfo.getSellerMbr().getSellerNickName());
+				giftChargeInfoSac.setSellerInfo(sellerMbrSac);
+			}
+			giftChargeInfoList.add(giftChargeInfoSac);
+		}
+
+		res.setUserKey(searchGiftChargeInfoResponse.getUserKey());
+		res.setGiftChargeInfoList(giftChargeInfoList);
+		return res;
 	}
 }

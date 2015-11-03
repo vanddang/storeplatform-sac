@@ -69,6 +69,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumber
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest;
@@ -792,5 +794,16 @@ public interface UserService {
 	 * @return CreateGiftChargeInfoResponse
 	 */
 	public CreateGiftChargeInfoResponse createGiftChargeInfo(CreateGiftChargeInfoRequest createGiftChargeInfoRequest);
+
+	/**
+	 * <pre>
+	 * 회원 상품권 충전 정보 조회.
+	 * </pre>
+	 * 
+	 * @param searchGiftChargeInfoRequest
+	 *            SearchGiftChargeInfoRequest
+	 * @return SearchGiftChargeInfoResponse
+	 */
+	public SearchGiftChargeInfoResponse searchGiftChargeInfo(SearchGiftChargeInfoRequest searchGiftChargeInfoRequest);
 
 }

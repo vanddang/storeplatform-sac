@@ -92,6 +92,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumber
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest;
@@ -3812,4 +3814,45 @@ public class UserSCIController implements UserSCI {
 		return createGiftChargeInfoResponse;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.member.client.user.sci.UserSCI#searchGiftChargeInfo(com.skplanet.storeplatform.member
+	 * .client.user.sci.vo.SearchGiftChargeInfoRequest)
+	 */
+	@Override
+	public SearchGiftChargeInfoResponse searchGiftChargeInfo(SearchGiftChargeInfoRequest searchGiftChargeInfoRequest) {
+
+		SearchGiftChargeInfoResponse searchGiftChargeInfoResponse = null;
+
+		// 입력 파라미터가 없음
+		if (searchGiftChargeInfoRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (searchGiftChargeInfoRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 테넌트 아이디 없음
+		if (searchGiftChargeInfoRequest.getCommonRequest().getTenantID() == null
+				|| searchGiftChargeInfoRequest.getCommonRequest().getTenantID().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
+		}
+
+		// 필수 파라미터, userKey
+		if (searchGiftChargeInfoRequest.getUserKey() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+			searchGiftChargeInfoResponse = this.service.searchGiftChargeInfo(searchGiftChargeInfoRequest);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return searchGiftChargeInfoResponse;
+	}
 }

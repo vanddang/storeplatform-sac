@@ -56,6 +56,7 @@ import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointReque
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ChangedDeviceLog;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
@@ -112,6 +113,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumber
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest;
@@ -4207,4 +4210,38 @@ public class UserServiceImpl implements UserService {
 		return createGiftChargeInfoResponse;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.member.user.service.UserService#searchGiftChargeInfo(com.skplanet.storeplatform.member
+	 * .client.user.sci.vo.SearchGiftChargeInfoRequest)
+	 */
+	@Override
+	public SearchGiftChargeInfoResponse searchGiftChargeInfo(SearchGiftChargeInfoRequest searchGiftChargeInfoRequest) {
+		SearchGiftChargeInfoResponse searchGiftChargeInfoResponse = new SearchGiftChargeInfoResponse();
+
+		List<GiftChargeInfo> giftChargeInfoList = (List<GiftChargeInfo>) this.commonDAO.queryForList(
+				"User.searchGiftChargeInfoList", searchGiftChargeInfoRequest);
+
+		if (giftChargeInfoList == null || giftChargeInfoList.size() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
+		}
+
+		// 판매자 정보 셋팅
+		for (GiftChargeInfo giftChargeInfo : giftChargeInfoList) {
+			SellerMbr sellerMbr = (SellerMbr) this.commonDAO.queryForObject("Seller.searchSellerMbr",
+					giftChargeInfo.getSellerKey());
+			if (sellerMbr != null) {
+				giftChargeInfo.setSellerMbr(sellerMbr);
+			}
+		}
+
+		searchGiftChargeInfoResponse.setUserKey(searchGiftChargeInfoRequest.getUserKey());
+		searchGiftChargeInfoResponse.setGiftChargeInfoList(giftChargeInfoList);
+		searchGiftChargeInfoResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+
+		return searchGiftChargeInfoResponse;
+	}
 }

@@ -39,6 +39,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSac;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
@@ -345,4 +347,16 @@ public interface UserSearchService {
 	 */
 	public SearchDeliveryInfoSacRes searchDeliveryInfo(SacRequestHeader header, SearchDeliveryInfoSacReq req);
 
+	/**
+	 * <pre>
+	 * 2.1.65.	회원 상품권 충전 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchGiftChargeInfoSacReq
+	 * @return SearchGiftChargeInfoSacRes
+	 */
+	public SearchGiftChargeInfoSacRes searchGiftChargeInfo(SacRequestHeader header, SearchGiftChargeInfoSacReq req);
 }
