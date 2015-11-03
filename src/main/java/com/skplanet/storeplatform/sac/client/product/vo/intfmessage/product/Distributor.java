@@ -67,6 +67,16 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	private String sellerKey;
 
+    /**
+     * 판매자(개발사) 홈페이지URL
+     */
+    private String sellerWebUrl;
+
+    /**
+     * 개인정보 취급방침 URL
+     */
+    private String policyInfoUrl;
+
 	/**
 	 * @return the identifier
 	 */
@@ -231,4 +241,20 @@ public class Distributor extends CommonInfo implements Serializable {
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
+
+    public String getSellerWebUrl() {
+        return sellerWebUrl;
+    }
+
+    public void setSellerWebUrl(String sellerWebUrl) {
+        this.sellerWebUrl = sellerWebUrl;
+    }
+
+    public String getPolicyInfoUrl() {
+        return policyInfoUrl;
+    }
+
+    public void setPolicyInfoUrl(String policyInfoUrl) {
+        this.policyInfoUrl = policyInfoUrl;
+    }
 }
