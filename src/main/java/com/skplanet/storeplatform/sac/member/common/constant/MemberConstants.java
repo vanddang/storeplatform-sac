@@ -384,6 +384,9 @@ public final class MemberConstants {
 	/** 수정. */
 	public static final String TYPE_MODIFY = "UPDATE";
 
+	/** SMS SendOrder 1. */
+	public static final String SMS_SEND_ORDER_FIRST = "1";
+
 	/**
 	 * 판매자 회원 상수들.
 	 * 

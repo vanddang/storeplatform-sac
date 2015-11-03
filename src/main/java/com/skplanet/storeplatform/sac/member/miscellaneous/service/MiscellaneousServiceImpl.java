@@ -373,6 +373,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			smsReq.setMsg(StringUtil.isNotEmpty(prefixMessageText) ? prefixMessageText + messageText : messageText);
 			// 통신사정보 Optional
 			smsReq.setCarrier(StringUtils.defaultIfBlank(request.getCarrier(), null));
+			// 발송_순서 | 1~9, 1: 높음, 9:낮음
+			smsReq.setSendOrder(MemberConstants.SMS_SEND_ORDER_FIRST);
 
 			LOGGER.debug("[MiscellaneousService.getPhoneAuthorizationCode] SAC->SMS 발송 Request : {}", smsReq);
 			this.messageSCI.smsSend(smsReq);
