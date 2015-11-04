@@ -24,9 +24,9 @@ public class GiftChargeInfoSac extends CommonInfo {
 	private String brandName;
 
 	/**
-	 * 제휴사 회원 아이디.
+	 * 충전자 아이디.
 	 */
-	private String brandSiteId;
+	private String chargerId;
 
 	/**
 	 * 충전자 이름.
@@ -64,18 +64,18 @@ public class GiftChargeInfoSac extends CommonInfo {
 	}
 
 	/**
-	 * @return brandSiteId
+	 * @return chargerId
 	 */
-	public String getBrandSiteId() {
-		return this.brandSiteId;
+	public String getChargerId() {
+		return this.chargerId;
 	}
 
 	/**
-	 * @param brandSiteId
+	 * @param chargerId
 	 *            String
 	 */
-	public void setBrandSiteId(String brandSiteId) {
-		this.brandSiteId = brandSiteId;
+	public void setChargerId(String chargerId) {
+		this.chargerId = chargerId;
 	}
 
 	/**
