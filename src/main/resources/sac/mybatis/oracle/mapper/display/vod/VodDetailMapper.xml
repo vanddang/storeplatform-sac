@@ -118,7 +118,7 @@
 		              , TB_DP_SPRT_DEVICE K 
 		              , TB_CM_DEVICE L
 		              , TB_DP_USE_POLICY M
-		          WHERE A.MENU_ID = B.MENU_ID AND A.BASE_YN = 'Y'AND B.USE_YN = 'Y'
+		          WHERE A.MENU_ID = B.MENU_ID AND A.BASE_YN = 'Y' AND B.USE_YN = 'Y'
 		            AND A.MENU_ID = C.MENU_ID AND C.LANG_CD = #{langCd}
 		            AND A.PROD_ID = RSHP.PROD_ID
 		            AND RSHP.PROD_ID = #{channelId}
