@@ -4285,7 +4285,7 @@ public class UserServiceImpl implements UserService {
 					preUserGiftCharInfo.setTenantId(transferGiftChrgInfoRequest.getCommonRequest().getTenantID());
 					preUserGiftCharInfo.setUserKey(transferGiftChrgInfoRequest.getUserKey());
 
-					row = this.commonDAO.update("User.insertGiftChargeInfo", preUserGiftCharInfo);
+					row = this.commonDAO.update("User.insertTransferGiftChargeInfo", preUserGiftCharInfo);
 					if (row <= 0) {
 						throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 					}
