@@ -448,7 +448,7 @@ public class UserSearchController {
 			@RequestBody @Validated SearchGiftChargeInfoSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		SearchGiftChargeInfoSacRes res = this.svc.searchGiftChargeInfo(header, req);
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}, {}", res.getUserKey(), res.getGiftChargeInfoList().size());
 		return res;
 	}
 }
