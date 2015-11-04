@@ -2446,8 +2446,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchGiftChargeInfoResponse searchGiftChargeInfoResponse = this.userSCI
 				.searchGiftChargeInfo(searchGiftChargeInfoRequest);
 
-		SearchGiftChargeInfoSacRes res = new SearchGiftChargeInfoSacRes();
-		List<GiftChargeInfoSac> giftChargeInfoList = new ArrayList<GiftChargeInfoSac>();
+		List<GiftChargeInfoSac> giftChargeInfoSacList = new ArrayList<GiftChargeInfoSac>();
 		GiftChargeInfoSac giftChargeInfoSac = null;
 		SellerMbrSac sellerMbrSac = null;
 		for (GiftChargeInfo giftChargeInfo : searchGiftChargeInfoResponse.getGiftChargeInfoList()) {
@@ -2469,11 +2468,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 				sellerMbrSac.setSellerNickName(giftChargeInfo.getSellerMbr().getSellerNickName());
 				giftChargeInfoSac.setSellerInfo(sellerMbrSac);
 			}
-			giftChargeInfoList.add(giftChargeInfoSac);
+			giftChargeInfoSacList.add(giftChargeInfoSac);
 		}
 
+		SearchGiftChargeInfoSacRes res = new SearchGiftChargeInfoSacRes();
 		res.setUserKey(searchGiftChargeInfoResponse.getUserKey());
-		res.setGiftChargeInfoList(giftChargeInfoList);
+		res.setGiftChargeInfoList(giftChargeInfoSacList);
 		return res;
 	}
 }

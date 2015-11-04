@@ -4228,7 +4228,6 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public SearchGiftChargeInfoResponse searchGiftChargeInfo(SearchGiftChargeInfoRequest searchGiftChargeInfoRequest) {
-		SearchGiftChargeInfoResponse searchGiftChargeInfoResponse = new SearchGiftChargeInfoResponse();
 
 		List<GiftChargeInfo> giftChargeInfoList = (List<GiftChargeInfo>) this.commonDAO.queryForList(
 				"User.searchGiftChargeInfoList", searchGiftChargeInfoRequest);
@@ -4246,6 +4245,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 
+		SearchGiftChargeInfoResponse searchGiftChargeInfoResponse = new SearchGiftChargeInfoResponse();
 		searchGiftChargeInfoResponse.setUserKey(searchGiftChargeInfoRequest.getUserKey());
 		searchGiftChargeInfoResponse.setGiftChargeInfoList(giftChargeInfoList);
 		searchGiftChargeInfoResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
