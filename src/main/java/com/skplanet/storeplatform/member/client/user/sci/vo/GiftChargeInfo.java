@@ -32,8 +32,8 @@ public class GiftChargeInfo extends CommonInfo implements Serializable {
 	/** 제휴사브랜드명. */
 	private String brandNm;
 
-	/** 제휴사회원아이디. */
-	private String brandSiteId;
+	/** 충전자 아이디. */
+	private String chargerId;
 
 	/** 충전자이름. */
 	private String chargerNm;
@@ -66,13 +66,6 @@ public class GiftChargeInfo extends CommonInfo implements Serializable {
 	 */
 	public String getBrandNm() {
 		return this.brandNm;
-	}
-
-	/**
-	 * @return the brandSiteId
-	 */
-	public String getBrandSiteId() {
-		return this.brandSiteId;
 	}
 
 	/**
@@ -118,14 +111,6 @@ public class GiftChargeInfo extends CommonInfo implements Serializable {
 	 */
 	public void setBrandNm(String brandNm) {
 		this.brandNm = brandNm;
-	}
-
-	/**
-	 * @param brandSiteId
-	 *            the brandSiteId to set
-	 */
-	public void setBrandSiteId(String brandSiteId) {
-		this.brandSiteId = brandSiteId;
 	}
 
 	/**
@@ -197,4 +182,18 @@ public class GiftChargeInfo extends CommonInfo implements Serializable {
 		this.sellerMbr = sellerMbr;
 	}
 
+	/**
+	 * @return the chargerId
+	 */
+	public String getChargerId() {
+		return this.chargerId;
+	}
+
+	/**
+	 * @param chargerId
+	 *            the chargerId to set
+	 */
+	public void setChargerId(String chargerId) {
+		this.chargerId = chargerId;
+	}
 }
