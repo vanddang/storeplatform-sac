@@ -35,10 +35,10 @@ public class CreateGiftChargeInfoSacReq extends CommonInfo {
 	private String brandName;
 
 	/**
-	 * 제휴사 회원 아이디.
+	 * 충전자 아이디.
 	 */
 	@NotEmpty
-	private String brandSiteId;
+	private String chargerId;
 
 	/**
 	 * 충전자 이름.
@@ -65,13 +65,6 @@ public class CreateGiftChargeInfoSacReq extends CommonInfo {
 	 */
 	public String getBrandName() {
 		return this.brandName;
-	}
-
-	/**
-	 * @return the brandSiteId
-	 */
-	public String getBrandSiteId() {
-		return this.brandSiteId;
 	}
 
 	/**
@@ -106,18 +99,25 @@ public class CreateGiftChargeInfoSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @param brandSiteId
-	 *            the brandSiteId to set
-	 */
-	public void setBrandSiteId(String brandSiteId) {
-		this.brandSiteId = brandSiteId;
-	}
-
-	/**
 	 * @param chargerName
 	 *            the chargerName to set
 	 */
 	public void setChargerName(String chargerName) {
 		this.chargerName = chargerName;
+	}
+
+	/**
+	 * @return the chargerId
+	 */
+	public String getChargerId() {
+		return this.chargerId;
+	}
+
+	/**
+	 * @param chargerId
+	 *            the chargerId to set
+	 */
+	public void setChargerId(String chargerId) {
+		this.chargerId = chargerId;
 	}
 }

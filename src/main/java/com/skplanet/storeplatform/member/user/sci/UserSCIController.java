@@ -3802,7 +3802,7 @@ public class UserSCIController implements UserSCI {
 		if (StringUtils.isEmpty(createGiftChargeInfoRequest.getUserKey())
 				|| StringUtils.isEmpty(createGiftChargeInfoRequest.getSellerKey())
 				|| StringUtils.isEmpty(createGiftChargeInfoRequest.getBrandName())
-				|| StringUtils.isEmpty(createGiftChargeInfoRequest.getBrandSiteId())
+				|| StringUtils.isEmpty(createGiftChargeInfoRequest.getChargerId())
 				|| StringUtils.isEmpty(createGiftChargeInfoRequest.getChargerName())) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 		}

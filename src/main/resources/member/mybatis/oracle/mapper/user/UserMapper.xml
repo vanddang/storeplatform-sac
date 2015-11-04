@@ -3860,7 +3860,7 @@
             insd_usermbr_no AS userKey,
             insd_sellermbr_no AS sellerKey,
             brand_nm          AS brandNm,
-            brand_site_id     AS brandSiteId,
+            charger_id     AS chargerId,
             charger_nm        AS chargerNm,
             TO_CHAR (reg_dt, 'YYYYMMDDHH24MISS') AS regDt,
             TO_CHAR (upd_dt, 'YYYYMMDDHH24MISS') AS updDt
@@ -3883,7 +3883,7 @@
             insd_usermbr_no AS userKey,
             insd_sellermbr_no AS sellerKey,
             brand_nm          AS brandNm,
-            brand_site_id     AS brandSiteId,
+            charger_id     AS chargerId,
             charger_nm        AS chargerNm,
             TO_CHAR (reg_dt, 'YYYYMMDDHH24MISS') AS regDt,
             TO_CHAR (upd_dt, 'YYYYMMDDHH24MISS') AS updDt
@@ -3892,7 +3892,7 @@
         AND insd_usermbr_no = #{userKey}
         AND insd_sellermbr_no = #{sellerKey}
         AND brand_nm = #{brandName}
-        AND brand_site_id = #{brandSiteId}
+        AND charger_id = #{chargerId}
    </select>
    
    <!-- 상품권 충전정보 등록 -->
@@ -3904,7 +3904,7 @@
 			       ,insd_usermbr_no
 			       ,insd_sellermbr_no
 			       ,brand_nm
-			       ,brand_site_id
+			       ,charger_id
 			       ,charger_nm
 			       ,reg_dt
             ) VALUES (
@@ -3913,7 +3913,7 @@
 	                ,#{userKey}
 	                ,#{sellerKey}
 	                ,#{brandName}
-	                ,#{brandSiteId}
+	                ,#{chargerId}
 	                ,#{chargerName}
 	                ,SYSDATE
             )
@@ -3929,7 +3929,7 @@
             AND insd_usermbr_no  = #{userKey}
             AND insd_sellermbr_no  = #{sellerKey}
             AND brand_nm  = #{brandName}
-            AND brand_site_id  = #{brandSiteId}
+            AND charger_id  = #{chargerId}
    </update>
    
    <!-- 상품권 충전소 정보 이관 등록 -->
