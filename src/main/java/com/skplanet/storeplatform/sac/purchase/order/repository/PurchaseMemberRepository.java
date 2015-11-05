@@ -140,4 +140,21 @@ public interface PurchaseMemberRepository {
 	 * @param userKey the user key
 	 */
 	public void removeSSOCredential(String userKey);
+
+	/**
+	 * 2.1.16.회원 상품권 충전 정보 등록
+	 *
+	 * @param userKey
+	 * 		the user key
+	 * @param sellerKey
+	 * 		the seller key
+	 * @param brandName
+	 * 		the brand name
+	 * @param brandSiteId
+	 * 		the brand site id
+	 * @param chargerName
+	 * 		the charger name
+	 */
+	void createGiftChargeInfo(String userKey, String sellerKey, String brandName, String brandSiteId,
+			String chargerName);
 }

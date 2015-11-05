@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +91,8 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	 *            결제처리결과 Noti 정보
 	 */
 	@Override
-	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList, NotifyPaymentSacReq notifyPaymentReq) {
+	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList, NotifyPaymentSacReq notifyPaymentReq,
+			Map<String, String> reservedDataMap) {
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 		this.logger.info("PRCHS,ORDER,SAC,POST,START,{}", prchsDtlMore.getPrchsId());
 
@@ -107,11 +109,25 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 				if (notifyPaymentReq.getPaymentInfoList().size() > 0
 						&& StringUtils.isNotBlank(notifyPaymentReq.getPaymentInfoList().get(0).getLimitMemberYn())) {
 					this.purchaseMemberRepository.updateLimitChargeYn(prchsDtlMore.getUseInsdUsermbrNo(),
-							prchsDtlMore.getUseInsdDeviceId(), prchsDtlMore.getPrchsDt(),
-							notifyPaymentReq.getPaymentInfoList().get(0).getLimitMemberYn());
+							prchsDtlMore.getUseInsdDeviceId(), prchsDtlMore.getPrchsDt(), notifyPaymentReq
+									.getPaymentInfoList().get(0).getLimitMemberYn());
 				}
 			} catch (Exception ignore) {
 				this.logger.info("PRCHS,ORDER,SAC,MEMBER,UPDATELIMITCHARGEYN,ERROR,{},{}", prchsDtlMore.getPrchsId(),
+						ignore.getMessage());
+			}
+
+			// 회원 상품권 충전 정보 등록
+			try {
+				if (StringUtils.equals(prchsDtlMore.getCpnProdCaseCd(), PurchaseCDConstants.SHOPPING_TYPE_CHARGE_CARD)) {
+					this.purchaseMemberRepository.createGiftChargeInfo(prchsDtlMore.getUseInsdUsermbrNo(),
+							reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_SELLER_MBRNO), URLDecoder.decode(
+									reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BRAND_NAME), PurchaseConstants.DEFAULT_ENCODING),
+									reservedDataMap.get(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID),
+							URLDecoder.decode(reservedDataMap.get(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM), PurchaseConstants.DEFAULT_ENCODING));
+				}
+			} catch (Exception ignore) {
+				this.logger.info("PRCHS,ORDER,SAC,MEMBER,CREATEGIFTCHARGEINFO,ERROR,{},{}", prchsDtlMore.getPrchsId(),
 						ignore.getMessage());
 			}
 
@@ -178,11 +194,11 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> 결제완료Noti. </pre>
-	 *
+	 * 
 	 * @param prchsDtlMoreList 구매정보 목록
-	 *
+	 * 
 	 * @param notifyPaymentReq 결제처리결과 Noti 정보
 	 */
 	private void sendPurchaseNoti(List<PrchsDtlMore> prchsDtlMoreList, NotifyPaymentSacReq notifyPaymentReq) {
@@ -190,63 +206,63 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
-//		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) { // T store
+		// if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) { // T store
 
-			// PayPlanet 결제 건은 T store 측으로 구매완료 Noti: 이메일 발송, SMS / MMS 등등 처리
-			// T store 결제 건은 결제처리결과 알림 API 응답 항목에 추가
-			if (this.payPlanetShopService
-					.startsWithPayPlanetMID(notifyPaymentReq.getPaymentInfoList().get(0).getTid())) {
+		// PayPlanet 결제 건은 T store 측으로 구매완료 Noti: 이메일 발송, SMS / MMS 등등 처리
+		// T store 결제 건은 결제처리결과 알림 API 응답 항목에 추가
+		if (this.payPlanetShopService.startsWithPayPlanetMID(notifyPaymentReq.getPaymentInfoList().get(0).getTid())) {
 
-				String notiType = null;
-				String prchsResvData = prchsDtlMore.getPrchsResvDesc();
-				int pos = StringUtils.indexOf(prchsResvData, "tstoreNotiPublishType=");
-				if (pos >= 0) {
-					int endPos = StringUtils.indexOf(prchsResvData, ";", pos + 22);
+			String notiType = null;
+			String prchsResvData = prchsDtlMore.getPrchsResvDesc();
+			int pos = StringUtils.indexOf(prchsResvData, "tstoreNotiPublishType=");
+			if (pos >= 0) {
+				int endPos = StringUtils.indexOf(prchsResvData, ";", pos + 22);
 
-					if (endPos >= 0) {
-						notiType = StringUtils.substring(prchsResvData, pos + 22, endPos);
-					} else {
-						notiType = StringUtils.substring(prchsResvData, pos + 22);
-					}
-				}
-
-				String userKey = null;
-				String deviceKey = null;
-
-				boolean bGift = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD);
-				if (bGift) {
-					userKey = prchsDtlMore.getSendInsdUsermbrNo();
-					deviceKey = prchsDtlMore.getSendInsdDeviceId();
+				if (endPos >= 0) {
+					notiType = StringUtils.substring(prchsResvData, pos + 22, endPos);
 				} else {
-					userKey = prchsDtlMore.getUseInsdUsermbrNo();
-					deviceKey = prchsDtlMore.getUseInsdDeviceId();
+					notiType = StringUtils.substring(prchsResvData, pos + 22);
 				}
-
-				StringBuffer sbProdIdInfo = new StringBuffer();
-				List<String> prodIdList = new ArrayList<String>();
-				for (PrchsDtlMore prchsInfo : prchsDtlMoreList) {
-					if (prchsInfo.getPrchsDtlId() > 1 && StringUtils.isNotBlank(prchsInfo.getUseFixrateProdId())
-							&& StringUtils.startsWith(prchsInfo.getTenantProdGrpCd(),
-									PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
-						break; // 이북 전권/소장 상품 구매 경우는 에피소드들 skip
-					}
-					if (prodIdList.contains(prchsInfo.getProdId())) {
-						continue; // 상품ID 중복 방지
-					}
-
-					if (sbProdIdInfo.length() > 0) {
-						sbProdIdInfo.append(";");
-					}
-					sbProdIdInfo.append(prchsInfo.getProdId());
-
-					prodIdList.add(prchsInfo.getProdId());
-				}
-
-				this.purchaseOrderTstoreService.postTstoreNotiV2(prchsDtlMore.getPrchsId(), prchsDtlMore.getPrchsDt(),
-						userKey, deviceKey, notiType, bGift, sbProdIdInfo.toString());
 			}
 
-//		}
+			String userKey = null;
+			String deviceKey = null;
+
+			boolean bGift = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD);
+			if (bGift) {
+				userKey = prchsDtlMore.getSendInsdUsermbrNo();
+				deviceKey = prchsDtlMore.getSendInsdDeviceId();
+			} else {
+				userKey = prchsDtlMore.getUseInsdUsermbrNo();
+				deviceKey = prchsDtlMore.getUseInsdDeviceId();
+			}
+
+			StringBuffer sbProdIdInfo = new StringBuffer();
+			List<String> prodIdList = new ArrayList<String>();
+			for (PrchsDtlMore prchsInfo : prchsDtlMoreList) {
+				if (prchsInfo.getPrchsDtlId() > 1
+						&& StringUtils.isNotBlank(prchsInfo.getUseFixrateProdId())
+						&& StringUtils.startsWith(prchsInfo.getTenantProdGrpCd(),
+								PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
+					break; // 이북 전권/소장 상품 구매 경우는 에피소드들 skip
+				}
+				if (prodIdList.contains(prchsInfo.getProdId())) {
+					continue; // 상품ID 중복 방지
+				}
+
+				if (sbProdIdInfo.length() > 0) {
+					sbProdIdInfo.append(";");
+				}
+				sbProdIdInfo.append(prchsInfo.getProdId());
+
+				prodIdList.add(prchsInfo.getProdId());
+			}
+
+			this.purchaseOrderTstoreService.postTstoreNotiV2(prchsDtlMore.getPrchsId(), prchsDtlMore.getPrchsDt(),
+					userKey, deviceKey, notiType, bGift, sbProdIdInfo.toString());
+		}
+
+		// }
 
 		// SAP
 		if (!StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
@@ -254,8 +270,8 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			for (PaymentInfo paymentNotiReq : notifyPaymentReq.getPaymentInfoList()) {
 				paymentMtdCdList.add(PaymethodUtil.convert2StoreCode(paymentNotiReq.getPaymentMtdCd()));
 			}
-			Map<String, PurchaseCommonCode> commonCodeMap = this.purchaseCommonSCI.searchCommonCodeMap(paymentMtdCdList,
-					prchsDtlMore.getCurrencyCd());
+			Map<String, PurchaseCommonCode> commonCodeMap = this.purchaseCommonSCI.searchCommonCodeMap(
+					paymentMtdCdList, prchsDtlMore.getCurrencyCd());
 			PurchaseCommonCode commonCode = null;
 
 			// 결제정보
@@ -305,8 +321,8 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 					product.setAutoPrchsPeriodValue(Integer.parseInt(reservedDataMap.get("autoPrchsPeriodValue")));
 				}
 
-				SellerMbrSac sellerMbrSac = this.purchaseMemberRepository
-						.searchSellerInfo(reservedDataMap.get("sellerMbrNo"));
+				SellerMbrSac sellerMbrSac = this.purchaseMemberRepository.searchSellerInfo(reservedDataMap
+						.get("sellerMbrNo"));
 				if (sellerMbrSac != null) {
 					seller = new SendPurchaseNotiSellerInfoEc();
 					seller.setSellerCompany(sellerMbrSac.getSellerCompany());
@@ -315,9 +331,12 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 
 					// 앱 상품- 1순위:전시 정보, 2순위:회원정보
 					if (StringUtils.equals(purchaseProduct.getSvcGrpCd(), PurchaseCDConstants.DISPLAY_SVCGRPCD_APP)) {
-						seller.setSellerName(StringUtils.defaultString(purchaseProduct.getSellerNm(),sellerMbrSac.getSellerName()));
-						seller.setSellerEmail(StringUtils.defaultString(purchaseProduct.getSellerEmail(),sellerMbrSac.getSellerEmail()));
-						seller.setSellerPhone(StringUtils.defaultString(purchaseProduct.getSellerTelno(),sellerMbrSac.getRepPhone()));
+						seller.setSellerName(StringUtils.defaultString(purchaseProduct.getSellerNm(),
+								sellerMbrSac.getSellerName()));
+						seller.setSellerEmail(StringUtils.defaultString(purchaseProduct.getSellerEmail(),
+								sellerMbrSac.getSellerEmail()));
+						seller.setSellerPhone(StringUtils.defaultString(purchaseProduct.getSellerTelno(),
+								sellerMbrSac.getRepPhone()));
 					} else // 앱 이외 상품-회원 정보
 					{
 						seller.setSellerName(sellerMbrSac.getSellerName());
@@ -385,8 +404,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			}
 			this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,RESULT,{},{}", bSucc, errDesc);
 
-			String procStatusCd = bSucc ? PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_SUCCESS
-					: PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE;
+			String procStatusCd = bSucc ? PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_SUCCESS : PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE;
 
 			// 정상완료응답이 아닌경우 - 배치 처리를 위한 테이블 INSERT
 			this.createSapPurchaseNoti(prchsDtlMore, sendPurchaseNotiEcReq, procStatusCd, errDesc);

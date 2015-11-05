@@ -404,9 +404,23 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		RemoveSSOCredentialSacReq removeSSOCredentialSacReq = new RemoveSSOCredentialSacReq();
 		removeSSOCredentialSacReq.setUserKey(userKey);
 
-		this.logger.info("PRCHS,ORDER,SAC,MEMBER,REMOVESSO,REQ,{}", removeSSOCredentialSacReq.getUserKey());
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,REMOVESSO,REQ,{}", removeSSOCredentialSacReq);
 		RemoveSSOCredentialSacRes removeSSOCredentialSacRes = this.userSCI.removeSSOCredential(removeSSOCredentialSacReq);
-		this.logger.info("PRCHS,ORDER,SAC,MEMBER,REMOVESSO,RES,{}", removeSSOCredentialSacRes.getUserKey());
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,REMOVESSO,RES,{}", removeSSOCredentialSacRes);
+	}
+
+	@Override
+	public void createGiftChargeInfo(String userKey, String sellerKey, String brandName, String chargerId, String chargerName) {
+		CreateGiftChargeInfoSacReq createGiftChargeInfoSacReq = new CreateGiftChargeInfoSacReq();
+		createGiftChargeInfoSacReq.setUserKey(userKey);
+		createGiftChargeInfoSacReq.setSellerKey(sellerKey);
+		createGiftChargeInfoSacReq.setBrandName(brandName);
+		createGiftChargeInfoSacReq.setChargerId(chargerId);
+		createGiftChargeInfoSacReq.setChargerName(chargerName);
+
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,CREATEGIFTCHARGEINFO,REQ,{}", createGiftChargeInfoSacReq);
+		CreateGiftChargeInfoSacRes createGiftChargeInfoSacRes = this.userSCI.createGiftChargeInfo(createGiftChargeInfoSacReq);
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,CREATEGIFTCHARGEINFO,RES,{}", createGiftChargeInfoSacRes);
 	}
 
 	/*

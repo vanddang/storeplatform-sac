@@ -9,10 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -33,5 +34,5 @@ public interface PurchaseOrderPostService {
 	 * @param notifyPaymentReq
 	 *            결제처리결과 Noti 정보
 	 */
-	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList, NotifyPaymentSacReq notifyPaymentReq);
+	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList, NotifyPaymentSacReq notifyPaymentReq, Map<String, String> reservedDataMap);
 }

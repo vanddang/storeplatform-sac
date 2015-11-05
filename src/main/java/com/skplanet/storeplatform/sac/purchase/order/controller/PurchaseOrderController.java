@@ -74,8 +74,6 @@ public class PurchaseOrderController {
 	@Autowired
 	private PurchaseOrderPaymentPageService orderPaymentPageService;
 	@Autowired
-	private PurchaseOrderPostService orderPostService;
-	@Autowired
 	private PurchaseOrderMakeDataService purchaseOrderMakeDataService;
 	@Autowired
 	private PurchaseOrderValidationService validationService;
@@ -400,11 +398,6 @@ public class PurchaseOrderController {
 		// 구매 확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장
 
 		List<PrchsDtlMore> prchsDtlMoreList = this.orderService.confirmPurchase(notifyPaymentReq, tenantId);
-
-		// ------------------------------------------------------------------------------
-		// 구매 후 처리 - 씨네21/인터파크, 구매건수 증가 등등
-
-		this.orderPostService.postPurchase(prchsDtlMoreList, notifyPaymentReq);
 
 		// ------------------------------------------------------------------------------
 		// 응답 : PP 결제 여부에 따른 차별 세팅

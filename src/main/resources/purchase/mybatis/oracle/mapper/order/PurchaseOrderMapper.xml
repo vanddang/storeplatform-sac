@@ -142,6 +142,7 @@
         , use_period_redate_cd
         , use_period_unit_cd
         , use_period
+        , cpn_prod_case_cd
         )
         VALUES
         (
@@ -239,6 +240,7 @@
         , #{usePeriodRedateCd, jdbcType=VARCHAR}
         , #{usePeriodUnitCd, jdbcType=VARCHAR}
         , #{usePeriod, jdbcType=VARCHAR}
+        , #{cpnProdCaseCd, jdbcType=VARCHAR}
         )
     </insert>
 

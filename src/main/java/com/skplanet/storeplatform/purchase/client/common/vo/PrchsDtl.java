@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * 구매상세 CommonVo
- * 
+ *
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
  */
 public class PrchsDtl extends CommonInfo {
@@ -91,6 +91,7 @@ public class PrchsDtl extends CommonInfo {
 	private String usePeriodRedateCd;
 	private String usePeriodUnitCd;
 	private String usePeriod;
+	private String cpnProdCaseCd;
 
 	private String couponCmsPrchsId;
 
@@ -1159,4 +1160,22 @@ public class PrchsDtl extends CommonInfo {
 		this.usePeriod = usePeriod;
 	}
 
+	/**
+	 * Gets cpn prod case cd.
+	 *
+	 * @return the cpn prod case cd
+	 */
+	public String getCpnProdCaseCd() {
+		return cpnProdCaseCd;
+	}
+
+	/**
+	 * Sets cpn prod case cd.
+	 *
+	 * @param cpnProdCaseCd
+	 *            the cpn prod case cd
+	 */
+	public void setCpnProdCaseCd(String cpnProdCaseCd) {
+		this.cpnProdCaseCd = cpnProdCaseCd;
+	}
 }

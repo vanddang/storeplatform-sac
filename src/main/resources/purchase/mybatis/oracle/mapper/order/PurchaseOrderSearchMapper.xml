@@ -363,6 +363,7 @@
               , contents_type
               , use_fixrate_prod_id
               , cpn_dlv_url
+              , cpn_prod_case_cd
           FROM  tb_pr_prchs_dtl 
          WHERE  1 = 1
          <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(useInsdUsermbrNo)">

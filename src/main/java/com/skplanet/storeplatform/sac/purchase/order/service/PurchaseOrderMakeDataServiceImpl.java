@@ -180,6 +180,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					prchsDtlMore.setUsePeriodUnitCd(product.getUsePeriodUnitCd());
 					prchsDtlMore.setUsePeriod(product.getUsePeriod() == null ? "0" : product.getUsePeriod());
 					prchsDtlMore.setUsePeriodSetCd(product.getUsePeriodSetCd());
+					prchsDtlMore.setCpnProdCaseCd(product.getProdCaseCd());
 
 					// ############# 아래 이용기간 세팅 순서 주의 ###################
 
@@ -842,8 +843,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 								.append("&svcGrpCd=")
 								.append(StringUtils.defaultString(product.getSvcGrpCd()))
 								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID, product.getPromId()))
-								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROD_NM,
-										URLEncoder.encode(product.getProdNm(), PurchaseConstants.DEFAULT_ENCODING)))
+								.append(genResvDataEncoded(PurchaseConstants.IF_DISPLAY_RES_PROD_NM,product.getProdNm()))
 								// 이벤트 프로모션 ID
 								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,
 										product.getAcmlMethodCd())) // 프로모션 적립 방법
@@ -851,6 +851,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 																													// 적립일
 								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD,
 										product.getSpecialTypeCd())) // 특가상품 유형코드, 팅요금제 상품 유형 코드
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_META_CLSF_CD,
+										product.getMetaClsfCd())) // 메타 클래스 코드
 								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT,
 										product.getPrivateAcmlLimit())) // 개인 적립 한도
 								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_FORCECLOSE_CD,
@@ -911,9 +913,11 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 						// 쇼핑-충전권
 						if (StringUtils.equals(product.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
+							sbReserveData.append(genResvDataEncoded(PurchaseConstants.IF_DISPLAY_RES_BRAND_NAME,
+									product.getBrandNm()));
 							sbReserveData.append(genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID,
 									purchaseOrderInfo.getChargeMemberId()));
-							sbReserveData.append(genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM,
+							sbReserveData.append(genResvDataEncoded(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM,
 									purchaseOrderInfo.getChargeMemberNm()));
 						}
 
@@ -939,6 +943,14 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			sb.append(StringUtils.defaultString((String) value));
 		}
 		return sb.toString();
+	}
+
+	private String genResvDataEncoded(String key, String value) {
+		try {
+			return genResvData(key, URLEncoder.encode(StringUtils.defaultString(value), PurchaseConstants.DEFAULT_ENCODING));
+		} catch (UnsupportedEncodingException e) {
+			return genResvData(key, value);
+		}
 	}
 
 	/**
