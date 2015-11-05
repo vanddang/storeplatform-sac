@@ -18,6 +18,8 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCanc
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcRes;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
@@ -299,5 +301,17 @@ public interface PurchaseCancelRepository {
 	 * @return 특가쿠폰 사용 여부
 	 */
 	public boolean useSpecialCoupon(String tenantId, String prchsId);
+
+	/**
+	 * 
+	 * <pre>
+	 * T Cash 특정 충전내역 환불을 호출한다.
+	 * </pre>
+	 * 
+	 * @param tStoreCashChargeCancelEcReq
+	 *            tStoreCashChargeCancelEcReq
+	 * @return TStoreCashChargeCancelEcRes
+	 */
+	TStoreCashSpecificRefundEcRes specificRefundTCash(TStoreCashSpecificRefundEcReq tStoreCashSpecificRefundEcReq);
 
 }

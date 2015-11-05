@@ -79,7 +79,8 @@
         <result property="resvCol05"         column="resv_col_05"          jdbcType="VARCHAR" />
         <result property="prchsResvDesc"     column="prchs_resv_desc"      jdbcType="VARCHAR" />
         <result property="couponCmsPrchsId"  column="coupon_cms_prchs_id"  jdbcType="VARCHAR" />
-        <result property="contentsType"      column="contents_type"  jdbcType="VARCHAR" />
+        <result property="contentsType"      column="contents_type"        jdbcType="VARCHAR" />
+        <result property="cpnProdCaseCd"     column="cpn_prod_case_cd"     jdbcType="VARCHAR" />
         
     </resultMap>
     

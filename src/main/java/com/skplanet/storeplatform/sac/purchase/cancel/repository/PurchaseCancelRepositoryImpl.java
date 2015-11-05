@@ -45,6 +45,8 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRe
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSaveCancelEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSaveCancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
@@ -564,13 +566,15 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 							&& purchaseCancelDetailSacParam.getPayPlanetCancelEcRes().getResPaymethod().size() > 0) {
 						for (CancelEcResPaymethod cancelEcResPaymethod : purchaseCancelDetailSacParam
 								.getPayPlanetCancelEcRes().getResPaymethod()) {
-							if (StringUtils.equals(
-									PaymethodUtil.convert2StoreCode(cancelEcResPaymethod.getCdPaymethod()),
-									paymentSacParam.getPaymentMtdCd())) {
+
+							this.logger.info("#####  PP결제 수단 = {}{}", PaymethodUtil
+									.convert2PayPlanetCodeWithoutPointCode(paymentSacParam.getPaymentMtdCd()),
+									cancelEcResPaymethod.getCdPaymethod());
+
+							if (StringUtils.equals(PaymethodUtil.convert2PayPlanetCodeWithoutPointCode(paymentSacParam
+									.getPaymentMtdCd()), cancelEcResPaymethod.getCdPaymethod())) {
 								if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYPLANET_CANCEL_SUCCESS,
-										cancelEcResPaymethod.getResultCode())
-										&& !StringUtils.equals(PurchaseConstants.TSTORE_PAYPLANET_CANCEL_PART_SUCCESS,
-												cancelEcResPaymethod.getResultCode())) {
+										cancelEcResPaymethod.getResultCode())) {
 									// PayPlanet 결제 취소 실패이면
 									purchaseCancelPaymentDetailScReq
 											.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
@@ -947,6 +951,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		prchsDtlSacParam.setResvCol03(prchsDtl.getResvCol03());
 		prchsDtlSacParam.setCouponCmsPrchsId(prchsDtl.getCouponCmsPrchsId());
 		prchsDtlSacParam.setContentsType(prchsDtl.getContentsType()); // IAP 상품타입
+		prchsDtlSacParam.setCpnProdCaseCd(prchsDtl.getCpnProdCaseCd()); // 쇼핑상품 유형 타입
 
 		return prchsDtlSacParam;
 
@@ -1101,6 +1106,21 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		req.setPrchsId(prchsId);
 
 		return this.purchaseCancelSCI.useSpecialCoupon(req);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * T Cash 특정 충전내역 환불을 호출한다.
+	 * </pre>
+	 * 
+	 * @param tStoreCashChargeCancelEcReq
+	 *            tStoreCashChargeCancelEcReq
+	 * @return TStoreCashChargeCancelEcRes
+	 */
+	@Override
+	public TStoreCashSpecificRefundEcRes specificRefundTCash(TStoreCashSpecificRefundEcReq tStoreCashSpecificRefundEcReq) {
+		return this.tStoreCashSCI.specificRefund(tStoreCashSpecificRefundEcReq);
 	}
 
 }

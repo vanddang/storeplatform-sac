@@ -11,9 +11,9 @@ package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -28,6 +28,9 @@ import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundDetailEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
@@ -333,6 +336,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 구매 상품 별 체크. */
 		boolean shoppingYn = false; // 쇼핑상품 구분.
+		String prodCaseCd = ""; // 쇼핑상품 유형을 가져온다.
+
 		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
 
 			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
@@ -345,82 +350,42 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 				// 쇼핑상품이면 true 셋팅.
 				shoppingYn = true;
+				prodCaseCd = prchsDtlSacParam.getCpnProdCaseCd();
 			}
 
+			// 게임캐쉬 충전 취소 처리
 			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
 					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-				// 게임캐쉬 정액제 처리. - 게임캐쉬 충전 취소 처리.
-				String resvCol03 = prchsDtlSacParam.getResvCol03();
-				String tCashCash = StringUtils.substringBetween(resvCol03, "CASH=", ";");
-				String tCashPoint = StringUtils.substringBetween(resvCol03, "POINT=", ";");
 
 				if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_REFUND,
 						purchaseCancelSacParam.getCancelReqPathCd())) {
 					// 환불
+					// this.specificRefundTCash(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH,
+					// prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getUseInsdUsermbrNo());
 				} else {
 					// 취소
+					this.cancelTCashCharge(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH,
+							prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getUseInsdUsermbrNo(),
+							prchsDtlSacParam.getResvCol03());
 				}
-
-				// 환불, 취소 구분 없이 무조껀 충전취소 처리 - 2014.04.30 최상훈c.
-				TStoreCashChargeCancelEcReq tStoreCashChargeCancelEcReq = new TStoreCashChargeCancelEcReq();
-				List<TStoreCashChargeCancelDetailEcReq> cashList = new ArrayList<TStoreCashChargeCancelDetailEcReq>();
-				if (StringUtils.isNotBlank(tCashCash)) {
-					TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
-					tStoreCashChargeCancelDetailEcReq.setIdentifier(tCashCash);
-					tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
-					tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsDtlSacParam.getPrchsId());
-					tStoreCashChargeCancelDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_APP);
-					cashList.add(tStoreCashChargeCancelDetailEcReq);
-				}
-				if (StringUtils.isNotBlank(tCashPoint)) {
-					TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
-					tStoreCashChargeCancelDetailEcReq.setIdentifier(tCashPoint);
-					tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_POINT);
-					tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsDtlSacParam.getPrchsId());
-					tStoreCashChargeCancelDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_APP);
-					cashList.add(tStoreCashChargeCancelDetailEcReq);
-				}
-
-				tStoreCashChargeCancelEcReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
-				tStoreCashChargeCancelEcReq.setCashList(cashList);
-				this.purchaseCancelRepository.cancelTCashCharge(tStoreCashChargeCancelEcReq);
-
 			}
 
 			// 북스캐쉬 충전 취소 처리 2015.10.20
 			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
 					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE)) {
 
-				String resvCol03 = prchsDtlSacParam.getResvCol03();
-				String tCashCash = StringUtils.substringBetween(resvCol03, "CASH=", ";");
-				String tCashPoint = StringUtils.substringBetween(resvCol03, "POINT=", ";");
-
-				TStoreCashChargeCancelEcReq tStoreCashChargeCancelEcReq = new TStoreCashChargeCancelEcReq();
-				List<TStoreCashChargeCancelDetailEcReq> cashList = new ArrayList<TStoreCashChargeCancelDetailEcReq>();
-
-				if (StringUtils.isNotBlank(tCashCash)) {
-					TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
-					tStoreCashChargeCancelDetailEcReq.setIdentifier(tCashCash);
-					tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
-					tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsDtlSacParam.getPrchsId());
-					tStoreCashChargeCancelDetailEcReq
-							.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_SHOPPING);
-					cashList.add(tStoreCashChargeCancelDetailEcReq);
-				}
-				if (StringUtils.isNotBlank(tCashPoint)) {
-					TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
-					tStoreCashChargeCancelDetailEcReq.setIdentifier(tCashPoint);
-					tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_POINT);
-					tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsDtlSacParam.getPrchsId());
-					tStoreCashChargeCancelDetailEcReq
-							.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_SHOPPING);
-					cashList.add(tStoreCashChargeCancelDetailEcReq);
+				if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_REFUND,
+						purchaseCancelSacParam.getCancelReqPathCd())) {
+					// 환불
+					// this.specificRefundTCash(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH,
+					// prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getUseInsdUsermbrNo());
+				} else {
+					// 취소
+					this.cancelTCashCharge(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH,
+							prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getUseInsdUsermbrNo(),
+							prchsDtlSacParam.getResvCol03());
 				}
 
-				tStoreCashChargeCancelEcReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
-				tStoreCashChargeCancelEcReq.setCashList(cashList);
-
-				this.purchaseCancelRepository.cancelTCashCharge(tStoreCashChargeCancelEcReq);
 			}
 
 			// 정액권 상품 체크 (이북/코믹 정액권 인 경우 체크 제외한다. 전권상품일 경우 )
@@ -442,32 +407,14 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		/** 쇼핑 상품 처리. */
 		if (shoppingYn) {
 
-			// 예약 저장해둔 데이터 추출(상품유형을 조회하기 위함)
-			Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService
-					.parseReservedDataByMap(purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0)
-							.getPrchsResvDesc());
-			String prodCaseCd = reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROD_CASE_CD);
-
 			this.logger.info("## PurchaseCancelServiceImpl prodCaseCd {}", prodCaseCd);
 
+			// 상품유형이 충전권인지 확인
 			if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
 
-				// 상품권 타입구분(망상취소:1 그외:0)
-				String cancelType = "";
-				if (StringUtils.equals(PurchaseCDConstants.PRCHS_REQ_PATH_PAYMENT_ERROR_CANCEL,
-						purchaseCancelSacParam.getCancelReqPathCd())
-						|| StringUtils.equals(PurchaseCDConstants.PRCHS_REQ_PATH_TENANT_PAYMENT_ERROR_CANCEL,
-								purchaseCancelSacParam.getCancelReqPathCd())
-						|| StringUtils.equals(PurchaseCDConstants.PRCHS_REQ_PATH_OFFERING_PAYMENT_ERROR_CANCEL,
-								purchaseCancelSacParam.getCancelReqPathCd())) {
+				// 충전권 취소 처리
+				this.executeCancelGoods(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 
-					cancelType = PurchaseConstants.SHOPPING_CANCEL_CHARGE_SYSTEM;
-				} else {
-					cancelType = PurchaseConstants.SHOPPING_CANCEL_CHARGE_DEFAULT;
-				}
-
-				// 상품권 충전 취소 처리
-				this.purchaseShoppingOrderRepository.cancelGoods(purchaseCancelDetailSacParam.getPrchsId(), cancelType);
 			} else {
 
 				// 쇼핑쿠폰 취소 처리
@@ -1310,6 +1257,114 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 트랜잭션 처리 수정(처리상태업데이트) */
 		this.purchaseTransactionSCI.updateTransaction(purchaseTransactionScReq);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품권 충전 취소 요청.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelSacParam
+	 * @param purchaseCancelDetailSacParam
+	 */
+	private void executeCancelGoods(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
+
+		// 상품권 타입구분(망상취소:1 그외:0)
+		String cancelType = "";
+		if (StringUtils.equals(PurchaseCDConstants.PRCHS_REQ_PATH_PAYMENT_ERROR_CANCEL,
+				purchaseCancelSacParam.getCancelReqPathCd())
+				|| StringUtils.equals(PurchaseCDConstants.PRCHS_REQ_PATH_TENANT_PAYMENT_ERROR_CANCEL,
+						purchaseCancelSacParam.getCancelReqPathCd())
+				|| StringUtils.equals(PurchaseCDConstants.PRCHS_REQ_PATH_OFFERING_PAYMENT_ERROR_CANCEL,
+						purchaseCancelSacParam.getCancelReqPathCd())) {
+
+			cancelType = PurchaseConstants.SHOPPING_CANCEL_CHARGE_SYSTEM;
+		} else {
+			cancelType = PurchaseConstants.SHOPPING_CANCEL_CHARGE_DEFAULT;
+		}
+
+		try {
+			// 상품권 충전 취소 처리
+			this.purchaseShoppingOrderRepository.cancelGoods(purchaseCancelDetailSacParam.getPrchsId(), cancelType);
+		} catch (StorePlatformException e) {
+
+			if (!purchaseCancelSacParam.getIgnoreCouponCms()) {
+				ErrorInfo errorInfo = e.getErrorInfo();
+				this.logger.info("Shopping Coupon Exception CODE : {}", errorInfo.getCode());
+				if (!StringUtils.equals("EC_SCPNCMS_3901", errorInfo.getCode())) {
+					this.logger.info("SAC_PUR_8122 Exception : {}", e.getMessage());
+					throw new StorePlatformException("SAC_PUR_8122", e);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * T Cash 취소요청.
+	 * </pre>
+	 * 
+	 * @param productGroup
+	 * @param prchsId
+	 * @param userKey
+	 * @param resvCol03
+	 */
+	private void cancelTCashCharge(String productGroup, String prchsId, String userKey, String resvCol03) {
+
+		String tCashCash = StringUtils.substringBetween(resvCol03, "CASH=", ";");
+		String tCashPoint = StringUtils.substringBetween(resvCol03, "POINT=", ";");
+
+		TStoreCashChargeCancelEcReq tStoreCashChargeCancelEcReq = new TStoreCashChargeCancelEcReq();
+		List<TStoreCashChargeCancelDetailEcReq> cashList = new ArrayList<TStoreCashChargeCancelDetailEcReq>();
+		if (StringUtils.isNotBlank(tCashCash)) {
+			TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
+			tStoreCashChargeCancelDetailEcReq.setIdentifier(tCashCash);
+			tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
+			tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsId);
+			tStoreCashChargeCancelDetailEcReq.setProductGroup(productGroup);
+			cashList.add(tStoreCashChargeCancelDetailEcReq);
+		}
+		if (StringUtils.isNotBlank(tCashPoint)) {
+			TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
+			tStoreCashChargeCancelDetailEcReq.setIdentifier(tCashPoint);
+			tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_POINT);
+			tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsId);
+			tStoreCashChargeCancelDetailEcReq.setProductGroup(productGroup);
+			cashList.add(tStoreCashChargeCancelDetailEcReq);
+		}
+
+		tStoreCashChargeCancelEcReq.setUserKey(userKey);
+		tStoreCashChargeCancelEcReq.setCashList(cashList);
+
+		if (CollectionUtils.isNotEmpty(cashList)) {
+			this.purchaseCancelRepository.cancelTCashCharge(tStoreCashChargeCancelEcReq);
+		}
+	}
+
+	private TStoreCashSpecificRefundEcRes specificRefundTCash(String productGroup, String prchsId, String userKey) {
+
+		TStoreCashSpecificRefundEcReq tStoreCashSpecificRefundEcReq = new TStoreCashSpecificRefundEcReq();
+		TStoreCashSpecificRefundEcRes tStoreCashSpecificRefundEcRes = new TStoreCashSpecificRefundEcRes();
+
+		List<TStoreCashSpecificRefundDetailEcReq> cashList = new ArrayList<TStoreCashSpecificRefundDetailEcReq>();
+
+		TStoreCashSpecificRefundDetailEcReq tStoreCashSpecificRefundDetailEcReq = new TStoreCashSpecificRefundDetailEcReq();
+		tStoreCashSpecificRefundDetailEcReq.setOrderNo(prchsId);
+		tStoreCashSpecificRefundDetailEcReq.setProductGroup(productGroup);
+		cashList.add(tStoreCashSpecificRefundDetailEcReq);
+
+		tStoreCashSpecificRefundEcReq.setUserKey(userKey);
+		tStoreCashSpecificRefundEcReq.setCashList(cashList);
+
+		if (CollectionUtils.isNotEmpty(cashList)) {
+			tStoreCashSpecificRefundEcRes = this.purchaseCancelRepository
+					.specificRefundTCash(tStoreCashSpecificRefundEcReq);
+		}
+
+		return tStoreCashSpecificRefundEcRes;
 	}
 
 }
