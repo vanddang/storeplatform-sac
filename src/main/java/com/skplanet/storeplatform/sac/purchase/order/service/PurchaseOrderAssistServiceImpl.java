@@ -111,6 +111,28 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 	}
 
 	/**
+	 *
+	 * <pre>
+	 * 기준일로부터 이용 일자 계산.
+	 * </pre>
+	 *
+	 * @param startDt
+	 *            기준일(시작일)
+	 * @param periodUnitCd
+	 *            이용기간 단위 코드
+	 * @param periodVal
+	 *            이용기간 값
+	 * @param bAutoPrchs
+	 *            자동결제상품 여부
+	 *
+	 * @return 계산된 이용 일자
+	 */
+	@Override
+	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs) {
+		return this.calculateUseDate(startDt, periodUnitCd, periodVal, bAutoPrchs, "yyyyMMddHHmmss");
+	}
+
+	/**
 	 * 
 	 * <pre>
 	 * 기준일로부터 이용 일자 계산.
@@ -128,7 +150,7 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 	 * @return 계산된 이용 일자
 	 */
 	@Override
-	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs) {
+	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs, String dateFormant) {
 
 		if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) { // 무제한
 			return PurchaseConstants.UNLIMITED_DATE;
@@ -166,7 +188,7 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 				checkDate = DateUtils.addHours(DateUtils.truncate(checkDate, Calendar.DATE), 10);
 			}
 
-			return DateFormatUtils.format(checkDate, "yyyyMMddHHmmss");
+			return DateFormatUtils.format(checkDate, dateFormant);
 		}
 	}
 

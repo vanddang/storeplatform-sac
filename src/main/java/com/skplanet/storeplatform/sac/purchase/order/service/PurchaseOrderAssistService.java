@@ -43,6 +43,8 @@ public interface PurchaseOrderAssistService {
 	 */
 	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal);
 
+	String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs);
+
 	/**
 	 * 
 	 * <pre>
@@ -60,7 +62,7 @@ public interface PurchaseOrderAssistService {
 	 * 
 	 * @return 계산된 이용 일자
 	 */
-	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs);
+	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs, String dateFormat);
 
 	/**
 	 * 

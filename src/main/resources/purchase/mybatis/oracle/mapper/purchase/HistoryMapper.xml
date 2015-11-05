@@ -300,7 +300,12 @@
                    AND  a.use_insd_usermbr_no = #{userKey}
                 <!-- 조회조건 -->
                 <include refid="puchaseSearchParam"/>
-                
+
+                <!-- 테넌트상품분류 -->
+                <if test="notTenantProdGrpCd != null and notTenantProdGrpCd != ''">
+                    AND a.tenant_prod_grp_cd NOT LIKE #{notTenantProdGrpCd} || '%'
+                </if>
+
                 <choose>
                     <when  test='selectDeviceYn == "Y"'><!-- 테넌트상품분류가 Device정책 분류와 동일할 경우에는 DeviceKey를 조회조건으로 생성 -->
                       AND a.use_insd_device_id = #{deviceKey, jdbcType=VARCHAR}
@@ -753,6 +758,11 @@
                 
                 <!-- 조회조건 -->
                 <include refid="puchaseSearchParam"/>
+
+                <!-- 테넌트상품분류 -->
+                <if test="notTenantProdGrpCd != null and notTenantProdGrpCd != ''">
+                    AND a.tenant_prod_grp_cd NOT LIKE #{notTenantProdGrpCd} || '%'
+                </if>
                 ) a
          WHERE  RNUM between #{startRow} and #{endRow}      
         

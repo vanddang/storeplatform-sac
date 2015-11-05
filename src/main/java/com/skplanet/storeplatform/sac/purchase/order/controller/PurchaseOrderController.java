@@ -520,7 +520,8 @@ public class PurchaseOrderController {
 		String tenantProdGrpCd = purchaseOrderInfo.getTenantProdGrpCd();
 
 		if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)
-				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)
+				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE)) {
 			purchaseOrderInfo.setFlat(true); // 정액 상품 여부
 		}
 
