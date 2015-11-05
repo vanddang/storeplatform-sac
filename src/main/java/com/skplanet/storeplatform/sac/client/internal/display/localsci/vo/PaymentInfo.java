@@ -74,6 +74,7 @@ public class PaymentInfo extends CommonInfo {
 	private String specialTypeCd;
 	private String orgBrandId;
 	private String brandId;
+	private String brandNm;
 	
 
 	// ////////////////////////// 정액제 상품 변수 ////////////////////////////
@@ -731,6 +732,15 @@ public class PaymentInfo extends CommonInfo {
 	 */
 	public void setBrandId(String brandId) {
 		this.brandId = brandId;
+	}
+
+
+	public String getBrandNm() {
+		return brandNm;
+	}
+
+	public void setBrandNm(String brandNm) {
+		this.brandNm = brandNm;
 	}
 
 	/**
