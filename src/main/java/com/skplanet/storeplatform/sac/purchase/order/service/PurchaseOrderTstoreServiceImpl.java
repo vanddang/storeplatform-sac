@@ -534,7 +534,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreCashChargeEcReq.setProductGroup(productGroupCode);
 		tStoreCashChargeEcReq.setAmt(String.valueOf((int) cashAmt));
 		tStoreCashChargeEcReq.setDate(this.purchaseOrderAssistService
-				.calculateUseDate(useStartDt, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR, "5", false, "yyyyMMdd")); // 사용 유효기간(만료일시 - yyyyMMddHHmmss)
+				.calculateUseDate(useStartDt, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR, "5", false, "yyyyMMdd"));
 		tStoreCashChargeEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
 		tStoreCashChargeEcReq.setProcType(PurchaseConstants.TSTORE_CASH_PROCTYPE_BOOKS_CASH);
 		tStoreCashChargeEcReq.setOrderNo(prchsId);
@@ -547,7 +547,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		if (bonusPointAmt > 0.0) {
 			tStoreCashChargeEcReq.setAmt(String.valueOf((int) bonusPointAmt));
 			tStoreCashChargeEcReq.setDate(this.purchaseOrderAssistService.calculateUseDate(useStartDt,
-					bonusPointUsePeriodUnitCd, bonusPointUsePeriod));
+					bonusPointUsePeriodUnitCd, bonusPointUsePeriod, false, "yyyyMMdd"));
 			tStoreCashChargeEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_POINT);
 			tStoreCashChargeEcReq.setProcType(PurchaseConstants.TSTORE_CASH_PROCTYPE_BOOKS_CASH_POINT);
 
