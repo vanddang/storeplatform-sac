@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -118,7 +119,9 @@ public class UserSCIServiceImpl implements UserSCIService {
 		sellerKeys.add(keySearch);
 		SearchMbrSellerRequest searchMbrSellerRequest = new SearchMbrSellerRequest();
 		searchMbrSellerRequest.setCommonRequest(commonRequest);
-		searchMbrSellerRequest.setKeySearchList(sellerKeys);
+		if (StringUtil.isNotEmpty(request.getSellerKey())) {
+			searchMbrSellerRequest.setKeySearchList(sellerKeys);
+		}
 
 		try {
 			this.sellerSCI.searchMbrSeller(searchMbrSellerRequest);
