@@ -4088,7 +4088,6 @@
                         AND NVL(B.CHNL_CNT, 0) <![CDATA[> ]]> 0
                         AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */       
                         </if>                
-                        AND I.PROD_CASE_CD != 'DP006306'         
                         AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
                         AND F.LANG_CD= #{langCd}          /* ko : 한국어 */
                         AND O.LANG_CD= #{langCd}          /* ko : 한국어 */
