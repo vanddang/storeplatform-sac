@@ -164,10 +164,10 @@ public interface PurchaseOrderMakeDataService {
 	 * <pre>
 	 * 구매예약시 예약컬럼에 저장해뒀던 추가 데이터들.
 	 * </pre>
-	 * 
+	 *
 	 * @param reservedData
 	 *            구매예약시 저장해뒀던 추가 데이터들
-	 * 
+	 *
 	 * @return 분리된 파라미터 Map
 	 */
 	public Map<String, String> parseReservedDataByMap(String reservedData);

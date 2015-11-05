@@ -99,6 +99,11 @@ public class AdjustValueUtil {
 		return resultMap;
 	}
 
+	public static Map<String, String> classifyValuesToMap(String str)
+	{
+		return classifyValuesToMap(str, PurchaseConstants.SEPARATOR, PurchaseConstants.DELIMITER);
+	}
+
 	private static String concatStr(Map<String,String> dataMap, String separator, String delimiter)
 	{
 		return concatStr(dataMap.keySet(), dataMap, separator, delimiter);

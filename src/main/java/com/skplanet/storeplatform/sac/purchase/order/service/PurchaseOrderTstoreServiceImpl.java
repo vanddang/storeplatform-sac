@@ -296,13 +296,13 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			} else if (StringUtils
 					.equals(cash.getProductGroup(), PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS)) {
 				if(cashProductGroupList.contains(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS)){
-					sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30).append(":")
+					sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPLUS_POINT_30).append(":")
 							.append(Double.parseDouble(cash.getAmt()));
 				}
 			} else if (StringUtils
 					.equals(cash.getProductGroup(), PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH)) {
 				if(cashProductGroupList.contains(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH)) {
-					sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_BOOKS_CASH_31).append(":")
+					sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_BOOKSCASH_31).append(":")
 							.append(Double.parseDouble(cash.getAmt()));
 				}
 			}

@@ -149,7 +149,8 @@ public class PurchaseCDConstants {
 	public static final String PAYMENT_METHOD_GAMECASH_POINT = "OR000624"; // 게임캐쉬 보너스 포인트
 	public static final String PAYMENT_METHOD_TGAMEPASS = "OR000625"; // T game pass
 	public static final String PAYMENT_METHOD_SYRUP_PAY = "OR000626"; // SYRUP PAY
-	public static final String PAYMENT_METHOD_BOOKS_CASH = "OR000627"; // Books Cash
+	public static final String PAYMENT_METHOD_BOOKS_CASH = "OR000627"; // 북스캐시
+	public static final String PAYMENT_METHOD_BOOKS_CASH_POINT = "OR000628"; // 북스캐시 포인트
 	public static final String PAYMENT_METHOD_SHOPPING_SPECIAL_COUPON = "OR000606"; // TAKTODO:: 쇼핑 특가상품 쿠폰
 	public static final String PAYMENT_METHOD_FIXRATE_REFUND = "OR000692"; // 정액권 환불
 	public static final String PAYMENT_METHOD_SKT_TEST_DEVICE = "OR000694"; // SKT 시험폰 결제

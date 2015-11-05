@@ -1536,7 +1536,7 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 		// sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25).append(":0:0;");
 		// sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_COUPON_26).append(":0:0;");
 		// sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_GAMECASH_27).append(":0:0;");
-		// sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30).append(":0:0");
+		// sbPaymethodAdjInfo.append(PAYPLANET_PAYMENT_METHOD_TGAMEPLUS_POINT_30).append(":0:0");
 		//
 		// paymethodInfo = sbPaymethodAdjInfo.toString();
 		// }
