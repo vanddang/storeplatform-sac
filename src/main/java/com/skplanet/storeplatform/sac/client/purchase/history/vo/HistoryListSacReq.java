@@ -1,14 +1,12 @@
 package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
-import java.util.List;
+import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseHeaderSacReq;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
-
-import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseHeaderSacReq;
+import java.util.List;
 
 /**
  * 구매내역 조회 요청 VO
@@ -27,6 +25,7 @@ public class HistoryListSacReq extends PurchaseHeaderSacReq {
 	@NotBlank
 	private String endDt; // 조회종료일시
 	private String tenantProdGrpCd; // 테넌트상품분류코드
+	private String notTenantProdGrpCd;// 제외 테넌트상품분류코드
 	@Size(min = 0, max = 100)
 	private List<ProductListSac> productList; // 조회 상품PID LIST
 	private String prchsCaseCd; // 구매유형코드
@@ -318,4 +317,22 @@ public class HistoryListSacReq extends PurchaseHeaderSacReq {
 		this.deviceHistoryYn = deviceHistoryYn;
 	}
 
+	/**
+	 * Gets not tenant prod grp cd.
+	 *
+	 * @return the not tenant prod grp cd
+	 */
+	public String getNotTenantProdGrpCd() {
+		return notTenantProdGrpCd;
+	}
+
+	/**
+	 * Sets not tenant prod grp cd.
+	 *
+	 * @param notTenantProdGrpCd
+	 *            the not tenant prod grp cd
+	 */
+	public void setNotTenantProdGrpCd(String notTenantProdGrpCd) {
+		this.notTenantProdGrpCd = notTenantProdGrpCd;
+	}
 }
