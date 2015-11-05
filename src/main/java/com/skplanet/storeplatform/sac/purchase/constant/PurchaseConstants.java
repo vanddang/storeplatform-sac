@@ -293,10 +293,13 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_CASH_25 = "25"; // T store 캐쉬
 	public static final String PAYPLANET_PAYMENT_METHOD_COUPON_26 = "26"; // 쿠폰
 	public static final String PAYPLANET_PAYMENT_METHOD_GAMECASH_27 = "27"; // 게임캐쉬
-	public static final String PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT_28 = "28"; // 게임캐쉬 보너스 포인트
-	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_POINT_29 = "29"; // T store 포인트
-	public static final String PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30 = "30"; // T game pass 포인트
-	public static final String PAYPLANET_PAYMENT_METHOD_BOOKS_CASH_31 = "31"; // Books Cash
+//	public static final String PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT_28 = "28"; // 게임캐쉬 보너스 포인트
+//	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_POINT_29 = "29"; // T store 포인트
+	public static final String PAYPLANET_PAYMENT_METHOD_TGAMEPLUS_POINT_30 = "30"; // T game+(포인트)
+	public static final String PAYPLANET_PAYMENT_METHOD_BOOKSCASH_31 = "31"; // Books Cash
+
+	public static final String TSTORE_CASH_CLASS_POINT_01 = "01";
+	public static final String TSTORE_CASH_CLASS_CASH_02 = "02";
 
 	/** 결제 가능액 **/
 	public static final String PAYPLANET_PAYMENT_AMT_MAX = "MAXAMT"; // SKT 후불
@@ -395,13 +398,7 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 
 	/** 구매 예약 데이터 관리 **/
 	/** 전시 응답 규격 **/
-	/* 프로모션 관련 */
-	public static final String IF_DISPLAY_RES_PROM_ID = "promId";
-	public static final String IF_DISPLAY_RES_ACLMETHOD_CD = "acmlMethodCd"; // 적립 수단 코드 (OR020701-캐쉬,OR020702-게임캐쉬,OR020703-북스캐쉬)
-	public static final String IF_DISPLAY_RES_ACML_DT = "acmlDt";
-	public static final String IF_DISPLAY_RES_PROM_FORCECLOSE_CD = "promForceCloseCd"; // 프로모션 강제 종료 코드
-	public static final String IF_DISPLAY_RES_PAY_METHOD_VDTY_DT = "payMethodVdtyDt"; // 적립금 유효일
-
+	/* 기타 */
 	public static final String IF_DISPLAY_RES_PROD_NM = "prodNm";
 	public static final String IF_DISPLAY_RES_COUPON_CODE = "couponCode"; // 쿠폰 상품 코드
 	public static final String IF_DISPLAY_RES_PROD_CASE_CD = "prodCaseCd"; // 상품 유형
@@ -411,6 +408,16 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String IF_DISPLAY_RES_PRIVATEACML_LIMIT = "privateAcmlLimit"; // 개인 적립 한도
 	public static final String IF_DISPLAY_RES_USE_PERIOD_CNT = "usePeriodCnt"; // 사용일
 	public static final String IF_DISPLAY_RES_DWLD_PERIOD_CNT = "dwldAvailableDayCnt"; // 다운로드 가능일 (현재는 전시의 사용일을 동일하게 세팅하여 사용)
+	public static final String IF_DISPLAY_RES_BRAND_NAME = "brandNm"; // 제휴사 브랜드명
+	public static final String IF_DISPLAY_RES_BRAND_ID = "brandId"; // 제휴사 브랜드명
+	public static final String IF_DISPLAY_META_CLSF_CD = "metaClsfCd"; // 메타 클래스 코드
+
+	/* 프로모션 관련 */
+	public static final String IF_DISPLAY_RES_PROM_ID = "promId";
+	public static final String IF_DISPLAY_RES_ACLMETHOD_CD = "acmlMethodCd"; // 적립 수단 코드 (OR020701-캐쉬,OR020702-게임캐쉬,OR020703-북스캐쉬)
+	public static final String IF_DISPLAY_RES_ACML_DT = "acmlDt";
+	public static final String IF_DISPLAY_RES_PROM_FORCECLOSE_CD = "promForceCloseCd"; // 프로모션 강제 종료 코드
+	public static final String IF_DISPLAY_RES_PAY_METHOD_VDTY_DT = "payMethodVdtyDt"; // 적립금 유효일
 
 	/* 캐쉬 */
 	public static final String IF_DISPLAY_RES_BNS_CASH_AMT = "bnsCashAmt"; // 보너스 캐쉬

@@ -115,6 +115,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	@Autowired
 	private PurchaseShoppingOrderRepository purchaseShoppingOrderRepository;
 
+	@Autowired
+	private PurchaseOrderPostService orderPostService;
 	/**
 	 * 
 	 * <pre>
@@ -800,7 +802,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					&& StringUtils.contains(cdMaxAmtRateNoDouble,
 							PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH_27 + ":0:0")
 					&& StringUtils.contains(cdMaxAmtRateNoDouble,
-							PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT_30 + ":0:0")) {
+							PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPLUS_POINT_30 + ":0:0")) {
 			} else {
 				ArrayList<String> productGroupList = new ArrayList<String>();
 				productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH);
@@ -813,7 +815,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		} else if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 				PurchaseCDConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
 			// 이북일 경우 Books Cash, Tstore 캐시 조회
-			if (StringUtils.contains(cdMaxAmtRateNoDouble, PurchaseConstants.PAYPLANET_PAYMENT_METHOD_BOOKS_CASH_31
+			if (StringUtils.contains(cdMaxAmtRateNoDouble, PurchaseConstants.PAYPLANET_PAYMENT_METHOD_BOOKSCASH_31
 					+ ":0:0") == false) {
 				ArrayList<String> productGroupList = new ArrayList<String>();
 				productGroupList.add(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH);
@@ -954,6 +956,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		res.setProdKind(reservedDataMap.get("prodCaseCd")); // 쇼핑상품 종류
 		res.setSpecialTypeCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD));
+		res.setMetaClsfCd(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_META_CLSF_CD));
 
 		// IAP P/P 정보 세팅
 		if (StringUtils.equals("Y", reservedDataMap.get("iapYn"))) {
@@ -1494,8 +1497,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				});
 			}
 		}
-
 		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,END");
+
+		// ------------------------------------------------------------------------------
+		// 구매 후 처리 - 씨네21/인터파크, 구매건수 증가 등등
+		this.orderPostService.postPurchase(prchsDtlMoreList, notifyPaymentReq, reservedDataMap);
 		return prchsDtlMoreList;
 	}
 
