@@ -743,6 +743,7 @@ public class PaymentInfo extends CommonInfo {
 		this.brandNm = brandNm;
 	}
 
+
 	/**
 	 * @return the availableFixrateProdIdList
 	 */
