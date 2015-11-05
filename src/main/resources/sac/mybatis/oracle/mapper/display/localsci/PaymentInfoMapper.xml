@@ -198,6 +198,7 @@
                         ,N.SPRC_TYPE_CD as specialTypeCd
                         ,A.ORG_BRAND_ID 
                         ,A.BRAND_ID
+                        ,A.BRAND_NM
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
