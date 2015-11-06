@@ -15,6 +15,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.common.support.redis.RedisDataService;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
@@ -96,6 +97,12 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
             ProductBaseInfo baseInfo = extraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(prodId));
 
             if (baseInfo == null)
+                continue;
+
+            if(param.getFilterProdGradeCd() != null && !param.getFilterProdGradeCd().contains(baseInfo.getProdGrdCd()))
+                continue;
+
+            if(param.getFilter19plus() != null && param.getFilter19plus() != baseInfo.getPlus19())
                 continue;
 
             MetaInfo metaInfo;

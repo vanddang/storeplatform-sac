@@ -127,6 +127,8 @@
             P.CONTENTS_TYPE_CD,
             P.META_CLSF_CD,
             P.TOP_MENU_ID,
+            P.PROD_GRD_CD,
+            P.PLUS19_YN,
             APP.PART_PARENT_CLSF_CD,
             NVL(RSHP.PROD_ID, P.PROD_ID) AS CHNL_ID,
             CASE WHEN SVC_GRP_CD || P.CONTENTS_TYPE_CD = 'DP000206PD002502' THEN (
@@ -155,6 +157,8 @@
                 P.CONTENTS_TYPE_CD,
                 P.META_CLSF_CD,
                 P.TOP_MENU_ID,
+                P.PROD_GRD_CD,
+                P.PLUS19_YN,
                 '' as PART_PARENT_CLSF_CD,
                 CM.PROD_ID as CHNL_ID,
                 CM.CATALOG_ID as CAT_ID,

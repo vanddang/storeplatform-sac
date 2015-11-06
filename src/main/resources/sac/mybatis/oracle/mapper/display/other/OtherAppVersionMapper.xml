@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="OtherAppVersion">
-	<select id="getSprtDev" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.other.service.OtherAppVersionServiceImpl$SprtDev">
+	<select id="getSprtDev" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.SupportDevice">
 		SELECT
 			SC.SUB_CONTENTS_ID as SC_ID,
 			SC.VM_VER as OS_VER,

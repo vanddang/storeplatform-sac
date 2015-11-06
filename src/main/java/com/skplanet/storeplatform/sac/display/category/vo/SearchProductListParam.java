@@ -9,7 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.category.vo;
 
+import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -23,6 +27,8 @@ public class SearchProductListParam {
     private String langCd;
     private String deviceModelCd;
     private List<String> prodIdList;
+    private Set<String> filterProdGradeCd;
+    private Boolean filter19plus;
 
     public SearchProductListParam() {}
 
@@ -64,4 +70,26 @@ public class SearchProductListParam {
     public void setDeviceModelCd(String deviceModelCd) {
         this.deviceModelCd = deviceModelCd;
     }
+
+    public Set<String> getFilterProdGradeCd() {
+        return filterProdGradeCd;
+    }
+
+    public void setFilterProdGradeCd(Set<String> filterProdGradeCd) {
+        this.filterProdGradeCd = filterProdGradeCd;
+    }
+
+    public Boolean getFilter19plus() {
+        return filter19plus;
+    }
+
+    public void setFilter19plus(Boolean filter19plus) {
+        this.filter19plus = filter19plus;
+    }
+
+    public void setFilterProdGradeCdStr(String param) {
+        String[] strs = StringUtils.split(param, "+");
+        this.filterProdGradeCd = Sets.newHashSet(strs);
+    }
+
 }

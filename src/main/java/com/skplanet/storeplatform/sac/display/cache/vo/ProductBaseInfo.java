@@ -10,18 +10,17 @@
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-//import com.skplanet.storeplatform.sac.common.support.redis.OptionalField;
-import com.skplanet.storeplatform.sac.common.support.redis.OptionalField;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.data.annotation.Transient;
 
 import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
 
 /**
  * <p>
  * ProductBasicInfo
- * - @Optional 적용하자.
+ * [c25d] 초기 데이터
  * </p>
  * Updated on : 2015. 07. 01 Updated by : 정희원, SK 플래닛.
  */
@@ -31,14 +30,13 @@ public class ProductBaseInfo {
     private String svcGrpCd;
     private String contentsTypeCd;
     private String chnlId;
+    private Boolean plus19;
+    private String prodGrdCd;
 
-    @OptionalField
+    ///// 아래는 Optional한 필드임 /////
     private String metaClsfCd;
-    @OptionalField
     private String svcTpCd;
-    @OptionalField
     private String partParentClsfCd;
-    @OptionalField
     private String catId;
 
     public String getChnlId() {
@@ -105,10 +103,34 @@ public class ProductBaseInfo {
         this.catId = catId;
     }
 
+    public Boolean getPlus19() {
+        return plus19;
+    }
+
+    public void setPlus19(Boolean plus19) {
+        this.plus19 = plus19;
+    }
+
+    public void setPlus19Yn(String plus19Yn) {
+        if(plus19Yn == null)
+            return;
+
+        this.plus19 = plus19Yn.equals("Y");
+    }
+
+    public String getProdGrdCd() {
+        return prodGrdCd;
+    }
+
+    public void setProdGrdCd(String prodGrdCd) {
+        this.prodGrdCd = prodGrdCd;
+    }
+
     /**
      * IAP 상품인지 여부
      * @return IAP상품이면 true
      */
+    @Transient
     public boolean isIapProduct() {
         return DP_PART_CHILD_CLSF_CD.equals(partParentClsfCd);
     }
@@ -117,6 +139,7 @@ public class ProductBaseInfo {
      * 모상품인 경우 IAP(자상품)이 존재하는지 여부
      * @return 자상품이 존재하는 경우 true
      */
+    @Transient
     public boolean hasIapProduct() {
         return DP_PART_PARENT_CLSF_CD.equals(partParentClsfCd);
     }
@@ -125,10 +148,12 @@ public class ProductBaseInfo {
      * 시리즈 상품인지 여부
      * @return 시리즈 상품이면 true
      */
+    @Transient
     public boolean isSeries() {
         return SET_SERIES_META.contains(metaClsfCd);
     }
 
+    @Transient
     public ProductType getProductType() {
 
         String q = StringUtils.join(new String[]{svcGrpCd, svcTpCd, metaClsfCd}, ".");

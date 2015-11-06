@@ -9,8 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.cache;
 
-import com.skplanet.storeplatform.sac.common.support.redis.ObjectHashGenerator;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
+
+import static com.skplanet.storeplatform.sac.common.support.redis.ObjectHashGenerator.*;
 
 /**
  * <p>
@@ -24,12 +26,12 @@ public class SacRedisKeys {
     private static final String PREFIX_PKG_2_PROD = "pkg2prod:";
     private static final String PREFIX_PKGS_IN_PROD = "pkgsInProd:";
     private static final String PREFIX_SPRT_DEV = "sprtdev:";
-    private static final String PREFIX_PRODUCT_BASE = "prodBase:";
+    private static final String PREFIX_PRODUCT_BASE = hash(ProductBaseInfo.class) + ":prodBase:";
 
-    private static final String SET_PROMOEVENT = ObjectHashGenerator.hash(PromotionEvent.class) + ":set:promoEvent";
-    private static final String PREFIX_PROMOEVENT = ObjectHashGenerator.hash(PromotionEvent.class) + ":promoEvent:";
-    private static final String PREFIX_LIVE_PROMOEVENT = ObjectHashGenerator.hash(PromotionEvent.class) + ":livePromoEvent";
-    private static final String PREFIX_TARGET_USERS = ObjectHashGenerator.hash(PromotionEvent.class) + ":set:targetUser:";
+    private static final String SET_PROMOEVENT = hash(PromotionEvent.class) + ":set:promoEvent";
+    private static final String PREFIX_PROMOEVENT = hash(PromotionEvent.class) + ":promoEvent:";
+    private static final String PREFIX_LIVE_PROMOEVENT = hash(PromotionEvent.class) + ":livePromoEvent";
+    private static final String PREFIX_TARGET_USERS = hash(PromotionEvent.class) + ":set:targetUser:";
 
     private static final String LIVE_PROMO_EVENT_END_LOG = "livePromoEventEndLog";
     private static final String LIVE_PROMO_EVENT_TRANSITION = "livePromoEventTransition";

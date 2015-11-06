@@ -9,13 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.common.support.featureswitch.FeatureKey;
 import com.skplanet.storeplatform.sac.common.support.featureswitch.SacFeatureSwitchAccessor;
+import com.skplanet.storeplatform.sac.common.support.redis.RedisDataService;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleAction;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleGetOrLoadHandler;
 import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
@@ -73,6 +72,9 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     @Autowired
     private PromotionEventDataService eventDataService;
 
+    @Autowired
+    private RedisDataService dataService;
+
     private static final Logger logger = LoggerFactory.getLogger(CachedExtraInfoManagerImpl.class);
 
     @Override
@@ -96,39 +98,6 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
     }
 
     @Override
-    public String getProdIdByPkgNm(String pkgNm) {
-        final DisplayCryptUtils.SacSha1Mac sha1Mac = DisplayCryptUtils.createSha1Mac();
-
-        return RedisSimpleAction.getOrLoad(connectionFactory, pkgNm,
-                new RedisSimpleGetOrLoadHandler<String, String>() {
-                    @Override
-                    public String load(String pkgNm, Plandasj redis) {
-                        return redis.get(SacRedisKeys.pkg2prod(pkgNm));
-                    }
-
-                    @Override
-                    public void store(String pkgNm, String value, Plandasj redis) {
-                        String key = SacRedisKeys.pkg2prod(pkgNm);
-                        redis.set(key, value);
-                        redis.expire(key, 60 * 60 * 12);
-
-                        redis.sadd(SacRedisKeys.pkgsInProd(value), pkgNm);
-                    }
-
-                    @Override
-                    public String makeValue(String pkgNm) {
-                        String hashedPkgNm = sha1Mac.hashPkgNm(pkgNm);
-                        Map<String, Object> req = new HashMap<String, Object>();
-                        req.put("tenantIds", ServicePropertyManager.getSupportTenantList());
-                        req.put("hashedPkgNm", hashedPkgNm);
-                        String prodId = commonDAO.queryForObject("CachedExtraInfoManager.getProdIdByPkgNm", req, String.class);
-
-                        return prodId;
-                    }
-                });
-    }
-
-    @Override
     public void evictPkgsInProd(String prodId) {
         Plandasj c = connectionFactory.getConnectionPool().getClient();
         Set<String> pkgs = c.smembers(SacRedisKeys.pkgsInProd(prodId));
@@ -139,54 +108,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
     @Override
     public ProductBaseInfo getProductBaseInfo(GetProductBaseInfoParam param) {
-        return RedisSimpleAction.getOrLoad(connectionFactory, param.getProdId(),
-                new RedisSimpleGetOrLoadHandler<String, ProductBaseInfo>() {
-                    @Override
-                    public ProductBaseInfo load(String prodId, Plandasj redis) {
-                        Map<String, String> data = redis.hgetAll(SacRedisKeys.prodBase(prodId));
-                        if(data.isEmpty())
-                            return null;
-
-                        ProductBaseInfo info = new ProductBaseInfo();
-                        info.setTopMenuId(data.get("topMenuId"));
-                        info.setChnlId(data.get("chnlId"));
-                        info.setMetaClsfCd(data.get("metaClsfCd"));
-                        info.setSvcGrpCd(data.get("svcGrpCd"));
-                        info.setSvcTpCd(data.get("svcTpCd"));
-                        info.setContentsTypeCd(data.get("contentsTypeCd"));
-                        info.setPartParentClsfCd(data.get("partParentClsfCd"));
-                        info.setCatId(data.get("catId"));
-
-                        return info;
-                    }
-
-                    @Override
-                    public void store(String prodId, ProductBaseInfo value, Plandasj redis) {
-                        // FIXME 실행중 에러가 나면 원치 않는 동작을 할수도 있다.
-                        String key = SacRedisKeys.prodBase(prodId);
-                        redis.hset(key, "svcGrpCd", value.getSvcGrpCd());
-                        redis.hset(key, "topMenuId", value.getTopMenuId());
-                        redis.hset(key, "chnlId", value.getChnlId());
-
-                        if(!Strings.isNullOrEmpty(value.getContentsTypeCd()))
-                            redis.hset(key, "contentsTypeCd", value.getContentsTypeCd());
-                        if(!Strings.isNullOrEmpty(value.getSvcTpCd()))
-                            redis.hset(key, "svcTpCd", value.getSvcTpCd());
-                        if(!Strings.isNullOrEmpty(value.getMetaClsfCd()))
-                            redis.hset(key, "metaClsfCd", value.getMetaClsfCd());
-                        if(!Strings.isNullOrEmpty(value.getPartParentClsfCd()))
-                            redis.hset(key, "partParentClsfCd", value.getPartParentClsfCd());
-                        if(!Strings.isNullOrEmpty(value.getCatId()))
-                            redis.hset(key, "catId", value.getCatId());
-                    }
-
-                    @Override
-                    public ProductBaseInfo makeValue(String prodId) {
-                        HashMap<String, Object> req = new HashMap<String, Object>();
-                        req.put("prodId", prodId);
-                        return commonDAO.queryForObject("CachedExtraInfoManager.getProductBaseInfo", req, ProductBaseInfo.class);
-                    }
-                });
+        return dataService.get(ProductBaseInfo.class, param.getProdId());
     }
 
     ////////// 프로모션 이벤트에 대한 부분은 차후 독립 예정 //////////

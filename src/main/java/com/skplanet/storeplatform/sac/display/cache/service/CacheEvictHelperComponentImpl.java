@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
+import com.skplanet.storeplatform.sac.common.support.redis.RedisDataService;
 import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
 import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
@@ -45,6 +46,9 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
 
     @Autowired
     private CachedExtraInfoManager cachedExtraInfoManager;
+
+    @Autowired
+    private RedisDataService dataService;
 
     @Value("#{propertiesForSac['skp.common.service.language']}")
     private String SERVICE_LANG;
@@ -119,6 +123,7 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
             }
 
             this.cacheEvictManager.evictProductStats(new ProductStatsParam(_prodId));
+            dataService.evict(ProductBaseInfo.class, _prodId);
 
             executedProd.add(_prodId);
         }

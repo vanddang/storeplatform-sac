@@ -439,7 +439,12 @@ public class CategoryController {
 					DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
 		}
 
-		return this.categorySpecificProductService.searchProductList(new SearchProductListParam(tenantId, langCd,
-				deviceModelCd, prodIdList));
+        SearchProductListParam param = new SearchProductListParam(tenantId, langCd, deviceModelCd, prodIdList);
+        if(StringUtils.isNotEmpty(req.getProdGradeCd()))
+            param.setFilterProdGradeCdStr(req.getProdGradeCd());
+        if(StringUtils.isNotEmpty(req.getPlus19Yn()))
+            param.setFilter19plus(req.getPlus19Yn().equals("Y"));
+
+        return this.categorySpecificProductService.searchProductList(param);
 	}
 }
