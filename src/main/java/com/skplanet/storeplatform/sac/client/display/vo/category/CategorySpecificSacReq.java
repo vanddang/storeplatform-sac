@@ -12,6 +12,10 @@ public class CategorySpecificSacReq extends CommonInfo {
 
     private String ignoreProvisionYn = "N";
 
+    private String prodGradeCd;
+
+    private String plus19Yn;
+
 	public String getList() {
 		return this.list;
 	}
@@ -20,12 +24,27 @@ public class CategorySpecificSacReq extends CommonInfo {
 		this.list = list;
 	}
 
-
     public String getIgnoreProvisionYn() {
         return ignoreProvisionYn;
     }
 
     public void setIgnoreProvisionYn(String ignoreProvisionYn) {
         this.ignoreProvisionYn = ignoreProvisionYn;
+    }
+
+    public String getProdGradeCd() {
+        return prodGradeCd;
+    }
+
+    public void setProdGradeCd(String prodGradeCd) {
+        this.prodGradeCd = prodGradeCd;
+    }
+
+    public String getPlus19Yn() {
+        return plus19Yn;
+    }
+
+    public void setPlus19Yn(String plus19Yn) {
+        this.plus19Yn = plus19Yn;
     }
 }
