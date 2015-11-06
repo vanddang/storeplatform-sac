@@ -86,7 +86,7 @@ public class DisplayCryptUtils {
                 result = new String(Base64.encodeBase64(rawHmac));
             }
             catch (Exception e) {
-                logger.error("패키지명 해쉬 적용중 에러: {}", nm, e);
+                logger.error("SacSha1Mac hash error: {}", nm, e);
                 return nm;
             }
 
@@ -115,7 +115,7 @@ public class DisplayCryptUtils {
                 result = new String(Base64.encodeBase64(rawHmac));
             }
             catch (Exception e) {
-                logger.error("Mdn+Aid 해쉬 적용중 에러: {}", rawKey, e);
+                logger.error("SacSha1Mac hash error: {}", rawKey, e);
                 return "";
             }
 
