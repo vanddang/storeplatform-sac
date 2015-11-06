@@ -214,6 +214,7 @@
               , CASE WHEN SUBSTR(recv_prchs_id, 0, 1) = 'G' THEN recv_prchs_id 
                 ELSE prchs_id END AS coupon_cms_prchs_id
               , contents_type
+              , a.cpn_prod_case_cd
           FROM  tb_pr_prchs_dtl a
          WHERE  1=1 
            AND  a.tenant_id = #{tenantId}
