@@ -804,6 +804,7 @@
              , TB.PLUS19_YN
              , TB.PREFIX_TITLE
              , TB.BADGE_CD
+             , TB.VERTICAL_YN
              , (
                 SELECT /*+ INDEX_JOIN(TB_CM_CD) */
                     CASE
@@ -868,6 +869,7 @@
                       , CPP.BADGE_CD
                       , CPP.BADGE_OPT_TEXT
                       , F.LANG_CD
+                      , L.VERTICAL_YN
                     <if test='contentsTypeCd == "PD002501"'>
                       , D.CID
                       , D.PROD_GRD_CD   -- 채널 상품 ID 조회
