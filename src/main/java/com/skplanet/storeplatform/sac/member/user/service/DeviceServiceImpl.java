@@ -56,7 +56,9 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameRespon
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
@@ -594,12 +596,15 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 			/* 배송지 정보 이관 (2015-10-27) */
-			LOGGER.info("기등록된 모바일 회원 배송지 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
+
 			TransferDeliveryRequest transferDeliveryRequest = new TransferDeliveryRequest();
 			transferDeliveryRequest.setCommonRequest(commonRequest);
 			transferDeliveryRequest.setUserKey(userKey);
 			transferDeliveryRequest.setPreUserKey(previousUserKey);
-			this.userSCI.transferDelivery(transferDeliveryRequest);
+			TransferDeliveryResponse transferDeliveryResponse = this.userSCI.transferDelivery(transferDeliveryRequest);
+			if (transferDeliveryResponse != null && StringUtil.isNotEmpty(transferDeliveryResponse.getUserKey())) {
+				LOGGER.info("기등록된 모바일 회원 배송지 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
+			}
 
 			/* 회원 전환 시 상품권 충전소 정보 이관 (2015-11-11) */
 			TransferGiftChrgInfoRequest transferGiftChrgInfoRequest = new TransferGiftChrgInfoRequest();
@@ -608,7 +613,8 @@ public class DeviceServiceImpl implements DeviceService {
 			transferGiftChrgInfoRequest.setUserKey(userKey);
 			TransferGiftChrgInfoResponse transferGiftChrgInfoResponse = this.userSCI
 					.transferGiftChrgInfo(transferGiftChrgInfoRequest);
-			if (transferGiftChrgInfoResponse.getUserKey() != null) {
+			if (transferGiftChrgInfoResponse != null
+					&& StringUtil.isNotEmpty(transferGiftChrgInfoResponse.getUserKey())) {
 				LOGGER.info("기등록된 모바일 회원 상품권 충전소 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
 			}
 
@@ -651,7 +657,14 @@ public class DeviceServiceImpl implements DeviceService {
 			transferDeviceSetInfoRequest.setPreUserKey(preUserKey);
 			transferDeviceSetInfoRequest.setPreDeviceKey(preDeviceKey);
 			transferDeviceSetInfoRequest.setPreIsDormant(previousIsDormant);
-			this.deviceSetSCI.transferDeviceSetInfo(transferDeviceSetInfoRequest);
+			TransferDeviceSetInfoResponse transferDeviceSetInfoResponse = this.deviceSetSCI
+					.transferDeviceSetInfo(transferDeviceSetInfoRequest);
+
+			if (transferDeviceSetInfoResponse != null
+					&& StringUtil.isNotEmpty(transferDeviceSetInfoResponse.getUserKey())
+					&& StringUtil.isNotEmpty(transferDeviceSetInfoResponse.getDeviceKey())) {
+				LOGGER.info("기등록된 모바일 회원 상품권 PIN 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
+			}
 
 		}
 

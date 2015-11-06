@@ -659,6 +659,9 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 			}
 			LOGGER.debug("### createDevicePin row : {}", row);
+
+			transferDeviceSetInfoResponse.setDeviceKey(transferDeviceSetInfoRequest.getDeviceKey());
+			transferDeviceSetInfoResponse.setUserKey(transferDeviceSetInfoRequest.getUserKey());
 		}
 
 		// 공통 응답
@@ -669,8 +672,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 				"성공", LocaleContextHolder.getLocale()));
 
 		transferDeviceSetInfoResponse.setCommonResponse(commonResponse);
-		transferDeviceSetInfoResponse.setDeviceKey(transferDeviceSetInfoRequest.getDeviceKey());
-		transferDeviceSetInfoResponse.setUserKey(transferDeviceSetInfoRequest.getUserKey());
 
 		LOGGER.debug("### DB에서 받아온 결과 : {}", transferDeviceSetInfoResponse);
 
