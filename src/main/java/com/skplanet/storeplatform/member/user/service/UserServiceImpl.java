@@ -4290,10 +4290,10 @@ public class UserServiceImpl implements UserService {
 						throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 					}
 				}
+				transferGiftChrgInfoResponse.setUserKey(transferGiftChrgInfoRequest.getUserKey());
 			}
 		}
 
-		transferGiftChrgInfoResponse.setUserKey(transferGiftChrgInfoRequest.getUserKey());
 		transferGiftChrgInfoResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
 

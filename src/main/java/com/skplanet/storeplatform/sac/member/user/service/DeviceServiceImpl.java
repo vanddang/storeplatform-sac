@@ -58,6 +58,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRespons
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
@@ -601,12 +602,15 @@ public class DeviceServiceImpl implements DeviceService {
 			this.userSCI.transferDelivery(transferDeliveryRequest);
 
 			/* 회원 전환 시 상품권 충전소 정보 이관 (2015-11-11) */
-			LOGGER.info("기등록된 모바일 회원 전환시 상품권 충전소 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
 			TransferGiftChrgInfoRequest transferGiftChrgInfoRequest = new TransferGiftChrgInfoRequest();
 			transferGiftChrgInfoRequest.setCommonRequest(commonRequest);
 			transferGiftChrgInfoRequest.setPreUserKey(previousUserKey); // 기등록된 회원키
 			transferGiftChrgInfoRequest.setUserKey(userKey);
-			this.userSCI.transferGiftChrgInfo(transferGiftChrgInfoRequest);
+			TransferGiftChrgInfoResponse transferGiftChrgInfoResponse = this.userSCI
+					.transferGiftChrgInfo(transferGiftChrgInfoRequest);
+			if (transferGiftChrgInfoResponse.getUserKey() != null) {
+				LOGGER.info("기등록된 모바일 회원 상품권 충전소 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
+			}
 
 			/**
 			 * MQ 연동(회원 탈퇴) - 무선회원.
