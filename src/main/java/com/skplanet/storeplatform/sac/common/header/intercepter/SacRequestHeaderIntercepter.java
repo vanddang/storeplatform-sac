@@ -66,21 +66,27 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
         TenantHeader tenant = this.extractTenant(servletWebRequest);
 		DeviceHeader device = this.extractDevice(servletWebRequest);
 		NetworkHeader network = this.extractNetwork(servletWebRequest);
+        String userKey = extractUserKey(servletWebRequest);
 
 		sacHeader.setTenantHeader(tenant);
 		sacHeader.setDeviceHeader(device);
 		sacHeader.setNetworkHeader(network);
+        sacHeader.setUserKey(userKey);
 
-		RequestContextHolder.currentRequestAttributes().setAttribute(SacRequestHeader.class.getName(), sacHeader,
-				RequestAttributes.SCOPE_REQUEST);
+		RequestContextHolder.currentRequestAttributes().setAttribute(SacRequestHeader.class.getName(), sacHeader, RequestAttributes.SCOPE_REQUEST);
+		RequestContextHolder.currentRequestAttributes().setAttribute("userKey", userKey, RequestAttributes.SCOPE_REQUEST);
 
         // for Debug - 캐쉬 이용 여부 처리
-        String headerUseCache = request.getHeader("x-sac-use-cache");
+        String headerUseCache = request.getHeader(CommonConstants.HEADER_USE_CACHE);
         RequestContextHolder.currentRequestAttributes()
                 .setAttribute("useCache", StringUtils.isEmpty(headerUseCache) || headerUseCache.toLowerCase().equals("true"), RequestAttributes.SCOPE_REQUEST);
 
         return true;
 	}
+
+    private String extractUserKey(NativeWebRequest webRequest) {
+        return webRequest.getHeader(CommonConstants.HEADER_USER_KEY);
+    }
 
 	/**
 	 * <pre>

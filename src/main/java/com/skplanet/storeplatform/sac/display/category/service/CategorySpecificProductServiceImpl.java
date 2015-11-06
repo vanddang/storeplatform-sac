@@ -64,9 +64,6 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
     private CommonDAO commonDAO;
 
     @Autowired
-    private MemberBenefitService memberBenefitService;
-
-    @Autowired
     private ProductSubInfoManager subInfoManager;
 
     @Autowired
@@ -198,9 +195,6 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
                     metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());
                 }
             }
-
-            // 마일리지 조회시 항상 channel 기준이어야 함
-            //metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(param.getTenantId(), baseInfo.getTopMenuId(), baseInfo.getChnlId(), null));
 
             Object product; // Product or Coupon
             switch (type) {

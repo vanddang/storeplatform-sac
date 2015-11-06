@@ -15,6 +15,7 @@ public class SacRequestHeader extends CommonInfo {
 	private TenantHeader tenant;
 	private DeviceHeader device;
 	private NetworkHeader network;
+    private String userKey;
 
 	public SacRequestHeader() {
 		super();
@@ -39,4 +40,11 @@ public class SacRequestHeader extends CommonInfo {
 		this.network = network;
 	}
 
+    public String getUserKey() {
+        return userKey;
+    }
+
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
+    }
 }

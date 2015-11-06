@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Ident
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.support.redis.RedisDataService;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetPromotionEventParam;
@@ -55,6 +56,9 @@ public class PromotionEventProcessor {
     private CachedExtraInfoManager cachedExtraInfoManager;
 
     @Autowired
+    private RedisDataService dataService;
+
+    @Autowired
     private CommonMetaInfoGenerator metaInfoGenerator;
 
     @Autowired
@@ -73,7 +77,8 @@ public class PromotionEventProcessor {
             return;
 
         List productListTarget = extractTarget(retVal);
-        String tenantId = getTenantId();
+        String tenantId = getTenantId(),
+                userKey = getUserKey();
 
         for (Object item : productListTarget) {
             if(!(item instanceof PromotionEventAccessor))
@@ -97,7 +102,7 @@ public class PromotionEventProcessor {
 
                 if (!Strings.isNullOrEmpty(prodId)) {
                     logger.debug("유효한 상품 식별자가 존재하지 않습니다.");
-                    ProductBaseInfo productBaseInfo = cachedExtraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(prodId));
+                    ProductBaseInfo productBaseInfo = dataService.get(ProductBaseInfo.class, prodId);
 
                     if (productBaseInfo == null) {
                         logger.warn("#{} 상품은 존재하지 않습니다.", prodId);
@@ -117,7 +122,7 @@ public class PromotionEventProcessor {
             }
 
             // attach promotion event
-            PromotionEvent promotionEvent = cachedExtraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId));
+            PromotionEvent promotionEvent = cachedExtraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId, userKey));
             MileageInfo mileageInfo = new MileageInfo();
             if (promotionEvent != null) {
                 mileageInfo.setPolicyTargetCd(promotionEvent.getTargetTp());
@@ -232,6 +237,15 @@ public class PromotionEventProcessor {
             return DEFAULT_TENANT_ID;
 
         return header.getTenantHeader().getTenantId();
+    }
+
+    private String getUserKey() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+
+        if(requestAttributes == null)
+            return null;
+
+        return (String) requestAttributes.getAttribute("userKey", RequestAttributes.SCOPE_REQUEST);
     }
 
 }

@@ -69,6 +69,16 @@ public class CommonConstants {
      */
     public static final String HEADER_NETWORK = "x-sac-network-info";
 
+    /**
+     * 요청 커스텀 헤더 상수 - 유저 키
+     */
+    public static final String HEADER_USER_KEY = "x-sac-user-key";
+
+    /**
+     * 요청 커스텀 헤더 상수 - 캐시 사용 여부
+     */
+    public static final String HEADER_USE_CACHE = "x-sac-use-cache";
+
 	/**
 	 * 요청 스탠다드 헤더 상수 - Accept
 	 */
