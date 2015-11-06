@@ -1344,7 +1344,6 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				ErrorInfo errorInfo = e.getErrorInfo();
 				this.logger.info("cancelTCashCharge Exception CODE : {}", errorInfo.getCode());
 				if (!StringUtils.equals("EC_TSTORE_4132", errorInfo.getCode())) {
-					this.logger.info("SAC_PUR_8122 Exception : {}", e.getMessage());
 					throw e;
 				}
 			}
