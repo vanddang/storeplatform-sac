@@ -152,6 +152,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		
 		book.setSupportList(this.generateSupportList(metaInfo));
 		book.setIsbn(metaInfo.getIsbn());
+        book.setVerticalYn(StringUtils.defaultString(metaInfo.getVerticalYn(), "N"));
 		return book;
 	}
 

@@ -1205,7 +1205,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 			}
 		}
 		book.setStatus(metaInfo.getBookStatus());
-        book.setVerticalYn(metaInfo.getVerticalYn());
 
 		product.setBook(book);
 		product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo));
