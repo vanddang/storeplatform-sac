@@ -28,9 +28,6 @@ import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundDetailEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
@@ -1340,31 +1337,42 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		tStoreCashChargeCancelEcReq.setCashList(cashList);
 
 		if (CollectionUtils.isNotEmpty(cashList)) {
-			this.purchaseCancelRepository.cancelTCashCharge(tStoreCashChargeCancelEcReq);
+			try {
+				this.purchaseCancelRepository.cancelTCashCharge(tStoreCashChargeCancelEcReq);
+			} catch (StorePlatformException e) {
+				// 이미 취소되었어도 무시하고 구매취소 처리 진행한다. 2015-11-06 염동환M
+				ErrorInfo errorInfo = e.getErrorInfo();
+				this.logger.info("cancelTCashCharge Exception CODE : {}", errorInfo.getCode());
+				if (!StringUtils.equals("EC_TSTORE_4132", errorInfo.getCode())) {
+					this.logger.info("SAC_PUR_8122 Exception : {}", e.getMessage());
+					throw e;
+				}
+			}
 		}
 	}
 
-	private TStoreCashSpecificRefundEcRes specificRefundTCash(String productGroup, String prchsId, String userKey) {
-
-		TStoreCashSpecificRefundEcReq tStoreCashSpecificRefundEcReq = new TStoreCashSpecificRefundEcReq();
-		TStoreCashSpecificRefundEcRes tStoreCashSpecificRefundEcRes = new TStoreCashSpecificRefundEcRes();
-
-		List<TStoreCashSpecificRefundDetailEcReq> cashList = new ArrayList<TStoreCashSpecificRefundDetailEcReq>();
-
-		TStoreCashSpecificRefundDetailEcReq tStoreCashSpecificRefundDetailEcReq = new TStoreCashSpecificRefundDetailEcReq();
-		tStoreCashSpecificRefundDetailEcReq.setOrderNo(prchsId);
-		tStoreCashSpecificRefundDetailEcReq.setProductGroup(productGroup);
-		cashList.add(tStoreCashSpecificRefundDetailEcReq);
-
-		tStoreCashSpecificRefundEcReq.setUserKey(userKey);
-		tStoreCashSpecificRefundEcReq.setCashList(cashList);
-
-		if (CollectionUtils.isNotEmpty(cashList)) {
-			tStoreCashSpecificRefundEcRes = this.purchaseCancelRepository
-					.specificRefundTCash(tStoreCashSpecificRefundEcReq);
-		}
-
-		return tStoreCashSpecificRefundEcRes;
-	}
+	// private TStoreCashSpecificRefundEcRes specificRefundTCash(String productGroup, String prchsId, String userKey) {
+	//
+	// TStoreCashSpecificRefundEcReq tStoreCashSpecificRefundEcReq = new TStoreCashSpecificRefundEcReq();
+	// TStoreCashSpecificRefundEcRes tStoreCashSpecificRefundEcRes = new TStoreCashSpecificRefundEcRes();
+	//
+	// List<TStoreCashSpecificRefundDetailEcReq> cashList = new ArrayList<TStoreCashSpecificRefundDetailEcReq>();
+	//
+	// TStoreCashSpecificRefundDetailEcReq tStoreCashSpecificRefundDetailEcReq = new
+	// TStoreCashSpecificRefundDetailEcReq();
+	// tStoreCashSpecificRefundDetailEcReq.setOrderNo(prchsId);
+	// tStoreCashSpecificRefundDetailEcReq.setProductGroup(productGroup);
+	// cashList.add(tStoreCashSpecificRefundDetailEcReq);
+	//
+	// tStoreCashSpecificRefundEcReq.setUserKey(userKey);
+	// tStoreCashSpecificRefundEcReq.setCashList(cashList);
+	//
+	// if (CollectionUtils.isNotEmpty(cashList)) {
+	// tStoreCashSpecificRefundEcRes = this.purchaseCancelRepository
+	// .specificRefundTCash(tStoreCashSpecificRefundEcReq);
+	// }
+	//
+	// return tStoreCashSpecificRefundEcRes;
+	// }
 
 }
