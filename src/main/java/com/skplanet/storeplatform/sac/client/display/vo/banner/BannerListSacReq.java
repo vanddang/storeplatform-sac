@@ -30,6 +30,7 @@ public class BannerListSacReq extends CommonInfo {
 
     private String startKey;
     private Integer count;
+	private String useGrdCd = "PD004403"; // 15세이용가
 
     public String getBnrMenuId() {
         return bnrMenuId;
@@ -70,4 +71,12 @@ public class BannerListSacReq extends CommonInfo {
     public void setCount(Integer count) {
         this.count = count;
     }
+
+	public String getUseGrdCd() {
+		return useGrdCd;
+	}
+
+	public void setUseGrdCd(String useGrdCd) {
+		this.useGrdCd = useGrdCd;
+	}
 }

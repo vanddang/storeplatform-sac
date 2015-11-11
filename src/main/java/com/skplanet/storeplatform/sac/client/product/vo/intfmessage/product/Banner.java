@@ -42,6 +42,8 @@ public class Banner extends CommonInfo implements Serializable {
 	private Preview preview;
 	private SalesOption salesOption;
 	private Url url;
+	private String useGrdCd;
+	private String pinAuthYn;
 
 	/**
 	 * @return the identifierList
@@ -206,5 +208,21 @@ public class Banner extends CommonInfo implements Serializable {
 	 */
 	public void setUrl(Url url) {
 		this.url = url;
+	}
+
+	public String getUseGrdCd() {
+		return useGrdCd;
+	}
+
+	public void setUseGrdCd(String useGrdCd) {
+		this.useGrdCd = useGrdCd;
+	}
+
+	public String getPinAuthYn() {
+		return pinAuthYn;
+	}
+
+	public void setPinAuthYn(String pinAuthYn) {
+		this.pinAuthYn = pinAuthYn;
 	}
 }
