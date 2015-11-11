@@ -46,8 +46,8 @@
               <if test="isAdultLock != null"> ,ADULT_CONTENTS_LIMT_YN </if>
               <if test="isDownloadWifiOnly != null"> ,WI_FI_AUTO_DWLD_YN </if>
               <if test="isIcasAuth != null"> ,ICAS_AUTH_YN </if>
-              <!-- <if test="realNameDate != null"> ,REAL_NAME_DATE </if>
-              <if test="realNameMdn != null"> ,REAL_NAME_MDN </if> -->
+              <if test="realNameDate != null"> ,REAL_NAME_DATE </if>
+              <if test="realNameMdn != null"> ,REAL_NAME_MDN </if>
             ) VALUES (              
                 #{tenantID},
                 #{userKey},
@@ -67,8 +67,8 @@
               <if test="isAdultLock != null"> ,#{isAdultLock} </if>
               <if test="isDownloadWifiOnly != null"> ,#{isDownloadWifiOnly} </if>
               <if test="isIcasAuth != null"> ,#{isIcasAuth} </if>
-              <!-- <if test="realNameDate != null"> ,TO_DATE(#{realNameDate}, 'YYYYMMDDHH24MISS') </if>
-              <if test="realNameMdn != null"> ,#{realNameMdn} </if> -->
+              <if test="realNameDate != null"> ,TO_DATE(#{realNameDate}, 'YYYYMMDDHH24MISS') </if>
+              <if test="realNameMdn != null"> ,#{realNameMdn} </if>
             )   
     </update>
 
@@ -90,8 +90,8 @@
               <if test="isAdultLock != null"> ,ADULT_CONTENTS_LIMT_YN = #{isAdultLock} </if>
               <if test="isDownloadWifiOnly != null"> ,WI_FI_AUTO_DWLD_YN = #{isDownloadWifiOnly} </if>
               <if test="isIcasAuth != null"> ,ICAS_AUTH_YN = #{isIcasAuth}</if>
-              <!-- <if test="realNameDate != null"> ,REAL_NAME_DATE = TO_DATE(#{realNameDate}, 'YYYYMMDDHH24MISS') </if>
-              <if test="realNameMdn != null"> ,REAL_NAME_MDN = #{realNameMdn} </if> -->
+              <if test="realNameDate != null"> ,REAL_NAME_DATE = TO_DATE(#{realNameDate}, 'YYYYMMDDHH24MISS') </if>
+              <if test="realNameMdn != null"> ,REAL_NAME_MDN = #{realNameMdn} </if>
         WHERE tenant_id = #{tenantID}
           AND insd_usermbr_no = #{userKey}
           AND insd_device_id = #{deviceKey}
@@ -119,9 +119,9 @@
                TO_CHAR( b.upd_dt,'YYYYMMDDHH24MISS') updateDate,
                b.UPD_ID AS updateID,
                b.SYSTEM_ID AS systemID,
-               b.ICAS_AUTH_YN AS isIcasAuth<!-- ,
+               b.ICAS_AUTH_YN AS isIcasAuth,
                TO_CHAR( b.REAL_NAME_DATE,'YYYYMMDDHH24MISS') AS realNameDate,
-               b.REAL_NAME_MDN AS realNameMdn -->
+               b.REAL_NAME_MDN AS realNameMdn
           FROM    TB_US_USERMBR a
                LEFT JOIN
                   TB_US_USERMBR_DEVICE_SET b

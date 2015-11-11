@@ -618,10 +618,8 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		// Default=N, ICAS_AUTH_YN 컬럼은 디폴트 값이 없고 기존 데이터는 NULL로 되어 있으므로 주의.
 		res.setIsIcasAuth(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsIcasAuth(),
 				"N"));
-		/*
-		 * res.setRealNameDate(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getRealNameDate());
-		 * res.setRealNameMdn(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getRealNameMdn());
-		 */
+		res.setRealNameDate(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getRealNameDate());
+		res.setRealNameMdn(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getRealNameMdn());
 
 		return res;
 	}
@@ -670,10 +668,8 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		userMbrDeviceSet.setIsAdultLock(req.getIsAdultLock());
 		userMbrDeviceSet.setIsDownloadWifiOnly(req.getIsDownloadWifiOnly());
 		userMbrDeviceSet.setIsIcasAuth(req.getIsIcasAuth());
-		/*
-		 * userMbrDeviceSet.setRealNameDate(req.getRealNameDate());
-		 * userMbrDeviceSet.setRealNameMdn(req.getRealNameMdn());
-		 */
+		userMbrDeviceSet.setRealNameDate(req.getRealNameDate());
+		userMbrDeviceSet.setRealNameMdn(req.getRealNameMdn());
 
 		modifyDeviceSetInfoRequest.setUserMbrDeviceSet(userMbrDeviceSet);
 
