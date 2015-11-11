@@ -232,6 +232,7 @@ public class AppServiceImpl implements AppService {
         app.setSize(appDetail.getFileSize());
         app.setDate(new Date(DisplayConstants.DP_DATE_SALE_REG, appDetail.getSaleStrtDt()));
         app.setDescriptionVideoUrl(appDetail.getDescVideoUrl());
+		app.setApkSignedKeyHash(appDetail.getApkSignedKeyHash());
 
         // App - Provisioning
         app.setIsDeviceSupported(checkAvailability(param.getSdkCd(), param.getOsVersion(), appDetail) ? "Y" : "N");

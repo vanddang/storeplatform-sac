@@ -48,6 +48,7 @@ public class AppDetail extends CommonInfo {
     private Integer sdkMax;
     private String expoSellerWebUrl;
     private String policyInfoUrl;
+	private String apkSignedKeyHash;
 
     public String getPartParentClsfCd() {
         return partParentClsfCd;
@@ -336,4 +337,12 @@ public class AppDetail extends CommonInfo {
     public void setPolicyInfoUrl(String policyInfoUrl) {
         this.policyInfoUrl = policyInfoUrl;
     }
+
+	public String getApkSignedKeyHash() {
+		return apkSignedKeyHash;
+	}
+
+	public void setApkSignedKeyHash(String apkSignedKeyHash) {
+		this.apkSignedKeyHash = apkSignedKeyHash;
+	}
 }
