@@ -874,6 +874,10 @@ public class BannerServceImpl implements BannerService {
 
 		banner.setIdentifierList(identifierList);
 
+		// 이용등급, PIN 인증 여부
+		banner.setUseGrdCd(bannerDf.getUseGrdCd());
+		banner.setPinAuthYn(bannerDf.getPinAuthYn());
+
 		return banner;
 	}
 

@@ -39,6 +39,8 @@ public class BannerDefault {
 	private String situRecommYn;
 	private String expoOrd;
 	private String expoOrdSub;
+	private String useGrdCd;
+	private String pinAuthYn;
 
 	/**
 	 * @return the totalCount
@@ -384,5 +386,21 @@ public class BannerDefault {
 
 	public void setExpoOrdSub(String expoOrdSub) {
 		this.expoOrdSub = expoOrdSub;
+	}
+
+	public String getUseGrdCd() {
+		return useGrdCd;
+	}
+
+	public void setUseGrdCd(String useGrdCd) {
+		this.useGrdCd = useGrdCd;
+	}
+
+	public String getPinAuthYn() {
+		return pinAuthYn;
+	}
+
+	public void setPinAuthYn(String pinAuthYn) {
+		this.pinAuthYn = pinAuthYn;
 	}
 }

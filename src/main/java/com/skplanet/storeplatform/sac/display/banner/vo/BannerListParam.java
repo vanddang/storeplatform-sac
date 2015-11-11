@@ -33,6 +33,7 @@ public class BannerListParam {
     private Integer lastExpoOrdSub;
     private Integer count;
     private Integer maxBnrCount;
+	private String useGrdCd;
 
     public BannerListParam(BannerListSacReq req, String tenantId, String deviceModelCd, String langCd) {
         this.tenantId = tenantId;
@@ -45,6 +46,8 @@ public class BannerListParam {
 
         this.anyDeviceModelCd = DisplayConstants.DP_ANY_PHONE_4MM;
         this.maxBnrCount = MAX_BNR_COUNT;
+
+		this.useGrdCd = req.getUseGrdCd();
 
         setupOrders(req);
         setCount(req);
@@ -154,4 +157,12 @@ public class BannerListParam {
     public void setMaxBnrCount(Integer maxBnrCount) {
         this.maxBnrCount = maxBnrCount;
     }
+
+	public String getUseGrdCd() {
+		return useGrdCd;
+	}
+
+	public void setUseGrdCd(String useGrdCd) {
+		this.useGrdCd = useGrdCd;
+	}
 }
