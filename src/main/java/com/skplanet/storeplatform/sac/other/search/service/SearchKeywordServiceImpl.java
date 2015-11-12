@@ -42,13 +42,13 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
         SearchKeywordRes res = new SearchKeywordRes();
         List<SearchKeywordListInfo> searchKeywordList = new ArrayList<SearchKeywordListInfo>();
 
-        /**
-         * 인기 검색어.
-         */
-        if(searchKeywordReq.getKeywordType().contains(SearchType.POPULAR_KEYWORD.getKeywordType())) {
-            SearchKeywordListInfo popularInfo = getKeyword(sacRequestHeader.getTenantHeader().getTenantId(), SearchType.POPULAR_KEYWORD, searchKeywordReq.getCount());
-            searchKeywordList.add(popularInfo);
-        }
+//        /**
+//         * 인기 검색어.
+//         */
+//        if(searchKeywordReq.getKeywordType().contains(SearchType.POPULAR_KEYWORD.getKeywordType())) {
+//            SearchKeywordListInfo popularInfo = getKeyword(sacRequestHeader.getTenantHeader().getTenantId(), SearchType.POPULAR_KEYWORD, searchKeywordReq.getCount());
+//            searchKeywordList.add(popularInfo);
+//        }
 
         /**
          * 급상승 검색어.
