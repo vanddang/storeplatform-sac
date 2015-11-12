@@ -1861,6 +1861,11 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setSimSerialNo(req.getSimSerialNo());
 		marketReq.setExtraInfo(req.getExtraInfo());
 
+		String svcVersion = requestHeader.getDeviceHeader().getSvc();
+		if (StringUtils.isNotBlank(svcVersion)) {
+			marketReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
+		}
+
 		LOGGER.info("{} authorizeForOllehMarket Request : {}", req.getDeviceId(),
 				ConvertMapperUtils.convertObjectToJson(marketReq));
 
@@ -2135,6 +2140,11 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setSimSerialNo(req.getSimSerialNo());
 		marketReq.setDeviceType(req.getDeviceType());
 		marketReq.setExtraInfo(req.getExtraInfo());
+
+		String svcVersion = requestHeader.getDeviceHeader().getSvc();
+		if (StringUtils.isNotBlank(svcVersion)) {
+			marketReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
+		}
 
 		LOGGER.info("{} authorizeForUplusStore Request : {}", req.getDeviceId(),
 				ConvertMapperUtils.convertObjectToJson(marketReq));
