@@ -18,12 +18,12 @@ public class SearchKeywordReq extends CommonInfo {
 
     /**
      * 검색 유형.
-     * DP013801 : 인기검색어
+     * DP013801 : 인기검색어 (삭제)
      * DP013802 : 급상승검색어
      * DP013803 : 테마검색어
      */
     @NotBlank
-    @Pattern(regexp = "^(DP01380){1}?[1-3]$|^(DP01380){1}?[1-3][+](DP01380){1}?[1-3]$|^(DP01380){1}?[1-3][+](DP01380){1}?[1-3][+](DP01380){1}?[1-3]$")
+    @Pattern(regexp = "^(DP01380){1}?[2-3]$|^(DP01380){1}?[2-3][+](DP01380){1}?[2-3]$")
     private String keywordType;
     /**
      * 조회할 검색어 개수.
