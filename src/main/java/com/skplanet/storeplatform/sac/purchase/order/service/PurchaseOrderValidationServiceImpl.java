@@ -201,7 +201,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		} else if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) { // 쇼핑
 			// 쇼핑 : 쇼핑
 			if (StringUtils.equals(reqMenuId, "DP28") == false
-					|| StringUtils.equals(reqSuffix, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT) == false) {
+					|| (StringUtils.equals(reqSuffix, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT) == false
+					&& StringUtils.equals(reqSuffix, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_CHARGE) == false)) {
 				throw new StorePlatformException("SAC_PUR_5100", "잘못된 상품 분류 코드");
 			}
 		} else if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {

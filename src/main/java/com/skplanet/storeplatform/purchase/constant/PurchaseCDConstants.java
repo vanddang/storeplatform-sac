@@ -211,6 +211,7 @@ public class PurchaseCDConstants {
 	public static final String TENANT_PRODUCT_GROUP_SUFFIX_UNIT = "OR006311"; // 일반 상품 suffix
 	public static final String TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE = "OR006331"; // 정액 상품 suffix
 	public static final String TENANT_PRODUCT_GROUP_SUFFIX_CASH = "OR006332"; // 캐시 정액 상품 suffix
+	public static final String TENANT_PRODUCT_GROUP_SUFFIX_CHARGE = "OR006312"; // 충전 상품 suffix
 
 	/** 자동 결제 상태 코드 */
 	public static final String AUTO_PRCHS_STATUS_AUTO = "OR020101"; // 자동결제 진행 중
