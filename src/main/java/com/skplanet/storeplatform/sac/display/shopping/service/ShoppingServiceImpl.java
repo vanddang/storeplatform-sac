@@ -4359,6 +4359,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Map<String, Object> contrubuterMap = null;
 				Identifier identifier = null;
 				for (int kk = 0; kk < contrubutorResult.size(); kk++) {
+					contributorList = new ArrayList<Contributor>();
 					contrubuterMap = businessPartnerInfo(contrubutorResult.get(kk).getRegId());
 					Contributor contributor = new Contributor();
 					identifier = new Identifier();
