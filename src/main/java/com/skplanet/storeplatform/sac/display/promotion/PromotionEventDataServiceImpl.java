@@ -56,6 +56,23 @@ public class PromotionEventDataServiceImpl implements PromotionEventDataService 
     }
 
     @Override
+    public RawPromotionEvent getLivePromotionEventForUser(String tenantId, String iapProdId, String chnlId, String menuId, String userKey) {
+        Map<String, Object> req = Maps.newHashMap();
+        req.put("tenantId", tenantId);
+        req.put("targetUserAll", DisplayConstants.PROM_TARGET_USER_ALL);
+        req.put("userKey", userKey);
+        req.put("keyList", PromotionEventUtils.makeKeys(iapProdId, chnlId, menuId));
+
+        /*
+         쿼리 정렬 조건 설명:
+            TARGET_USER_KIND(사용자 타게팅 방법)이 '모두' 인 경우 JOIN_CD_1(참여중)으로
+            그 외의 경우 TB_DP_PROM_USER에서 userKey로 찾아서 있는 경우에만 JOIN_CD_1(참여중)으로 처리한다.
+            참여 여부, 탐색 순서에 따라 정렬을 하여 가장 상위에 있는 데이터가 유효한 데이터이다
+         */
+        return commonDAO.queryForObject("PromotionEventMapper.getLivePromotionEventForUser", req, RawPromotionEvent.class);
+    }
+
+    @Override
     public List<String> getPromotionUserList(int promId) {
         Map<String, Object> req = Maps.newHashMap();
         req.put("promId", promId);

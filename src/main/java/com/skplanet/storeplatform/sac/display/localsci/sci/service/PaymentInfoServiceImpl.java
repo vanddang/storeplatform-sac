@@ -323,7 +323,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     private void mapgPromotion(String tenantId, String userKey, ProductBaseInfo baseInfo, PaymentInfo paymentInfo) {
 
         // IAP상품은 부모 상품으로, 그 외의 상품은 chnlId로 조회
-        String chnlId = "", menuId = "";
+        String chnlId = "", iapProdId = null, menuId = "";
 
         // 이용권 상품이면서 "시리즈 전회차 상품"인 경우 매핑된 채널ID의 상품 정보를 조회하여 프로모션 정보를 조회한다.
         if(FIXRATE_PROD_TYPE_VOD_SERIESPASS.equals(paymentInfo.getCmpxProdClsfCd())) {
@@ -334,11 +334,12 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             }
         }
         else {
-            chnlId = baseInfo.isIapProduct() ? paymentInfo.getParentProdId() : baseInfo.getChnlId();
+            chnlId = baseInfo.getChnlId();
+            iapProdId = baseInfo.isIapProduct() ? baseInfo.getChnlId() : null;
             menuId = StringUtils.defaultString(paymentInfo.getMenuId(), paymentInfo.getTopMenuId());
         }
 
-        RawPromotionEvent event = promotionEventDataService.getLivePromotionEventForUser(tenantId, chnlId, menuId, userKey);
+        RawPromotionEvent event = promotionEventDataService.getLivePromotionEventForUser(tenantId, iapProdId, chnlId, menuId, userKey);
 
         Map<String, Integer> milMap = Maps.newHashMap();
         if (event != null) {

@@ -38,7 +38,7 @@
             SELECT /* CachedExtraInfoManager.getLivePromotionEventForUser, 정희원/SKP, 2015-10-22 */
                 ROW_NUMBER() OVER (ORDER BY
                   CASE WHEN TARGET_USER_KIND = #{targetUserAll} THEN '1' ELSE  NVL2(PU.USER_KEY, '1', '2') END,
-                  PROM_TYPE_CD) RN,
+                  CASE WHEN AP.PART_PARENT_CLSF_CD = 'PD012302' THEN 'DP01160100' ELSE PROM_TYPE_CD END ) RN,
                 PP.TENANT_ID,
                 PP.PROM_TYPE_VALUE,
                 to_char(START_DT,'yyyyMMddHH24miss')||'_'||to_char(END_DT,'yyyyMMddHH24miss') as DATETIME_KEY,
@@ -60,6 +60,8 @@
             FROM TB_DP_PROM_POLICY PP
               LEFT OUTER JOIN TB_DP_PROM_USER PU
                 ON PU.PROM_ID = PP.PROM_ID AND PU.USER_KEY = #{userKey, jdbcType=VARCHAR}
+              LEFT OUTER JOIN TB_DP_APP_PROD AP
+                ON AP.PROD_ID = PP.PROM_TYPE_VALUE
             WHERE 1=1
               AND sysdate between START_DT AND END_DT
               AND PROM_FORCE_CLOSE_CD IS NULL

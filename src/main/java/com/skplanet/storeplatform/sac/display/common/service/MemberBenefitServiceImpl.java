@@ -95,7 +95,6 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
             return mileageInfo;
 
         GetPromotionEventParam param = new GetPromotionEventParam(tenantId, menuId, chnlId, userKey);
-        param.setUseDb(true);   // FIXME 2015-10-23 타게팅 기능이 목록 API까지 확산되기 전까지는 DB로 조회하도록 함
         PromotionEvent event = cachedExtraInfoManager.getPromotionEvent(param);
 
         if (event != null) {

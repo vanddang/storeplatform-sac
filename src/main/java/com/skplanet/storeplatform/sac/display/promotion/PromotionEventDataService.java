@@ -43,6 +43,8 @@ public interface PromotionEventDataService {
      */
     RawPromotionEvent getLivePromotionEventForUser(String tenantId, String chnlId, String menuId, String userKey);
 
+    RawPromotionEvent getLivePromotionEventForUser(String tenantId, String iapProdId, String chnlId, String menuId, String userKey);
+
     /**
      * 프로모션 참여자 목록 조회
      * @param promId

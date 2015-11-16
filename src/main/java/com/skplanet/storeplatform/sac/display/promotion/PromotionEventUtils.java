@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.promotion;
 
 import com.google.common.base.Strings;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 
 /**
  * <p>
@@ -38,6 +39,30 @@ public class PromotionEventUtils {
         }
 
         return new String[]{prodId, menuOrTopMenuId, topMenuId};
+    }
+
+    /**
+     * 프로모션 이벤트 조회에 필요한 키 파라메터를 생성한다.
+     * @param prodId
+     * @param menuId
+     * @return
+     */
+    public static String[] makeKeys(String iapProdId, String prodId, String menuId) {
+        String menuOrTopMenuId = "",
+                topMenuId = "";
+
+        if(!Strings.isNullOrEmpty(menuId)) {
+
+            menuOrTopMenuId = menuId;
+            if(menuId.length() > 4) {
+                topMenuId = menuOrTopMenuId.substring(0, 4);
+            }
+        }
+
+        if(StringUtils.isNotEmpty(iapProdId))
+            return new String[]{iapProdId, prodId, menuOrTopMenuId, topMenuId};
+        else
+            return new String[]{prodId, menuOrTopMenuId, topMenuId};
     }
 
 }
