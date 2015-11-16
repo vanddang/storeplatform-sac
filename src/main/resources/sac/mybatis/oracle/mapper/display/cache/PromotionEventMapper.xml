@@ -68,6 +68,7 @@
               <foreach collection="keyList" separator="," open="(" close=")" item="v">#{v, jdbcType=VARCHAR}</foreach>
         )
         WHERE RN = 1
+        AND JOIN_CD = 1
     </select>
 
     <select id="getPromotionUserList" parameterType="map" resultType="String">
