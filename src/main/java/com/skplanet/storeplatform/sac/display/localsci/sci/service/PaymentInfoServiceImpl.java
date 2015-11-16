@@ -334,7 +334,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             }
         }
         else {
-            chnlId = baseInfo.getChnlId();
+            chnlId = baseInfo.isIapProduct() ? paymentInfo.getParentProdId() : baseInfo.getChnlId();
             iapProdId = baseInfo.isIapProduct() ? baseInfo.getChnlId() : null;
             menuId = StringUtils.defaultString(paymentInfo.getMenuId(), paymentInfo.getTopMenuId());
         }
