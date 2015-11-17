@@ -24,6 +24,11 @@ public class GiftChargeInfoSac extends CommonInfo {
 	private String brandName;
 
 	/**
+	 * 제휴사 브랜드 아이디.
+	 */
+	private String brandId;
+
+	/**
 	 * 충전자 아이디.
 	 */
 	private String chargerId;
@@ -136,6 +141,21 @@ public class GiftChargeInfoSac extends CommonInfo {
 	 */
 	public void setSellerInfo(SellerMbrSac sellerInfo) {
 		this.sellerInfo = sellerInfo;
+	}
+
+	/**
+	 * @return the brandId
+	 */
+	public String getBrandId() {
+		return this.brandId;
+	}
+
+	/**
+	 * @param brandId
+	 *            the brandId to set
+	 */
+	public void setBrandId(String brandId) {
+		this.brandId = brandId;
 	}
 
 }
