@@ -13,6 +13,10 @@ package com.skplanet.storeplatform.sac.display.banner.vo;
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerListSacReq;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Updated on : 2015-06-30. Updated by : 양해엽, SK Planet.
  */
@@ -21,6 +25,9 @@ public class BannerListParam {
     private static final int DEFAULT_BNR_COUNT = 20;
     private static final int MAX_BNR_COUNT = 100;
     private static final int MIN_EXPO_ORD = -99999999;
+
+	private static final Set<String> bannerDeviceProvision =
+			new HashSet<String>(Arrays.asList("DP010920", "DP010921", "DP010928", "DP010932", "DP010933", "DP010934"));
 
     private String tenantId;
     private String bnrMenuId;
@@ -34,6 +41,7 @@ public class BannerListParam {
     private Integer count;
     private Integer maxBnrCount;
 	private String useGrdCd;
+	private boolean isDvcProvision;
 
     public BannerListParam(BannerListSacReq req, String tenantId, String deviceModelCd, String langCd) {
         this.tenantId = tenantId;
@@ -48,6 +56,8 @@ public class BannerListParam {
         this.maxBnrCount = MAX_BNR_COUNT;
 
 		this.useGrdCd = req.getUseGrdCd();
+
+		this.isDvcProvision = bannerDeviceProvision.contains(req.getBnrMenuId());
 
         setupOrders(req);
         setCount(req);
@@ -164,5 +174,9 @@ public class BannerListParam {
 
 	public void setUseGrdCd(String useGrdCd) {
 		this.useGrdCd = useGrdCd;
+	}
+
+	public boolean isDvcProvision() {
+		return isDvcProvision;
 	}
 }
