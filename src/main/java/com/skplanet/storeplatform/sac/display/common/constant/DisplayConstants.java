@@ -256,6 +256,7 @@ public class DisplayConstants {
 	public static final String DP_DL_STRM_NM = "dlStrmCd";
 	public static final String DP_IN_APP_SUPPORT_NM = "iab";
 	public static final String DP_COLOR_SUPPORT_NM = "color";
+	public static final String DP_AVAILABLE_PLAYER = "availablePlayer";	// // Chrome Cast 재생 허용 Player
 
 	/**
 	 * 부모-자식 상품 관계 코드

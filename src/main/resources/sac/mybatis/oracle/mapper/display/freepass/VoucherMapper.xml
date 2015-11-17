@@ -54,7 +54,6 @@
                     AND TP.TENANT_ID = #{tenantId}
                     AND TP.TENANT_ID = PR.TENANT_ID
                     AND CM.SALE_POC_CD IN ('OR004501','OR004503')
-                    AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
                     AND EXISTS (
                         SELECT 'X'
                         FROM TB_CM_DEVICE DV
@@ -227,7 +226,6 @@
 	            AND DC.LANG_CD = #{langCd}
 	            AND TP.TENANT_ID = #{tenantId}
 	            AND TP.TENANT_ID = PR.TENANT_ID
-	            AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 	            AND EXISTS (
 		            SELECT 'X' 
 		            FROM TB_CM_DEVICE DV
@@ -444,8 +442,7 @@
                     AND TP.TENANT_ID = #{tenantId}
                     AND TP.TENANT_ID = PR.TENANT_ID
                     AND PD.SVC_GRP_CD = 'DP000207'
-                    AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-                    AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+                    AND CM.SALE_POC_CD IN ('OR004501','OR004503')
                      AND EXISTS (
                         SELECT 'X' 
                         FROM TB_CM_DEVICE DV

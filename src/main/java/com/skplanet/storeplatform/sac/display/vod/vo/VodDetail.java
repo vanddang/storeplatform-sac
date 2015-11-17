@@ -320,6 +320,8 @@ public class VodDetail extends CommonInfo {
 	private String productInfoType;
 	/** 기준 에피소드 상품 여부 */
 	private String baseYn;
+	/** Chrome Cast 재생 허용 Player*/
+	private String availablePlayer;
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -1807,4 +1809,20 @@ public class VodDetail extends CommonInfo {
 	public void setBaseYn(String baseYn) {
 		this.baseYn = baseYn;
 	}
+
+
+	/**
+	 * @return the availablePlayer
+	 */
+	public String getAvailablePlayer() {
+		return availablePlayer;
+	}
+
+	/**
+	 * @param availablePlayer the availablePlayer to set
+	 */
+	public void setAvailablePlayer(String availablePlayer) {
+		this.availablePlayer = availablePlayer;
+	}
+
 }

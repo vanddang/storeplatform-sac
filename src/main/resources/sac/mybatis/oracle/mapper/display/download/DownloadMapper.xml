@@ -643,11 +643,7 @@
                                                AND M.SALE_YN ='Y'                                       
                                                AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
                                                AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
-                                               AND O.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
-					                                                     FROM TB_DP_TENANT_PROD_PRICE PR
-					                                                    WHERE PR.TENANT_ID = O.TENANT_ID
-					                                                      AND PR.PROD_ID = O.PROD_ID)
-                                               AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */                                               
+                                               AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */
                                                <if test="idType == 'episode'">
                                                AND J.PROD_ID = #{productId} /* 에피소드 ID 조회 */
                                                </if>
@@ -756,7 +752,8 @@
                  , PREFIX_TITLE
                  , VOD_TITL_NM                 
                  , BADGE_OPT_TEXT
-                 , BADGE_CD                       
+                 , BADGE_CD
+                 , AVAILABLE_PLAYER
             FROM
                  (
                    SELECT  ROWNUM AS RNUM
@@ -809,7 +806,8 @@
                          , PREFIX_TITLE
                          , VOD_TITL_NM                         
                          , BADGE_OPT_TEXT
-                         , BADGE_CD                               
+                         , BADGE_CD
+                         , AVAILABLE_PLAYER
                      FROM
                           (
                             SELECT  JA.CID
@@ -872,7 +870,8 @@
                                   , MAX( JA.PREFIX_TITLE ) AS PREFIX_TITLE 
                                   , MAX( JA.VOD_TITL_NM ) AS VOD_TITL_NM                                  
                                   , MAX( JA.BADGE_OPT_TEXT ) AS BADGE_OPT_TEXT
-                                  , MAX( JA.BADGE_CD ) AS BADGE_CD                                       
+                                  , MAX( JA.BADGE_CD ) AS BADGE_CD
+                                  , MAX( JA.AVAILABLE_PLAYER ) AS AVAILABLE_PLAYER
                               FROM
                                    (
                                     SELECT  IA.MENU_ID
@@ -926,7 +925,8 @@
                                           , IA.PREFIX_TITLE
                                           , IA.VOD_TITL_NM                                          
                                           , IA.BADGE_OPT_TEXT
-                                          , IA.BADGE_CD                                              
+                                          , IA.BADGE_CD
+                                          , IA.AVAILABLE_PLAYER
                                       FROM
                                            (
                                             SELECT A.MENU_ID
@@ -1009,7 +1009,8 @@
                                                       FROM TB_CM_CD Y
                                                      WHERE PREFIX.BADGE_CD = Y.CD_ID(+)
                                                        AND Y.LANG_CD(+) = #{langCd}) AS BADGE_OPT_TEXT
-                                                 , PREFIX.BADGE_CD                                                       
+                                                 , PREFIX.BADGE_CD
+                                                 , U.AVAILABLE_PLAYER
                                               FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
                                                  , TB_DP_MENU_CATEGORY           B
                                                  , TB_DP_PROD                    D
@@ -1060,11 +1061,7 @@
                                                AND M.SALE_YN ='Y'                                       
                                                AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
                                                AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
-                                               AND O.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
-                                                                         FROM TB_DP_TENANT_PROD_PRICE PR
-                                                                        WHERE PR.TENANT_ID = O.TENANT_ID
-                                                                          AND PR.PROD_ID = O.PROD_ID)
-                                               AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */                                               
+                                               AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */
                                                AND J.PROD_ID = #{episodeId} /* 에피소드 ID 조회 */
                                                AND J.PROD_ID  = PREFIX.PROD_ID(+)
                                            ) IA

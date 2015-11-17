@@ -253,6 +253,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		setRequestV3(downloadVodV3SacReq, tenantHeader, deviceHeader);
 
 		String productId = downloadVodV3SacReq.getEpisodeId(); // 조회 상품 ID
+		// Chrome Cast 재생 허용 Player
+		if(StringUtils.isEmpty(downloadVodV3SacReq.getPlayer())){
+			downloadVodV3SacReq.setPlayer("mobile");	// default : mobile
+		}
 
 		log.debug("----------------------------------------------------------------");
 		log.debug("[DownloadVodServiceImpl] productId : {}", productId);

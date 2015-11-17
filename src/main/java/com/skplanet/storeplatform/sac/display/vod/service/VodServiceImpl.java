@@ -9,21 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.vod.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
@@ -32,27 +17,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSa
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Authority;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Badge;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -62,6 +28,17 @@ import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.vod.vo.VodDetail;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * VOD Service
@@ -817,6 +794,19 @@ public class VodServiceImpl implements VodService {
 			List<Support> supportList = new ArrayList<Support>();
 			supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
 			supportList.add(this.mapSupport(DisplayConstants.DP_DL_STRM_NM, mapperVO.getPlayDlStrmCd()));
+
+			// Chrome Cast 재생 허용 Player
+			if(StringUtils.isNotEmpty(mapperVO.getAvailablePlayer())){
+				String availablePlayerStr = "";
+				StringTokenizer st = new StringTokenizer(mapperVO.getAvailablePlayer(), "\\|");
+				while (st.hasMoreTokens()) {
+					String token = st.nextToken();
+					availablePlayerStr = availablePlayerStr + token + "|";
+				}
+				int lastGubunInt = availablePlayerStr.lastIndexOf("|");
+				availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt-1));
+				supportList.add(this.mapSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerStr));
+			}
 			play.setSupportList(supportList);
 
 			if (mapperVO.getPlayUsePeriod() != null) {
@@ -853,8 +843,10 @@ public class VodServiceImpl implements VodService {
 						play.setUsagePeriod("purchase");
 					}
 				}
-			}			
+			}
 			play.setBaseYn(mapperVO.getBaseYn());
+
+
 		}
 		return play;
 	}
@@ -880,6 +872,19 @@ public class VodServiceImpl implements VodService {
 			List<Support> supportList = new ArrayList<Support>();
 			supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
 			supportList.add(this.mapSupport(DisplayConstants.DP_DL_STRM_NM, mapperVO.getStoreDlStrmCd()));
+
+			// Chrome Cast 재생 허용 Player
+			if(StringUtils.isNotEmpty(mapperVO.getAvailablePlayer())){
+				String availablePlayerStr = "";
+				StringTokenizer st = new StringTokenizer(mapperVO.getAvailablePlayer(), "\\|");
+				while (st.hasMoreTokens()) {
+					String token = st.nextToken();
+					availablePlayerStr = availablePlayerStr + token + "|";
+				}
+				int lastGubunInt = availablePlayerStr.lastIndexOf("|");
+				availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt-1));
+				supportList.add(this.mapSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerStr));
+			}
 			store.setSupportList(supportList);
 
 			if (mapperVO.getStoreUsePeriod() != null) {

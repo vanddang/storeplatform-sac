@@ -152,7 +152,6 @@
 			AND P.TENANT_ID = TP.TENANT_ID
 			AND P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
 			AND P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
-			AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT  
 			AND P.CHNL_PROD_ID = PI.PROD_ID(+) AND P.LANG_CD = PI.LANG_CD(+) AND PI.EXPO_ORD(+) = 1 AND PI.IMG_CD(+) = #{representImgCd}
 			AND P.CHNL_PROD_ID = STAT.PROD_ID(+) AND P.TENANT_ID = STAT.TENANT_ID(+)
 			<if test="userKey != null">   
@@ -470,7 +469,6 @@
 		                    AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
 		                    AND (CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' AND NVL(PD.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT' ELSE 'SUPPORT' END) = 'SUPPORT'
 		                    AND DECODE( DV.SD_VIDEO_SPRT_YN , 'Y' , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( DV.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1
-		                    AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
 		                    AND PD.SVC_GRP_CD = 'DP000203' AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD IN ('DP001112', 'DP001115')
                             AND PD.BASE_YN = 'Y'
 		                ) T1
@@ -585,7 +583,6 @@
                                                                                                     ELSE 'SUPPORT'
                                   END) = 'SUPPORT'
                            AND DECODE( DV.SD_VIDEO_SPRT_YN , 'Y' , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( DV.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1
-                           AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
                            AND PD.SVC_GRP_CD = 'DP000203'
                            AND PD.CONTENTS_TYPE_CD = 'PD002502'
                            AND PD.SVC_TYPE_CD IN ('DP001112', 'DP001115') 
@@ -837,7 +834,6 @@
 								                              AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
 								                              AND (CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' AND NVL(PD.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT' ELSE 'SUPPORT' END) = 'SUPPORT'
 								                              AND DECODE( DV.SD_VIDEO_SPRT_YN , 'Y' , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( DV.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1
-								                              AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
 								                              AND PD.SVC_GRP_CD = 'DP000203' AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD IN ('DP001112', 'DP001115')
                                                           ) T1
                                                      GROUP BY T1.CID, T1.CHAPTER
@@ -917,6 +913,7 @@
               ) AS PLAY_DL_STRM_CD                  
             , HDV_SPRT_YN
 			, BASE_YN
+			, AVAILABLE_PLAYER
         FROM
         (
             SELECT  
@@ -939,6 +936,7 @@
                , STORE_DWLD_STRM, PLAY_DWLD_STRM                     
                , HDV_SPRT_YN
 			   , BASE_YN
+			   , AVAILABLE_PLAYER
              FROM
                   (
                 SELECT * FROM (
@@ -992,7 +990,8 @@
                           , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
                           , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD                                                     
                           , MAX( T1.HDV_SPRT_YN ) AS HDV_SPRT_YN
-						  , MAX( T1.BASE_YN) AS BASE_YN
+						  , MAX( T1.BASE_YN ) AS BASE_YN
+						  , MAX( T1.AVAILABLE_PLAYER ) AS AVAILABLE_PLAYER
                         FROM
                            (
                             SELECT
@@ -1022,6 +1021,7 @@
                                 , TP.PROD_STATUS_CD                                
                                 , DV.HDV_SPRT_YN
 								, PD.BASE_YN
+								, UP.AVAILABLE_PLAYER
                           FROM TB_DP_PROD_RSHP PR
                              , TB_DP_PROD PD
                              , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
@@ -1061,7 +1061,6 @@
                             AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
                             AND (CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' AND NVL(PD.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT' ELSE 'SUPPORT' END) = 'SUPPORT'
                             AND DECODE( DV.SD_VIDEO_SPRT_YN , 'Y' , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( DV.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1
-                            AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
                             AND PD.SVC_GRP_CD = 'DP000203' AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD IN ('DP001112', 'DP001115')
                             <if test="cid !=null">
                             AND PD.CID = #{cid}
@@ -1131,6 +1130,7 @@
                      , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD ) ) AS PLAY_USE_PERIOD
                      , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', T1.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
                      , MAX( DECODE( T1.POSS_LEND_CLSF_CD, 'DP010601', NULL, T1.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD
+                     , MAX( T1.AVAILABLE_PLAYER ) AS AVAILABLE_PLAYER
                   FROM
                        (
                         SELECT PR.PROD_ID AS CHNL_PROD_ID
@@ -1149,6 +1149,7 @@
                              , PRC.PROD_AMT
                              , PRC.PROD_NET_AMT
                              , PD.BASE_YN
+                             , UP.AVAILABLE_PLAYER
                           FROM TB_DP_PROD_RSHP PR
                              , TB_DP_PROD PD
                              , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
@@ -1185,7 +1186,6 @@
                                                                                                     ELSE 'SUPPORT'
                                   END) = 'SUPPORT'
                            AND DECODE( DV.SD_VIDEO_SPRT_YN , 'Y' , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( DV.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1
-                           AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
                            AND PD.SVC_GRP_CD = 'DP000203'
                            AND PD.CONTENTS_TYPE_CD = 'PD002502'
                            AND PD.SVC_TYPE_CD IN ('DP001112', 'DP001115') 
@@ -1211,6 +1211,7 @@
 		   AND TP.TENANT_ID = #{tenantId}
 		   AND PD.PROD_ID = TP.PROD_ID
 		   AND TP.PROD_STATUS_CD = 'PD000403'
+		   AND SC.SALE_YN = 'Y'
 		 ORDER BY SC.SUB_CONTENTS_ID  , PD.LAST_DEPLOY_DT DESC
     </select>    
     

@@ -222,6 +222,7 @@ public class MetaInfo extends CommonInfo {
 	private String badgeOptText;
 	
 	private String hdvSprtYn;
+	private String availablePlayer; // Chrome Cast 재생 허용 Player
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -4944,6 +4945,13 @@ public class MetaInfo extends CommonInfo {
 	public void setListId(String listId) {
 		this.listId = listId;
 	}
-	
-	
+
+	public String getAvailablePlayer() {
+		return this.availablePlayer;
+	}
+
+	public void setAvailablePlayer(String availablePlayer) {
+		this.availablePlayer = availablePlayer;
+	}
+
 }

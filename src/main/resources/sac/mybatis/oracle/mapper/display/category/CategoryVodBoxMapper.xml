@@ -280,7 +280,6 @@
                   AND A.USE_POLICY_ID = I.USE_POLICY_ID(+)
                   AND B.PROD_ID = J.PROD_ID(+) 
                   AND J.IMG_CD(+) = #{imageCd} AND J.LANG_CD(+) = #{langCd}
-                  AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT 
 		          AND A.TOP_MENU_ID IN ('DP17','DP18') /* 탑 메뉴 ID */
 		          AND A.CONTENTS_TYPE_CD = 'PD002502' /* 컨텐츠 타입 코드 */
 		          AND B.TENANT_ID = #{tenantId} /* 테넌트 ID */
