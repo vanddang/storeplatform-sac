@@ -138,6 +138,7 @@ public class UserSCIServiceImpl implements UserSCIService {
 		createGiftChargeInfoRequest.setUserKey(request.getUserKey());
 		createGiftChargeInfoRequest.setSellerKey(request.getSellerKey());
 		createGiftChargeInfoRequest.setBrandName(request.getBrandName());
+		createGiftChargeInfoRequest.setBrandId(request.getBrandId());
 		createGiftChargeInfoRequest.setChargerId(request.getChargerId());
 		createGiftChargeInfoRequest.setChargerName(request.getChargerName());
 

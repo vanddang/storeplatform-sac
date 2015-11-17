@@ -3904,6 +3904,7 @@
 			       ,insd_usermbr_no
 			       ,insd_sellermbr_no
 			       ,brand_nm
+			       ,brand_id
 			       ,charger_id
 			       ,charger_nm
 			       ,reg_dt
@@ -3913,6 +3914,7 @@
 	                ,#{userKey}
 	                ,#{sellerKey}
 	                ,#{brandName}
+	                ,#{brandId}
 	                ,#{chargerId}
 	                ,#{chargerName}
 	                ,SYSDATE
