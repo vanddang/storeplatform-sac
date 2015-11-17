@@ -9,13 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
@@ -709,7 +703,21 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		ArrayList<Support> supportList = new ArrayList<Support>();
 		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
 		supportList.add(this.generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getStoreDlStrmCd()));
-		supportList.add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
+
+		// Chrome Cast 재생 허용 Player
+		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
+			String availablePlayerStr = "";
+			StringTokenizer st = new StringTokenizer(metaInfo.getAvailablePlayer(), "\\|");
+			while (st.hasMoreTokens()) {
+				String token = st.nextToken();
+				availablePlayerStr = availablePlayerStr + token + "|";
+			}
+			int lastGubunInt = availablePlayerStr.lastIndexOf("|");
+			availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt-1));
+			supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerStr));
+			store.setSupportList(supportList);
+		}
+
 		store.setSupportList(supportList);
 
 		// 이용기간단위
@@ -740,7 +748,20 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		ArrayList<Support> supportList = new ArrayList<Support>();
 		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
 		supportList.add(this.generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getPlayDlStrmCd()));
-        supportList.add(new Support(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
+
+		// Chrome Cast 재생 허용 Player
+		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
+			String availablePlayerStr = "";
+			StringTokenizer st = new StringTokenizer(metaInfo.getAvailablePlayer(), "\\|");
+			while (st.hasMoreTokens()) {
+				String token = st.nextToken();
+				availablePlayerStr = availablePlayerStr + token + "|";
+			}
+			int lastGubunInt = availablePlayerStr.lastIndexOf("|");
+			availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt-1));
+			supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerStr));
+		}
+
 		play.setSupportList(supportList);
 
 		// 이용기간단위
