@@ -2452,6 +2452,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		for (GiftChargeInfo giftChargeInfo : searchGiftChargeInfoResponse.getGiftChargeInfoList()) {
 			giftChargeInfoSac = new GiftChargeInfoSac();
 			giftChargeInfoSac.setBrandName(giftChargeInfo.getBrandNm());
+			giftChargeInfoSac.setBrandId(giftChargeInfo.getBrandId());
 			giftChargeInfoSac.setChargerId(giftChargeInfo.getChargerId());
 			giftChargeInfoSac.setChargerName(giftChargeInfo.getChargerNm());
 			giftChargeInfoSac.setRegDate(giftChargeInfo.getRegDt());
