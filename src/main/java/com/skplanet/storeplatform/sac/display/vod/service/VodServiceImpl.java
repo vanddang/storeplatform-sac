@@ -804,7 +804,7 @@ public class VodServiceImpl implements VodService {
 					availablePlayerStr = availablePlayerStr + token + "|";
 				}
 				int lastGubunInt = availablePlayerStr.lastIndexOf("|");
-				availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt-1));
+				availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt));
 				supportList.add(this.mapSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerStr));
 			}
 			play.setSupportList(supportList);
@@ -882,7 +882,7 @@ public class VodServiceImpl implements VodService {
 					availablePlayerStr = availablePlayerStr + token + "|";
 				}
 				int lastGubunInt = availablePlayerStr.lastIndexOf("|");
-				availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt-1));
+				availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt));
 				supportList.add(this.mapSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerStr));
 			}
 			store.setSupportList(supportList);

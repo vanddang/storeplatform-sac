@@ -253,10 +253,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		setRequestV3(downloadVodV3SacReq, tenantHeader, deviceHeader);
 
 		String productId = downloadVodV3SacReq.getEpisodeId(); // 조회 상품 ID
-		// Chrome Cast 재생 허용 Player
-		if(StringUtils.isEmpty(downloadVodV3SacReq.getPlayer())){
-			downloadVodV3SacReq.setPlayer("mobile");	// default : mobile
-		}
 
 		log.debug("----------------------------------------------------------------");
 		log.debug("[DownloadVodServiceImpl] productId : {}", productId);
@@ -266,7 +262,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		MetaInfo metaInfo = getVodMetaInfoV3(downloadVodV3SacReq); // VOD 상품 조회
 		Product product = new Product();
-		
+
 		log.debug("----------------------------------------------------------------");
 		log.debug("[DownloadVodServiceImpl] NORMAL scid : {}", metaInfo.getNmSubContsId());
 		log.debug("[DownloadVodServiceImpl] SD scid : {}", metaInfo.getSdSubContsId());
@@ -351,6 +347,25 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					break;
 				}
 			}
+		}
+
+		// Chrome Cast 재생 허용 Player
+		if (StringUtils.isNotEmpty(downloadVodV3SacReq.getPlayer())) {
+			String player = StringUtils.lowerCase(downloadVodV3SacReq.getPlayer());
+			try {
+				if (!"mobile".equals(player) && !"chrome".equals(player) && !"pc".equals(player) && !"tv".equals(player)) {
+					this.log.debug("----------------------------------------------------------------");
+					this.log.debug("유효하지않은 크롬캐스트 요청 파라메터 : " + player);
+					this.log.debug("----------------------------------------------------------------");
+					throw new StorePlatformException("SAC_DSP_0003", " player", player);
+				}
+				metaInfo.setAvailablePlayerReq(player);
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_DSP_0003", "player", player);
+			}
+		}else{
+			// default : mobile
+			metaInfo.setAvailablePlayerReq("mobile");
 		}
 
 		setProduct(product, metaInfo, supportFhdVideo, downloadVodV3SacReq.getBaseYn());

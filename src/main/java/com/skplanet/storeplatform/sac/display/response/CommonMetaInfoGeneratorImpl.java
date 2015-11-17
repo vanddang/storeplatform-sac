@@ -9,36 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.*;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Authority;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Badge;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -46,6 +24,12 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 /**
  * 공통 Meta 정보 Generator 구현체.
@@ -706,18 +690,22 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		// Chrome Cast 재생 허용 Player
 		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
-			String availablePlayerStr = "";
-			StringTokenizer st = new StringTokenizer(metaInfo.getAvailablePlayer(), "\\|");
-			while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				availablePlayerStr = availablePlayerStr + token + "|";
+			String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
+			String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
+			if(availablePlayer.contains(availablePlayerReq)){
+				//  요청이 player=chrome 이지만 스트리밍 지원 상품이면 규격을 내려준다. (dl : 다운로드, strm : 스트리밍, both : 스트리밍&다운로드)
+				if(StringUtils.equals(availablePlayerReq, "chrome")){
+					if(availablePlayer.contains(availablePlayerReq) && !StringUtils.equals(metaInfo.getStoreDlStrmCd(), "dl")) {
+						supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
+					}
+				}else{
+					// player=tv,mobile,pc로 요청하면 규격을 내려준다.
+					if(availablePlayer.contains(availablePlayerReq)){
+						supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
+					}
+				}
 			}
-			int lastGubunInt = availablePlayerStr.lastIndexOf("|");
-			availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt-1));
-			supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerStr));
-			store.setSupportList(supportList);
 		}
-
 		store.setSupportList(supportList);
 
 		// 이용기간단위
@@ -742,7 +730,6 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	@Override
 	public Play generatePlay(MetaInfo metaInfo) {
-
 		Play play = new Play();
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
@@ -751,17 +738,22 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		// Chrome Cast 재생 허용 Player
 		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
-			String availablePlayerStr = "";
-			StringTokenizer st = new StringTokenizer(metaInfo.getAvailablePlayer(), "\\|");
-			while (st.hasMoreTokens()) {
-				String token = st.nextToken();
-				availablePlayerStr = availablePlayerStr + token + "|";
+			String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
+			String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
+			if(availablePlayer.contains(availablePlayerReq)){
+				//  요청이 player=chrome 이지만 스트리밍 지원 상품이면 규격을 내려준다. (dl : 다운로드, strm : 스트리밍, both : 스트리밍&다운로드)
+				if(StringUtils.equals(availablePlayerReq, "chrome")){
+					if(availablePlayer.contains(availablePlayerReq) && !StringUtils.equals(metaInfo.getPlayDlStrmCd(), "dl")) {
+						supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
+					}
+				}else{
+					// player=tv,mobile,pc로 요청하면 규격을 내려준다.
+					if(availablePlayer.contains(availablePlayerReq)){
+						supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
+					}
+				}
 			}
-			int lastGubunInt = availablePlayerStr.lastIndexOf("|");
-			availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt-1));
-			supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerStr));
 		}
-
 		play.setSupportList(supportList);
 
 		// 이용기간단위
