@@ -4180,11 +4180,10 @@ public class UserServiceImpl implements UserService {
 		searchGiftChargeInfoRequest.setCommonRequest(createGiftChargeInfoRequest.getCommonRequest());
 		searchGiftChargeInfoRequest.setUserKey(createGiftChargeInfoRequest.getUserKey());
 		searchGiftChargeInfoRequest.setSellerKey(createGiftChargeInfoRequest.getSellerKey());
-		searchGiftChargeInfoRequest.setBrandName(createGiftChargeInfoRequest.getBrandName());
 		searchGiftChargeInfoRequest.setBrandId(createGiftChargeInfoRequest.getBrandId());
 		searchGiftChargeInfoRequest.setChargerId(createGiftChargeInfoRequest.getChargerId());
 
-		// 중복체크 항목 : tenantId, userKey, sellerKey, 브랜드명 , 제휴사 회원ID
+		// 중복체크 항목 : tenantId, userKey, sellerKey, 제휴사 브랜드 ID , 제휴사 회원 ID
 		GiftChargeInfo giftChargeInfo = (GiftChargeInfo) this.commonDAO.queryForObject("User.searchGiftChargeInfo",
 				searchGiftChargeInfoRequest);
 
