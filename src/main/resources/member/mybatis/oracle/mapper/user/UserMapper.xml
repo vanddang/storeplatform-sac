@@ -3937,13 +3937,14 @@
    
    <!-- 상품권 충전소 정보 이관 등록 -->
     <insert id="insertTransferGiftChargeInfo" parameterType="giftChargeInfo">
-     INSERT /* UserMapper.xml, insertTransferGiftChargeInfo, SAC(SC), 최진호, 2015-11-11 */
+     INSERT /* UserMapper.xml, insertTransferGiftChargeInfo, SAC(SC), 최진호, 2015-11-24 */
        INTO TB_US_GIFT_CHRG_INFO (
               SEQ
               ,TENANT_ID
               ,INSD_USERMBR_NO
               <if test="sellerKey != null">,INSD_SELLERMBR_NO</if>
               <if test="brandNm != null">,BRAND_NM</if>
+              <if test="brandId != null">,BRAND_ID</if>
               <if test="chargerId != null">,CHARGER_ID</if>
               <if test="chargerNm != null">,CHARGER_NM</if>
               <if test="regDt != null">,REG_DT</if>
@@ -3954,6 +3955,7 @@
               ,#{userKey}
               <if test="sellerKey != null">,#{sellerKey}</if>
               <if test="brandNm != null">,#{brandNm}</if>
+              <if test="brandId != null">,#{brandId}</if>
               <if test="chargerId != null">,#{chargerId}</if>
               <if test="chargerNm != null">,#{chargerNm}</if>
               <if test="regDt != null">,TO_DATE(#{regDt}, 'YYYYMMDDHH24MISS')</if>
