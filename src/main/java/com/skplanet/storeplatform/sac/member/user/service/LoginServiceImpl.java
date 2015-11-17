@@ -51,6 +51,7 @@ import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
+import com.skplanet.storeplatform.member.client.common.util.RandomString;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
@@ -132,6 +133,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
@@ -459,6 +461,15 @@ public class LoginServiceImpl implements LoginService {
 			}
 		}
 
+		/* 타사인경우 타사 간편인증 연동후 marketDeviceKey를 svcMangNo로 업데이트 */
+		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
+				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
+			if (StringUtils.isNotBlank(req.getNativeId())) { // 타사 간편인증시 nativeId 필수
+				this.updateMarketDeviceKey(requestHeader, chkDupRes.getUserMbr().getUserKey(), req.getDeviceId(),
+						req.getDeviceTelecom(), req.getNativeId());
+			}
+		}
+
 		/* 로그인 결과 */
 		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		res.setUserType(chkDupRes.getUserMbr().getUserType());
@@ -747,6 +758,15 @@ public class LoginServiceImpl implements LoginService {
 					LOGGER.info("UAPS getMappingInfo MDN : {}, errorCode : {}, errorMessage : {}", req.getDeviceId(), e
 							.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
 				}
+			}
+		}
+
+		/* 타사인경우 타사 간편인증 연동후 marketDeviceKey를 svcMangNo로 업데이트 */
+		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
+				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
+			if (StringUtils.isNotBlank(req.getNativeId())) { // 타사 간편인증시 nativeId 필수
+				this.updateMarketDeviceKey(requestHeader, chkDupRes.getUserMbr().getUserKey(), req.getDeviceId(),
+						req.getDeviceTelecom(), req.getNativeId());
 			}
 		}
 
@@ -4107,8 +4127,8 @@ public class LoginServiceImpl implements LoginService {
 	 *            SacRequestHeader
 	 * @param deviceId
 	 *            String
-	 * @param userInfo
-	 *            UserInfo
+	 * @param detailRes
+	 *            DetailV2Res
 	 * @param marketRes
 	 *            MarketAuthorizeEcRes
 	 */
@@ -4435,4 +4455,69 @@ public class LoginServiceImpl implements LoginService {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * S01 모바일 회원 인증시 타사 통신사로 온경우 타사 간편인증 연동후 marketDeviceKey 업데이트.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userKey
+	 *            String
+	 * @param deviceId
+	 *            String
+	 * @param deviceTelecom
+	 *            String
+	 * @param nativeId
+	 *            String
+	 */
+	private void updateMarketDeviceKey(SacRequestHeader requestHeader, String userKey, String deviceId,
+			String deviceTelecom, String nativeId) {
+
+		String trxNo = new StringBuffer("trx").append("-")
+				.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
+				.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString();
+
+		MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+		marketReq.setTrxNo(trxNo);
+		marketReq.setDeviceId(deviceId);
+		marketReq.setDeviceTelecom(deviceTelecom);
+		marketReq.setNativeId(nativeId);
+		MarketAuthorizeEcRes marketRes = null;
+		String svcVersion = requestHeader.getDeviceHeader().getSvc();
+		if (StringUtils.isNotBlank(svcVersion)) {
+			marketReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
+		}
+
+		try {
+			if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_KT)) {
+				LOGGER.info("{} authorizeForOllehMarket Request : {}", deviceId,
+						ConvertMapperUtils.convertObjectToJson(marketReq));
+				marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
+				LOGGER.info("{} authorizeForOllehMarket Response : {}", deviceId,
+						ConvertMapperUtils.convertObjectToJson(marketRes));
+			} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_LGT)) {
+				LOGGER.info("{} authorizeForUplusStore Request : {}", deviceId,
+						ConvertMapperUtils.convertObjectToJson(marketReq));
+				marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+				LOGGER.info("{} authorizeForUplusStore Response : {}", deviceId,
+						ConvertMapperUtils.convertObjectToJson(marketRes));
+			}
+
+			if (marketRes != null) {
+				if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상회원
+					ModifyDeviceReq modifyDeviceReq = new ModifyDeviceReq();
+					DeviceInfo deviceInfo = new DeviceInfo();
+					deviceInfo.setDeviceId(deviceId);
+					deviceInfo.setSvcMangNum(marketRes.getDeviceInfo().getDeviceKey());
+					modifyDeviceReq.setUserKey(userKey);
+					modifyDeviceReq.setDeviceInfo(deviceInfo);
+					this.deviceService.modDevice(requestHeader, modifyDeviceReq);
+				}
+			}
+		} catch (StorePlatformException e) {
+			// ignore Exception
+		}
+
+	}
 }
