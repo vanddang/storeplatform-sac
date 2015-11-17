@@ -42,6 +42,7 @@ public class DownloadVodV3SacReq extends CommonInfo {
 	private String dwldExprDt; // 다운로드 만료일시
 	
 	private String baseYn; // EP상품의 기준화질 여부
+	private String player; // Chrome Cast 재생 허용 Player
 
 	/**
 	 *
@@ -337,6 +338,21 @@ public class DownloadVodV3SacReq extends CommonInfo {
 	 */
 	public void setBaseYn(String baseYn) {
 		this.baseYn = baseYn;
+	}
+
+
+	/**
+	 * @return the player
+	 */
+	public String getPlayer() {
+		return player;
+	}
+
+	/**
+	 * @param player the player to set
+	 */
+	public void setPlayer(String player) {
+		this.player = player;
 	}
 
 }
