@@ -77,7 +77,7 @@
             TB_US_USERMBR_DEVICE_SET
                 SET
                  UPD_DT = SYSDATE
-                ,UPD_ID = #{userID}
+              <if test="userID != null"> ,UPD_ID = #{userID} </if>
               <if test="pinNo != null"> ,PIN_NO = #{pinNo} </if>
               <if test="authCnt != null"> ,AUTH_CNT = #{authCnt} </if>
               <if test="authLockYn != null"> ,AUTH_LOCK_YN = #{authLockYn} </if>
