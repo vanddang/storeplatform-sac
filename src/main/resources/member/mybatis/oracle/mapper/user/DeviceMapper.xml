@@ -1112,5 +1112,12 @@
 		         AND insd_device_id  = #{deviceKey}
 		         )
     </select>    
-    
+
+    <delete id="removeDeviceExtraProfile" resultType="userMbrDeviceDetail">
+        DELETE  /* DeviceMapper.xml, removeDeviceExtraProfile, SAC(SC), 반범진, 2015-11-24 */
+          FROM tb_us_usermbr_device_dtl
+         WHERE tenant_id = #{tenantID} 
+             AND insd_usermbr_no = #{userKey}
+             AND insd_device_id = #{deviceKey}
+    </delete>    
 </mapper>
