@@ -1208,7 +1208,7 @@ public class DeviceServiceImpl implements DeviceService {
 			userMbrDeviceSet.setUserKey(userKey);
 			userMbrDeviceSet.setDeviceKey(deviceKeyList.get(i));
 			userMbrDeviceSet.setPinNo("");
-			userMbrDeviceSet.setAuthCnt("");
+			userMbrDeviceSet.setAuthCnt("0");
 			userMbrDeviceSet.setAuthLockYn("N");
 			this.commonDAO.delete("DeviceSet.modifyDeviceSet", userMbrDeviceSet);
 		}
