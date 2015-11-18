@@ -689,22 +689,16 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		supportList.add(this.generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getStoreDlStrmCd()));
 
 		// Chrome Cast 재생 허용 Player
+		String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
+		String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
-			String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
-			String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 			if(availablePlayer.contains(availablePlayerReq)){
-				//  요청이 player=chrome 이지만 스트리밍 지원 상품이면 규격을 내려준다. (dl : 다운로드, strm : 스트리밍, both : 스트리밍&다운로드)
-				if(StringUtils.equals(availablePlayerReq, "chrome")){
-					if(availablePlayer.contains(availablePlayerReq) && !StringUtils.equals(metaInfo.getStoreDlStrmCd(), "dl")) {
-						supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
-					}
-				}else{
-					// player=tv,mobile,pc로 요청하면 규격을 내려준다.
-					if(availablePlayer.contains(availablePlayerReq)){
-						supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
-					}
-				}
+				supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
+			}else{
+				supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, "mobile"));
 			}
+		}else{
+			supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, "mobile"));
 		}
 		store.setSupportList(supportList);
 
@@ -737,22 +731,16 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		supportList.add(this.generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getPlayDlStrmCd()));
 
 		// Chrome Cast 재생 허용 Player
+		String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
+		String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
-			String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
-			String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 			if(availablePlayer.contains(availablePlayerReq)){
-				//  요청이 player=chrome 이지만 스트리밍 지원 상품이면 규격을 내려준다. (dl : 다운로드, strm : 스트리밍, both : 스트리밍&다운로드)
-				if(StringUtils.equals(availablePlayerReq, "chrome")){
-					if(availablePlayer.contains(availablePlayerReq) && !StringUtils.equals(metaInfo.getPlayDlStrmCd(), "dl")) {
-						supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
-					}
-				}else{
-					// player=tv,mobile,pc로 요청하면 규격을 내려준다.
-					if(availablePlayer.contains(availablePlayerReq)){
-						supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
-					}
-				}
+				supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
+			}else{
+				supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, "mobile"));
 			}
+		}else{
+			supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, "mobile"));
 		}
 		play.setSupportList(supportList);
 

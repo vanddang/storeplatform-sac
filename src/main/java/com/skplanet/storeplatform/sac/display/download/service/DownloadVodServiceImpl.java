@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +38,6 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -270,6 +266,26 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		log.debug("[DownloadVodServiceImpl] CID : {}", metaInfo.getCid());
 		log.debug("----------------------------------------------------------------");
 
+		// Chrome Cast 재생 허용 Player
+		if (StringUtils.isNotEmpty(downloadVodV3SacReq.getPlayer())) {
+			String player = StringUtils.lowerCase(downloadVodV3SacReq.getPlayer());
+			try {
+				if (!"mobile".equals(player) && !"chrome".equals(player) && !"pc".equals(player) && !"tv".equals(player)) {
+					this.log.debug("----------------------------------------------------------------");
+					this.log.debug("유효하지않은 크롬캐스트 요청 파라메터 : " + player);
+					this.log.debug("----------------------------------------------------------------");
+					throw new StorePlatformException("SAC_DSP_0003", " player", player);
+				}
+				metaInfo.setAvailablePlayerReq(player);
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_DSP_0003", "player", player);
+			}
+		}else{
+			// default : mobile
+			metaInfo.setAvailablePlayerReq("mobile");
+		}
+
+
 		if (StringUtils.isNotEmpty(downloadVodV3SacReq.getDeviceKey()) && StringUtils.isNotEmpty(downloadVodV3SacReq.getUserKey())) {
 			HistoryListSacInRes historyRes = null;
 			boolean purchaseFlag = true;
@@ -339,33 +355,43 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					// 구매 정보
 					product.setPurchaseList(purchaseList);
 
+					// DlStrmCd 값 가져오기
+					String dlStrmCd = "";
+					if(StringUtils.isNotEmpty(metaInfo.getPlayDlStrmCd())){
+						dlStrmCd = metaInfo.getPlayDlStrmCd();
+					}else if(StringUtils.isNotEmpty(metaInfo.getStoreDlStrmCd())){
+						dlStrmCd = metaInfo.getStoreDlStrmCd();
+					}
+
+
+					// Chrome Cast 재생 허용 Player
+					boolean dlTokenFlag = false;
+					if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
+						String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
+						String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
+						if (availablePlayer.contains(availablePlayerReq)){
+							//  요청이 player=chrome 이지만 스트리밍 지원 상품이면 규격을 내려준다. (dl : 다운로드, strm : 스트리밍, both : 스트리밍&다운로드)
+							if (StringUtils.equals(availablePlayerReq, "chrome")){
+								if(availablePlayer.contains(availablePlayerReq) && !StringUtils.equals(dlStrmCd, "dl")) {
+									dlTokenFlag = true;
+								}
+							}else{
+								// player=tv,mobile,pc로 요청하면 규격을 내려준다.
+								if (availablePlayer.contains(availablePlayerReq)){
+									dlTokenFlag = true;
+								}
+							}
+						}
+					}
 					// 암호화 정보
-					if (!encryptionList.isEmpty()) {
+					if (!encryptionList.isEmpty() && dlTokenFlag) {
 						log.debug("[DownloadVodServiceImpl]	setDl : {}");
 						product.setDl(encryptionList);
 					}
+
 					break;
 				}
 			}
-		}
-
-		// Chrome Cast 재생 허용 Player
-		if (StringUtils.isNotEmpty(downloadVodV3SacReq.getPlayer())) {
-			String player = StringUtils.lowerCase(downloadVodV3SacReq.getPlayer());
-			try {
-				if (!"mobile".equals(player) && !"chrome".equals(player) && !"pc".equals(player) && !"tv".equals(player)) {
-					this.log.debug("----------------------------------------------------------------");
-					this.log.debug("유효하지않은 크롬캐스트 요청 파라메터 : " + player);
-					this.log.debug("----------------------------------------------------------------");
-					throw new StorePlatformException("SAC_DSP_0003", " player", player);
-				}
-				metaInfo.setAvailablePlayerReq(player);
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_DSP_0003", "player", player);
-			}
-		}else{
-			// default : mobile
-			metaInfo.setAvailablePlayerReq("mobile");
 		}
 
 		setProduct(product, metaInfo, supportFhdVideo, downloadVodV3SacReq.getBaseYn());
