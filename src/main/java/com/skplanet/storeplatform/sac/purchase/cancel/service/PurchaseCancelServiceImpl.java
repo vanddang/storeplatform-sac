@@ -28,6 +28,9 @@ import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundDetailEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
@@ -333,7 +336,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 구매 상품 별 체크. */
 		boolean shoppingYn = false; // 쇼핑상품 구분.
-		String prodCaseCd = ""; // 쇼핑상품 유형을 가져온다.
+		boolean isCharge = false; // 쇼핑충전권 구분.
 
 		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
 
@@ -347,18 +350,26 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 				// 쇼핑상품이면 true 셋팅.
 				shoppingYn = true;
-				prodCaseCd = prchsDtlSacParam.getCpnProdCaseCd();
+
+				// 쇼핑 충전권 구분.
+				if (StringUtils.equals(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_SHOPPING_CHARGE,
+						prchsDtlSacParam.getTenantProdGrpCd())) {
+					isCharge = true;
+				}
 			}
 
 			// 게임캐쉬 충전 취소 처리
 			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
 					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
 
+				this.logger.info("## PurchaseCancelServiceImpl GAMECASH_FIXRATE CANCEL CancelReqPathCd {}",
+						purchaseCancelSacParam.getCancelReqPathCd());
+
 				if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_REFUND,
 						purchaseCancelSacParam.getCancelReqPathCd())) {
 					// 환불
-					// this.specificRefundTCash(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH,
-					// prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getUseInsdUsermbrNo());
+					this.specificRefundTCash(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH,
+							prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getUseInsdUsermbrNo());
 				} else {
 					// 취소
 					this.cancelTCashCharge(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH,
@@ -371,11 +382,14 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
 					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE)) {
 
+				this.logger.info("## PurchaseCancelServiceImpl BOOKSCASH_FIXRATE CANCEL CancelReqPathCd {}",
+						purchaseCancelSacParam.getCancelReqPathCd());
+
 				if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_REFUND,
 						purchaseCancelSacParam.getCancelReqPathCd())) {
 					// 환불
-					// this.specificRefundTCash(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH,
-					// prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getUseInsdUsermbrNo());
+					this.specificRefundTCash(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH,
+							prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getUseInsdUsermbrNo());
 				} else {
 					// 취소
 					this.cancelTCashCharge(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_BOOKS_CASH,
@@ -404,14 +418,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		/** 쇼핑 상품 처리. */
 		if (shoppingYn) {
 
-			this.logger.info("## PurchaseCancelServiceImpl prodCaseCd {}", prodCaseCd);
-
-			// 상품유형이 충전권인지 확인
-			if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
-
-				// 충전권 취소 처리
+			this.logger.info("## PurchaseCancelServiceImpl isCharge {}", isCharge);
+			if (isCharge) {
+				// 충전권이면 충전 취소 처리
 				this.executeCancelGoods(purchaseCancelSacParam, purchaseCancelDetailSacParam);
-
 			} else {
 
 				// 쇼핑쿠폰 취소 처리
@@ -1350,28 +1360,27 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 	}
 
-	// private TStoreCashSpecificRefundEcRes specificRefundTCash(String productGroup, String prchsId, String userKey) {
-	//
-	// TStoreCashSpecificRefundEcReq tStoreCashSpecificRefundEcReq = new TStoreCashSpecificRefundEcReq();
-	// TStoreCashSpecificRefundEcRes tStoreCashSpecificRefundEcRes = new TStoreCashSpecificRefundEcRes();
-	//
-	// List<TStoreCashSpecificRefundDetailEcReq> cashList = new ArrayList<TStoreCashSpecificRefundDetailEcReq>();
-	//
-	// TStoreCashSpecificRefundDetailEcReq tStoreCashSpecificRefundDetailEcReq = new
-	// TStoreCashSpecificRefundDetailEcReq();
-	// tStoreCashSpecificRefundDetailEcReq.setOrderNo(prchsId);
-	// tStoreCashSpecificRefundDetailEcReq.setProductGroup(productGroup);
-	// cashList.add(tStoreCashSpecificRefundDetailEcReq);
-	//
-	// tStoreCashSpecificRefundEcReq.setUserKey(userKey);
-	// tStoreCashSpecificRefundEcReq.setCashList(cashList);
-	//
-	// if (CollectionUtils.isNotEmpty(cashList)) {
-	// tStoreCashSpecificRefundEcRes = this.purchaseCancelRepository
-	// .specificRefundTCash(tStoreCashSpecificRefundEcReq);
-	// }
-	//
-	// return tStoreCashSpecificRefundEcRes;
-	// }
+	private TStoreCashSpecificRefundEcRes specificRefundTCash(String productGroup, String prchsId, String userKey) {
+
+		TStoreCashSpecificRefundEcReq tStoreCashSpecificRefundEcReq = new TStoreCashSpecificRefundEcReq();
+		TStoreCashSpecificRefundEcRes tStoreCashSpecificRefundEcRes = new TStoreCashSpecificRefundEcRes();
+
+		List<TStoreCashSpecificRefundDetailEcReq> cashList = new ArrayList<TStoreCashSpecificRefundDetailEcReq>();
+
+		TStoreCashSpecificRefundDetailEcReq tStoreCashSpecificRefundDetailEcReq = new TStoreCashSpecificRefundDetailEcReq();
+		tStoreCashSpecificRefundDetailEcReq.setOrderNo(prchsId);
+		tStoreCashSpecificRefundDetailEcReq.setProductGroup(productGroup);
+		cashList.add(tStoreCashSpecificRefundDetailEcReq);
+
+		tStoreCashSpecificRefundEcReq.setUserKey(userKey);
+		tStoreCashSpecificRefundEcReq.setCashList(cashList);
+
+		if (CollectionUtils.isNotEmpty(cashList)) {
+			tStoreCashSpecificRefundEcRes = this.purchaseCancelRepository
+					.specificRefundTCash(tStoreCashSpecificRefundEcReq);
+		}
+
+		return tStoreCashSpecificRefundEcRes;
+	}
 
 }

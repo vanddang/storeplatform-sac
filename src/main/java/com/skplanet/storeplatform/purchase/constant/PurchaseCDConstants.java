@@ -207,6 +207,7 @@ public class PurchaseCDConstants {
 	public static final String TENANT_PRODUCT_GROUP_DTL_COMIC_FIXRATE = "OR006214DP14OR006331"; // COMIC 정액권
 	public static final String TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE = "OR006211DP01OR006332"; // 게임캐쉬 정액제
 	public static final String TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE = "OR006214DP13OR006332"; // 북스캐쉬 정액제
+	public static final String TENANT_PRODUCT_GROUP_DTL_SHOPPING_CHARGE = "OR006221DP28OR006312"; // 쇼핑 충전권
 	// SUFFIX
 	public static final String TENANT_PRODUCT_GROUP_SUFFIX_UNIT = "OR006311"; // 일반 상품 suffix
 	public static final String TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE = "OR006331"; // 정액 상품 suffix

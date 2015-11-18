@@ -951,7 +951,6 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		prchsDtlSacParam.setResvCol03(prchsDtl.getResvCol03());
 		prchsDtlSacParam.setCouponCmsPrchsId(prchsDtl.getCouponCmsPrchsId());
 		prchsDtlSacParam.setContentsType(prchsDtl.getContentsType()); // IAP 상품타입
-		prchsDtlSacParam.setCpnProdCaseCd(prchsDtl.getCpnProdCaseCd()); // 쇼핑상품 유형 타입
 
 		return prchsDtlSacParam;
 
