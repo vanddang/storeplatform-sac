@@ -23,7 +23,7 @@
         JOIN tb_fw_bypass
         USING (bypass_id)
         <choose>
-	        <when test="@com.skplanet.storeplatform.sac.common.environment.ActvieProfileProvider@getActiveProfile() == 'stg'">
+	        <when test="@com.skplanet.storeplatform.sac.common.environment.ActiveProfileProvider@getActiveProfile() == 'stg'">
 	        JOIN tb_fw_component_domain_stg$
 	        </when>
 	        <otherwise>
@@ -44,7 +44,7 @@
 		  host, 
 		  port
         <choose>
-	        <when test="@com.skplanet.storeplatform.sac.common.environment.ActvieProfileProvider@getActiveProfile() == 'stg'">
+	        <when test="@com.skplanet.storeplatform.sac.common.environment.ActiveProfileProvider@getActiveProfile() == 'stg'">
 	        FROM tb_fw_component_domain_stg$
 	        </when>
 	        <otherwise>

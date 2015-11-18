@@ -13,7 +13,7 @@
 		                  , enc_key
 		                  , url
 		              FROM  <choose>
-			                    <when test="@com.skplanet.storeplatform.purchase.common.ActvieProfileProvider@getActiveProfile() == 'stg'">
+			                    <when test="@com.skplanet.storeplatform.sac.common.environment.ActiveProfileProvider@getActiveProfile() == 'stg'">
 			                        tb_pr_pp_property_stg$
 			                    </when>
 			                    <otherwise>
@@ -39,7 +39,7 @@
                        sys_div
                       ,cncl_sys_div
                  FROM  <choose>
-                           <when test="@com.skplanet.storeplatform.purchase.common.ActvieProfileProvider@getActiveProfile() == 'stg'">
+                           <when test="@com.skplanet.storeplatform.sac.common.environment.ActiveProfileProvider@getActiveProfile() == 'stg'">
                                tb_pr_pp_property_stg$
                            </when>
                            <otherwise>
@@ -57,7 +57,7 @@
                        sys_div
                       ,cncl_sys_div
                  FROM  <choose>
-                           <when test="@com.skplanet.storeplatform.purchase.common.ActvieProfileProvider@getActiveProfile() == 'stg'">
+                           <when test="@com.skplanet.storeplatform.sac.common.environment.ActiveProfileProvider@getActiveProfile() == 'stg'">
                                tb_pr_pp_property_stg$
                            </when>
                            <otherwise>
@@ -77,7 +77,7 @@
                                 sys_div
                                ,cncl_sys_div
                           FROM  <choose>
-                                    <when test="@com.skplanet.storeplatform.purchase.common.ActvieProfileProvider@getActiveProfile() == 'stg'">
+                                    <when test="@com.skplanet.storeplatform.sac.common.environment.ActiveProfileProvider@getActiveProfile() == 'stg'">
                                         tb_pr_pp_property_stg$
                                     </when>
                                     <otherwise>

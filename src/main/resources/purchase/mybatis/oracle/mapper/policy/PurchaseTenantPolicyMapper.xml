@@ -24,7 +24,7 @@
         , extra_value
         FROM
         <choose>
-            <when test="@com.skplanet.storeplatform.purchase.common.ActvieProfileProvider@getActiveProfile() == 'stg'">
+            <when test="@com.skplanet.storeplatform.sac.common.environment.ActiveProfileProvider@getActiveProfile() == 'stg'">
                 tb_cm_tenant_sale_policy_stg$
             </when>
             <otherwise>
@@ -66,7 +66,7 @@
         , cond_clsf_value
         , policy_prior
         FROM  <choose>
-        <when test="@com.skplanet.storeplatform.purchase.common.ActvieProfileProvider@getActiveProfile() == 'stg'">
+        <when test="@com.skplanet.storeplatform.sac.common.environment.ActiveProfileProvider@getActiveProfile() == 'stg'">
             tb_cm_tenant_sale_policy_stg$
         </when>
         <otherwise>

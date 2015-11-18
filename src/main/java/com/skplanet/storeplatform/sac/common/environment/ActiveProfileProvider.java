@@ -14,18 +14,18 @@ import org.springframework.stereotype.Component;
 
 /**
 *
-* ActvieProfileProvider
+* ActiveProfileProvider
 *
 * Created on 2014. 12. 11. by 서대영, SK플래닛.
 */
 @Component
-public class ActvieProfileProvider {
+public class ActiveProfileProvider {
 	
 	private static String activeProfile = "";
 	
 	@Value("#{systemProperties['spring.profiles.active']}") 
 	public void setActiveProfile(String activeProfile) {
-		ActvieProfileProvider.activeProfile = activeProfile;
+		ActiveProfileProvider.activeProfile = activeProfile;
 	}
 	
 	public static String getActiveProfile() {
