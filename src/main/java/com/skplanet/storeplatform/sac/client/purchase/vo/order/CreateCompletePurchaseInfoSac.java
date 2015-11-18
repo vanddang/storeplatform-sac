@@ -9,11 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
-import javax.validation.constraints.NotNull;
-
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import javax.validation.constraints.NotNull;
 
 /**
  * 
@@ -66,6 +65,7 @@ public class CreateCompletePurchaseInfoSac extends CommonInfo {
 	private String partChrgProdNm; // 부분_유료_상품_명
 	private String regId;
 	private String updId;
+	private String flgLimitUser; // 한도 가입자 여부
 
 	/**
 	 * @return the tenantId
@@ -427,4 +427,22 @@ public class CreateCompletePurchaseInfoSac extends CommonInfo {
 		this.updId = updId;
 	}
 
+	/**
+	 * Gets flg limit user.
+	 *
+	 * @return the flg limit user
+	 */
+	public String getFlgLimitUser() {
+		return flgLimitUser;
+	}
+
+	/**
+	 * Sets flg limit user.
+	 *
+	 * @param flgLimitUser
+	 *            the flg limit user
+	 */
+	public void setFlgLimitUser(String flgLimitUser) {
+		this.flgLimitUser = flgLimitUser;
+	}
 }
