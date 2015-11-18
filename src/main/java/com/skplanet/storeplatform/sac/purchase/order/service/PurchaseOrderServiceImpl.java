@@ -1719,7 +1719,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 결제정보 생성
 		List<Payment> paymentList = this.purchaseOrderMakeDataService.makePaymentList(prchsDtlMore,
-				req.getPaymentList(), prchsDtlMore.getStatusCd());
+				req.getPaymentList(), prchsDtlMore.getStatusCd(), purchase.getFlgLimitUser());
 
 		boolean bSktTest = false; // 시험폰 결제 여부
 		for (Payment payment : paymentList) {

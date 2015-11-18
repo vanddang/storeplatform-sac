@@ -9,9 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
@@ -22,6 +19,9 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseReservedData;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -60,6 +60,25 @@ public interface PurchaseOrderMakeDataService {
 	 * @param statusCd
 	 *            구매상태코드
 	 * 
+	 * @return 결제내역 생성 목록
+	 */
+	public List<Payment> makePaymentList(PrchsDtlMore prchsDtlMore, List<PaymentInfo> paymentInfoList, String statusCd, String flgLimitUser);
+
+	/**
+	 *
+	 * <pre>
+	 * 결제내역 생성 목록 생성.
+	 * </pre>
+	 *
+	 * @param prchsDtlMore
+	 *            구매정보
+	 *
+	 * @param paymentInfoList
+	 *            결제이력 생성 정보
+	 *
+	 * @param statusCd
+	 *            구매상태코드
+	 *
 	 * @return 결제내역 생성 목록
 	 */
 	public List<Payment> makePaymentList(PrchsDtlMore prchsDtlMore, List<PaymentInfo> paymentInfoList, String statusCd);
@@ -106,7 +125,7 @@ public interface PurchaseOrderMakeDataService {
 	 * 멤버쉽 적립을 위한 목록 생성.
 	 * </pre>
 	 * 
-	 * @param prchsDtlMore
+	 * @param prchsDtlMoreList
 	 *            구매생성 정보
 	 * 
 	 * @param mileageSubInfo
