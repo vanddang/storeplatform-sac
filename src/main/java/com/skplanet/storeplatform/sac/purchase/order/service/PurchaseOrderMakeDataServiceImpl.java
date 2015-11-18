@@ -311,6 +311,28 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	}
 
 	/**
+	 *
+	 * <pre>
+	 * 결제내역 생성 목록 생성.
+	 * </pre>
+	 *
+	 * @param prchsDtlMore
+	 *            구매정보
+	 *
+	 * @param paymentInfoList
+	 *            결제이력 생성 정보
+	 *
+	 * @param statusCd
+	 *            구매상태코드
+	 *
+	 * @return 결제내역 생성 목록
+	 */
+	@Override
+	public List<Payment> makePaymentList(PrchsDtlMore prchsDtlMore, List<PaymentInfo> paymentInfoList, String statusCd) {
+		return makePaymentList(prchsDtlMore, paymentInfoList, statusCd, "");
+	}
+
+	/**
 	 * 
 	 * <pre>
 	 * 결제내역 생성 목록 생성.
@@ -328,7 +350,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	 * @return 결제내역 생성 목록
 	 */
 	@Override
-	public List<Payment> makePaymentList(PrchsDtlMore prchsDtlMore, List<PaymentInfo> paymentInfoList, String statusCd) {
+	public List<Payment> makePaymentList(PrchsDtlMore prchsDtlMore, List<PaymentInfo> paymentInfoList, String statusCd, String flgLimitUser) {
 
 		String tenantId = prchsDtlMore.getTenantId();
 		String systemId = prchsDtlMore.getSystemId();
@@ -384,7 +406,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			payment.setUpdId(systemId);
 
 			payment.setMnoCd(paymentInfo.getMnoCd());
-			payment.setLimtMbrYn(paymentInfo.getLimitMemberYn());
+			payment.setLimtMbrYn(StringUtils.isBlank(paymentInfo.getLimitMemberYn()) ? flgLimitUser : paymentInfo.getLimitMemberYn());
 
 			paymentList.add(payment);
 		}
@@ -919,6 +941,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 									purchaseOrderInfo.getChargeMemberId()));
 							sbReserveData.append(genResvDataEncoded(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM,
 									purchaseOrderInfo.getChargeMemberNm()));
+							sbReserveData.append(
+									genResvData(PurchaseConstants.IF_DISPLAY_RES_BRAND_ID, product.getBrandId()));
 						}
 
 						// 부정결제 참조용 데이터 추가

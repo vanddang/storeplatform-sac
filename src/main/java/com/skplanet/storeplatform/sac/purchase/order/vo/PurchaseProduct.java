@@ -168,6 +168,7 @@ public class PurchaseProduct extends PaymentInfo {
 		this.setPayMethodVdtyDt(displayInfo.getPayMethodVdtyDt()); // 적립금 유효일
 		this.setMetaClsfCd(displayInfo.getMetaClsfCd()); // 메타 클래스 코드
 		this.setBrandNm(displayInfo.getBrandNm()); // 브랜드명
+		this.setBrandId(displayInfo.getBrandId()); // 브랜드ID
 	}
 
 	/**
