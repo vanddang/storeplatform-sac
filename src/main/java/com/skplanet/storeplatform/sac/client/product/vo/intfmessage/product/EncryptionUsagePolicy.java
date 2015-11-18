@@ -33,6 +33,9 @@ public class EncryptionUsagePolicy extends CommonInfo implements Serializable {
     //	"both": 다운로드 & 스트리밍 모두 지원
 	private String dlStrmCd;
 
+	//
+	private String player;
+
 	/**
 	 * @return the applyDrm
 	 */
@@ -69,5 +72,13 @@ public class EncryptionUsagePolicy extends CommonInfo implements Serializable {
 
 	public void setDlStrmCd(String dlStrmCd) {
 		this.dlStrmCd = dlStrmCd;
+	}
+
+	public String getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(String player) {
+		this.player = player;
 	}
 }
