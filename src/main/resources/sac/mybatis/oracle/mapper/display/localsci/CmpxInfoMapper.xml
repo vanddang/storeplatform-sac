@@ -199,7 +199,7 @@
 	        AND DC.LANG_CD = #{langCd} 
 	        AND TP.TENANT_ID = #{tenantId}
 	        AND TP.TENANT_ID = PR.TENANT_ID 
-	        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+	        --AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 	    ) IV 
 	  </select>    
 
@@ -297,7 +297,7 @@
         AND DC.LANG_CD = #{langCd} 
         AND TP.TENANT_ID = #{tenantId}
         AND TP.TENANT_ID = PR.TENANT_ID
-        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+        --AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
     ) IV 
     </select>    
    

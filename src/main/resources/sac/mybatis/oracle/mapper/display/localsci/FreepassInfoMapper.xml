@@ -55,7 +55,7 @@
         AND DC.LANG_CD = #{langCd} 
         AND TP.TENANT_ID = #{tenantId}
         AND TP.TENANT_ID = PR.TENANT_ID
-        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+        --AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
     ) IV 
     </select>    
     
@@ -117,7 +117,7 @@
         AND DC.LANG_CD = #{langCd} 
         AND TP.TENANT_ID = #{tenantId}
         AND TP.TENANT_ID = PR.TENANT_ID
-        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+        --AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
     ) IV 
     </select>        
     
@@ -199,7 +199,7 @@
 		         AND D.LANG_CD = #{langCd} 
 		         AND E.TENANT_ID = #{tenantId}
 		         AND E.TENANT_ID = F.TENANT_ID 
-		         AND SYSDATE BETWEEN F.APPLY_START_DT AND F.APPLY_END_DT              
+		         --AND SYSDATE BETWEEN F.APPLY_START_DT AND F.APPLY_END_DT
                  AND B.PROD_RSHP_CD =#{prodRshpCd}
                  AND A.PROD_ID =#{prodId}
                  AND C.CMPX_PROD_CLSF_CD =#{cmpxProdClsfCd}
@@ -214,7 +214,7 @@
         <if test="cmpxProdClsfCd == 'OR004303' or  cmpxProdClsfCd == 'OR004304'">
         AND 'DP004301' = (SELECT BOOK_CLSF_CD  FROM TB_DP_EBOOK_PROD WHERE PROD_ID =PD.PROD_ID AND ROWNUM=1) /* 전권 일때는 단행만 */
         </if>                   
-        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+        --AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
     ) IV 
     </select>    
     
