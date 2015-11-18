@@ -155,6 +155,15 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
         }
         String dlStrmCd = getDlStrmCd(metaInfo);
         usagePolicy.setDlStrmCd(dlStrmCd);
+
+		String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
+		String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
+		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())) {
+			if (availablePlayer.contains(availablePlayerReq)) {
+				usagePolicy.setPlayer(metaInfo.getAvailablePlayer());
+			}
+		}
+
         data.setUsagePolicy(usagePolicy);
 
         // 기기 정보

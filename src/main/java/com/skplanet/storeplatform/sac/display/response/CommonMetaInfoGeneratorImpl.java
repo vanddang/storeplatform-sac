@@ -24,11 +24,13 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.System;
 import java.util.*;
 
 /**
@@ -693,12 +695,10 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
 			if(availablePlayer.contains(availablePlayerReq)){
-				supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
-			}else{
-				supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, "mobile"));
+				if(!"dl".equals(metaInfo.getStoreDlStrmCd()) || !"chrome".equals(availablePlayerReq)){
+					supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
+				}
 			}
-		}else{
-			supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, "mobile"));
 		}
 		store.setSupportList(supportList);
 
@@ -735,12 +735,10 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
 			if(availablePlayer.contains(availablePlayerReq)){
-				supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
-			}else{
-				supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, "mobile"));
+				if(!"dl".equals(metaInfo.getPlayDlStrmCd()) || !"chrome".equals(availablePlayerReq)){
+					supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
+				}
 			}
-		}else{
-			supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, "mobile"));
 		}
 		play.setSupportList(supportList);
 
