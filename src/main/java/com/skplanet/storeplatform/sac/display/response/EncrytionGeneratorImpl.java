@@ -160,7 +160,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())) {
 			if (availablePlayer.contains(availablePlayerReq)) {
-				usagePolicy.setPlayer(metaInfo.getAvailablePlayer());
+				usagePolicy.setPlayer(metaInfo.getAvailablePlayerReq());
 			}
 		}
 
