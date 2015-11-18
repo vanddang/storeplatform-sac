@@ -4374,7 +4374,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					contributorIdentifierList.add(identifier);
 					contributor.setIdentifierList(contributorIdentifierList);
 					contributor.setCompany(contrubuterMap.get("CompNm").toString());
-					contributor.setName(contrubuterMap.get("NickName").toString());
+					contributor.setNickName(contrubuterMap.get("NickName").toString());
 					contributorList.add(contributor);
 				}
 
