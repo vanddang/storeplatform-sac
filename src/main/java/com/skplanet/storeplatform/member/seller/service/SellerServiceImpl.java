@@ -52,6 +52,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminderAll;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.ProviderMbrInfo;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
@@ -70,6 +71,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoReq
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListRequest;
@@ -1594,8 +1597,8 @@ public class SellerServiceImpl implements SellerService {
 			try {
 				if (docDir.exists() && docDir.isDirectory()) {
 					FileUtils.deleteDirectory(docDir);
-					LOGGER.info("{} : Delete seller document directory success {}  ", removeSellerRequest.getSellerKey(),
-							docDir.getPath());
+					LOGGER.info("{} : Delete seller document directory success {}  ",
+							removeSellerRequest.getSellerKey(), docDir.getPath());
 				}
 			} catch (IOException e) {
 				LOGGER.info("{} :  Delete seller document directory fail  {}  ", removeSellerRequest.getSellerKey(),
@@ -2167,6 +2170,52 @@ public class SellerServiceImpl implements SellerService {
 		searchAgreementListSellerResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
 		return searchAgreementListSellerResponse;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 제공자 정보 목록을 조회하는 기능을 제공한다.
+	 * </pre>
+	 * 
+	 * @param searchProviderRequest
+	 *            판매자회원 제공자 정보 조회 요청 Value Object
+	 * @return SearchProviderResponse - 판매자회원 제공자 정보 조회 응답 Value Object
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public SearchProviderResponse searchProviderList(SearchProviderRequest searchProviderRequest) {
+
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("서비스 - 판매자회원 제공자 정보 조회");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		LOGGER.debug("### searchProviderRequest : {}", searchProviderRequest);
+
+		SearchProviderResponse searchProviderResponse = new SearchProviderResponse();
+
+		// 판매 제공자 여부가 Y인 판매자가 등록된 categoryCd값 조회
+		List<String> categoryCdList = null;
+		categoryCdList = (List<String>) this.commonDAO.queryForList("Seller.searchCategoryCdList",
+				searchProviderRequest);
+		LOGGER.debug("### categoryCdList : {}", categoryCdList);
+
+		// 판매자가 등록된 카테고리 목록이 있으면 해당 카테고리의 제공자 정보 조회
+		if (categoryCdList != null && categoryCdList.size() > 0) {
+			List<ProviderMbrInfo> providerMbrInfoList = null;
+			providerMbrInfoList = (List<ProviderMbrInfo>) this.commonDAO.queryForList(
+					"Seller.searchProviderMbrInfoList", categoryCdList);
+			LOGGER.debug("### providerMbrInfoList : {}", providerMbrInfoList);
+			if (providerMbrInfoList != null && providerMbrInfoList.size() > 0) {
+				searchProviderResponse.setProviderMbrInfoList(providerMbrInfoList);
+			}
+		}
+
+		searchProviderResponse.setSellerKey(searchProviderRequest.getSellerKey());
+		searchProviderResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+
+		return searchProviderResponse;
 	}
 
 	/**

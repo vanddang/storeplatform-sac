@@ -37,6 +37,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoReq
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListRequest;
@@ -413,4 +415,16 @@ public interface SellerService {
 	 */
 	public SearchAgreementListSellerResponse searchAgreementListSeller(
 			SearchAgreementListSellerRequest searchAgreementListSellerRequest);
+
+	/**
+	 * <pre>
+	 * 판매자회원 제공자 정보 목록을 조회하는 기능을 제공한다.
+	 * </pre>
+	 * 
+	 * @param searchProviderRequest
+	 *            판매자회원 제공자 정보 조회 요청 Value Object
+	 * @return SearchProviderResponse - 판매자회원 제공자 정보 조회 응답 Value Object
+	 */
+	public SearchProviderResponse searchProviderList(SearchProviderRequest searchProviderRequest);
+
 }

@@ -52,6 +52,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoReq
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListRequest;
@@ -2215,6 +2217,58 @@ public class SellerSCIController implements SellerSCI {
 		}
 
 		return searchAgreementListSellerResponse;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 제공자 정보 목록을 조회하는 기능을 제공한다.
+	 * </pre>
+	 * 
+	 * @param searchProviderRequest
+	 *            판매자회원 제공자 정보 조회 요청 Value Object
+	 * @return SearchProviderResponse - 판매자회원 제공자 정보 조회 응답 Value Object
+	 */
+	@Override
+	public SearchProviderResponse searchProviderList(SearchProviderRequest searchProviderRequest) {
+
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("컨트롤러 - 판매자회원 제공자 정보 조회");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		SearchProviderResponse searchProviderResponse = null;
+
+		// 입력 파라미터가 없음
+		if (searchProviderRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (searchProviderRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 테넌트 아이디 없음
+		if (searchProviderRequest.getCommonRequest().getTenantID() == null
+				|| searchProviderRequest.getCommonRequest().getTenantID().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
+		}
+
+		// 판매자키 없음
+		if (searchProviderRequest.getSellerKey() == null || searchProviderRequest.getSellerKey().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+		}
+
+		try {
+
+			searchProviderResponse = this.service.searchProviderList(searchProviderRequest);
+
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return searchProviderResponse;
+
 	}
 
 	/**

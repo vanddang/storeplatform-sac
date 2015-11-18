@@ -2751,15 +2751,14 @@
             <result property="expireDate"              column="expireDate"/>
         </association>
     </resultMap>
-    
+
     <!-- 판매자 로그인정보 삭제 -->
     <update id="removeLoginInfo" parameterType="loginInfo">
         UPDATE tb_us_sellermbr_login_info     /* SellerMapper.removeLoginInfo, 판매자 로그인정보 삭제, wisestone_mikepark, 2013-12-23 */
         SET EXPR_DT = SYSDATE , session_key = ''
         WHERE insd_sellermbr_no = #{sellerKey} AND session_key IS NOT NULL
     </update>
-       
-    
+
     <!-- 개인 보안질문 목록 조회 -->
     <select id="searchPasswordReminderList" parameterType="searchPwdHintListRequest" resultType="pWReminder">
         SELECT /* SellerMapper.searchPasswordReminderList, 개인 보안질문 목록 조회 , wisestone_mikepark, 2014-02-10 */
@@ -2771,7 +2770,7 @@
          WHERE insd_sellermbr_no = #{sellerKey}
                <if test="!questionID.equals('return')"> AND  pwd_qust_id =  #{questionID} </if>
     </select>  
-    
+
     <!-- 전체 보안질문 목록 조회 -->
     <select id="searchPasswordReminderListAll" parameterType="searchPwdHintListAllRequest" resultType="pWReminderAll">
         SELECT /* SellerMapper.searchPasswordReminderListAll, 전체 보안질문 목록 조회 , wisestone_mikepark, 2014-02-10 */
@@ -2788,9 +2787,7 @@
           FROM tb_us_sellermbr_pwd_hint 
          WHERE lang_cd = #{languageCode} order by dp_ord desc
     </select>  
-    
-    
-    
+
     <!-- 판매자 회원정보 + 비밀번호 -->
     <select id="getSellerMbrRetrievePWD" resultType="sellerMbrRetrievePWD"> 
         SELECT  /* SellerMapper.xml, getSellerMbrRetrievePWD, SAC(SC), 김경복, 2015-05-27 */
@@ -3001,5 +2998,51 @@
                 clause_ver       extraAgreementVersion
           FROM  tb_us_sellermbr_clause_agree
          WHERE  insd_sellermbr_no = #{sellerKey}
-    </select>    
+    </select>
+
+    <!-- 판매 제공자가 있는 판매자의 카테코리 코드 목록 조회  -->
+    <select id="searchCategoryCdList" parameterType="searchProviderRequest" resultType="String">
+        /* SellerMapper.searchCategoryCdList, 판매 제공자가 있는 판매자의 카테코리 코드 조회, SAC(SC), 최진호, 2015-11-24 */
+		(    
+		    SELECT
+		        MULTIMDA_CD AS CATEGORY_CD
+		    FROM
+		        TB_US_SELLERMBR_MULTIMDA_AUTH
+		    WHERE
+		        TENANT_ID = #{commonRequest.tenantID}
+		        AND INSD_SELLERMBR_NO = #{sellerKey}
+		        AND END_DT > SYSDATE
+		        AND USE_AGENCY_YN = 'Y'
+		)
+		UNION ALL
+		(
+		    SELECT
+		        TAB_CD AS CATEGORY_CD
+		    FROM
+		        TB_US_SELLERMBR_TAB_AUTH
+		    WHERE
+		        TENANT_ID = #{commonRequest.tenantID}
+		        AND INSD_SELLERMBR_NO = #{sellerKey}
+		        AND USE_AGENCY_YN = 'Y'
+		)
+    </select>
+
+    <!-- 판매 제공자 정보 목록 조회 -->
+    <select id="searchProviderMbrInfoList" resultType="providerMbrInfo">
+        SELECT /* SellerMapper.searchProviderMbrInfoList, 판매 제공자 정보 목록 조회, SAC(SC), 최진호, 2015-11-24 */
+		    COMP_NM AS sellerCompany,
+		    CEO_NM AS sellerName,
+		    EMAIL_ADDR AS sellerEmail,
+		    MSALBIZ_DECL_NO AS bizRegNumber,
+		    ADDR AS sellerAddress,
+		    TEL_NO AS sellerPhone
+		FROM
+		    TB_US_SELLERMBR_AGENCY
+		WHERE
+		    CATEGORY_CD IN
+		    <foreach item="categoryCd" index="index" collection="list" open="(" separator="," close=")">
+                #{categoryCd}
+            </foreach>
+    </select>
+
 </mapper>
