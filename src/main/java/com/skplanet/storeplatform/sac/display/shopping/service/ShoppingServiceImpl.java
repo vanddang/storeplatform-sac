@@ -4374,6 +4374,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					contributorIdentifierList.add(identifier);
 					contributor.setIdentifierList(contributorIdentifierList);
 					contributor.setCompany(contrubuterMap.get("CompNm").toString());
+					contributor.setName(contrubuterMap.get("NickName").toString());
 					contributorList.add(contributor);
 				}
 
@@ -4616,6 +4617,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					}
 					resultMap.put("CompNm", sellerMbrs.get(0).getSellerCompany());
 					resultMap.put("MbrNo", sellerMbrs.get(0).getSellerKey());
+					resultMap.put("NickName", sellerMbrs.get(0).getSellerNickName());
 				} else {
 					throw new StorePlatformException("SAC_DSP_1002");
 				}
