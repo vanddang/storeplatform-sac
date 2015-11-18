@@ -936,7 +936,7 @@
                   AND RSHP.PROD_RSHP_CD = 'DP010802'
                   AND TPROD.TENANT_ID = #{tenantId}
                   AND TPROD.PROD_STATUS_CD = 'PD000403'
-                  AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
+                  --AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
                   AND NVL(SPROD.B2B_PROD_YN, 'N') != 'Y'
                   AND NVL(SC.CHNL_CNT, 0) > 0
                   AND PCM.BASE_YN = 'Y'
@@ -1028,7 +1028,7 @@
               AND CPROD.PROD_ID = #{prodId}
               AND CPDESC.LANG_CD = #{langCd}
               AND TP.TENANT_ID = #{tenantId}
-              AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
+              --AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
     </select>
 
     <select id="getSubContent" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.SubContent">
@@ -1190,7 +1190,7 @@
               AND CPROD.PROD_ID = #{prodId}
               AND CPDESC.LANG_CD = #{langCd}
               AND TP.TENANT_ID = #{tenantId}
-              AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
+              --AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
     </select>
 
 
