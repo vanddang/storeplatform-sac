@@ -4513,10 +4513,12 @@ public class LoginServiceImpl implements LoginService {
 					modifyDeviceReq.setUserKey(userKey);
 					modifyDeviceReq.setDeviceInfo(deviceInfo);
 					this.deviceService.modDevice(requestHeader, modifyDeviceReq);
+					LOGGER.info("{} marketDeviceKey update : {}", deviceId, marketRes.getDeviceInfo().getDeviceKey());
 				}
 			}
 		} catch (StorePlatformException e) {
 			// ignore Exception
+			LOGGER.info("{} SAP 연동 에러 : {}", deviceId, e.getErrorInfo().getMessage());
 		}
 
 	}
