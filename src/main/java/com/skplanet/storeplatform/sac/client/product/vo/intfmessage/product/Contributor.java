@@ -115,6 +115,11 @@ public class Contributor extends CommonInfo implements Serializable {
 	 * 개별 사용자가 해당 contributor에 like를 했는지 여부
 	 */
 	private String likeYn;
+	/**
+	 * NickName명.
+	 */
+	private String nickName;
+
 
 	/**
 	 * resource 정보.
@@ -441,6 +446,13 @@ public class Contributor extends CommonInfo implements Serializable {
 	public void setLikeYn(String likeYn) {
 		this.likeYn = likeYn;
 	}
-	
-	
+
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 }
