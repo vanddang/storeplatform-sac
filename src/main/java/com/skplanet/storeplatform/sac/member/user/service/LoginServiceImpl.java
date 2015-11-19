@@ -461,9 +461,8 @@ public class LoginServiceImpl implements LoginService {
 			}
 		}
 
-		/* 타사인경우 타사 간편인증 연동후 marketDeviceKey를 svcMangNo로 업데이트 */
-		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
-				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
+		/* 통신사가 U+인경우 U+ 간편인증 연동후 marketDeviceKey를 svcMangNo로 업데이트 */
+		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
 			if (StringUtils.isNotBlank(req.getNativeId())) { // 타사 간편인증시 nativeId 필수
 				this.updateMarketDeviceKey(requestHeader, chkDupRes.getUserMbr().getUserKey(), req.getDeviceId(),
 						req.getDeviceTelecom(), req.getNativeId());
@@ -761,9 +760,8 @@ public class LoginServiceImpl implements LoginService {
 			}
 		}
 
-		/* 타사인경우 타사 간편인증 연동후 marketDeviceKey를 svcMangNo로 업데이트 */
-		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
-				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
+		/* 통신사가 U+인경우 U+ 간편인증 연동후 marketDeviceKey를 svcMangNo로 업데이트 */
+		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
 			if (StringUtils.isNotBlank(req.getNativeId())) { // 타사 간편인증시 nativeId 필수
 				this.updateMarketDeviceKey(requestHeader, chkDupRes.getUserMbr().getUserKey(), req.getDeviceId(),
 						req.getDeviceTelecom(), req.getNativeId());
