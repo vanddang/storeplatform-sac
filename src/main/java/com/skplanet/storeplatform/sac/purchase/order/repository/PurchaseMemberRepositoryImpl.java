@@ -410,11 +410,12 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	}
 
 	@Override
-	public void createGiftChargeInfo(String userKey, String sellerKey, String brandName, String chargerId, String chargerName) {
+	public void createGiftChargeInfo(String userKey, String sellerKey, String brandName, String brandId, String chargerId, String chargerName) {
 		CreateGiftChargeInfoSacReq createGiftChargeInfoSacReq = new CreateGiftChargeInfoSacReq();
 		createGiftChargeInfoSacReq.setUserKey(userKey);
 		createGiftChargeInfoSacReq.setSellerKey(sellerKey);
 		createGiftChargeInfoSacReq.setBrandName(brandName);
+		createGiftChargeInfoSacReq.setBrandId(brandId);
 		createGiftChargeInfoSacReq.setChargerId(chargerId);
 		createGiftChargeInfoSacReq.setChargerName(chargerName);
 

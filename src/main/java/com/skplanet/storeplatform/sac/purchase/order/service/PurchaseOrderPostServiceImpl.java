@@ -123,6 +123,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 					this.purchaseMemberRepository.createGiftChargeInfo(prchsDtlMore.getUseInsdUsermbrNo(),
 							reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_SELLER_MBRNO), URLDecoder.decode(
 									reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BRAND_NAME), PurchaseConstants.DEFAULT_ENCODING),
+							reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BRAND_ID),
 									reservedDataMap.get(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID),
 							URLDecoder.decode(reservedDataMap.get(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM), PurchaseConstants.DEFAULT_ENCODING));
 				}

@@ -150,11 +150,11 @@ public interface PurchaseMemberRepository {
 	 * 		the seller key
 	 * @param brandName
 	 * 		the brand name
-	 * @param brandSiteId
+	 * @param chargerId
 	 * 		the brand site id
 	 * @param chargerName
 	 * 		the charger name
 	 */
-	void createGiftChargeInfo(String userKey, String sellerKey, String brandName, String brandSiteId,
+	void createGiftChargeInfo(String userKey, String sellerKey, String brandName, String brandId,  String chargerId,
 			String chargerName);
 }
