@@ -4314,7 +4314,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setImageCd(DisplayConstants.DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 		List<Contributor> contributorList = null;
-
+		Price price = null;
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -4349,6 +4349,21 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// MenuList 생성
 				List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
+				// Price
+				price = new Price();
+				int maxPrice = 0;
+				int minPrice = 0;
+				String[] priceValue = shopping.getPrice().split(",");
+
+				if(StringUtils.isNotEmpty(priceValue[0])){
+					maxPrice = Integer.parseInt(priceValue[0]);
+				}
+				if(StringUtils.isNotEmpty(priceValue[1])) {
+					 minPrice = Integer.parseInt(priceValue[1]);
+				}
+
+				price.setMaxAmt(maxPrice);
+				price.setMinAmt(minPrice);
 
 				// 상품 정보 (상품명)
 				Title title = this.commonGenerator.generateTitle(shopping);
@@ -4381,6 +4396,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 데이터 매핑
 				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
+				product.setPrice(price);
 				product.setTitle(title);
 				product.setSourceList(sourceList);
 				product.setContributorList(contributorList);
