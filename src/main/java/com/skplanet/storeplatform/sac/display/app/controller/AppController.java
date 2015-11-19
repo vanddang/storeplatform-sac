@@ -12,7 +12,10 @@ package com.skplanet.storeplatform.sac.display.app.controller;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.app.AppPermissionReq;
+import com.skplanet.storeplatform.sac.client.display.vo.app.AppPermissionRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.app.service.AppPermissionService;
 import com.skplanet.storeplatform.sac.display.app.service.AppService;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import org.slf4j.Logger;
@@ -37,6 +40,9 @@ public class AppController {
 
     @Autowired
     private AppService appService;
+
+	@Autowired
+	private AppPermissionService appPermissionService;
 
 //    @InitBinder
 //    public void initBinder(WebDataBinder dataBinder) {
@@ -102,5 +108,17 @@ public class AppController {
 
         return appDetail;
     }
+
+	@RequestMapping(value = "/app/permission/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AppPermissionRes getAppPermission(@Validated @RequestBody AppPermissionReq req) {
+
+		String usePermission = appPermissionService.getAppPermission(req.getProdId(), req.getSubContentsId());
+		if (usePermission == null) {
+			throw new StorePlatformException("SAC_DSP_0009");
+		}
+
+		return new AppPermissionRes(usePermission);
+	}
 
 }

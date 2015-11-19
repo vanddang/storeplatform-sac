@@ -233,6 +233,7 @@ public class AppServiceImpl implements AppService {
         app.setDate(new Date(DisplayConstants.DP_DATE_SALE_REG, appDetail.getSaleStrtDt()));
         app.setDescriptionVideoUrl(appDetail.getDescVideoUrl());
 		app.setApkSignedKeyHash(appDetail.getApkSignedKeyHash());
+		app.setScid(appDetail.getSubContentsId());
 
         // App - Provisioning
         app.setIsDeviceSupported(checkAvailability(param.getSdkCd(), param.getOsVersion(), appDetail) ? "Y" : "N");

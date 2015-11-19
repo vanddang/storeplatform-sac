@@ -101,4 +101,13 @@
         AND MAPG_PROD_ID IS NOT NULL
     </select>
 
+	<select id="getUsePermission" parameterType="map" resultType="String">
+		SELECT /* AppDetailMapper.xml, getUsePermission, SAC : 양해엽 , 2015-11-19 */
+			USE_PERMISSION
+		FROM TB_DP_APP_PROD_USE_PERMISSION
+		WHERE 1=1
+			AND PROD_ID = #{prodId}
+			AND SUB_CONTENTS_ID = #{subContentsId}
+	</select>
+
 </mapper>
