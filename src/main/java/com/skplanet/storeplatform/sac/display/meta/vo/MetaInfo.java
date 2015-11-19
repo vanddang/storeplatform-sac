@@ -308,6 +308,7 @@ public class MetaInfo extends CommonInfo {
 	private String catalogVodUrl;
 	private String orgBrandId;
 	private String regId;
+	private String price;
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
 	private String tagNm;
@@ -4696,6 +4697,14 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setRegId(String regId) {
 		this.regId = regId;
+	}
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
 	}
 
 	public String getBookTbctns() {
