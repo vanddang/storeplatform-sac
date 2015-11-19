@@ -225,12 +225,12 @@ public class SellerMbrAmqpSacReq implements Serializable {
 		public String tenantSettRate;
 		public String sellermbrSettRate;
 		public String agencyYn;
-		public String agencyCompany;
-		public String agencyName;
-		public String agencyEmail;
-		public String agencyBizRegNum;
-		public String agencyAddress;
-		public String agencyPhone;
+		public String agencyCompany = "";
+		public String agencyName = "";
+		public String agencyEmail = "";
+		public String agencyBizRegNum = "";
+		public String agencyAddress = "";
+		public String agencyPhone = "";
 
 		/**
 		 * @return the categoryCd
