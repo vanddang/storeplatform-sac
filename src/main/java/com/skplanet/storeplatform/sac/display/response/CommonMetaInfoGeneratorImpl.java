@@ -691,9 +691,9 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		supportList.add(this.generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getStoreDlStrmCd()));
 
 		// Chrome Cast 재생 허용 Player
-		String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
-		String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
+			String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
+			String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 			if(availablePlayer.contains(availablePlayerReq)){
 				if(!"dl".equals(metaInfo.getStoreDlStrmCd()) || !"chrome".equals(availablePlayerReq)){
 					supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
@@ -731,9 +731,9 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		supportList.add(this.generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getPlayDlStrmCd()));
 
 		// Chrome Cast 재생 허용 Player
-		String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
-		String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 		if(StringUtils.isNotEmpty(metaInfo.getAvailablePlayer())){
+			String availablePlayer = StringUtils.lowerCase(metaInfo.getAvailablePlayer());			// 실제 DB값
+			String availablePlayerReq = StringUtils.lowerCase(metaInfo.getAvailablePlayerReq()); 	// Request 값
 			if(availablePlayer.contains(availablePlayerReq)){
 				if(!"dl".equals(metaInfo.getPlayDlStrmCd()) || !"chrome".equals(availablePlayerReq)){
 					supportList.add(this.generateSupport(DisplayConstants.DP_AVAILABLE_PLAYER, availablePlayerReq));
