@@ -3931,7 +3931,7 @@
           WHERE tenant_id        = #{commonRequest.tenantID}
             AND insd_usermbr_no  = #{userKey}
             AND insd_sellermbr_no  = #{sellerKey}
-            AND brand_nm  = #{brandName}
+            AND brand_id  = #{brandId}
             AND charger_id  = #{chargerId}
    </update>
    
