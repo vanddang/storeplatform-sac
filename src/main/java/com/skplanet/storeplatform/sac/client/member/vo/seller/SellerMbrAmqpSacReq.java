@@ -142,21 +142,6 @@ public class SellerMbrAmqpSacReq implements Serializable {
 
 	private List<Category> categoryList;
 
-	// 판매 대행사 정보
-	private String agencyYn;
-	// 판매 대행사 회사명
-	private String agencyCompany;
-	// 판매 대행사 판매자명
-	private String agencyName;
-	// 판매 대행사 판매자 이메일
-	private String agencyEmail;
-	// 판매 대행사 통신판매업 신고번호
-	private String agencyBizRegNum;
-	// 판매 대행사 주소
-	private String agencyAddress;
-	// 판매 대행사 연락처
-	private String agencyPhone;
-
 	public static class Multimda implements Serializable {
 
 		private static final long serialVersionUID = 1L;
@@ -1401,111 +1386,6 @@ public class SellerMbrAmqpSacReq implements Serializable {
 	 */
 	public void setRepWebsite(String repWebsite) {
 		this.repWebsite = repWebsite;
-	}
-
-	/**
-	 * @return the agencyYn
-	 */
-	public String getAgencyYn() {
-		return this.agencyYn;
-	}
-
-	/**
-	 * @return the agencyCompany
-	 */
-	public String getAgencyCompany() {
-		return this.agencyCompany;
-	}
-
-	/**
-	 * @return the agencyrName
-	 */
-	public String getAgencyName() {
-		return this.agencyName;
-	}
-
-	/**
-	 * @return the agencyEmail
-	 */
-	public String getAgencyEmail() {
-		return this.agencyEmail;
-	}
-
-	/**
-	 * @return the agencyBizRegNum
-	 */
-	public String getAgencyBizRegNum() {
-		return this.agencyBizRegNum;
-	}
-
-	/**
-	 * @return the agencyAddress
-	 */
-	public String getAgencyAddress() {
-		return this.agencyAddress;
-	}
-
-	/**
-	 * @return the agencyPhone
-	 */
-	public String getAgencyPhone() {
-		return this.agencyPhone;
-	}
-
-	/**
-	 * @param agencyYn
-	 *            the agencyYn to set
-	 */
-	public void setAgencyYn(String agencyYn) {
-		this.agencyYn = agencyYn;
-	}
-
-	/**
-	 * @param agencyCompany
-	 *            the agencyCompany to set
-	 */
-	public void setAgencyCompany(String agencyCompany) {
-		this.agencyCompany = agencyCompany;
-	}
-
-	/**
-	 * @param agencyrName
-	 *            the agencyrName to set
-	 */
-	public void setAgencyName(String agencyName) {
-		this.agencyName = agencyName;
-	}
-
-	/**
-	 * @param agencyEmail
-	 *            the agencyEmail to set
-	 */
-	public void setAgencyEmail(String agencyEmail) {
-		this.agencyEmail = agencyEmail;
-	}
-
-	/**
-	 * @param agencyBizRegNum
-	 *            the agencyBizRegNum to set
-	 */
-	public void setAgencyBizRegNum(String agencyBizRegNum) {
-		this.agencyBizRegNum = agencyBizRegNum;
-	}
-
-	/**
-	 * @param agencyAddress
-	 *            the agencyAddress to set
-	 */
-	public void setAgencyAddress(String agencyAddress) {
-		this.agencyAddress = agencyAddress;
-	}
-
-	/**
-	 * @param agencyPhone
-	 *            the agencyPhone to set
-	 */
-	public void setAgencyPhone(String agencyPhone) {
-		this.agencyPhone = agencyPhone;
 	}
 
 	/**
