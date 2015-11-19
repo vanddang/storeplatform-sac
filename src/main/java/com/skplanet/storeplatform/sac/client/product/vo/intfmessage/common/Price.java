@@ -36,7 +36,8 @@ public class Price extends CommonInfo implements Serializable {
 	private Integer unlmtAmt;// 소장가격
 	private Integer periodAmt;// 대여가격
 	private Integer orgDiscountPrice;// 특가전원 가격
-	
+	private Integer maxAmt; // 최대값
+	private Integer minAmt; // 최소값
 
 	public Price() {
 	}
@@ -124,4 +125,19 @@ public class Price extends CommonInfo implements Serializable {
 		this.orgDiscountPrice = orgDiscountPrice;
 	}
 
+	public Integer getMaxAmt() {
+		return maxAmt;
+	}
+
+	public void setMaxAmt(Integer maxAmt) {
+		this.maxAmt = maxAmt;
+	}
+
+	public Integer getMinAmt() {
+		return minAmt;
+	}
+
+	public void setMinAmt(Integer minAmt) {
+		this.minAmt = minAmt;
+	}
 }
