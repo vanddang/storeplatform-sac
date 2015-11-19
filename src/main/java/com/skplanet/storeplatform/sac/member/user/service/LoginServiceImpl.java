@@ -4455,7 +4455,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/**
 	 * <pre>
-	 * S01 모바일 회원 인증시 타사 통신사로 온경우 타사 간편인증 연동후 marketDeviceKey 업데이트.
+	 * 타사 간편인증 연동후 marketDeviceKey를 svcMangNo로 업데이트.
 	 * </pre>
 	 * 
 	 * @param requestHeader
@@ -4472,52 +4472,48 @@ public class LoginServiceImpl implements LoginService {
 	private void updateMarketDeviceKey(SacRequestHeader requestHeader, String userKey, String deviceId,
 			String deviceTelecom, String nativeId) {
 
-		String trxNo = new StringBuffer("trx").append("-")
-				.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
-				.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString();
+		if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_LGT)) {
 
-		MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
-		marketReq.setTrxNo(trxNo);
-		marketReq.setDeviceId(deviceId);
-		marketReq.setDeviceTelecom(deviceTelecom);
-		marketReq.setNativeId(nativeId);
-		MarketAuthorizeEcRes marketRes = null;
-		String svcVersion = requestHeader.getDeviceHeader().getSvc();
-		if (StringUtils.isNotBlank(svcVersion)) {
-			marketReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
-		}
+			String trxNo = new StringBuffer("trx").append("-")
+					.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
+					.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString();
 
-		try {
-			if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_KT)) {
-				LOGGER.info("{} authorizeForOllehMarket Request : {}", deviceId,
-						ConvertMapperUtils.convertObjectToJson(marketReq));
-				marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
-				LOGGER.info("{} authorizeForOllehMarket Response : {}", deviceId,
-						ConvertMapperUtils.convertObjectToJson(marketRes));
-			} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_LGT)) {
+			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+			marketReq.setTrxNo(trxNo);
+			marketReq.setDeviceId(deviceId);
+			marketReq.setDeviceTelecom(deviceTelecom);
+			marketReq.setNativeId(nativeId);
+			MarketAuthorizeEcRes marketRes = null;
+			String svcVersion = requestHeader.getDeviceHeader().getSvc();
+			if (StringUtils.isNotBlank(svcVersion)) {
+				marketReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
+			}
+
+			try {
+
 				LOGGER.info("{} authorizeForUplusStore Request : {}", deviceId,
 						ConvertMapperUtils.convertObjectToJson(marketReq));
 				marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
 				LOGGER.info("{} authorizeForUplusStore Response : {}", deviceId,
 						ConvertMapperUtils.convertObjectToJson(marketRes));
-			}
 
-			if (marketRes != null) {
-				if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상회원
-					ModifyDeviceReq modifyDeviceReq = new ModifyDeviceReq();
-					DeviceInfo deviceInfo = new DeviceInfo();
-					deviceInfo.setDeviceId(deviceId);
-					deviceInfo.setSvcMangNum(marketRes.getDeviceInfo().getDeviceKey());
-					modifyDeviceReq.setUserKey(userKey);
-					modifyDeviceReq.setDeviceInfo(deviceInfo);
-					this.deviceService.modDevice(requestHeader, modifyDeviceReq);
-					LOGGER.info("{} marketDeviceKey update : {}", deviceId, marketRes.getDeviceInfo().getDeviceKey());
+				if (marketRes != null) {
+					if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상회원
+						ModifyDeviceReq modifyDeviceReq = new ModifyDeviceReq();
+						DeviceInfo deviceInfo = new DeviceInfo();
+						deviceInfo.setDeviceId(deviceId);
+						deviceInfo.setSvcMangNum(marketRes.getDeviceInfo().getDeviceKey());
+						modifyDeviceReq.setUserKey(userKey);
+						modifyDeviceReq.setDeviceInfo(deviceInfo);
+						this.deviceService.modDevice(requestHeader, modifyDeviceReq);
+						LOGGER.info("{} marketDeviceKey update : {}", deviceId, marketRes.getDeviceInfo()
+								.getDeviceKey());
+					}
 				}
+			} catch (StorePlatformException e) {
+				// ignore Exception
+				LOGGER.info("{} SAP 연동 에러 : {}", deviceId, e.getErrorInfo().getMessage());
 			}
-		} catch (StorePlatformException e) {
-			// ignore Exception
-			LOGGER.info("{} SAP 연동 에러 : {}", deviceId, e.getErrorInfo().getMessage());
 		}
-
 	}
 }
