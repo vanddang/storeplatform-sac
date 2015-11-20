@@ -3009,8 +3009,7 @@
 		    FROM
 		        TB_US_SELLERMBR_MULTIMDA_AUTH
 		    WHERE
-		        TENANT_ID = #{commonRequest.tenantID}
-		        AND INSD_SELLERMBR_NO = #{sellerKey}
+		        INSD_SELLERMBR_NO = #{sellerKey}
 		        AND END_DT > SYSDATE
 		        AND USE_AGENCY_YN = 'Y'
 		)
@@ -3021,8 +3020,7 @@
 		    FROM
 		        TB_US_SELLERMBR_TAB_AUTH
 		    WHERE
-		        TENANT_ID = #{commonRequest.tenantID}
-		        AND INSD_SELLERMBR_NO = #{sellerKey}
+		        INSD_SELLERMBR_NO = #{sellerKey}
 		        AND USE_AGENCY_YN = 'Y'
 		)
     </select>
