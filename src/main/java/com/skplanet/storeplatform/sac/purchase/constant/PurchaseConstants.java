@@ -305,15 +305,15 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String PAYPLANET_PAYMENT_AMT_MAX = "MAXAMT"; // SKT 후불
 
 	/** 결제Page Template */
-	public static final String PAYMENT_PAGE_TEMPLATE_NORMAL = "TC01"; // 일반
-	public static final String PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE = "TC02"; // 정액제 (게임캐쉬)
-	public static final String PAYMENT_PAGE_TEMPLATE_LOAN_OWN = "TC03"; // 대여/소장
-	public static final String PAYMENT_PAGE_TEMPLATE_AUTOPAY = "TC04"; // 자동결제
-	public static final String PAYMENT_PAGE_TEMPLATE_SHOPPING = "TC05"; // 쇼핑
-	public static final String PAYMENT_PAGE_TEMPLATE_GIFT = "TC06"; // 선물
-	public static final String PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY = "TC07"; // IAP 자동결제
-	public static final String PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY = "TC08"; // S2S 자동결제
-	public static final String PAYMENT_PAGE_TEMPLATE_IAP_S2S_UNIT = "TC09"; // S2S 단품
+	public static final String PAYMENT_PAGE_TEMPLATE_NORMAL_TC01 = "TC01"; // 일반
+	public static final String PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE_TC02 = "TC02"; // 정액제 (게임캐쉬)
+	public static final String PAYMENT_PAGE_TEMPLATE_LOAN_OWN_TC03 = "TC03"; // 대여/소장
+	public static final String PAYMENT_PAGE_TEMPLATE_AUTOPAY_04 = "TC04"; // 자동결제
+	public static final String PAYMENT_PAGE_TEMPLATE_SHOPPING_TC05 = "TC05"; // 쇼핑
+	public static final String PAYMENT_PAGE_TEMPLATE_GIFT_TC06 = "TC06"; // 선물
+	public static final String PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY_TC07 = "TC07"; // IAP 자동결제
+	public static final String PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY_TC08 = "TC08"; // S2S 자동결제
+	public static final String PAYMENT_PAGE_TEMPLATE_IAP_S2S_UNIT_TC09 = "TC09"; // S2S 단품
 
 	/** 결제Page 상품설명 */
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_IAP_UNIT_UNLIMITED = "아이템 영구성 건당상품";

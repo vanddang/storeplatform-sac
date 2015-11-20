@@ -57,10 +57,11 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 	 * @return 발급 요청 결과 개체
 	 */
 	@Override
-	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String couponCode, String itemCode,
+	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String userKey, String couponCode, String itemCode,
 			String buyDeviceId, List<String> useDeviceIdList, boolean bGift) {
 		CouponPublishV2EcReq couponPublishV2EcReq = new CouponPublishV2EcReq();
 		couponPublishV2EcReq.setPrchsId(prchsId);
+		couponPublishV2EcReq.setUserKey(userKey);
 		couponPublishV2EcReq.setCouponCode(couponCode);
 		couponPublishV2EcReq.setItemCode(itemCode);
 		couponPublishV2EcReq.setBuyMdn(buyDeviceId);
@@ -106,10 +107,11 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 	 * @return 발급 요청 결과 개체
 	 */
 	@Override
-	public CouponPublishEcRes createCouponPublish(String prchsId, String useDeviceId, String buyDeviceId,
+	public CouponPublishEcRes createCouponPublish(String prchsId, String userKey, String useDeviceId, String buyDeviceId,
 			String couponCode, String itemCode, int qty) {
 		CouponPublishEcReq couponPublishEcReq = new CouponPublishEcReq();
 		couponPublishEcReq.setPrchsId(prchsId);
+		couponPublishEcReq.setUserKey(userKey);
 		couponPublishEcReq.setUseMdn(useDeviceId);
 		couponPublishEcReq.setBuyMdn(buyDeviceId);
 		couponPublishEcReq.setCouponCode(couponCode);

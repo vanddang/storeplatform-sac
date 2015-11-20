@@ -330,7 +330,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					}
 
 					CouponPublishV2EcRes couponPublishV2EcRes = this.purchaseShoppingOrderRepository
-							.createCouponPublishV2(purchaseOrderInfo.getPrchsId(), purchaseProduct.getCouponCode(),
+							.createCouponPublishV2(purchaseOrderInfo.getPrchsId(), purchaseOrderInfo.getUserKey(), purchaseProduct.getCouponCode(),
 									purchaseProduct.getItemCode(), purchaseOrderInfo.getPurchaseUser().getDeviceId(),
 									useMdnList, StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
 											PurchaseConstants.PRCHS_CASE_GIFT_CD));
@@ -357,7 +357,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				} else {
 
 					CouponPublishEcRes couponPublishEcRes = this.purchaseShoppingOrderRepository.createCouponPublish(
-							purchaseOrderInfo.getPrchsId(), useDeviceId, purchaseOrderInfo.getPurchaseUser()
+							purchaseOrderInfo.getPrchsId(), purchaseOrderInfo.getUserKey(), useDeviceId, purchaseOrderInfo.getPurchaseUser()
 									.getDeviceId(), purchaseProduct.getCouponCode(), purchaseProduct.getItemCode(),
 							purchaseProduct.getProdQty());
 
@@ -1527,7 +1527,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			CouponPublishV2EcRes couponPublishV2EcRes = null;
 			try {
 				couponPublishV2EcRes = this.purchaseShoppingOrderRepository.createCouponPublishV2(
-						prchsDtlMore.getPrchsId(), reservedDataMap.get("couponCode"), reservedDataMap.get("itemCode"),
+						prchsDtlMore.getPrchsId(), prchsDtlMore.getInsdUsermbrNo(), reservedDataMap.get("couponCode"), reservedDataMap.get("itemCode"),
 						reservedDataMap.get("deviceId"), useMdnList,
 						StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD));
 
@@ -1567,7 +1567,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			CouponPublishEcRes couponPublishEcRes = null;
 			try {
 				couponPublishEcRes = this.purchaseShoppingOrderRepository.createCouponPublish(
-						prchsDtlMore.getPrchsId(), reservedDataMap.get("useDeviceId"), reservedDataMap.get("deviceId"),
+						prchsDtlMore.getPrchsId(), prchsDtlMore.getInsdUsermbrNo(), reservedDataMap.get("useDeviceId"), reservedDataMap.get("deviceId"),
 						reservedDataMap.get("couponCode"), reservedDataMap.get("itemCode"), prchsDtlMore.getProdQty());
 
 			} catch (StorePlatformException e) {

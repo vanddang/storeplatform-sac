@@ -45,7 +45,7 @@ public interface PurchaseShoppingOrderRepository {
 	 *            선물여부 (true: 선물)
 	 * @return 발급 요청 결과 개체
 	 */
-	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String couponCode, String itemCode,
+	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String userKey, String couponCode, String itemCode,
 			String buyDeviceId, List<String> useDeviceIdList, boolean bGift);
 
 	/**
@@ -68,7 +68,7 @@ public interface PurchaseShoppingOrderRepository {
 	 *            수량
 	 * @return 발급 요청 결과 개체
 	 */
-	public CouponPublishEcRes createCouponPublish(String prchsId, String useDeviceId, String buyDeviceId,
+	public CouponPublishEcRes createCouponPublish(String prchsId, String userKey, String useDeviceId, String buyDeviceId,
 			String couponCode, String itemCode, int qty);
 
 	/**

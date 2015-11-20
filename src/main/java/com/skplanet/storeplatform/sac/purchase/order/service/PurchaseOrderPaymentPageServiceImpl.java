@@ -630,34 +630,34 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			boolean bAutoPrchs, boolean bS2sAutoPrchs, boolean bS2s, int prchsProdCnt) {
 
 		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING; // 쇼핑: TC05
+			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING_TC05; // 쇼핑: TC05
 
 		} else if (StringUtils.equals(prchsCaseCd, PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GIFT; // 선물: TC06
+			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GIFT_TC06; // 선물: TC06
 
 		} else {
 			if (bS2sAutoPrchs) { // IAP S2S 월자동결제 상품
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY; // S2S 자동결제: TC08
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY_TC08; // S2S 자동결제: TC08
 
 			} else if (bAutoPrchs
 					&& StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY; // IAP 자동결제: TC07
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY_TC07; // IAP 자동결제: TC07
 
 			} else if (bS2s) {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_S2S_UNIT; // S2S 단품: TC09
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_S2S_UNIT_TC09; // S2S 단품: TC09
 
 			} else if (bAutoPrchs
 					&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
 							.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
 					&& StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY_04; // 자동결제: TC04
 
 			} else if (StringUtils.startsWith(tenantProdGrpCd,
 					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE; // 정액제(게임캐쉬): TC02
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE_TC02; // 정액제(게임캐쉬): TC02
 
 			} else {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_NORMAL; // 일반: TC01
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_NORMAL_TC01; // 일반: TC01
 			}
 		}
 	}
