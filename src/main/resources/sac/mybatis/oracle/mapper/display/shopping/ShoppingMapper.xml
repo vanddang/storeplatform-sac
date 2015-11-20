@@ -4116,141 +4116,151 @@
     <!-- 충전권 브랜드샵 조회-->
     <select id="getShoppingBrandShopBrandList" parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getShoppingBrandShopBrandList,충전권 브랜드샵 조회, 김형식/SK플래닛  , 2015-10-06 */
-       SELECT * FROM (
-           SELECT 
-                     KK.*
-                    ,(
-                        SELECT
-                             MAX(PROD_AMT)||','||MIN(PROD_AMT)
-                          FROM TB_DP_SHPG_CATALOG SC
-                                ,TB_DP_PROD_CATALOG_MAPG CM
-                                ,TB_DP_PROD_RSHP PR
-                                ,TB_DP_TENANT_PROD_PRICE PRR
-                                ,TB_DP_TENANT_PROD TP
-                         WHERE 1=1
-                           AND SC.CATALOG_ID = CM.CATALOG_ID
-                           AND CM.PROD_ID = PR.PROD_ID
-                           AND PR.PART_PROD_ID = PRR.PROD_ID
-                           AND TP.PROD_ID = PRR.PROD_ID
-                           AND SC.BRAND_ID=KK.BRAND_ID
-                           AND PROD_RSHP_CD ='DP010802'
-                           AND PRR.TENANT_ID =#{tenantId}
-                           AND TP.TENANT_ID = #{tenantId}
-                           AND NVL(SC.CHNL_CNT, 0) > 0
-                           AND TP.PROD_STATUS_CD ='PD000403'
-                     ) AS PRICE
+        SELECT * FROM (
+        SELECT
+            KK.BRAND_ID
+            , KK.ORG_BRAND_ID
+            , KK.BRAND_NM AS catalogNm
+            , KK.MENU_ID
+            , KK.MENU_NM
+            , KK.TOP_MENU_ID
+            ,(
+              SELECT MENU_NM
+                FROM TB_DP_MENU_CATEGORY_DESC
+               WHERE MENU_ID = KK.TOP_MENU_ID
+                 AND LANG_CD = #{langCd}         /* ko : 한국어 */
+                 AND ROWNUM = 1
+            ) AS TOP_MENU_NM
+            ,(
+              SELECT CONCAT(FILE_PATH,FILE_NM)
+                FROM TB_DP_PROD_IMG
+               WHERE PROD_ID = KK.BRAND_ID
+                 AND IMG_CD =#{imageCd}
+            ) AS FILE_PATH
+            ,(
+                SELECT
+                    MAX(PROD_AMT)||','||MIN(PROD_AMT)
+                  FROM   TB_DP_SHPG_CATALOG SC
+                        ,TB_DP_PROD_CATALOG_MAPG CM
+                        ,TB_DP_PROD_RSHP PR
+                        ,TB_DP_TENANT_PROD_PRICE PRR
+                        ,TB_DP_TENANT_PROD TP
+                 WHERE 1=1
+                    AND SC.CATALOG_ID = CM.CATALOG_ID
+                    AND CM.PROD_ID = PR.PROD_ID
+                    AND PR.PART_PROD_ID = PRR.PROD_ID
+                    AND TP.PROD_ID = PRR.PROD_ID
+                    AND SC.BRAND_ID=KK.BRAND_ID
+                    AND PROD_RSHP_CD ='DP010802'
+                    AND PRR.TENANT_ID =#{tenantId}
+                    AND TP.TENANT_ID = #{tenantId}
+                    AND NVL(SC.CHNL_CNT, 0) > 0
+                    AND TP.PROD_STATUS_CD ='PD000403'
+                ) AS PRICE
+            ,TOTALCOUNT
+            ,RNUM
+        FROM(
+                SELECT
+                      BRAND_ID
+                    , ORG_BRAND_ID
+                    , BRAND_NM
+                    , MENU_ID
+                    , MENU_NM
+                    , TOP_MENU_ID
                     ,COUNT(1) OVER() AS TOTALCOUNT
-                    ,ROWNUM AS RNUM         
-             FROM(
-                SELECT 
-                           BRAND_ID 
-                         , ORG_BRAND_ID
-                         , BRAND_NM AS catalogNm
-                         , MENU_ID 
-                         , MENU_NM 
-                         , TOP_MENU_ID 
-                         ,(SELECT MENU_NM
-                              FROM TB_DP_MENU_CATEGORY_DESC
-                             WHERE MENU_ID = TOP_MENU_ID
-                               AND LANG_CD = #{langCd}          /* ko : 한국어 */
-                               AND ROWNUM = 1
-                           ) AS TOP_MENU_NM                      
-                         ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
-                            WHERE PROD_ID = BRAND_ID AND IMG_CD =#{imageCd}
-                          ) AS FILE_PATH
-                 FROM (
+                    ,ROWNUM AS RNUM
+              FROM (
                     SELECT *
                     FROM (
-                        SELECT  
-                              SB.BRAND_ID
-                             ,SB.ORG_BRAND_ID
-                             ,SB.BRAND_NM
-                             ,MC.MENU_ID
-                             ,MCD.MENU_NM
-                             ,MC.TOP_MENU_ID
-                        FROM  TB_DP_SHPG_BRAND SB
-                             ,TB_DP_MENU_CATEGORY MC
-                             ,TB_DP_MENU_CATEGORY_DESC MCD
-                        WHERE SB.MENU_ID = MC.MENU_ID
-                          AND SB.MENU_ID = MCD.MENU_ID
-                            <if test="brandId != null">
-                              AND SB.BRAND_ID = #{brandId}
-                            </if>                          
-                          AND SB.CHARGE_CARD_YN ='Y'
-                          AND MC.USE_YN ='Y'
-                          AND MCD.LANG_CD =#{langCd}
-                          AND EXISTS (
-                               SELECT
-                                        'X'
-                                 FROM 
-                                          TB_DP_SHPG_BRAND A
-                                         ,TB_DP_SHPG_CATALOG B
-                                         ,TB_DP_SHPG_CATALOG_DESC C
-                                         ,TB_DP_MENU_SHPG_MAPG D
-                                         ,TB_DP_MENU_CATEGORY E
-                                         ,TB_DP_MENU_CATEGORY_DESC F 
-                                         ,TB_DP_PROD_CATALOG_MAPG G 
-                                         ,TB_DP_PROD_RSHP H
-                                         ,TB_DP_SHPG_PROD I
-                                         ,TB_DP_PROD J
-                                         ,TB_DP_TENANT_PROD K
-                                         ,TB_DP_TENANT_PROD K1
-                                         ,TB_DP_TENANT_PROD_PRICE L
-
-                                WHERE 1=1
-                                AND A.BRAND_ID = B.BRAND_ID
-                                AND B.CATALOG_ID = C.CATALOG_ID
-                                AND C.CATALOG_ID = D.CATALOG_ID     
-                                AND D.MENU_ID = E.MENU_ID
-                                AND D.MENU_ID = F.MENU_ID
-                                AND B.CATALOG_ID = G.CATALOG_ID
-                                AND G.PROD_ID = H.PROD_ID
-                                AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
-                                AND H.PART_PROD_ID = I.PROD_ID
-                                AND I.PROD_ID = J.PROD_ID
-                                AND I.PROD_ID = K.PROD_ID
-                                AND I.PROD_ID = L.PROD_ID
-                                AND G.PROD_ID = K1.PROD_ID
-                                AND K.TENANT_ID = K1.TENANT_ID
-                                AND K.TENANT_ID = L.TENANT_ID 
-                                AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/ 
-                                AND NVL(B.CHNL_CNT, 0) > 0          
-                                AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
-                                AND F.LANG_CD= #{langCd}         /* ko : 한국어 */
-                                AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                                AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
-                                AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
-                                AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                                AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                                AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
-                                AND I.PROD_CASE_CD = 'DP006306' 
-                                AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
-                                AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
-                                AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
-                                AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                                --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
-                                AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
-                                AND A.BRAND_ID =SB.BRAND_ID
-                                AND  EXISTS (
-                                    SELECT 1 
-                                      FROM  TB_DP_SPRT_DEVICE DV  
-                                     WHERE PROD_ID = I.PROD_ID
-                                       AND DV.DEVICE_MODEL_CD  = #{deviceModelCd} 
-                                     UNION ALL
-                                    SELECT 1 
-                                      FROM  TB_DP_SPRT_DEVICE DV  
-                                     WHERE PROD_ID = I.PROD_ID                             
-                                       AND DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo} 
-                                )
-                          )
-                     )
+                    SELECT
+                            SB.BRAND_ID
+                            ,SB.ORG_BRAND_ID
+                            ,SB.BRAND_NM
+                            ,MC.MENU_ID
+                            ,MCD.MENU_NM
+                            ,MC.TOP_MENU_ID
+                    FROM TB_DP_SHPG_BRAND SB
+                        ,TB_DP_MENU_CATEGORY MC
+                        ,TB_DP_MENU_CATEGORY_DESC MCD
+                    WHERE SB.MENU_ID = MC.MENU_ID
+                    AND SB.MENU_ID = MCD.MENU_ID
+                    <if test="brandId != null">
+                        AND SB.BRAND_ID = #{brandId}
+                    </if>
+                    AND SB.CHARGE_CARD_YN ='Y'
+                    AND MC.USE_YN ='Y'
+                    AND MCD.LANG_CD =#{langCd}
+                    AND EXISTS (
+                            SELECT
+                              'X'
+                            FROM
+                                 TB_DP_SHPG_BRAND A
+                                ,TB_DP_SHPG_CATALOG B
+                                ,TB_DP_SHPG_CATALOG_DESC C
+                                ,TB_DP_MENU_SHPG_MAPG D
+                                ,TB_DP_MENU_CATEGORY E
+                                ,TB_DP_MENU_CATEGORY_DESC F
+                                ,TB_DP_PROD_CATALOG_MAPG G
+                                ,TB_DP_PROD_RSHP H
+                                ,TB_DP_SHPG_PROD I
+                                ,TB_DP_PROD J
+                                ,TB_DP_TENANT_PROD K
+                                ,TB_DP_TENANT_PROD K1
+                                ,TB_DP_TENANT_PROD_PRICE L
+                            WHERE 1=1
+                            AND A.BRAND_ID = B.BRAND_ID
+                            AND B.CATALOG_ID = C.CATALOG_ID
+                            AND C.CATALOG_ID = D.CATALOG_ID
+                            AND D.MENU_ID = E.MENU_ID
+                            AND D.MENU_ID = F.MENU_ID
+                            AND B.CATALOG_ID = G.CATALOG_ID
+                            AND G.PROD_ID = H.PROD_ID
+                            AND H.PROD_ID  <![CDATA[ <> ]]> H.PART_PROD_ID
+                            AND H.PART_PROD_ID = I.PROD_ID
+                            AND I.PROD_ID = J.PROD_ID
+                            AND I.PROD_ID = K.PROD_ID
+                            AND I.PROD_ID = L.PROD_ID
+                            AND G.PROD_ID = K1.PROD_ID
+                            AND K.TENANT_ID = K1.TENANT_ID
+                            AND K.TENANT_ID = L.TENANT_ID
+                            AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/
+                            AND NVL(B.CHNL_CNT, 0) > 0
+                            AND C.LANG_CD= #{langCd}         /* ko : 한국어 */
+                            AND F.LANG_CD= #{langCd}        /* ko : 한국어 */
+                            AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                            AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+                            AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+                            AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                            AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+                            AND NVL(I.B2B_PROD_YN, 'N')<![CDATA[ <> ]]> 'Y'
+                            AND I.PROD_CASE_CD = 'DP006306'
+                            AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                            AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                            AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                            AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                            --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+                            AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
+                            AND A.BRAND_ID =SB.BRAND_ID
+                            AND  EXISTS (
+                               SELECT 1
+                                FROM  TB_DP_SPRT_DEVICE DV
+                                WHERE PROD_ID = I.PROD_ID
+                                AND DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo}
+                                UNION ALL
+                                SELECT 1
+                                FROM  TB_DP_SPRT_DEVICE DV
+                                WHERE PROD_ID = I.PROD_ID
+                                AND DV.DEVICE_MODEL_CD  = #{deviceModelCd}
+                            )
+                        )
+                    )
                     ORDER BY
-	                    MENU_ID , 
-	                    BRAND_NM
-                ) AA
+                       MENU_ID ,
+                       BRAND_NM
+                 ) AA
             )KK
         )
-        WHERE RNUM BETWEEN #{offset} AND #{count}
+        WHERE RNUM BETWEEN  #{offset} AND #{count}
     </select>  
     
     
