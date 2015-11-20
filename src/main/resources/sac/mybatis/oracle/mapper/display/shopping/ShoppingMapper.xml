@@ -4126,14 +4126,19 @@
                                 ,TB_DP_PROD_CATALOG_MAPG CM
                                 ,TB_DP_PROD_RSHP PR
                                 ,TB_DP_TENANT_PROD_PRICE PRR
+                                ,TB_DP_TENANT_PROD TP
                          WHERE 1=1
                            AND SC.CATALOG_ID = CM.CATALOG_ID
                            AND CM.PROD_ID = PR.PROD_ID
                            AND PR.PART_PROD_ID = PRR.PROD_ID
+                           AND TP.PROD_ID = PRR.PROD_ID
                            AND SC.BRAND_ID=KK.BRAND_ID
                            AND PROD_RSHP_CD ='DP010802'
                            AND PRR.TENANT_ID =#{tenantId}
-                    ) AS PRICE
+                           AND TP.TENANT_ID = #{tenantId}
+                           AND NVL(SC.CHNL_CNT, 0) > 0
+                           AND TP.PROD_STATUS_CD ='PD000403'
+                     ) AS PRICE
                     ,COUNT(1) OVER() AS TOTALCOUNT
                     ,ROWNUM AS RNUM         
              FROM(
