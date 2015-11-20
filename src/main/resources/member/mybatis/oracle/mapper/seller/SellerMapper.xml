@@ -3002,12 +3002,12 @@
 
     <!-- 판매 제공자가 있는 판매자의 카테코리 코드 목록 조회  -->
     <select id="searchCategoryCdList" parameterType="searchProviderRequest" resultType="String">
-        /* SellerMapper.searchCategoryCdList, 판매 제공자가 있는 판매자의 카테코리 코드 조회, SAC(SC), 최진호, 2015-11-24 */
-		(    
-		    SELECT
-		        MULTIMDA_CD AS CATEGORY_CD
+		/* SellerMapper.searchCategoryCdList, 판매 제공자가 있는 판매자의 카테코리 코드 조회, SAC(SC), 최진호, 2015-11-24 */
+		(
+		    SELECT /*+ opt_param('_optimizer_skip_scan_enabled','true') index_ss(ma PK_US_SELLERMBR_MULTIMDA_AUTH) */
+		        MULTIMDA_CD AS categoryCd
 		    FROM
-		        TB_US_SELLERMBR_MULTIMDA_AUTH
+		        TB_US_SELLERMBR_MULTIMDA_AUTH ma --ma추가 
 		    WHERE
 		        INSD_SELLERMBR_NO = #{sellerKey}
 		        AND END_DT > SYSDATE
@@ -3015,10 +3015,10 @@
 		)
 		UNION ALL
 		(
-		    SELECT
-		        TAB_CD AS CATEGORY_CD
+		    SELECT /*+ opt_param('_optimizer_skip_scan_enabled','true') index_ss(ta PK_US_SELLERMBR_TAB_AUTH) */
+		        TAB_CD AS categoryCd
 		    FROM
-		        TB_US_SELLERMBR_TAB_AUTH
+		        TB_US_SELLERMBR_TAB_AUTH ta --ta추가 
 		    WHERE
 		        INSD_SELLERMBR_NO = #{sellerKey}
 		        AND USE_AGENCY_YN = 'Y'
