@@ -9,14 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.sci;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
@@ -28,6 +20,13 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.GiftC
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.GiftConfirmSacInRes;
 import com.skplanet.storeplatform.sac.purchase.history.service.GiftSacService;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 구매 SAC 컨트롤러
@@ -44,11 +43,9 @@ public class GiftConfirmInternalSCIController implements GiftConfirmInternalSCI 
 
 	/**
 	 * 선물수신 처리.
-	 * 
-	 * @param GiftConfirmSacInReq
+	 *
+	 * @param giftConfirmSacInReq
 	 *            요청정보
-	 * @param requestHeader
-	 *            헤더정보
 	 * @return GiftConfirmSacInRes
 	 */
 	@Override
@@ -106,10 +103,8 @@ public class GiftConfirmInternalSCIController implements GiftConfirmInternalSCI 
 	/**
 	 * 선물수신처리 reqConfirmConvert.
 	 * 
-	 * @param GiftConfirmSacInReq
+	 * @param giftConfirmSacInReq
 	 *            선물수신처리 요청정보
-	 * @param header
-	 *            테넌트 헤더정보
 	 * @return GiftConfirmScReq
 	 */
 	private GiftConfirmScReq reqConfirmConvert(GiftConfirmSacInReq giftConfirmSacInReq) {

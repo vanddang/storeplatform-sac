@@ -69,10 +69,12 @@ public class GiftScServiceImpl implements GiftScService {
 		if (giftConfirmScRes == null) {
 			// 선물 수신 내역이 존재하지않으면 Exception 처리
 			throw new StorePlatformException("SC_PUR_4002");
-		} else if (!StringUtils.equals(giftConfirmScReq.getDeviceKey(), giftConfirmScRes.getUseInsdDeviceId())) {
-			// ID기반의 다른 기기로 요청들어올 경우 아래오류코드로 처리 2015.02.12 csh
-			throw new StorePlatformException("SAC_PUR_4111"); // 선물 받은 휴대기기에서 수신 확인 후 이용 가능합니다.
-		} else {
+		}
+//		else if (!StringUtils.equals(giftConfirmScReq.getDeviceKey(), giftConfirmScRes.getUseInsdDeviceId())) {
+//			 ID기반의 다른 기기로 요청들어올 경우 아래오류코드로 처리 2015.02.12 csh
+//			throw new StorePlatformException("SAC_PUR_4111"); // 선물 받은 휴대기기에서 수신 확인 후 이용 가능합니다.
+//		}
+		else {
 			this.logger.debug("PRCHS,GiftScService,SC,REQ,{}", giftConfirmScRes.getRecvDt());
 			if (StringUtils.isEmpty(giftConfirmScRes.getRecvDt())
 					&& !StringUtils.isEmpty(giftConfirmScRes.getPrchsId())) {

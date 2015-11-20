@@ -1003,7 +1003,6 @@
            AND  use_period_redate_cd = 'OR021101' /*처리대기 상태*/
            AND  recv_dt is null /*선물수신 안된 상태*/
            AND  tenant_prod_grp_cd not like 'OR006221%' /*쇼핑상품이 아닌경우*/
-           
     </update>  
     
     <!-- 기간 재산정 조회    2015.10.06 사용안함
