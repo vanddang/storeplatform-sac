@@ -465,7 +465,7 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
 			if (StringUtils.isNotBlank(req.getNativeId())) { // 타사 간편인증시 nativeId 필수
 				this.updateMarketDeviceKey(requestHeader, chkDupRes.getUserMbr().getUserKey(), req.getDeviceId(),
-						req.getDeviceTelecom(), req.getNativeId());
+						req.getDeviceTelecom(), req.getNativeId(), dbDeviceInfo.getSvcMangNum());
 			}
 		}
 
@@ -764,7 +764,7 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
 			if (StringUtils.isNotBlank(req.getNativeId())) { // 타사 간편인증시 nativeId 필수
 				this.updateMarketDeviceKey(requestHeader, chkDupRes.getUserMbr().getUserKey(), req.getDeviceId(),
-						req.getDeviceTelecom(), req.getNativeId());
+						req.getDeviceTelecom(), req.getNativeId(), dbDeviceInfo.getSvcMangNum());
 			}
 		}
 
@@ -4468,9 +4468,11 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @param nativeId
 	 *            String
+	 * @param svcMangNo
+	 *            String
 	 */
 	private void updateMarketDeviceKey(SacRequestHeader requestHeader, String userKey, String deviceId,
-			String deviceTelecom, String nativeId) {
+			String deviceTelecom, String nativeId, String svcMangNo) {
 
 		if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_LGT)) {
 
@@ -4499,15 +4501,21 @@ public class LoginServiceImpl implements LoginService {
 
 				if (marketRes != null) {
 					if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상회원
-						ModifyDeviceReq modifyDeviceReq = new ModifyDeviceReq();
-						DeviceInfo deviceInfo = new DeviceInfo();
-						deviceInfo.setDeviceId(deviceId);
-						deviceInfo.setSvcMangNum(marketRes.getDeviceInfo().getDeviceKey());
-						modifyDeviceReq.setUserKey(userKey);
-						modifyDeviceReq.setDeviceInfo(deviceInfo);
-						this.deviceService.modDevice(requestHeader, modifyDeviceReq);
-						LOGGER.info("{} marketDeviceKey update : {}", deviceId, marketRes.getDeviceInfo()
-								.getDeviceKey());
+						if (StringUtils.isBlank(svcMangNo)
+								|| !StringUtils.equals(svcMangNo, marketRes.getDeviceInfo().getDeviceKey())) {
+							ModifyDeviceReq modifyDeviceReq = new ModifyDeviceReq();
+							DeviceInfo deviceInfo = new DeviceInfo();
+							deviceInfo.setDeviceId(deviceId);
+							deviceInfo.setSvcMangNum(marketRes.getDeviceInfo().getDeviceKey());
+							modifyDeviceReq.setUserKey(userKey);
+							modifyDeviceReq.setDeviceInfo(deviceInfo);
+							this.deviceService.modDevice(requestHeader, modifyDeviceReq);
+							LOGGER.info("{} marketDeviceKey update : {}", deviceId, marketRes.getDeviceInfo()
+									.getDeviceKey());
+						} else {
+							LOGGER.info("{} marketDeviceKey equal : {}", deviceId, marketRes.getDeviceInfo()
+									.getDeviceKey());
+						}
 					}
 				}
 			} catch (StorePlatformException e) {
