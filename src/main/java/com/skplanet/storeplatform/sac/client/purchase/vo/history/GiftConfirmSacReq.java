@@ -9,15 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
-import java.io.Serializable;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import java.io.Serializable;
 
 /**
  * 
@@ -33,8 +31,6 @@ public class GiftConfirmSacReq extends CommonInfo implements Serializable {
 	@NotNull
 	@NotEmpty
 	private String userKey; // 내부사용자번호
-	@NotNull
-	@NotEmpty
 	private String deviceKey; // 내부디바이스ID
 	@NotNull
 	@NotEmpty
