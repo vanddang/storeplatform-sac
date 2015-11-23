@@ -112,10 +112,7 @@ public class ProductBaseInfo {
     }
 
     public void setPlus19Yn(String plus19Yn) {
-        if(plus19Yn == null)
-            return;
-
-        this.plus19 = plus19Yn.equals("Y");
+        this.plus19 = StringUtils.equals(plus19Yn, "Y");
     }
 
     public String getProdGrdCd() {

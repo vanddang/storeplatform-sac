@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.cache.redisdata;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.common.support.redis.AbstractRedisDataHandler;
+import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
 import org.msgpack.MessageTypeException;
 import org.msgpack.packer.Packer;
@@ -66,7 +67,8 @@ public class ProductBaseInfoHandlerImpl extends AbstractRedisDataHandler<String,
             throw new RuntimeException("데이터 변환에 실패했습니다.", e);
         }
 
-        redis.set(key.getBytes(), out.toByteArray());
+        redis.set(SacRedisKeys.prodBase(key).getBytes(), out.toByteArray());
+        redis.sadd(SacRedisKeys.prodBaseSet(), key);
     }
 
     @Override
@@ -78,6 +80,7 @@ public class ProductBaseInfoHandlerImpl extends AbstractRedisDataHandler<String,
 
     @Override
     public void evict(String key, Plandasj redis) {
-        redis.del(key.getBytes());
+        redis.del(SacRedisKeys.prodBase(key).getBytes());
+        redis.srem(SacRedisKeys.prodBaseSet(), key);
     }
 }
