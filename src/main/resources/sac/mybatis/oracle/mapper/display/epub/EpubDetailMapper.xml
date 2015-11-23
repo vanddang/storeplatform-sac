@@ -164,14 +164,13 @@
 		                AND G.PROD_STATUS_CD = 'PD000403'
 		                AND CTP.PROD_STATUS_CD = 'PD000403'
 	                    AND G.EXPO_YN = 'Y'
-	                    AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
 						AND RSHP.PROD_ID = D.PROD_ID
                       	AND RSHP.PART_PROD_ID = CPD.PROD_ID
 						AND CPD.PROD_ID = K.PROD_ID AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 						AND CD.DEVICE_MODEL_CD = #{deviceModel} AND CD.USE_YN = 'Y'
                       	AND CPD.SVC_GRP_CD = 'DP000203' AND CPD.CONTENTS_TYPE_CD = 'PD002502' AND CPD.SVC_TYPE_CD = 'DP001116'
                       	AND CPD.PROD_ID = CTP.PROD_ID AND CTP.TENANT_ID = G.TENANT_ID AND CTP.EXPO_YN = 'Y'
-                      	AND CPD.PROD_ID = CTPR.PROD_ID AND CTPR.TENANT_ID = CTP.TENANT_ID AND SYSDATE BETWEEN CTPR.APPLY_START_DT AND CTPR.APPLY_END_DT
+                      	AND CPD.PROD_ID = CTPR.PROD_ID AND CTPR.TENANT_ID = CTP.TENANT_ID
                       	AND CPD.PROD_ID = EP.PROD_ID
 	                    GROUP BY G.TENANT_ID, C.LANG_CD, D.PROD_ID, A.MENU_ID, C.MENU_NM, EP.BOOK_CLSF_CD, EP.CHAPTER, CPD.CID
 				) GROUP BY TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
@@ -190,8 +189,7 @@
 		WHERE P2.PROD_ID = P.CHNL_PROD_ID
 	      AND P2.PROD_ID = MP.PROD_ID
 	      AND P2.PROD_ID = TP.PROD_ID AND P.TENANT_ID = TP.TENANT_ID
-	      AND P2.PROD_ID = PREFIX.PROD_ID(+)
-		  AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
+	      AND P2.PROD_ID = PREFIX.PROD_ID(+) 
 	      AND P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
 	      AND P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
 	      AND P.CHNL_PROD_ID = PI.PROD_ID(+) AND P.LANG_CD = PI.LANG_CD(+) AND PI.EXPO_ORD(+) = 1 AND PI.IMG_CD(+) = #{representImgCd}
@@ -223,7 +221,6 @@
 		   AND PRC.TENANT_ID = #{tenantId}
 		   AND P.PROD_ID = #{channelId}
 		   AND EPI.CHNL_CLSF_CD = 'DP001401'
-		   AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT 
 		 ORDER BY EPI.MGZIN_TYPE_CD, TO_NUMBER( P.USE_PERIOD )
 	</select>
 	
@@ -352,7 +349,6 @@
 		                      AND PD.PROD_ID = SD.PROD_ID
 		                      AND (SD.DEVICE_MODEL_CD = #{deviceModel} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 		                      AND DV.DEVICE_MODEL_CD = #{deviceModel} AND DV.USE_YN = 'Y'
-		                      AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
 		                      AND PD.SVC_GRP_CD = 'DP000203'   AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD = 'DP001116'
 							  AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
 							  <if test="bookTypeCd != null and bookTypeCd !=''">
@@ -494,7 +490,6 @@
 		                                    AND SC.PROD_ID = PD.PROD_ID
 		                                    AND SC.SALE_YN ='Y'
                                             AND MP.BOOK_CLSF_CD = #{searchUsePolicyBookTypeCd}
-                                            AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
 		                               ) T1
 		                         WHERE  RN = 1               
 		                       ) T2             
