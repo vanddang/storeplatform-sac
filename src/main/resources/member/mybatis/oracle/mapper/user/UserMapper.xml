@@ -3871,9 +3871,10 @@
         <if test="sellerKey != null">
             AND insd_sellermbr_no = #{sellerKey}
         </if>
-        <if test="brandName != null">
-            AND brand_nm = #{brandName}
+        <if test="brandId != null">
+            AND brand_id = #{brandId}
         </if>
+        ORDER BY brand_nm, charger_id
    </select>
    
    <!-- 상품권충전소 정보 조회 -->
