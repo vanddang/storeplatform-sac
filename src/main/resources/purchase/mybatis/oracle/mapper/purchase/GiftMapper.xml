@@ -57,6 +57,7 @@
         , send_insd_usermbr_no
         , send_insd_device_id
         , use_insd_device_id
+        , tenant_prod_grp_cd
         FROM tb_pr_prchs_dtl
         WHERE use_tenant_id = #{tenantId}
         AND use_insd_usermbr_no = #{userKey}
@@ -108,16 +109,15 @@
               , upd_dt = sysdate      /* 업데이트일시 */
          WHERE  use_tenant_id = #{tenantId} 
            AND  use_insd_usermbr_no = #{userKey}
-           AND  use_insd_device_id = #{deviceKey} 
            AND  prod_id = #{prodId}
            AND  prchs_id = #{prchsId}
            AND  prchs_case_cd = 'OR020302' /* 선물인 경우에만 선물수신확인 */
            AND  status_cd = 'OR000301'
            AND  recv_dt is null
-    </update>
+       </update>
 
 
-    <!-- 4. SELECT SQL-->
+       <!-- 4. SELECT SQL-->
     <select id="retrieveUpdatedGiftDtl" parameterType="giftConfirmScReq" resultMap="PurchaseGiftConfirmMap">
         SELECT  /* PurchaseGift.getUpdatedGiftDtl, 선물수신 처리 결과 조회, 황민규/SK플래닛, 2015-06-01 */
               dtl.PRCHS_ID

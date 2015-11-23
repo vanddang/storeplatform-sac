@@ -31,6 +31,7 @@ public class GiftConfirmScRes extends CommonInfo implements Serializable {
 	private String sendInsdUsermbrNo; // 구매상태
 	private String sendInsdDeviceId; // 구매상태
 	private String useInsdDeviceId;
+	private String tenantProdGrpCd; // 테넌트 그룹 코드
 
 	/**
 	 * @return the recvDt
@@ -306,4 +307,22 @@ public class GiftConfirmScRes extends CommonInfo implements Serializable {
 		this.dwldStartDt = dwldStartDt;
 	}
 
+	/**
+	 * Gets tenant prod grp cd.
+	 *
+	 * @return the tenant prod grp cd
+	 */
+	public String getTenantProdGrpCd() {
+		return tenantProdGrpCd;
+	}
+
+	/**
+	 * Sets tenant prod grp cd.
+	 *
+	 * @param tenantProdGrpCd
+	 *            the tenant prod grp cd
+	 */
+	public void setTenantProdGrpCd(String tenantProdGrpCd) {
+		this.tenantProdGrpCd = tenantProdGrpCd;
+	}
 }
