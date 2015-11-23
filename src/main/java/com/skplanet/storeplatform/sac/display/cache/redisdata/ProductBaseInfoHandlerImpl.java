@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.cache.redisdata;
 
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.rest.example.SacRestAdaptorExample;
 import com.skplanet.storeplatform.sac.common.support.redis.AbstractRedisDataHandler;
 import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
@@ -39,7 +40,7 @@ public class ProductBaseInfoHandlerImpl extends AbstractRedisDataHandler<String,
 
     @Override
     public ProductBaseInfo load(String key, Plandasj redis) {
-        byte[] data = redis.get(key.getBytes());
+        byte[] data = redis.get(SacRedisKeys.prodBase(key).getBytes());
         if(data == null || data.length == 0)
             return null;
 
