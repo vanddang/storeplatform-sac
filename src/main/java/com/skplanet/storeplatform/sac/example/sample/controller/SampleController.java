@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.example.sample.controller;
 
 import java.util.Date;
 
+import com.skplanet.storeplatform.sac.client.example.sample.vo.SampleReq;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,23 @@ public class SampleController {
 		res.setDescription("My description");
 		res.setDate(new Date());
 		
+		return res;
+	}
+
+	/**
+	 * 더미 데이터
+	 */
+	@RequestMapping(value = "/postDummy", method = RequestMethod.POST)
+	@ResponseBody
+	public SampleRes postDummy(@RequestBody SampleReq req) {
+
+		SampleRes res = new SampleRes();
+		res.setNo(req.getNo());
+		res.setId(req.getId());
+		res.setName(req.getName());
+		res.setDescription("New dummy has been posted.");
+		res.setDate(req.getDate());
+
 		return res;
 	}
 	
