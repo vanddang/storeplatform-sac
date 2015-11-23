@@ -78,7 +78,7 @@ public class SampleController {
 		res.setId(req.getId());
 		res.setName(req.getName());
 		res.setDescription("New dummy has been posted.");
-		res.setDate(req.getDate());
+		res.setDate(new Date());
 
 		return res;
 	}
