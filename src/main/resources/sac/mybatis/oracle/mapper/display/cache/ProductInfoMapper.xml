@@ -46,7 +46,6 @@
               AND PROD.PROD_ID = #{channelId}
               AND PDESC.LANG_CD = #{langCd}
               AND TP.TENANT_ID = #{tenantId}
-              AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
               AND TP.EXPO_YN = 'Y'
               AND IMG.IMG_CD = #{imageCd}  --'DP000101'
               AND IMG.EXPO_ORD = 1  -- 노출순서
@@ -118,7 +117,6 @@
               AND PDESC.LANG_CD = #{langCd}
               AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
               AND TP.TENANT_ID = #{tenantId}
-              AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
               AND TP.EXPO_YN = 'Y'
               AND IMG.IMG_CD = #{imageCd}  --'DP000101'
               AND IMG.EXPO_ORD = 1  -- 노출순서
@@ -516,9 +514,7 @@
             AND CPDESC.LANG_CD = #{langCd}
             AND CTPROD.TENANT_ID = #{tenantId}
             AND CTPROD.EXPO_YN = 'Y'
-            AND SYSDATE BETWEEN CTPRC.APPLY_START_DT AND CTPRC.APPLY_END_DT
             AND ETPROD.EXPO_YN = 'Y'
-            AND SYSDATE BETWEEN ETPRC.APPLY_START_DT AND ETPRC.APPLY_END_DT
             AND EMCPM.BASE_YN = 'Y'
             AND EMCPM.USE_YN = 'Y'
             AND EMC.USE_YN = 'Y'
@@ -703,8 +699,6 @@
                 AND CPROD.CONTENTS_TYPE_CD = 'PD002501'
                 AND EPROD.CONTENTS_TYPE_CD = 'PD002502'
                 AND CPROD.SVC_GRP_CD = 'DP000203'
-                AND SYSDATE BETWEEN CTPRC.APPLY_START_DT AND CTPRC.APPLY_END_DT
-                AND SYSDATE BETWEEN ETPRC.APPLY_START_DT AND ETPRC.APPLY_END_DT
                 AND CMCM.BASE_YN = 'Y'
                 AND CMCM.USE_YN = 'Y'
                 AND CMC.USE_YN = 'Y'
@@ -837,8 +831,6 @@
                 AND EPROD.CONTENTS_TYPE_CD = 'PD002502'
                 AND CPROD.SVC_GRP_CD = 'DP000203'
                 AND CPROD.TOP_MENU_ID = 'DP26'
-                AND SYSDATE BETWEEN CTPRC.APPLY_START_DT AND CTPRC.APPLY_END_DT
-                AND SYSDATE BETWEEN ETPRC.APPLY_START_DT AND ETPRC.APPLY_END_DT
                 AND CMCM.BASE_YN = 'Y'
                 AND CMCM.USE_YN = 'Y'
                 AND CMC.USE_YN = 'Y'
