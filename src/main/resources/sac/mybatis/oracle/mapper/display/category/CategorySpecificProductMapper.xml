@@ -1351,7 +1351,6 @@
              AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
              AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]>  'Y'
              AND I.PROD_CASE_CD != 'DP006306'
-             AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
              AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
         ) 
       WHERE NO =1   
