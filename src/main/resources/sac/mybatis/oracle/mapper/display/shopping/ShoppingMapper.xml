@@ -111,7 +111,6 @@
                         AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
@@ -223,7 +222,6 @@
                         AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
@@ -388,7 +386,6 @@
                         AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
@@ -584,7 +581,6 @@
                         AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         AND SYSDATE BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT 
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
                         <if test="prodCharge != null">
                         AND J.PROD_CHRG_YN =#{prodCharge}
@@ -689,7 +685,6 @@
                           AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
                           AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                           AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                          --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                           AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                           AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
                           AND M.PLAN_ID = KK.PLAN_ID 
@@ -807,7 +802,6 @@
                         AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
@@ -952,7 +946,6 @@
                                 AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
                                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                                --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                                 AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                 AND A.BRAND_ID =SB.BRAND_ID
                                 AND  EXISTS (
@@ -1159,7 +1152,6 @@
                         AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}  /* INPUT 테넌트ID */
                         AND A.BRAND_ID = #{req.brandId}        /* INPUT 브랜드ID */
                         <if test="req.prodCharge != null">
@@ -1335,7 +1327,6 @@
                         AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
@@ -1496,7 +1487,6 @@
                         AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
@@ -1664,7 +1654,6 @@
                         AND I.PROD_CASE_CD != 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
@@ -1797,7 +1786,6 @@
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 <if test="req.saleDtUseYn == null">
-                --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                 </if>
                 AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                 AND B.CATALOG_ID = #{req.productId}
@@ -1987,7 +1975,6 @@
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 <if test="req.saleDtUseYn == null">
-                --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                 </if>
                 AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                 AND B.CATALOG_ID = #{req.productId}
@@ -2076,7 +2063,6 @@
           AND E.PROD_STATUS_CD ='PD000403'  
          </if>    
           <if test="req.saleDtUseYn == null">
-          --AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
           </if>
         ORDER BY A.CHNL_PROD_ID
                 ,A.OPT1_NM
@@ -2317,7 +2303,6 @@
                                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                                 AND SYSDATE BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT 
-                                --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                                 AND K.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
                                 <if test="prodCharge != null">
                                 AND J.PROD_CHRG_YN =#{prodCharge}
@@ -2421,7 +2406,6 @@
                           AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
                           AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                           AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                          --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                           AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                           AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
                           AND M.PLAN_ID = KK.PLAN_ID 
@@ -2545,7 +2529,6 @@
                         AND I.PROD_CASE_CD != 'DP006306'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
@@ -2688,7 +2671,6 @@
                                 AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
                                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                                --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                                 AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                 AND A.BRAND_ID =SB.BRAND_ID
                                 AND NOT EXISTS (
@@ -2825,7 +2807,6 @@
                                 AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
                                 AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                                --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                                 AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                 AND A.BRAND_ID =SB.BRAND_ID
                                 AND NOT EXISTS (
@@ -2985,7 +2966,6 @@
                         AND I.PROD_CASE_CD != 'DP006306'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}  /* INPUT 테넌트ID */
                         AND A.BRAND_ID = #{req.brandId}        /* INPUT 브랜드ID */
                         <if test="req.prodCharge != null">
@@ -3174,7 +3154,6 @@
                         AND I.PROD_CASE_CD != 'DP006306'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
@@ -3359,7 +3338,6 @@
                         AND I.PROD_CASE_CD != 'DP006306'
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
@@ -3529,7 +3507,6 @@
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 <if test="req.saleDtUseYn == null">
-                --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                 </if>
                 AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                 AND B.CATALOG_ID = #{req.productId}
@@ -3733,7 +3710,6 @@
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         <if test="req.saleDtUseYn == null">
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         </if>
                         AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                         AND B.CATALOG_ID = #{req.productId}
@@ -3831,7 +3807,6 @@
                   AND E.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                   AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                   <if test="req.saleDtUseYn == null">
-                  --AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
                   </if>
                  <if test="req.includeProdStopStatus != null">
                   AND (CASE WHEN A.EXPO_ORD=1 THEN NVL( A.EXPO_YN, 'N' ) 
@@ -4098,7 +4073,6 @@
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                         <if test="filterApplyDt">
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         </if>
                         AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                         AND B.CATALOG_ID = #{catalogId}
@@ -4238,7 +4212,6 @@
                             AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                             AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                             AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                            --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                             AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                             AND A.BRAND_ID =SB.BRAND_ID
                             AND  EXISTS (
@@ -4326,7 +4299,6 @@
               AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
               AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
               AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-              --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
               AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
               AND B.CATALOG_ID =BB.CATALOG_ID
               AND  EXISTS (
@@ -4425,7 +4397,6 @@
                         AND I.PROD_CASE_CD = 'DP006306' 
                         AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}  /* INPUT 테넌트ID */
                         AND A.BRAND_ID = #{req.brandId}        /* INPUT 브랜드ID */
                         <if test="req.price != null">
