@@ -267,7 +267,6 @@
                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                 AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                 AND I.PROD_ID = #{prodId}        /* 상품ID */
            ) KK
@@ -301,8 +300,7 @@
                 AND DC.LANG_CD = #{langCd}
                 AND TP.TENANT_ID = #{tenantId} 
                 AND TP.TENANT_ID = PR.TENANT_ID
-               --AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-            ) IV 
+            ) IV
     </select>     
     
  <select id="getAvailableFixrateInfoList" parameterType="map" resultType="FreePass">
@@ -356,7 +354,6 @@
                 <if test='bookClsfCd == "DP004302"'> 
                  AND CM.SERIES_BOOK_CLSF_CD IN ('DP004302','DP004305')  
                 </if>                               
-                --AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
                 ORDER BY FREE_PASS_CLSF_CD DESC
             ) IV 
     </select>        
@@ -491,7 +488,6 @@
                 AND DC.LANG_CD = #{langCd}
                 AND TP.TENANT_ID = #{tenantId} 
                 AND TP.TENANT_ID = PR.TENANT_ID
-                --AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
             ) IV 
     </select>     
     
