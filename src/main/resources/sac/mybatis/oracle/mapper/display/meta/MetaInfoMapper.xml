@@ -976,7 +976,6 @@
                         AND G.BASE_YN ='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]>  'Y'
-                        --AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                    ) 
                  WHERE NO =1   
@@ -1053,7 +1052,6 @@
 		AND DC.LANG_CD = #{tenantHeader.langCd}
 		AND TP.TENANT_ID = #{tenantHeader.tenantId}
 		AND TP.TENANT_ID = PR.TENANT_ID
-		--AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 	) IV LEFT OUTER JOIN TB_DP_PROD_IMG BIG
 	ON BIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = BIG.PROD_ID AND BIG.IMG_CD = #{bannerImageCd}
 	LEFT OUTER JOIN TB_DP_PROD_IMG TIG
@@ -1170,6 +1168,5 @@
               AND CPROD.PROD_ID = #{productBasicInfo.prodId}
               AND CPDESC.LANG_CD = #{tenantHeader.langCd}
               AND TP.TENANT_ID = #{tenantHeader.tenantId}
-              --AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
-    </select>    
+    </select>
  </mapper>
