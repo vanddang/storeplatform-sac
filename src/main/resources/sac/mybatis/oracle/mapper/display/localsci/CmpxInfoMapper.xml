@@ -160,7 +160,6 @@
 	                 AND D.LANG_CD = #{langCd} 
 	                 AND E.TENANT_ID = #{tenantId}
 	                 AND E.TENANT_ID = F.TENANT_ID 
-	                 AND SYSDATE BETWEEN F.APPLY_START_DT AND F.APPLY_END_DT              
 	                 AND B.PROD_RSHP_CD =#{prodRshpCd}
 	                 AND A.PROD_ID =#{prodId}
 	                 AND C.FREE_PASS_CLSF_CD =#{cmpxProdClsfCd}
@@ -199,8 +198,7 @@
 	        AND DC.LANG_CD = #{langCd} 
 	        AND TP.TENANT_ID = #{tenantId}
 	        AND TP.TENANT_ID = PR.TENANT_ID 
-	        --AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-	    ) IV 
+	    ) IV
 	  </select>    
 
    <select id="searchCmpxProductInfo" parameterType="CmpxProductInfoSacReq" resultType="CmpxProductInfo">
@@ -297,8 +295,7 @@
         AND DC.LANG_CD = #{langCd} 
         AND TP.TENANT_ID = #{tenantId}
         AND TP.TENANT_ID = PR.TENANT_ID
-        --AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-    ) IV 
+    ) IV
     </select>    
    
 </mapper>
