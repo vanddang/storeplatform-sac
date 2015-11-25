@@ -916,7 +916,6 @@
         AND G.BASE_YN ='Y'                 /* Y : 기본(기본여부) */
         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
         AND NVL(I.B2B_PROD_YN, 'N')  !=  'Y'
-        AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
         AND K.TENANT_ID = 'S01'      /* INPUT 테넌트ID */
         
         <foreach collection="list" item="item" index="index" separator="," open="AND H.PART_PROD_ID  IN (" close=")">
