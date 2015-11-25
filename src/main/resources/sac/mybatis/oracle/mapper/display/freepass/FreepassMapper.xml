@@ -47,7 +47,6 @@
 					AND TP.TENANT_ID = #{tenantId}
 					AND TP.TENANT_ID = PR.TENANT_ID
 					AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
-					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 					AND PD.SVC_GRP_CD  ='DP000207'
 			    	AND EXISTS ( SELECT /*+ index(SP PK_DP_SPRT_DEVICE) */ SP.PROD_ID 
 			    	               FROM TB_DP_SPRT_DEVICE SP 
@@ -157,8 +156,7 @@
 		AND DC.LANG_CD = #{langCd}
 		AND TP.TENANT_ID = #{tenantId}
 		AND TP.TENANT_ID = PR.TENANT_ID
-		AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-		AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
+		AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID
 			AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
 		AND EXISTS (
 			SELECT 'X' 
@@ -314,8 +312,7 @@
                     AND DC.LANG_CD = #{langCd}
                     AND TP.TENANT_ID = #{tenantId}
                     AND TP.TENANT_ID = PR.TENANT_ID
-                    AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-                    AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+                    AND CM.SALE_POC_CD IN ('OR004501','OR004503')
                     AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
                         AND ( SP.DEVICE_MODEL_CD = #{virtualDeviceModelNo} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
                     AND EXISTS (
@@ -402,8 +399,7 @@
                     AND DC.LANG_CD = #{langCd}
                     AND TP.TENANT_ID = #{tenantId}
                     AND TP.TENANT_ID = PR.TENANT_ID
-                    AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-                    AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+                    AND CM.SALE_POC_CD IN ('OR004501','OR004503')
                     AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
                         AND ( SP.DEVICE_MODEL_CD = #{virtualDeviceModelNo} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
                     AND EXISTS (
@@ -488,8 +484,7 @@
           			AND CP.PROD_ID = TM.PROD_ID
           			AND TM.USE_YN = 'Y'
           			AND TM.BASE_YN = 'Y'
-					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-    		    	AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+    		    	AND CM.SALE_POC_CD IN ('OR004501','OR004503')
 			    	AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
 			    		AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
 			    	AND EXISTS (
@@ -569,7 +564,6 @@
 					AND TP.TENANT_ID = #{tenantId}
 					AND TP.TENANT_ID = PR.TENANT_ID
 					AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
-					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 			    	AND EXISTS (
 			          	SELECT 'X' 
 			            FROM TB_CM_DEVICE DV
@@ -674,7 +668,6 @@
 		AND DC.LANG_CD = #{langCd}
 		AND TP.TENANT_ID = #{tenantId}
 		AND TP.TENANT_ID = PR.TENANT_ID
-		AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 		AND EXISTS (
 			SELECT 'X' 
 			FROM TB_CM_DEVICE DV
@@ -841,8 +834,7 @@
                     AND DC.LANG_CD = #{langCd}
                     AND TP.TENANT_ID = #{tenantId}
                     AND TP.TENANT_ID = PR.TENANT_ID
-                    AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-                    AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+                    AND CM.SALE_POC_CD IN ('OR004501','OR004503')
                      AND EXISTS (
                         SELECT 'X' 
                         FROM TB_CM_DEVICE DV
@@ -925,8 +917,7 @@
           			AND CP.PROD_ID = TM.PROD_ID
           			AND TM.USE_YN = 'Y'
           			AND TM.BASE_YN = 'Y'
-					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-    		    	AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+    		    	AND CM.SALE_POC_CD IN ('OR004501','OR004503')
                     <if test="arrayProdGradeCd != null">
                     AND CP.PROD_GRD_CD  IN
                                  <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
