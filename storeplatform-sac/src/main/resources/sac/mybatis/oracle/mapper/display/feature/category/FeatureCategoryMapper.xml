@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FeatureCategory">
+    <!-- 영화 추천/1000원관 방송 카테고리별 추천 상품 조회 -->
+    <select id="selectFeatureVodList" parameterType="FeatureCategoryVodSacReq" resultType="ProductBasicInfo">
+        SELECT /* FeatureCategoryMapper.xml, selectFeatureVodList, SAC 전시, 2014-02-10 */
+               B.TENANT_ID
+             , B.MENU_ID
+             , B.PROD_ID
+             , B.TOP_MENU_ID
+             , B.CONTENTS_TYPE_CD
+             , B.TOTAL_COUNT
+          FROM (SELECT A.TENANT_ID
+                     , A.MENU_ID
+                     , A.PROD_ID
+                     , A.TOP_MENU_ID
+                     , A.CONTENTS_TYPE_CD
+                     , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB, A.PROD_NM) AS RNUM
+                 FROM (SELECT A.TENANT_ID
+                            , D.MENU_ID
+                            , A.PROD_ID
+                            , D.TOP_MENU_ID
+                            , E.META_CLSF_CD
+                            , 'PD002501' AS CONTENTS_TYPE_CD
+                            , A.EXPO_ORD_ALWAYS_YN
+                            , A.EXPO_ORD
+                            , A.EXPO_ORD_SUB
+                            , E.REG_DT
+                            , H.PROD_NM
+                            , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY E.REG_DT DESC) AS RN
+                         FROM (SELECT LP.TENANT_ID
+                                    , LP.PROD_ID
+                                    , LP.MENU_ID
+                                    , LP.EXPO_ORD_ALWAYS_YN
+                                    , LP.EXPO_ORD
+                                    , LP.EXPO_ORD_SUB
+                                 FROM TB_DP_LIST_PROD LP  /* 채널 */
+                                    , TB_DP_LIST LT
+                                WHERE LP.TENANT_ID = #{tenantId}  /* 테넌트ID */
+                                  AND LP.LIST_ID = #{listId}
+                                  AND LP.EXPO_YN = 'Y'  /* Y : 노출 (노출여부) */
+                                  AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                                  AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+                                  AND LP.TENANT_ID = LT.TENANT_ID
+                                  AND LP.LIST_ID = LT.LIST_ID
+                                  AND LT.EXPO_YN = 'Y'
+                              ) A
+                            , TB_DP_PROD_RSHP B
+                            , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                            , TB_DP_MENU_CATEGORY D
+                            , TB_DP_PROD E
+                            , TB_DP_TENANT_PROD F
+                            , TB_DP_SPRT_DEVICE G
+                            , TB_DP_PROD_DESC H  /* 채널 */
+                        WHERE A.PROD_ID = B.PROD_ID
+                          AND B.PROD_RSHP_CD = 'DP010802'
+                          AND A.MENU_ID = C.MENU_ID
+                          AND B.PART_PROD_ID = C.PROD_ID
+                          AND C.USE_YN = 'Y'
+                          AND C.MENU_ID = D.MENU_ID
+                          AND D.USE_YN = 'Y'
+                          AND D.TOP_MENU_ID = #{topMenuId}
+                          AND C.PROD_ID = E.PROD_ID
+                          AND E.SVC_GRP_CD = 'DP000203'
+                          AND E.CONTENTS_TYPE_CD = 'PD002502'
+                          <if test='prodGradeCd != null and prodGradeCd != ""'>
+                          AND E.PROD_GRD_CD IN
+                              <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                              #{prodGradeCd}  
+                              </foreach> /* 상품등급코드 */
+                          </if>
+                          AND E.PROD_ID = F.PROD_ID
+                          AND A.TENANT_ID = F.TENANT_ID
+                          AND F.PROD_STATUS_CD = 'PD000403'
+                          AND F.EXPO_YN = 'Y'
+                          AND F.PROD_ID = G.PROD_ID
+                          AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{anyDeviceModelCd}) /* 단말기 모델 코드 */
+                          AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN 
+                                            FROM TB_CM_DEVICE 
+                                           WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                             AND USE_YN = 'Y' )  = 'N' 
+                                         AND NVL(E.DRM_YN, 'N') = 'Y'  
+                                    THEN 'NOT SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
+                                    ELSE CASE WHEN (SELECT SD_VIDEO_SPRT_YN 
+                                                     FROM TB_CM_DEVICE 
+                                                    WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                                    AND USE_YN = 'Y' )  = 'Y' 
+                                              THEN 'SUPPORT' 
+                                              ELSE 'NOT SUPPORT' 
+                                         END 
+                                     END) = 'SUPPORT'
+                          AND B.PROD_ID = H.PROD_ID
+                          AND H.LANG_CD = #{langCd}
+                      ) A
+                WHERE RN = 1
+              ) B
+        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+        ORDER BY RNUM
+    </select>
+    
+    <!-- 영화/방송 카테고리 신규 상품 조회 -->
+    <select id="selectFeatureNewVodist" parameterType="FeatureCategoryVodSacReq" resultType="ProductBasicInfo">
+        SELECT /* FeatureCategoryMapper.xml, selectFeatureNewVodist, SAC 전시, 2014-02-10 */
+               B.TENANT_ID
+             , B.MENU_ID
+             , B.PROD_ID
+             , B.TOP_MENU_ID
+             , B.CONTENTS_TYPE_CD
+             , B.TOTAL_COUNT
+          FROM (SELECT A.TENANT_ID
+                     , A.MENU_ID
+                     , A.PROD_ID
+                     , A.TOP_MENU_ID
+                     , A.CONTENTS_TYPE_CD
+                     , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
+                     --,ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
+                     <if test='orderedBy == "recent"'>
+                     , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 최신순 */
+                     </if>
+                     <if test='orderedBy == "download"'>
+                     , ROW_NUMBER() OVER(ORDER BY NVL(A.PRCHS_CNT, 0) DESC, A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 다운로드순 */
+                     </if>
+                     <if test='orderedBy == "popular"'>
+                     , ROW_NUMBER() OVER(ORDER BY NVL(A.AVG_EVLU_SCORE, 0) DESC, A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 평점순 */
+                     </if>
+                     <if test='orderedBy != "recent" and orderedBy != "download" and orderedBy != "popular"'>
+                     , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB, A.PROD_NM) AS RNUM
+                     </if>
+                 FROM (SELECT /*+ LEADING(A D B C E I F G H) USE_NL(A D B C E I F G H) NO_MERGE(A)*/
+ 							  A.TENANT_ID
+                            , D.MENU_ID
+                            , A.PROD_ID
+                            , D.TOP_MENU_ID
+                            , E.META_CLSF_CD
+                            , 'PD002501' AS CONTENTS_TYPE_CD
+                            , A.EXPO_ORD_ALWAYS_YN
+                            , A.EXPO_ORD
+                            , A.EXPO_ORD_SUB
+                            , E.REG_DT
+                            , H.PRCHS_CNT
+                            , H.AVG_EVLU_SCORE
+                            , I.PROD_NM
+                            , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY E.REG_DT DESC) AS RN
+                         FROM (SELECT LP.TENANT_ID
+                                    , LP.PROD_ID
+                                    , LP.MENU_ID
+                                    , LP.EXPO_ORD_ALWAYS_YN
+                                    , LP.EXPO_ORD
+                                    , LP.EXPO_ORD_SUB
+                                    , LP.ETC_CD
+                                 FROM TB_DP_LIST_PROD LP  /* 채널 */
+                                    , TB_DP_LIST LT
+                                WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
+                                  AND LP.LIST_ID = #{listId}       /* TGR000000002 : 운영자신규 멀티미디어 */
+                                  AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+                                  AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                                  AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+                                  AND LP.TENANT_ID = LT.TENANT_ID
+                                  AND LP.LIST_ID = LT.LIST_ID
+                                  AND LT.EXPO_YN = 'Y'
+                              ) A
+                            , TB_DP_PROD_RSHP B
+                            , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                            , TB_DP_MENU_CATEGORY D
+                            , TB_DP_PROD E  /* 에피소드 */
+                            , TB_DP_TENANT_PROD F
+                            , TB_DP_SPRT_DEVICE G
+                            , TB_DP_TENANT_PROD_STATS H  /* 채널 */
+                            , TB_DP_PROD_DESC I  /* 채널 */
+                        WHERE A.PROD_ID = B.PROD_ID
+                          AND B.PROD_RSHP_CD = 'DP010802'
+                          AND A.MENU_ID = C.MENU_ID
+                          AND A.MENU_ID = D.MENU_ID
+                          AND B.PART_PROD_ID = C.PROD_ID
+                          AND C.USE_YN = 'Y'
+                          AND C.MENU_ID = D.MENU_ID
+                          AND D.USE_YN = 'Y'
+                          AND D.TOP_MENU_ID = #{topMenuId}
+                          <if test='menuId != null and menuId != ""'>
+                              <if test='topMenuId == "DP17"'>
+                                  <if test='menuId == "DP17001"'>
+                                  /* 프리미엄 영화 */
+                          AND A.ETC_CD IN ( 'DP003700', 'DP003701' )
+                                  </if>
+                                  <if test='menuId != "DP17001"'>
+                                  /* 프리미엄 영화 외 */
+                          AND A.ETC_CD NOT IN ( 'DP003700', 'DP003701' )
+                          AND D.MENU_ID = #{menuId}
+                                  </if>
+                              </if>
+                              <if test='topMenuId == "DP18"'>
+                          AND D.MENU_ID = #{menuId}
+                              </if>
+                          </if>
+                          AND C.PROD_ID = E.PROD_ID
+                          AND E.SVC_GRP_CD = 'DP000203'
+                          AND E.CONTENTS_TYPE_CD = 'PD002502'
+                          <if test='prodGradeCd != null and prodGradeCd != ""'>
+                          AND E.PROD_GRD_CD IN
+                              <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                              #{prodGradeCd}  
+                              </foreach> /* 상품등급코드 */
+                          </if>
+                          AND E.PROD_ID = F.PROD_ID
+                          AND A.TENANT_ID = F.TENANT_ID
+                          AND F.PROD_STATUS_CD = 'PD000403'
+                          AND F.EXPO_YN = 'Y'
+                          AND F.PROD_ID = G.PROD_ID
+                          AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{anyDeviceModelCd}) /* 단말기 모델 코드 */
+                          AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN 
+                                            FROM TB_CM_DEVICE 
+                                           WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                             AND USE_YN = 'Y' )  = 'N' 
+                                         AND NVL(E.DRM_YN, 'N') = 'Y'  
+                                    THEN 'NOT SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
+                                    ELSE CASE WHEN (SELECT SD_VIDEO_SPRT_YN 
+                                                     FROM TB_CM_DEVICE 
+                                                    WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                                    AND USE_YN = 'Y' )  = 'Y' 
+                                              THEN 'SUPPORT' 
+                                              ELSE 'NOT SUPPORT' 
+                                         END 
+                                     END) = 'SUPPORT'
+                          AND A.PROD_ID = H.PROD_ID(+)
+                          AND A.TENANT_ID = H.TENANT_ID(+)
+                          AND B.PROD_ID = I.PROD_ID
+                          AND I.LANG_CD = #{langCd}
+                      ) A
+                WHERE RN = 1
+              ) B
+        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+        ORDER BY RNUM
+    </select>
+    
+    <!-- 방송 최신UP 상품 조회 -->
+    <select id="selectFeatureNewUpTvList" parameterType="FeatureCategoryVodSacReq" resultType="ProductBasicInfo">
+        SELECT /* FeatureCategoryMapper.xml, selectFeatureNewUpTvList, SAC 전시, 2014-02-10 */
+               B.TENANT_ID
+             , B.MENU_ID
+             , B.PROD_ID
+             , B.TOP_MENU_ID
+             , B.CONTENTS_TYPE_CD
+             , B.TOTAL_COUNT
+          FROM (SELECT A.TENANT_ID
+                     , A.MENU_ID
+                     , A.PROD_ID
+                     , A.TOP_MENU_ID
+                     , A.CONTENTS_TYPE_CD
+                     , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
+                     /* , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM */
+                     , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC) AS RNUM  /* 최신순 */
+                  FROM (SELECT A.TENANT_ID
+                            , A.MENU_ID
+                            , A.PROD_ID
+                            , A.TOP_MENU_ID
+                            , D.META_CLSF_CD
+                            , 'PD002501' AS CONTENTS_TYPE_CD
+                            , A.EXPO_ORD_ALWAYS_YN
+                            , A.EXPO_ORD
+                            , A.EXPO_ORD_SUB
+                            , D.REG_DT
+                            , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY G.CHAPTER DESC, D.REG_DT DESC) AS RN
+                         FROM (SELECT LP1.TENANT_ID
+                                    , LP1.PROD_ID
+                                    , LP1.MENU_ID
+                                    , LP1.EXPO_ORD_ALWAYS_YN
+                                    , LP1.EXPO_ORD
+                                    , LP1.EXPO_ORD_SUB
+                                    , MC1.TOP_MENU_ID
+                                 FROM TB_DP_LIST_PROD LP1  /* 채널 */
+                                    , TB_DP_LIST LT1
+                                    , TB_DP_MENU_CATEGORY MC1
+                                WHERE LP1.TENANT_ID = #{tenantId}   /* 테넌트ID */
+                                  AND LP1.LIST_ID = #{listId}  /* TGR000000002 : 운영자신규 멀티미디어 */
+                                  AND LP1.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+                                  AND LP1.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                                  AND SYSDATE BETWEEN LP1.EXPO_START_DT AND LP1.EXPO_END_DT
+                                  AND LP1.TENANT_ID = LT1.TENANT_ID
+                                  AND LP1.LIST_ID = LT1.LIST_ID
+                                  AND LT1.EXPO_YN = 'Y'
+                                  AND LP1.PROD_ID NOT IN (SELECT PROD_ID
+                                                            FROM (SELECT LP.PROD_ID
+                                                                        , ROW_NUMBER() OVER(PARTITION BY LP.LIST_ID ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC, LP.EXPO_ORD, LP.EXPO_ORD_SUB, PD.PROD_NM) AS NO
+                                                                     FROM TB_DP_LIST_PROD LP
+                                                                        , (SELECT TENANT_ID, BATCH_ID, STD_DT
+                                                                             FROM TB_DP_BATCH_COMPT
+                                                                            WHERE BATCH_ID IN ('ADM000000033', 'ADM000000034', 'ADM000000035', 'ADM000000036', 'ADM000000041', 'ADM000000042')
+                                                                              AND TENANT_ID = #{tenantId}
+                                                                          ) BC
+                                                                        , TB_DP_LIST LT
+                                                                        , TB_DP_TENANT_PROD TP
+                                                                        , TB_DP_PROD_DESC PD
+                                                                    WHERE LP.LIST_ID IN ('ADM000000033', 'ADM000000034', 'ADM000000035', 'ADM000000036', 'ADM000000041', 'ADM000000042')
+                                                                      AND LP.EXPO_YN = 'Y'
+                                                                      AND LP.TENANT_ID = #{tenantId}
+                                                                      AND LP.LIST_ID = BC.BATCH_ID
+                                                                      AND LP.TENANT_ID = BC.TENANT_ID
+                                                                      AND LP.STD_DT = BC.STD_DT
+                                                                      AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+                                                                      AND LP.TENANT_ID = LT.TENANT_ID
+                                                                      AND LP.LIST_ID = LT.LIST_ID
+                                                                      AND LT.EXPO_YN = 'Y'
+                                                                      AND LP.PROD_ID = TP.PROD_ID
+                                                                      AND LP.TENANT_ID = TP.TENANT_ID
+                                                                      AND TP.PROD_STATUS_CD = 'PD000403'
+                                                                      AND TP.EXPO_YN = 'Y'
+                                                                      AND LP.PROD_ID = PD.PROD_ID
+                                                                      AND PD.LANG_CD = #{langCd}
+                                                                 )
+                                                           WHERE NO <![CDATA[<=]]> 4
+                                                         )  /* 방송 카테고리별 추천 제외 */
+                                  AND 'DP18' = MC1.TOP_MENU_ID
+                                  AND 'Y' = MC1.USE_YN
+                                  AND MC1.MENU_ID = LP1.MENU_ID
+                                  AND MC1.MENU_ID IN ( 'DP18001', 'DP18004' ) 
+                                  AND (LP1.ETC_CLSF_CD = 'DP003601' OR LP1.ETC_CLSF_CD IS NULL)
+                              ) A
+                            , TB_DP_PROD_RSHP B
+                            , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                            , TB_DP_PROD D  /* 에피소드 */
+                            , TB_DP_TENANT_PROD E
+                            , TB_DP_SPRT_DEVICE F
+                            , TB_DP_VOD_PROD G
+                        WHERE A.PROD_ID = B.PROD_ID
+                          AND B.PROD_RSHP_CD = 'DP010802'
+                          AND A.MENU_ID = C.MENU_ID
+                          AND B.PART_PROD_ID = C.PROD_ID
+                          AND C.USE_YN = 'Y'
+                          AND C.PROD_ID = D.PROD_ID
+                          AND D.SVC_GRP_CD = 'DP000203'
+                          AND D.CONTENTS_TYPE_CD = 'PD002502'
+                          <if test='prodGradeCd != null and prodGradeCd != ""'>
+                          AND D.PROD_GRD_CD IN
+                              <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                              #{prodGradeCd}  
+                              </foreach> /* 상품등급코드 */
+                          </if>
+                          AND D.PROD_ID = E.PROD_ID
+                          AND A.TENANT_ID = E.TENANT_ID
+                          AND E.PROD_STATUS_CD = 'PD000403'
+                          AND E.EXPO_YN = 'Y'
+                          AND E.PROD_ID = F.PROD_ID
+                          AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{anyDeviceModelCd}) /* 단말기 모델 코드 */
+                          AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN 
+                                            FROM TB_CM_DEVICE 
+                                           WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                             AND USE_YN = 'Y' )  = 'N' 
+                                         AND NVL(D.DRM_YN, 'N') = 'Y'  
+                                    THEN 'NOT SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
+                                    ELSE CASE WHEN (SELECT SD_VIDEO_SPRT_YN 
+                                                     FROM TB_CM_DEVICE 
+                                                    WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                                    AND USE_YN = 'Y' )  = 'Y' 
+                                              THEN 'SUPPORT' 
+                                              ELSE 'NOT SUPPORT' 
+                                         END 
+                                     END) = 'SUPPORT'
+                          AND D.PROD_ID = G.PROD_ID
+                          <if test='filteredBy == "mbc"'>
+                          AND G.BRDC_COMP_CD = 'DP004601'  /* mbc */
+                          </if>
+                          <if test='filteredBy == "kbs"'>
+                          AND G.BRDC_COMP_CD = 'DP004602'  /* kbs */
+                          </if>
+                          <if test='filteredBy == "sbs"'>
+                          AND G.BRDC_COMP_CD = 'DP004603'  /* sbs */
+                          </if>
+                      ) A
+                WHERE RN = 1
+              ) B
+        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+        ORDER BY RNUM
+    </select>
+    
+    <!--운영자 추천 앱상품 조회-->
+    <select id="selectTopMenuAppListByRecent" parameterType="FeatureCategoryAppSacReq" resultType="ProductBasicInfo">
+        SELECT /* FeatureCategoryMapper.xml, selectTopMenuAppListByRecent, SAC 전시 , 2014-02-04 */
+               B.TENANT_ID
+             , B.MENU_ID
+             , B.PROD_ID
+             , B.TOTAL_COUNT
+          FROM (SELECT A.TENANT_ID
+                    , A.MENU_ID
+                    , A.PROD_ID
+                    , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
+                    , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
+                 FROM (SELECT A.TENANT_ID
+                             , B.MENU_ID
+                             , B.PROD_ID
+                             , B.EXPO_ORD_ALWAYS_YN
+                             , B.EXPO_ORD
+                             , B.EXPO_ORD_SUB
+                             , ROW_NUMBER() OVER ( PARTITION BY E.SELLER_MBR_NO ORDER BY B.UPD_DT DESC ) AS RN
+                          FROM TB_DP_LIST A
+                             , TB_DP_LIST_PROD B
+                             , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                             , TB_DP_MENU_CATEGORY D
+                             , TB_DP_PROD E
+                             , TB_DP_SUB_CONTENTS F
+                             , TB_DP_SPRT_DEVICE G
+                             , TB_CM_DEVICE H
+                             , TB_DP_TENANT_PROD I
+                             , TB_DP_APP_PROD J
+                         WHERE A.LIST_ID = B.LIST_ID
+                           AND A.TENANT_ID = B.TENANT_ID
+                           AND B.LIST_ID = #{listId}
+                           AND A.TENANT_ID = #{tenantId}
+                           AND A.EXPO_YN = 'Y'
+                           AND B.EXPO_YN = 'Y'
+                           AND B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                           AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+                           AND B.PROD_ID = C.PROD_ID
+                           AND B.MENU_ID = C.MENU_ID
+                           AND C.USE_YN = 'Y'
+                           AND C.MENU_ID = D.MENU_ID
+                           AND D.USE_YN = 'Y'
+                           <if test='menuId != null and menuId != ""'>
+                           AND D.TOP_MENU_ID = #{menuId}
+                           </if>
+                           AND C.PROD_ID = E.PROD_ID
+                           AND D.TOP_MENU_ID = E.TOP_MENU_ID
+                           <if test='prodGradeCd != null and prodGradeCd != ""'>
+                           AND E.PROD_GRD_CD IN
+                              <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                              #{prodGradeCd}          
+                              </foreach> /* 상품등급코드 */
+                           </if>
+                           <if test='prodCharge == "Y"'>
+                           AND E.PROD_CHRG_YN = 'Y'  /* 유료 */
+                           </if>
+                           <if test='prodCharge == "N"'>
+                           AND E.PROD_CHRG_YN = 'N'  /* 무료 */
+                           </if>  
+                           AND E.PROD_ID = F.PROD_ID
+                           AND F.PROD_ID = G.PROD_ID
+                           AND F.SUB_CONTENTS_ID = G.SUB_CONTENTS_ID
+                           AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                           AND H.USE_YN = 'Y'
+                           AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                           AND B.PROD_ID = I.PROD_ID
+                           AND I.TENANT_ID = #{tenantId}
+                           AND I.EXPO_YN = 'Y'
+                           AND I.PROD_STATUS_CD = 'PD000403'
+                           AND I.PROD_ID = J.PROD_ID
+                      ) A 
+                WHERE A.RN <![CDATA[<=]]> 2
+               ) B
+         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+         ORDER BY RNUM
+    </select>
+    
+    <!--운영자 추천 앱상품 조회 메인-->
+    <select id="selectTopMenuAppList" parameterType="FeatureCategoryAppSacReq" resultType="ProductBasicInfo">
+        SELECT /* FeatureCategoryMapper.xml, selectTopMenuAppList, SAC 전시, 2014-02-04 */
+               A.TENANT_ID
+             , A.MENU_ID
+             , A.PROD_ID
+             , A.TOTAL_COUNT
+          FROM (SELECT A.TENANT_ID
+                     , B.MENU_ID
+                     , B.PROD_ID
+                     , COUNT(B.PROD_ID) OVER () AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(ORDER BY B.EXPO_ORD_ALWAYS_YN DESC, B.EXPO_ORD, B.EXPO_ORD_SUB) AS RNUM
+                  FROM TB_DP_LIST A
+                     , TB_DP_LIST_PROD B
+                     , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                     , TB_DP_MENU_CATEGORY D
+                     , TB_DP_PROD E
+                     , TB_DP_SUB_CONTENTS F
+                     , TB_DP_SPRT_DEVICE G
+                     , TB_CM_DEVICE H
+                     , TB_DP_TENANT_PROD I
+                     , TB_DP_APP_PROD J
+                 WHERE A.LIST_ID = B.LIST_ID
+                   AND A.TENANT_ID = B.TENANT_ID
+                   AND B.LIST_ID = #{listId}
+                   AND A.TENANT_ID = #{tenantId}
+                   AND A.EXPO_YN = 'Y'
+                   AND B.EXPO_YN = 'Y'
+                   AND B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                   AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+                   AND B.PROD_ID = C.PROD_ID
+                   AND B.MENU_ID = C.MENU_ID
+                   AND C.USE_YN = 'Y'
+                   AND C.MENU_ID = D.MENU_ID
+                   AND D.USE_YN = 'Y'
+                   <if test='menuId != null and menuId != ""'>
+                   AND D.TOP_MENU_ID = #{menuId}
+                   </if>
+                   AND C.PROD_ID = E.PROD_ID
+                   AND D.TOP_MENU_ID = E.TOP_MENU_ID
+                   <if test='prodGradeCd != null and prodGradeCd != ""'>
+                   AND E.PROD_GRD_CD IN
+                       <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                   #{prodGradeCd}          
+                       </foreach> /* 상품등급코드 */
+                   </if>
+                   <if test='prodCharge == "Y"'>
+                   AND E.PROD_CHRG_YN = 'Y'  /* 유료 */
+                   </if>
+                   <if test='prodCharge == "N"'>
+                   AND E.PROD_CHRG_YN = 'N'  /* 무료 */
+                   </if>  
+                   AND E.PROD_ID = F.PROD_ID
+                   AND F.PROD_ID = G.PROD_ID
+                   AND F.SUB_CONTENTS_ID = G.SUB_CONTENTS_ID
+                   AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                   AND H.USE_YN = 'Y'
+                   AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                   AND B.PROD_ID = I.PROD_ID
+                   AND I.TENANT_ID = #{tenantId}
+                   AND I.EXPO_YN = 'Y'
+                   AND I.PROD_STATUS_CD = 'PD000403'
+                   AND I.PROD_ID = J.PROD_ID
+               ) A 
+         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+         ORDER BY RNUM
+    </select>
+    
+    <!--운영자 추천 앱상품 조회 메인-->
+    <select id="selectSubMenuAppList" parameterType="FeatureCategoryAppSacReq" resultType="ProductBasicInfo">
+        SELECT /* FeatureCategoryMapper.xml, selectSubMenuAppList, SAC 전시, 2014-02-04 */
+               A.TENANT_ID
+             , A.MENU_ID
+             , A.PROD_ID
+             , A.TOTAL_COUNT
+          FROM (SELECT A.TENANT_ID
+                     , B.MENU_ID
+                     , B.PROD_ID
+                     , COUNT(B.PROD_ID) OVER () AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(ORDER BY B.EXPO_ORD_ALWAYS_YN DESC, B.EXPO_ORD, B.EXPO_ORD_SUB) AS RNUM
+                  FROM TB_DP_LIST A
+                     , TB_DP_LIST_PROD B
+                     , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                     , TB_DP_MENU_CATEGORY D
+                     , TB_DP_PROD E
+                     , TB_DP_SUB_CONTENTS F
+                     , TB_DP_SPRT_DEVICE G
+                     , TB_CM_DEVICE H
+                     , TB_DP_TENANT_PROD I
+                     , TB_DP_APP_PROD J
+                 WHERE A.LIST_ID = B.LIST_ID
+                   AND A.TENANT_ID = B.TENANT_ID
+                   AND B.LIST_ID = #{listId}
+                   AND A.TENANT_ID = #{tenantId}
+                   AND A.EXPO_YN = 'Y'
+                   AND B.EXPO_YN = 'Y'
+                   AND B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                   AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+                   AND B.PROD_ID = C.PROD_ID
+                   AND B.MENU_ID = C.MENU_ID
+                   AND C.USE_YN = 'Y'
+                   AND C.MENU_ID = D.MENU_ID
+                   AND D.USE_YN = 'Y'
+                   <if test='menuId != null and menuId != ""'>
+                   AND D.MENU_ID = #{menuId}
+                   </if>
+                   AND C.PROD_ID = E.PROD_ID
+                   AND D.TOP_MENU_ID = E.TOP_MENU_ID
+                   <if test='prodGradeCd != null and prodGradeCd != ""'>
+                   AND E.PROD_GRD_CD IN
+                       <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                   #{prodGradeCd}          
+                       </foreach> /* 상품등급코드 */
+                   </if>
+                   <if test='prodCharge == "Y"'>
+                   AND E.PROD_CHRG_YN = 'Y'  /* 유료 */
+                   </if>
+                   <if test='prodCharge == "N"'>
+                   AND E.PROD_CHRG_YN = 'N'  /* 무료 */
+                   </if>  
+                   AND E.PROD_ID = F.PROD_ID
+                   AND F.PROD_ID = G.PROD_ID
+                   AND F.SUB_CONTENTS_ID = G.SUB_CONTENTS_ID
+                   AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
+                   AND H.USE_YN = 'Y'
+                   AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                   AND B.PROD_ID = I.PROD_ID
+                   AND I.TENANT_ID = #{tenantId}
+                   AND I.EXPO_YN = 'Y'
+                   AND I.PROD_STATUS_CD = 'PD000403'
+                   AND I.PROD_ID = J.PROD_ID
+               ) A 
+         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+         ORDER BY RNUM
+    </select>
+    
+    <!--운영자 추천 만화/이북 리스트 조회-->
+    <select id="selectCategoryEpubRecomList" parameterType="FeatureCategoryEpubSacReq" resultType="ProductBasicInfo">
+        SELECT /* FeatureCategoryMapper.xml, selectCategoryEpubRecomList, SAC 전시, 2014-02-10 */
+               B.TENANT_ID
+             , B.MENU_ID
+             , B.PROD_ID
+             , (SELECT TOP_MENU_ID 
+                FROM TB_DP_MENU_CATEGORY
+                WHERE TENANT_ID = B.TENANT_ID
+                AND MENU_ID = B.MENU_ID) AS TOP_MENU_ID             
+             , B.META_CLSF_CD
+             , 'PD002501' AS CONTENTS_TYPE_CD
+             , B.TOTAL_COUNT
+          FROM (SELECT A.TENANT_ID
+                     , A.MENU_ID
+                     , A.PROD_ID
+                     , A.META_CLSF_CD
+                     , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
+                  FROM (SELECT <if test='listId == "TGR000000001"'> /*+ LEADING(A F G C B D E) */ </if>
+                               A.TENANT_ID
+                             , B.MENU_ID
+                             , C.PROD_ID
+                             , F.META_CLSF_CD
+                             , B.EXPO_ORD_ALWAYS_YN
+                             , B.EXPO_ORD
+                             , B.EXPO_ORD_SUB
+                             , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.LAST_DEPLOY_DT DESC) AS RN
+                          FROM TB_DP_LIST A
+                             , TB_DP_LIST_PROD B
+                             , TB_DP_PROD_RSHP C
+                             , TB_DP_PROD F  /* 에피소드 */
+                             , TB_DP_TENANT_PROD G
+                         WHERE A.LIST_ID = B.LIST_ID
+                           AND A.TENANT_ID = B.TENANT_ID
+                           AND A.EXPO_YN = 'Y'
+                           AND B.EXPO_YN = 'Y'
+                            AND B.MENU_ID like #{topMenuId}||'%'  
+                           AND A.TENANT_ID = #{tenantId}
+                           AND A.LIST_ID = #{listId}
+                           AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+                           AND B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                           AND B.PROD_ID = C.PROD_ID  /* 채널 */
+                           AND C.PROD_RSHP_CD = 'DP010802'
+                           AND F.TOP_MENU_ID = #{topMenuId}
+                           AND C.PART_PROD_ID = G.PROD_ID
+                           AND F.CONTENTS_TYPE_CD = 'PD002502'
+                           <if test='prodCharge == "Y"'>
+                           AND F.PROD_CHRG_YN = 'Y'  /* 유료 */
+                           </if>
+                           <if test='prodCharge == "N"'>
+                           AND F.PROD_CHRG_YN = 'N'  /* 무료 */
+                           </if>
+                           <if test='prodGradeCd != null and prodGradeCd != ""'>
+                           AND F.PROD_GRD_CD IN
+                              <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                              #{prodGradeCd}          
+                              </foreach> /* 상품등급코드 */
+                           </if>
+                           <if test='topMenuId == "DP13"'>
+                           AND F.META_CLSF_CD IN ('CT19', 'CT20')  /* EBOOK */
+                               <if test='filteredBy == "ebook+normal"'>  /* 이북 일반 */
+                           AND B.MENU_ID NOT IN (SELECT MENU_ID
+                                                   FROM TB_DP_MENU_CATEGORY
+                                                  WHERE MENU_ID LIKE 'DP1304%')
+                               </if>
+                               <if test='filteredBy == "ebook+genre"'>  /* 이북 장르 */
+                           AND B.MENU_ID IN (SELECT MENU_ID
+                                               FROM TB_DP_MENU_CATEGORY
+                                              WHERE MENU_ID LIKE 'DP1304%')  
+                               </if>
+                           </if>
+                           AND F.PROD_ID = G.PROD_ID
+                           AND G.EXPO_YN = 'Y'
+                           AND G.PROD_STATUS_CD = 'PD000403'
+                           AND EXISTS
+                              (SELECT 1
+                                 FROM TB_DP_SPRT_DEVICE T1
+                                    , TB_CM_DEVICE T2
+                                WHERE (T1.DEVICE_MODEL_CD = #{deviceModelCd}
+                                      OR T1.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                                  AND T1.DEVICE_MODEL_CD = T2.DEVICE_MODEL_CD
+                                  AND T2.USE_YN = 'Y'
+                                  <if test='topMenuId == "DP13"'>
+                                  AND T2.EBOOK_SPRT_YN = 'Y'
+                                  </if>
+                                  <if test='topMenuId == "DP14"'>
+                                  AND T2.COMIC_SPRT_YN = 'Y'
+                                  </if>
+                              )
+                        	AND EXISTS
+                              (SELECT /*+ LEADING(D E) USE_NL(D E) NO_QUERY_TRANSFORMATION */ 1
+                                FROM TB_DP_MENU_CATEGORY_PROD_MAPG D,
+                                     TB_DP_MENU_CATEGORY E
+                                WHERE D.MENU_ID = E.MENU_ID
+                                  AND E.TOP_MENU_ID = #{topMenuId}
+                                  AND D.PROD_ID = B.PROD_ID
+                                  AND D.USE_YN = 'Y'
+                                  AND E.USE_YN = 'Y' )   
+                      ) A
+                 WHERE RN = 1
+              ) B
+         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+         ORDER BY RNUM
+    </select>
+    
+    <!-- 코믹/이북 인기만화/도서 리스트 조회-->
+    <select id="selectCategoryEpubBestList" parameterType="FeatureCategoryEpubSacReq" resultType="ProductBasicInfo">
+        SELECT /* eatureCategoryMapper.xml, selectCategoryEpubBestList, SAC 전시, 2014-02-10 */
+               A.TENANT_ID
+             , A.MENU_ID
+             , A.PROD_ID
+             , A.PART_PROD_ID
+             , A.TOP_MENU_ID
+             , A.CONTENTS_TYPE_CD
+             , A.TOTAL_COUNT
+          FROM (SELECT A.TENANT_ID
+                     , D.MENU_ID
+                     , H.PROD_ID
+                     , H.PART_PROD_ID
+                     , D.TOP_MENU_ID
+                     , E.CONTENTS_TYPE_CD
+                     , COUNT(H.PART_PROD_ID) OVER () AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(ORDER BY B.EXPO_ORD_ALWAYS_YN DESC, B.EXPO_ORD, B.EXPO_ORD_SUB) AS RNUM
+                  FROM TB_DP_LIST A
+                     , TB_DP_LIST_PROD B
+                     , TB_DP_MENU_CATEGORY_PROD_MAPG C
+                     , TB_DP_MENU_CATEGORY D
+                     , TB_DP_PROD E
+                     , TB_DP_TENANT_PROD F
+                     , TB_DP_SPRT_DEVICE G
+                     , TB_DP_PROD_RSHP H
+                 WHERE A.LIST_ID = B.LIST_ID
+                   AND A.TENANT_ID = B.TENANT_ID
+                   AND A.EXPO_YN = 'Y'
+                   AND B.EXPO_YN = 'Y'
+                   AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+                   AND A.TENANT_ID = #{tenantId}
+                   AND A.LIST_ID = #{listId}
+                   AND B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                   AND B.PROD_ID = C.PROD_ID
+                   AND B.MENU_ID = C.MENU_ID
+                   AND C.USE_YN = 'Y'
+                   AND C.MENU_ID = D.MENU_ID
+                   AND D.USE_YN = 'Y'
+                   AND D.TOP_MENU_ID = #{topMenuId}
+                   <if test='topMenuId == "DP13"'>
+                       <if test='filteredBy == "normal"'>
+                       /* 인기도서 일반 - 장르소설을 제외한 나머지 */
+                       AND D.MENU_ID NOT IN (SELECT MENU_ID
+                                               FROM TB_DP_MENU_CATEGORY
+                                              WHERE MENU_ID LIKE 'DP1304%')
+                       </if>
+                       <if test='filteredBy == "fantasy"'>
+                       /* 인기도서 판타지 - 장르소설>SF/판타지 */
+                       AND D.MENU_ID = 'DP13042'
+                       </if>
+                       <if test='filteredBy == "rommance"'>
+                       /* 인기도서 로맨스 - 장르소설>로맨스 */
+                       AND D.MENU_ID = 'DP13040'
+                       </if>
+                       <if test='filteredBy == "martialArts"'>
+                       /* 인기도서 무협 - 장르소설>무협 */
+                       AND D.MENU_ID = 'DP13041'
+                       </if>
+                   </if>
+                   <if test='topMenuId == "DP14"'>
+                       <if test='filteredBy == "martialArts"'>
+                       AND D.MENU_ID = 'DP14001'  /* 인기코믹 무협 */
+                       </if>
+                       <if test='filteredBy == "pureLove"'>
+                       AND D.MENU_ID = 'DP14002'  /* 인기코믹 순정 */
+                       </if>
+                       <if test='filteredBy == "action"'>
+                       AND D.MENU_ID = 'DP14003'  /* 인기코믹 액션 */
+                       </if>
+                       <if test='filteredBy == "drama"'>
+                       AND D.MENU_ID = 'DP14006'  /* 인기코믹 드라마 */
+                       </if>
+                   </if>
+                   AND C.PROD_ID = E.PROD_ID
+                   AND E.CONTENTS_TYPE_CD = 'PD002502'
+                   <if test='prodCharge == "Y"'>
+                   AND E.PROD_CHRG_YN = 'Y'  /* 유료 */
+                   </if>
+                   <if test='prodCharge == "N"'>
+                   AND E.PROD_CHRG_YN = 'N'  /* 무료 */
+                   </if>
+                   <if test='prodGradeCd != null and prodGradeCd != ""'>
+                   AND E.PROD_GRD_CD IN
+                       <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                   #{prodGradeCd}          
+                       </foreach> /* 상품등급코드 */
+                   </if>       
+                   AND E.PROD_ID = F.PROD_ID
+                   AND F.EXPO_YN = 'Y'
+                   AND F.PROD_STATUS_CD = 'PD000403'
+                   AND B.TENANT_ID = F.TENANT_ID
+                   AND F.PROD_ID = G.PROD_ID
+                   AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                   <if test='topMenuId == "DP13"'>
+                   AND E.META_CLSF_CD IN ('CT19', 'CT20')  /* EBOOK */
+                   AND (CASE WHEN (SELECT EBOOK_SPRT_YN 
+                                     FROM TB_CM_DEVICE CD 
+                                    WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                      AND CD.USE_YN = 'Y') = 'Y'  
+                             THEN 1 ELSE 0 END) = 1
+                   </if>
+                   <if test='topMenuId == "DP14"'>
+                   AND (CASE WHEN (SELECT COMIC_SPRT_YN 
+                                     FROM TB_CM_DEVICE CD 
+                                    WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                      AND CD.USE_YN = 'Y') = 'Y'  
+                             THEN 1 ELSE 0 END) = 1
+                   </if>
+                   AND G.PROD_ID = H.PART_PROD_ID
+                   AND H.PROD_RSHP_CD = 'DP010802'
+               ) A
+         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+         ORDER BY RNUM
+    </select>
+    
+</mapper>

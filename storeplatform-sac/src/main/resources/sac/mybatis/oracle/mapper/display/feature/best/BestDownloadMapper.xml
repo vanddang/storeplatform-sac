@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BestDownload">
+
+    <!-- BEST 다운로드 앱 상품 조회(BEST앱, 게임, FUN, 생활/위치, 어학/교육) -->
+    <select id="selectBestDownloadAppList" parameterType="bestDownloadSacReq" resultType="ProductBasicInfo">
+      SELECT  /* BestDownloadMapper.xml, selectBestDownloadAppList, SAC 전시, 2015-04-13 */
+              KA.total_count     /* 조회 건수 */
+            , KA.top_menu_id     /* TOP MENU ID */
+            , KA.menu_id         /* MENU_ID */
+            , KA.prod_id         /* 상품 ID */
+      FROM (
+              SELECT  JA.*
+              FROM (
+                      SELECT  ROWNUM AS rnum, IA.*
+                      FROM (
+                              SELECT COUNT(B.prod_id) OVER () AS total_count
+                                   , A.tenant_id
+                                   , A.prod_id
+                                   , A.menu_id
+                                   , B.top_menu_id
+                              FROM (
+                                     SELECT  tenant_id
+                                           , prod_id
+                                           , menu_id
+                                           , expo_ord_always_yn
+                                           , expo_ord
+                                           , expo_ord_sub
+                                   <if test='searchHisYn == "N"'>
+                                     FROM    TB_DP_LIST_PROD
+                                   </if>
+                                   <if test='searchHisYn == "Y"'>
+                                     FROM    TB_DP_LIST_PROD_HIS
+                                   </if>
+                                     WHERE   tenant_id = #{tenantId} /* header param : tenantId */
+                                     AND     list_id   = #{listId}   /* param : listId */
+                                     AND     expo_yn   = 'Y'         /* 전시여부 */
+                                     AND     std_dt    = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
+                                     AND     SYSDATE BETWEEN expo_start_dt AND expo_end_dt
+                                  <if test='menuId != null and menuId != "" '>
+                                     AND     menu_id   = #{menuId}
+                                  </if>
+                              ) A
+                              JOIN   TB_DP_PROD                     B
+                                     ON( A.prod_id = B.prod_id )
+                              JOIN   TB_DP_TENANT_PROD              I
+                                     ON( A.tenant_id = I.tenant_id AND A.prod_id = I.prod_id AND I.expo_yn = 'Y' )
+                              WHERE  1 = 1
+                              AND    B.svc_grp_cd     = 'DP000201'     /* 서비스 그룹코드 : 앱 */
+                              AND    I.prod_status_cd = 'PD000403'     /* PD000403 : 판매중 */
+                              AND    B.prod_chrg_yn   = #{prodChrgYn}  /* 상품 유/무료 여부 */
+                              AND    B.top_menu_id   !=  'DP02'        /* 폰꾸미기 제외 */
+                              AND    EXISTS (
+                                     SELECT  1
+                                     FROM    TB_DP_SPRT_DEVICE  SP1
+                                     JOIN    TB_CM_DEVICE       SP2
+                                             ON( SP1.device_model_cd = SP2.device_model_cd )
+                                     WHERE   SP1.prod_id = A.prod_id
+                                     AND     SP2.device_model_cd = #{deviceModelCd}
+                                     AND     SP2.use_yn = 'Y'
+                              )
+                            <if test="arrayProdGradeCd != null">
+                              AND    B.prod_grd_cd IN <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">#{prodGradeCd}</foreach>
+                            </if>
+                            <if test="arrayTopMenuId != null">
+                              AND    B.top_menu_id IN <foreach collection="arrayTopMenuId" item="topMenuId" separator="," open="(" close=")">#{topMenuId}</foreach>
+                            </if>
+                              ORDER BY A.expo_ord_always_yn DESC, A.expo_ord, A.expo_ord_sub
+                      ) IA
+              ) JA
+              WHERE   JA.rnum BETWEEN #{offset} AND #{count}
+      ) KA
+    </select>
+
+    <!-- BEST 다운로드 멀티미디어 상품 조회 -->
+    <select id="selectBestDownloadMMList" parameterType="bestDownloadSacReq" resultType="ProductBasicInfo">
+      SELECT  /* BestDownloadMapper.xml, selectBestDownloadMMList, SAC 전시, 2015-04-13 */
+              LA.total_count
+            , LA.rnum
+            , LA.top_menu_id
+            , LA.menu_id
+            , LA.prod_id
+            , LA.prod_id AS part_prod_id
+            , LA.meta_clsf_cd
+            , LA.expo_ord
+            , LA.contents_type_cd
+      FROM (
+              SELECT  KA.*
+              FROM (
+                      SELECT  JA.*, ROW_NUMBER() OVER( ORDER BY JA.expo_ord_always_yn DESC, JA.expo_ord, JA.expo_ord_sub ) AS rnum
+                      FROM (
+                              SELECT  COUNT(D.prod_id) OVER() AS total_count
+                                    , B.top_menu_id
+                                    , A.menu_id
+                                    , A.prod_id
+                                    , A.expo_ord_always_yn
+                                    , A.expo_ord
+                                    , A.expo_ord_sub
+                                    , D.meta_clsf_cd
+                                    , D.contents_type_cd
+                              FROM (
+                                      SELECT  tenant_id
+                                            , prod_id
+                                            , menu_id
+                                            , expo_ord_always_yn
+                                            , expo_ord
+                                            , expo_ord_sub
+                                    <if test='searchHisYn == "N"'>
+                                      FROM    TB_DP_LIST_PROD
+                                    </if>
+                                    <if test='searchHisYn == "Y"'>
+                                      FROM    TB_DP_LIST_PROD_HIS
+                                    </if>
+                                      WHERE   tenant_id = #{tenantId} /* header param : tenantId */
+                                      AND     list_id   = #{listId}     /* param : listId */
+                                      AND     expo_yn   = 'Y'           /* 전시여부 */
+                                      AND     std_dt    = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
+                                      AND     SYSDATE BETWEEN expo_start_dt AND expo_end_dt
+                              ) A
+                              JOIN    TB_DP_MENU_CATEGORY      B
+                                      ON( A.menu_id = B.menu_id AND B.use_yn = 'Y' )
+                              JOIN    TB_DP_PROD               D /* 에피소드 상품 */
+                                      ON( A.prod_id = D.prod_id AND D.contents_type_cd = 'PD002502' ) /* PD002502 : 에피소드 */
+                              JOIN    TB_DP_TENANT_PROD        G
+                                      ON( A.tenant_id = G.tenant_id AND A.prod_id = G.prod_id AND G.expo_yn = 'Y' )
+                              JOIN    TB_DP_PROD_RSHP          I
+                                      ON( A.prod_id = I.part_prod_id AND I.prod_rshp_cd = 'DP010802' ) /* DP010802 : 채널-에피소드 상품 관계 */
+                              JOIN    TB_DP_PROD               J /* 채널 상품 */
+                                      ON( I.prod_id = J.prod_id AND J.contents_type_cd = 'PD002501' ) /* PD002501 : 채널 */
+                              JOIN    TB_DP_USE_POLICY         E  /* 에피소드 상품 사용정책 */
+                                      ON( D.use_policy_id = E.use_policy_id )
+                              WHERE   1 = 1
+                              AND     G.prod_status_cd = 'PD000403'    /* PD000403 : 판매중 */
+                              AND     D.svc_grp_cd     = 'DP000203'    /* DP000203 : 멀티미디어 */
+                              AND     D.prod_chrg_yn   = #{prodChrgYn} /* 상품 유/무료 여부 */
+                              AND     EXISTS (
+                                      SELECT  1
+                                      FROM    TB_DP_SPRT_DEVICE  SP1
+                                      JOIN    TB_CM_DEVICE       SP2
+                                              ON( SP1.device_model_cd = SP2.device_model_cd )
+                                      WHERE   SP1.prod_id = I.part_prod_id
+                                      AND     SP2.device_model_cd IN ( 'ANY-PHONE-4MM', #{deviceModelCd} )
+                                      AND     SP2.use_yn = 'Y'
+                                    <if test='topMenuId == "DP17" || topMenuId == "DP18"'>
+                                      AND   ( CASE
+                                                WHEN SP2.video_drm_sprt_yn = 'N' AND NVL(D.drm_yn, 'N') = 'Y' THEN -1 -- NOT SUPPORT
+                                                ELSE 0 -- SUPPORT
+                                              END ) = 0  /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
+                                    </if>
+                              )
+                            <if test="arrayTopMenuId != null">
+                              AND     B.top_menu_id IN <foreach collection="arrayTopMenuId" item="topMenuId" separator="," open="(" close=")">#{topMenuId}</foreach>
+                            </if>
+                            <if test='menuId != null and menuId != "" '>
+                              AND     B.menu_id = #{menuId}
+                            </if>
+                            <if test="arrayProdGradeCd != null">
+                              AND     J.prod_grd_cd IN <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">#{prodGradeCd}</foreach>
+                            </if>
+                            <if test='filteredBy == "ebook+normal"'>
+                              AND     B.top_menu_id = 'DP13'
+                              AND     B.menu_id NOT IN ( SELECT menu_id FROM TB_DP_MENU_CATEGORY WHERE use_yn = 'Y' AND menu_id LIKE 'DP1304%' )
+                            </if>
+                            <if test='filteredBy == "ebook+genre"'>
+                              AND     B.top_menu_id = 'DP13'
+                              AND     B.menu_id IN ( SELECT menu_id FROM TB_DP_MENU_CATEGORY WHERE use_yn = 'Y' AND menu_id LIKE 'DP1304%' )
+                            </if>
+                            <if test='possLendClsfCd != null and possLendClsfCd != "" '>
+                              AND     E.poss_lend_clsf_cd = #{possLendClsfCd}  /* 소장/대여 구분 코드 */
+                            </if>
+                      ) JA
+              ) KA
+              WHERE   KA.rnum BETWEEN #{offset} AND #{count}
+      ) LA
+    </select>
+
+</mapper>

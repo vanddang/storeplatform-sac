@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="PurchaseHiding">
+
+    <!-- 1. update SQL -->    
+    <update id="hidingSendY" parameterType="string">
+         <!-- 선물발신함에서 숨김처리시 sendYn:'Y' -->
+        /* PurchaseHiding.hidingSendY, 구매내역숨김, 조용진/엔텔스, 2013-12-10 */
+        UPDATE  tb_pr_prchs_dtl
+           SET  send_hiding_yn = #{hidingYn, jdbcType=VARCHAR}  /* 발신 숨김처리 */
+              , upd_id = #{systemId, jdbcType=VARCHAR}  /* 업데이트시스템ID */
+              , upd_dt = SYSDATE  /* 업데이트일시 */
+         WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId} 
+           AND  prchs_dtl_id = #{prchsDtlId}
+           AND  send_insd_usermbr_no  = #{userKey}
+        <if test='hidingYn == "Y"'>
+           AND  send_hiding_yn = 'N'
+        </if>
+        <!-- 숨김해제요청이 'N'이면 상태가 'Y'인것만 업데이트처리한다. --> 
+        <if test='hidingYn == "N"'>
+           AND  send_hiding_yn = 'Y'
+        </if>
+
+    </update>      
+    <!-- 1. update SQL -->    
+    <update id="hidingSendN" parameterType="string">
+         <!-- 구매내역에서 숨김처리시 sendYn:'N' -->
+        /* PurchaseHiding.hidingSendN, 구매내역숨김, 조용진/엔텔스, 2013-12-10 */
+        UPDATE  tb_pr_prchs_dtl
+           SET  use_hiding_yn = #{hidingYn, jdbcType=VARCHAR}  /* 수신 숨김처리 */
+              , upd_id = #{systemId, jdbcType=VARCHAR}  /* 업데이트시스템ID */
+              , upd_dt = SYSDATE  /* 업데이트일시 */
+         WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId} 
+           AND  prchs_dtl_id = #{prchsDtlId}
+           AND  use_tenant_id = #{tenantId} 
+           AND  use_insd_usermbr_no  = #{userKey}
+        <!-- 숨김요청이 'Y'이면 상태가 'N'인것만 업데이트처리한다. --> 
+        <if test='hidingYn == "Y"'>
+                   AND  use_hiding_yn = 'N'
+        </if>
+        <!-- 숨김해제요청이 'N'이면 상태가 'Y'인것만 업데이트처리한다. --> 
+        <if test='hidingYn == "N"'>
+                   AND  use_hiding_yn = 'Y'
+        </if>
+
+    </update>      
+
+</mapper>

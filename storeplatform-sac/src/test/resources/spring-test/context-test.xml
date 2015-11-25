@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="classpath:runtime/context-runtime.xml"/>
+    
+    <import resource="classpath:sac/spring/context-app-aop.xml"/>
+	<import resource="classpath:sac/spring/context-common.xml"/>
+	<import resource="classpath:sac/spring/context-component-if.xml"/>
+	<import resource="classpath:sac/spring/context-environment.xml"/>
+	<import resource="classpath:sac/spring/context-lpc-sci-import.xml"/>	
+	<import resource="classpath:sac/spring/context-repository.xml"/>	
+    
+    <import resource="classpath:sac/runtime/context-runtime.xml"/>
+    <import resource="classpath:sac/runtime/context-runtime-amqp.xml"/>
+	<import resource="classpath:sac/runtime/context-rest-sac.xml"/>    
+	
+    <!-- JUnit Test TransactionManager -->
+    <bean id="transactionManager" class="org.springframework.data.transaction.ChainedTransactionManager">
+        <constructor-arg>
+            <list>
+                <ref bean="transactionManagerForSac" />
+                <ref bean="transactionManagerForScPurchase" />
+                <ref bean="transactionManagerForScMember" />
+            </list>
+        </constructor-arg>
+    </bean>
+    
+</beans>

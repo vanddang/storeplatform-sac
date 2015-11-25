@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OutProductList">
+
+    <!--타사 홈 상품 목록 통합 조회 -->
+    <select id="selectOutProdList" parameterType="OutProductListCriteria" resultType="OutProductDbResultMap">
+        SELECT /* OutProductListMapper.xml, selectOutProdList, SAC 전시 , 2015-02-05 */  
+               A.LIST_ID, A.STD_DT, A.DETAIL_URL, A.RANK
+               ,A.TITLE, A.THUMBNAIL_URL, A.THUMBNAIL_PATH, A.SCORE
+               ,A.VOTER_COUNT, A.ACCRUAL_COUNT, A.RANK_CHANGE, A.CATEGORY
+               ,A.CATEGORY_SUB, A.RIGHT_GRADE, A.PRICE, A.PRICE_RENT
+               ,A.PRICE_FIXED, A.DISCOUNT_RATE, A.SUPPORT, A.CHAPTER
+               ,A.SUB_COUNT, A.DESCRIPTION, A.RUNNING_TIME, A.CONTRIBUTOR_NAME
+               ,A.CONTRIBUTOR_DIRECTOR, A.CONTRIBUTOR_ARTIST, A.CONTRIBUTOR_AUTHOR, A.CONTRIBUTOR_PAINTER
+               ,A.CONTRIBUTOR_CHANNEL, A.CONTRIBUTOR_PARTER, A.ALBUM_NAME, A.SALE_DATE_INFO
+               ,A.DATE_RELEASE, A.BOOK_TYPE, A.SERIAL_DATE, A.SERIAL_WEEK
+               ,A.STATUS, A.DELIVERY, A.ORIGIN, A.PREVIEW_URL
+               ,A.RECOMMEND_REASON, A.FREE_DEFINED_01, A.FREE_DEFINED_02, A.FREE_DEFINED_03
+               ,A.FREE_DEFINED_04, A.FREE_DEFINED_05, A.FREE_DEFINED_06, A.FREE_DEFINED_07
+               ,A.FREE_DEFINED_08, A.FREE_DEFINED_09, A.FREE_DEFINED_10 
+             FROM (
+                    SELECT LIST_ID, STD_DT, DETAIL_URL, RANK
+                           ,TITLE, THUMBNAIL_URL, THUMBNAIL_PATH, SCORE
+                           ,VOTER_COUNT, ACCRUAL_COUNT, RANK_CHANGE, CATEGORY
+                           ,CATEGORY_SUB, RIGHT_GRADE, PRICE, PRICE_RENT
+                           ,PRICE_FIXED, DISCOUNT_RATE, SUPPORT, CHAPTER
+                           ,SUB_COUNT, DESCRIPTION, RUNNING_TIME, CONTRIBUTOR_NAME
+                           ,CONTRIBUTOR_DIRECTOR, CONTRIBUTOR_ARTIST, CONTRIBUTOR_AUTHOR, CONTRIBUTOR_PAINTER
+                           ,CONTRIBUTOR_CHANNEL, CONTRIBUTOR_PARTER, ALBUM_NAME, SALE_DATE_INFO
+                           ,DATE_RELEASE, BOOK_TYPE, SERIAL_DATE, SERIAL_WEEK
+                           ,STATUS, DELIVERY, ORIGIN, PREVIEW_URL
+                           ,RECOMMEND_REASON, FREE_DEFINED_01, FREE_DEFINED_02, FREE_DEFINED_03
+                           ,FREE_DEFINED_04, FREE_DEFINED_05, FREE_DEFINED_06, FREE_DEFINED_07
+                           ,FREE_DEFINED_08, FREE_DEFINED_09, FREE_DEFINED_10 
+                      FROM TB_DP_LIST_PROD_OUTSD_TENANT
+                     WHERE 1=1
+                        AND TENANT_ID=#{tenantId}
+                        AND LIST_ID=#{listId}
+                        <if test='stdDt != null and stdDt != ""'>
+                        AND STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                        </if>
+                        AND RANK &gt; #{lastRank,   javaType=Integer,jdbcType=NUMERIC}
+                    ORDER BY RANK
+                    ) A
+        /* 더보기 유무 판단을 위해서 (+1)건을 더 select 한다. */
+        WHERE ROWNUM &lt;= #{count,javaType=Integer,jdbcType=NUMERIC}+1
+         ORDER BY ROWNUM
+    </select>
+</mapper>
+

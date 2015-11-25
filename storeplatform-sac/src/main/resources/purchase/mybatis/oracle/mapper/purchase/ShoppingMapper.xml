@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="Shopping">
+
+    <!-- Biz쿠폰정보 갱신 -->
+    <update id="updateShoppingAsync" parameterType="shoppingAsyncItemSc">
+		UPDATE  /* Shopping.updateShoppingAsync, 발급쿠폰정보갱신, 양주원/엔텔스, 2013-12-10 */ 
+		        tb_pr_prchs_dtl
+		   SET  cpn_publish_cd    = #{publishCode}
+		      , cpn_dlv_url       = #{shippingUrl}
+		      , cpn_add_info      = #{extraData}
+		      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(availStartdate)">
+		      , use_start_dt      = TO_DATE(#{availStartdate}, 'YYYYMMDDHH24MISS')
+		      , dwld_start_dt     = TO_DATE(#{availStartdate}, 'YYYYMMDDHH24MISS')
+		      </if>
+		      <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(availEnddate)">
+		      , use_expr_dt       = TO_DATE(#{availEnddate}, 'YYYYMMDDHH24MISS')
+		      , dwld_expr_dt      = TO_DATE(#{availEnddate}, 'YYYYMMDDHH24MISS')
+		      </if>
+		      , upd_id            = #{systemId}
+              , upd_dt            = SYSDATE
+              , recv_dt = SYSDATE          
+              , recv_conf_path_cd = 'OR003902'  
+		 WHERE  tenant_id = #{tenantId} 
+		   AND  prchs_id = #{prchsId}
+		   AND  prchs_dtl_id = #{prchsDtlId}
+    </update>
+    
+    <!-- 쿠폰발급 실패 구매 취소 업데이트 -->
+    <update id="updatePrchsStatus" parameterType="shoppingAsyncItemSc">
+        UPDATE  tb_pr_prchs /* Shopping.updatePrchsStatus, 구매 내역 취소 업데이트,  양주원/엔텔스, 2014-02-12 */
+           SET  status_cd = #{prchsStatusCd}
+              , cancel_req_path_cd = #{cancelReqPathCd}
+              , cancel_dt = SYSDATE
+              , upd_id = #{systemId}
+              , upd_dt = SYSDATE
+         WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId}
+    </update>
+    
+     <!-- 쿠폰발급 실패 구매상세 취소 업데이트 -->
+    <update id="updatePrchsDtlStatus" parameterType="shoppingAsyncItemSc">
+        UPDATE  tb_pr_prchs_dtl /* Shopping.updatePrchsStatus, 구매 상세 내역 취소 업데이트,  양주원/엔텔스, 2014-02-12 */
+           SET  status_cd = #{prchsStatusCd}
+              , cancel_req_path_cd = #{cancelReqPathCd}
+              , cancel_dt = SYSDATE
+              , upd_id = #{systemId}
+              , upd_dt = SYSDATE
+              
+              /* 이 아래로는 OGG를 위해 추가. */
+              , tenant_id            = tenant_id           
+              , prchs_id             = prchs_id            
+              , prchs_dtl_id         = prchs_dtl_id        
+              , use_tenant_id        = use_tenant_id       
+              , use_insd_usermbr_no  = use_insd_usermbr_no 
+              , use_insd_device_id   = use_insd_device_id  
+              , prchs_dt             = prchs_dt            
+              , tot_amt              = tot_amt             
+              , currency_cd          = currency_cd         
+              , prchs_req_path_cd    = prchs_req_path_cd   
+              , client_ip            = client_ip           
+              , send_insd_usermbr_no = send_insd_usermbr_no
+              , send_insd_device_id  = send_insd_device_id 
+              , recv_dt              = recv_dt             
+              , recv_conf_path_cd    = recv_conf_path_cd   
+              , prod_id              = prod_id             
+              , prod_amt             = prod_amt            
+              , prod_qty             = prod_qty            
+              , tenant_prod_grp_cd   = tenant_prod_grp_cd  
+              , prchs_case_cd        = prchs_case_cd       
+              , drm_yn               = drm_yn              
+              , use_start_dt         = use_start_dt        
+              , use_expr_dt          = use_expr_dt         
+              , dwld_start_dt        = dwld_start_dt       
+              , dwld_expr_dt         = dwld_expr_dt        
+              , prchs_prod_type      = prchs_prod_type     
+              , use_hiding_yn        = use_hiding_yn       
+              , send_hiding_yn       = send_hiding_yn      
+              , use_fixrate_prod_id  = use_fixrate_prod_id 
+              , cpn_publish_cd       = cpn_publish_cd      
+              , cpn_dlv_url          = cpn_dlv_url         
+              , cpn_add_info         = cpn_add_info        
+              , cpn_biz_prod_seq     = cpn_biz_prod_seq    
+              , cpn_biz_order_no     = cpn_biz_order_no    
+              , tid                  = tid                 
+              , tx_id                = tx_id               
+              , parent_prod_id       = parent_prod_id      
+              , part_chrg_ver        = part_chrg_ver       
+              , part_chrg_prod_nm    = part_chrg_prod_nm   
+              , rn_bill_cd           = rn_bill_cd          
+              , info_use_fee         = info_use_fee        
+              , cid                  = cid                 
+              , contents_clsf        = contents_clsf       
+              , contents_type        = contents_type       
+              , prchs_type           = prchs_type          
+              , timbre_clsf          = timbre_clsf         
+              , timbre_sctn          = timbre_sctn         
+              , menu_id              = menu_id             
+              , genre_clsf_cd        = genre_clsf_cd       
+              , prchs_resv_desc      = prchs_resv_desc     
+              , reg_id               = reg_id              
+              , reg_dt               = reg_dt              
+              , resv_col_01          = resv_col_01         
+              , resv_col_02          = resv_col_02         
+              , resv_col_03          = resv_col_03         
+              , resv_col_04          = resv_col_04         
+              , resv_col_05          = resv_col_05         
+              , alarm_yn             = alarm_yn            
+              , ogg_seq              = ogg_seq             
+              , recv_prchs_id        = recv_prchs_id       
+         WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId}
+    </update>
+    
+    <select id="searchPrchsIdCnt" parameterType="Map" resultType="Integer">
+	    SELECT count(*)
+		  FROM tb_pr_prchs_dtl
+		 WHERE tenant_id = #{tenantId}
+		   AND prchs_id = #{prchsId}
+    
+    </select>
+    
+    <!-- 쿠폰사용여부 업데이트 -->
+    <update id="updatePrchsDtl" parameterType="ShoppingScReq">
+        UPDATE  tb_pr_prchs_dtl /* Shopping.updatePrchsDtl, 구매 내역 업데이트,  양주원/엔텔스, 2014-02-12 */
+           SET  cpn_use_status_cd = #{cpnUseStatusCd}
+              , upd_id = #{systemId}
+              , upd_dt = SYSDATE
+         WHERE  tenant_id = #{tenantId}
+           AND  prchs_id = #{prchsId}
+           AND  cpn_publish_cd = #{cpnPublishCd}
+    </update>
+    
+</mapper>

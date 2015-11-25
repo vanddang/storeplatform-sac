@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="IapProductInfo">
+
+	<select id="getIapProductInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.localsci.sci.vo.IapProductInfo">
+        SELECT /* IapProductInfo.getIapProductInfo, 정희원/SKP, 2014-11-04 */
+             RSHP.PROD_ID AS PARENT_PROD_ID
+            ,RSHP.PART_PROD_ID
+            ,PARTAPP.PROD_CASE || NVL2(PARTAPP.PROD_KIND, '/'||PARTAPP.PROD_KIND, '') AS PART_PRODUCT_TYPE
+            ,PARTAPP.PROD_CASE
+            ,PARTAPP.PROD_KIND
+            ,NVL2(PARTAPP.FULL_PROD_ID, 'Y', 'N') AS HAS_FULL_PROD_YN
+            ,PARTAPP.FULL_PROD_ID AS FULL_AID
+            ,(SELECT PROD_ID FROM TB_DP_APP_PROD WHERE AID = PARTAPP.FULL_PROD_ID AND ROWNUM = 1) AS FULL_PROD_ID
+            ,MCM.MENU_ID
+            ,PARTAPP.USE_PERIOD
+            ,TP.MAPG_PROD_ID
+        FROM TB_DP_PROD_RSHP RSHP
+            INNER JOIN TB_DP_PROD PARTPROD
+                ON PARTPROD.PROD_ID = RSHP.PART_PROD_ID
+            INNER JOIN TB_DP_APP_PROD PARTAPP
+                ON PARTAPP.PROD_ID = PARTPROD.PROD_ID
+            INNER JOIN TB_DP_MENU_CATEGORY_PROD_MAPG MCM
+                ON MCM.PROD_ID = RSHP.PROD_ID AND MCM.BASE_YN = 'Y'
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID = RSHP.PROD_ID
+        WHERE 1=1
+              AND RSHP.PROD_RSHP_CD = 'DP010801'
+              AND PARTAPP.PART_PARENT_CLSF_CD = 'PD012302'
+              AND RSHP.PART_PROD_ID = #{partProdId, jdbcType=VARCHAR}
+              AND TP.TENANT_ID = #{tenantId, jdbcType=VARCHAR}
+    </select>
+
+</mapper>

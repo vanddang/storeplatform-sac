@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+    "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration> 
+    <!-- Definition of myBatis Configuration -->
+    <settings>
+        <!-- 설정에서 각 mapper 에 설정된 캐시를 전역적으로 사용할지 말지에 대한 여부 -->
+        <setting name="cacheEnabled" value="true" />
+        <!-- 생성키에 대한 JDBC 지원을 허용 -->
+        <setting name="useGeneratedKeys" value="true" />
+        <!-- REUSE 실행자는 PreparedStatement 를 재사용한다. -->
+        <setting name="defaultExecutorType" value="REUSE" />
+        <setting name="safeResultHandlerEnabled" value="false" />
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!-- Definition of MAPPER Alias -->
+    <typeAliases>
+
+        <typeAlias alias="userMbrRetrieveUserMbrPwd"      type="com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd"/>
+        <typeAlias alias="userMbrLoginLog"                type="com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog"/>
+        <typeAlias alias="sellerMbrRetrievePWD"           type="com.skplanet.storeplatform.member.seller.vo.SellerMbrRetrievePWD"/>
+        <typeAlias alias="existLimitWordMemberID"         type="com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID"/>
+
+        <!-- common -->
+        <typeAlias alias="mbrPwd"                         type="com.skplanet.storeplatform.member.client.common.vo.MbrPwd"/>
+        <typeAlias alias="mbrLglAgent"                    type="com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent"/>
+        <typeAlias alias="mbrAuth"                        type="com.skplanet.storeplatform.member.client.common.vo.MbrAuth"/>
+        <typeAlias alias="mbrClauseAgree"                 type="com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree"/>
+        <typeAlias alias="keySearch"                      type="com.skplanet.storeplatform.member.client.common.vo.KeySearch"/>
+        <typeAlias alias="mbrMangItemPtcr"                type="com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr"/>
+        <typeAlias alias="mbrOneID"                       type="com.skplanet.storeplatform.member.client.common.vo.MbrOneID"/>
+        <typeAlias alias="limitTarget"                    type="com.skplanet.storeplatform.member.client.common.vo.LimitTarget"/>
+        <typeAlias alias="memberPoint"                    type="com.skplanet.storeplatform.member.client.common.vo.MemberPoint"/>
+        <typeAlias alias="searchPolicyResponse"           type="com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse"/>
+        <typeAlias alias="searchPolicyRequest"           type="com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest"/>
+        <typeAlias alias="searchMemberPointResponse"      type="com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointResponse"/>
+        <typeAlias alias="searchMemberPointRequest"       type="com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointRequest"/>
+
+
+        <!-- user -->
+        <typeAlias alias="userMbrDevice"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice"/>
+        <typeAlias alias="userMbrDeviceDetail"            type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail"/>
+        <typeAlias alias="searchDeviceListRequest"        type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest"/>
+        <typeAlias alias="searchDeviceListResponse"       type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse"/>
+        <typeAlias alias="searchDeviceResponse"           type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse"/>
+        <typeAlias alias="searchAllDeviceResponse"        type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceResponse"/>
+        <typeAlias alias="searchUserResponse"             type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse"/>
+        <typeAlias alias="userMbr"                        type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr"/>
+        <typeAlias alias="updateRealNameRequest"          type="com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest"/>
+        <typeAlias alias="CreateDeviceRequest"            type="com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest"/>
+        <typeAlias alias="userMbrPnsh"                    type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrPnsh"/>
+        <typeAlias alias="removeUserRequest"              type="com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest"/>
+        <typeAlias alias="checkDuplicationRequest"        type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest"/>
+        <typeAlias alias="checkDuplicationResponse"       type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse"/>
+        <typeAlias alias="searchManagementListRequest"    type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest"/>
+        <typeAlias alias="searchManagementListResponse"   type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse"/>
+        <typeAlias alias="searchAgreementListRequest"     type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest"/>
+        <typeAlias alias="searchAgreementListResponse"    type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse"/>
+        <typeAlias alias="removeManagementRequest"        type="com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementRequest"/>
+        <typeAlias alias="removeManagementResponse"       type="com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementResponse"/>
+        <typeAlias alias="searchUserRequest"              type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest"/>
+        <typeAlias alias="searchDeviceRequest"            type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest"/>
+        <typeAlias alias="searchAllDeviceRequest"         type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceRequest"/>
+        <typeAlias alias="updateStatusUserRequest"        type="com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest"/>
+        <typeAlias alias="userkeyTrack"                   type="com.skplanet.storeplatform.member.client.user.sci.vo.UserkeyTrack"/>
+        <typeAlias alias="removeMbrOneIDRequest"          type="com.skplanet.storeplatform.member.client.user.sci.vo.RemoveMbrOneIDRequest"/>
+        <typeAlias alias="userMbrSegment"                 type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrSegment"/>
+        <typeAlias alias="nonMbrSegment"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.NonMbrSegment"/>
+        <typeAlias alias="changedDeviceLog"               type="com.skplanet.storeplatform.member.client.user.sci.vo.ChangedDeviceLog"/>
+        <typeAlias alias="searchChangedDeviceRequest"     type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest"/>
+        <typeAlias alias="searchUserEmailRequest"         type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailRequest"/>
+        <typeAlias alias="loginUserRequest"               type="com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserRequest"/>
+        <typeAlias alias="deviceSystemStats"              type="com.skplanet.storeplatform.member.client.user.sci.vo.DeviceSystemStats"/>
+        <typeAlias alias="searchMbrUserRequest"           type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserRequest"/>
+        <typeAlias alias="searchMbrSapUserRequest"        type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrSapUserRequest"/>
+        <typeAlias alias="searchMbrUserResponse"          type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserResponse"/>
+        <typeAlias alias="userMbrStatus"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus"/>
+        <typeAlias alias="searchRealNameRequest"          type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameRequest"/>
+        <typeAlias alias="searchMbrDeviceRequest"         type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceRequest"/>
+        <typeAlias alias="searchMbrDeviceResponse"        type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceResponse"/>
+        <typeAlias alias="deviceMbrStatus"                type="com.skplanet.storeplatform.member.client.user.sci.vo.DeviceMbrStatus"/>
+        <typeAlias alias="checkSaveNSyncRequest"          type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncRequest"/>
+        <typeAlias alias="checkSaveNSyncResponse"         type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncResponse"/>
+        <typeAlias alias="reviveUserRequest"              type="com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserRequest"/>
+        <typeAlias alias="searchDeviceOwnerRequest"       type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerRequest"/>
+        <typeAlias alias="searchDeviceOwnerResponse"      type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerResponse"/>
+
+        <typeAlias alias="userGrade"                      type="com.skplanet.storeplatform.member.client.user.sci.vo.Grade"/>
+        <typeAlias alias="searchExtentUserResponse"       type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse"/>
+        <typeAlias alias="searchExtentUserRequest"        type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest"/>
+        <typeAlias alias="searchOrderDeviceRequest"       type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceRequest"/>
+        <typeAlias alias="searchOrderDeviceResponse"      type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceResponse"/>
+        <typeAlias alias="searchUserSegmentRequest"       type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserSegmentRequest"/>
+        <typeAlias alias="searchUserSegmentResponse"      type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserSegmentResponse"/>
+        <typeAlias alias="searchUserExtraInfoRequest"     type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserExtraInfoRequest"/>
+        <typeAlias alias="searchManagementRequest"               type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest"/>
+        <typeAlias alias="searchManagementResponse"               type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementResponse"/>
+        
+        <!-- 2014.12.12 추가 -->
+        <typeAlias alias="existListRequest"               type="com.skplanet.storeplatform.member.client.user.sci.vo.ExistListRequest"/>
+        
+        <typeAlias alias="listTenantRequest"              type="com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantRequest"/>
+        
+        <!-- 배송지 관리 API 추가 (2015-10-28) -->
+        <typeAlias alias="createDeliveryInfoRequest"      type="com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoRequest"/>
+        <typeAlias alias="removeDeliveryInfoRequest"      type="com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoRequest"/>
+        <typeAlias alias="searchDeliveryInfoRequest"      type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfoRequest"/>
+        <typeAlias alias="searchAfterUserKeyRequest"      type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchAfterUserKeyRequest"/>
+        
+        <!-- 배송지 정보 2015.10.27 추가 -->
+        <typeAlias alias="searchDeliveryInfo"             type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfo"/>
+        
+        <!-- 상품권충전소 정보 추가 2015.11.11 -->
+        <typeAlias alias="giftChargeInfo"                 type="com.skplanet.storeplatform.member.client.user.sci.vo.GiftChargeInfo"/>
+        <typeAlias alias="createGiftChargeInfoRequest"    type="com.skplanet.storeplatform.member.client.user.sci.vo.CreateGiftChargeInfoRequest"/>
+        <typeAlias alias="searchGiftChargeInfoRequest"    type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoRequest"/>
+                
+        <!-- seller -->
+        <typeAlias alias="searchSellerRequest"            type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest"/>
+        <typeAlias alias="searchSellerResponse"           type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse"/>
+        <typeAlias alias="searchMbrSellerRequest"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest"/>
+        <typeAlias alias="searchMbrSellerRequest"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest"/>
+        <typeAlias alias="searchAgreementListSellerRequest"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAgreementListSellerRequest"/>
+        <typeAlias alias="searchAgreementListSellerResponse"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAgreementListSellerResponse"/>
+        
+        
+        <typeAlias alias="searchAccountSellerRequest"     type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerRequest"/>
+        <typeAlias alias="searchAccountSellerResponse"    type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerResponse"/>
+        <typeAlias alias="searchSubSellerListRequest"     type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerListRequest"/>
+        <typeAlias alias="searchSubSellerListResponse"    type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerListResponse"/>     
+        <typeAlias alias="searchSubSellerRequest"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerRequest"/>
+        <typeAlias alias="searchSubSellerResponse"        type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerResponse"/>
+        <typeAlias alias="searchIDSellerRequest"          type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequest"/>
+        <typeAlias alias="searchIDSellerResponse"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerResponse"/>
+        <typeAlias alias="checkDuplicationSellerRequest"  type="com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerRequest"/>
+        <typeAlias alias="checkDuplicationSellerResponse" type="com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerResponse"/>
+        <typeAlias alias="checkPasswordReminderSellerRequest"        type="com.skplanet.storeplatform.member.client.seller.sci.vo.CheckPasswordReminderSellerRequest"/>
+        <typeAlias alias="checkPasswordReminderSellerResponse"       type="com.skplanet.storeplatform.member.client.seller.sci.vo.CheckPasswordReminderSellerResponse"/>
+        <typeAlias alias="updatePasswordSellerRequest"    type="com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerRequest"/>
+        <typeAlias alias="updatePasswordSellerResponse"   type="com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerResponse"/>
+        <typeAlias alias="updateRealNameSellerRequest"    type="com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateRealNameSellerRequest"/>
+        <typeAlias alias="createSubSellerRequest"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSubSellerRequest"/>
+        <typeAlias alias="upgradeSellerRequest"           type="com.skplanet.storeplatform.member.client.seller.sci.vo.UpgradeSellerRequest"/>
+        <typeAlias alias="upgradeSellerResponse"          type="com.skplanet.storeplatform.member.client.seller.sci.vo.UpgradeSellerResponse"/>
+        <typeAlias alias="pWReminder"                     type="com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder"/>
+
+        <typeAlias alias="searchPwdHintListRequest"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListRequest"/>
+        <typeAlias alias="searchPwdHintListResponse"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListResponse"/>
+        <typeAlias alias="sellerMbrPwdHint"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbrPwdHint"/>
+        
+        <typeAlias alias="sellerMbr"                      type="com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr"/>
+        <typeAlias alias="sellerBp"                      type="com.skplanet.storeplatform.member.client.seller.sci.vo.SellerBp"/>
+        <typeAlias alias="extraRight"                     type="com.skplanet.storeplatform.member.client.seller.sci.vo.ExtraRight"/>
+        <typeAlias alias="sellerAccount"                  type="com.skplanet.storeplatform.member.client.seller.sci.vo.SellerAccount"/>
+        <typeAlias alias="document"                       type="com.skplanet.storeplatform.member.client.seller.sci.vo.Document"/>
+        <typeAlias alias="sellerUpgrade"                  type="com.skplanet.storeplatform.member.client.seller.sci.vo.SellerUpgrade"/>
+        <typeAlias alias="tabAuth"                        type="com.skplanet.storeplatform.member.client.seller.sci.vo.TabAuth"/>
+        <typeAlias alias="loginInfo"                      type="com.skplanet.storeplatform.member.client.seller.sci.vo.LoginInfo"/>
+        <typeAlias alias="searchLoginInfoResponse"        type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse"/>
+        <typeAlias alias="searchLoginInfoRequest"         type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest"/>
+        <typeAlias alias="pWReminderAll"                  type="com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminderAll"/>
+        <typeAlias alias="searchPwdHintListAllRequest"    type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllRequest"/>
+        <typeAlias alias="searchPwdHintListAllResponse"   type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllResponse"/>
+        <typeAlias alias="batCmsSellerMbr"                        type="com.skplanet.storeplatform.member.client.seller.sci.vo.BatCmsSellerMbr"/>
+        <typeAlias alias="searchProviderRequest"            type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderRequest"/>
+        <typeAlias alias="providerMbrInfo"                  type="com.skplanet.storeplatform.member.client.seller.sci.vo.ProviderMbrInfo"/>
+         
+
+        <!-- device -->
+        <typeAlias alias="setMainDeviceRequest"           type="com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest"/>
+        
+        <typeAlias alias="simpleLoginRequest"               type="com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginRequest"/>
+        <typeAlias alias="simpleLoginResponse"              type="com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginResponse"/>
+        
+        <!-- CI Infra -->
+        <typeAlias alias="CIInfraUserInfo"                type="com.skplanet.storeplatform.member.client.user.sci.vo.CIInfraUserInfo"/>
+        <typeAlias alias="CIInfraSearchUserInfoRequest"   type="com.skplanet.storeplatform.member.client.user.sci.vo.CIInfraSearchUserInfoRequest"/>
+        <typeAlias alias="CIInfraDetailUserRequest"       type="com.skplanet.storeplatform.member.client.user.sci.vo.CIInfraDetailUserRequest"/>
+        <typeAlias alias="CIInfraListUserKeyRequest"      type="com.skplanet.storeplatform.member.client.user.sci.vo.CIInfraListUserKeyRequest"/>
+
+        <!-- DeviceSet (2014-10-30) -->
+        <typeAlias alias="userMbrDeviceSet"                 type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceSet"/>
+        <typeAlias alias="createDevicePinRequest"           type="com.skplanet.storeplatform.member.client.user.sci.vo.CreateDevicePinRequest"/>
+        <typeAlias alias="createDevicePinResponse"          type="com.skplanet.storeplatform.member.client.user.sci.vo.CreateDevicePinResponse"/>
+        <typeAlias alias="modifyDevicePinRequest"           type="com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDevicePinRequest"/>
+        <typeAlias alias="modifyDevicePinResponse"          type="com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDevicePinResponse"/>
+        <typeAlias alias="searchDevicePinRequest"           type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchDevicePinRequest"/>
+        <typeAlias alias="searchDevicePinResponse"          type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchDevicePinResponse"/>
+        <typeAlias alias="checkDevicePinRequest"            type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckDevicePinRequest"/>
+        <typeAlias alias="checkDevicePinResponse"           type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckDevicePinResponse"/>    
+        
+        <typeAlias alias="userMbrInfo"                           type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrInfo"/>
+        <typeAlias alias="userMbrDeviceInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceInfo"/>
+        <typeAlias alias="userMbrDeviceDtlInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDtlInfo"/>
+        <typeAlias alias="userMbrDeviceHisInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceHisInfo"/>
+        <typeAlias alias="userMbrDeviceSetInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceSetInfo"/>        
+        <typeAlias alias="userMbrHisInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrHisInfo"/>
+        <typeAlias alias="userMbrIdMbrTrfmChasInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrIdMbrTrfmChasInfo"/>
+        <typeAlias alias="userMbrLglAgentInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrLglAgentInfo"/>
+        <typeAlias alias="userMbrMangItemPtcrInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrMangItemPtcrInfo"/>
+        <typeAlias alias="userMbrOcbInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrOcbInfo"/>
+        <typeAlias alias="userMbrOneIdInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrOneIdInfo"/>
+        <typeAlias alias="userMbrAuthInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrAuthInfo"/>
+        <typeAlias alias="userMbrPwdInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrPwdInfo"/>
+        <typeAlias alias="userMbrClauseAgreeInfo"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrClauseAgreeInfo"/>
+        
+        <!-- 소셜이력 (2015-06-24) -->
+        <typeAlias alias="createSocialAccountRequest"       type="com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountRequest"/>
+        <typeAlias alias="searchSocialAccountRequest"       type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchSocialAccountRequest"/>
+        <typeAlias alias="socialAccount"                    type="com.skplanet.storeplatform.member.client.user.sci.vo.SocialAccount"/>
+        
+    </typeAliases>
+</configuration>

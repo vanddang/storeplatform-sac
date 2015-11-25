@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="MileageSave">
+    
+    <!-- 마일리지 적립 예상 총 금액 조회 -->
+    <select id="searchMileageSave" parameterType="MileageSaveRequest" resultType="MileageSave">
+		 SELECT  /* MileageSaveMapper.searchMileageSave, 마일리지 적립 예상 총 금액 조회, 양주원/nTels, 2014-08-08 */
+		         tenant_id
+		       , insd_usermbr_no
+		       , prom_id
+		       , TO_CHAR(save_dt,'yyyyMMdd') AS save_dt
+		       , SUM(save_result_amt) AS saveAmt
+		  FROM (SELECT  tenant_id
+		              , insd_usermbr_no
+		              , prom_id
+		              , save_dt
+		              , save_result_amt
+		          FROM  tb_pr_membership_reserve
+		         WHERE  tenant_id = #{tenantId}
+		           AND  insd_usermbr_no = #{userKey}
+		           AND  proc_status_cd = #{procStatusCd}
+		           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(standardDt)">
+		           AND save_dt &gt;= TO_DATE(#{standardDt, jdbcType=VARCHAR}, 'YYYYMMDDHH24MISS')
+		           </if>
+                )
+		 GROUP BY tenant_id,insd_usermbr_no , prom_id, save_dt
+    </select>
+    
+    <!-- 마일리지 적립 예상 단건 조회 -->
+    <select id="getMileageSave" parameterType="MileageSaveGetRequest" resultType="MileageSaveGetResponse">
+        SELECT  TO_CHAR(save_dt,'YYYYMMDD') AS save_dt
+			  , type_cd
+              , save_result_amt
+              , proc_status_cd
+          FROM  tb_pr_membership_reserve
+         WHERE  tenant_id = #{tenantId}
+			<if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(typeCd)">
+           AND  type_cd = #{typeCd}
+			</if>
+           AND  prchs_id = #{prchsId}
+    </select>
+    
+</mapper>

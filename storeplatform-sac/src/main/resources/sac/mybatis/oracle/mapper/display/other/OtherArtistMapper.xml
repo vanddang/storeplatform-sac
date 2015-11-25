@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OtherArtist">
+	<select id="searchArtistDetail" parameterType="Map" resultType="MetaInfo">
+		SELECT /* OtherArtistMapper.searchArtistDetail, 아티스트 정보 조회, 오승민/인크로스, 2014-03-05 */
+			 A.ACTY_TYPE
+			, A.ACTY_YYPRD
+			, A.ARTIST_ID
+			, A.ARTIST_NM
+			, A.BIRTH
+			, A.CMPS_ARTIST_ID
+			, A.CMPS_ARTIST_NM
+			, A.DEBUT_DAY
+			, A.DEBUT_MUSIC_ID
+			, A.DEBUT_MUSIC_NM
+			, A.IMG_FILE_PATH as imagePath
+			, A.NATY as country
+		FROM TB_DP_ARTIST A
+		WHERE 1=1
+		AND A.ARTIST_ID = #{artistId}
+	</select>
+	
+	<select id="searchArtistDetailWithLikeYn" parameterType="Map" resultType="MetaInfo">
+		SELECT /* OtherArtistMapper.searchArtistDetailWithLikeYn, 아티스트 정보 조회(좋아여 여부 포함) */
+			A.ACTY_TYPE
+			, A.ACTY_YYPRD
+			, A.ARTIST_ID
+			, A.ARTIST_NM
+			, A.BIRTH
+			, A.CMPS_ARTIST_ID
+			, A.CMPS_ARTIST_NM
+			, A.DEBUT_DAY
+			, A.DEBUT_MUSIC_ID
+			, A.DEBUT_MUSIC_NM
+			, A.IMG_FILE_PATH as imagePath
+			, A.NATY as country
+			, CASE WHEN SSML.STATS_KEY IS NOT NULL THEN 'Y' ELSE 'N' END AS likeYn
+		FROM  TB_DP_ARTIST A
+		LEFT JOIN TB_DP_SOCIAL_STATS_MBR_LIKE SSML
+			ON SSML.TENANT_ID = #{tenantId, jdbcType=VARCHAR} AND SSML.STATS_KEY = #{artistId, jdbcType=VARCHAR}
+			AND SSML.STATS_CLSF = 'DP01210003' AND SSML.USER_KEY = #{userKey, jdbcType=VARCHAR}
+		WHERE 1=1
+		AND A.ARTIST_ID = #{artistId}
+	</select>
+</mapper>

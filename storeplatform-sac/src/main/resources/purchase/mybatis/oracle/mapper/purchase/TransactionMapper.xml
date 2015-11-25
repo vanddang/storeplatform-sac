@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="Transaction">
+    
+    <!-- 트랜잭션처리조회 -->
+    <select id="searchTransaction" parameterType="PurchaseTransactionScReq" resultType="PurchaseTransactionScRes">
+		SELECT tenant_id
+		     , prchs_id
+		     , interface_id
+		     , proc_seq
+		     , proc_status_cd
+		  FROM tb_pr_prchs_transaction a
+		 WHERE tenant_id = #{tenantId}
+		   AND prchs_id = #{prchsId}
+		   AND interface_id = #{interfaceId}
+    </select>
+    
+    <!-- 트랜잭션처리등록 -->
+    <insert id="createTransaction" parameterType="PurchaseTransactionScReq">
+        INSERT /* TransactionMapper.createTransaction, 트랜잭션처리등록, 양주원/nTels, 2015-09-04 */
+          INTO  tb_pr_prchs_transaction 
+        (
+           tenant_id
+         , prchs_id
+         , interface_id
+         , proc_seq
+         , proc_status_cd
+         , reg_id
+         , reg_dt
+         , upd_id
+         , upd_dt
+        )
+        VALUES
+        (
+          #{tenantId}
+        , #{prchsId}
+        , #{interfaceId}
+        , #{procSeq}
+        , #{procStatusCd}
+        , #{systemId}
+        , SYSDATE
+        , #{systemId}
+        , SYSDATE
+        )
+    </insert>
+    
+    <!-- 트랜잭션처리수정 -->
+    <update id="updateTransaction" parameterType="PurchaseTransactionScReq">
+        UPDATE  tb_pr_prchs_transaction /* TransactionMapper.updateTransaction, 트랜잭션처리수정, 양주원/nTels, 2015-09-04 */
+           SET  proc_status_cd = #{procStatusCd} 
+              , proc_seq = (SELECT NVL(MAX(proc_seq), 0) + 1
+				              FROM tb_pr_prchs_transaction 
+				             WHERE tenant_id = #{tenantId}
+				               AND prchs_id = #{prchsId}
+				               AND interface_id = #{interfaceId})
+              , upd_id = #{systemId}
+              , upd_dt = SYSDATE
+         WHERE  tenant_id = #{tenantId}
+		   AND  prchs_id = #{prchsId}
+		   AND  interface_id = #{interfaceId}
+		   AND  proc_seq = #{procSeq}
+    </update>
+    
+   
+    
+    
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SearchKeyword">
+
+    <!-- 인기검색어, 급상승검색어, 테마검색어 조회 -->
+    <select id="getSearchKeyword" parameterType="SearchKeyword" resultType="SearchKeyword">
+        SELECT  /* SearchKeywordMapper.xml, getSearchKeyword, SAC-전시기타/심대진/다모아솔루션, 2015-09-04 */
+                TOTAL_COUNT
+              , OPERATION_DT
+              , SEARCH_NM
+              , SEARCH_DESC
+              , SEARCH_CLSF_CD
+              , ROWNUM AS RANK
+              , RANK_VARIATION
+              , RANK_VARIATION_CD
+              , KEYWORD
+          FROM (
+                SELECT  COUNT(1) OVER () AS TOTAL_COUNT
+                      , TO_CHAR(B.OPERATION_DT, 'YYYYMMDDHH24MISS') AS OPERATION_DT
+                      , A.SEARCH_NM
+                      , A.SEARCH_DESC
+                      , A.SEARCH_CLSF_CD
+                      , B.RANK
+                      , B.RANK_VARIATION
+                      , B.RANK_VARIATION_CD
+                      , B.KEYWORD
+                      , B.UPD_DT
+                  FROM TB_DP_SEARCH A, TB_DP_SEARCH_KEYWORD B
+                 WHERE A.TENANT_ID = B.TENANT_ID
+                   AND A.SEARCH_ID = B.SEARCH_ID
+                   AND A.STD_DT = B.STD_DT
+                   AND A.TENANT_ID = #{tenantId}
+                   <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(searchId)">
+                   AND B.SEARCH_ID = #{searchId}
+                   </if>
+                   <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(searchClsfCd)">
+                   AND A.SEARCH_CLSF_CD = #{searchClsfCd}
+                   </if>
+                   AND A.EXPO_YN = 'Y'
+                   AND B.EXPO_YN = 'Y'
+                 ORDER BY B.RANK ASC, B.UPD_DT DESC
+          )
+         WHERE ROWNUM <![CDATA[<=]]> #{count}
+    </select>
+
+    <!-- 테마 검색어 랜덤 아이디 추출. -->
+    <select id="getThemeRandomId" parameterType="SearchKeyword" resultType="String">
+        SELECT /* SearchKeywordMapper.xml, getThemeRandomId, SAC-전시기타/심대진/다모아솔루션, 2015-09-04 */
+               SEARCH_ID
+          FROM (
+                  SELECT B.SEARCH_ID
+                    FROM TB_DP_SEARCH A, TB_DP_SEARCH_KEYWORD B
+                   WHERE A.TENANT_ID = B.TENANT_ID
+                     AND A.SEARCH_ID = B.SEARCH_ID
+                     AND A.STD_DT = B.STD_DT
+                     AND A.TENANT_ID = #{tenantId}
+                     AND A.SEARCH_CLSF_CD = #{searchClsfCd}
+                     AND B.EXPO_YN = 'Y'
+                     AND A.EXPO_YN = 'Y'
+                   GROUP BY B.SEARCH_ID
+                   ORDER BY DBMS_RANDOM.VALUE
+          )
+         WHERE ROWNUM = 1
+    </select>
+    
+</mapper>

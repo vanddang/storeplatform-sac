@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="PurchaseAutoPaymentCancel">
+
+    <!-- 1. update SQL-->
+    <update id="modifyReservation" parameterType="autoPaymentCancelScReq">
+        /* PurchaseAutoPaymentCancel.modifyReservation, 자동결재해지예약/예약취소/해지, 조용진/엔텔스, 2014-01-16 */
+		UPDATE  tb_pr_auto_prchs
+		   SET  auto_payment_status_cd = #{autoPaymentStatusCd, jdbcType=VARCHAR}  /* 해지예약코드 */
+            <if test="autoPaymentStatusCd == 'OR020103'">
+	          , closed_dt = SYSDATE  /* 해지일시 */
+            </if>
+		      , closed_reason_cd = #{closedReasonCd, jdbcType=VARCHAR}  /* 해지예약사유코드 */
+		      , closed_req_path_cd = #{closedReqPathCd, jdbcType=VARCHAR}  /* 해지예약요청경로코드 */
+              , upd_id = #{systemId, jdbcType=VARCHAR}  /* 업데이트시스템ID */
+              , upd_dt = sysdate  /* 업데이트일시 */
+		 WHERE  tenant_id = #{tenantId} 
+		   AND  insd_usermbr_no = #{userKey}
+		   AND  insd_device_id = #{deviceKey}
+		   AND  last_prchs_id = #{prchsId}
+		<if test="autoPaymentStatusCd == 'OR020102'">
+           AND  auto_payment_status_cd NOT IN ('OR020102','OR020103','OR020104')
+        </if>
+		<if test="autoPaymentStatusCd == 'OR020101'">
+           AND  auto_payment_status_cd = 'OR020102'
+        </if>
+        <if test="autoPaymentStatusCd == 'OR020103'">
+           AND  auto_payment_status_cd = 'OR020101'
+        </if>
+    </update>  
+    
+        <!-- 2. SELECT SQL-->
+    <select id="searchPurchaseDate" resultType="autoPaymentCancelScRes">
+        SELECT  /* PurchaseAutoPaymentCancel.searchPurchaseDate, 구매일시조회, 조용진/엔텔스, 2014-03-06 */
+                TO_CHAR(prchs_dt,'YYYYMMDDHH24MISS') AS prchs_dt  /* 구매일시 */
+              , prod_id
+          FROM  tb_pr_prchs_dtl
+         WHERE  use_tenant_id = #{tenantId} 
+           AND  use_insd_usermbr_no = #{userKey}
+           AND  use_insd_device_id = #{deviceKey}
+           AND  tenant_id = #{tenantId} 
+           AND  prchs_id = #{prchsId}
+    </select>  
+    
+        <!-- 2. SELECT SQL-->
+    <select id="getCheckAutoPaymentCancel" resultType="Integer">
+		SELECT  /* PurchaseAutoPaymentCancel.getCheckAutoPaymentCancel, 자동결제중인지 확인, 조용진/엔텔스, 2014-03-06 */
+		        COUNT(FST_PRCHS_ID) AS checkCount
+		  FROM  TB_PR_AUTO_PRCHS
+         WHERE  tenant_id = #{tenantId} 
+           AND  insd_usermbr_no = #{userKey}
+           AND  insd_device_id = #{deviceKey}
+           AND  last_prchs_id = #{prchsId}
+    </select>  
+    
+     <update id="updateInAppClose" parameterType="autoPaymentCancelScReq">
+        /* PurchaseAutoPaymentCancel.updateInAppClose, 부분유료화자동결제 해지처리, 조용진/엔텔스, 2014-03-26 */
+	    UPDATE  tb_pr_prchs_dtl
+		   SET  RESV_COL_02 = 'IAP_CLOSE_DT='||TO_CHAR(SYSDATE,'YYYYMMDD')
+		 WHERE  use_tenant_id = #{tenantId} 
+		   AND  use_insd_usermbr_no = #{userKey}
+		   AND  use_insd_device_id = #{deviceKey}
+		   AND  tenant_id = #{tenantId} 
+		   AND  prchs_id = #{prchsId}
+    </update>
+    
+    <select id="searchUniqueTid" resultType="String" parameterType="String">
+        SELECT  /* PurchaseAutoPaymentCancel.searchPurchaseDate, 구매ID조회, 조용진/엔텔스, 2014-03-06 */
+                prchs_id
+          FROM  tb_pr_unique_tid
+         WHERE  tid = TO_CHAR(TO_NUMBER(#{tid}))
+    </select>  
+
+</mapper>
