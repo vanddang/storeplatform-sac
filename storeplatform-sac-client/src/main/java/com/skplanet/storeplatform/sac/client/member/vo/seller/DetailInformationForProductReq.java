@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * [REQUEST] 상품상세의 판매자 정보.
  * 
- * Updated on : 2014. 4. 10. Updated by : 김다슬, 인크로스.
+ * Updated on : 2015. 11. 27. Updated by : 최진호, 보고지티
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DetailInformationForProductReq extends CommonInfo {
@@ -19,6 +19,8 @@ public class DetailInformationForProductReq extends CommonInfo {
 	private String sellerKey;
 	/** App ID. */
 	private String aid;
+	/** 상품 카테고리 */
+	private String categoryCd;
 
 	/**
 	 * @return the sellerKey
@@ -48,5 +50,24 @@ public class DetailInformationForProductReq extends CommonInfo {
 	 */
 	public void setAid(String aid) {
 		this.aid = aid;
+	}
+
+	/**
+	 * 상품 카테고리 을(를) 리턴한다.
+	 * 
+	 * @return categoryCd -
+	 */
+	public String getCategoryCd() {
+		return this.categoryCd;
+	}
+
+	/**
+	 * 상품 카테고리 을(를) 셋팅한다.
+	 * 
+	 * @param categoryCd
+	 *            categoryCd
+	 */
+	public void setCategoryCd(String categoryCd) {
+		this.categoryCd = categoryCd;
 	}
 }

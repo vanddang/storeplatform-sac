@@ -87,7 +87,7 @@ import com.skplanet.storeplatform.member.seller.service.SellerService;
 /**
  * 판매자 기능을 제공하는 Controller.
  * 
- * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2015. 11. 27. Updated by : 최진호, 보고지티.
  */
 @LocalSCI
 public class SellerSCIController implements SellerSCI {
@@ -2229,7 +2229,7 @@ public class SellerSCIController implements SellerSCI {
 	 * @return SearchProviderResponse - 판매자회원 제공자 정보 조회 응답 Value Object
 	 */
 	@Override
-	public SearchProviderResponse searchProviderList(SearchProviderRequest searchProviderRequest) {
+	public SearchProviderResponse searchProviderInfo(SearchProviderRequest searchProviderRequest) {
 
 		LOGGER.debug("\n\n\n\n\n");
 		LOGGER.debug("==================================================================================");
@@ -2261,7 +2261,7 @@ public class SellerSCIController implements SellerSCI {
 
 		try {
 
-			searchProviderResponse = this.service.searchProviderList(searchProviderRequest);
+			searchProviderResponse = this.service.searchProviderInfo(searchProviderRequest);
 
 		} catch (StorePlatformException ex) {
 			throw ex;
