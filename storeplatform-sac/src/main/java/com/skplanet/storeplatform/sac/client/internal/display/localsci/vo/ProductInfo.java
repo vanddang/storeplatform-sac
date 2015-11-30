@@ -67,6 +67,7 @@ public class ProductInfo {
 	private String epsdImgPath; // episode 이미지 패스
     private String chnlCompNm;
     private String agencyNm;
+    private String availablePlayer;
 
 	// ////////////////////////// Ebook/Comic 전용 변수 ////////////////////////////
 	private String author;
@@ -1376,4 +1377,12 @@ public class ProductInfo {
     public void setAgencyNm(String agencyNm) {
         this.agencyNm = agencyNm;
     }
+
+	public String getAvailablePlayer() {
+		return availablePlayer;
+	}
+
+	public void setAvailablePlayer(String availablePlayer) {
+		this.availablePlayer = availablePlayer;
+	}
 }

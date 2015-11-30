@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * 구매 내역 조회 시 필요한 상품 메타 정보 조회 서비스 구현체.
@@ -148,6 +149,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                 case VodTv:
                     product.setChapterUnit(displayCommonService.getVodChapterUnit());
                     check19Plus(product, DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+                    setChromeCast(product);
                     break;
                 case Ebook:
                 case Comic:
@@ -245,4 +247,25 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 				product.setEpsdImgPath(this.plus19ImgUrl);
 		}
 	}
+
+    /**
+     * 크롬캐스트 파라미터 체크후 다시 세팅.
+     * @param product
+     */
+    private void setChromeCast(ProductInfo product) {
+
+        // Chrome Cast 재생 허용 Player
+        if(StringUtils.isNotEmpty(product.getAvailablePlayer())){
+            String availablePlayerStr = "";
+            StringTokenizer st = new StringTokenizer(product.getAvailablePlayer(), "\\|");
+            while (st.hasMoreTokens()) {
+                String token = st.nextToken();
+                availablePlayerStr = availablePlayerStr + token + "|";
+            }
+            int lastGubunInt = availablePlayerStr.lastIndexOf("|");
+            availablePlayerStr = availablePlayerStr.substring(0, (lastGubunInt));
+            product.setAvailablePlayer(availablePlayerStr);
+        }
+
+    }
 }

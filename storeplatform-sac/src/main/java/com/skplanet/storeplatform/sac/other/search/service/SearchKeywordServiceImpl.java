@@ -84,21 +84,35 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
         /**
          * DB 응답 데이터.
          */
+        SearchKeyword keyword = null;
         List<SearchKeyword> list = null;
 
         /**
          * SearchType에 따라 (인기, 급상승), 테마 검색어 조회.
          */
         LOGGER.info("====>> {}", searchType.name());
-        if(StringUtils.equals(SearchType.THEME_KEYWORD.name(), searchType.name())) { // 테마
 
+        // 테마 검색어
+        if(StringUtils.equals(SearchType.THEME_KEYWORD.name(), searchType.name())) {
             String randomId = (String) commonDAO.queryForObject("SearchKeyword.getThemeRandomId", new SearchKeyword(tenantId, searchType.getCode()));
             list = commonDAO.queryForList("SearchKeyword.getSearchKeyword", new SearchKeyword(tenantId, randomId, searchType.getCode(), count), SearchKeyword.class);
+        // 급상승 검색어
+        } else {
+            // White 리스트 조회
+            list = commonDAO.queryForList("SearchKeyword.getWhiteKeywordList", new SearchKeyword(tenantId, searchType.getId(), searchType.getCode(), count), SearchKeyword.class);
 
-        } else { // 인기, 급상승
+            if(Integer.parseInt(count) > list.size()) {
+                // White 리스트가 요청 건수보다 부족하면 급상승 검색어로 대체
+                count = String.valueOf(Integer.parseInt(count) - list.size());
+                List<SearchKeyword> keywordList = commonDAO.queryForList("SearchKeyword.getSearchKeyword", new SearchKeyword(tenantId, searchType.getId(), searchType.getCode(), count), SearchKeyword.class);
 
-            list = commonDAO.queryForList("SearchKeyword.getSearchKeyword", new SearchKeyword(tenantId, searchType.getId(), searchType.getCode(), count), SearchKeyword.class);
-
+                for(SearchKeyword info : keywordList) {
+                    list.add(info);
+                }
+            } else {
+                // 검색어 기본정보 조회 (작업일시, 검색어명 등 White 리스트에 없는 검색어 기본정보를 조회)
+                keyword = commonDAO.queryForObject("SearchKeyword.getWhiteKeywordInfo", new SearchKeyword(tenantId, searchType.getId(), searchType.getCode(), count), SearchKeyword.class);
+            }
         }
 
         /**
@@ -108,10 +122,8 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
         searchKeywordListInfo.setKeywordType(searchType.getKeywordType()); // 검색어 유형
 
         if(list.size() > 0) {
-
             List<KeywordListInfo> keywordList = new ArrayList<KeywordListInfo>(); // 검색어 List
             for(SearchKeyword info : list) {
-                searchKeywordListInfo.setTotalCount(info.getTotalCount()); // 전체 건수
                 searchKeywordListInfo.setOperationDt(info.getOperationDt()); // 기준일시 (데이타가 동일하다는 판단으로 맨마지막 데이타가 세팅됨.)
                 searchKeywordListInfo.setSearchNm(info.getSearchNm()); // 검색어명
                 searchKeywordListInfo.setSearchDesc(info.getSearchDesc()); // 검색어 설명
@@ -124,15 +136,14 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
                 keywordList.add(keywordListInfo);
             }
 
+            if(keyword != null) {
+                // White 리스트의 검색어 기본정보 세팅
+                searchKeywordListInfo.setOperationDt(keyword.getOperationDt()); // 기준일시 (데이타가 동일하다는 판단으로 맨마지막 데이타가 세팅됨.)
+                searchKeywordListInfo.setSearchNm(keyword.getSearchNm()); // 검색어명
+                searchKeywordListInfo.setSearchDesc(keyword.getSearchDesc()); // 검색어 설명
+            }
+
             searchKeywordListInfo.setKeywordList(keywordList); // 검색어 List set
-
-        } else {
-
-            /**
-             * 데이타가 존재 하지 않은 경우 Default 값으로 세팅. (By 백승현)
-             */
-            searchKeywordListInfo.setTotalCount("0");
-
         }
 
         return searchKeywordListInfo;

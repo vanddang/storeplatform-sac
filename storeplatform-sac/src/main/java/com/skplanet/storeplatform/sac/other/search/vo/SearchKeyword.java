@@ -42,10 +42,6 @@ public class SearchKeyword extends CommonInfo {
      */
     private String searchId;
     /**
-     * 전체 건수.
-     */
-    private String totalCount;
-    /**
      * 기준일시.
      */
     private String operationDt;
@@ -100,14 +96,6 @@ public class SearchKeyword extends CommonInfo {
 
     public void setSearchId(String searchId) {
         this.searchId = searchId;
-    }
-
-    public String getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(String totalCount) {
-        this.totalCount = totalCount;
     }
 
     public String getOperationDt() {
