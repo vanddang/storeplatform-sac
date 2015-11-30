@@ -13,13 +13,7 @@ import java.util.List;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class SearchKeywordListInfo extends CommonInfo {
-
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 전체 건수.
-     */
-    private String totalCount;
     /**
      * 기준일시.
      */
@@ -43,14 +37,6 @@ public class SearchKeywordListInfo extends CommonInfo {
      * 검색어 List.
      */
     private List<KeywordListInfo> keywordList;
-
-    public String getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(String totalCount) {
-        this.totalCount = totalCount;
-    }
 
     public String getOperationDt() {
         return operationDt;
