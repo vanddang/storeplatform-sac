@@ -3000,47 +3000,42 @@
          WHERE  insd_sellermbr_no = #{sellerKey}
     </select>
 
-    <!-- 판매 제공자가 있는 판매자의 카테코리 코드 목록 조회  -->
-    <select id="searchCategoryCdList" parameterType="searchProviderRequest" resultType="String">
-		/* SellerMapper.searchCategoryCdList, 판매 제공자가 있는 판매자의 카테코리 코드 조회, SAC(SC), 최진호, 2015-11-24 */
-		(
-		    SELECT /*+ opt_param('_optimizer_skip_scan_enabled','true') index_ss(ma PK_US_SELLERMBR_MULTIMDA_AUTH) */
-		        MULTIMDA_CD AS categoryCd
-		    FROM
-		        TB_US_SELLERMBR_MULTIMDA_AUTH ma --ma추가 
-		    WHERE
-		        INSD_SELLERMBR_NO = #{sellerKey}
-		        AND END_DT > SYSDATE
-		        AND USE_AGENCY_YN = 'Y'
-		)
-		UNION ALL
-		(
-		    SELECT /*+ opt_param('_optimizer_skip_scan_enabled','true') index_ss(ta PK_US_SELLERMBR_TAB_AUTH) */
-		        TAB_CD AS categoryCd
-		    FROM
-		        TB_US_SELLERMBR_TAB_AUTH ta --ta추가 
-		    WHERE
-		        INSD_SELLERMBR_NO = #{sellerKey}
-		        AND USE_AGENCY_YN = 'Y'
-		)
-    </select>
-
     <!-- 판매 제공자 정보 목록 조회 -->
-    <select id="searchProviderMbrInfoList" resultType="providerMbrInfo">
-        SELECT /* SellerMapper.searchProviderMbrInfoList, 판매 제공자 정보 목록 조회, SAC(SC), 최진호, 2015-11-24 */
-		    COMP_NM AS sellerCompany,
-		    CEO_NM AS sellerName,
-		    EMAIL_ADDR AS sellerEmail,
-		    MSALBIZ_DECL_NO AS bizRegNumber,
-		    ADDR AS sellerAddress,
-		    TEL_NO AS sellerPhone
+    <select id="searchProviderInfo" parameterType="searchProviderRequest" resultType="searchProviderResponse">
+		SELECT /* SellerMapper.searchProviderMbrInfo, 판매 제공자 정보 목록 조회, SAC(SC), 최진호, 2015-11-27 */
+		    a.COMP_NM AS sellerCompany,
+		    a.CEO_NM AS sellerName,
+		    a.EMAIL_ADDR AS sellerEmail,
+		    a.MSALBIZ_DECL_NO AS bizRegNumber,
+		    a.ADDR AS sellerAddress,
+		    a.TEL_NO AS sellerPhone
 		FROM
-		    TB_US_SELLERMBR_AGENCY
+		    TB_US_SELLERMBR_AGENCY a,
+		    (
+		        (    
+		            SELECT /*+ opt_param('_optimizer_skip_scan_enabled','true') index_ss(ma PK_US_SELLERMBR_MULTIMDA_AUTH) */
+		                MULTIMDA_CD AS categoryCd
+		            FROM
+		                TB_US_SELLERMBR_MULTIMDA_AUTH ma
+		            WHERE
+		                INSD_SELLERMBR_NO = #{sellerKey}
+		                AND END_DT > SYSDATE
+		                AND USE_AGENCY_YN = 'Y'
+		        )
+		        UNION ALL
+		        (
+		            SELECT /*+ opt_param('_optimizer_skip_scan_enabled','true') index_ss(ta PK_US_SELLERMBR_TAB_AUTH) */
+		                TAB_CD AS categoryCd
+		            FROM
+		                TB_US_SELLERMBR_TAB_AUTH ta
+		            WHERE
+		                INSD_SELLERMBR_NO = #{sellerKey}
+		                AND USE_AGENCY_YN = 'Y'
+		        )
+		    ) b
 		WHERE
-		    CATEGORY_CD IN
-		    <foreach item="categoryCd" index="index" collection="list" open="(" separator="," close=")">
-                #{categoryCd}
-            </foreach>
+		    a.CATEGORY_CD = b.categoryCd
+		    AND a.CATEGORY_CD = #{categoryCd}
     </select>
 
 </mapper>

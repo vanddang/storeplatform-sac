@@ -20,12 +20,12 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.ProviderMbrInfo;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
@@ -41,7 +41,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 /**
  * 판매자 회원 조회 관련 기능 ServiceImpl.
  * 
- * Updated on : 2014. 5. 20. Updated by : 김다슬, 인크로스.
+ * Updated on : 2015. 11. 27. Updated by : 최진호, 보고지티.
  */
 @Service
 public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
@@ -352,15 +352,25 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 				sellerInfo.setSellerClass(sellerMbrs.get(0).getSellerClass());
 				sellerInfo.setProviderYn("N");
 
+				/*
+				 * // req에 categoryCd 값이 있으면 제공자 정보 조회 및 셋팅 SearchProviderResponse schProvRes = new
+				 * SearchProviderResponse(); if (req.getCategoryCd() != null ||
+				 * StringUtil.isNotBlank(req.getCategoryCd())) { // SC 제공자 정보 조회 SearchProviderRequest schProvReq = new
+				 * SearchProviderRequest();
+				 * schProvReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+				 * schProvReq.setSellerKey(sellerKey); schProvReq.setCategoryCd(req.getCategoryCd());
+				 * 
+				 * schProvRes = this.sellerSCI.searchProviderInfo(schProvReq); }
+				 */
+
 				// SC 제공자 정보 조회
 				SearchProviderRequest schProvReq = new SearchProviderRequest();
 				schProvReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 				schProvReq.setSellerKey(sellerKey);
-
-				SearchProviderResponse schProvRes = this.sellerSCI.searchProviderList(schProvReq);
+				SearchProviderResponse schProvRes = this.sellerSCI.searchProviderInfo(schProvReq);
 
 				// 제공자 정보가 있으면 기존 판매자 정보를 제공자 정보로, 제공자 정보를 판매자 정보로 바꾼다.
-				if (schProvRes.getProviderMbrInfoList() != null && schProvRes.getProviderMbrInfoList().size() > 0) {
+				if (schProvRes != null && StringUtil.isNotBlank(schProvRes.getSellerKey())) {
 					// 판매 제공자 유무 값 셋팅
 					sellerInfo.setProviderYn("Y");
 
@@ -382,30 +392,30 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 					providerResList.add(1, providerMbrSac);
 					// 3. 기존 판매자 정보를 제공자 정보로 셋팅
 					sellerInfo.setProviderMbrList(providerResList);
+					// sellerInfo.setProviderId(sellerMbrs.get(0).getSellerID());
+					// sellerInfo.setProviderClass(sellerMbrs.get(0).getSellerClass());
+					// sellerInfo.setProviderIsDomestic(sellerMbrs.get(0).getIsDomestic());
 
 					// 조회된 제공자 정보를 판매자 정보로 셋팅
-					List<ProviderMbrInfo> providerMbrInfoList = schProvRes.getProviderMbrInfoList();
-					for (ProviderMbrInfo providerMbrInfo : providerMbrInfoList) {
-						// 1. 상단 셋팅
-						sellerMbrSac = new SellerMbrAppSac();
-						sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_TOP);
-						sellerMbrSac.setSellerName(providerMbrInfo.getSellerCompany());
-						sellerResList.add(0, sellerMbrSac);
-						// 2. 하단 셋팅
-						sellerMbrSac = new SellerMbrAppSac();
-						sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_LOWER);
-						sellerMbrSac.setSellerName(providerMbrInfo.getSellerName());
-						sellerMbrSac.setSellerCompany(providerMbrInfo.getSellerCompany());
-						sellerMbrSac.setSellerEmail(providerMbrInfo.getSellerEmail());
-						sellerMbrSac.setBizRegNumber(providerMbrInfo.getBizRegNumber());
-						sellerMbrSac.setSellerAddress(providerMbrInfo.getSellerAddress());
-						sellerMbrSac.setSellerPhone(providerMbrInfo.getSellerPhone());
-						sellerResList.add(1, sellerMbrSac);
-						// 3. 조회된 제공자 정보를 판매자 정보로 셋팅
-						sellerInfo.setSellerMbrList(sellerResList);
+					// 1. 상단 셋팅
+					sellerMbrSac = new SellerMbrAppSac();
+					sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_TOP);
+					sellerMbrSac.setSellerName(schProvRes.getSellerCompany());
+					sellerResList.add(0, sellerMbrSac);
+					// 2. 하단 셋팅
+					sellerMbrSac = new SellerMbrAppSac();
+					sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_LOWER);
+					sellerMbrSac.setSellerName(schProvRes.getSellerName());
+					sellerMbrSac.setSellerCompany(schProvRes.getSellerCompany());
+					sellerMbrSac.setSellerEmail(schProvRes.getSellerEmail());
+					sellerMbrSac.setBizRegNumber(schProvRes.getBizRegNumber());
+					sellerMbrSac.setSellerAddress(schProvRes.getSellerAddress());
+					sellerMbrSac.setSellerPhone(schProvRes.getSellerPhone());
+					sellerResList.add(1, sellerMbrSac);
+					// 3. 조회된 제공자 정보를 판매자 정보로 셋팅
+					sellerInfo.setSellerMbrList(sellerResList);
 
-						sellerInfoSacMap.put(sellerKey, sellerInfo);
-					}
+					sellerInfoSacMap.put(sellerKey, sellerInfo);
 				} else {
 					// 1. 상단 셋팅
 					sellerMbrSac = new SellerMbrAppSac();

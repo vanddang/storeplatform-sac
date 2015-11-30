@@ -165,8 +165,8 @@
         <typeAlias alias="searchPwdHintListAllRequest"    type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllRequest"/>
         <typeAlias alias="searchPwdHintListAllResponse"   type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllResponse"/>
         <typeAlias alias="batCmsSellerMbr"                        type="com.skplanet.storeplatform.member.client.seller.sci.vo.BatCmsSellerMbr"/>
-        <typeAlias alias="searchProviderRequest"            type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderRequest"/>
-        <typeAlias alias="providerMbrInfo"                  type="com.skplanet.storeplatform.member.client.seller.sci.vo.ProviderMbrInfo"/>
+        <typeAlias alias="searchProviderRequest"                type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderRequest"/>
+        <typeAlias alias="searchProviderResponse"              type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchProviderResponse"/>
          
 
         <!-- device -->

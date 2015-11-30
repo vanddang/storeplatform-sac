@@ -72,7 +72,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpgradeSellerRespo
 /**
  * 판매자 기능을 제공하는 Interface
  * 
- * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2015. 11. 27. Updated by : 최진호, 보고지티.
  */
 @SCI
 public interface SellerSCI {
@@ -424,6 +424,6 @@ public interface SellerSCI {
 	 *            판매자회원 제공자 정보 조회 요청 Value Object
 	 * @return SearchProviderResponse - 판매자회원 제공자 정보 조회 응답 Value Object
 	 */
-	public SearchProviderResponse searchProviderList(SearchProviderRequest searchProviderRequest);
+	public SearchProviderResponse searchProviderInfo(SearchProviderRequest searchProviderRequest);
 
 }

@@ -28,6 +28,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
@@ -52,7 +53,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminderAll;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.ProviderMbrInfo;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
@@ -115,7 +115,7 @@ import com.skplanet.storeplatform.member.seller.vo.SellerMbrRetrievePWD;
 /**
  * 판매자 기능 implementation.
  * 
- * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2015. 11. 27. Updated by : 최진호, 보고지티.
  */
 @Service
 public class SellerServiceImpl implements SellerService {
@@ -2183,7 +2183,7 @@ public class SellerServiceImpl implements SellerService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public SearchProviderResponse searchProviderList(SearchProviderRequest searchProviderRequest) {
+	public SearchProviderResponse searchProviderInfo(SearchProviderRequest searchProviderRequest) {
 
 		LOGGER.debug("\n\n\n\n\n");
 		LOGGER.debug("==================================================================================");
@@ -2192,28 +2192,42 @@ public class SellerServiceImpl implements SellerService {
 
 		LOGGER.debug("### searchProviderRequest : {}", searchProviderRequest);
 
-		SearchProviderResponse searchProviderResponse = new SearchProviderResponse();
+		String categoryCd = searchProviderRequest.getCategoryCd();
 
-		// 판매 제공자 여부가 Y인 판매자가 등록된 categoryCd값 조회
-		List<String> categoryCdList = null;
-		categoryCdList = (List<String>) this.commonDAO.queryForList("Seller.searchCategoryCdList",
-				searchProviderRequest);
-		LOGGER.debug("### categoryCdList : {}", categoryCdList);
+		// locaSCI에서는 categoryCd 유효성검사가 없음. 강제로 고정
+		if (StringUtil.isEmpty(categoryCd))
+			categoryCd = "DE120204";
+
+		if (categoryCd.equals("DP18"))
+			categoryCd = "DE120201"; // 방송
+		else if (categoryCd.equals("DP17"))
+			categoryCd = "DE120202"; // 영화
+		else if (categoryCd.equals("DP14"))
+			categoryCd = "DE120203"; // 만화
+		else if (categoryCd.equals("DP13"))
+			categoryCd = "DE120204"; // 이북
+		else if (categoryCd.equals("DP26"))
+			categoryCd = "DE120206"; // 웹툰
+		else if (categoryCd.equals("DP28"))
+			categoryCd = ""; // 쇼핑
+		else if (categoryCd.equals("DP30"))
+			categoryCd = ""; // 앱
+		else if (categoryCd.equals("DP01"))
+			categoryCd = ""; // 게임
+
+		searchProviderRequest.setCategoryCd(categoryCd);
 
 		// 판매자가 등록된 카테고리 목록이 있으면 해당 카테고리의 제공자 정보 조회
-		if (categoryCdList != null && categoryCdList.size() > 0) {
-			List<ProviderMbrInfo> providerMbrInfoList = null;
-			providerMbrInfoList = (List<ProviderMbrInfo>) this.commonDAO.queryForList(
-					"Seller.searchProviderMbrInfoList", categoryCdList);
-			LOGGER.debug("### providerMbrInfoList : {}", providerMbrInfoList);
-			if (providerMbrInfoList != null && providerMbrInfoList.size() > 0) {
-				searchProviderResponse.setProviderMbrInfoList(providerMbrInfoList);
-			}
-		}
+		SearchProviderResponse searchProviderResponse = new SearchProviderResponse();
+		searchProviderResponse = this.commonDAO.queryForObject("Seller.searchProviderInfo", searchProviderRequest,
+				SearchProviderResponse.class);
+		LOGGER.debug("### providerInfo : {}", searchProviderResponse);
 
-		searchProviderResponse.setSellerKey(searchProviderRequest.getSellerKey());
-		searchProviderResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
-				"response.ResultMessage.success"));
+		if (searchProviderResponse != null) {
+			searchProviderResponse.setSellerKey(searchProviderRequest.getSellerKey());
+			searchProviderResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+					"response.ResultMessage.success"));
+		}
 
 		return searchProviderResponse;
 	}

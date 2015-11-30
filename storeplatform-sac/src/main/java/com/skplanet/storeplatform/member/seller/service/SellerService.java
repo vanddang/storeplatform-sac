@@ -73,7 +73,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpgradeSellerRespo
  * 판매자 서비스인터페이스.
  * </pre>
  * 
- * Created on : 2013-09-01 Created by :
+ * Created on : 2015. 11. 27. Update by : 최진호, 보고지티.
  */
 
 public interface SellerService {
@@ -425,6 +425,6 @@ public interface SellerService {
 	 *            판매자회원 제공자 정보 조회 요청 Value Object
 	 * @return SearchProviderResponse - 판매자회원 제공자 정보 조회 응답 Value Object
 	 */
-	public SearchProviderResponse searchProviderList(SearchProviderRequest searchProviderRequest);
+	public SearchProviderResponse searchProviderInfo(SearchProviderRequest searchProviderRequest);
 
 }

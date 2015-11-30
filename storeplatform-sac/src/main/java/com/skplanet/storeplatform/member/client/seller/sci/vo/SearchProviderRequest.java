@@ -21,18 +21,18 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 /**
  * 판매자회원 제공자 정보 조회 요청 Value Object.
  * 
- * Updated on : 2015. 11. 13. Updated by : 최진호, 보고지티.
+ * Updated on : 2015. 11. 27. Updated by : 최진호, 보고지티.
  */
 public class SearchProviderRequest extends CommonInfo implements Serializable {
 
 	/** The Constant serial Version UID. */
 	private static final long serialVersionUID = 1L;
-
 	/** 공통 요청 Value Object. */
 	private CommonRequest commonRequest;
-
 	/** 판매자 키 */
 	private String sellerKey;
+	/** 상품 카테고리 */
+	private String categoryCd;
 
 	/**
 	 * 공통 요청 Value Object를 리턴한다.
@@ -66,6 +66,25 @@ public class SearchProviderRequest extends CommonInfo implements Serializable {
 	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
+	}
+
+	/**
+	 * 상품 카테고리 을(를) 리턴한다.
+	 * 
+	 * @return categoryCd -
+	 */
+	public String getCategoryCd() {
+		return this.categoryCd;
+	}
+
+	/**
+	 * 상품 카테고리 을(를) 셋팅한다.
+	 * 
+	 * @param categoryCd
+	 *            categoryCd
+	 */
+	public void setCategoryCd(String categoryCd) {
+		this.categoryCd = categoryCd;
 	}
 
 	/**
