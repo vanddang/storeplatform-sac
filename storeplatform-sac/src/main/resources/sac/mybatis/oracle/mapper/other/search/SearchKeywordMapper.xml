@@ -77,7 +77,7 @@
 		         </if>
 		           AND EXPO_YN   = 'Y'
 		           AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
-		         ORDER BY RANK
+		         ORDER BY RANK ASC, KEYWORD ASC
 		       )
 		 WHERE ROWNUM <![CDATA[<=]]> #{count}
 	</select>

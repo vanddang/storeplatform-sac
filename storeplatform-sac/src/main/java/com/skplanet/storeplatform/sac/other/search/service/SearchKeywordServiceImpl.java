@@ -80,7 +80,6 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
      * @return
      */
     private SearchKeywordListInfo getKeyword(String tenantId, SearchType searchType, String count) {
-
         /**
          * DB 응답 데이터.
          */
@@ -98,6 +97,11 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
             list = commonDAO.queryForList("SearchKeyword.getSearchKeyword", new SearchKeyword(tenantId, randomId, searchType.getCode(), count), SearchKeyword.class);
         // 급상승 검색어
         } else {
+            // count 기본값 세팅
+            if(StringUtils.isBlank(count)) {
+                count = "10";
+            }
+
             // White 리스트 조회
             list = commonDAO.queryForList("SearchKeyword.getWhiteKeywordList", new SearchKeyword(tenantId, searchType.getId(), searchType.getCode(), count), SearchKeyword.class);
 
@@ -122,14 +126,17 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
         searchKeywordListInfo.setKeywordType(searchType.getKeywordType()); // 검색어 유형
 
         if(list.size() > 0) {
+            Integer rank = 0;
             List<KeywordListInfo> keywordList = new ArrayList<KeywordListInfo>(); // 검색어 List
+
             for(SearchKeyword info : list) {
+                rank++;
                 searchKeywordListInfo.setOperationDt(info.getOperationDt()); // 기준일시 (데이타가 동일하다는 판단으로 맨마지막 데이타가 세팅됨.)
                 searchKeywordListInfo.setSearchNm(info.getSearchNm()); // 검색어명
                 searchKeywordListInfo.setSearchDesc(info.getSearchDesc()); // 검색어 설명
 
                 KeywordListInfo keywordListInfo = new KeywordListInfo();
-                keywordListInfo.setRank(info.getRank()); // 순위
+                keywordListInfo.setRank(String.valueOf(rank)); // 순위
                 keywordListInfo.setRankVariation(info.getRankVariation()); // 순위변동폭
                 keywordListInfo.setRankVariationCd(info.getRankVariationCd()); // 순위변동 코드
                 keywordListInfo.setKeyword(info.getKeyword()); // 순위변동 코드
