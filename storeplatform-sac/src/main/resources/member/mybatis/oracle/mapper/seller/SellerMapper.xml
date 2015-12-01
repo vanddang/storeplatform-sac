@@ -3002,7 +3002,7 @@
 
     <!-- 판매 제공자 정보 목록 조회 -->
     <select id="searchProviderInfo" parameterType="searchProviderRequest" resultType="searchProviderResponse">
-		SELECT /* SellerMapper.searchProviderMbrInfo, 판매 제공자 정보 목록 조회, SAC(SC), 최진호, 2015-11-27 */
+		SELECT /* SellerMapper.searchProviderInfo, 판매 제공자 정보 목록 조회, SAC(SC), 최진호, 2015-12-08 */
 		    a.COMP_NM AS sellerCompany,
 		    a.CEO_NM AS sellerName,
 		    a.EMAIL_ADDR AS sellerEmail,
