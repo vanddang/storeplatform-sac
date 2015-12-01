@@ -80,7 +80,6 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
      * @return
      */
     private SearchKeywordListInfo getKeyword(String tenantId, SearchType searchType, String count) {
-
         /**
          * DB 응답 데이터.
          */
@@ -98,6 +97,11 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
             list = commonDAO.queryForList("SearchKeyword.getSearchKeyword", new SearchKeyword(tenantId, randomId, searchType.getCode(), count), SearchKeyword.class);
         // 급상승 검색어
         } else {
+            // count 기본값 세팅
+            if(StringUtils.isBlank(count)) {
+                count = "10";
+            }
+
             // White 리스트 조회
             list = commonDAO.queryForList("SearchKeyword.getWhiteKeywordList", new SearchKeyword(tenantId, searchType.getId(), searchType.getCode(), count), SearchKeyword.class);
 
