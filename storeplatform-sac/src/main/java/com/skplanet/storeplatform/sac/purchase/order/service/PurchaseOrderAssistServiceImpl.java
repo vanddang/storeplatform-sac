@@ -150,7 +150,8 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 	 * @return 계산된 이용 일자
 	 */
 	@Override
-	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs, String dateFormant) {
+	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs,
+			String dateFormant) {
 
 		if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) { // 무제한
 			return PurchaseConstants.UNLIMITED_DATE;
@@ -189,6 +190,60 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 			}
 
 			return DateFormatUtils.format(checkDate, dateFormant);
+		}
+	}
+
+	/**
+	 * Calculate day cnt string.
+	 *
+	 * @param today
+	 * 		the today
+	 * @param periodUnitCd
+	 * 		the period unit cd
+	 * @param periodVal
+	 * 		the period val
+	 *
+	 * @return the string
+	 */
+	@Override
+	public String calculateDayCnt(String today, String periodUnitCd, int periodVal) {
+		if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) { // 무제한
+			return "0";
+		} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_DATE)) { // 당일
+			return "1";
+		} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_YEAR)
+				|| StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_MONTH)) { // 당년
+			try {
+				Date dToday = DateUtils.parseDate(today, "yyyyMMddHHmmss");
+				if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_YEAR)) {
+					Date dEndOfYear = DateUtils.parseDate(today.substring(0, 4) + "1231235959", "yyyyMMddHHmmss");
+					return String.valueOf(DateUtils.getFragmentInDays(dEndOfYear, Calendar.YEAR)
+							- DateUtils.getFragmentInDays(dToday, Calendar.YEAR) + 1);
+				} else {
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(dToday);
+					return String.valueOf(cal.getActualMaximum(Calendar.DATE) - Integer.parseInt(today.substring(6, 8))
+							+ 1);
+				}
+			} catch (ParseException e) {
+				throw new StorePlatformException("SAC_PUR_7216", today);
+			}
+		} else {
+			if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE)
+					|| StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_SELECT)) { // 일
+				return String.valueOf(periodVal);
+			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH)) { // 월
+				return String.valueOf(30 * periodVal);
+			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR)) { // 년
+				return String.valueOf(365 * periodVal);
+			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_HOUR) || // 시간
+					StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MINUTE)) { // 분 (시간과 분은
+																										  // 1일 이내의 범위에서
+																										  // 설정)
+				return "1";
+			} else {
+				throw new StorePlatformException("SAC_PUR_7215", periodUnitCd);
+			}
 		}
 	}
 

@@ -947,7 +947,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.contains(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_CASH)) {
 			res.setBonusCashPoint(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT)); // 보너스 캐쉬 지급
 																									   // Point
-			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
+			res.setBonusCashUsableDayCnt(reservedDataMap
+					.get(PurchaseConstants.IF_PUR_ORDER_RES_BONUS_CASH_USABLE_DAY_CNT)); // 보너스 캐쉬 유효기간(일)
 		}
 		res.setDwldAvailableDayCnt(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT)); // 다운로드
 																										   // 가능기간(일)

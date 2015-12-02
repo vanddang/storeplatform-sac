@@ -428,4 +428,6 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID = "chargeMemberId";
 	public static final String IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM = "chargeMemberNm";
 	public static final String IF_PUR_ORDER_REQ_FLAG = "flag";
+
+	public static final String IF_PUR_ORDER_RES_BONUS_CASH_USABLE_DAY_CNT = "bonusCashUsableDayCnt"; // 보너스 캐쉬 유효기간(일)
 }

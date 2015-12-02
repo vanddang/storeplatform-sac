@@ -62,7 +62,24 @@ public interface PurchaseOrderAssistService {
 	 * 
 	 * @return 계산된 이용 일자
 	 */
-	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs, String dateFormat);
+	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs,
+			String dateFormat);
+
+	/**
+	 * <pre>
+	 * 기준일로부터 이용 기간(일)을 계산.
+	 * </pre>
+	 *
+	 * @param today
+	 *            기준일
+	 * @param periodUnitCd
+	 *            이용기간 단위 코드
+	 * @param periodVal
+	 *            이용기간 값
+	 * 
+	 * @return 계산된 이용 기간(일)
+	 */
+	public String calculateDayCnt(String today, String periodUnitCd, int periodVal);
 
 	/**
 	 * 

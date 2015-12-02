@@ -350,7 +350,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	 * @return 결제내역 생성 목록
 	 */
 	@Override
-	public List<Payment> makePaymentList(PrchsDtlMore prchsDtlMore, List<PaymentInfo> paymentInfoList, String statusCd, String flgLimitUser) {
+	public List<Payment> makePaymentList(PrchsDtlMore prchsDtlMore, List<PaymentInfo> paymentInfoList, String statusCd,
+			String flgLimitUser) {
 
 		String tenantId = prchsDtlMore.getTenantId();
 		String systemId = prchsDtlMore.getSystemId();
@@ -406,7 +407,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			payment.setUpdId(systemId);
 
 			payment.setMnoCd(paymentInfo.getMnoCd());
-			payment.setLimtMbrYn(StringUtils.isBlank(paymentInfo.getLimitMemberYn()) ? flgLimitUser : paymentInfo.getLimitMemberYn());
+			payment.setLimtMbrYn(StringUtils.isBlank(paymentInfo.getLimitMemberYn()) ? flgLimitUser : paymentInfo
+					.getLimitMemberYn());
 
 			paymentList.add(payment);
 		}
@@ -865,7 +867,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 								.append("&svcGrpCd=")
 								.append(StringUtils.defaultString(product.getSvcGrpCd()))
 								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_ID, product.getPromId()))
-								.append(genResvDataEncoded(PurchaseConstants.IF_DISPLAY_RES_PROD_NM,product.getProdNm()))
+								.append(genResvDataEncoded(PurchaseConstants.IF_DISPLAY_RES_PROD_NM,
+										product.getProdNm()))
 								// 이벤트 프로모션 ID
 								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_ACLMETHOD_CD,
 										product.getAcmlMethodCd())) // 프로모션 적립 방법
@@ -873,8 +876,9 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 																													// 적립일
 								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_SPECIALTYPE_CD,
 										product.getSpecialTypeCd())) // 특가상품 유형코드, 팅요금제 상품 유형 코드
-								.append(genResvData(PurchaseConstants.IF_DISPLAY_META_CLSF_CD,
-										product.getMetaClsfCd())) // 메타 클래스 코드
+								.append(genResvData(PurchaseConstants.IF_DISPLAY_META_CLSF_CD, product.getMetaClsfCd())) // 메타
+																														 // 클래스
+																														 // 코드
 								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PRIVATEACML_LIMIT,
 										product.getPrivateAcmlLimit())) // 개인 적립 한도
 								.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_PROM_FORCECLOSE_CD,
@@ -933,16 +937,25 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 									.append(StringUtils.defaultString(product.getCmpxProdBookClsfCd()));
 						}
 
+						if (StringUtils.isNotBlank(product.getBnsCashAmt())) {
+							String bonusDayCnt = this.purchaseOrderAssistService.calculateDayCnt(
+									purchaseOrderInfo.getPrchsDt(), product.getBnsUsePeriodUnitCd(),
+									product.getBnsUsePeriod());
+							sbReserveData.append(genResvData(
+									PurchaseConstants.IF_PUR_ORDER_RES_BONUS_CASH_USABLE_DAY_CNT, bonusDayCnt));
+						}
+
 						// 쇼핑-충전권
 						if (StringUtils.equals(product.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
 							sbReserveData.append(genResvDataEncoded(PurchaseConstants.IF_DISPLAY_RES_BRAND_NAME,
 									product.getBrandNm()));
 							sbReserveData.append(genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID,
 									purchaseOrderInfo.getChargeMemberId()));
-							sbReserveData.append(genResvDataEncoded(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM,
+							sbReserveData.append(genResvDataEncoded(
+									PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM,
 									purchaseOrderInfo.getChargeMemberNm()));
-							sbReserveData.append(
-									genResvData(PurchaseConstants.IF_DISPLAY_RES_BRAND_ID, product.getBrandId()));
+							sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_BRAND_ID,
+									product.getBrandId()));
 						}
 
 						// 부정결제 참조용 데이터 추가
@@ -971,7 +984,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 	private String genResvDataEncoded(String key, String value) {
 		try {
-			return genResvData(key, URLEncoder.encode(StringUtils.defaultString(value), PurchaseConstants.DEFAULT_ENCODING));
+			return genResvData(key,
+					URLEncoder.encode(StringUtils.defaultString(value), PurchaseConstants.DEFAULT_ENCODING));
 		} catch (UnsupportedEncodingException e) {
 			return genResvData(key, value);
 		}
