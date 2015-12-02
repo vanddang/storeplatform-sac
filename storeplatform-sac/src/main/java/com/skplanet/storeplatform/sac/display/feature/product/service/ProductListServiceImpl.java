@@ -208,6 +208,9 @@ public class ProductListServiceImpl implements ProductListService{
 
 	@Override
 	public Product getProduct( SacRequestHeader header, ListProduct listProd ) {
+        if (listProd == null) {
+            return null;
+        }
 
 		Product product = null;
 		String prodId=listProd.getProdId();
