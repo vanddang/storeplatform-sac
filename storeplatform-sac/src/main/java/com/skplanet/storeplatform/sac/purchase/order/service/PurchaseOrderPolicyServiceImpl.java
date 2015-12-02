@@ -1627,7 +1627,8 @@ public class PurchaseOrderPolicyServiceImpl extends PurchaseConstants implements
 				|| StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_SHOPPING)
 				|| StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
 				|| StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)
-				|| StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+				|| StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)
+				|| StringUtils.startsWith(tenantProdGrpCd, TENANT_PRODUCT_GROUP_DTL_BOOKSCASH_FIXRATE)) {
 			return "";
 
 		} else {
