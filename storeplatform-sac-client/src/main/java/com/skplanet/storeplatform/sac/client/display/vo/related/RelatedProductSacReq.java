@@ -11,7 +11,6 @@ public class RelatedProductSacReq {
     private String productId;
 
     @NotNull
-    @Pattern(regexp = "DP01310001")
     private String relatedType;
 
     private String prodGradeCd;
