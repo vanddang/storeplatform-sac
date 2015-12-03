@@ -43,7 +43,7 @@ public class RelatedProductServiceImpl implements RelatedProductService {
         log.debug("연관 상품 조회");
 
         // 연관 상품 ProdId 리스트 조회.
-        Map<String, Object> reqMap = getRequestMapForRelatedProduct(requestVO, requestHeader);
+        Map<String, Object> reqMap = getRequestMapForRelatedProduct(requestVO);
         RelatedProduct relatedProduct = this.commonDAO.queryForObject(
                 "RelatedProduct.selectRelatedProduct", reqMap, RelatedProduct.class);
         relatedProduct = relatedProduct == null ? new RelatedProduct() : relatedProduct;
@@ -100,9 +100,8 @@ public class RelatedProductServiceImpl implements RelatedProductService {
 
 
 
-    private Map<String, Object> getRequestMapForRelatedProduct(RelatedProductSacReq requestVO, SacRequestHeader requestHeader) {
+    private Map<String, Object> getRequestMapForRelatedProduct(RelatedProductSacReq requestVO) {
         Map<String, Object> reqMap = new HashMap<String, Object>();
-        reqMap.put("tenantId", requestHeader.getTenantHeader().getTenantId());
         reqMap.put("prodId", requestVO.getProductId());
         reqMap.put("relaType", requestVO.getRelatedType());
         return reqMap;

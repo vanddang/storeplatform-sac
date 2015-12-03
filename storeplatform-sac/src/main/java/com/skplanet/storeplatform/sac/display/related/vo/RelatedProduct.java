@@ -3,7 +3,6 @@ package com.skplanet.storeplatform.sac.display.related.vo;
 import java.util.Date;
 
 public class RelatedProduct {
-    private String tenantId;
     private Date stdDt;
     private String relaType;
     private String prodId;
@@ -12,14 +11,6 @@ public class RelatedProduct {
     private Date regDt;
     private String updId;
     private Date updDt;
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
 
     public Date getStdDt() {
         return stdDt;
