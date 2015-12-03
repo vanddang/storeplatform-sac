@@ -39,7 +39,7 @@
 
     <select id="searchPidByHashedPkg" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.personal.service.AppUpdateSupportServiceImpl$PkgNmPidMapg">
         SELECT /*PersonalUpdateProductMapper.searchPidByHashedPkg, 정희원, 2015-03-02 */ /*+ NO_EXPAND ORDERED USE_NL(P) */
-            TP.PROD_ID,
+            P.PROD_ID,
             TP.MAPG_APK_PKG_NM AS APK_PKG_NM,
             P.LAST_DEPLOY_DT
         FROM TB_DP_TENANT_PROD TP
