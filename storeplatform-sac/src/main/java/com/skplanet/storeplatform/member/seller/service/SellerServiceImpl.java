@@ -2209,7 +2209,7 @@ public class SellerServiceImpl implements SellerService {
 		else if (categoryCd.equals("DP26"))
 			categoryCd = "DE120206"; // 웹툰
 		else if (categoryCd.equals("DP28"))
-			categoryCd = ""; // 쇼핑
+			categoryCd = "US011002"; // 쇼핑
 		else if (categoryCd.equals("DP30"))
 			categoryCd = ""; // 앱
 		else if (categoryCd.equals("DP01"))
