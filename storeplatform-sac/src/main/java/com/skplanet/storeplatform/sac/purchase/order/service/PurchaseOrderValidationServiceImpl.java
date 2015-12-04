@@ -765,6 +765,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		boolean bPurchaserNotRealName = false;
 		// boolean bReceiverNotRealName = false;
 
+		// 상품별 validation check, 이용권에 의한 무료 구매 처리
+		Set <Boolean> isFreePurchase = new HashSet<Boolean>();
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
 			// 연령체크 안함: 모바일 회원은 생년월일 저장X, 생년월일도 * 문자 포함으로 확인불가
 			// if (StringUtils.equals(product.getProdGrdCd(), PurchaseCDConstants.PRODUCT_GRADE_19) && useUser.getAge() <
@@ -1017,9 +1019,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						// 정액제 상품으로 이용할 에피소드 상품에 적용할 DRM/이용기간 정보 조회 및 반영
 						if (this.setEpisodeDrmInfo(product, useExistenceScRes, useUser.getTenantId(),
 								purchaseOrderInfo.getLangCd())) {
-							purchaseOrderInfo.setRealTotAmt(0.0); // 정상적으로 정액제 상품 이용하는 경우: 무료구매 처리 데이터 세팅
+							isFreePurchase.add(true);
 						}
+						else
+							isFreePurchase.add(false);
 					}
+					else
+						isFreePurchase.add(false);
 				} // #END 이용 가능한 정액권 기구매 확인 처리
 			}
 
@@ -1030,6 +1036,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				existenceProdIdList.add(product.getProdId());
 			}
 		}
+		// 요청한 모든 상품이 무료일 경우 무료 구매 처리
+		if(isFreePurchase.size()==1 && isFreePurchase.contains(true))
+			purchaseOrderInfo.setRealTotAmt(0.0); // 정상적으로 정액제 상품 이용하는 경우: 무료구매 처리 데이터 세팅
 
 		// 기구매 체크
 		if (existenceProdIdList.size() > 0) {
