@@ -1100,10 +1100,14 @@ public class DeviceServiceImpl implements DeviceService {
 
 					/* ICAS IMEI 비교 */
 					if (StringUtils.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
-						deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->")
-								.append(nativeId);
-						userMbrDevice.setNativeID(nativeId);
-						DeviceChangeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE;
+
+						if (!StringUtils.equals(nativeId, dbDeviceInfo.getNativeId())) {
+							deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->")
+									.append(nativeId);
+							userMbrDevice.setNativeID(nativeId);
+							DeviceChangeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE;
+						}
+
 					} else {
 						throw new StorePlatformException("SAC_MEM_1503");
 					}
