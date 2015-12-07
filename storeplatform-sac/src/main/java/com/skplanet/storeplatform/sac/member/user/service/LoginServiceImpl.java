@@ -2449,7 +2449,8 @@ public class LoginServiceImpl implements LoginService {
 				try {
 					String cspImei = this.deviceService.getIcasImei(req.getDeviceId());
 					if (StringUtils.equals(req.getNativeId(), cspImei)) {
-						LOGGER.info("{} imei 변경 : {} -> {}", req.getDeviceId(), req.getNativeId(), cspImei);
+						LOGGER.info("{} imei 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList().get(0)
+								.getNativeId(), cspImei);
 						UserMbrDevice userMbrDevice = new UserMbrDevice();
 						userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE);
 						userMbrDevice.setNativeID(cspImei);
@@ -2873,7 +2874,8 @@ public class LoginServiceImpl implements LoginService {
 			try {
 				String cspImei = this.deviceService.getIcasImei(req.getDeviceId());
 				if (StringUtils.equals(req.getNativeId(), cspImei)) {
-					LOGGER.info("{} imei 변경 : {} -> {}", req.getDeviceId(), req.getNativeId(), cspImei);
+					LOGGER.info("{} imei 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList().get(0)
+							.getNativeId(), cspImei);
 					UserMbrDevice userMbrDevice = new UserMbrDevice();
 					userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE);
 					userMbrDevice.setNativeID(cspImei);
