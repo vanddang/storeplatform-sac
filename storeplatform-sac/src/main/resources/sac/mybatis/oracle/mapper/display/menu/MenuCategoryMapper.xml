@@ -944,7 +944,6 @@
                             AND G.EXPO_YN = 'Y'
                             AND NVL(F.B2B_PROD_YN, 'N') != 'Y'
                             AND G.PROD_STATUS_CD = 'PD000403'
-                            AND SYSDATE BETWEEN  H.APPLY_START_DT AND H.APPLY_END_DT 
                             AND J.SCL_SHPG_SPRT_YN = 'Y'
                             AND (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
                             AND J.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
