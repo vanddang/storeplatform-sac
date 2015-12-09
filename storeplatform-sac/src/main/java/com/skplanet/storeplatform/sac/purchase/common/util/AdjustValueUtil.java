@@ -26,14 +26,6 @@ import java.util.TreeSet;
  */
 public class AdjustValueUtil {
 
-	public static void main(String []args)
-	{
-		String org = "11:0;12:0;13:0";
-
-		System.out.println(adjuestValue(org, "12:4000;11:300"));
-	}
-
-
 	/**
 	 * Extends value.
 	 *
@@ -59,9 +51,9 @@ public class AdjustValueUtil {
 		if(sortKey) {
 			keySet = new TreeSet<String>();
 			keySet.addAll(resultMap.keySet());
-			result = concatStr(keySet, resultMap, separator, delimiter);
+			result = concatStr(keySet, resultMap, separator, delimiter, true);
 		} else {
-			result = concatStr(resultMap, separator, delimiter);
+			result = concatStr(resultMap, separator, delimiter, true);
 		}
 		return StringUtils.defaultString(result);
 	}
@@ -104,23 +96,24 @@ public class AdjustValueUtil {
 		return classifyValuesToMap(str, PurchaseConstants.SEPARATOR, PurchaseConstants.DELIMITER);
 	}
 
-	private static String concatStr(Map<String,String> dataMap, String separator, String delimiter)
+	public static String concatStr(Map<String,String> dataMap, String separator, String delimiter, boolean includeNullValue)
 	{
-		return concatStr(dataMap.keySet(), dataMap, separator, delimiter);
+		return concatStr(dataMap.keySet(), dataMap, separator, delimiter, includeNullValue);
 	}
 
-	private static String concatStr(Set<String> keySet, Map<String,String> dataMap, String separator, String delimiter)
+	public static String concatStr(Set<String> keySet, Map<String,String> dataMap, String separator, String delimiter, boolean includeNullValue)
 	{
 		StringBuffer sb = new StringBuffer();
 
 		for(String key : keySet)
 		{
+			Object value = dataMap.get(key);
+			if(!includeNullValue && value == null) continue;
+			if(sb.length()>0) sb.append(separator);
 			sb.append(key);
 			sb.append(delimiter);
-			sb.append(dataMap.get(key));
-			sb.append(separator);
+			sb.append(value);
 		}
-		if(sb.length()>0) sb.deleteCharAt(sb.length()-1);
 		return sb.toString();
 	}
 }
