@@ -320,13 +320,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				String useDeviceId = useUser.getDeviceId();
 
 				if (purchaseOrderInfo.getApiVer() > 1) { // 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (1:N 선물 지원)
-					List<String> useMdnList = new ArrayList<String>();
+					Map<String,String> useMdnList = new LinkedHashMap<String, String>();
 					if (purchaseOrderInfo.isGift()) {
 						for (PurchaseUserDevice user : purchaseOrderInfo.getReceiveUserList()) {
-							useMdnList.add(user.getDeviceId());
+							useMdnList.put(user.getDeviceId(), user.getUserKey());
 						}
 					} else {
-						useMdnList.add(useDeviceId);
+						useMdnList.put(useDeviceId, useUser.getUserKey());
 					}
 
 					CouponPublishV2EcRes couponPublishV2EcRes = this.purchaseShoppingOrderRepository
@@ -1176,11 +1176,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (prchsDtlMore.getTenantProdGrpCd().startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
 				couponCode = reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_COUPON_CODE);
-				invokeCMSCharge(couponCode, prchsDtlMore.getUseInsdUsermbrNo() ,prchsDtlMore.getPrchsId(), reservedDataMap.get("deviceId"),
+				shoppingCouponList = invokeCMSCharge(couponCode, prchsDtlMore.getUseInsdUsermbrNo() ,prchsDtlMore.getPrchsId(), reservedDataMap.get("deviceId"),
 						reservedDataMap.get(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID));
 			} else {
 				shoppingCouponList = invokeCMSStore(reservedDataMap, prchsDtlMore, prchsDtlMoreList,
-						tstoreNotiPublishType, shoppingCouponList);
+						tstoreNotiPublishType);
 			}
 		}
 
@@ -1506,24 +1506,33 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		return prchsDtlMoreList;
 	}
 
-	private void invokeCMSCharge(String couponCode, String userKey, String prchsId, String MDN, String chargeMemeberId) {
+	private List<ShoppingCouponPublishInfo> invokeCMSCharge(String couponCode, String userKey, String prchsId, String MDN, String chargeMemeberId) {
+		ShoppingCouponPublishInfo shoppingCouponPublishInfo = new ShoppingCouponPublishInfo();
 		CouponChargeEcRes couponChargeEcRes = this.purchaseShoppingOrderRepository.chargeGoods(couponCode, userKey, prchsId,
 				MDN, chargeMemeberId);
 		if (!StringUtils.equals(chargeMemeberId, couponChargeEcRes.getMemberId()))
 			throw new StorePlatformException("SAC_PUR_1812", chargeMemeberId, couponChargeEcRes.getMemberId());
+
+		shoppingCouponPublishInfo.setPrchsDtlId(1); // 구매상세ID 처리
+		shoppingCouponPublishInfo.setAvailStartDt(couponChargeEcRes.getAplDate());
+		shoppingCouponPublishInfo.setPublishCode(couponChargeEcRes.getPublishCode());
+
+		List<ShoppingCouponPublishInfo> shoppingCouponPublishInfos = new ArrayList<ShoppingCouponPublishInfo>();
+		shoppingCouponPublishInfos.add(shoppingCouponPublishInfo);
+		return shoppingCouponPublishInfos;
 	}
 
 	private List<ShoppingCouponPublishInfo> invokeCMSStore(Map<String, String> reservedDataMap,
-			PrchsDtlMore prchsDtlMore, List<PrchsDtlMore> prchsDtlMoreList, String tstoreNotiPublishType,
-			List<ShoppingCouponPublishInfo> shoppingCouponList) {
+			PrchsDtlMore prchsDtlMore, List<PrchsDtlMore> prchsDtlMoreList, String tstoreNotiPublishType) {
 		// 구매요청 API 버전
 		int apiVer = Integer.parseInt(StringUtils.defaultString(reservedDataMap.get("apiVer"), "1"));
+		ArrayList<ShoppingCouponPublishInfo> shoppingCouponList = new ArrayList<ShoppingCouponPublishInfo>();
 
 		// if (StringUtils.equals(giftYn, "Y") && prchsDtlMoreList.size() > 1 && prchsDtlMore.getProdQty() == 1)
 		// {1:N선물구분
 
 		if (apiVer > 1) { // 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (1:N 선물 지원)
-			List<String> useMdnList = this.concatResvDescByList(prchsDtlMoreList, "useDeviceId");
+			Map<String, String> useMdnList = this.concatResvDescByList(prchsDtlMoreList);
 
 			CouponPublishV2EcRes couponPublishV2EcRes = null;
 			try {
@@ -1540,7 +1549,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 								prchsDtlMore.getProdId());
 					}
 				}
-
 				throw e;
 			}
 
@@ -2195,26 +2203,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	/*
 	 * 
-	 * <pre> 구매 예약 정보의 특정 값을 리스트로 반환. </pre>
+	 * <pre> 구매예약정보에서 CMS호출시 필요한 값을 뽑아낸다. </pre>
 	 * 
 	 * @param prchsDtlMoreList 구매예약정보 목록
 	 * 
-	 * @param fieldName 원하는 값
-	 * 
-	 * @return 해당 값의 리스트
+	 * @return mdn과 userkey로 된 Map
 	 */
-	private List<String> concatResvDescByList(List<PrchsDtlMore> prchsDtlMoreList, String fieldName) {
-		List<String> valList = new ArrayList<String>();
-		String resvDesc = null;
-		int tmpIdx = 0;
+	private Map<String, String> concatResvDescByList(List<PrchsDtlMore> prchsDtlMoreList) {
+		Map<String, String> valList = new LinkedHashMap<String, String>();
+		String filedName = PurchaseConstants.IF_PUR_ORDER_REQ_MDN_DELIVERY_USE_DEVICE_ID;
 
 		for (PrchsDtlMore resvPrchsDtlMore : prchsDtlMoreList) {
-
-			resvDesc = resvPrchsDtlMore.getPrchsResvDesc();
-
-			tmpIdx = resvDesc.indexOf(fieldName + "=");
-			valList.add(resvDesc.substring(tmpIdx + fieldName.length() + 1,
-					resvDesc.indexOf("&", tmpIdx + fieldName.length() + 1)));
+			String resvDesc = resvPrchsDtlMore.getPrchsResvDesc();
+			int tmpIdx = resvDesc.indexOf(filedName+ "=");
+			String useDevice = resvDesc.substring(tmpIdx + filedName.length() + 1,
+					resvDesc.indexOf("&", tmpIdx + filedName.length() + 1));
+			String useUserKey = resvPrchsDtlMore.getUseInsdUsermbrNo();
+			valList.put(useDevice, useUserKey);
 		}
 
 		return valList;
