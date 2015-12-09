@@ -966,5 +966,5 @@
         ) A   
         ORDER BY A.RNK1, A.RNK2 
     </select>
-         
+
 </mapper>
