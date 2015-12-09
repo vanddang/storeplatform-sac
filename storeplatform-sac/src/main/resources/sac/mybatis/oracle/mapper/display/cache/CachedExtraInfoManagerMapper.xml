@@ -84,7 +84,6 @@
                                  AND   PI.LANG_CD = #{langCd}
                                  AND   PD.LANG_CD = #{langCd}
                                  AND   RSHP.PROD_RSHP_CD = #{rshpCd}
-                                 AND   SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
                      ) LA
             )LB
     </select>
