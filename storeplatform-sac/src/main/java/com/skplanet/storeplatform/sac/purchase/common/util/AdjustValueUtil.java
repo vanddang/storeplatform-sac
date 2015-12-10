@@ -13,10 +13,7 @@ package com.skplanet.storeplatform.sac.purchase.common.util;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * 값을 조정하는 각종 기능을 한다.
@@ -113,6 +110,25 @@ public class AdjustValueUtil {
 			sb.append(key);
 			sb.append(delimiter);
 			sb.append(value);
+		}
+		return sb.toString();
+	}
+
+	public static String concatStr(List<Object []> list, String separator, String delimiter)
+	{
+		StringBuffer sb = new StringBuffer();
+
+		for(Object [] obj : list)
+		{
+			if(sb.length()>0) sb.append(separator);
+			StringBuffer subSb = new StringBuffer();
+			for(Object o : obj)
+			{
+				if(subSb.length()>0)
+					subSb.append(delimiter);
+				subSb.append(o == null ? "" : o);
+			}
+			sb.append(subSb.toString());
 		}
 		return sb.toString();
 	}
