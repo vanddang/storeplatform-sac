@@ -134,6 +134,7 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 		Accrual accrual = new Accrual();
 		accrual.setDownloadCount(stats.getPurchaseCount());
 		return accrual;
+
 	}
 
 	/*
