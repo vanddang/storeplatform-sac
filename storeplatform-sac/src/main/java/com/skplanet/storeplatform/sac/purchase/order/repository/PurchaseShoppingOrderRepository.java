@@ -16,7 +16,6 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcR
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -47,7 +46,7 @@ public interface PurchaseShoppingOrderRepository {
 	 * @return 발급 요청 결과 개체
 	 */
 	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String userKey, String couponCode, String itemCode,
-			String buyDeviceId, Map<String,String> useDeviceIdList, boolean bGift);
+			String buyDeviceId, List<Object[]> useDeviceIdList, boolean bGift);
 
 	/**
 	 * 

@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -60,7 +59,7 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 	 */
 	@Override
 	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String userKey, String couponCode,
-			String itemCode, String buyDeviceId, Map<String,String> useDeviceIdList, boolean bGift) {
+			String itemCode, String buyDeviceId, List<Object[]> useDeviceIdList, boolean bGift) {
 		CouponPublishV2EcReq couponPublishV2EcReq = new CouponPublishV2EcReq();
 		couponPublishV2EcReq.setPrchsId(prchsId);
 		couponPublishV2EcReq.setUserKey(userKey);
@@ -68,7 +67,7 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		couponPublishV2EcReq.setItemCode(itemCode);
 		couponPublishV2EcReq.setBuyMdn(buyDeviceId);
 		couponPublishV2EcReq.setGiftFlag(bGift ? "Y" : "N");
-		couponPublishV2EcReq.setUseMdns(AdjustValueUtil.concatStr(useDeviceIdList, ",",":", false));
+		couponPublishV2EcReq.setUseMdns(AdjustValueUtil.concatStr(useDeviceIdList, ",",":"));
 
 		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,PUBLISH,REQ,V2,{}",
 				ReflectionToStringBuilder.toString(couponPublishV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));

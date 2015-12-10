@@ -118,11 +118,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	@Autowired
 	private PurchaseOrderPostService orderPostService;
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 비과금 구매 처리.
 	 * </pre>
-	 * 
+	 *
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 * @return 생성된 구매이력 건수
@@ -136,11 +136,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * Biz 쿠폰 발급 요청 처리.
 	 * </pre>
-	 * 
+	 *
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 * @return 생성된 구매이력 건수
@@ -153,11 +153,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 상품 구매요청 처리.
 	 * </pre>
-	 * 
+	 *
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 * @return 생성된 구매이력 건수
@@ -222,11 +222,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 * 
+	 *
 	 * <pre> 무료구매 처리. </pre>
-	 * 
+	 *
 	 * @param purchaseOrderInfo 구매요청 정보
-	 * 
+	 *
 	 * @return 생성된 구매이력 건수
 	 */
 	private int freePurchase(PurchaseOrderInfo purchaseOrderInfo) {
@@ -320,13 +320,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				String useDeviceId = useUser.getDeviceId();
 
 				if (purchaseOrderInfo.getApiVer() > 1) { // 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (1:N 선물 지원)
-					Map<String,String> useMdnList = new LinkedHashMap<String, String>();
+					List<Object[]> useMdnList = new ArrayList<Object[]>();
 					if (purchaseOrderInfo.isGift()) {
 						for (PurchaseUserDevice user : purchaseOrderInfo.getReceiveUserList()) {
-							useMdnList.put(user.getDeviceId(), user.getUserKey());
+							useMdnList.add(new String[]{user.getDeviceId(), user.getUserKey()});
 						}
 					} else {
-						useMdnList.put(useDeviceId, useUser.getUserKey());
+						useMdnList.add(new String[]{useDeviceId, useUser.getUserKey()});
 					}
 
 					CouponPublishV2EcRes couponPublishV2EcRes = this.purchaseShoppingOrderRepository
@@ -543,9 +543,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 * 
+	 *
 	 * <pre> 유료구매 - 구매예약. </pre>
-	 * 
+	 *
 	 * @param purchaseOrderInfo 구매요청 정보
 	 */
 	private int reservePurchase(PurchaseOrderInfo purchaseOrderInfo) {
@@ -654,11 +654,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 구매인증.
 	 * </pre>
-	 * 
+	 *
 	 * @param verifyOrderInfo
 	 *            구매인증 요청 정보
 	 */
@@ -993,11 +993,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 유료구매 - 구매확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장.
 	 * </pre>
-	 * 
+	 *
 	 * @param notifyPaymentReq
 	 *            결제결과 정보
 	 */
@@ -1532,7 +1532,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// {1:N선물구분
 
 		if (apiVer > 1) { // 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (1:N 선물 지원)
-			Map<String, String> useMdnList = this.concatResvDescByList(prchsDtlMoreList);
+			List<Object[]> useMdnList = this.concatResvDescByList(prchsDtlMoreList);
 
 			CouponPublishV2EcRes couponPublishV2EcRes = null;
 			try {
@@ -1620,11 +1620,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * IAP 구매/결제 통합 구매이력 생성 요청.
 	 * </pre>
-	 * 
+	 *
 	 * @param req
 	 *            구매/결제 통합 구매이력 생성 요청 VO
 	 * @param tenantId
@@ -1907,7 +1907,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	/*
 	 * <pre> 구매 전처리 - 구매 정합성 체크. </pre>
-	 * 
+	 *
 	 * @param purchaseOrderInfo 구매진행 정보
 	 */
 	private void validatePurchaseOrder(PurchaseOrderInfo purchaseOrderInfo) {
@@ -1977,11 +1977,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 * 
+	 *
 	 * <pre> CLINK 상품 별 구매 결과 응답 값 생성. </pre>
-	 * 
+	 *
 	 * @param productList 구매요청 상품 목록
-	 * 
+	 *
 	 * @return 상품 별 구매 결과
 	 */
 	private String makeClinkResProductResult(List<PurchaseProduct> productList) {
@@ -2000,11 +2000,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 * 
+	 *
 	 * <pre> 구매 확정 취소 작업. </pre>
-	 * 
+	 *
 	 * @param prchsDtlMoreList 구매 정보
-	 * 
+	 *
 	 * @param cashReserveResList 게임캐쉬 충전예약 결과 정보 목록
 	 */
 	private void revertToPreConfirm(List<PrchsDtlMore> prchsDtlMoreList, TStoreCashDetailParam tStoreCashDetailParam,
@@ -2052,17 +2052,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	// RE~
 
 	/*
-	 * 
+	 *
 	 * <pre> 구매 예약 정보 목록 조회. </pre>
-	 * 
+	 *
 	 * @param tenantId 테넌트 ID
-	 * 
+	 *
 	 * @param prchsId 조회할 구매 ID
-	 * 
+	 *
 	 * @param useTenantId 이용자 테넌트 ID
-	 * 
+	 *
 	 * @param useUserKey 이용자 내부관리 번호
-	 * 
+	 *
 	 * @return 구매 예약 정보 목록
 	 */
 	private List<PrchsDtlMore> searchReservedPurchaseList(String tenantId, String prchsId, String useTenantId,
@@ -2093,19 +2093,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 * 
+	 *
 	 * <pre> 결제 정책 체크. </pre>
-	 * 
+	 *
 	 * @param prchsDtlMoreList 구매 정보
-	 * 
+	 *
 	 * @param checkSystemId 구매인증 요청한 시스템ID
-	 * 
+	 *
 	 * @param marketDeviceKey SAP 통신사 디바이스 고유 Key
-	 * 
+	 *
 	 * @param deviceKeyAuth SAP 통신사 디바이스 고유 Key 의 hash 값. SHA256 with salt 권장
-	 * 
+	 *
 	 * @param reservedDataMap 구매예약 정보
-	 * 
+	 *
 	 * @return 결제 정책 체크 결과
 	 */
 	private CheckPaymentPolicyResult checkPaymentPolicy(List<PrchsDtlMore> prchsDtlMoreList, String checkSystemId,
@@ -2167,15 +2167,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 * 
+	 *
 	 * <pre> 구매 예약 정보의 특정 값을 구분자로 연결. </pre>
-	 * 
+	 *
 	 * @param prchsDtlMoreList 구매예약정보 목록
-	 * 
+	 *
 	 * @param fieldName 원하는 값
-	 * 
+	 *
 	 * @param separator 구분자
-	 * 
+	 *
 	 * @return 연결된 값
 	 */
 	// private String concatResvDesc(List<PrchsDtlMore> prchsDtlMoreList, String fieldName, String separator) {
@@ -2202,15 +2202,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	// }
 
 	/*
-	 * 
+	 *
 	 * <pre> 구매예약정보에서 CMS호출시 필요한 값을 뽑아낸다. </pre>
-	 * 
+	 *
 	 * @param prchsDtlMoreList 구매예약정보 목록
-	 * 
+	 *
 	 * @return mdn과 userkey로 된 Map
 	 */
-	private Map<String, String> concatResvDescByList(List<PrchsDtlMore> prchsDtlMoreList) {
-		Map<String, String> valList = new LinkedHashMap<String, String>();
+	private List<Object[]> concatResvDescByList(List<PrchsDtlMore> prchsDtlMoreList) {
+		List<Object[]> list = new ArrayList<Object[]>();
 		String filedName = PurchaseConstants.IF_PUR_ORDER_REQ_MDN_DELIVERY_USE_DEVICE_ID;
 
 		for (PrchsDtlMore resvPrchsDtlMore : prchsDtlMoreList) {
@@ -2219,10 +2219,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			String useDevice = resvDesc.substring(tmpIdx + filedName.length() + 1,
 					resvDesc.indexOf("&", tmpIdx + filedName.length() + 1));
 			String useUserKey = resvPrchsDtlMore.getUseInsdUsermbrNo();
-			valList.put(useDevice, useUserKey);
+			list.add(new String[] {useDevice, useUserKey});
 		}
 
-		return valList;
+		return list;
 	}
 
 	/*
