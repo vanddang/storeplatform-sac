@@ -355,7 +355,6 @@
                    AND SB.PROD_ID = SC.PROD_ID
                    AND SB.CONTENTS_TYPE_CD = 'PD002502'
                    AND SC.TENANT_ID = #{tenantId}
-                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
                    AND SC.PROD_ID = SD.PROD_ID
                    AND SD.TENANT_ID = SC.TENANT_ID
                    AND SD.PROD_STATUS_CD = 'PD000403'
@@ -375,7 +374,6 @@
                    AND SB.PROD_ID = SC.PROD_ID
                    AND SB.CONTENTS_TYPE_CD = 'PD002502'
                    AND SC.TENANT_ID = #{tenantId}
-                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
                    AND SC.PROD_ID = SD.PROD_ID
                    AND SD.TENANT_ID = SC.TENANT_ID
                    AND SD.PROD_STATUS_CD = 'PD000403'

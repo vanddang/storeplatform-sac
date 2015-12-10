@@ -154,7 +154,6 @@
                                          AND H.TENANT_ID = #{tenantId}             /* header param : tenantId */
                                          AND I.PROD_ID(+) = D.PROD_ID
                                          AND I.TENANT_ID(+) = #{tenantId}             /* header param : tenantId */
-                                         AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                                          AND A.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                          AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                          AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
