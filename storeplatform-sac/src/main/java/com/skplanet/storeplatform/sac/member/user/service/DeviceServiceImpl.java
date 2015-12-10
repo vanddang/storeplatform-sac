@@ -155,6 +155,10 @@ public class DeviceServiceImpl implements DeviceService {
 	private AmqpTemplate memberRetireAmqpTemplate;
 
 	@Autowired
+	@Resource(name = "memberShoppingChangeKeyAmqpTemplate")
+	private AmqpTemplate memberShoppingChangeKeyAmqpTemplate;
+
+	@Autowired
 	private MemberCommonInternalComponent mcic;
 
 	/*
@@ -641,6 +645,18 @@ public class DeviceServiceImpl implements DeviceService {
 				mqInfo.setChgMemberYn(MemberConstants.USE_Y);
 				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
+			} catch (AmqpException ex) {
+				LOGGER.error("MQ process fail {}", mqInfo);
+			}
+
+			/**
+			 * MQ 연동(shopping 사용자키 변경)
+			 */
+			try {
+				CreateDeviceAmqpSacReq createDeviceAmqpSacReq = new CreateDeviceAmqpSacReq();
+				createDeviceAmqpSacReq.setUserKey(userKey);
+				createDeviceAmqpSacReq.setOldUserKey(previousUserKey);
+				this.memberShoppingChangeKeyAmqpTemplate.convertAndSend(createDeviceAmqpSacReq);
 			} catch (AmqpException ex) {
 				LOGGER.error("MQ process fail {}", mqInfo);
 			}
