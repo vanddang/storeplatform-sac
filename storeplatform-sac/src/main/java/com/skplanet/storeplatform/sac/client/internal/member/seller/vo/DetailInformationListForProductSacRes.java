@@ -15,7 +15,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * [REQUEST]상품상세의 판매자 정보 목록 조회.
  * 
- * Updated on : 2015. 11. 17. Updated by : 최진호, 보고지티.
+ * Updated on : 2015. 12. 10. Updated by : 최진호, 보고지티.
  */
 
 @JsonSerialize(include = Inclusion.NON_NULL)
@@ -64,6 +64,12 @@ public class DetailInformationListForProductSacRes extends CommonInfo {
 		private List<SellerMbrAppSac> sellerMbrList;
 		/** 판매 제공자 여부. */
 		private String providerYn;
+		/** 제공자 ID. */
+		private String providerId;
+		/** 제공자 구분 코드 . */
+		private String providerClass;
+		/** 제공자 내국인 여부 . */
+		private String providerIsDomestic;
 		/** 제공자 정보 Value List. */
 		private List<ProviderMbrAppSac> providerMbrList;
 
@@ -140,6 +146,63 @@ public class DetailInformationListForProductSacRes extends CommonInfo {
 		 */
 		public void setProviderYn(String providerYn) {
 			this.providerYn = providerYn;
+		}
+
+		/**
+		 * 제공자ID 을(를) 리턴한다.
+		 * 
+		 * @return providerId -
+		 */
+		public String getProviderId() {
+			return this.providerId;
+		}
+
+		/**
+		 * 제공자ID 을(를) 셋팅한다.
+		 * 
+		 * @param providerId
+		 *            providerId
+		 */
+		public void setProviderId(String providerId) {
+			this.providerId = providerId;
+		}
+
+		/**
+		 * 제공자 구분 코드 을(를) 리턴한다.
+		 * 
+		 * @return providerClass -
+		 */
+		public String getProviderClass() {
+			return this.providerClass;
+		}
+
+		/**
+		 * 제공자 구분 코드 을(를) 셋팅한다.
+		 * 
+		 * @param providerClass
+		 *            providerClass
+		 */
+		public void setProviderClass(String providerClass) {
+			this.providerClass = providerClass;
+		}
+
+		/**
+		 * 제공자 내국인 여부 을(를) 리턴한다.
+		 * 
+		 * @return providerIsDomestic -
+		 */
+		public String getProviderIsDomestic() {
+			return this.providerIsDomestic;
+		}
+
+		/**
+		 * 제공자 내국인 여부 을(를) 셋팅한다.
+		 * 
+		 * @param providerIsDomestic
+		 *            providerIsDomestic
+		 */
+		public void setProviderIsDomestic(String providerIsDomestic) {
+			this.providerIsDomestic = providerIsDomestic;
 		}
 
 		/**
