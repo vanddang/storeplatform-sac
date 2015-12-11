@@ -3946,8 +3946,9 @@
             AND B2.TENANT_ID  =#{tenantId}        /* INPUT 테넌트ID */
             AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT
             AND ROWNUM = 1 
-    </select>       
-              
+    </select>
+
+
     <!-- 카테고리 쇼핑 상세 조회-->
     <select id="searchSpecificShoppingDetail" parameterType="Map" resultType="MetaInfo">
      SELECT  /* ShoppingMapper.xml.searchSpecificShoppingDetail,카테고리 쇼핑 상세 조회, 김형식/SK플래닛  , 2014-12-07 */
