@@ -70,11 +70,17 @@
                                          <if test="menuId == null or menuId == ''">
                                            AND A.MENU_ID LIKE 'DP26%'                /* 메뉴ID */
 		                                 </if>
-                               ) IA
+                                         <if test="arrayProdGradeCd != null">
+                                            AND D.PROD_GRD_CD IN                     /* 상품 등급 코드 */
+                                            <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                                #{prodGradeCd}
+                                            </foreach>
+                                         </if>
+                                 ) IA
                                  WHERE IA.RN = 1
                                <if test="weekDayCd != null and weekDayCd != ''">
                                  AND   IA.SERIALLY_WKDY LIKE CONCAT('%', CONCAT((SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd} AND LANG_CD = #{langCd}), '%')) /* DP010101 ~ DP010107 : 월~토*/
-                               </if>   
+                               </if>
                                ) JA
                        ) KA
                  WHERE KA.RNUM BETWEEN #{offset} AND #{count}
