@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * [RESPONSE]상품상세의 판매자 정보 목록 조회.
  * 
- * Updated on : 2015. 12. 10. Updated by : 최진호, 보고지티.
+ * Updated on : 2014. 6. 10. Updated by : 김다슬, 인크로스.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DetailInformationListForProductSacReq extends CommonInfo {
@@ -21,23 +21,23 @@ public class DetailInformationListForProductSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 상품상세의 판매자 요청 정보 리스트.
+	 * 판매자 Key 목록.
 	 */
-	private List<SellerMbrSac> sellerMbrSacList;
+	private List<String> sellerKeyList;
 
 	/**
-	 * @return the sellerMbrSacList
+	 * @return the sellerKeyList
 	 */
-	public List<SellerMbrSac> getSellerMbrSacList() {
-		return this.sellerMbrSacList;
+	public List<String> getSellerKeyList() {
+		return this.sellerKeyList;
 	}
 
 	/**
-	 * @param sellerMbrSacList
-	 *            the sellerMbrSacList to set
+	 * @param sellerKeyList
+	 *            the sellerKeyList to set
 	 */
-	public void setSellerMbrSacList(List<SellerMbrSac> sellerMbrSacList) {
-		this.sellerMbrSacList = sellerMbrSacList;
+	public void setSellerKeyList(List<String> sellerKeyList) {
+		this.sellerKeyList = sellerKeyList;
 	}
 
 }
