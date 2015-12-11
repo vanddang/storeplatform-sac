@@ -919,6 +919,7 @@
                     ON SPP.PROD_ID = EPROD.PROD_ID
                        AND SPP.EXPO_YN = 'Y'
                        AND SPP.CPN_ID IS NOT NULL
+                       AND SPP.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                        AND SYSDATE BETWEEN SPP.SPRC_APPLY_START_DT AND SPP.SPRC_APPLY_END_DT
             WHERE 1 = 1
                   AND SC.CATALOG_ID = #{catalogId}

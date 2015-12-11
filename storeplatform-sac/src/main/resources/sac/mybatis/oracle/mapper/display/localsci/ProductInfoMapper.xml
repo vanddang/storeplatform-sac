@@ -662,6 +662,7 @@
                                      AND B1.PROD_ID  = #{epsdId}
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                      ORDER BY  B1.SPRC_APPLY_END_DT DESC
                                ) WHERE ROWNUM =1                         
                           )N                           

@@ -3712,6 +3712,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 		req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		req.setTenantId(tenantHeader.getTenantId());
 		// 필수 파라미터 체크
 
 		if (!DisplayConstants.DP_CATALOG_IDENTIFIER_CD.equals(req.getType())
