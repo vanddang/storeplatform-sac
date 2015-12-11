@@ -3948,7 +3948,7 @@
             AND ROWNUM = 1 
     </select>
 
-              
+
     <!-- 카테고리 쇼핑 상세 조회-->
     <select id="searchSpecificShoppingDetail" parameterType="Map" resultType="MetaInfo">
      SELECT  /* ShoppingMapper.xml.searchSpecificShoppingDetail,카테고리 쇼핑 상세 조회, 김형식/SK플래닛  , 2014-12-07 */
