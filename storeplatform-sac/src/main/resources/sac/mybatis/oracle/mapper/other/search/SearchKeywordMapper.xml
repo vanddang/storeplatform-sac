@@ -36,7 +36,7 @@
 		           </if>
 		           AND A.EXPO_YN = 'Y'
 		           AND B.EXPO_YN = 'Y'
-		         ORDER BY B.RANK ASC, B.UPD_DT DESC
+		         ORDER BY B.RANK ASC, B.UPD_DT DESC, B.KEYWORD ASC
 		  )
 		 WHERE ROWNUM <![CDATA[<=]]> #{count}
 	</select>
