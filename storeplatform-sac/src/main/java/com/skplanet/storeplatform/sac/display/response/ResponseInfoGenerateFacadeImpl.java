@@ -213,6 +213,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 				product.setDateList(Arrays.asList(new Date(DisplayConstants.DP_DATE_REG, regDt)));
 		}
 
+        // Music 상품설명
+        product.setProductExplain(metaInfo.getProdBaseDesc());
 		// Music 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 		// 판매상태 설정

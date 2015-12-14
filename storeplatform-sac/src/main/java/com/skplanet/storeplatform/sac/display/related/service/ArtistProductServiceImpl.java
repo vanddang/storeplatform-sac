@@ -11,19 +11,15 @@ package com.skplanet.storeplatform.sac.display.related.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.related.AlbumProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
@@ -62,12 +58,6 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	@Autowired
-	private CommonMetaInfoGenerator commonGenerator;
-
-//	@Autowired
-//    private MemberBenefitService memberBenefitService;
-	
 	/**
 	 * 
 	 * <pre>
@@ -128,13 +118,7 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 				retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,
 						MetaInfo.class); // 뮤직 메타
 				if (retMetaInfo != null) {
-					// Tstore멤버십 적립율 정보
-//					retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
-					
-					Product product = null;
-					product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
-					product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
-					product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
+					Product product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
 					productList.add(product);
 				}
 			}

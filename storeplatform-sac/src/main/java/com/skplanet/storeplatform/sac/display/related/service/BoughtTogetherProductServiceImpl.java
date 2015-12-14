@@ -28,14 +28,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
-import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
@@ -59,9 +56,6 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	@Autowired
-	private CommonMetaInfoGenerator commonGenerator;
-
-	@Autowired
 	private DisplayCommonService displayCommonService;
 
 	@Autowired
@@ -69,9 +63,6 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 
 	@Autowired
 	private BoughtTogetherProductDataService dataSvc; // Data를 조회하기 위한 Service
-
-//	@Autowired
-//	private MemberBenefitService benefitService; // 마일리지, 할인율 등 사용자 혜택 정보 조회 Service
 
 	/**
 	 * 
@@ -163,17 +154,8 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap, MetaInfo.class); // 뮤직 메타
-					// retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap); // 뮤직 공통 메타
 					if (retMetaInfo != null) {
-
-						// Tstore멤버십 적립율 정보
-						// 음악 상세화면에서 이 상품과 함께 구매한 상품 진입, 다운로드가 완료된 경우 상품가격영역에 멤버십 적립율이 노출. #22048 2014.09.23
-//						MileageInfo mileageInfo = this.benefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt());
-//						retMetaInfo.setMileageInfo(mileageInfo);
-
 						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
-						product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
-						product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
 						productList.add(product);
 					}
 				} else {
@@ -284,17 +266,8 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
 					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,MetaInfo.class); // 뮤직 메타
-					// retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap); // 뮤직 공통 메타
 					if (retMetaInfo != null) {
-
-						// Tstore멤버십 적립율 정보
-						// 음악 상세화면에서 이 상품과 함께 구매한 상품 진입, 다운로드가 완료된 경우 상품가격영역에 멤버십 적립율이 노출. #22048 2014.09.23
-//						MileageInfo mileageInfo = this.benefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt());
-//						retMetaInfo.setMileageInfo(mileageInfo);
-
 						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
-						product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
-						product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
 						productList.add(product);
 					}
 				} else {
