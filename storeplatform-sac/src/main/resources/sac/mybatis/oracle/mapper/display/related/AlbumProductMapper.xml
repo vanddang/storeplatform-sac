@@ -26,7 +26,6 @@
                 , TB_DP_TENANT_PROD E
                 , TB_DP_SPRT_DEVICE F
                 , TB_CM_DEVICE G
-                , TB_DP_TENANT_PROD_STATS H
                 , TB_DP_MUSIC_PROD I
                 , TB_DP_PROD_RSHP J
                 , TB_DP_PROD_RSHP K
@@ -35,8 +34,6 @@
             AND A.PROD_ID = D.PROD_ID
             AND A.PROD_ID = E.PROD_ID
             AND A.PROD_ID = F.PROD_ID
-            AND E.PROD_ID = H.PROD_ID(+)
-            AND E.TENANT_ID = H.TENANT_ID(+)
             AND A.PROD_ID = I.PROD_ID
             AND A.PROD_ID = J.PART_PROD_ID /* 채널 관계 */
             AND J.PROD_ID = K.PART_PROD_ID /* 앨범 관계 */
