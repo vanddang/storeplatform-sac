@@ -73,6 +73,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ChangeMemberKeyAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
@@ -652,13 +653,14 @@ public class DeviceServiceImpl implements DeviceService {
 			/**
 			 * MQ 연동(shopping 사용자키 변경)
 			 */
+			ChangeMemberKeyAmqpSacReq changeMemberKeyAmqpSacReq = new ChangeMemberKeyAmqpSacReq();
 			try {
-				CreateDeviceAmqpSacReq createDeviceAmqpSacReq = new CreateDeviceAmqpSacReq();
-				createDeviceAmqpSacReq.setUserKey(userKey);
-				createDeviceAmqpSacReq.setOldUserKey(previousUserKey);
-				this.memberShoppingChangeKeyAmqpTemplate.convertAndSend(createDeviceAmqpSacReq);
+				changeMemberKeyAmqpSacReq.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+				changeMemberKeyAmqpSacReq.setUserKey(userKey);
+				changeMemberKeyAmqpSacReq.setOldUserKey(previousUserKey);
+				this.memberShoppingChangeKeyAmqpTemplate.convertAndSend(changeMemberKeyAmqpSacReq);
 			} catch (AmqpException ex) {
-				LOGGER.error("MQ process fail {}", mqInfo);
+				LOGGER.error("MQ process fail {}", changeMemberKeyAmqpSacReq);
 			}
 		}
 
