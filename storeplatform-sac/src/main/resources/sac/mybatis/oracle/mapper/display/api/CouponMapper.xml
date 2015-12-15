@@ -80,6 +80,7 @@
 		WHERE PROD_ID =#{episodeId}
 		  AND EXPO_YN = 'Y' 
 		  AND CPN_ID IS NOT NULL
+		  AND TENANT_ID = 'S01'
 		  AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
     </select>      
     
@@ -685,6 +686,7 @@
           AND PROD_ID =#{itemCode}
           AND EXPO_YN = 'Y' 
           AND CPN_ID IS NOT NULL
+          AND TENANT_ID = 'S01'
           AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
     </update>            
         
@@ -696,7 +698,7 @@
         FROM   TB_DP_SPRC_PROD A
               ,TB_DP_SHPG_PROD B
         WHERE A.PROD_ID = B.PROD_ID
-          AND B.SRC_CONTENT_ID =  
+          AND B.SRC_CONTENT_ID =
                                  CASE WHEN PROD_CASE_CD = 'DP006303'
                                   THEN
                                         (  SELECT 
@@ -713,7 +715,8 @@
                                                      WHERE A.PROD_ID = B.PROD_ID 
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
                                                    ) 
-                                               AND SP1.EXPO_YN = 'Y'  
+                                               AND SP1.EXPO_YN = 'Y'
+                                               AND SP1.TENANT_ID = 'S01'
                                                AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT      
                                                AND SP1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가                                           
                                                AND ROWNUM =1     
@@ -722,6 +725,7 @@
                                   END
           AND A.EXPO_YN = 'Y' 
           AND A.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+          AND A.TENANT_ID = 'S01'
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
     </select>
     
@@ -750,7 +754,8 @@
                                                      WHERE A.PROD_ID = B.PROD_ID 
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
                                                    ) 
-                                               AND SP1.EXPO_YN = 'Y'   
+                                               AND SP1.EXPO_YN = 'Y'
+                                               AND SP1.TENANT_ID = 'S01'
                                                AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT
                                                AND SP1.SPRC_TYPE_CD IN ('DP007503','DP007504')                                                   
                                                AND ROWNUM =1     
@@ -759,6 +764,7 @@
                                   END
           AND A.EXPO_YN = 'Y' 
           AND A.SPRC_TYPE_CD IN ('DP007503','DP007504') --DP007503 : 팅요금제 일반 특가 , DP007504 팅요금제 배송 특가
+          AND A.TENANT_ID = 'S01'
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
     </select>    
     
@@ -793,7 +799,8 @@
         WHERE A.PROD_ID = B.PROD_ID
           AND A.PROD_ID = C.PROD_ID
           AND C.SRC_CONTENT_ID =  #{itemCode}
-          AND A.EXPO_YN = 'Y' 
+          AND A.EXPO_YN = 'Y'
+          AND A.TENANT_ID = 'S01'
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
           AND ROWNUM =1
     </select>    
@@ -824,7 +831,8 @@
               ,TB_DP_SHPG_PROD C
         WHERE A.PROD_ID = B.PROD_ID
           AND A.PROD_ID = C.PROD_ID
-          AND A.EXPO_YN = 'Y' 
+          AND A.EXPO_YN = 'Y'
+          AND A.TENANT_ID = 'S01'
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
 		  AND (TO_CHAR(A.SPRC_APPLY_START_DT, 'YYYYMMDDHH24MISS') BETWEEN #{startDate} AND #{endDate} 
 		       OR TO_CHAR(A.SPRC_APPLY_END_DT, 'yyyyMMddHH24miss') BETWEEN #{startDate} AND #{endDate}
@@ -942,6 +950,7 @@
         WHERE PROD_ID =#{episodeId}
           AND EXPO_YN = 'Y' 
           AND CPN_ID IS NOT NULL
+          AND TENANT_ID = 'S01'
           AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
     </select>      
     
