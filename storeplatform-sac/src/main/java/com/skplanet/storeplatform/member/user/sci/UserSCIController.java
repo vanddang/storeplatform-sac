@@ -39,8 +39,6 @@ import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointReque
 import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointRequest;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
@@ -1472,62 +1470,6 @@ public class UserSCIController implements UserSCI {
 		// }
 
 		return removeManagementResponse;
-
-	}
-
-	/**
-	 * <pre>
-	 * 미동의 사용자 등록을 처리하는 기능을 제공한다.
-	 * </pre>
-	 * 
-	 * @param updateMbrOneIDRequest
-	 *            미동의 사용자 등록 요청 Value Object
-	 * @return createMbrOneIDResponse - 미동의 사용자 등록 응답 Value Object
-	 */
-	@Override
-	public UpdateMbrOneIDResponse createAgreeSite(UpdateMbrOneIDRequest updateMbrOneIDRequest) {
-
-		LOGGER.debug("\n\n\n\n\n");
-		LOGGER.debug("==================================================================================");
-		LOGGER.debug("컨트롤러 - 미동의 사용자 등록");
-		LOGGER.debug("==================================================================================\n\n\n\n\n");
-
-		UpdateMbrOneIDResponse updateMbrOneIDResponse = null;
-
-		// 입력 파라미터가 없음
-		if (updateMbrOneIDRequest == null) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
-		}
-
-		// 공통 파라미터 없음
-		if (updateMbrOneIDRequest.getCommonRequest() == null) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
-		}
-
-		// 테넌트 아이디 없음
-		if (updateMbrOneIDRequest.getCommonRequest().getTenantID() == null
-				|| updateMbrOneIDRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
-		// 필수 파라미터, mbrMangItemPtcr
-		if (updateMbrOneIDRequest.getMbrOneID().getIntgSvcNumber() == null
-				|| updateMbrOneIDRequest.getMbrOneID().getIntgSvcNumber().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-		}
-
-		try {
-
-			updateMbrOneIDResponse = this.service.createMbrOneID(updateMbrOneIDRequest);
-
-		} catch (StorePlatformException ex) {
-			throw ex;
-		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
-
-		return updateMbrOneIDResponse;
 
 	}
 

@@ -37,8 +37,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearch
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
-import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
@@ -322,11 +320,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
 		/**
-		 * OneID 정보 업데이트
-		 */
-		this.modOneIdInfo(sacHeader, agreeUserEcRes, createUserResponse.getUserKey());
-
-		/**
 		 * 결과 세팅
 		 */
 		CreateByAgreementRes response = new CreateByAgreementRes();
@@ -441,11 +434,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 휴대기기 등록.
 		 */
 		String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
-
-		/**
-		 * OneID 정보 업데이트
-		 */
-		this.modOneIdInfo(sacHeader, agreeUserEcRes, createUserResponse.getUserKey());
 
 		/**
 		 * 결과 세팅
@@ -1196,51 +1184,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		Random random = new Random();
 		fixMbrNo.append(String.valueOf(random.nextInt(10)));
 		return fixMbrNo.toString();
-	}
-
-	/**
-	 * <pre>
-	 * T-store 미동의 회원 정보 업데이트.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @param agreeUserEcRes
-	 *            이용동의가입 응답 Object
-	 * @param userKey
-	 *            사용자 Key
-	 */
-	private void modOneIdInfo(SacRequestHeader sacHeader, AgreeUserEcRes agreeUserEcRes, String userKey) {
-
-		try {
-
-			/**
-			 * 미동의 회원 정보 업데이트.
-			 */
-			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-			updateMbrOneIDRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-			MbrOneID mbrOneID = new MbrOneID();
-			mbrOneID.setUserKey(userKey); // 가입시 등록된 사용자 Key
-			mbrOneID.setIntgSvcNumber(agreeUserEcRes.getImIntSvcNo()); // OneID 통합서비스 관리번호
-			mbrOneID.setLoginStatusCode(agreeUserEcRes.getUserStatusCode()); // 가입자상태코드 (10=정상, 11=가인증)
-			mbrOneID.setEntryStatusCode(agreeUserEcRes.getUserStatusCode()); // 가입자 상태코드 (10=정상, 11=가인증)
-			mbrOneID.setStopStatusCode(MemberConstants.USER_STOP_STATUS_NOMAL); // 직권중지해제 기본셋팅
-			mbrOneID.setIsMemberPoint(this.ocbJoinCodeYn(agreeUserEcRes)); // 통합포인트 여부
-			mbrOneID.setIntgMbrCaseCode(agreeUserEcRes.getImMemTypeCd()); // 통합회원 유형 코드 100: 국내회원 900: 글로벌회원
-			mbrOneID.setEntryDate(agreeUserEcRes.getJoinDate() + agreeUserEcRes.getJoinTime()); // 가입일시
-			mbrOneID.setMemberCaseCode(agreeUserEcRes.getUserType()); // 가입자 유형코드
-			mbrOneID.setIntgSiteCode(agreeUserEcRes.getJoinSstCode()); // 가입 서비스 사이트 코드
-			mbrOneID.setUpdateDate(DateUtil.getToday("yyyyMMddHHmmss")); // 업데이트 날짜
-			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-		} catch (StorePlatformException spe) {
-
-			LOGGER.info("미동의 회원정보 업데이트 실패 [{}]", agreeUserEcRes.getImIntSvcNo());
-			throw spe;
-
-		}
-
 	}
 
 	/**

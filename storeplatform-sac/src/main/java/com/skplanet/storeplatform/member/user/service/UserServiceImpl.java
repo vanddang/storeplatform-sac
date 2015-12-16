@@ -50,8 +50,6 @@ import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointReque
 import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointRequest;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
@@ -1974,52 +1972,6 @@ public class UserServiceImpl implements UserService {
 				"response.ResultMessage.success"));
 		return removeManagementResponse;
 
-	}
-
-	/**
-	 * <pre>
-	 * OneID 사용자 등록을 처리하는 기능을 제공한다.
-	 * </pre>
-	 * 
-	 * @param updateMbrOneIDRequest
-	 *            OneID 사용자 등록 요청 Value Object
-	 * @return createMbrOneIDResponse - OneID 사용자 등록 응답 Value Object
-	 */
-	@Override
-	public UpdateMbrOneIDResponse createMbrOneID(UpdateMbrOneIDRequest updateMbrOneIDRequest) {
-
-		LOGGER.debug("\n\n\n\n\n");
-		LOGGER.debug("==================================================================================");
-		LOGGER.debug("서비스 - OneID 사용자 등록");
-		LOGGER.debug("==================================================================================\n\n\n\n\n");
-
-		LOGGER.debug("### createMbrOneIDRequest : {}", updateMbrOneIDRequest);
-
-		String isDormant = StringUtils.isBlank(updateMbrOneIDRequest.getIsDormant()) ? Constant.TYPE_YN_N : updateMbrOneIDRequest
-				.getIsDormant();
-		UpdateMbrOneIDResponse updateMbrOneIDResponse = new UpdateMbrOneIDResponse();
-		Integer row = 0;
-
-		MbrOneID mbrOneID = null;
-		mbrOneID = updateMbrOneIDRequest.getMbrOneID();
-		mbrOneID.setTenantID(updateMbrOneIDRequest.getCommonRequest().getTenantID());
-
-		LOGGER.debug(">>>> >>> UserServiceImpl before createMbrOneID : {}", mbrOneID);
-		if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
-			row = this.commonDAO.update("User.createMbrOneID", mbrOneID);
-		} else {
-			row = this.idleDAO.update("User.createMbrOneID", mbrOneID);
-		}
-
-		LOGGER.debug("### row : {}", row);
-
-		if (row == 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
-		}
-
-		updateMbrOneIDResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
-				"response.ResultMessage.success"));
-		return updateMbrOneIDResponse;
 	}
 
 	/**

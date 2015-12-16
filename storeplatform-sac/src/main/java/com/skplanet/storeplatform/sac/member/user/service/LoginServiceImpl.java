@@ -55,8 +55,6 @@ import com.skplanet.storeplatform.member.client.common.util.RandomString;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
-import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -875,21 +873,6 @@ public class LoginServiceImpl implements LoginService {
 				});
 			}
 
-		} else {
-
-			/* 변동성 여부 조회 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId(),
-					req.getDeviceTelecom());
-			isSaveAndSyncTarget = saveAndSync.getIsSaveAndSyncTarget();
-
-			if (!StringUtils.equals(isSaveAndSyncTarget, "Y")) {
-
-				/* 회원 정보가 존재 하지 않습니다. */
-				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
-
-			}
-
-			userKey = saveAndSync.getUserKey();
 		}
 
 		if (StringUtils.equals(isVariability, "Y")) {
@@ -1114,8 +1097,6 @@ public class LoginServiceImpl implements LoginService {
 					/* 로그인 상태코드 정상처리 */
 					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
-					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), isDormant,
-							MemberConstants.USER_LOGIN_STATUS_NOMAL, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
@@ -1162,8 +1143,6 @@ public class LoginServiceImpl implements LoginService {
 							MemberConstants.USER_STOP_STATUS_NOMAL);
 					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USE_N, null,
 							MemberConstants.USER_STOP_STATUS_NOMAL, null, null);
-					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USE_N, null,
-							MemberConstants.USER_STOP_STATUS_NOMAL);
 					stopStatusCode = MemberConstants.USER_STOP_STATUS_NOMAL;
 				}
 
@@ -1173,8 +1152,6 @@ public class LoginServiceImpl implements LoginService {
 							MemberConstants.USER_LOGIN_STATUS_NOMAL);
 					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USE_N,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
-					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USE_N,
-							MemberConstants.USER_LOGIN_STATUS_NOMAL, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
@@ -1217,8 +1194,6 @@ public class LoginServiceImpl implements LoginService {
 								MemberConstants.USER_STOP_STATUS_PAUSE);
 						this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant, null,
 								MemberConstants.USER_STOP_STATUS_PAUSE, null, null);
-						this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), isDormant, null,
-								MemberConstants.USER_STOP_STATUS_PAUSE);
 						stopStatusCode = MemberConstants.USER_STOP_STATUS_PAUSE;
 					}
 
@@ -1233,8 +1208,6 @@ public class LoginServiceImpl implements LoginService {
 								MemberConstants.USER_LOGIN_STATUS_PAUSE);
 						this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant,
 								MemberConstants.USER_LOGIN_STATUS_PAUSE, null, null, null);
-						this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), isDormant,
-								MemberConstants.USER_LOGIN_STATUS_PAUSE, null);
 						loginStatusCode = MemberConstants.USER_LOGIN_STATUS_PAUSE;
 					}
 
@@ -3366,39 +3339,6 @@ public class LoginServiceImpl implements LoginService {
 		}
 		updStatusUserReq.setIsDormant(isDormant);
 		this.userSCI.updateStatus(updStatusUserReq);
-
-	}
-
-	/**
-	 * <pre>
-	 * 원아이디 회원 정보 업데이트.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @param imSvcNo
-	 *            OneID 통합서비스 관리번호
-	 * @param isDormant
-	 *            휴면계정유무
-	 * @param loginStatusCode
-	 *            로그인 상태코드
-	 * @param stopStatusCode
-	 *            직권중지 상태코드
-	 */
-	private void modOneIdInfo(SacRequestHeader sacHeader, String imSvcNo, String isDormant, String loginStatusCode,
-			String stopStatusCode) {
-
-		UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-		updateMbrOneIDRequest.setCommonRequest(this.commService.getSCCommonRequest(sacHeader));
-		MbrOneID mbrOneID = new MbrOneID();
-		mbrOneID.setIntgSvcNumber(imSvcNo);
-		mbrOneID.setLoginStatusCode(loginStatusCode);
-		mbrOneID.setStopStatusCode(stopStatusCode);
-		mbrOneID.setUpdateDate(DateUtil.getToday("yyyyMMddHHmmss"));
-
-		updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-		updateMbrOneIDRequest.setIsDormant(isDormant);
-		this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 	}
 

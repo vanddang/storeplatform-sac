@@ -54,7 +54,7 @@ public class UserLockController {
 	public LockAccountSacRes lockAccount(SacRequestHeader sacHeader, @Validated @RequestBody LockAccountSacReq req) {
 
 		LOGGER.debug("################################");
-		LOGGER.debug("##### 2.1.36. 회원 계정 잠금 #####");
+		LOGGER.debug("##### 2.1.35. 회원 계정 잠금 #####");
 		LOGGER.debug("################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));

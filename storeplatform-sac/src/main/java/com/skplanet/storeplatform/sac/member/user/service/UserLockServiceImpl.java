@@ -19,12 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
-import com.skplanet.storeplatform.external.client.shopping.util.DateUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
-import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
@@ -60,48 +56,12 @@ public class UserLockServiceImpl implements UserLockService {
 		/**
 		 * 미동의 회원 체크및 회원 정보 조회.
 		 */
-		CheckDuplicationResponse chkDupRes = this.checkDisAgree(sacHeader, req);
+		this.checkDisAgree(sacHeader, req);
 
 		/**
-		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
+		 * 회원 계정 잠금
 		 */
-		LOGGER.debug("## 사용자 타입  : {}", chkDupRes.getUserMbr().getUserType());
-		if (StringUtils.isNotEmpty(chkDupRes.getUserMbr().getImSvcNo())) {
-
-			LOGGER.debug("## ====================================================");
-			LOGGER.debug("## One ID 통합회원 [{}]", req.getUserId());
-			LOGGER.debug("## ====================================================");
-
-			/**
-			 * 통합IDP 로그인 상태 정보 변경 연동 (cmd = TXSetLoginConditionIDP)
-			 */
-			SetLoginStatusEcReq setLoginStatusEcReq = new SetLoginStatusEcReq();
-			setLoginStatusEcReq.setKey(req.getUserId());
-			setLoginStatusEcReq.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE);
-			this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
-
-			/**
-			 * 회원 계정 잠금
-			 */
-			this.modLoginStatus(sacHeader, req.getUserId());
-
-			/**
-			 * OneID 정보 업데이트
-			 */
-			this.modOneIdInfo(sacHeader, chkDupRes.getUserMbr().getImSvcNo());
-
-		} else {
-
-			LOGGER.debug("## ====================================================");
-			LOGGER.debug("## 기존 IDP 회원 [{}]", req.getUserId());
-			LOGGER.debug("## ====================================================");
-
-			/**
-			 * 회원 계정 잠금
-			 */
-			this.modLoginStatus(sacHeader, req.getUserId());
-
-		}
+		this.modLoginStatus(sacHeader, req.getUserId());
 
 		/**
 		 * 결과 setting.
@@ -193,44 +153,6 @@ public class UserLockServiceImpl implements UserLockService {
 
 		this.userSCI.updateStatus(updStatusUserReq);
 		LOGGER.debug("## 회원 계정 잠금 DB 설정 완료!!");
-
-	}
-
-	/**
-	 * <pre>
-	 * T-store 미동의 회원 정보 업데이트.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @param imSvcNo
-	 *            OneID 통합서비스 관리번호
-	 */
-	private void modOneIdInfo(SacRequestHeader sacHeader, String imSvcNo) {
-
-		try {
-
-			LOGGER.info("OneID 정보 업데이트 : {}", imSvcNo);
-
-			/**
-			 * 미동의 회원 정보 업데이트.
-			 */
-			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-			updateMbrOneIDRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-			MbrOneID mbrOneID = new MbrOneID();
-			mbrOneID.setIntgSvcNumber(imSvcNo); // OneID 통합서비스 관리번호
-			mbrOneID.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE); // 로그인 상태코드
-			mbrOneID.setUpdateDate(DateUtil.getToday("yyyyMMddHHmmss")); // 업데이트 날짜
-
-			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-		} catch (StorePlatformException spe) {
-
-			LOGGER.info("미동의 회원정보 업데이트 실패 [{}]", imSvcNo);
-			throw spe;
-
-		}
 
 	}
 
