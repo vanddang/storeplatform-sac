@@ -197,6 +197,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
             }
         }
 
+        if (sellerKeyList.isEmpty())
+            return;
+
         // 2014.06.12 판매자 정보 목록 조회 추가 (이태희D)
         DetailInformationListForProductSacReq sellerReq = new DetailInformationListForProductSacReq();
         sellerReq.setSellerMbrSacList(sellerKeyList);
