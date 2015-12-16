@@ -875,21 +875,6 @@ public class LoginServiceImpl implements LoginService {
 				});
 			}
 
-		} else {
-
-			/* 변동성 여부 조회 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId(),
-					req.getDeviceTelecom());
-			isSaveAndSyncTarget = saveAndSync.getIsSaveAndSyncTarget();
-
-			if (!StringUtils.equals(isSaveAndSyncTarget, "Y")) {
-
-				/* 회원 정보가 존재 하지 않습니다. */
-				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
-
-			}
-
-			userKey = saveAndSync.getUserKey();
 		}
 
 		if (StringUtils.equals(isVariability, "Y")) {
