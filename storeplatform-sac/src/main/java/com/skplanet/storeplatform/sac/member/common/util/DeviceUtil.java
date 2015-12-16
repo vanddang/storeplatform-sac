@@ -127,14 +127,11 @@ public class DeviceUtil {
 		deviceInfo.setUserKey(userMbrDevice.getUserKey());
 		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
 		deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
-		deviceInfo.setTenantId(userMbrDevice.getTenantID());
 		deviceInfo.setDeviceModelNo(userMbrDevice.getDeviceModelNo());
 		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
-		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setIsPrimary(userMbrDevice.getIsPrimary());
 		deviceInfo.setIsRecvSms(userMbrDevice.getIsRecvSMS());
 		deviceInfo.setNativeId(userMbrDevice.getNativeID());
-		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setJoinId(userMbrDevice.getJoinId());
 		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
@@ -142,6 +139,7 @@ public class DeviceUtil {
 		// deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
 		deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
 		deviceInfo.setIsDormant(userMbrDevice.getIsDormant());
+		deviceInfo.setMdn(userMbrDevice.getMdn());
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 
 		return deviceInfo;
@@ -193,17 +191,15 @@ public class DeviceUtil {
 		userMbrDevice.setUserKey(deviceInfo.getUserKey());
 		userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
 		userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
-		userMbrDevice.setTenantID(deviceInfo.getTenantId());
 		if (StringUtils.isNotBlank(deviceInfo.getDeviceModelNo()))
 			userMbrDevice.setDeviceModelNo(deviceInfo.getDeviceModelNo());
 		userMbrDevice.setDeviceTelecom(deviceInfo.getDeviceTelecom());
-		userMbrDevice.setDeviceNickName(deviceInfo.getDeviceNickName());
 		userMbrDevice.setIsPrimary(deviceInfo.getIsPrimary());
 		userMbrDevice.setIsRecvSMS(deviceInfo.getIsRecvSms());
 		userMbrDevice.setNativeID(deviceInfo.getNativeId());
-		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
 		userMbrDevice.setJoinId(deviceInfo.getJoinId());
 		userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
+		userMbrDevice.setMdn(deviceInfo.getMdn());
 		userMbrDevice.setUserMbrDeviceDetail(getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		return userMbrDevice;

@@ -55,6 +55,7 @@ public class Constant {
 	public final static String SEARCH_TYPE_DEVICE_KEY = "INSD_DEVICE_ID"; /* Device 내부키. */
 	public final static String SEARCH_TYPE_DEVICE_ID = "DEVICE_ID"; /* Device 고유ID. */
 	public final static String SEARCH_TYPE_SVC_MANG_NO = "SVC_MANG_NO"; /* Device 서비스 관리 번호. */
+	public final static String SEARCH_TYPE_MDN = "MDN"; /* Device mdn. */
 	public final static String REAL_NAME_TYPE_OWN = "OWN"; /* 실명인증 대상 : 본인. */
 	public final static String REAL_NAME_TYPE_PARANT = "PARENT"; /* 실명인증 대상 : 법정대리인. */
 

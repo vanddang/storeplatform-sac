@@ -27,8 +27,11 @@ public class SearchDeviceOwnerRequest extends CommonInfo implements Serializable
 	/** 공통 요청 Value Object. */
 	private CommonRequest commonRequest;
 
-	/** 휴대기기 ID(MDN/UUID/MAC). */
+	/** 휴대기기 ID(deviceId/UUID/MAC). */
 	private String deviceID;
+
+	/** 휴대기기 MDN. */
+	private String mdn;
 
 	/** 등록일시. */
 	private String regDate; // REG_DT
@@ -117,6 +120,21 @@ public class SearchDeviceOwnerRequest extends CommonInfo implements Serializable
 	 */
 	public void setIsDormant(String isDormant) {
 		this.isDormant = isDormant;
+	}
+
+	/**
+	 * @return mdn
+	 */
+	public String getMdn() {
+		return this.mdn;
+	}
+
+	/**
+	 * @param mdn
+	 *            String
+	 */
+	public void setMdn(String mdn) {
+		this.mdn = mdn;
 	}
 
 	/*

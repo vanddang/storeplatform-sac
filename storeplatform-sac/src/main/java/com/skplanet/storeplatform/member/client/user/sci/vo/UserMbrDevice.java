@@ -37,8 +37,11 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	/** 휴대기기 Key. */
 	private String deviceKey;
 
-	/** 휴대기기 ID(MDN/UUID/MAC). */
+	/** 휴대기기 ID. */
 	private String deviceID;
+
+	/** 휴대기기 mdn. */
+	private String mdn;
 
 	/** 테넌트 ID. */
 	private String tenantID;
@@ -508,6 +511,28 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	 */
 	public void setIsDormant(String isDormant) {
 		this.isDormant = isDormant;
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 MDN을 리턴한다.
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	public String getMdn() {
+		return this.mdn;
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 MDN을 설정한다.
+	 * </pre>
+	 * 
+	 * @param mDN
+	 */
+	public void setMdn(String mdn) {
+		this.mdn = mdn;
 	}
 
 }
