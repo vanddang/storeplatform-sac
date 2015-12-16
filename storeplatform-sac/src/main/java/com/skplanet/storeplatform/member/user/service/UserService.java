@@ -17,8 +17,6 @@ import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointReque
 import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointRequest;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
@@ -301,17 +299,6 @@ public interface UserService {
 	 * @return RemoveManagementResponse - 사용자 관리항목 및 부가정보 삭제 응답 Value Object
 	 */
 	public RemoveManagementResponse removeManagement(RemoveManagementRequest removeManagementRequest);
-
-	/**
-	 * <pre>
-	 * OneID 사용자 등록을 처리하는 기능을 제공한다.
-	 * </pre>
-	 * 
-	 * @param updateMbrOneIDRequest
-	 *            OneID 사용자 등록 요청 Value Object
-	 * @return createMbrOneIDResponse - OneID 사용자 등록 응답 Value Object
-	 */
-	public UpdateMbrOneIDResponse createMbrOneID(UpdateMbrOneIDRequest updateMbrOneIDRequest);
 
 	/**
 	 * <pre>

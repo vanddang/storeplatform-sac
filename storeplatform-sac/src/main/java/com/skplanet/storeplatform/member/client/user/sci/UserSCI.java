@@ -18,8 +18,6 @@ import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointReque
 import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointRequest;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointResponse;
 import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
@@ -299,17 +297,6 @@ public interface UserSCI {
 	 * @return removeManagementResponse - 사용자 부가정보 삭제 응답 Value Object
 	 */
 	public RemoveManagementResponse removeManagement(RemoveManagementRequest removeManagementRequest);
-
-	/**
-	 * <pre>
-	 * 미동의 사용자 등록을 처리하는 기능을 제공한다.
-	 * </pre>
-	 * 
-	 * @param updateMbrOneIDRequest
-	 *            미동의 사용자 등록 요청 Value Object
-	 * @return createMbrOneIDResponse - 미동의 사용자 등록 응답 Value Object
-	 */
-	public UpdateMbrOneIDResponse createAgreeSite(UpdateMbrOneIDRequest updateMbrOneIDRequest);
 
 	/**
 	 * <pre>

@@ -362,14 +362,6 @@ public class IdpServiceImpl implements IdpService {
 
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
-			try {
-				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-			} catch (StorePlatformException spe) {
-				LOGGER.error(spe.getMessage(), spe);
-				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
-				return imResult;
-			}
 			LOGGER.debug("JOIN ONEID DATA INSERT COMPLETE");
 
 			// 게임센터 연동 : 신규가입인경우 as-is src에서 신규가입 데이터를 입력하고 user_id로 조회하여 회원정보 있으면 게임센터 연동함
@@ -555,7 +547,6 @@ public class IdpServiceImpl implements IdpService {
 
 				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 				updateMbrOneIDRequest.setIsDormant(isDormant); // 휴면계정유무
-				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 			} catch (StorePlatformException spe) {
 				LOGGER.error(spe.getMessage(), spe);
@@ -971,7 +962,6 @@ public class IdpServiceImpl implements IdpService {
 			mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 			updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
-			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 			idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
 			idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
@@ -985,7 +975,7 @@ public class IdpServiceImpl implements IdpService {
 				mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
 				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 				try {
-					this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
 				} catch (StorePlatformException e) {
 					if (!StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_INSERT_OR_UPDATE)) {
 						throw e;
@@ -1073,7 +1063,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrOneID.setUserID(map.get("user_id"));
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 			try {
-				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
 				idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			} catch (StorePlatformException spe) {
@@ -1144,7 +1134,6 @@ public class IdpServiceImpl implements IdpService {
 			mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 			updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
-			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 			idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
 			idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
@@ -1158,7 +1147,7 @@ public class IdpServiceImpl implements IdpService {
 				mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
 				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 				try {
-					this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
 				} catch (StorePlatformException e) {
 					if (!StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_INSERT_OR_UPDATE)) {
 						throw e;
@@ -1341,7 +1330,6 @@ public class IdpServiceImpl implements IdpService {
 					mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
 					updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 					updateMbrOneIDRequest.setIsDormant(searchUserRespnse.getUserMbr().getIsDormant());
-					this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 				}
 			}
@@ -1573,7 +1561,6 @@ public class IdpServiceImpl implements IdpService {
 			if (searchUserResponse != null) {
 				updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
 			}
-			this.userSCI.createAgreeSite(updateMbrOneIDRequest); // check 20140424
 
 			LOGGER.debug("ONEID DATA MERGE COMPLETE");
 		} catch (StorePlatformException spe) {
@@ -1937,7 +1924,6 @@ public class IdpServiceImpl implements IdpService {
 			mbrOneID.setIsMemberPoint(ocbTermReq);
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 			updateMbrOneIDRequest.setIsDormant(searchUserRespnse.getUserMbr().getIsDormant());
-			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 			// if (updateUserResponse.getCommonResponse().getResultCode()
 			// .equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
@@ -1955,7 +1941,6 @@ public class IdpServiceImpl implements IdpService {
 				mbrOneID.setIsMemberPoint(ocbTermReq);
 				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
-				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 				idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
@@ -2122,7 +2107,6 @@ public class IdpServiceImpl implements IdpService {
 
 					updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 					updateMbrOneIDRequest.setIsDormant(userMbr.getIsDormant());
-					this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 				}
 			} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
@@ -2427,7 +2411,6 @@ public class IdpServiceImpl implements IdpService {
 
 						updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 						updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
-						this.userSCI.createAgreeSite(updateMbrOneIDRequest); // ONEID 정보 수정
 
 						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
 						imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
@@ -2520,8 +2503,6 @@ public class IdpServiceImpl implements IdpService {
 						mbrOneID.setIntgSvcNumber(imIntSvcNo);
 						mbrOneID.setUserID(newUserId);
 						updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-						// SC.TB_US_USERMBR_ONEID 정보 수정
-						this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 						// OneId Response Setting
 						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
@@ -2811,7 +2792,6 @@ public class IdpServiceImpl implements IdpService {
 
 								updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 								updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
-								this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 							} catch (StorePlatformException spe) {
 								LOGGER.error(spe.getMessage(), spe);
@@ -2952,7 +2932,7 @@ public class IdpServiceImpl implements IdpService {
 							updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
 							try {
-								this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
 								imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
 								imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
 
@@ -3332,7 +3312,6 @@ public class IdpServiceImpl implements IdpService {
 
 							updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 							updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
-							this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 						} catch (StorePlatformException spe) {
 							LOGGER.error(spe.getMessage(), spe);
@@ -3395,7 +3374,6 @@ public class IdpServiceImpl implements IdpService {
 							mbrOneID.setIsCi(StringUtils.isNotBlank(map.get("user_ci")) ? MemberConstants.USE_Y : MemberConstants.USE_N);
 							updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 							updateMbrOneIDRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
-							this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 						} catch (StorePlatformException spe) {
 							searchUserResponse = null; // 정보가 없을경우 null로 셋팅
 
@@ -3416,7 +3394,6 @@ public class IdpServiceImpl implements IdpService {
 							mbrOneID.setMemberCaseCode(userType); // 가입자 유형코드
 							mbrOneID.setIsCi(StringUtils.isNotBlank(map.get("user_ci")) ? MemberConstants.USE_Y : MemberConstants.USE_N);
 							updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-							this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 						}
 
 					} catch (StorePlatformException spe) {

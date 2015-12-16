@@ -41,9 +41,7 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
-import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountRequest;
@@ -506,10 +504,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 						updateUserNameEcReq.setRnameAuthDate(req.getRealNameDate());
 						this.imIdpSCI.updateUserName(updateUserNameEcReq);
 
-						/**
-						 * OneID 실명인증 정보 업데이트.
-						 */
-						this.modOneIdInfo(sacHeader, userInfo.getImSvcNo());
 					}
 
 				} else if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_PARENT)) { // 법정대리인
@@ -555,11 +549,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 							updateGuardianEcReq.setParentApproveDate(req.getRealNameDate());
 						}
 						this.imIdpSCI.updateGuardian(updateGuardianEcReq);
-
-						/**
-						 * OneID 실명인증 정보 업데이트.
-						 */
-						this.modOneIdInfo(sacHeader, userInfo.getImSvcNo());
 
 					} catch (StorePlatformException spe) {
 
@@ -1211,43 +1200,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 * SC 회원 비밀번호 변경 요청.
 		 */
 		this.userSCI.updatePasswordUser(updatePasswordUserRequest);
-
-	}
-
-	/**
-	 * <pre>
-	 * T-store 미동의 회원 정보 업데이트.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @param imSvcNo
-	 *            OneID 통합서비스 관리번호
-	 */
-	private void modOneIdInfo(SacRequestHeader sacHeader, String imSvcNo) {
-
-		try {
-
-			/**
-			 * 미동의 회원 정보 업데이트.
-			 */
-			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-			updateMbrOneIDRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-			MbrOneID mbrOneID = new MbrOneID();
-			mbrOneID.setIntgSvcNumber(imSvcNo); // OneID 통합서비스 관리번호
-			mbrOneID.setIsRealName(MemberConstants.USE_Y); // 실명인증 여부
-			mbrOneID.setIsCi(MemberConstants.USE_Y); // CI 존재 여부(Y/N)
-			mbrOneID.setUpdateDate(DateUtil.getToday("yyyyMMddHHmmss")); // 업데이트 날짜
-
-			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-		} catch (StorePlatformException spe) {
-
-			LOGGER.info("미동의 회원정보 업데이트 실패 [{}]", imSvcNo);
-			throw spe;
-
-		}
 
 	}
 
