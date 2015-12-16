@@ -38,9 +38,19 @@ public class DeviceInfo extends CommonInfo {
 	private String deviceId;
 
 	/**
-	 * 자번호(mdn 로그인시 올려주는 자버호)
+	 * 자번호(mdn 로그인시 올려주는 자번호).
 	 */
 	private String oDeviceId;
+
+	/**
+	 * 기기 mdn.
+	 */
+	private String mdn;
+
+	/**
+	 * 기기 mdn 자번호.
+	 */
+	private String omdn;
 
 	/**
 	 * 기기 ID 타입 (msisdn, uuid, macaddress).
@@ -608,6 +618,36 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	public void setIsDormant(String isDormant) {
 		this.isDormant = isDormant;
+	}
+
+	/**
+	 * @return mdn
+	 */
+	public String getMdn() {
+		return this.mdn;
+	}
+
+	/**
+	 * @param mdn
+	 *            String
+	 */
+	public void setMdn(String mdn) {
+		this.mdn = mdn;
+	}
+
+	/**
+	 * @return omdn
+	 */
+	public String getOmdn() {
+		return this.omdn;
+	}
+
+	/**
+	 * @param omdn
+	 *            String
+	 */
+	public void setOmdn(String omdn) {
+		this.omdn = omdn;
 	}
 
 }
