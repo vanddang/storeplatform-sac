@@ -156,6 +156,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 /**
@@ -464,7 +465,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 			req.setDeviceId(opmdMdn);
 			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
-			UserInfo info = this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
+			// req의 deviceId mdn여부
+			String reqKeyType = "deviceId";
+			if (ValidationCheckUtils.isMdn(opmdMdn)) {
+				reqKeyType = "mdn";
+			}
+
+			UserInfo info = this.mcc.getUserBaseInfo(reqKeyType, req.getDeviceId(), sacHeader);
 			SearchIdSac sac = new SearchIdSac();
 			sac.setImSvcNo(StringUtil.setTrim(info.getImSvcNo()));
 			sac.setRegDate(StringUtil.setTrim(info.getRegDate()));

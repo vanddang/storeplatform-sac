@@ -38,7 +38,8 @@ public class KeySearch extends CommonInfo implements Serializable {
 	 * EMAIL_ADDR : 사용자 이메일 <br>
 	 * EMAIL : 판매자 이메일 <br>
 	 * TEL_NO : 사용자 연락처 <br>
-	 * WILS_TEL_NO : 판매자 연락처.
+	 * WILS_TEL_NO : 판매자 연락처 <br>
+	 * MDN : 전화번호.
 	 */
 	private String keyType;
 

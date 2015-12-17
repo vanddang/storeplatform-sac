@@ -869,7 +869,8 @@ public class UserSCIController implements UserSCI {
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_IDP_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_ONEID_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_KEY)
-					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_ID)) {
+					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_ID)
+					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_MDN)) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.wrongKeyType", ""));
 			}
 		}

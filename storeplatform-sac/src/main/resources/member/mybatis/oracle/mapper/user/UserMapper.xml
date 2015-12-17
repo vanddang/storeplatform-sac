@@ -131,10 +131,11 @@
                    FROM  tb_us_ousermbr a
               LEFT JOIN  tb_us_ousermbr_device b ON a.insd_usermbr_no = b.insd_usermbr_no
                   WHERE  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
-                    AND  b.auth_yn = 'Y' 
+                    AND  b.auth_yn = 'Y'
                <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                    <if test="keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') "> b.insd_device_id =  #{keySearch.keyString} </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> b.device_id =  #{keySearch.keyString} </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('MDN') "> b.mdn =  #{keySearch.keyString} </if>
                </foreach>
                 ORDER BY b.auth_dt DESC) l
                 WHERE ROWNUM = 1
