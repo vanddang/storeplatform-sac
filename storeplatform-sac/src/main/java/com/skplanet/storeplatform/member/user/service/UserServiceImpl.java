@@ -242,8 +242,6 @@ public class UserServiceImpl implements UserService {
 		String generatedUserKey = "";
 
 		UserMbr usermbr = new UserMbr();
-		usermbr.setTenantID(createUserRequest.getCommonRequest().getTenantID());
-		usermbr.setSystemID(createUserRequest.getCommonRequest().getSystemID());
 		usermbr.setUserID(createUserRequest.getUserMbr().getUserID());
 
 		if (!createUserRequest.getUserMbr().getUserType().equals(UserTypeCode.MOBILE_USER.getCode())) {
@@ -271,15 +269,11 @@ public class UserServiceImpl implements UserService {
 		int seq = this.commonDAO.queryForObject("User.getUserSequence", null, Integer.class);
 		generatedUserKey = "US" + Utils.getLocalDateTime() + Utils.leftPadStringWithChar(Integer.toString(seq), 7, '0');
 
-		usermbr.setTenantID(createUserRequest.getCommonRequest().getTenantID());
 		usermbr.setSystemID(createUserRequest.getCommonRequest().getSystemID());
 		usermbr.setUserKey(generatedUserKey);
 		usermbr.setRegDate(Utils.getLocalDateTimeinYYYYMMDD());
 		usermbr.setLoginStatusCode(createUserRequest.getUserMbr().getLoginStatusCode());
 		usermbr.setStopStatusCode(createUserRequest.getUserMbr().getStopStatusCode());
-		if (createUserRequest.getUserMbr().getIsMemberPoint() != null) {
-			usermbr.setIsMemberPoint(createUserRequest.getUserMbr().getIsMemberPoint());
-		}
 
 		// ACTION 2-2. 무선사용자 회원가입의 경우 MBR_ID 생성
 		if (createUserRequest.getUserMbr().getUserType().equals(UserTypeCode.MOBILE_USER.getCode())) {
@@ -309,7 +303,6 @@ public class UserServiceImpl implements UserService {
 		// ACTION 3-1. 사용자 회원 비밀번호 추가
 		MbrPwd mbrPwd = new MbrPwd();
 		mbrPwd.setMemberKey(generatedUserKey);
-		mbrPwd.setTenantID(createUserRequest.getCommonRequest().getTenantID());
 
 		// 사용자 패스워드 추가
 		row = (Integer) this.commonDAO.insert("User.insertPassword", mbrPwd);
@@ -322,7 +315,6 @@ public class UserServiceImpl implements UserService {
 		if (createUserRequest.getMbrLglAgent() != null) {
 
 			MbrLglAgent mbrLglAgent = createUserRequest.getMbrLglAgent();
-			mbrLglAgent.setTenantID(createUserRequest.getCommonRequest().getTenantID());
 			mbrLglAgent.setMemberKey(generatedUserKey);
 			row = (Integer) this.commonDAO.insert("User.updateAgentRealName", mbrLglAgent);
 			LOGGER.debug("### User.updateAgentRealName row : {}", row);
@@ -339,7 +331,6 @@ public class UserServiceImpl implements UserService {
 					// 법정대리인 동의여부 수정 LGL_AGENT_AGREE_YN
 					UserMbr usermbrLglAgentYN = new UserMbr();
 					usermbrLglAgentYN.setSystemID(usermbr.getSystemID());
-					usermbrLglAgentYN.setTenantID(usermbr.getTenantID());
 					usermbrLglAgentYN.setUserKey(usermbr.getUserKey());
 					usermbrLglAgentYN.setIsParent(createUserRequest.getMbrLglAgent().getIsParent());
 
@@ -359,7 +350,6 @@ public class UserServiceImpl implements UserService {
 			MbrAuth mbrAuth = new MbrAuth();
 			mbrAuth = createUserRequest.getMbrAuth();
 			mbrAuth.setMemberKey(generatedUserKey);
-			mbrAuth.setTenantID(createUserRequest.getCommonRequest().getTenantID());
 			row = (Integer) this.commonDAO.insert("User.updateOwnRealName", mbrAuth);
 			LOGGER.debug("### 2  row : {}", row);
 
@@ -376,7 +366,6 @@ public class UserServiceImpl implements UserService {
 					// 실명_인증_여부 수정 REALNM_AUTH_YN -> Y
 					UserMbr usermbrIsRealNameAuthYN = new UserMbr();
 					usermbrIsRealNameAuthYN.setSystemID(usermbr.getSystemID());
-					usermbrIsRealNameAuthYN.setTenantID(usermbr.getTenantID());
 					usermbrIsRealNameAuthYN.setUserKey(usermbr.getUserKey());
 					usermbrIsRealNameAuthYN.setIsRealName(createUserRequest.getMbrAuth().getIsRealName());
 
@@ -414,10 +403,8 @@ public class UserServiceImpl implements UserService {
 		if (createUserRequest.getMbrMangItemPtcrList() != null) {
 			List<MbrMangItemPtcr> mbrMangItemPtcrList = createUserRequest.getMbrMangItemPtcrList();
 			for (MbrMangItemPtcr mbrMangItemPtcr : mbrMangItemPtcrList) {
-				mbrMangItemPtcr.setTenantID(createUserRequest.getCommonRequest().getTenantID());
 				mbrMangItemPtcr.setUserKey(generatedUserKey);
 				mbrMangItemPtcr.setUserID(createUserRequest.getUserMbr().getUserID());
-				mbrMangItemPtcr.setImMbrNo(createUserRequest.getUserMbr().getImMbrNo());
 
 				row = this.commonDAO.update("User.updateManagement", mbrMangItemPtcr);
 				LOGGER.debug("###  3 row : {}", row);
@@ -433,7 +420,6 @@ public class UserServiceImpl implements UserService {
 			List<MbrClauseAgree> mbrClauseAgreeList = createUserRequest.getMbrClauseAgreeList();
 			for (int i = 0; i < mbrClauseAgreeList.size(); i++) {
 				MbrClauseAgree mbrClauseAgree = mbrClauseAgreeList.get(i);
-				mbrClauseAgree.setTenantID(createUserRequest.getCommonRequest().getTenantID());
 				mbrClauseAgree.setMemberKey(generatedUserKey);
 				row = this.commonDAO.update("User.updateAgreement", mbrClauseAgree);
 				LOGGER.debug("###  4 row : {}", row);
@@ -452,19 +438,13 @@ public class UserServiceImpl implements UserService {
 		createUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
 
-		// TLog
-		String imMbrNo = "";
-		if (usermbr.getImMbrNo() != null && usermbr.getImMbrNo().length() > 0) {
-			imMbrNo = usermbr.getImMbrNo();
-		}
 		final String tlogUserKey = usermbr.getUserKey();
 		final String tlogUserID = usermbr.getUserID();
-		final String tlogImMbrNo = imMbrNo;
 
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.insd_usermbr_no(tlogUserKey).mbr_id(tlogUserID).usermbr_no(tlogImMbrNo);
+				shuttle.insd_usermbr_no(tlogUserKey).mbr_id(tlogUserID).usermbr_no("");
 			}
 		});
 
@@ -1343,7 +1323,6 @@ public class UserServiceImpl implements UserService {
 		Integer row = 0;
 
 		UserMbr usermbr = updateUserRequest.getUserMbr();
-		usermbr.setTenantID(updateUserRequest.getCommonRequest().getTenantID());
 		usermbr.setSystemID(updateUserRequest.getCommonRequest().getSystemID());
 		usermbr.setUserKey(updateUserRequest.getUserMbr().getUserKey());
 
@@ -1394,7 +1373,6 @@ public class UserServiceImpl implements UserService {
 			if (updateUserRequest.getMbrLglAgent() != null) {
 				MbrLglAgent mbrLglAgent = new MbrLglAgent();
 				mbrLglAgent = updateUserRequest.getMbrLglAgent();
-				mbrLglAgent.setTenantID(updateUserRequest.getCommonRequest().getTenantID());
 				mbrLglAgent.setMemberKey(updateUserRequest.getUserMbr().getUserKey());
 				row = (Integer) dao.insert("User.updateAgentRealName", mbrLglAgent);
 				LOGGER.debug("### 1 row : {}", row);
@@ -1411,7 +1389,6 @@ public class UserServiceImpl implements UserService {
 						// 법정대리인 동의여부 수정 LGL_AGENT_AGREE_YN -> Y
 						UserMbr usermbrLglAgentYN = new UserMbr();
 						usermbrLglAgentYN.setSystemID(usermbr.getSystemID());
-						usermbrLglAgentYN.setTenantID(usermbr.getTenantID());
 						usermbrLglAgentYN.setUserKey(usermbr.getUserKey());
 						usermbrLglAgentYN.setIsParent(updateUserRequest.getMbrLglAgent().getIsParent());
 
@@ -1441,7 +1418,6 @@ public class UserServiceImpl implements UserService {
 				MbrAuth mbrAuth = new MbrAuth();
 				mbrAuth = updateUserRequest.getMbrAuth();
 				mbrAuth.setMemberKey(updateUserRequest.getUserMbr().getUserKey());
-				mbrAuth.setTenantID(updateUserRequest.getCommonRequest().getTenantID());
 				row = (Integer) dao.insert("User.updateOwnRealName", mbrAuth);
 				LOGGER.debug("### 2  row : {}", row);
 				if (row == 0) {
@@ -1502,7 +1478,6 @@ public class UserServiceImpl implements UserService {
 			if (updateUserRequest.getMbrMangItemPtcrList() != null) {
 				List<MbrMangItemPtcr> mbrMangItemPtcrList = updateUserRequest.getMbrMangItemPtcrList();
 				for (MbrMangItemPtcr mbrMangItemPtcr : mbrMangItemPtcrList) {
-					mbrMangItemPtcr.setTenantID(updateUserRequest.getCommonRequest().getTenantID());
 					mbrMangItemPtcr.setUserKey(updateUserRequest.getUserMbr().getUserKey());
 					row = dao.update("User.updateManagement", mbrMangItemPtcr);
 					LOGGER.debug("###  3 row : {}", row);
@@ -1517,7 +1492,6 @@ public class UserServiceImpl implements UserService {
 				List<MbrClauseAgree> mbrClauseAgreeList = updateUserRequest.getMbrClauseAgree();
 				for (int i = 0; i < mbrClauseAgreeList.size(); i++) {
 					MbrClauseAgree mbrClauseAgree = mbrClauseAgreeList.get(i);
-					mbrClauseAgree.setTenantID(updateUserRequest.getCommonRequest().getTenantID());
 					mbrClauseAgree.setMemberKey(updateUserRequest.getUserMbr().getUserKey());
 					row = dao.update("User.updateAgreement", mbrClauseAgree);
 					LOGGER.debug("###  4 row : {}", row);
@@ -1525,27 +1499,6 @@ public class UserServiceImpl implements UserService {
 						throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 					}
 				}
-			}
-
-			// mbr_no 변경시 TLog 남김
-			if (mbrOneID.getIntgSvcNumber() != null && updateUserRequest.getUserMbr().getImMbrNo() != null
-					&& updateUserRequest.getUserMbr().getImMbrNo().equals(mbrOneID.getIntgSvcNumber()) == false) {
-				// TLog
-				new TLogUtil().set(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL_SC_MEM_0006");
-					}
-				});
-				final String usermbrnopre = mbrOneID.getIntgSvcNumber();
-				final String usermbrnopost = updateUserRequest.getUserMbr().getImMbrNo();
-				new TLogUtil().set(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.usermbr_no_pre(usermbrnopre);
-						shuttle.usermbr_no_post(usermbrnopost);
-					}
-				});
 			}
 
 		} else {
@@ -2942,11 +2895,11 @@ public class UserServiceImpl implements UserService {
 		if (StringUtils.equals(Constant.TYPE_YN_Y, searchExtentUserRequest.getUserInfoYn())) {
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserKey(userKey);
-			userMbr.setTenantID(searchExtentUserRequest.getCommonRequest().getTenantID());
 			resultUserMbr = dao.queryForObject("User.getUserDetail", userMbr, UserMbr.class);
 			if (resultUserMbr != null) {
 				resultUserMbr.setIsDormant(isDormant);
 			}
+			// TODO 여기까지!!
 			resultMbrMangItemPtcrList = dao.queryForList("User.getManagementItemList", userMbr, MbrMangItemPtcr.class);
 
 			// 회원 정보 중 성별, 생년월일, 이름 정보 설정 우선순위 (1.인증정보 , 2.회원정보)

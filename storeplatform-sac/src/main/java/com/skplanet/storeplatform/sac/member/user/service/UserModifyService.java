@@ -51,7 +51,7 @@ public interface UserModifyService {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	public ModifyRes mod(SacRequestHeader sacHeader, ModifyReq req);
+	public ModifyRes modUser(SacRequestHeader sacHeader, ModifyReq req);
 
 	/**
 	 * <pre>

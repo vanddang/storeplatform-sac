@@ -220,9 +220,8 @@
 
     <!-- 사용자 회원정보(사용자 가입여부 조회) -->
     <select id="getUserDetail" resultType="userMbr">
-        SELECT  /* UserMapper.getUserDetail, 사용자 회원정보, wisestone_dinga, 2014-01-15 */
+        SELECT  /* UserMapper.xml, getUserDetail, SAC(SC), 윤보영, 2015-12-16 */
                 insd_usermbr_no         userKey,
-                usermbr_no              imMbrNo,
                 mbr_clas_cd             userType,
                 mbr_status_main_cd      userMainStatus,
                 mbr_status_sub_cd       userSubStatus,
@@ -305,7 +304,7 @@
     <!-- 사용자 회원징계 -->
     <select id="getUserPunish" resultType="userMbrPnsh">
         <if test="isDormant.equalsIgnoreCase('N')">
-        SELECT  /* UserMapper.getUserPunish, 사용자 회원 징계, wisestone_dinga, 2014-01-15 */
+        SELECT  /* UserMapper.xml, getUserPunish, SAC(SC), 윤보영, 2015-12-16 */
                 m.*
           FROM  (
                  SELECT  insd_usermbr_no       userKey,
@@ -359,7 +358,7 @@
     
     <!-- 사용자 실명인증(본인) -->
     <select id="getRealNameOwn" resultType="mbrAuth">
-        SELECT  /* UserMapper.getRealNameOwn, 사용자 실명인증(본인), wisestone_dinga, 2014-01-15 */
+        SELECT  /* UserMapper.xml, getRealNameOwn, SAC(SC), 윤보영, 2015-12-16 */
                 n.*
           FROM  (
                  SELECT  l.insd_usermbr_no       memberKey,
@@ -444,7 +443,7 @@
 
     <!-- 사용자 관리항목 -->
     <select id="getManagementItemList" resultType="mbrMangItemPtcr">
-        SELECT  /* UserMapper.getManagementItemList, 사용자 관리항목, wisestone_dinga, 2014-01-15 */
+        SELECT  /* UserMapper.xml, getManagementItemList, SAC(SC), 윤보영, 2015-12-16 */
                 mang_item_cd extraProfile,
                 reg_result_value extraProfileValue
           FROM  tb_us_ousermbr_mang_item_ptcr
@@ -453,7 +452,7 @@
 
     <!-- 사용자 약관동의 -->
     <select id="getClauseAgreeList" resultType="mbrClauseAgree">
-        SELECT  /* UserMapper.getClauseAgreeList, 사용자 약관동의, wisestone_dinga, 2014-01-15 */
+        SELECT  /* UserMapper.xml, getClauseAgreeList, SAC(SC), 윤보영, 2015-12-16 */
                 clause_id        extraAgreementID,
                 agree_yn         isExtraAgreement,
                 TO_CHAR( reg_dt,'YYYYMMDDHH24MISS') regDate,
@@ -467,7 +466,7 @@
 
     <!-- 사용자 약관동의 등록/수정 -->
     <update id="updateAgreement">
-        MERGE  /* UserMapper.updateAgreement, 사용자 약관 등록/수정, wisestone_dinga, 2013-12-10 */
+        MERGE  /* UserMapper.xml, updateAgreement, SAC(SC), 윤보영, 2015-12-14 */
                INTO tb_us_ousermbr_clause_agree u 
         USING  DUAL ON 
                (
@@ -604,7 +603,7 @@
     
     <!-- 사용자 상태 변경 히스토리 추가 -->
     <update id="insertUpdateStatusHistory" parameterType="userMbr">
-        INSERT  /* UserMapper.xml, insertUpdateStatusHistory, SAC(SC), 김경복, 2015-05-27 */
+        INSERT  /* UserMapper.xml, insertUpdateStatusHistory, SAC(SC), 윤보영, 2015-12-15 */
                 INTO tb_us_ousermbr_his
                 (
                     seq
@@ -631,7 +630,6 @@
                     ,nation_cd
                     ,lang_cd
                     ,system_id
-                    ,bolter_case_cd
                     ,mbr_clas_cd
                     ,upd_email_addr
                     ,last_prchs_dt
@@ -659,7 +657,6 @@
                 ,lgl_agent_agree_yn
                 ,lang_cd
                 ,system_id
-                ,bolter_case_cd
                 ,mbr_clas_cd
                 ,upd_email_addr
                 ,last_login_dt
@@ -745,9 +742,8 @@
     </select>
     
     <select id="isRegisteredKeyAndMbrNo" parameterType="userMbr" resultType="mbrOneID">
-        SELECT  /* UserMapper.isRegisteredKeyAndMbrNo, 사용자 ID 조회, wisestone_mikepark, 2013-12-23 */
+         SELECT  /* UserMapper.xml, isRegisteredKeyAndMbrNo, SAC(SC), 윤보영, 2015-12-14 */
                 insd_usermbr_no as userKey,
-                usermbr_no as intgSvcNumber,
                 mbr_id as userID
           FROM  tb_us_ousermbr
          WHERE  insd_usermbr_no = #{userKey}
@@ -873,7 +869,7 @@
 
     <!-- 법정_대리인_동의_여부 수정 -->
     <update id="updateLglAgentAgreeYN" parameterType="userMbr">
-        UPDATE  /* UserMapper.updateLglAgentAgreeYN, 법정_대리인_동의_여부 수정, incross_cmlee80, 2015-07-28 */
+        UPDATE  /* UserMapper.xml, updateLglAgentAgreeYN, SAC(SC), 윤보영, 2015-12-14 */
                 tb_us_ousermbr
            SET  lgl_agent_agree_yn = #{isParent},
                   upd_dt = SYSDATE,
@@ -885,7 +881,7 @@
 
     <!-- 실명인증_여부 수정 -->
     <update id="updateRealNameAuthYN" parameterType="userMbr">
-        UPDATE  /* UserMapper.updateRealNameAuthYN, 실명인증_여부 수정, incross_cmlee80, 2015-07-28 */
+        UPDATE  /* UserMapper.xml, updateRealNameAuthYN, SAC(SC), 윤보영, 2015-12-14 */
                 tb_us_ousermbr
            SET  realnm_auth_yn = #{isRealName},
                 mbr_nm = #{userName, jdbcType=VARCHAR},
@@ -900,7 +896,7 @@
 
     <!-- 사용자 가입 -->
     <update id="createUser" parameterType="userMbr">
-        INSERT /* UserMapper.createUser, wisestone_mikepark, 2013-12-23 */
+        INSERT /* UserMapper.xml, createUser, SAC(SC), 윤보영, 2015-12-14  */
                INTO tb_us_ousermbr (
                insd_usermbr_no,
                mbr_clas_cd,         /* 회원_분류_코드, US011501(모바일회원) , US011502(IDP 회원) , US011503(OneID 회원) */
@@ -910,7 +906,6 @@
                start_dt,
                device_reg_cnt,  /* 휴대기기 보유 카운트 */
                upd_dt
-               <if test="imMbrNo != null">,usermbr_no </if>
                <if test="userID != null">,mbr_id </if>
                <if test="userName != null">,mbr_nm </if>
                <if test="userBirthDay != null">,birth </if>
@@ -932,7 +927,6 @@
             SYSDATE, /* start_dt */
             0, /* device_reg_cnt */
             SYSDATE /* upd_dt */
-            <if test="imMbrNo != null">,#{imMbrNo} </if>
             <if test="userID != null">,#{userID} </if>
             <if test="userName != null">,#{userName} </if>
             <if test="userBirthDay != null">,#{userBirthDay} </if>
@@ -950,12 +944,11 @@
     
     <!-- 사용자 기본정보 수정 -->
     <update id="updateUser" parameterType="userMbr">
-        UPDATE  /* UserMapper.updateUser, 사용자 기본정보 수정, burkhan_rejoice, 2015-04-09 */
+         UPDATE  /* UserMapper.xml, updateUser, SAC(SC), 윤보영, 2015-12-15 */
                 tb_us_ousermbr 
            SET  insd_usermbr_no = #{userKey},
                 upd_dt = SYSDATE,
                 start_dt = SYSDATE
-                <if test="imMbrNo != null">,usermbr_no = #{imMbrNo}</if>
                 <if test="deviceCount != null">,device_reg_cnt = #{deviceCount}</if>
                 <if test="userID != null">,mbr_id = #{userID}</if>
                 <if test="userName != null">,mbr_nm = #{userName}</if>
@@ -1020,7 +1013,7 @@
 
     <!-- 사용자 부가정보 등록/수정 -->
     <update id="updateManagement">
-        MERGE  /* UserMapper.updateManagement, 사용자 부가정보 등록/수정, wisestone_dinga, 2013-12-30 */
+        MERGE  /* UserMapper.xml, updateManagement, SAC(SC), 윤보영, 2015-12-14 */
                INTO tb_us_ousermbr_mang_item_ptcr u
         USING  DUAL ON 
                (
@@ -1293,7 +1286,7 @@
     
     <!-- 사용자 본인 실명인증 수정(실제로는 insert를 수행한다), 가입, 회원수정 -->
     <insert id="updateOwnRealName" parameterType="mbrAuth">
-        INSERT  /* UserMapper.updateOwnRealName, 사용자 본인 실명인증 수정, wisestone_dinga, 2013-12-10 */
+        INSERT  /* UserMapper.xml, updateOwnRealName, SAC(SC), 윤보영, 2015-12-14 */
                 INTO tb_us_ousermbr_auth 
                 (
                     auth_seq
@@ -1332,7 +1325,7 @@
     
     <!-- 사용자 법정대리인 실명인증 수정(실제로는 insert를 수행한다), 가입, 회원수정 -->
     <insert id="updateAgentRealName" parameterType="mbrLglAgent">
-        INSERT  /* UserMapper.updateAgentRealName, 사용자 법정대리인 실명인증 수정, wisestone_dinga, 2013-12-20 */
+         INSERT  /* UserMapper.xml, updateAgentRealName, SAC(SC), 윤보영, 2015-12-14 */
                 INTO tb_us_ousermbr_lgl_agent 
                 (
                     auth_seq
@@ -1373,7 +1366,7 @@
 
     <!-- 사용자 아이디의 중복/제한단여 여부 정보 조회 -->
     <select id="checkExistLimitWord" parameterType="userMbr" resultType="existLimitWordMemberID">
-        SELECT  /* UserMapper.checkExistLimitWord, 사용자 아이디의 중복/제한단여 여부 정보 조회, wisestone_dinga, 2014-01-15 */
+          SELECT  /* UserMapper.xml, checkExistLimitWord, SAC(SC), 윤보영, 2015-12-14 */
                 (  
                  SELECT  mbr_id 
                    FROM  tb_us_ousermbr
@@ -1451,7 +1444,7 @@
     
     <!-- Password 등록 -->
     <insert id="insertPassword" parameterType="mbrPwd">
-        INSERT  /* UserMapper.insertPassword, Password 관련 필드 등록 , incross_cmlee80, 2015-05-27 */
+        INSERT  /* UserMapper.xml, insertPassword, SAC(SC), 윤보영, 2015-12-14 */
                 INTO tb_us_ousermbr_pwd 
                 (
                       insd_usermbr_no
@@ -1680,7 +1673,7 @@
     
     <!-- 조건별 사용자 정보 조회(휴대기기 정보로 조회) -->
     <select id="searchExtentUserD" parameterType="searchExtentUserRequest" resultType="java.util.HashMap">
-        SELECT  /* UserMapper.searchExtentUserD, 조건별 사용자 정보 조회, burkhan_rejoice, 2014-07-31 */
+        SELECT  /* UserMapper.xml, searchExtentUserD, SAC(SC), 윤보영, 2015-12-15 */
                 DISTINCT(l.userKey) as userKey,
                 (
                  SELECT  TO_CHAR(upd_dt ,'YYYYMMDDHH24MISS')
@@ -1710,7 +1703,7 @@
     
     <!-- 조건별 사용자 정보 조회 -->
     <select id="searchExtentUser" parameterType="searchExtentUserRequest" resultType="java.util.HashMap">
-        SELECT /* UserMapper.searchExtentUser, 조건별 사용자 정보 조회, burkhan_rejoice, 2014-07-31 */
+        SELECT /* UserMapper.xml, searchExtentUser, SAC(SC), 윤보영, 2015-12-15 */
                a.insd_usermbr_no AS userKey,
                (
                SELECT TO_CHAR(upd_dt ,'YYYYMMDDHH24MISS')
