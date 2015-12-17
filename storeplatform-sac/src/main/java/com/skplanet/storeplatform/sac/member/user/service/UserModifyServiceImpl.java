@@ -22,11 +22,9 @@ import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyAuthInfoEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ModifyEmailEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.CheckIdPwdAuthEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.ModifyPwdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateGuardianEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEmIDPEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserNameEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
@@ -48,6 +46,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoRe
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
@@ -262,37 +261,21 @@ public class UserModifyServiceImpl implements UserModifyService {
 	@Override
 	public ModifyEmailRes modEmail(SacRequestHeader sacHeader, ModifyEmailReq req) {
 
-		/** 사용자 정보 조회 후 IDP/ImIDP 이메일 정보 변경 요청. 2015-04-09. */
-		DetailReq detailReq = new DetailReq();
-		detailReq.setUserKey(req.getUserKey());
-		SearchExtentReq searchExtent = new SearchExtentReq();
-		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
-		detailReq.setSearchExtent(searchExtent);
-		DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
+		/** 회원 정보 조회. */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		searchExtentUserRequest.setCommonRequest(commonRequest);
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+		SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
 
-		if (StringUtils.equals(detailRes.getUserInfo().getIsDormant(), MemberConstants.USE_Y)) {
+		if (StringUtils.equals(res.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
 			throw new StorePlatformException("SAC_MEM_0006");
-		}
-
-		// S01
-		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, sacHeader.getTenantHeader().getTenantId())) {
-			if (StringUtils.equals(MemberConstants.USER_TYPE_ONEID, detailRes.getUserInfo().getUserType())
-					&& StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
-				// 통합 IDP 회원
-				UpdateUserInfoEmIDPEcReq updateUserInfoEmIDPEcReq = new UpdateUserInfoEmIDPEcReq();
-				// ImserviceNo
-				updateUserInfoEmIDPEcReq.setKey(detailRes.getUserInfo().getImSvcNo());
-				updateUserInfoEmIDPEcReq.setUserEmail(req.getNewEmail());
-				this.imIdpSCI.updateUserInfoEmIDP(updateUserInfoEmIDPEcReq);
-
-			} else if (StringUtils.equals(MemberConstants.USER_TYPE_IDPID, detailRes.getUserInfo().getUserType())) {
-				// IDP 회원
-				ModifyEmailEcReq modifyEmailEcReq = new ModifyEmailEcReq();
-				modifyEmailEcReq.setUserId(detailRes.getUserInfo().getUserId()); // ID
-				modifyEmailEcReq.setPreUserEmail(detailRes.getUserInfo().getUserEmail()); // 변경전Email
-				modifyEmailEcReq.setUserEmail(req.getNewEmail()); // 변경할 Email
-				this.idpSCI.modifyEmail(modifyEmailEcReq);
-			}
 		}
 
 		/**

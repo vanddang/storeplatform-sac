@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * [REQUEST] 이메일 주소 수정
  * 
- * Updated on : 2014. 1. 6. Updated by : 심대진, 다모아 솔루션.
+ * Updated on : 2015. 12. 17. Updated by : 윤보영, 카레즈.
  */
 public class ModifyEmailReq extends CommonInfo {
 
@@ -18,11 +18,6 @@ public class ModifyEmailReq extends CommonInfo {
 	 */
 	@NotEmpty
 	private String userKey = "";
-
-	/**
-	 * IDP 인증 Key.
-	 */
-	private String userAuthKey = "";
 
 	/**
 	 * 신규 이메일.
@@ -48,21 +43,6 @@ public class ModifyEmailReq extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	/**
-	 * @return String : userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String : the userAuthKey to set
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
 	}
 
 	/**
