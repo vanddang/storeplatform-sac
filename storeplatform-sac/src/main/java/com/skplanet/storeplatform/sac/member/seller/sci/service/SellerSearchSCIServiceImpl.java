@@ -144,8 +144,6 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 			SellerMbrSac sellerMbrSac = null;
 			Map<String, List<SellerMbrSac>> sellerMbrSacMap = new HashMap<String, List<SellerMbrSac>>();
 
-			SearchProviderResponse schProvRes = new SearchProviderResponse();
-
 			for (Entry<String, List<SellerMbr>> entry : sellerMbrMapSc.entrySet()) {
 				sellerMbrSacs = new ArrayList<SellerMbrSac>();
 				for (SellerMbr sellerMbr : entry.getValue()) {
@@ -153,13 +151,16 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 					// 제공자 정보 조회 여부를 판단하기 위한 req 매핑
 					for (SellerMbrSac sellerMbrSacReq : req.getSellerMbrSacList()) {
 						// req의 sellerKey, sellerId, sellerBizNumber로 확인
-						if (StringUtil.equals(sellerMbr.getSellerKey(), sellerMbrSacReq.getSellerKey())
-								|| StringUtil.equals(sellerMbr.getSellerID(), sellerMbrSacReq.getSellerId())
-								|| StringUtil.equals(sellerMbr.getSellerBizNumber(),
+						if (StringUtil.contains(sellerMbr.getSellerKey(), sellerMbrSacReq.getSellerKey())
+								|| StringUtil.contains(sellerMbr.getSellerID(), sellerMbrSacReq.getSellerId())
+								|| StringUtil.contains(sellerMbr.getSellerBizNumber(),
 										sellerMbrSacReq.getSellerBizNumber())) {
 							// 매핑된 req의 categoryCd 값이 있다면
 							if (StringUtil.isNotBlank(sellerMbrSacReq.getCategoryCd())) {
+
 								// SC 제공자 정보 조회
+								SearchProviderResponse schProvRes = new SearchProviderResponse();
+
 								SearchProviderRequest schProvReq = new SearchProviderRequest();
 								schProvReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 								schProvReq.setSellerKey(sellerMbr.getSellerKey());
@@ -422,14 +423,13 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 				sellerInfo.setSellerClass(sellerMbrs.get(0).getSellerClass());
 				sellerInfo.setProviderYn("N");
 
-				SearchProviderResponse schProvRes = new SearchProviderResponse();
-
 				for (SellerMbrSac sellerMbrSacReq : req.getSellerMbrSacList()) {
 					// 현재의 sellerKey에 매칭되는 req를 확인하여 처리
 					if (sellerMbrSacReq.getSellerKey().equals(sellerKey)) {
 						// 해당 req에 categoryCd값이 있다면 제공자 정보 조회후 셋팅 없으면 판매자정보만 셋팅
 						if (StringUtil.isNotBlank(sellerMbrSacReq.getCategoryCd())) {
 							// SC 제공자 정보 조회
+							SearchProviderResponse schProvRes = new SearchProviderResponse();
 							SearchProviderRequest schProvReq = new SearchProviderRequest();
 							schProvReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 							schProvReq.setSellerKey(sellerKey);
