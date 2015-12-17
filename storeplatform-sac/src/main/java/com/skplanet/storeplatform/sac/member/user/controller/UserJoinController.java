@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
@@ -30,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
 
@@ -66,15 +68,17 @@ public class UserJoinController {
 		LOGGER.debug("####################################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		// 미지원 단말 정보 수정으로 인한 주서처리...
-		// if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
-		// throw new StorePlatformException("SAC_MEM_0002", "model");
-		// }
+
+		// TODO SKT만 가입 처리 되도록 validation 추가
+		if (!StringUtil.equalsIgnoreCase(sacHeader.getTenantHeader().getTenantId(), MemberConstants.TENANT_ID_TSTORE)
+				|| !StringUtil.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+			throw new StorePlatformException("SAC_MEM_1203", "deviceTelecom");
+		}
 
 		/**
 		 * 모바일 전용회원 Biz
 		 */
-		CreateByMdnRes res = this.svc.regByMdn(sacHeader, req);
+		 CreateByMdnRes res = this.svc.regByMdn(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 

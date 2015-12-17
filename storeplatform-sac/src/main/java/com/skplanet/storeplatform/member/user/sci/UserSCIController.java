@@ -208,10 +208,10 @@ public class UserSCIController implements UserSCI {
 		}
 
 		// 테넌트 아이디 없음
-		if (createUserRequest.getCommonRequest().getTenantID() == null
-				|| createUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
+		// if (createUserRequest.getCommonRequest().getTenantID() == null
+		// || createUserRequest.getCommonRequest().getTenantID().length() <= 0) {
+		// throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
+		// }
 
 		// 필수 파라미터 > userMbr
 		UserMbr userMbr = createUserRequest.getUserMbr();
@@ -230,12 +230,11 @@ public class UserSCIController implements UserSCI {
 
 		// TLog
 		final String tlogUserID = userMbr.getUserID();
-		final String tlogImMbrNo = userMbr.getImMbrNo();
 
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.mbr_id(tlogUserID).usermbr_no(tlogImMbrNo);
+				shuttle.mbr_id(tlogUserID).usermbr_no("");
 			}
 		});
 
@@ -265,14 +264,6 @@ public class UserSCIController implements UserSCI {
 		// 필수 파라미터 > mbrLglAgent
 		if (createUserRequest.getMbrLglAgent() != null) {
 
-			// 2014.03.13 필수에서 제외
-			// // 필수 파라미터 없음, 법정대리인 인증방법코드
-			// if (createUserRequest.getMbrLglAgent().getParentRealNameMethod() == null
-			// || createUserRequest.getMbrLglAgent().getParentRealNameMethod().length() <= 0) {
-			// throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-			// }
-
-			// 2014.03.14 필수로 변경됨.
 			// 필수 파라미터 없음, parentName(법정대리인 이름)
 			if (createUserRequest.getMbrLglAgent().getParentName() == null
 					|| createUserRequest.getMbrLglAgent().getParentName().length() <= 0) {
@@ -329,10 +320,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
-
 		return createUserResponse;
 
 	}
@@ -1072,10 +1059,10 @@ public class UserSCIController implements UserSCI {
 		}
 
 		// 테넌트 아이디 없음
-		if (updateUserRequest.getCommonRequest().getTenantID() == null
-				|| updateUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
+		// if (updateUserRequest.getCommonRequest().getTenantID() == null
+		// || updateUserRequest.getCommonRequest().getTenantID().length() <= 0) {
+		// throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
+		// }
 
 		// 사용자키 없음
 		if (updateUserRequest.getUserMbr().getUserKey() == null
@@ -1116,9 +1103,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return updateUserResponse;
 	}
@@ -2807,10 +2791,10 @@ public class UserSCIController implements UserSCI {
 		}
 
 		// 테넌트 아이디 없음
-		if (searchExtentUserRequest.getCommonRequest().getTenantID() == null
-				|| searchExtentUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
+		// if (searchExtentUserRequest.getCommonRequest().getTenantID() == null
+		// || searchExtentUserRequest.getCommonRequest().getTenantID().length() <= 0) {
+		// throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
+		// }
 
 		// 필수 파라미터, keySearchList
 		if (searchExtentUserRequest.getKeySearchList() == null) {
@@ -2830,8 +2814,6 @@ public class UserSCIController implements UserSCI {
 			// 잘못된 키값
 			if (!keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_USER_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_USER_ID)
-					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_IDP_KEY)
-					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_ONEID_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_ID)) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.wrongKeyType", ""));

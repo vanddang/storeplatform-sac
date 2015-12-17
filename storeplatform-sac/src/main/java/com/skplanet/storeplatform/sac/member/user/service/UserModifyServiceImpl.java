@@ -21,14 +21,11 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.FindCommonProfileForServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyAuthInfoEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyEmailEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.CheckIdPwdAuthEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.ModifyPwdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateGuardianEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEmIDPEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserNameEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
@@ -50,6 +47,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoRe
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
@@ -121,127 +119,49 @@ public class UserModifyServiceImpl implements UserModifyService {
 	private UserSearchService userSearchService;
 
 	@Override
-	public ModifyRes mod(SacRequestHeader sacHeader, ModifyReq req) {
+	public ModifyRes modUser(SacRequestHeader sacHeader, ModifyReq req) {
 
 		ModifyRes response = new ModifyRes();
 
 		/**
 		 * 회원 정보 조회.
 		 */
-		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		searchExtentUserRequest.setCommonRequest(commonRequest);
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+		this.userSCI.searchExtentUser(searchExtentUserRequest);
 
 		/**
-		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
+		 * SC 회원 수정.
 		 */
-		LOGGER.debug("## 사용자 타입  : {}", userInfo.getUserType());
-		LOGGER.debug("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
-		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
+		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 
-			LOGGER.debug("## ====================================================");
-			LOGGER.debug("## One ID 통합회원 [{}]", userInfo.getUserName());
-			LOGGER.debug("## ====================================================");
+		/**
+		 * 공통 정보 setting.
+		 */
+		updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
-			/**
-			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
-			 */
-			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
+		/**
+		 * 사용자 기본정보 setting.
+		 */
+		updateUserRequest.setUserMbr(this.getUserMbr(req));
 
-				/**
-				 * 통합IDP 회원정보 수정 연동 (cmd - TXUpdateUserInfoIDP)
-				 */
-				UpdateUserInfoEcReq updateUserInfoEcReq = new UpdateUserInfoEcReq();
-				updateUserInfoEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 인증키
-				updateUserInfoEcReq.setKey(userInfo.getImSvcNo()); // 통합서비스 관리번호
-				updateUserInfoEcReq.setUserType("1"); // 가입자 유형코드 (1:개인)
-				updateUserInfoEcReq.setIsBizAuth(MemberConstants.USE_N);
-				updateUserInfoEcReq.setUdtTypeCd("4"); // 업데이트 구분 코드 (1:TN, 2:EM, 3:TN+EM, 4:부가정보)
-				if (!StringUtils.equals(req.getUserCalendar(), "")) {
-					updateUserInfoEcReq.setUserCalendar(req.getUserCalendar()); // 양력1, 음력2
-				}
-				if (!StringUtils.equals(req.getUserZip(), "")) {
-					updateUserInfoEcReq.setUserZipcode(req.getUserZip()); // 우편번호
-				}
-				if (!StringUtils.equals(req.getUserAddress(), "")) {
-					updateUserInfoEcReq.setUserAddress(req.getUserAddress()); // 주소
-				}
-				if (!StringUtils.equals(req.getUserDetailAddress(), "")) {
-					updateUserInfoEcReq.setUserAddress2(req.getUserDetailAddress()); // 상세주소
-				}
-				this.imIdpSCI.updateUserInfo(updateUserInfoEcReq);
-
-				/**
-				 * 통합IDP 회원정보 조회 연동 (cmd - findCommonProfileForServerIDP))
-				 */
-				UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
-				userInfoIdpSearchServerEcReq.setKey(userInfo.getImSvcNo()); // 통합서비스 관리번호
-				this.imIdpSCI.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
-
-			}
-
-			/**
-			 * SC 회원 수정.
-			 */
-			String userKey = this.modUser(sacHeader, req);
-			response.setUserKey(userKey);
-
-		} else {
-
-			LOGGER.debug("## ====================================================");
-			LOGGER.debug("## 기존 IDP 회원 [{}]", userInfo.getUserName());
-			LOGGER.debug("## ====================================================");
-
-			/**
-			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
-			 */
-			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
-
-				/**
-				 * IDP 회원정보 수정 연동 (cmd - modifyProfile)
-				 */
-				ModifyProfileEcReq modifyProfileEcReq = new ModifyProfileEcReq();
-				modifyProfileEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 인증키
-				modifyProfileEcReq.setKeyType("2");
-				modifyProfileEcReq.setKey(userInfo.getImMbrNo()); // MBR_NO
-				if (!StringUtils.equals(req.getUserSex(), "")) {
-					modifyProfileEcReq.setUserSex(req.getUserSex()); // 성별
-				}
-				if (!StringUtils.equals(req.getUserBirthDay(), "")) {
-					modifyProfileEcReq.setUserBirthday(req.getUserBirthDay()); // 생년월일
-				}
-				if (!StringUtils.equals(req.getUserCalendar(), "")) {
-					modifyProfileEcReq.setUserCalendar(req.getUserCalendar()); // 양력1, 음력2
-				}
-				if (!StringUtils.equals(req.getUserZip(), "")) {
-					modifyProfileEcReq.setUserZipcode(req.getUserZip()); // 우편번호
-				}
-				if (!StringUtils.equals(req.getUserAddress(), "")) {
-					modifyProfileEcReq.setUserAddress(req.getUserAddress()); // 주소
-				}
-				if (!StringUtils.equals(req.getUserDetailAddress(), "")) {
-					modifyProfileEcReq.setUserAddress2(req.getUserDetailAddress()); // 상세주소
-				}
-				if (!StringUtils.equals(req.getUserPhone(), "")) {
-					modifyProfileEcReq.setUserTel(req.getUserPhone()); // 사용자 연락처
-				}
-				this.idpSCI.modifyProfile(modifyProfileEcReq);
-
-				/**
-				 * IDP 회원정보 조회 연동 (cmd - findCommonProfileForServer)
-				 */
-				FindCommonProfileForServerEcReq findCommonProfileForServerEcReq = new FindCommonProfileForServerEcReq();
-				findCommonProfileForServerEcReq.setKeyType("3");
-				findCommonProfileForServerEcReq.setKey(userInfo.getImMbrNo()); // MBR_NO
-				this.idpSCI.findCommonProfileForServer(findCommonProfileForServerEcReq);
-
-			}
-
-			/**
-			 * SC 회원 수정.
-			 */
-			String userKey = this.modUser(sacHeader, req);
-			response.setUserKey(userKey);
-
+		/**
+		 * SC 사용자 회원 기본정보 수정 요청.
+		 */
+		UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
+		if (updateUserResponse.getUserKey() == null || StringUtils.equals(updateUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
+
+		response.setUserKey(updateUserResponse.getUserKey());
 
 		return response;
 	}
@@ -601,46 +521,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 	/**
 	 * <pre>
-	 * 사용자 기본정보 수정.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @param req
-	 *            Request Value Object
-	 * @return String (userKey)
-	 */
-	private String modUser(SacRequestHeader sacHeader, ModifyReq req) {
-
-		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-
-		/**
-		 * 공통 정보 setting.
-		 */
-		updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-
-		/**
-		 * 사용자 기본정보 setting.
-		 */
-		updateUserRequest.setUserMbr(this.getUserMbr(req));
-
-		/**
-		 * SC 사용자 회원 기본정보 수정 요청.
-		 */
-		UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
-		if (updateUserResponse.getUserKey() == null || StringUtils.equals(updateUserResponse.getUserKey(), "")) {
-			throw new StorePlatformException("SAC_MEM_0002", "userKey");
-		}
-
-		/**
-		 * 결과 세팅
-		 */
-		return updateUserResponse.getUserKey();
-
-	}
-
-	/**
-	 * <pre>
 	 * 사용자 기본정보 setting..
 	 * </pre>
 	 * 
@@ -652,20 +532,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserKey(req.getUserKey());
-
-		/**
-		 * 사용자 연락처 (Sync 대상)
-		 */
-		if (StringUtils.isNotBlank(req.getUserPhone())) {
-			userMbr.setUserPhone(req.getUserPhone());
-		}
-
-		/**
-		 * SMS 수신 여부
-		 */
-		if (StringUtils.isNotBlank(req.getIsRecvSms())) {
-			userMbr.setIsRecvSMS(req.getIsRecvSms());
-		}
 
 		/**
 		 * 이메일 수신여부

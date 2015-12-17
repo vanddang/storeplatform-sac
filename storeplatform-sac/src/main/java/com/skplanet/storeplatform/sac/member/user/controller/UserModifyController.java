@@ -85,7 +85,7 @@ public class UserModifyController {
 		/**
 		 * 회원 정보 수정 Biz
 		 */
-		ModifyRes res = this.svc.mod(sacHeader, req);
+		ModifyRes res = this.svc.modUser(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 

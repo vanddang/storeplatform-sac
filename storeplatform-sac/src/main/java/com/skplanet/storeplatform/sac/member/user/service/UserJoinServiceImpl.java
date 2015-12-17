@@ -27,7 +27,6 @@ import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.CheckDupIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SimpleJoinEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SimpleJoinEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AgreeUserEcReq;
@@ -57,7 +56,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
-import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 
@@ -114,77 +112,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
 		/**
-		 * ROOTING 여부 체크, IMEI 비교
-		 */
-		// this.checkDeviceInfo(req);
-
-		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
 		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(),
-				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType(), false);
+				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType(), true);
 
 		/**
 		 * 약관 맵핑정보 세팅.
 		 */
 		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(
 				sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
-
-		JoinForWapEcRes joinForWapEcRes = null;
-
-		try {
-
-			/**
-			 * (IDP 연동) 무선회원 가입 (cmd - joinForWap)
-			 */
-			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
-			joinForWapEcReq.setUserMdn(req.getDeviceId());
-			joinForWapEcReq.setMdnCorp(this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
-			joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
-
-			/**
-			 * skt 서비스 관리번호 idp응답값으로 셋팅
-			 */
-			majorDeviceInfo.setSvcMangNum(joinForWapEcRes.getSvcMngNum());
-
-		} catch (StorePlatformException spe) {
-
-			/**
-			 * 가가입일 경우 처리.
-			 */
-			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-					+ IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
-
-				/**
-				 * IDP에 이미 가입되어 있는 회원일 경우 SC 회원 DB 조회해서 정보 존재 하면 Error를 반환 (데이터는 삭제 하지 않음 - 이유 : IDP 및 회원 DB에도 정상 임) -
-				 * 에러 : IDP 가가입 에러
-				 */
-				try {
-
-					this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
-
-				} catch (StorePlatformException ex) {
-					if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
-							|| StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-
-						/**
-						 * SC회원에 정보가 없는경우 IDP 모바일회원 탈퇴 요청
-						 */
-						SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-						ecReq.setUserMdn(req.getDeviceId());
-						this.idpSCI.secedeForWap(ecReq);
-
-					}
-				}
-
-				throw new StorePlatformException("SAC_MEM_1101", spe);
-
-			} else {
-
-				throw spe;
-
-			}
-		}
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -207,14 +144,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * SC 사용자 기본정보 setting
 		 */
 		UserMbr userMbr = new UserMbr();
-		userMbr.setImMbrNo(joinForWapEcRes.getUserKey()); // MBR_NO
 		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
-		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
@@ -229,16 +164,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
 		/**
-		 * 휴대기기 등록.
+		 * 휴대기기 등록. - 휴대기기 등록 SC 작업 완료 후 재작업
 		 */
-		String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
+		// String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
 
 		/**
 		 * 결과 세팅
 		 */
 		CreateByMdnRes response = new CreateByMdnRes();
 		response.setUserKey(createUserResponse.getUserKey());
-		response.setDeviceKey(deviceKey);
+		response.setDeviceKey("");
 		return response;
 
 	}
@@ -294,9 +229,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserID(req.getUserId()); // 사용자 아이디
 		userMbr.setUserEmail(agreeUserEcRes.getUserEmail()); // 사용자 이메일
-		userMbr.setUserPhone(agreeUserEcRes.getUserTn()); // 사용자 전화번호 (AS-IS 로직 반영.)
-		userMbr.setImMbrNo(agreeUserEcRes.getUserKey()); // MBR_NO
-		userMbr.setImSvcNo(agreeUserEcRes.getImIntSvcNo()); // OneID 통합서비스 관리번호
 		userMbr.setUserName(userInfoIdpSearchServerEcRes.getUserName()); // 사용자 이름
 		userMbr.setUserBirthDay(userInfoIdpSearchServerEcRes.getUserBirthday()); // 사용자 생년월일
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
@@ -307,8 +239,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
-		userMbr.setIsMemberPoint(this.ocbJoinCodeYn(agreeUserEcRes)); // 통합포인트 사용 여부
-		userMbr.setImSiteCode(agreeUserEcRes.getJoinSstList()); // 이용동의 사이트 정보
 		createUserRequest.setUserMbr(userMbr);
 
 		/**
@@ -405,11 +335,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserID(req.getUserId()); // 사용자 아이디
 		userMbr.setUserEmail(agreeUserEcRes.getUserEmail()); // 사용자 이메일
-		userMbr.setUserPhone(agreeUserEcRes.getUserTn()); // 사용자 전화번호 (AS-IS 로직 반영.)
 		userMbr.setUserName(userInfoIdpSearchServerEcRes.getUserName()); // 사용자 이름
 		userMbr.setUserBirthDay(userInfoIdpSearchServerEcRes.getUserBirthday()); // 사용자 생년월일
-		userMbr.setImMbrNo(agreeUserEcRes.getUserKey()); // MBR_NO
-		userMbr.setImSvcNo(agreeUserEcRes.getImIntSvcNo()); // 통합 서비스 관리 번호
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // One ID 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
@@ -418,8 +345,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
-		userMbr.setIsMemberPoint(this.ocbJoinCodeYn(agreeUserEcRes)); // 통합포인트 사용 여부
-		userMbr.setImSiteCode(agreeUserEcRes.getJoinSstList()); // 이용동의 사이트 정보
 		createUserRequest.setUserMbr(userMbr);
 
 		/**
@@ -478,7 +403,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserID(req.getUserId()); // 사용자 아이디
-		userMbr.setImMbrNo(simpleJoinEcRes.getUserKey()); // MBR_NO
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
@@ -563,7 +487,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserID(req.getUserId()); // 사용자 아이디
-		userMbr.setImMbrNo(simpleJoinEcRes.getUserKey()); // MBR_NO
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
@@ -1089,7 +1012,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * SC 사용자 기본정보 setting
 		 */
 		UserMbr userMbr = new UserMbr();
-		userMbr.setImMbrNo(joinForWapEcRes.getUserKey()); // MBR_NO
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
@@ -1140,7 +1062,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.) [MAC-yyyyMMdd] MBR_NO (26)
 		 */
-		userMbr.setImMbrNo(this.getFixMbrNo(req.getDeviceIdType())); // 고정된 MBR_NO 세팅함.
+		// userMbr.setImMbrNo(this.getFixMbrNo(req.getDeviceIdType())); // 고정된 MBR_NO 세팅함.
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
