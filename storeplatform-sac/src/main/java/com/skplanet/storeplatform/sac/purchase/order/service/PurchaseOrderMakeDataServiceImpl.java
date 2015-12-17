@@ -818,8 +818,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 					try {
 						sbReserveData
-								.append("&useDeviceId=")
-								.append(useUser.getDeviceId())
+								.append(genResvData(PurchaseConstants.IF_PUR_ORDER_REQ_MDN_DELIVERY_USE_DEVICE_ID,
+										useUser.getDeviceId()))
 								.append("&useDeviceModelCd=")
 								.append(useUser.getDeviceModelCd())
 								.append("&aid=")
