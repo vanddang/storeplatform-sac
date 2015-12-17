@@ -508,7 +508,8 @@ public class UserServiceImpl implements UserService {
 		List<KeySearch> keySearchList = checkDuplicationRequest.getKeySearchList();
 		for (KeySearch keySearch : keySearchList) {
 			if (keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_KEY)
-					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)) {
+					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)
+					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)) {
 				isDeviceRequest = true;
 			}
 		}
@@ -2900,7 +2901,8 @@ public class UserServiceImpl implements UserService {
 		List<KeySearch> keySearchList = searchExtentUserRequest.getKeySearchList();
 		for (KeySearch keySearch : keySearchList) {
 			if (keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_KEY)
-					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)) {
+					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)
+					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)) {
 				isDeviceRequest = true;
 			}
 		}

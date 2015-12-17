@@ -727,8 +727,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 			keyType = "deviceKey";
 			keyValue = deviceKey;
 		} else if (!deviceId.equals("")) {
-			keyType = "deviceId";
-			keyValue = deviceId;
+			if (ValidationCheckUtils.isMdn(deviceId)) {
+				keyType = "mdn";
+				keyValue = deviceId;
+			} else {
+				keyType = "deviceId";
+				keyValue = deviceId;
+			}
 		} else if (!mbrNo.equals("")) {
 			keyType = "mbrNo";
 			keyValue = mbrNo;
@@ -740,6 +745,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
 		keyTypeMap.put("mbrNo", MemberConstants.KEY_TYPE_USERMBR_NO);
+		keyTypeMap.put("mdn", MemberConstants.KEY_TYPE_MDN);
 
 		/**
 		 * 검색 조건 setting
@@ -1609,8 +1615,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 			keyType = MemberConstants.KEY_TYPE_MBR_ID;
 			keyValue = req.getUserId();
 		} else if (StringUtils.isNotBlank(req.getDeviceId())) {
-			keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
-			keyValue = req.getDeviceId();
+			if (ValidationCheckUtils.isMdn(req.getDeviceId())) {
+				keyType = MemberConstants.KEY_TYPE_MDN;
+				keyValue = req.getDeviceId();
+			} else {
+				keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
+				keyValue = req.getDeviceId();
+			}
 		} else if (StringUtils.isNotBlank(req.getDeviceKey())) {
 			keyType = MemberConstants.KEY_TYPE_INSD_DEVICE_ID;
 			keyValue = req.getDeviceKey();
