@@ -275,6 +275,7 @@ public class MemberCommonComponent {
 		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
 		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
+		keyTypeMap.put("mdn", MemberConstants.KEY_TYPE_MDN);
 
 		/**
 		 * 검색 조건 setting

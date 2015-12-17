@@ -1063,6 +1063,4 @@
         WHERE ROWNUM = 1
     </select>
 
-    </select>
-        
 </mapper>
