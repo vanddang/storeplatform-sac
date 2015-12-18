@@ -77,7 +77,6 @@
             SELECT  /* DeviceMapper.searchDeviceList2, 휴대기기 목록 조회, 황정택/와이즈스톤, 2013-12-05 */
                     DISTINCT(l.userKey) AS userKey
                     , #{commonRequest.systemID} AS userID
-                    , #{commonRequest.tenantID} AS tenantID
                     , #{isMainDevice} AS isMainDevice
               FROM  (
                       SELECT  a.insd_usermbr_no AS userKey
@@ -102,14 +101,12 @@
             SELECT  /* DeviceMapper.searchDeviceList2D, 휴대기기 목록 조회(휴대기기 정보로 조회), 황정택/와이즈스톤, 2013-12-05 */
                       DISTINCT(l.userKey) AS userKey
                       , #{commonRequest.systemID} AS userID
-                      , #{commonRequest.tenantID} AS tenantID
                       , #{isMainDevice} AS isMainDevice
                       FROM ( SELECT  a.insd_usermbr_no AS userKey
                         FROM  tb_us_ousermbr a
                    LEFT JOIN  tb_us_ousermbr_device b 
                           ON  a.insd_usermbr_no = b.insd_usermbr_no
                        WHERE  b.auth_yn = 'Y'
-                         AND  b.tenant_id = #{commonRequest.tenantID}
                <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                    <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID')">
                        b.device_id = #{keySearch.keyString}
@@ -133,7 +130,7 @@
 
         <collection
             property="userMbrDevice"
-            column="{tenantID=tenantID, userKey=userKey, isMainDevice=isMainDevice}"
+            column="{userKey=userKey, isMainDevice=isMainDevice}"
             javaType="java.util.ArrayList"
             ofType="userMbrDevice"
             select="getDevice"/>
@@ -143,8 +140,7 @@
     <!-- 휴대기기 단건 조회 -->
     <select id="getDevice" resultMap="getDeviceResultMap">
             SELECT  /* DeviceMapper.getDevice, 휴대기기 단건 조회, 황정택/와이즈스톤, 2013-12-05 */
-                    tenant_id
-                    , insd_usermbr_no
+                    insd_usermbr_no
                     , insd_device_id
                     , device_id
                     , mdn
@@ -180,8 +176,7 @@
     <!-- 이전 휴대기기 단건 조회 -->
     <select id="getAllDevice" resultMap="getDeviceResultMap">
             SELECT  /* DeviceMapper.getAllDevice, 이전 휴대기기 단건 조회, 황정택/와이즈스톤, 2013-12-05 */
-                    tenant_id
-                    , insd_usermbr_no
+                    insd_usermbr_no
                     , insd_device_id
                     , device_id
                     , mdn
@@ -217,12 +212,11 @@
         <result property="deviceAccount"        column="device_acct"        jdbcType="VARCHAR"  /> 
         <result property="svcMangNum"           column="svc_mang_no"        jdbcType="VARCHAR"  />
         <result property="userKey"              column="insd_usermbr_no"    jdbcType="VARCHAR"  />
-        <result property="tenantID"             column="tenant_id"          jdbcType="VARCHAR"  />
         <result property="joinId"               column="entry_chnl_cd"      jdbcType="VARCHAR"  />
         <result property="isUsed"               column="auth_yn"            jdbcType="VARCHAR"  />
         <collection
             property="userMbrDeviceDetail"
-            column="{tenantID=tenant_id, userKey=insd_usermbr_no, deviceKey=insd_device_id}"
+            column="{userKey=insd_usermbr_no, deviceKey=insd_device_id}"
             javaType="java.util.ArrayList"
             ofType="userMbrDeviceDetail"
             select="getExtraProfile"/>
@@ -250,7 +244,6 @@
                       FROM  tb_us_ousermbr
                      WHERE  insd_usermbr_no = #{userKey}
                 ) AS userID
-             ,  #{commonRequest.tenantID} AS tenantID
              ,  'INSD_DEVICE_ID' AS keyType
              ,  u.insd_device_id AS keyString
           FROM  
@@ -276,7 +269,6 @@
                       FROM  tb_us_ousermbr
                      WHERE  insd_usermbr_no = #{userKey}
                 ) AS userID
-             ,  #{commonRequest.tenantID} AS tenantID
              ,  #{deviceKey} AS deviceKey
          FROM DUAL
     </select>
@@ -335,7 +327,7 @@
         <!-- 휴대기기 단건 조회 -->
         <association
             property="userMbrDevice"
-            column="{tenantID=tenantID, userKey=userKey, keyType=keyType, keyString=keyString}"
+            column="{userKey=userKey, keyType=keyType, keyString=keyString}"
             javaType="userMbrDevice"
             select="getDevice"/>
     </resultMap>
@@ -349,7 +341,7 @@
         <!-- 휴대기기 단건 조회 -->
         <association
             property="userMbrDevice"
-            column="{tenantID=tenantID, userKey=userKey, deviceKey=deviceKey}"
+            column="{userKey=userKey, deviceKey=deviceKey}"
             javaType="userMbrDevice"
             select="getAllDevice"/>
     </resultMap>
@@ -477,7 +469,6 @@
     <update id="createDevice" parameterType="userMbrDevice">
         INSERT /* DeviceMapper.createDevice, 휴대기기 등록, 황정택/와이즈스톤, 2013-12-23 */
         INTO tb_us_ousermbr_device (
-               tenant_id,
                insd_usermbr_no,
                insd_device_id,
                device_id,
@@ -496,7 +487,6 @@
                <if test="joinId != null">,entry_chnl_cd </if>
                <if test="changeCaseCode != null">,chg_case_cd </if>
         ) VALUES (
-            #{tenantID},
             #{userKey},
             #{deviceKey},
             #{deviceID},
@@ -815,8 +805,7 @@
                <if test="joinId != null">,entry_chnl_cd = #{joinId} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
-        WHERE tenant_id = #{tenantID}
-          AND insd_usermbr_no = #{userKey}
+        WHERE insd_usermbr_no = #{userKey}
           AND insd_device_id = #{deviceKey}
     </update>
     
