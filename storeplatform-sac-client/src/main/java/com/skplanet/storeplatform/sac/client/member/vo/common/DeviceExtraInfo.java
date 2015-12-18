@@ -26,11 +26,6 @@ public class DeviceExtraInfo extends CommonInfo {
 	private String extraProfileValue;
 
 	/**
-	 * 테넌트 아이디.
-	 */
-	private String tenentId;
-
-	/**
 	 * 사용자 키.
 	 */
 	private String userKey;
@@ -68,21 +63,6 @@ public class DeviceExtraInfo extends CommonInfo {
 	 */
 	public void setExtraProfileValue(String extraProfileValue) {
 		this.extraProfileValue = extraProfileValue;
-	}
-
-	/**
-	 * @return tenentId
-	 */
-	public String getTenentId() {
-		return this.tenentId;
-	}
-
-	/**
-	 * @param tenentId
-	 *            String
-	 */
-	public void setTenentId(String tenentId) {
-		this.tenentId = tenentId;
 	}
 
 	/**

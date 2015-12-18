@@ -107,9 +107,9 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 			/* 폰정보 DB 조회하여 추가 정보 반영 */
 			Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
 			if (device != null) {
-				deviceInfo.setMakeComp(device.getMnftCompCd());
+				/*deviceInfo.setMakeComp(device.getMnftCompCd());
 				deviceInfo.setModelNm(device.getModelNm());
-				deviceInfo.setVmType(device.getVmTypeCd());
+				deviceInfo.setVmType(device.getVmTypeCd());*/
 			}
 
 		} catch (StorePlatformException ex) {
@@ -128,7 +128,7 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 	 * 
 	 * @param sacHeader
 	 *            SacRequestHeader
-	 * @param historyRequest
+	 * @param request
 	 *            ChangedDeviceHistoryReq
 	 * @return ChangedDeviceHistoryRes
 	 */
@@ -223,7 +223,7 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 	 * 2.1.13. 회원 한도 요금제 사용여부 업데이트.
 	 * </pre>
 	 * 
-	 * @param request
+	 * @param req
 	 *            UpdateLimitChargeYnSacReq
 	 * @return UpdateLimitChargeYnSacRes
 	 */

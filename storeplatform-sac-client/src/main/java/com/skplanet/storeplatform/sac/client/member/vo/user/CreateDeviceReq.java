@@ -15,42 +15,19 @@ public class CreateDeviceReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 사용자 권한 Key.
-	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
-	private String userAuthKey;
-
-	/**
 	 * 사용자 Key.
 	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String userKey;
 
 	/**
 	 * 최대 등록 가능한 휴대기기 수.
 	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String regMaxCnt;
 
 	/**
 	 * 사용자 단말 정보.
 	 */
 	private DeviceInfo deviceInfo;
-
-	/**
-	 * @return userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
-	}
 
 	/**
 	 * @return userKey

@@ -3055,17 +3055,17 @@ public class IdpServiceImpl implements IdpService {
 											Device device = this.mcc.getPhoneInfoByUacd(modelIdByMdnInfo);
 											if (device == null) {
 												getDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD);
-												getDeviceInfo.setModelNm(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
+//												getDeviceInfo.setModelNm(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
 												modelIdByMdnInfo = MemberConstants.NOT_SUPPORT_HP_UACODE;
 											} else {
 												getDeviceInfo.setDeviceModelNo(device.getDeviceModelCd());
 												// getDeviceInfo.setModelNm(device.getModelNm());
-												if (StringUtils.equals(getDeviceInfo.getDeviceNickName(),
+												/*if (StringUtils.equals(getDeviceInfo.getDeviceNickName(),
 														MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
 														&& StringUtils.equals(getDeviceInfo.getDeviceModelNo(),
 																MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 													getDeviceInfo.setDeviceNickName(device.getModelNm());
-												}
+												}*/
 											}
 
 											// 휴대기기등록
@@ -3088,7 +3088,7 @@ public class IdpServiceImpl implements IdpService {
 											}
 
 											this.deviceService
-													.regDeviceInfo(systemId, tenantId, userKey, getDeviceInfo);
+													.regDeviceInfo(systemId, userKey, getDeviceInfo);
 
 											// insertDeviceInfo 호출시 deviceKey가 새로 생성되는데 새로 생성된 값을 updateDeviceInfo
 											// api호출해서 부가속성을 모두 바꿔줘야함.

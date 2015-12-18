@@ -76,7 +76,6 @@ public class DeviceSCIController implements DeviceSCI {
 			response.setDeviceId(deviceInfo.getDeviceId());
 			response.setDeviceTelecom(deviceInfo.getDeviceTelecom());
 			response.setAuthYn(deviceInfo.getIsAuthenticated());
-			response.setTenantId(deviceInfo.getTenantId());
 		} else {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
@@ -152,7 +151,7 @@ public class DeviceSCIController implements DeviceSCI {
 	 * 2.1.13. 회원 한도 요금제 사용여부 업데이트.
 	 * </pre>
 	 * 
-	 * @param request
+	 * @param req
 	 *            UpdateLimitChargeYnSacReq
 	 * @return UpdateLimitChargeYnSacRes
 	 */

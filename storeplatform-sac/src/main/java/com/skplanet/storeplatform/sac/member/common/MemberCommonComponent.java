@@ -648,16 +648,12 @@ public class MemberCommonComponent {
 	 * <pre>
 	 * 약관동의 목록 조회.
 	 * </pre>
-	 * 
-	 * @param keyType
+	 *
+	 * @param userKey
 	 *            검색 조건 타입
-	 * @param keyValue
+	 * @param sacHeader
 	 *            검색 조건 값
-	 * @param systemId
-	 *            시스템 아이디
-	 * @param tenantId
-	 *            테넌트 아이디
-	 * @return UserExtraInfo
+	 * @return SearchAgreementRes
 	 * @throws Exception
 	 *             Exception
 	 */
@@ -733,7 +729,7 @@ public class MemberCommonComponent {
 	 *            단말 모델
 	 * @param deviceTelecom
 	 *            이동통신사
-	 * @param deviceId
+	 * @param mdn
 	 *            (msisdn or uuid or mac value)
 	 * @param deviceIdType
 	 *            (msisdn or uuid or mac type)
@@ -742,7 +738,7 @@ public class MemberCommonComponent {
 	 * @return MajorDeviceInfo
 	 * 
 	 */
-	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType,
+	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String mdn, String deviceIdType,
 			boolean isSearchSvcMangNo) {
 
 		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
@@ -757,7 +753,7 @@ public class MemberCommonComponent {
 			 * 미지원 단말 setting
 			 */
 			LOGGER.debug("## 미지원 단말 세팅.");
-			LOGGER.info("<getDeviceBaseInfo> NOT SUPPORT DEVICE. mdn : {}, model : {}", deviceId, model);
+			LOGGER.info("<getDeviceBaseInfo> NOT SUPPORT DEVICE. mdn : {}, model : {}", mdn, model);
 			majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
 			majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
 			majorDeviceInfo.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM); // 기기명
@@ -770,7 +766,7 @@ public class MemberCommonComponent {
 				 * 미지원 단말 setting
 				 */
 				LOGGER.debug("## 미지원 단말 세팅.");
-				LOGGER.info("<getDeviceBaseInfo> NOT SUPPORT DEVICE. mdn : {}, model : {}", deviceId, model);
+				LOGGER.info("<getDeviceBaseInfo> NOT SUPPORT DEVICE. mdn : {}, model : {}", mdn, model);
 				majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
 				majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
 				majorDeviceInfo.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM); // 기기명
@@ -816,7 +812,7 @@ public class MemberCommonComponent {
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
 
-				UserEcRes userRes = this.getMappingInfo(deviceId, "mdn");
+				UserEcRes userRes = this.getMappingInfo(mdn, "mdn");
 				LOGGER.debug("## UAPS 연동 결과 toString() : {}", userRes);
 				LOGGER.debug("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
 				majorDeviceInfo.setSvcMangNum(userRes.getSvcMngNum());

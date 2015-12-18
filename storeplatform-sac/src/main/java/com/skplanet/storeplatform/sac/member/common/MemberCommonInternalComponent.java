@@ -74,8 +74,6 @@ public class MemberCommonInternalComponent {
 	 *            내부메서드 연동여부
 	 * @param systemId
 	 *            Sysetm ID
-	 * @param tenantId
-	 *            Tenant ID
 	 * @param userKey
 	 *            사용자 Key
 	 * @param previousUserKey
@@ -85,7 +83,7 @@ public class MemberCommonInternalComponent {
 	 * @param previousDeviceKey
 	 *            이전 휴대기기 Key
 	 */
-	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey,
+	public void excuteInternalMethod(boolean isCall, String systemId, String userKey,
 			String previousUserKey, String deviceKey, String previousDeviceKey) {
 
 		// StackTraceElement[] ste = new Throwable().getStackTrace();
@@ -97,6 +95,8 @@ public class MemberCommonInternalComponent {
 
 		// LOGGER.info("회원 OGG 관련 구매/기타 내부메서드 호출 메서드: {}", ste[1].getMethodName());
 
+		// TODO. 타파트 개발 완료전 오류방지를 위해 임의로 SO1 셋팅
+		String tenantId = "S01";
 		if (isCall) {
 
 			/* 1. 기타/전시 파트 userKey 변경 */

@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.member.user.controller;
 
 import javax.validation.Valid;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,11 +109,6 @@ public class DeviceController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		/* 휴대기기 정보 필수 파라메터 체크 */
-		if (StringUtil.isBlank(req.getUserAuthKey())) {
-			throw new StorePlatformException("SAC_MEM_0001", "userAuthKey");
-		}
-
 		if (StringUtil.isBlank(req.getUserKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
@@ -140,10 +137,63 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "isPrimary");
 		}
 
+		// onebrand에서 mdn 컬럼이 추가되어, deviceIdType이 msisdn인 경우 deviceId를 mdn 필드로 셋팅한다.
+		if(StringUtils.equals(req.getDeviceInfo().getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+			req.getDeviceInfo().setDeviceId("");
+			req.getDeviceInfo().setMdn(req.getDeviceInfo().getDeviceId());
+		}
 		CreateDeviceRes res = this.deviceService.regDevice(requestHeader, req);
 
-		/* 변경된 정보 idp 연동 */
-		this.userService.modProfileIdp(requestHeader, res.getUserKey(), req.getUserAuthKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
+	}
+
+	/**
+	 * 휴대기기 등록 V2.
+	 *
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateDeviceReq
+	 * @return CreateDeviceRes
+	 */
+	@RequestMapping(value = "/createDevice/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateDeviceRes createDeviceV2(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if (StringUtil.isBlank(req.getUserKey())) {
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
+		}
+
+		if (StringUtil.isBlank(req.getRegMaxCnt())) {
+			throw new StorePlatformException("SAC_MEM_0001", "regMaxCnt");
+		}
+
+		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceId())) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+		}
+
+		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceTelecom())) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
+		}
+
+		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceModelNo())) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceModelNo");
+		}
+
+		if (StringUtil.isBlank(req.getDeviceInfo().getIsPrimary())) {
+			throw new StorePlatformException("SAC_MEM_0001", "isPrimary");
+		}
+
+		// TODO. deviceHeader에서 유심번호 추출 후 필수 파라메터 체크 로직 추가 필요.
+		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceSimMn())) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceSimMn");
+		}
+
+		CreateDeviceRes res = this.deviceService.regDevice(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 

@@ -83,15 +83,13 @@ public interface DeviceService {
 	 * 
 	 * @param systemId
 	 *            String
-	 * @param tenanId
-	 *            String
 	 * @param userKey
 	 *            String
 	 * @param deviceInfo
 	 *            DeviceInfo
 	 * @return deviceKey String
 	 */
-	public String regDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo);
+	public String regDeviceInfo(String systemId, String userKey, DeviceInfo deviceInfo);
 
 	/**
 	 * 기기정보 update.
