@@ -152,6 +152,7 @@ public class PayPlanetServiceImpl implements PayPlanetService {
 		notifyPaymentSacReq.setProcSubStatusCd(ppNotifyPaymentSacReq.getProcSubStatusCd());
 		notifyPaymentSacReq.setPaymentInfoList(paymentInfoList);
 		notifyPaymentSacReq.setRemoveSSOCredential(ppNotifyPaymentSacReq.getRemoveSSOCredential());
+		notifyPaymentSacReq.setSvcMangNo(ppNotifyPaymentSacReq.getSvcMangNo());
 
 		return notifyPaymentSacReq;
 	}

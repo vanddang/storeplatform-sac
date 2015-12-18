@@ -117,6 +117,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	@Autowired
 	private PurchaseOrderPostService orderPostService;
+
 	/**
 	 *
 	 * <pre>
@@ -222,11 +223,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> 무료구매 처리. </pre>
-	 *
+	 * 
 	 * @param purchaseOrderInfo 구매요청 정보
-	 *
+	 * 
 	 * @return 생성된 구매이력 건수
 	 */
 	private int freePurchase(PurchaseOrderInfo purchaseOrderInfo) {
@@ -323,17 +324,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					List<Object[]> useMdnList = new ArrayList<Object[]>();
 					if (purchaseOrderInfo.isGift()) {
 						for (PurchaseUserDevice user : purchaseOrderInfo.getReceiveUserList()) {
-							useMdnList.add(new String[]{user.getDeviceId(), user.getUserKey()});
+							useMdnList.add(new String[] { user.getDeviceId(), user.getUserKey() });
 						}
 					} else {
-						useMdnList.add(new String[]{useDeviceId, useUser.getUserKey()});
+						useMdnList.add(new String[] { useDeviceId, useUser.getUserKey() });
 					}
 
 					CouponPublishV2EcRes couponPublishV2EcRes = this.purchaseShoppingOrderRepository
-							.createCouponPublishV2(purchaseOrderInfo.getPrchsId(), purchaseOrderInfo.getUserKey(), purchaseProduct.getCouponCode(),
-									purchaseProduct.getItemCode(), purchaseOrderInfo.getPurchaseUser().getDeviceId(),
-									useMdnList, StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
-											PurchaseConstants.PRCHS_CASE_GIFT_CD));
+							.createCouponPublishV2(purchaseOrderInfo.getPrchsId(), purchaseOrderInfo.getUserKey(),
+									purchaseProduct.getCouponCode(), purchaseProduct.getItemCode(), purchaseOrderInfo
+											.getPurchaseUser().getDeviceId(), useMdnList, StringUtils.equals(
+											purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD));
 
 					String availStartDt = couponPublishV2EcRes.getAvailStartdate();
 					String availEndDt = couponPublishV2EcRes.getAvailEnddate();
@@ -357,9 +358,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				} else {
 
 					CouponPublishEcRes couponPublishEcRes = this.purchaseShoppingOrderRepository.createCouponPublish(
-							purchaseOrderInfo.getPrchsId(), purchaseOrderInfo.getUserKey(), useDeviceId, purchaseOrderInfo.getPurchaseUser()
-									.getDeviceId(), purchaseProduct.getCouponCode(), purchaseProduct.getItemCode(),
-							purchaseProduct.getProdQty());
+							purchaseOrderInfo.getPrchsId(), purchaseOrderInfo.getUserKey(), useDeviceId,
+							purchaseOrderInfo.getPurchaseUser().getDeviceId(), purchaseProduct.getCouponCode(),
+							purchaseProduct.getItemCode(), purchaseProduct.getProdQty());
 
 					if (StringUtils.equals(couponPublishEcRes.getPublishType(),
 							PurchaseConstants.SHOPPING_COUPON_PUBLISH_ASYNC) == false
@@ -493,6 +494,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				final String purchase_inflow_channel = purchaseOrderInfo.getPrchsCaseCd();
 				final String purchase_id = purchaseOrderInfo.getPrchsId();
 				final String purchase_id_recv = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getPrchsId() : "";
+				final String svc_mng_no = StringUtils.equals(purchaseOrderInfo.getTenantId(),
+						PurchaseConstants.TENANT_ID_TSTORE) ? "" : purchaseOrderInfo.getPurchaseUser().getMarketDeviceKey();
 
 				final List<String> topCatCodeList = new ArrayList<String>();
 				topCatCodeList.add(prchsDtlMore.getTenantProdGrpCd().substring(8, 12));
@@ -529,7 +532,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 									.download_expired_time(download_expired_time).product_qty(product_qty)
 									.coupon_publish_code(coupon_publish_code).coupon_code(coupon_code)
 									.coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn)
-									.top_cat_code(topCatCodeList).result_code(result_code);
+									.top_cat_code(topCatCodeList).result_code(result_code).svc_mng_no(svc_mng_no);
 							if (StringUtils.equals(result_code, PurchaseConstants.TLOG_RESULT_CODE_SUCCESS) == false) {
 								shuttle.result_message(result_message).exception_log(exception_log);
 							}
@@ -543,9 +546,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> 유료구매 - 구매예약. </pre>
-	 *
+	 * 
 	 * @param purchaseOrderInfo 구매요청 정보
 	 */
 	private int reservePurchase(PurchaseOrderInfo purchaseOrderInfo) {
@@ -966,10 +969,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			iapProdInfo.setProdKind(reservedDataMap.get("iapProdKind"));
 			iapProdInfo.setProdCase(reservedDataMap.get("iapProdCase"));
 			try {
-				iapProdInfo.setParentProdNm(URLDecoder.decode(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM),PurchaseConstants.DEFAULT_ENCODING));
+				iapProdInfo.setParentProdNm(URLDecoder.decode(
+						reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PARENT_PROD_NM),
+						PurchaseConstants.DEFAULT_ENCODING));
 			} catch (UnsupportedEncodingException e) {
 				throw new StorePlatformException("SAC_PUR_7223", e);
-			} if (StringUtils.isNotBlank(reservedDataMap.get("iapUsePeriod"))) {
+			}
+			if (StringUtils.isNotBlank(reservedDataMap.get("iapUsePeriod"))) {
 				iapProdInfo.setUsePeriod(Integer.parseInt(reservedDataMap.get("iapUsePeriod")));
 			}
 
@@ -1014,7 +1020,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				mctSpareParam.getUseTenantId(), mctSpareParam.getUseUserKey());
 
 		// ------------------------------------------------------------------------------
-		/** 구매 예약 추가 데이터 추출 **/
+		// /** 구매 예약 추가 데이터 추출 **/
 		Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedDataByMap(prchsDtlMoreList
 				.get(0).getPrchsResvDesc());
 
@@ -1136,10 +1142,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			try {
 				tStoreCashDetailParam = this.purchaseOrderTstoreService.chargeCashImmediately(prchsDtlMore
 						.getUseInsdUsermbrNo(), prchsDtlMore.getPrchsId(), prchsDtlMore.getProdAmt().doubleValue(),
-						prchsDtlMore.getUseStartDt(), URLDecoder.decode(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROD_NM), PurchaseConstants.DEFAULT_ENCODING), productGroupCode,
-								Double.parseDouble(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT)),
-								reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD),
-								reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD));
+						prchsDtlMore.getUseStartDt(), URLDecoder.decode(
+								reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_PROD_NM),
+								PurchaseConstants.DEFAULT_ENCODING), productGroupCode, Double
+								.parseDouble(reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_CASH_AMT)),
+						reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD), reservedDataMap
+								.get(PurchaseConstants.IF_DISPLAY_RES_BNS_USE_PERIOD));
 			} catch (UnsupportedEncodingException e) {
 				throw new StorePlatformException("SAC_PUR_7202", e);
 			}
@@ -1176,7 +1184,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (prchsDtlMore.getTenantProdGrpCd().startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_CHARGE_CARD)) {
 				couponCode = reservedDataMap.get(PurchaseConstants.IF_DISPLAY_RES_COUPON_CODE);
-				shoppingCouponList = invokeCMSCharge(couponCode, prchsDtlMore.getUseInsdUsermbrNo() ,prchsDtlMore.getPrchsId(), reservedDataMap.get("deviceId"),
+				shoppingCouponList = invokeCMSCharge(couponCode, prchsDtlMore.getUseInsdUsermbrNo(),
+						prchsDtlMore.getPrchsId(), reservedDataMap.get("deviceId"),
 						reservedDataMap.get(PurchaseConstants.IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID));
 			} else {
 				shoppingCouponList = invokeCMSStore(reservedDataMap, prchsDtlMore, prchsDtlMoreList,
@@ -1367,7 +1376,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			confirmPurchaseScReq.setNetworkTypeCd(prchsDtlMore.getNetworkTypeCd());
 			confirmPurchaseScReq.setOfferingId(offeringId);
 			confirmPurchaseScReq.setPrchsDt(currentDate);
-			confirmPurchaseScReq.setCashInfo(tStoreCashDetailParam == null ? "" : tStoreCashDetailParam.getCashIdToString()); // 캐시충전ID(북스캐시)
+			confirmPurchaseScReq.setCashInfo(tStoreCashDetailParam == null ? "" : tStoreCashDetailParam
+					.getCashIdToString()); // 캐시충전ID(북스캐시)
 			confirmPurchaseScReq.setMediaId(reservedDataMap.get("mediaId")); // CPS 매체ID 세팅
 			confirmPurchaseScReq.setPrchsProdCntList(prchsProdCntList); // 건수집계
 			confirmPurchaseScReq.setPaymentList(paymentList); // 결제
@@ -1452,6 +1462,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			final String coupon_code = reservedDataMap.get("couponCode");
 			final String coupon_item_code = reservedDataMap.get("itemCode");
 			final String auto_payment_yn = StringUtils.defaultIfBlank(reservedDataMap.get("autoPrchsYn"), "N");
+			final String svc_mng_no = StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_TSTORE) ? notifyPaymentReq
+					.getSvcMangNo() : reservedDataMap.get(PurchaseConstants.IF_MEMBER_RES_MARKET_DEVICE_KEY);
 
 			final List<String> topCatCodeList = new ArrayList<String>();
 			topCatCodeList.add(prchsDtlMore.getTenantProdGrpCd().substring(8, 12));
@@ -1490,7 +1502,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 								.tid(tid).tx_id(tx_id).use_start_time(use_start_time).use_end_time(use_end_time)
 								.download_expired_time(download_expired_time).product_qty(product_qty)
 								.coupon_publish_code(coupon_publish_code).device_id_recv(device_id_recv)
-								.top_cat_code(topCatCodeList).result_code(result_code);
+								.top_cat_code(topCatCodeList).result_code(result_code).svc_mng_no(svc_mng_no);
 						if (StringUtils.equals(result_code, PurchaseConstants.TLOG_RESULT_CODE_SUCCESS) == false) {
 							shuttle.result_message(result_message).exception_log(exception_log);
 						}
@@ -1506,10 +1518,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		return prchsDtlMoreList;
 	}
 
-	private List<ShoppingCouponPublishInfo> invokeCMSCharge(String couponCode, String userKey, String prchsId, String MDN, String chargeMemeberId) {
+	private List<ShoppingCouponPublishInfo> invokeCMSCharge(String couponCode, String userKey, String prchsId,
+			String MDN, String chargeMemeberId) {
 		ShoppingCouponPublishInfo shoppingCouponPublishInfo = new ShoppingCouponPublishInfo();
-		CouponChargeEcRes couponChargeEcRes = this.purchaseShoppingOrderRepository.chargeGoods(couponCode, userKey, prchsId,
-				MDN, chargeMemeberId);
+		CouponChargeEcRes couponChargeEcRes = this.purchaseShoppingOrderRepository.chargeGoods(couponCode, userKey,
+				prchsId, MDN, chargeMemeberId);
 		if (!StringUtils.equals(chargeMemeberId, couponChargeEcRes.getMemberId()))
 			throw new StorePlatformException("SAC_PUR_1812", chargeMemeberId, couponChargeEcRes.getMemberId());
 
@@ -1537,8 +1550,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			CouponPublishV2EcRes couponPublishV2EcRes = null;
 			try {
 				couponPublishV2EcRes = this.purchaseShoppingOrderRepository.createCouponPublishV2(
-						prchsDtlMore.getPrchsId(), prchsDtlMore.getInsdUsermbrNo(), reservedDataMap.get("couponCode"), reservedDataMap.get("itemCode"),
-						reservedDataMap.get("deviceId"), useMdnList,
+						prchsDtlMore.getPrchsId(), prchsDtlMore.getInsdUsermbrNo(), reservedDataMap.get("couponCode"),
+						reservedDataMap.get("itemCode"), reservedDataMap.get("deviceId"), useMdnList,
 						StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD));
 
 			} catch (StorePlatformException e) {
@@ -1576,8 +1589,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			CouponPublishEcRes couponPublishEcRes = null;
 			try {
 				couponPublishEcRes = this.purchaseShoppingOrderRepository.createCouponPublish(
-						prchsDtlMore.getPrchsId(), prchsDtlMore.getInsdUsermbrNo(), reservedDataMap.get("useDeviceId"), reservedDataMap.get("deviceId"),
-						reservedDataMap.get("couponCode"), reservedDataMap.get("itemCode"), prchsDtlMore.getProdQty());
+						prchsDtlMore.getPrchsId(), prchsDtlMore.getInsdUsermbrNo(), reservedDataMap.get("useDeviceId"),
+						reservedDataMap.get("deviceId"), reservedDataMap.get("couponCode"),
+						reservedDataMap.get("itemCode"), prchsDtlMore.getProdQty());
 
 			} catch (StorePlatformException e) {
 				// 쇼핑 특가 상품 품절 경우, 품절 처리
@@ -1907,7 +1921,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	/*
 	 * <pre> 구매 전처리 - 구매 정합성 체크. </pre>
-	 *
+	 * 
 	 * @param purchaseOrderInfo 구매진행 정보
 	 */
 	private void validatePurchaseOrder(PurchaseOrderInfo purchaseOrderInfo) {
@@ -1977,11 +1991,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> CLINK 상품 별 구매 결과 응답 값 생성. </pre>
-	 *
+	 * 
 	 * @param productList 구매요청 상품 목록
-	 *
+	 * 
 	 * @return 상품 별 구매 결과
 	 */
 	private String makeClinkResProductResult(List<PurchaseProduct> productList) {
@@ -2000,11 +2014,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> 구매 확정 취소 작업. </pre>
-	 *
+	 * 
 	 * @param prchsDtlMoreList 구매 정보
-	 *
+	 * 
 	 * @param cashReserveResList 게임캐쉬 충전예약 결과 정보 목록
 	 */
 	private void revertToPreConfirm(List<PrchsDtlMore> prchsDtlMoreList, TStoreCashDetailParam tStoreCashDetailParam,
@@ -2052,17 +2066,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	// RE~
 
 	/*
-	 *
+	 * 
 	 * <pre> 구매 예약 정보 목록 조회. </pre>
-	 *
+	 * 
 	 * @param tenantId 테넌트 ID
-	 *
+	 * 
 	 * @param prchsId 조회할 구매 ID
-	 *
+	 * 
 	 * @param useTenantId 이용자 테넌트 ID
-	 *
+	 * 
 	 * @param useUserKey 이용자 내부관리 번호
-	 *
+	 * 
 	 * @return 구매 예약 정보 목록
 	 */
 	private List<PrchsDtlMore> searchReservedPurchaseList(String tenantId, String prchsId, String useTenantId,
@@ -2093,19 +2107,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> 결제 정책 체크. </pre>
-	 *
+	 * 
 	 * @param prchsDtlMoreList 구매 정보
-	 *
+	 * 
 	 * @param checkSystemId 구매인증 요청한 시스템ID
-	 *
+	 * 
 	 * @param marketDeviceKey SAP 통신사 디바이스 고유 Key
-	 *
+	 * 
 	 * @param deviceKeyAuth SAP 통신사 디바이스 고유 Key 의 hash 값. SHA256 with salt 권장
-	 *
+	 * 
 	 * @param reservedDataMap 구매예약 정보
-	 *
+	 * 
 	 * @return 결제 정책 체크 결과
 	 */
 	private CheckPaymentPolicyResult checkPaymentPolicy(List<PrchsDtlMore> prchsDtlMoreList, String checkSystemId,
@@ -2167,15 +2181,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	/*
-	 *
+	 * 
 	 * <pre> 구매 예약 정보의 특정 값을 구분자로 연결. </pre>
-	 *
+	 * 
 	 * @param prchsDtlMoreList 구매예약정보 목록
-	 *
+	 * 
 	 * @param fieldName 원하는 값
-	 *
+	 * 
 	 * @param separator 구분자
-	 *
+	 * 
 	 * @return 연결된 값
 	 */
 	// private String concatResvDesc(List<PrchsDtlMore> prchsDtlMoreList, String fieldName, String separator) {
@@ -2202,11 +2216,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	// }
 
 	/*
-	 *
+	 * 
 	 * <pre> 구매예약정보에서 CMS호출시 필요한 값을 뽑아낸다. </pre>
-	 *
+	 * 
 	 * @param prchsDtlMoreList 구매예약정보 목록
-	 *
+	 * 
 	 * @return mdn과 userkey로 된 Map
 	 */
 	private List<Object[]> concatResvDescByList(List<PrchsDtlMore> prchsDtlMoreList) {
@@ -2215,11 +2229,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		for (PrchsDtlMore resvPrchsDtlMore : prchsDtlMoreList) {
 			String resvDesc = resvPrchsDtlMore.getPrchsResvDesc();
-			int tmpIdx = resvDesc.indexOf(filedName+ "=");
+			int tmpIdx = resvDesc.indexOf(filedName + "=");
 			String useDevice = resvDesc.substring(tmpIdx + filedName.length() + 1,
 					resvDesc.indexOf("&", tmpIdx + filedName.length() + 1));
 			String useUserKey = resvPrchsDtlMore.getUseInsdUsermbrNo();
-			list.add(new String[] {useDevice, useUserKey});
+			list.add(new String[] { useDevice, useUserKey });
 		}
 
 		return list;
