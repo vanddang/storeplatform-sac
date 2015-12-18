@@ -320,6 +320,7 @@
                     AND  b.auth_yn = 'Y'
                <foreach collection="keySearchList" item="keySearch"   open="" close="" separator="">
                    <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> AND  b.device_id =  #{keySearch.keyString} </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('MDN') "> AND  b.mdn =  #{keySearch.keyString} </if>
                </foreach>
                 ORDER BY b.auth_dt DESC) l
                 WHERE ROWNUM = 1

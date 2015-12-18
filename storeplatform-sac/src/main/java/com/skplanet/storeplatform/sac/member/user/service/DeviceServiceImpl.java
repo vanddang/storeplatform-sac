@@ -109,6 +109,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 /**
@@ -748,8 +749,13 @@ public class DeviceServiceImpl implements DeviceService {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 			key.setKeyString(deviceInfo.getDeviceKey());
 		} else if (StringUtils.isNotBlank(deviceInfo.getDeviceId())) {
-			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			key.setKeyString(deviceInfo.getDeviceId());
+			if (ValidationCheckUtils.isMdn(deviceInfo.getDeviceId())) {
+				key.setKeyType(MemberConstants.KEY_TYPE_MDN);
+				key.setKeyString(deviceInfo.getDeviceId());
+			} else {
+				key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+				key.setKeyString(deviceInfo.getDeviceId());
+			}
 		}
 
 		keySearchList.add(key);

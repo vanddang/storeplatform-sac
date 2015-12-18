@@ -145,6 +145,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 
@@ -794,7 +795,6 @@ public class LoginServiceImpl implements LoginService {
 		String oDeviceId = req.getDeviceId(); // 자번호
 		boolean isOpmd = this.commService.isOpmd(oDeviceId);
 		String isVariability = "Y"; // 변동성 체크 성공 유무
-		String isSaveAndSyncTarget = "N"; // 변동성 mdn 유무
 		String userKey = null;
 		String deviceKey = null;
 		DeviceInfo deviceInfo = null;
@@ -802,9 +802,14 @@ public class LoginServiceImpl implements LoginService {
 		/* 모번호 조회 및 셋팅 */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
 
+		/* deviceId의 mdn여부 체크 */
+		String reqKeyType = MemberConstants.KEY_TYPE_DEVICE_ID;
+		if (ValidationCheckUtils.isMdn(req.getDeviceId())) {
+			reqKeyType = MemberConstants.KEY_TYPE_MDN;
+		}
+
 		/* mdn 회원유무 조회 */
-		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
-				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, reqKeyType, req.getDeviceId());
 		if (chkDupRes.getUserMbr() != null) {
 			LOGGER.info("{} 휴면계정유무 : {}", oDeviceId, chkDupRes.getUserMbr().getIsDormant());
 		}
@@ -950,11 +955,6 @@ public class LoginServiceImpl implements LoginService {
 				removeUserReq.setSecedeReasonMessage("변동성인증수단없음");
 				removeUserReq.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
 				this.userSCI.remove(removeUserReq);
-
-				/* IDP 탈퇴 */
-				SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-				ecReq.setUserMdn(req.getDeviceId());
-				this.idpSCI.secedeForWap(ecReq);
 
 				/* 회원 정보가 존재 하지 않습니다. */
 				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
@@ -3171,6 +3171,8 @@ public class LoginServiceImpl implements LoginService {
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 		} else if (StringUtils.equals(keyType, MemberConstants.KEY_TYPE_MBR_ID)) {
 			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
+		} else if (StringUtils.equals(keyType, MemberConstants.KEY_TYPE_MDN)) {
+			key.setKeyType(MemberConstants.KEY_TYPE_MDN);
 		}
 		key.setKeyString(keyString);
 		keySearchList.add(key);
