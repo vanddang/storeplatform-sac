@@ -375,7 +375,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			SendPurchaseNotiEcReq sendPurchaseNotiEcReq = new SendPurchaseNotiEcReq();
 			sendPurchaseNotiEcReq.setTenantId(prchsDtlMore.getTenantId());
 			sendPurchaseNotiEcReq.setDeviceId(reservedDataMap.get("deviceId"));
-			sendPurchaseNotiEcReq.setDeviceKey(reservedDataMap.get("marketDeviceKey"));
+			sendPurchaseNotiEcReq.setDeviceKey(reservedDataMap.get(PurchaseConstants.IF_MEMBER_RES_MARKET_DEVICE_KEY));
 			sendPurchaseNotiEcReq.setUserEmail(userEmail);
 			sendPurchaseNotiEcReq.setPrchsId(prchsDtlMore.getPrchsId());
 			sendPurchaseNotiEcReq.setPrchsDt(prchsDtlMore.getPrchsDt());

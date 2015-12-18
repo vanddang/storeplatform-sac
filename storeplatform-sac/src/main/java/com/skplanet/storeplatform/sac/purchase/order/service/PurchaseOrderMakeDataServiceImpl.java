@@ -749,8 +749,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 				.append(purchaseOrderInfo.getPurchaseUser().getUserId())
 				.append("&deviceId=")
 				.append(purchaseOrderInfo.getPurchaseUser().getDeviceId())
-				.append("&marketDeviceKey=")
-				.append(StringUtils.defaultString(purchaseOrderInfo.getPurchaseUser().getMarketDeviceKey()))
+				.append(genResvData(PurchaseConstants.IF_MEMBER_RES_MARKET_DEVICE_KEY,
+						purchaseOrderInfo.getPurchaseUser().getMarketDeviceKey()))
 				.append("&deviceModelCd=")
 				.append(purchaseOrderInfo.getPurchaseUser().getDeviceModelCd())
 				.append("&telecom=")
@@ -1011,7 +1011,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		purchaseReservedData.setSystemId(reservedDataMap.get("systemId"));
 		purchaseReservedData.setUserId(reservedDataMap.get("userId"));
 		purchaseReservedData.setDeviceId(reservedDataMap.get("deviceId"));
-		purchaseReservedData.setMarketDeviceKey(reservedDataMap.get("marketDeviceKey"));
+		purchaseReservedData.setMarketDeviceKey(reservedDataMap.get(PurchaseConstants.IF_MEMBER_RES_MARKET_DEVICE_KEY));
 		purchaseReservedData.setDeviceModelCd(reservedDataMap.get("deviceModelCd"));
 		purchaseReservedData.setTelecom(reservedDataMap.get("telecom"));
 		purchaseReservedData.setImei(reservedDataMap.get("imei"));
