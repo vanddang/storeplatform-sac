@@ -1519,7 +1519,8 @@ public class UserServiceImpl implements UserService {
 		List<KeySearch> keySearchList = updateStatusUserRequest.getKeySearchList();
 		for (KeySearch keySearch : keySearchList) {
 			if (keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_KEY)
-					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)) {
+					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)
+					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)) {
 				isDeviceRequest = true;
 			}
 		}
@@ -3304,13 +3305,6 @@ public class UserServiceImpl implements UserService {
 			userMbrDevice.setUserKey((String) entry.getValue());
 			resultDeviceList.add(userMbrDevice);
 		}
-
-		// for (String key : dataMap.keySet()) {
-		// UserMbrDevice userMbrDevice = new UserMbrDevice();
-		// userMbrDevice.setDeviceID(key);
-		// userMbrDevice.setUserKey((String) dataMap.get(key));
-		// resultDeviceList.add(userMbrDevice);
-		// }
 
 		existListResponse = new ExistListResponse();
 

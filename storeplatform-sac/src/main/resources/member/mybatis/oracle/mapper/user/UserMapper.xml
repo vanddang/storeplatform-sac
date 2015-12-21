@@ -86,7 +86,7 @@
 
     <!-- 사용자 정보 조회 -->
     <select id="searchUser" parameterType="searchUserRequest" resultMap="searchUserResultMap">
-        SELECT /* UserMapper.searchUser, 사용자 정보 조회, wisestone_dinga, 2014-01-15 */
+        SELECT /* UserMapper.xml, searchUser, SAC(SC), 최진호, 2015-12-21 */
                #{commonRequest.tenantID} AS tenantID, 
                a.insd_usermbr_no AS userKey,
                (
@@ -111,7 +111,7 @@
     
     <!-- 사용자 정보 조회(휴대기기 정보로 조회) -->
     <select id="searchUserD" parameterType="searchUserRequest" resultMap="searchUserResultMap">
-        SELECT  /* UserMapper.searchUserD, 사용자 정보 조회, wisestone_dinga, 2014-01-15 */
+        SELECT  /* UserMapper.xml, searchUserD, SAC(SC), 최진호, 2015-12-21 */
                 DISTINCT(l.userKey) as userKey,
                 #{commonRequest.tenantID} as tenantID,
                 (
@@ -273,7 +273,7 @@
 
     <!-- 내부 사용자회원 번호 조회(가입여부 조회) -->
     <select id="getUserKeyByKeySearchList" parameterType="checkDuplicationRequest" resultType="String">
-        SELECT  /* UserMapper.getUserKeyByKeySearchList, 내부 사용자회원 번호 조회, wisestone_dinga, 2014-01-15 */
+        SELECT  /* UserMapper.xml, getUserKeyByKeySearchList, SAC(SC), 최진호, 2015-12-21 */
                 DISTINCT(a.insd_usermbr_no) as userKey
           FROM  tb_us_ousermbr a
          WHERE  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
@@ -287,7 +287,7 @@
     
     <!-- 내부 사용자회원 번호 조회(가입여부 조회, 휴대기기 정보로 조회) -->
     <select id="getUserKeyByKeySearchListD" parameterType="checkDuplicationRequest" resultType="String">
-        SELECT  /* UserMapper.getUserKeyByKeySearchListD, 내부 사용자회원 번호 조회(가입여부 조회, 휴대기기 정보로 조회), wisestone_dinga, 2014-01-15 */
+        SELECT  /* UserMapper.xml, getUserKeyByKeySearchListD, SAC(SC), 최진호, 2015-12-21 */
                 DISTINCT(u.insd_usermbr_no) as userKey
           FROM  ( SELECT a.insd_usermbr_no FROM tb_us_ousermbr a
      LEFT JOIN  tb_us_ousermbr_device b ON a.insd_usermbr_no = b.insd_usermbr_no
@@ -330,7 +330,7 @@
 
     <!-- 사용자 실명인증(법정대리인) -->
     <select id="getRealNameParent" resultType="mbrLglAgent">
-        SELECT  /* UserMapper.getRealNameParent, 사용자 실명인증(법정대리인), wisestone_dinga, 2014-01-15 */
+        SELECT  /* UserMapper.xml, getRealNameParent, SAC(SC), 최진호, 2015-12-21 */
                 n.*
           FROM  (
                  SELECT
@@ -671,7 +671,7 @@
     <!-- 사용자 상태 변경 -->
     <update id="updateStatus" parameterType="userMbr">
 
-       UPDATE  /* UserMapper.updateStatus, 사용자 상태 변경, wisestone_mikepark, 2013-12-23 */
+       UPDATE  /* UserMapper.xml, updateStatus, SAC(SC), 최진호, 2015-12-21 */
                tb_us_ousermbr
           SET  
                start_dt = SYSDATE
@@ -702,7 +702,7 @@
 
     <!-- 내부 사용자키 조회(사용자 회원 상태변경) -->
     <select id="getUserKeyInUpdateStatus" parameterType="updateStatusUserRequest" resultType="String">
-        SELECT  /* UserMapper.getUserKeyInUpdateStatus */ 
+        SELECT  /* UserMapper.xml, getUserKeyInUpdateStatus, SAC(SC), 최진호, 2015-12-21 */
                 distinct(u.userKey)  userKey
           FROM  (
                     SELECT  a.insd_usermbr_no as userKey
@@ -719,7 +719,7 @@
 
     <!-- 내부 사용자키 조회(사용자 회원 상태변경, 휴대기기 정보로 조회) -->
     <select id="getUserKeyInUpdateStatusD" parameterType="updateStatusUserRequest" resultType="String">
-        SELECT  /* UserMapper.getUserKeyInUpdateStatus */ 
+        SELECT  /* UserMapper.xml getUserKeyInUpdateStatus, SAC(SC), 최진호, 2015-12-21 */
                 distinct(l.userKey)  userKey
                 FROM ( SELECT  a.insd_usermbr_no as userKey
                       FROM  tb_us_ousermbr a
@@ -730,6 +730,7 @@
                    <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                        <if test=" keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') "> b.insd_device_id =  #{keySearch.keyString} </if>
                        <if test=" keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> b.device_id =  #{keySearch.keyString} </if>
+                       <if test=" keySearch.keyType.equalsIgnoreCase('MDN') "> b.mdn =  #{keySearch.keyString} </if>
                    </foreach>
                 ORDER BY b.auth_dt DESC) l
                 WHERE ROWNUM = 1
@@ -1821,9 +1822,9 @@
            AND b.DEVICE_ID = #{deviceID}
     </select> 
     
-    <!-- 2014.12.12. 회원가입여부 리스트 조회 API 추가 -->
+    <!-- 회원가입여부 리스트 조회 -->
     <select id="searchExistList" parameterType="existListRequest" resultType="userMbrDevice">
-        SELECT /* UserMapper.searchExistList, 회원 가입 여부 리스트 조회, burkhan_rejoice, 2014-12-12 */
+        SELECT /* UserMapper.xml, searchExistList, SAC(SC), 최진호, 2015-12-21 */
                b.mdn AS deviceID,
                a.insd_usermbr_no AS userKey
           FROM tb_us_ousermbr a, tb_us_ousermbr_device b
