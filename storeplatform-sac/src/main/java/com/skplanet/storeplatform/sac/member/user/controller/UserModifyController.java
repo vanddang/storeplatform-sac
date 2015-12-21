@@ -225,7 +225,7 @@ public class UserModifyController {
 
 	/**
 	 * <pre>
-	 * 실명 인증 정보 등록.
+	 * 성인 인증 정보 등록.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -239,7 +239,7 @@ public class UserModifyController {
 	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, @Validated @RequestBody CreateRealNameReq req) {
 
 		LOGGER.debug("####################################");
-		LOGGER.debug("##### 2.1.18 실명 인증 정보 등록 #####");
+		LOGGER.debug("##### 2.1.17.성인 인증 정보 등록 #####");
 		LOGGER.debug("####################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));

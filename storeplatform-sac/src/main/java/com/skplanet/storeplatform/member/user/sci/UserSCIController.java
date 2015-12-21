@@ -648,19 +648,19 @@ public class UserSCIController implements UserSCI {
 
 	/**
 	 * <pre>
-	 * 사용자 실명인증 정보 수정.
+	 * 사용자 성인인증 정보 수정.
 	 * </pre>
 	 * 
 	 * @param updateRealNameRequest
-	 *            사용자 실명인증 정보 수정 요청 Value Object
-	 * @return UpdateRealNameResponse - 사용자 실명인증 정보 수정 응답 Value Object
+	 *            사용자 성인인증 정보 수정 요청 Value Object
+	 * @return UpdateRealNameResponse - 사용자 성인인증 정보 수정 응답 Value Object
 	 */
 	@Override
 	public UpdateRealNameResponse updateRealName(UpdateRealNameRequest updateRealNameRequest) {
 
 		LOGGER.debug("\n\n\n\n\n");
 		LOGGER.debug("==================================================================================");
-		LOGGER.debug("컨트롤러 실명인증 정보 수정");
+		LOGGER.debug("컨트롤러 성인인증 정보 수정");
 		LOGGER.debug("==================================================================================\n\n\n\n\n");
 
 		UpdateRealNameResponse updateRealNameResponse = null;
@@ -673,12 +673,6 @@ public class UserSCIController implements UserSCI {
 		// 공통 파라미터 없음
 		if (updateRealNameRequest.getCommonRequest() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
-		}
-
-		// 테넌트 아이디 없음
-		if (updateRealNameRequest.getCommonRequest().getTenantID() == null
-				|| updateRealNameRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
 		}
 
 		// 사용자키 없음
@@ -754,14 +748,6 @@ public class UserSCIController implements UserSCI {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 			}
 
-			// 2014.03.13 필수에서 제외
-			// // 필수 파라미터 없음, 법정대리인 인증방법코드
-			// if (updateRealNameRequest.getMbrLglAgent().getParentRealNameMethod() == null
-			// || updateRealNameRequest.getMbrLglAgent().getParentRealNameMethod().length() <= 0) {
-			// throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-			// }
-
-			// 2014.03.14 필수로 변경됨.
 			// 필수 파라미터 없음, parentName(법정대리인 이름)
 			if (updateRealNameRequest.getMbrLglAgent().getParentName() == null
 					|| updateRealNameRequest.getMbrLglAgent().getParentName().length() <= 0) {
@@ -791,9 +777,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return updateRealNameResponse;
 
