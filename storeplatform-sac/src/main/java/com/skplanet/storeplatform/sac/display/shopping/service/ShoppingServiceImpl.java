@@ -953,6 +953,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 		}
 
+
 		if (resultList != null) {
 			MetaInfo shopping = null;
 			shopping = new MetaInfo();
