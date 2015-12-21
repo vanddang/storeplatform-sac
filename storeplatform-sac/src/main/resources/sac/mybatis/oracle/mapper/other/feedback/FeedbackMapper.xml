@@ -101,7 +101,7 @@
       , #{prodId}              /* 상품 ID  */
       </if>
       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
-      , #{title}               /* 제목 */
+      , SUBSTR(#{title}, 0, 20)               /* 제목 */
       </if>
       , #{notiDscr}            /* 후기 내용 */
       , 0                      /* 후기 점수(추천수) */
@@ -128,7 +128,7 @@
               tb_dp_prod_noti                     /* 상품 후기 */
          SET  noti_dscr = #{notiDscr}             /* 후기 내용 */
             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
-            , title = #{title}                    /* 제목 */
+            , title = SUBSTR(#{title}, 0, 20)     /* 제목 */
             </if>
             , upd_dt = SYSDATE                    /* 수정 일시 */
             , reg_dt = SYSDATE                    /* 등록 일시 */
