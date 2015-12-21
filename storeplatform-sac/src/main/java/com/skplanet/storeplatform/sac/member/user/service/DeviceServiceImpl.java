@@ -389,14 +389,6 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceInfo.setUserId(schDeviceRes.getUserID());
 			deviceInfo.setUserKey(schDeviceRes.getUserKey());
 
-			/* 폰정보 DB 조회하여 추가 정보 반영 */
-			/*Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
-			if (device != null) {
-				deviceInfo.setMakeComp(device.getMnftCompCd());
-				deviceInfo.setModelNm(device.getModelNm());
-				deviceInfo.setVmType(device.getVmTypeCd());
-			}*/
-
 		} catch (StorePlatformException ex) {
 			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 				throw ex;

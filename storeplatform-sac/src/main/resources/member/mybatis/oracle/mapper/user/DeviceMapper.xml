@@ -237,7 +237,7 @@
 
     <!-- 휴대기기 개별 조회 -->
     <select id="searchDevice" resultMap="searchDeviceResultMap">
-        SELECT  /* DeviceMapper.searchDevice, 휴대기기 개별 조회, 황정택/와이즈스톤, 2013-12-05 */
+        SELECT  /* DeviceMapper.xml, searchDevice, SAC(SC), 최진호, 2015-12-21 */
                 #{userKey} AS userKey
              , (
                     SELECT  mbr_id
@@ -275,7 +275,7 @@
 
     <!-- 휴대기기 개별 조회(서비스 관리번호) -->
     <select id="searchDeviceSvcMangNo" resultMap="searchDeviceResultMap">
-        SELECT  /* DeviceMapper.searchDeviceSvcMangNo, (서비스 관리번호), 황정택/와이즈스톤, 2013-12-05 */
+        SELECT  /* DeviceMapper.xml, searchDeviceSvcMangNo, SAC(SC), 최진호, 2015-12-21 */
                 l.insd_usermbr_no AS userKey
                 ,  l.mbr_id AS userID
                 ,  'SVC_MANG_NO' AS keyType
@@ -298,7 +298,7 @@
     
      <!-- 휴대기기 개별 조회(Device ID only) -->
     <select id="searchDeviceIDOnly" resultMap="searchDeviceResultMap">
-        SELECT  /* DeviceMapper.searchDeviceIDOnly, (Device ID only), 황정택/와이즈스톤, 2013-12-05 */
+        SELECT  /* DeviceMapper.xml, searchDeviceIDOnly, SAC(SC), 최진호, 2015-12-21 */
                       l.insd_usermbr_no AS userKey
                       ,  l.mbr_id AS userID
                       ,  'DEVICE_ID' AS keyType

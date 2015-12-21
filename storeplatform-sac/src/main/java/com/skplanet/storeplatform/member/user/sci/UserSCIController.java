@@ -356,12 +356,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (checkDuplicationRequest.getCommonRequest().getTenantID() == null
-				|| checkDuplicationRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, keySearchList
 		if (checkDuplicationRequest.getKeySearchList() == null
 				|| checkDuplicationRequest.getKeySearchList().size() <= 0) {
@@ -813,12 +807,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchUserRequest.getCommonRequest().getTenantID() == null
-				|| searchUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, keySearchList
 		if (searchUserRequest.getKeySearchList() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -892,12 +880,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (updateStatusUserRequest.getCommonRequest().getTenantID() == null
-				|| updateStatusUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, keySearchList
 		if (updateStatusUserRequest.getKeySearchList() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -919,7 +901,8 @@ public class UserSCIController implements UserSCI {
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_IDP_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_ONEID_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_KEY)
-					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_ID)) {
+					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_ID)
+					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_MDN)) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.wrongKeyType", ""));
 			}
 		}
@@ -944,9 +927,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return updateStatusUserResponse;
 
@@ -2997,12 +2977,6 @@ public class UserSCIController implements UserSCI {
 		// 공통 파라미터 없음
 		if (existListRequest.getCommonRequest() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
-		}
-
-		// 테넌트 아이디 없음
-		if (existListRequest.getCommonRequest().getTenantID() == null
-				|| existListRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
 		}
 
 		// 필수 파라미터 없음
