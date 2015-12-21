@@ -2255,5 +2255,16 @@
               <if test="regDt != null">,TO_DATE(#{regDt}, 'YYYYMMDDHH24MISS')</if>
               <if test="updDt != null">,TO_DATE(#{updDt}, 'YYYYMMDDHH24MISS')</if> )
     </insert>
-   
+
+    <!-- ID, PW 일치 체크 -->
+    <select id="checkUserPwd" parameterType="chkUserPwdRequest" resultType="String">
+        SELECT /* UserMapper.searchAfterUserKey, ID, PW 일치 체크, SAC(SC), 최진호, 2015-12-21 */
+            INSD_USERMBR_NO               AS userKey
+        FROM
+            TB_US_OUSERMBR_PWD
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
+            AND PWD = #{userPw}
+    </select>
+
 </mapper>
