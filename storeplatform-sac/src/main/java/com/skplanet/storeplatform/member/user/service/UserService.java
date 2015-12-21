@@ -191,12 +191,12 @@ public interface UserService {
 
 	/**
 	 * <pre>
-	 * 사용자 실명인증 정보 수정.
+	 * 사용자 성인인증 정보 수정.
 	 * </pre>
 	 * 
 	 * @param updateRealNameRequest
-	 *            사용자 실명인증 정보 수정 요청 Value Object
-	 * @return UpdateRealNameResponse - 사용자 실명인증 정보 수정 응답 Value Object
+	 *            사용자 성인인증 정보 수정 요청 Value Object
+	 * @return UpdateRealNameResponse - 사용자 성인인증 정보 수정 응답 Value Object
 	 */
 	public UpdateRealNameResponse updateRealName(UpdateRealNameRequest updateRealNameRequest);
 
