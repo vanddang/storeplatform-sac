@@ -1824,13 +1824,13 @@
     <!-- 2014.12.12. 회원가입여부 리스트 조회 API 추가 -->
     <select id="searchExistList" parameterType="existListRequest" resultType="userMbrDevice">
         SELECT /* UserMapper.searchExistList, 회원 가입 여부 리스트 조회, burkhan_rejoice, 2014-12-12 */
-               b.device_id AS deviceID,
+               b.mdn AS deviceID,
                a.insd_usermbr_no AS userKey
           FROM tb_us_ousermbr a, tb_us_ousermbr_device b
          WHERE a.mbr_status_main_cd != 'US010202'
                AND a.insd_usermbr_no = b.insd_usermbr_no
                AND b.auth_yn = 'Y'
-               AND b.device_id IN 
+               AND b.mdn IN
                (    
             <foreach collection="deviceIdList" item="deviceId" open="" close="" separator="" index="index">
                 <if test="index != 0">,</if> #{deviceId}
