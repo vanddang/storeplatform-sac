@@ -519,11 +519,11 @@
     </update>
 
 
-    <!-- 사용자 본인/법정대리인 성인인증 수정(실제로는 insert를 수행한다), 성인인증 수정 -->
+    <!-- 사용자 본인/법정대리인 실명인증 수정(실제로는 insert를 수행한다), 실명인증 수정 -->
     <insert id="updateRealName" parameterType="updateRealNameRequest">
 
         <if test="isOwn != null and isOwn.equalsIgnoreCase('OWN')">
-        INSERT  /* UserMapper.xml, updateRealName, SAC(SC), 윤보영, 2015-12-18 */
+        INSERT  /* UserMapper.updateRealName, 사용자 본인 실명인증 수정, wisestone_dinga, 2013-12-10 */
                 INTO tb_us_ousermbr_auth 
                 (
                     auth_seq
@@ -559,8 +559,9 @@
                 )
        </if>
 
-       <if test="isOwn != null and isOwn.equalsIgnoreCase('PARENT')">
-        INSERT  /* UserMapper.xml, updateRealName, SAC(SC), 윤보영, 2015-12-18 */
+
+        <if test="isOwn != null and isOwn.equalsIgnoreCase('PARENT')">
+        INSERT  /* UserMapper.updateRealName, 사용자 법정대리인 실명인증 수정, wisestone_dinga, 2013-12-20 */
                 INTO tb_us_ousermbr_lgl_agent 
                 (
                     auth_seq
@@ -596,6 +597,9 @@
             <if test="mbrLglAgent.isDomestic != null">          ,#{mbrLglAgent.isDomestic} </if>
                 )
        </if>
+
+
+
     </insert>
     
     
