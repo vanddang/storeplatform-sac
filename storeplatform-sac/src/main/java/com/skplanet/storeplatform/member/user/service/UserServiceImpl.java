@@ -1030,19 +1030,19 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * <pre>
-	 * 사용자 실명인증 정보 수정.
+	 * 사용자 성인인증 정보 수정.
 	 * </pre>
 	 * 
 	 * @param updateRealNameRequest
-	 *            사용자 실명인증 정보 수정 요청 Value Object
-	 * @return UpdateRealNameResponse - 사용자 실명인증 정보 수정 응답 Value Object
+	 *            사용자 성인인증 정보 수정 요청 Value Object
+	 * @return UpdateRealNameResponse - 사용자 성인인증 정보 수정 응답 Value Object
 	 */
 	@Override
 	public UpdateRealNameResponse updateRealName(UpdateRealNameRequest updateRealNameRequest) {
 
 		LOGGER.debug("\n\n\n\n\n");
 		LOGGER.debug("==================================================================================");
-		LOGGER.debug("서비스 - 실명인증 정보 수정");
+		LOGGER.debug("서비스 - 성인인증 정보 수정");
 		LOGGER.debug("==================================================================================\n\n\n\n\n");
 
 		String isDormant = StringUtils.isBlank(updateRealNameRequest.getIsDormant()) ? Constant.TYPE_YN_N : updateRealNameRequest
@@ -1078,14 +1078,12 @@ public class UserServiceImpl implements UserService {
 
 					if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
 						// 회원 정보 수정 이전 기존 정보 회원 이력 테이블에 저장.
-						this.insertUserMbrHistory(updateRealNameRequest.getCommonRequest().getTenantID(),
-								updateRealNameRequest.getUserKey());
+						this.insertUserMbrHistory(updateRealNameRequest.getUserKey());
 					}
 
 					// 실명 인증 정보 등록 시 기존에 법정 대리인 동의 여부가 'Y' 인 경우 'N'으로 업데이트
 					UserMbr usermbr = new UserMbr();
 					usermbr.setSystemID(updateRealNameRequest.getCommonRequest().getSystemID());
-					usermbr.setTenantID(updateRealNameRequest.getCommonRequest().getTenantID());
 					usermbr.setUserKey(updateRealNameRequest.getUserKey());
 					UserMbrInfo userInfo = dao.queryForObject("User.selectUsermbr", usermbr, UserMbrInfo.class);
 
@@ -1094,7 +1092,6 @@ public class UserServiceImpl implements UserService {
 							// 법정대리인 동의여부 수정 LGL_AGENT_AGREE_YN
 							UserMbr usermbrLglAgentYN = new UserMbr();
 							usermbrLglAgentYN.setSystemID(usermbr.getSystemID());
-							usermbrLglAgentYN.setTenantID(usermbr.getTenantID());
 							usermbrLglAgentYN.setUserKey(usermbr.getUserKey());
 							usermbrLglAgentYN.setIsParent(Constant.TYPE_YN_N);
 
@@ -1105,11 +1102,10 @@ public class UserServiceImpl implements UserService {
 					// 실명_인증_여부 수정 REALNM_AUTH_YN -> Y
 					UserMbr usermbrIsRealNameAuthYN = new UserMbr();
 					usermbrIsRealNameAuthYN.setSystemID(updateRealNameRequest.getCommonRequest().getSystemID());
-					usermbrIsRealNameAuthYN.setTenantID(updateRealNameRequest.getCommonRequest().getTenantID());
 					usermbrIsRealNameAuthYN.setUserKey(updateRealNameRequest.getUserKey());
 					usermbrIsRealNameAuthYN.setIsRealName(updateRealNameRequest.getMbrAuth().getIsRealName());
 
-					// 2014-08-01 vanddang 실명인증시 tb_us_usermbr 테이블의 MBR_NM, BIRTH, SEX 정보까지 업데이트
+					// 2014-08-01 vanddang 실명인증시 tb_us_ousermbr 테이블의 MBR_NM, BIRTH, SEX 정보까지 업데이트
 					usermbrIsRealNameAuthYN.setUserName(updateRealNameRequest.getMbrAuth().getName());
 					usermbrIsRealNameAuthYN.setUserBirthDay(updateRealNameRequest.getMbrAuth().getBirthDay());
 					usermbrIsRealNameAuthYN.setUserSex(updateRealNameRequest.getMbrAuth().getSex());
@@ -1130,15 +1126,13 @@ public class UserServiceImpl implements UserService {
 
 					if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
 						// 회원 정보 수정 이전 기존 정보 회원 이력 테이블에 저장.
-						this.insertUserMbrHistory(updateRealNameRequest.getCommonRequest().getTenantID(),
-								updateRealNameRequest.getUserKey());
+						this.insertUserMbrHistory(updateRealNameRequest.getUserKey());
 					}
 
 					// 실명인증 대상이 법정대리인인 경우
 					// 법정대리인 동의여부 수정 LGL_AGENT_AGREE_YN -> Y
 					UserMbr usermbrIsRealNameAuthYN = new UserMbr();
 					usermbrIsRealNameAuthYN.setSystemID(updateRealNameRequest.getCommonRequest().getSystemID());
-					usermbrIsRealNameAuthYN.setTenantID(updateRealNameRequest.getCommonRequest().getTenantID());
 					usermbrIsRealNameAuthYN.setUserKey(updateRealNameRequest.getUserKey());
 					usermbrIsRealNameAuthYN.setIsParent(updateRealNameRequest.getMbrLglAgent().getIsParent());
 
@@ -3657,15 +3651,12 @@ public class UserServiceImpl implements UserService {
 	 * 회원 정보 수정 이전 기존 정보 회원 이력 테이블에 저장.
 	 * </pre>
 	 * 
-	 * @param tenantId
-	 *            tenantId
 	 * @param insdUserMbrNo
 	 *            userKey
 	 * @return userMbr
 	 */
-	private UserMbr insertUserMbrHistory(String tenantId, String insdUserMbrNo) {
+	private UserMbr insertUserMbrHistory(String insdUserMbrNo) {
 		UserMbr usermbr = new UserMbr();
-		usermbr.setTenantID(tenantId);
 		usermbr.setUserKey(insdUserMbrNo);
 
 		this.commonDAO.update("User.insertUpdateStatusHistory", usermbr);

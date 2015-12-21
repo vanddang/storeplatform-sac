@@ -22,12 +22,6 @@ public class CreateRealNameReq extends CommonInfo {
 	private String userKey = "";
 
 	/**
-	 * IDP 인증 Key
-	 */
-	@NotEmpty
-	private String userAuthKey = "";
-
-	/**
 	 * 실명인증 대상 (OWN/PARENT)
 	 */
 	@NotEmpty
@@ -115,21 +109,6 @@ public class CreateRealNameReq extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	/**
-	 * @return String : userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String : the userAuthKey to set
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
 	}
 
 	/**
