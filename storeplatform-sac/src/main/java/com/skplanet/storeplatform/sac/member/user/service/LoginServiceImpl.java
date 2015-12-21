@@ -964,7 +964,6 @@ public class LoginServiceImpl implements LoginService {
 		String userMainStatus = null;
 		String userSubStatus = null;
 		String loginStatusCode = null;
-		String stopStatusCode = null;
 		String isDormant = null;
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
@@ -984,20 +983,17 @@ public class LoginServiceImpl implements LoginService {
 		userMainStatus = chkDupRes.getUserMbr().getUserMainStatus();
 		userSubStatus = chkDupRes.getUserMbr().getUserSubStatus();
 		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
-		stopStatusCode = chkDupRes.getUserMbr().getStopStatusCode();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
 
-		/*  2-1. 일시정지 / 로그인제한 / 직권중지 상태인 경우 셋팅후 리턴 */
+		/*  2-1. 일시정지 / 로그인제한 */
 		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
-				|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
-				|| StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
+				|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 
 			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
 			res.setUserSubStatus(userSubStatus);
 			res.setLoginStatusCode(loginStatusCode);
-			res.setStopStatusCode(stopStatusCode);
 			res.setIsLoginSuccess("Y");
 			return res;
 		}
@@ -1036,7 +1032,6 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserMainStatus(userMainStatus);
 			res.setUserSubStatus(userSubStatus);
 			res.setLoginStatusCode(loginStatusCode);
-			res.setStopStatusCode(stopStatusCode);
 			res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey,
 					userKey));
 			res.setIsLoginSuccess("Y");

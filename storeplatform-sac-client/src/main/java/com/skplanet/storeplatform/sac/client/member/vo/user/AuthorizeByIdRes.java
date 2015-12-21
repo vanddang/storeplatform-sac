@@ -21,11 +21,6 @@ public class AuthorizeByIdRes extends CommonInfo {
 	private String userKey = "";
 
 	/**
-	 * IDP 인증 Key.
-	 */
-	private String userAuthKey = "";
-
-	/**
 	 * 기기 Key.
 	 */
 	private String deviceKey = "";
@@ -46,29 +41,9 @@ public class AuthorizeByIdRes extends CommonInfo {
 	private String userSubStatus = "";
 
 	/**
-	 * 가입사이트 코드.
-	 */
-	private String joinSiteCd = "";
-
-	/**
-	 * 가입사이트 코드 값.
-	 */
-	private String joinSiteNm = "";
-
-	/**
 	 * 로그인 상태코드.
 	 */
 	private String loginStatusCode = "";
-
-	/**
-	 * 직권중지 상태코드.
-	 */
-	private String stopStatusCode = "";
-
-	/**
-	 * 통합아이디 관리번호.
-	 */
-	private String imIntSvcNo = "";
 
 	/**
 	 * 로그인 실패 카운트.
@@ -93,21 +68,6 @@ public class AuthorizeByIdRes extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	/**
-	 * @return userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
 	}
 
 	/**
@@ -156,51 +116,6 @@ public class AuthorizeByIdRes extends CommonInfo {
 	}
 
 	/**
-	 * @return joinSiteCd
-	 */
-	public String getJoinSiteCd() {
-		return this.joinSiteCd;
-	}
-
-	/**
-	 * @param joinSiteCd
-	 *            String
-	 */
-	public void setJoinSiteCd(String joinSiteCd) {
-		this.joinSiteCd = joinSiteCd;
-	}
-
-	/**
-	 * @return joinSiteNm
-	 */
-	public String getJoinSiteNm() {
-		return this.joinSiteNm;
-	}
-
-	/**
-	 * @param joinSiteNm
-	 *            String
-	 */
-	public void setJoinSiteNm(String joinSiteNm) {
-		this.joinSiteNm = joinSiteNm;
-	}
-
-	/**
-	 * @return imIntSvcNo
-	 */
-	public String getImIntSvcNo() {
-		return this.imIntSvcNo;
-	}
-
-	/**
-	 * @param imIntSvcNo
-	 *            String
-	 */
-	public void setImIntSvcNo(String imIntSvcNo) {
-		this.imIntSvcNo = imIntSvcNo;
-	}
-
-	/**
 	 * @return loginStatusCode
 	 */
 	public String getLoginStatusCode() {
@@ -213,21 +128,6 @@ public class AuthorizeByIdRes extends CommonInfo {
 	 */
 	public void setLoginStatusCode(String loginStatusCode) {
 		this.loginStatusCode = loginStatusCode;
-	}
-
-	/**
-	 * @return stopStatusCode
-	 */
-	public String getStopStatusCode() {
-		return this.stopStatusCode;
-	}
-
-	/**
-	 * @param stopStatusCode
-	 *            String
-	 */
-	public void setStopStatusCode(String stopStatusCode) {
-		this.stopStatusCode = stopStatusCode;
 	}
 
 	/**

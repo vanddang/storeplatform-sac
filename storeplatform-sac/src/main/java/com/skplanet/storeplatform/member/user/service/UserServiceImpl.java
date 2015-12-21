@@ -455,7 +455,6 @@ public class UserServiceImpl implements UserService {
 
 		} else { // 아이디 회원
 
-			userMbrRetrieveUserMbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
 			userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
 
 			// TODO. 동일한 userId가 2개 존재한경우 에러가 발생한다. 1건만 조회하도록 수정할지는 추후에 확인 필요.
@@ -465,7 +464,6 @@ public class UserServiceImpl implements UserService {
 			if (userMbrRetrieveUserMbrPwd == null) {
 				// 휴면DB조회
 				userMbrRetrieveUserMbrPwd = new UserMbrRetrieveUserMbrPwd();
-				userMbrRetrieveUserMbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
 				userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
 				userMbrRetrieveUserMbrPwd = this.idleDAO.queryForObject("User.getUserMbrRetrievePWD",
 						userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
