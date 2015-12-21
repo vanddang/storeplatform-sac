@@ -1857,7 +1857,7 @@
     
     <!-- 실명인증 초기화  -->
     <update id="updateInitRealName" parameterType="updateRealNameRequest">
-        UPDATE /* UserMapper.xml, updateInitRealName, SAC(SC), 윤보영, 2015-08-26 */
+        UPDATE /* UserMapper.xml, updateInitRealName, SAC(SC), 윤보영, 2015-12-22 */
            tb_us_ousermbr
            SET realnm_auth_yn = 'N',
                mbr_nm = null,
@@ -1867,7 +1867,14 @@
                start_dt = SYSDATE,
                system_id = #{commonRequest.systemID}
          WHERE insd_usermbr_no = #{userKey}
-    </update>    
+    </update>
+
+    <!-- 사용자 회원 인증 삭제 -->
+    <delete id="removeUserMbrAuth" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbrOneId, SAC(SC), 윤보영, 2015-12-22 */
+        FROM  tb_us_ousermbr_auth
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
     
     <!-- 마지막 로그인일자 컬럼 체크  -->
     <select id="selectAlreadyLastLoginDtUpdateYn" parameterType="userMbrLoginLog" resultType="String">

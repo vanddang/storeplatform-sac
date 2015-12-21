@@ -2775,12 +2775,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		// if (searchExtentUserRequest.getCommonRequest().getTenantID() == null
-		// || searchExtentUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		// }
-
 		// 필수 파라미터, keySearchList
 		if (searchExtentUserRequest.getKeySearchList() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -3101,12 +3095,6 @@ public class UserSCIController implements UserSCI {
 		// 공통 파라미터 없음
 		if (updateRealNameRequest.getCommonRequest() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
-		}
-
-		// 테넌트 아이디 없음
-		if (updateRealNameRequest.getCommonRequest().getTenantID() == null
-				|| updateRealNameRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
 		}
 
 		// 필수 파라미터, UserKey
