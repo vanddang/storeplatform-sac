@@ -527,49 +527,11 @@ public class UserServiceImpl implements UserService {
 			checkDuplicationResponse.setUserMbr(userMbr);
 			checkDuplicationResponse.setIsRegistered(Constant.TYPE_YN_Y);
 			checkDuplicationResponse.setUserID(userMbr.getUserID());
-			// todo
-			// return checkDuplicationResponse;
 		} else {
 			checkDuplicationResponse.setIsRegistered(Constant.TYPE_YN_N);
 		}
 
-		if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
-			dao = this.commonDAO;
-		} else {
-			dao = this.idleDAO;
-		}
-
-		for (KeySearch keySearch : keySearchList) {
-
-			// ACTION 2-1. 회원은 아니지만 keyType 통합서비스 관리 번호인 경우
-			if (keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_ONEID_KEY)) {
-				// checkDuplicationResponse.setIsRegistered(Constant.TYPE_YN_N);
-				MbrOneID mbrOneID = new MbrOneID();
-				mbrOneID.setIntgSvcNumber(keySearch.getKeyString());
-				mbrOneID.setTenantID(checkDuplicationRequest.getCommonRequest().getTenantID());
-				mbrOneID = dao.queryForObject("User.getOneIDDetail", mbrOneID, MbrOneID.class);
-				if (mbrOneID != null) {
-					checkDuplicationResponse.setMbrOneID(mbrOneID);
-				}
-				return checkDuplicationResponse;
-			}
-
-			// ACTION 2-2. 회원은 아니지만 keyType UserID인 경우
-			if (keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_USER_ID)) {
-				// checkDuplicationResponse.setIsRegistered(Constant.TYPE_YN_N);
-				MbrOneID mbrOneID = new MbrOneID();
-				mbrOneID.setUserID(keySearch.getKeyString());
-				mbrOneID.setTenantID(checkDuplicationRequest.getCommonRequest().getTenantID());
-				mbrOneID = dao.queryForObject("User.getOneIDDetail", mbrOneID, MbrOneID.class);
-				if (mbrOneID != null) {
-					checkDuplicationResponse.setMbrOneID(mbrOneID);
-				}
-				return checkDuplicationResponse;
-			}
-		}
-
-		// ACTION 3. 나머지는 등록 안됨으로 리턴
-		// checkDuplicationResponse.setIsRegistered(Constant.TYPE_YN_N);
+		// ACTION 2. 나머지는 등록 안됨으로 리턴
 		return checkDuplicationResponse;
 	}
 

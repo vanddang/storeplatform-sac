@@ -332,7 +332,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param userKey
+	 * @param req
 	 * @return
 	 */
 	@Override
@@ -395,7 +395,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param deviceId
+	 * @param req
 	 * @return
 	 */
 	@Override
@@ -447,7 +447,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param deviceId
+	 * @param req
 	 * @return
 	 */
 	@Override
@@ -501,7 +501,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param deviceId
+	 * @param req
 	 * @return
 	 */
 	@Override
@@ -1947,10 +1947,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/**
 	 * <pre>
-	 * 2.1.50. 회원 가입 여부 리스트 조회.
+	 * 2.1.49. 회원 가입 여부 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param header
+	 * @param sacHeader
 	 *            SacRequestHeader
 	 * @param req
 	 *            ExistListSacReq

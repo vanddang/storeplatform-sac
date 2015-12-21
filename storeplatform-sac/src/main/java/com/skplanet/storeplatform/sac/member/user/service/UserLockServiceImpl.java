@@ -47,9 +47,6 @@ public class UserLockServiceImpl implements UserLockService {
 	@Autowired
 	private UserSCI userSCI;
 
-	@Autowired
-	private ImIdpSCI imIdpSCI;
-
 	@Override
 	public LockAccountSacRes lockAccount(SacRequestHeader sacHeader, LockAccountSacReq req) {
 
