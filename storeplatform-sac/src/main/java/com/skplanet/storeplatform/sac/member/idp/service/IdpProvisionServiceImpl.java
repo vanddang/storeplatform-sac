@@ -202,7 +202,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
 					userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
 					userMbrDeviceDetail.setExtraProfileValue(uacd);
-					userMbrDeviceDetail.setTenantID(tenantId);
 					userMbrDeviceDetail.setUserKey(userKey);
 					userMbrDeviceDetail.setDeviceKey(deviceKey);
 					userMbrDeviceDetailList.add(userMbrDeviceDetail);
@@ -316,7 +315,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
 					userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
 					userMbrDeviceDetail.setExtraProfileValue(uacd);
-					userMbrDeviceDetail.setTenantID(tenantId);
 					userMbrDeviceDetail.setUserKey(userKey);
 					userMbrDeviceDetail.setDeviceKey(deviceKey);
 					userMbrDeviceDetailList.add(userMbrDeviceDetail);
@@ -606,7 +604,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
 			userMbrDeviceDetail.setExtraProfileValue(uacd);
-			userMbrDeviceDetail.setTenantID(tenantId);
 			userMbrDeviceDetail.setUserKey(userKey);
 			userMbrDeviceDetail.setDeviceKey(deviceKey);
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
@@ -1213,7 +1210,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 									UserMbrDeviceDetail modifyDeviceDetail = new UserMbrDeviceDetail();
 									modifyDeviceDetail.setUserKey(userKey);
 									modifyDeviceDetail.setDeviceKey(userMbrDevice.getDeviceKey());
-									modifyDeviceDetail.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
 									modifyDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
 									modifyDeviceDetail.setExtraProfileValue(uaCd);
 									modifyDeviceDetailList.add(modifyDeviceDetail);
@@ -1341,7 +1337,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 								UserMbrDeviceDetail modifyDeviceDetail = new UserMbrDeviceDetail();
 								modifyDeviceDetail.setUserKey(userKey);
 								modifyDeviceDetail.setDeviceKey(userMbrDevice.getDeviceKey());
-								modifyDeviceDetail.setTenantID(StringUtil.nvl(map.get("tenantID"), ""));
 								modifyDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
 								modifyDeviceDetail.setExtraProfileValue(uaCd);
 								modifyDeviceDetailList.add(modifyDeviceDetail);

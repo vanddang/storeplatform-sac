@@ -592,9 +592,9 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 				/* 폰정보 DB 조회하여 추가 정보 반영 */
 				Device device = this.mcc.getPhoneInfo(deviceInfo.getDeviceModelNo());
 				if (device != null) {
-					deviceInfo.setMakeComp(device.getMnftCompCd());
+					/*deviceInfo.setMakeComp(device.getMnftCompCd());
 					deviceInfo.setModelNm(device.getModelNm());
-					deviceInfo.setVmType(device.getVmTypeCd());
+					deviceInfo.setVmType(device.getVmTypeCd());*/
 				}
 				deviceInfoList.add(deviceInfo);
 			}
@@ -643,9 +643,9 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 			/* 폰정보 DB 조회하여 추가 정보 반영 */
 			Device device = this.mcc.getPhoneInfo(deviceInfo.getDeviceModelNo());
 			if (device != null) {
-				deviceInfo.setMakeComp(device.getMnftCompCd());
+				/*deviceInfo.setMakeComp(device.getMnftCompCd());
 				deviceInfo.setModelNm(device.getModelNm());
-				deviceInfo.setVmType(device.getVmTypeCd());
+				deviceInfo.setVmType(device.getVmTypeCd());*/
 			}
 
 		} catch (StorePlatformException ex) {

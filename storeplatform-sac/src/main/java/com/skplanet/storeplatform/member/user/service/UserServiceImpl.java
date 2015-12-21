@@ -963,7 +963,6 @@ public class UserServiceImpl implements UserService {
 			for (int i = 0; i < deviceKeyList.size(); i++) {
 
 				UserMbrDevice userMbrDevice = new UserMbrDevice();
-				userMbrDevice.setTenantID(removeUserRequest.getCommonRequest().getTenantID());
 				userMbrDevice.setUserKey(removeUserRequest.getUserKey());
 				userMbrDevice.setDeviceKey(deviceKeyList.get(i));
 				userMbrDevice.setIsUsed(Constant.TYPE_YN_N);
@@ -986,7 +985,6 @@ public class UserServiceImpl implements UserService {
 
 				// ACTION 6-2-3. 휴대기기 부가속성의 도토리사용여부를 N 으로 업데이트.(US011409 -> N)
 				UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-				userMbrDeviceDetail.setTenantID(removeUserRequest.getCommonRequest().getTenantID());
 				userMbrDeviceDetail.setUserKey(removeUserRequest.getUserKey());
 				userMbrDeviceDetail.setDeviceKey(deviceKeyList.get(i));
 				userMbrDeviceDetail.setExtraProfile(DeviceManagementCode.DOTORI_YN.getCode()); // 도토리 인증여부 CD_ID,

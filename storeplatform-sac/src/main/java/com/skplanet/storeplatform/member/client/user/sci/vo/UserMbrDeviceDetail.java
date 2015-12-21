@@ -38,9 +38,6 @@ public class UserMbrDeviceDetail extends CommonInfo implements Serializable {
 	/** 휴대기기 ID. OGG용, 추후 삭제 예정, 2014.03.20. */
 	private String deviceID;
 
-	/** 테넌트 ID. */
-	private String tenantID;
-
 	/** 휴대기기 등록 일시. */
 	private String regDate;
 
@@ -98,25 +95,6 @@ public class UserMbrDeviceDetail extends CommonInfo implements Serializable {
 	 */
 	public void setExtraProfileValue(String extraProfileValue) {
 		this.extraProfileValue = extraProfileValue;
-	}
-
-	/**
-	 * 테넌트 ID를 리턴한다.
-	 * 
-	 * @return tenantID - 테넌트 ID
-	 */
-	public String getTenantID() {
-		return this.tenantID;
-	}
-
-	/**
-	 * 테넌트 ID를 설정한다.
-	 * 
-	 * @param tenantID
-	 *            테넌트 ID
-	 */
-	public void setTenantID(String tenantID) {
-		this.tenantID = tenantID;
 	}
 
 	/**

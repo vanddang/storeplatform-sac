@@ -38,11 +38,6 @@ public class DeviceInfo extends CommonInfo {
 	private String deviceId;
 
 	/**
-	 * 자번호(mdn 로그인시 올려주는 자번호).
-	 */
-	private String oDeviceId;
-
-	/**
 	 * 기기 mdn.
 	 */
 	private String mdn;
@@ -53,7 +48,7 @@ public class DeviceInfo extends CommonInfo {
 	private String omdn;
 
 	/**
-	 * 기기 ID 타입 (msisdn, uuid, macaddress).
+	 * 기기 ID 타입 (msisdn, uuid, macaddress, imei).
 	 */
 	private String deviceIdType;
 
@@ -66,11 +61,6 @@ public class DeviceInfo extends CommonInfo {
 	 * 통신사 코드.
 	 */
 	private String deviceTelecom;
-
-	/**
-	 * 기기별명.
-	 */
-	private String deviceNickName;
 
 	/**
 	 * 대표기기 여부.
@@ -103,21 +93,6 @@ public class DeviceInfo extends CommonInfo {
 	private String joinId;
 
 	/**
-	 * 제조사명.
-	 */
-	private String makeComp;
-
-	/**
-	 * 모델 설명.
-	 */
-	private String modelNm;
-
-	/**
-	 * OS 플랫폼.
-	 */
-	private String vmType;
-
-	/**
 	 * 수정 일시.
 	 */
 	private String updateDate;
@@ -131,11 +106,6 @@ public class DeviceInfo extends CommonInfo {
 	 * 종료 일시.
 	 */
 	private String endDate;
-
-	/**
-	 * TenantId.
-	 */
-	private String tenantId;
 
 	/**
 	 * 휴대기기 통합 관리 번호.
@@ -156,6 +126,11 @@ public class DeviceInfo extends CommonInfo {
 	 * 휴면계정유무.
 	 */
 	private String isDormant;
+
+	/**
+	 * usim 번호.
+	 */
+	private String deviceSimMn;
 
 	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회.
@@ -238,21 +213,6 @@ public class DeviceInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return deviceNickName
-	 */
-	public String getDeviceNickName() {
-		return this.deviceNickName;
-	}
-
-	/**
-	 * @param deviceNickName
-	 *            String
-	 */
-	public void setDeviceNickName(String deviceNickName) {
-		this.deviceNickName = deviceNickName;
-	}
-
-	/**
 	 * @return isPrimary
 	 */
 	public String getIsPrimary() {
@@ -310,21 +270,6 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	public void setJoinId(String joinId) {
 		this.joinId = joinId;
-	}
-
-	/**
-	 * @return makeComp
-	 */
-	public String getMakeComp() {
-		return this.makeComp;
-	}
-
-	/**
-	 * @param makeComp
-	 *            String
-	 */
-	public void setMakeComp(String makeComp) {
-		this.makeComp = makeComp;
 	}
 
 	/**
@@ -418,21 +363,6 @@ public class DeviceInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return TenantId
-	 */
-	public String getTenantId() {
-		return this.tenantId;
-	}
-
-	/**
-	 * @param tenantId
-	 *            String
-	 */
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
-
-	/**
 	 * @return deviceIdType
 	 */
 	public String getDeviceIdType() {
@@ -460,36 +390,6 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	/**
-	 * @return modelNm
-	 */
-	public String getModelNm() {
-		return this.modelNm;
-	}
-
-	/**
-	 * @param modelNm
-	 *            String
-	 */
-	public void setModelNm(String modelNm) {
-		this.modelNm = modelNm;
-	}
-
-	/**
-	 * @return vmType
-	 */
-	public String getVmType() {
-		return this.vmType;
-	}
-
-	/**
-	 * @param vmType
-	 *            String
-	 */
-	public void setVmType(String vmType) {
-		this.vmType = vmType;
 	}
 
 	/**
@@ -553,24 +453,16 @@ public class DeviceInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return oDeviceId
+	 * @return marketDeviceKey
 	 */
-	public String getoDeviceId() {
-		return this.oDeviceId;
-	}
-
-	/**
-	 * @param oDeviceId
-	 *            String
-	 */
-	public void setoDeviceId(String oDeviceId) {
-		this.oDeviceId = oDeviceId;
-	}
-
 	public String getMarketDeviceKey() {
 		return this.marketDeviceKey;
 	}
 
+	/**
+	 * @param marketDeviceKey
+	 *            String
+	 */
 	public void setMarketDeviceKey(String marketDeviceKey) {
 		this.marketDeviceKey = marketDeviceKey;
 	}
@@ -650,4 +542,18 @@ public class DeviceInfo extends CommonInfo {
 		this.omdn = omdn;
 	}
 
+	/**
+	 * @return deviceSimMn
+	 */
+	public String getDeviceSimMn() {
+		return deviceSimMn;
+	}
+
+	/**
+	 * @param deviceSimMn
+	 *            String
+	 */
+	public void setDeviceSimMn(String deviceSimMn) {
+		this.deviceSimMn = deviceSimMn;
+	}
 }

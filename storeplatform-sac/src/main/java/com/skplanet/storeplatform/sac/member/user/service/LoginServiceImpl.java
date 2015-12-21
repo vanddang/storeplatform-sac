@@ -1493,15 +1493,15 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
 				deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
 				if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
-					deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+//					deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
 				} else {
 
 					/* 정상단말로 요청시 DB에 단말정보가 미지원단말정보이면 디폴트 모델명을 닉네임에 셋팅 */
-					if (StringUtils.equals(mdnDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+					/*if (StringUtils.equals(mdnDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
 							&& StringUtils.equals(mdnDeviceInfo.getDeviceModelNo(),
 									MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 						deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
-					}
+					}*/
 				}
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
 						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
@@ -1510,19 +1510,18 @@ public class LoginServiceImpl implements LoginService {
 						majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
 						deviceInfo.getDeviceExtraInfoList()));
 			} else {
-				deviceInfo.setDeviceModelNo(null); // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
+			/*	deviceInfo.setDeviceModelNo(null); // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
 				if (!StringUtils.equals(mdnDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
 						&& !StringUtils.equals(mdnDeviceInfo.getDeviceNickName(),
 								MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) { // DB에 저장된 단말정보가 미지원단말이 아닌경우 통신사정보를 업데이트 한다.
 					deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-				}
+				}*/
 			}
 			this.deviceService.modDeviceInfo(requestHeader, deviceInfo, false);
 
 			/* 전시/기타, 구매 파트 키 변경 */
 			if (StringUtils.equals(isPurchaseChange, "Y")) {
-				this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), requestHeader
-						.getTenantHeader().getTenantId(), newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
+				this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
 			}
 
 			res.setDeviceKey(newDeviceKey);
@@ -1595,7 +1594,7 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
 				deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
 				if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
-					deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+//					deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
 				}
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
 						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
@@ -1605,12 +1604,12 @@ public class LoginServiceImpl implements LoginService {
 						deviceInfo.getDeviceExtraInfoList()));
 			} else {
 				deviceInfo.setDeviceModelNo(null); // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
-				if (!StringUtils.equals(macDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
-						&& !StringUtils.equals(macDeviceInfo.getDeviceNickName(),
-								MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) { // MAC정보 DB에 저장된 단말정보가 미지원단말이 아닌경우 통신사정보를
-																			// 업데이트 한다.
-					deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-				}
+//				if (!StringUtils.equals(macDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
+//						&& !StringUtils.equals(macDeviceInfo.getDeviceNickName(),
+//								MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) { // MAC정보 DB에 저장된 단말정보가 미지원단말이 아닌경우 통신사정보를
+//																			// 업데이트 한다.
+//					deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+//				}
 			}
 
 			this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
@@ -3962,7 +3961,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 탈퇴 MQ연동
 		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
-		mqInfo.setTenantId(detailRes.getDeviceInfoList().get(0).getTenantId());
+		//mqInfo.setTenantId(detailRes.getDeviceInfoList().get(0).getTenantId());
 		mqInfo.setUserId(detailRes.getDeviceInfoList().get(0).getUserId());
 		mqInfo.setUserKey(detailRes.getUserKey());
 		mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());

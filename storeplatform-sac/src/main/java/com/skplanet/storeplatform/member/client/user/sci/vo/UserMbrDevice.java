@@ -43,9 +43,6 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	/** 휴대기기 mdn. */
 	private String mdn;
 
-	/** 테넌트 ID. */
-	private String tenantID;
-
 	/** 사용자 Key. */
 	private String userKey;
 
@@ -90,6 +87,9 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 
 	/** 휴면 휴대기기 유무. */
 	private String isDormant;
+
+	/** 휴대기기 usim 번호. */
+	private String deviceSimMn;
 
 	/**
 	 * 시작일자를 리턴한다.
@@ -434,25 +434,6 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 테넌트 ID를 리턴한다.
-	 * 
-	 * @return tenantID - 테넌트 ID
-	 */
-	public String getTenantID() {
-		return this.tenantID;
-	}
-
-	/**
-	 * 테넌트 ID를 설정한다.
-	 * 
-	 * @param tenantID
-	 *            테넌트 ID
-	 */
-	public void setTenantID(String tenantID) {
-		this.tenantID = tenantID;
-	}
-
-	/**
 	 * 사용자 Key를 리턴한다.
 	 * 
 	 * @return userKey - 사용자 Key
@@ -529,10 +510,31 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	 * 휴대기기 MDN을 설정한다.
 	 * </pre>
 	 * 
-	 * @param mDN
+	 * @param mdn
 	 */
 	public void setMdn(String mdn) {
 		this.mdn = mdn;
 	}
 
+	/**
+	 * <pre>
+	 * 휴대기기 usim번호를 리턴한다.
+	 * </pre>
+	 *
+	 * @return deviceSimMn
+	 */
+	public String getDeviceSimMn() {
+		return deviceSimMn;
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 usim번호를 설정한다.
+	 * </pre>
+	 *
+	 * @param deviceSimMn
+	 */
+	public void setDeviceSimMn(String deviceSimMn) {
+		this.deviceSimMn = deviceSimMn;
+	}
 }

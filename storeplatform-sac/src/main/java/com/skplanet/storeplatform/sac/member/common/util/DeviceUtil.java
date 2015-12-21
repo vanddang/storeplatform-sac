@@ -133,13 +133,13 @@ public class DeviceUtil {
 		deviceInfo.setIsRecvSms(userMbrDevice.getIsRecvSMS());
 		deviceInfo.setNativeId(userMbrDevice.getNativeID());
 		deviceInfo.setJoinId(userMbrDevice.getJoinId());
-		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
 		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
 		// deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
 		deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
 		deviceInfo.setIsDormant(userMbrDevice.getIsDormant());
 		deviceInfo.setMdn(userMbrDevice.getMdn());
+		deviceInfo.setDeviceSimMn(userMbrDevice.getDeviceSimMn());
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 
 		return deviceInfo;
@@ -166,7 +166,6 @@ public class DeviceUtil {
 					deviceExtraInfo.setExtraProfile(userMbrDeviceDetail.getExtraProfile());
 					deviceExtraInfo.setExtraProfileValue(userMbrDeviceDetail.getExtraProfileValue());
 					deviceExtraInfo.setDeviceKey(userMbrDeviceDetail.getDeviceKey());
-					deviceExtraInfo.setTenentId(userMbrDeviceDetail.getTenantID());
 					deviceExtraInfo.setUserKey(userMbrDeviceDetail.getUserKey());
 					deviceExtraInfoList.add(deviceExtraInfo);
 				}
@@ -200,6 +199,7 @@ public class DeviceUtil {
 		userMbrDevice.setJoinId(deviceInfo.getJoinId());
 		userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 		userMbrDevice.setMdn(deviceInfo.getMdn());
+		userMbrDevice.setDeviceSimMn(deviceInfo.getDeviceSimMn());
 		userMbrDevice.setUserMbrDeviceDetail(getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		return userMbrDevice;
@@ -228,7 +228,6 @@ public class DeviceUtil {
 					userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
 					userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
 					userMbrDeviceDetail.setDeviceKey(deviceInfo.getDeviceKey());
-					userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 					userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
 					userMbrDeviceDetailList.add(userMbrDeviceDetail);
 				}

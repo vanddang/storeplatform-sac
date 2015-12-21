@@ -658,7 +658,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
+//			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());// 단말 모델
 			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
@@ -679,7 +679,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
+//			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말 모델
 			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
@@ -699,7 +699,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
+//			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말 모델
 			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
@@ -719,7 +719,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(""); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
+//			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말 모델
 			deviceInfo.setDeviceAccount(""); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(""); // 기기고유 ID (imei)
@@ -740,8 +740,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 휴대기기 등록 모듈 호출.
 			 */
 			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
-			String deviceKey = this.deviceService.regDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader
-					.getTenantHeader().getTenantId(), userKey, deviceInfo);
+			String deviceKey = this.deviceService.regDeviceInfo(sacHeader.getTenantHeader().getSystemId(), userKey, deviceInfo);
 
 			if (deviceKey == null || StringUtils.equals(deviceKey, "")) {
 				throw new StorePlatformException("SAC_MEM_0002", "deviceKey");
