@@ -228,6 +228,7 @@
                              </if>                             
                              AND B1.EXPO_YN ='Y'
                              AND B1.CPN_ID IS NOT NULL
+                             AND B1.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                              AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                           )N                         
                          ,TB_DP_PROD_IMG PI

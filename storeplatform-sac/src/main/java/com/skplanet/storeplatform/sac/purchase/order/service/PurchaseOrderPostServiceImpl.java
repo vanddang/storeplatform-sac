@@ -266,7 +266,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 		// }
 
 		// SAP
-		if (!StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
+		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
 			List<String> paymentMtdCdList = new ArrayList<String>();
 			for (PaymentInfo paymentNotiReq : notifyPaymentReq.getPaymentInfoList()) {
 				paymentMtdCdList.add(PaymethodUtil.convert2StoreCode(paymentNotiReq.getPaymentMtdCd()));
@@ -322,8 +322,8 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 					product.setAutoPrchsPeriodValue(Integer.parseInt(reservedDataMap.get("autoPrchsPeriodValue")));
 				}
 
-				SellerMbrSac sellerMbrSac = this.purchaseMemberRepository.searchSellerInfo(reservedDataMap
-						.get("sellerMbrNo"));
+				SellerMbrSac sellerMbrSac = this.purchaseMemberRepository.detailInformation(
+						reservedDataMap.get("sellerMbrNo"), prchsInfo.getTenantProdGrpCd());
 				if (sellerMbrSac != null) {
 					seller = new SendPurchaseNotiSellerInfoEc();
 					seller.setSellerCompany(sellerMbrSac.getSellerCompany());
@@ -375,7 +375,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			SendPurchaseNotiEcReq sendPurchaseNotiEcReq = new SendPurchaseNotiEcReq();
 			sendPurchaseNotiEcReq.setTenantId(prchsDtlMore.getTenantId());
 			sendPurchaseNotiEcReq.setDeviceId(reservedDataMap.get("deviceId"));
-			sendPurchaseNotiEcReq.setDeviceKey(reservedDataMap.get("marketDeviceKey"));
+			sendPurchaseNotiEcReq.setDeviceKey(reservedDataMap.get(PurchaseConstants.IF_MEMBER_RES_MARKET_DEVICE_KEY));
 			sendPurchaseNotiEcReq.setUserEmail(userEmail);
 			sendPurchaseNotiEcReq.setPrchsId(prchsDtlMore.getPrchsId());
 			sendPurchaseNotiEcReq.setPrchsDt(prchsDtlMore.getPrchsDt());

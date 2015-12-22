@@ -114,7 +114,6 @@
                    AND  G.PROD_STATUS_CD = #{prodStatusCd}                /* PD000403 : 판매중 */
                    </if>
                    AND  G.EXPO_YN = 'Y'                 /* Y : 노출 (노출여부) */
-                   AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND  K.IMG_CD(+) = #{imageCd}           /* 이미지코드 */
                    AND  K.EXPO_ORD (+)= 1                  /* 노출순서 */
                    AND  K.LANG_CD(+) = #{tenantHeader.langCd}                /* ko : 한국어 */
@@ -293,7 +292,6 @@
                    AND CPP.PROD_ID(+) = B.PROD_ID
 		           AND E.TENANT_ID = F.TENANT_ID
 		           AND E.PROD_ID = F.PROD_ID
-		           AND SYSDATE BETWEEN F.APPLY_START_DT AND F.APPLY_END_DT
 		           AND F.PROD_ID = G.PROD_ID(+)
 		           AND F.TENANT_ID = G.TENANT_ID(+)
 		           AND B.PROD_ID = H.PROD_ID(+)
@@ -310,7 +308,6 @@
 		           AND K.EXPO_YN = 'Y'
 		           AND K.PROD_ID = L.PROD_ID
 		           AND K.TENANT_ID = L.TENANT_ID
-		           AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
 		           AND L.PROD_ID = M.PROD_ID
 		           AND M.USE_YN = 'Y'
 		           AND M.MENU_ID = N.MENU_ID
@@ -516,7 +513,6 @@
                    AND SB.PROD_ID = SC.PROD_ID
                    AND SB.CONTENTS_TYPE_CD = 'PD002502'
                    AND SC.TENANT_ID = #{tenantHeader.tenantId}
-                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
                    AND SC.PROD_ID = SD.PROD_ID
                    AND SD.TENANT_ID = #{tenantHeader.tenantId}
                    AND SD.PROD_STATUS_CD = 'PD000403'
@@ -536,7 +532,6 @@
                    AND SB.PROD_ID = SC.PROD_ID
                    AND SB.CONTENTS_TYPE_CD = 'PD002502'
                    AND SC.TENANT_ID = #{tenantHeader.tenantId}
-                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
                    AND SC.PROD_ID = SD.PROD_ID
                    AND SD.TENANT_ID = #{tenantHeader.tenantId}
                    AND SD.PROD_STATUS_CD = 'PD000403'
@@ -677,14 +672,12 @@
                    AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 채널 판매중 */
                    </if>
                    AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
-                   AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
 /*                 AND H.SEQ = 1 */                          /* 조건 추가 고려 필요 */
                    AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                    AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
                    AND M.IMG_CD(+) = #{imageCd}                 /* 이미지코드 */
                    AND M.EXPO_ORD(+) = 1                        /* 노출순서 */
                    AND M.LANG_CD(+) = #{tenantHeader.langCd}    /* ko : 한국어 */           
-                   AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
                    <if test='prodStatusCd != null'>
                    AND P.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 에피소드 판매중 */
                    </if>
@@ -828,13 +821,11 @@
                    AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 채널 판매중 */
                    </if>
                    AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
-                   AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                    AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
                    AND M.IMG_CD(+) = #{imageCd}                 /* 이미지코드 */
                    AND M.EXPO_ORD(+) = 1                        /* 노출순서 */
                    AND M.LANG_CD(+) = #{tenantHeader.langCd}    /* ko : 한국어 */           
-                   AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
                    <if test='prodStatusCd != null'>
                    AND P.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 에피소드 판매중 */
                    </if>
@@ -936,6 +927,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   ) N
                         WHERE 1=1

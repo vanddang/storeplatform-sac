@@ -424,6 +424,8 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String IF_DISPLAY_RES_BNS_USE_PERIOD_UNIT_CD = "bnsUsePeriodUnitCd"; // 보너스 이용기간 단위
 	public static final String IF_DISPLAY_RES_BNS_USE_PERIOD = "bnsUsePeriod"; // 보너스 이용기간 값
 
+	public static final String IF_MEMBER_RES_MARKET_DEVICE_KEY = "marketDeviceKey"; // SAP-마켓디바이스키
+
 	/** 구매 요청 규격 **/
 	public static final String IF_PUR_ORDER_REQ_CHARGE_MEMBER_ID = "chargeMemberId";
 	public static final String IF_PUR_ORDER_REQ_CHARGE_MEMBER_NM = "chargeMemberNm";

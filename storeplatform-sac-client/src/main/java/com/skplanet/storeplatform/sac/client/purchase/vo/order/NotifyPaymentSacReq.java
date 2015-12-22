@@ -43,6 +43,8 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	private String procSubStatusCd;
 	private String removeSSOCredential; // 회원 SSOCredential 정보 삭제요청(SyrupPay)
 
+	private String svcMangNo; // Tstore 일 경우 서비스 관리번호(PP를 통한 결제 완료 노티시에만 세팅됨)
+
 	@Valid
 	private List<PaymentInfo> paymentInfoList; // 결제수단정보 리스트
 
@@ -253,9 +255,29 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	/**
 	 * Sets remove sSO credential.
 	 *
-	 * @param removeSSOCredential the remove sSO credential
+	 * @param removeSSOCredential
+	 *            the remove sSO credential
 	 */
 	public void setRemoveSSOCredential(String removeSSOCredential) {
 		this.removeSSOCredential = removeSSOCredential;
+	}
+
+	/**
+	 * Gets svc mang no.
+	 *
+	 * @return the svc mang no
+	 */
+	public String getSvcMangNo() {
+		return svcMangNo;
+	}
+
+	/**
+	 * Sets svc mang no.
+	 *
+	 * @param svcMangNo
+	 *            the svc mang no
+	 */
+	public void setSvcMangNo(String svcMangNo) {
+		this.svcMangNo = svcMangNo;
 	}
 }

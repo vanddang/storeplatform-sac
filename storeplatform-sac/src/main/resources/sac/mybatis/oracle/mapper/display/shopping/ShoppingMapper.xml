@@ -79,6 +79,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -190,6 +191,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -352,6 +354,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -508,13 +511,17 @@
                                , NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                         WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
-                                          AND TSPP.PROD_ID = H.PART_PROD_ID )
+                                          AND TSPP.PROD_ID = H.PART_PROD_ID
+                                          AND TSPP.TENANT_ID = #{tenantId}    /* INPUT 테넌트ID */
+                                       )
                                    , 0 ) AS MTH_PRCHS_CNT
                                , NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                         WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                           AND TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' ) 
-                                          AND TSPP.PROD_ID = H.PART_PROD_ID )
+                                          AND TSPP.PROD_ID = H.PART_PROD_ID
+                                          AND TSPP.TENANT_ID = #{tenantId}    /* INPUT 테넌트ID */
+                                      )
                                    , 0 ) AS DLY_PRCHS_CNT 
                                ,N.MM_PROD_MAX_SALE_QTY
                                ,N.DLY_PROD_MAX_SALE_QTY
@@ -561,7 +568,8 @@
                         AND C.CATALOG_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID
                         AND I.PROD_ID = O.PROD_ID
-                        AND K.TENANT_ID = L.TENANT_ID 
+                        AND K.TENANT_ID = L.TENANT_ID
+                        AND K.TENANT_ID = N.TENANT_ID
                         AND N.EXPO_YN ='Y'
                         AND N.CPN_ID IS NOT NULL
                         AND PI.IMG_CD(+) = #{imageCd}
@@ -769,6 +777,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -1119,6 +1128,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -1295,6 +1305,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -1450,6 +1461,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -1617,6 +1629,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -1874,13 +1887,17 @@
                         ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                 WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
-                                  AND TSPP.PROD_ID = H.PART_PROD_ID )
+                                  AND TSPP.PROD_ID = H.PART_PROD_ID
+                                  AND TSPP.TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
+                               )
                            , 0 ) AS MTH_PRCHS_CNT
                         ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                 WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                   AND TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
-                                  AND TSPP.PROD_ID = H.PART_PROD_ID )
+                                  AND TSPP.PROD_ID = H.PART_PROD_ID
+                                  AND TSPP.TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
+                                )
                            , 0 ) AS DLY_PRCHS_CNT           
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID 
                                            ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC 
@@ -1941,6 +1958,7 @@
                             </if>                                
                              AND B1.EXPO_YN ='Y'
                              AND B1.CPN_ID IS NOT NULL
+                             AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                              AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                           )N
                 WHERE 1=1
@@ -2013,6 +2031,7 @@
                       FROM TB_DP_SPRC_PROD SP
                      WHERE SP.EXPO_YN = 'Y'
                        AND SP.CPN_ID IS NOT NULL
+                       AND SP.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                        AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
                        AND SP.PROD_ID = B.PROD_ID
                     ), NVL(D.DC_RATE,0)) AS DC_RATE
@@ -2020,6 +2039,7 @@
                       FROM TB_DP_SPRC_PROD SP
                      WHERE SP.EXPO_YN = 'Y'
                        AND SP.CPN_ID IS NOT NULL
+                       AND SP.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                        AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
                        AND SP.PROD_ID = B.PROD_ID
                     ), NVL(D.PROD_AMT,0)) AS PROD_AMT    
@@ -2027,6 +2047,7 @@
                       FROM TB_DP_SPRC_PROD SP
                      WHERE SP.EXPO_YN = 'Y'
                        AND SP.CPN_ID IS NOT NULL
+                       AND SP.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                        AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
                        AND SP.PROD_ID = B.PROD_ID
                     ), NVL(D.DC_AMT,0)) AS DC_AMT                       
@@ -2224,13 +2245,17 @@
                                        , NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                                 WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
-                                                  AND TSPP.PROD_ID = H.PART_PROD_ID )
+                                                  AND TSPP.PROD_ID = H.PART_PROD_ID
+                                                  AND TSPP.TENANT_ID = #{tenantId}    /* INPUT 테넌트ID */
+                                                )
                                            , 0 ) AS MTH_PRCHS_CNT
                                        , NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                                 WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                                   AND TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
-                                                  AND TSPP.PROD_ID = H.PART_PROD_ID )
+                                                  AND TSPP.PROD_ID = H.PART_PROD_ID
+                                                  AND TSPP.TENANT_ID = #{tenantId}    /* INPUT 테넌트ID */
+                                                )
                                            , 0 ) AS DLY_PRCHS_CNT 
                                        ,N.MM_PROD_MAX_SALE_QTY
                                        ,N.DLY_PROD_MAX_SALE_QTY
@@ -2277,7 +2302,8 @@
                                 AND C.CATALOG_ID = M.PROD_ID(+)                           
                                 AND I.PROD_ID = N.PROD_ID
                                 AND I.PROD_ID = O.PROD_ID
-                                AND K.TENANT_ID = L.TENANT_ID 
+                                AND K.TENANT_ID = L.TENANT_ID
+                                AND K.TENANT_ID = N.TENANT_ID
                                 AND N.EXPO_YN ='Y'
                                 AND N.CPN_ID IS NOT NULL
                                 <if test="arraySpecialTypeCd != null">
@@ -2424,6 +2450,7 @@
                                  AND B2.CPN_ID IS NOT NULL
                                  AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
                                  AND C2.CATALOG_ID = B.CATALOG_ID
+                                 AND B2.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                  AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
                             )                                                 
                          )                 
@@ -2496,6 +2523,7 @@
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
                                      AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -2553,6 +2581,7 @@
                                  AND B2.CPN_ID IS NOT NULL
                                  AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
                                  AND C2.CATALOG_ID = B.CATALOG_ID
+                                 AND B2.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                  AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
                           )                             
                  
@@ -2687,6 +2716,7 @@
                                          AND B2.CPN_ID IS NOT NULL
                                          AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
                                          AND C2.CATALOG_ID = B.CATALOG_ID
+                                         AND B2.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                          AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
                                     )                                   
                           )
@@ -2823,6 +2853,7 @@
                                          AND B2.CPN_ID IS NOT NULL
                                          AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
                                          AND C2.CATALOG_ID = B.CATALOG_ID
+                                         AND B2.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                          AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
                                     )                                   
                           )
@@ -2933,6 +2964,7 @@
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
                                      AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -2991,6 +3023,7 @@
                                  AND B2.CPN_ID IS NOT NULL
                                  AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
                                  AND C2.CATALOG_ID = B.CATALOG_ID
+                                 AND B2.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                  AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
                             )                         
                       
@@ -3117,6 +3150,7 @@
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
                                      AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -3178,6 +3212,7 @@
                                  AND B2.CPN_ID IS NOT NULL
                                  AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
                                  AND C2.CATALOG_ID = B.CATALOG_ID
+                                 AND B2.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                  AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
                             )                         
                       
@@ -3301,6 +3336,7 @@
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
                                      AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -3362,6 +3398,7 @@
                                  AND B2.CPN_ID IS NOT NULL
                                  AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
                                  AND C2.CATALOG_ID = B.CATALOG_ID
+                                 AND B2.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                  AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
                             )                         
                       
@@ -3604,13 +3641,17 @@
                                 ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                         WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
-                                          AND TSPP.PROD_ID = H.PART_PROD_ID )
+                                          AND TSPP.PROD_ID = H.PART_PROD_ID
+                                          AND TSPP.TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
+                                       )
                                    , 0 ) AS MTH_PRCHS_CNT
                                 ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                         WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                           AND TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
-                                          AND TSPP.PROD_ID = H.PART_PROD_ID )
+                                          AND TSPP.PROD_ID = H.PART_PROD_ID
+                                          AND TSPP.TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
+                                       )
                                    , 0 ) AS DLY_PRCHS_CNT           
                                 ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID 
                                                    ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC 
@@ -3676,6 +3717,7 @@
                                      <if test="req.specialTypeCd != null">
                                      AND B1.SPRC_TYPE_CD = #{req.specialTypeCd}
                                      </if>
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -3771,13 +3813,17 @@
                        ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                 FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                 WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
-                                  AND TSPP.PROD_ID = A.EPSD_PROD_ID )
+                                  AND TSPP.PROD_ID = A.EPSD_PROD_ID
+                                  AND TSPP.TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
+                             )
                            , 0 ) AS MTH_PRCHS_CNT
                        ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                 WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                   AND TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
-                                  AND TSPP.PROD_ID = A.EPSD_PROD_ID )
+                                  AND TSPP.PROD_ID = A.EPSD_PROD_ID
+                                  AND TSPP.TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
+                              )
                           , 0 ) AS DLY_PRCHS_CNT         
                        ,N.SOLD_OUT_YN
                        ,CASE WHEN N.PROD_ID IS NOT NULL THEN N.CPN_ID ELSE '' END AS SPECIAL_COUPON_ID                                         
@@ -3791,6 +3837,7 @@
                          FROM TB_DP_SPRC_PROD
                         WHERE EXPO_YN = 'Y'
                           AND CPN_ID IS NOT NULL
+                          AND TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                           AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT    
                         <if test="req.specialTypeCd != null">
                           AND SPRC_TYPE_CD = #{req.specialTypeCd}
@@ -3883,7 +3930,7 @@
     </select>    
   <!-- 쇼핑상세(팅요금제 조회 여부) 조회-->
     <select id="getTingPaidQueryV2" parameterType="ShoppingReq" resultType="String">
-     /* ShoppingMapper.xml.getChannelByepisodeV2,쇼핑상세(팅요금제 조회 여부) 조회, 김형식/SK플래닛  , 2014-02-04 */
+     /* ShoppingMapper.xml.getTingPaidQueryV2,쇼핑상세(팅요금제 조회 여부) 조회, 김형식/SK플래닛  , 2014-02-04 */
          SELECT SPRC_TYPE_CD
            FROM  TB_DP_PROD_RSHP A2
                 ,TB_DP_SPRC_PROD B2
@@ -3896,10 +3943,12 @@
             AND B2.EXPO_YN ='Y'
             AND B2.CPN_ID IS NOT NULL
             AND C2.CATALOG_ID = #{productId}
+            AND B2.TENANT_ID  =#{tenantId}        /* INPUT 테넌트ID */
             AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT
             AND ROWNUM = 1 
-    </select>       
-              
+    </select>
+
+
     <!-- 카테고리 쇼핑 상세 조회-->
     <select id="searchSpecificShoppingDetail" parameterType="Map" resultType="MetaInfo">
      SELECT  /* ShoppingMapper.xml.searchSpecificShoppingDetail,카테고리 쇼핑 상세 조회, 김형식/SK플래닛  , 2014-12-07 */
@@ -3964,13 +4013,17 @@
                                 ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                         WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
-                                          AND TSPP.PROD_ID = H.PART_PROD_ID )
+                                          AND TSPP.PROD_ID = H.PART_PROD_ID
+                                          AND TSPP.TENANT_ID = #{tenantId}    /* INPUT 테넌트ID */
+                                       )
                                    , 0 ) AS MTH_PRCHS_CNT
                                 ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                         WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                           AND TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
-                                          AND TSPP.PROD_ID = H.PART_PROD_ID )
+                                          AND TSPP.PROD_ID = H.PART_PROD_ID
+                                          AND TSPP.TENANT_ID = #{tenantId}    /* INPUT 테넌트ID */
+                                        )
                                    , 0 ) AS DLY_PRCHS_CNT           
                                 ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID 
                                                    ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC 
@@ -4037,6 +4090,7 @@
                                     </if>
                                      AND B1.EXPO_YN ='Y'  
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N 
                         WHERE 1=1
@@ -4367,6 +4421,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
+                                     AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -4422,7 +4477,8 @@
                  , CATALOG_NM ASC
                ) 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
-    </select>         
+    </select>
+
                   
               
 </mapper>

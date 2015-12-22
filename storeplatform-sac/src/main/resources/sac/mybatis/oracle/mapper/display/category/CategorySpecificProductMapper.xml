@@ -226,7 +226,6 @@
                    AND  G.PROD_STATUS_CD = #{prodStatusCd}                /* PD000403 : 판매중 */
                    </if>
                    AND  G.EXPO_YN = 'Y'                 /* Y : 노출 (노출여부) */
-                   AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND  K.IMG_CD = #{imageCd}           /* 이미지코드 */
                    AND  K.EXPO_ORD = 1                  /* 노출순서 */
                    AND  K.LANG_CD = #{langCd}                /* ko : 한국어 */
@@ -290,7 +289,6 @@
                AND  B.BASE_YN = 'Y'
                AND  C.LANG_CD = #{langCd}                /* ko : 한국어 */
                AND  F.LANG_CD = C.LANG_CD                /* ko : 한국어 */
-               AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                AND  E.PROD_ID = #{prodId}
                AND  G.TENANT_ID = #{tenantId}            /* 테넌트ID */
                AND  RSHP.PART_PROD_ID = E.PROD_ID
@@ -950,13 +948,11 @@
                    AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
                    </if>
                    AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
-                   AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                    AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
                    AND M.IMG_CD = #{imageCd}                 /* 이미지코드 */
                    AND M.EXPO_ORD = 1                        /* 노출순서 */
                    AND M.LANG_CD = #{langCd}    /* ko : 한국어 */
-                   AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    ----------------------------------------------------------------------------- 
@@ -1165,13 +1161,11 @@
                    AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
                    </if>
                    AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
-                   AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                    AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
                    AND M.IMG_CD = #{imageCd}                 /* 이미지코드 */
                    AND M.EXPO_ORD = 1                        /* 노출순서 */
                    AND M.LANG_CD = #{langCd}    /* ko : 한국어 */
-                   AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    ----------------------------------------------------------------------------- 
@@ -1312,6 +1306,7 @@
                           AND A1.PART_PROD_ID = B1.PROD_ID
                           AND B1.EXPO_YN ='Y'
                           AND B1.CPN_ID IS NOT NULL
+                          AND B1.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                           AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                        ) N
              WHERE 1=1
@@ -1385,7 +1380,7 @@
                JOIN TB_DP_PROD SB 
                 ON RSHP.PART_PROD_ID = SB.PROD_ID AND SB.CONTENTS_TYPE_CD = 'PD002502'
                JOIN TB_DP_TENANT_PROD_PRICE SC 
-                ON SB.PROD_ID = SC.PROD_ID AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
+                ON SB.PROD_ID = SC.PROD_ID
                JOIN TB_DP_TENANT_PROD SD
                 ON SC.PROD_ID = SD.PROD_ID AND SD.PROD_STATUS_CD = 'PD000403'
                JOIN TB_DP_EBOOK_PROD EP

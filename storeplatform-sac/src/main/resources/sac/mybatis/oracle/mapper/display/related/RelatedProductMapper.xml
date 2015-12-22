@@ -38,14 +38,6 @@
              , #{productBasicInfo.contentsTypeCd} as CONTENTS_TYPE_CD
              , K.PROD_STATUS_CD
              , TO_CHAR(I.REG_DT,'YYYYMMDDHH24MISS') AS REG_DT
-             , NVL(L.PATICPERS_CNT, 0) AS PATICPERS_CNT
-             , NVL(L.PRCHS_CNT, 0) AS DWLD_CNT
-             , NVL(L.PRCHS_CNT, 0) AS PRCHS_CNT
-             <![CDATA[
-             , NVL((CASE WHEN (L.AVG_EVLU_SCORE > 0 AND L.AVG_EVLU_SCORE < 1) THEN 1
-                    WHEN L.AVG_EVLU_SCORE > 5 THEN 5
-                    ELSE ROUND(L.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
-             ]]>
           FROM TB_DP_MENU_CATEGORY A
              , TB_DP_MENU_CATEGORY_DESC B  /* 서브메뉴 */
              , TB_DP_MENU_CATEGORY_DESC C  /* 탑메뉴 */
@@ -57,7 +49,6 @@
              , TB_DP_PROD I /* 에피 */
              , TB_DP_PROD_IMG J /* 에피 */
              , TB_DP_TENANT_PROD K /* 에피 */
-             , TB_DP_TENANT_PROD_STATS L /* 채널 */
          WHERE 1=1
            AND A.MENU_ID = B.MENU_ID
            AND A.TOP_MENU_ID = C.MENU_ID
@@ -69,12 +60,10 @@
            AND E.PART_PROD_ID = I.PROD_ID
            AND E.PROD_ID = J.PROD_ID(+)
            AND E.PART_PROD_ID = K.PROD_ID
-           AND E.PROD_ID = L.PROD_ID(+)
-           
+
            AND B.LANG_CD = C.LANG_CD
            AND B.LANG_CD = F.LANG_CD
            AND H.TENANT_ID = K.TENANT_ID
-           AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
            AND A.USE_YN = 'Y'
            AND D.USE_YN = 'Y'
            AND K.EXPO_YN = 'Y'
@@ -91,8 +80,7 @@
            </if>
            AND J.IMG_CD(+) = #{imageCd}
            AND H.TENANT_ID = #{tenantHeader.tenantId}
-           AND L.TENANT_ID(+) = #{tenantHeader.tenantId}
-           AND ROWNUM = 1      
+           AND ROWNUM = 1
     </select>
 
     <select id="selectRelatedProduct" parameterType="java.util.Map" resultType="com.skplanet.storeplatform.sac.display.related.vo.RelatedProduct">

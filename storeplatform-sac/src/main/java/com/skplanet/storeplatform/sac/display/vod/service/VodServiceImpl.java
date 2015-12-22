@@ -19,6 +19,9 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStats;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -70,6 +73,9 @@ public class VodServiceImpl implements VodService {
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	private ProductInfoManager productInfoManager; // 3사 통합 평점.
 
 	/*
 	 * (non-Javadoc)
@@ -490,7 +496,7 @@ public class VodServiceImpl implements VodService {
 		product.setRights(rights);
 		
 		// Accrual
-		Accrual accrual = this.mapAccrual(mapperVO);
+		Accrual accrual = this.mapAccrual(req.getChannelId());
 		product.setAccrual(accrual);
 
 		Vod vod = this.mapVod(mapperVO, supportFhdVideo);
@@ -573,7 +579,7 @@ public class VodServiceImpl implements VodService {
 		product.setDistributor(distributor);
 
 		// Accrual
-		Accrual accrual = this.mapAccrual(mapperVO);
+		Accrual accrual = this.mapAccrual(req.getChannelId());
 		product.setAccrual(accrual);
 
 		Vod vod = this.mapVod(mapperVO, supportFhdVideo);
@@ -625,16 +631,18 @@ public class VodServiceImpl implements VodService {
 	}
 
 	/**
-	 * Accural
-	 * 
-	 * @param mapperVO
+	 * Accural (평점 정보 3사 통합)
+	 * @param channelId
 	 * @return
 	 */
-	private Accrual mapAccrual(VodDetail mapperVO) {
+	private Accrual mapAccrual(String channelId) {
+		// 평점정보
 		Accrual accrual = new Accrual();
-		accrual.setVoterCount(mapperVO.getPaticpersCnt());
-		accrual.setDownloadCount(mapperVO.getPrchsCnt());
-		accrual.setScore(mapperVO.getAvgEvluScore());
+		// 3사 통함 평점, 구매수, 참여수 조회 (캐쉬적용)
+		ProductStats productStats = this.productInfoManager.getProductStats(new ProductStatsParam(channelId));
+		accrual.setVoterCount(productStats.getParticipantCount());
+		accrual.setDownloadCount(productStats.getPurchaseCount());
+		accrual.setScore(productStats.getAverageScore());
 		return accrual;
 	}
 
@@ -1327,7 +1335,7 @@ public class VodServiceImpl implements VodService {
 				}
 
 				// Accrual
-				Accrual accrual = this.mapAccrual(mapperVO);
+				Accrual accrual = this.mapAccrual(req.getChannelId());
 				subProduct.setAccrual(accrual);
 
 				// Badge
@@ -1416,7 +1424,7 @@ public class VodServiceImpl implements VodService {
 				subProduct.setVod(this.mapVodV3(cidVO, contentsIdList, supportFhdVideo));
 				
 				// Accrual
-				Accrual accrual = this.mapAccrual(cidVO);
+				Accrual accrual = this.mapAccrual(req.getChannelId());
 				subProduct.setAccrual(accrual);
 
 				// Badge

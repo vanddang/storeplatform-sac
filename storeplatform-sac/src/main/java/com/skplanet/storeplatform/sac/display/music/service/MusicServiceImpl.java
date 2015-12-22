@@ -14,6 +14,9 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStats;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
@@ -59,6 +62,9 @@ public class MusicServiceImpl implements MusicService {
     @Autowired
     private CommonMetaInfoGenerator metaInfoGenerator;
 
+    @Autowired
+    private ProductInfoManager productInfoManager;
+
 	@Override
 	public MusicDetailComposite searchMusicDetail(MusicDetailParam param) {
         logger.info("channelId={},userKey={},deviceKey={},deviceModel={}",
@@ -87,6 +93,13 @@ public class MusicServiceImpl implements MusicService {
         relProdListReq.put("metaCodes", MUSIC_RELATED_PROD_META_CLS);
         relProdListReq.put("tenantId", param.getTenantId());
         List<RelatedProduct> relProdList = this.commonDAO.queryForList("MusicDetail.getRelatedProductList", relProdListReq, RelatedProduct.class);
+
+        // 통계 정보 조회
+        ProductStatsParam productStatsParam = new ProductStatsParam(musicDetail.getChnlId());
+        ProductStats productStats = productInfoManager.getProductStats(productStatsParam);
+        musicDetail.setAvgEvluScore(productStats.getAverageScore());
+        musicDetail.setDwldCnt(productStats.getPurchaseCount());
+        musicDetail.setPaticpersCnt(productStats.getParticipantCount());
 
         //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), musicDetail.getTopMenuId());
