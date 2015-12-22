@@ -16,6 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.external.client.market.sci.MarketSCI;
+import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
+import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
+import com.skplanet.storeplatform.member.client.common.util.RandomString;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -96,6 +100,9 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private SellerSCI sellerSCI;
+
+	@Autowired
+	private MarketSCI marketSCI;
 
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	public String fixedMobileUserAuthKey;
@@ -1249,5 +1256,135 @@ public class MemberCommonComponent {
 			userStatusText = MemberConstants.INAPP_USER_STATUS_SYSTEM_ERROR_TEXT;
 		}
 		return userStatusText;
+	}
+
+	/**
+	 * <pre>
+	 * SKT, KT, U+ 각 통신사의 서비스관리번호를 구한다.
+	 * SKT는 mdn, deviceTelecom 파라메터만 필수.
+	 * KT/U+는 모든 파라메터 필수.
+	 * </pre>
+	 *
+	 * @param mdn
+	 *            String
+	 * @param deviceTelecom
+	 *            String
+	 * @param nativeId
+	 *            String
+	 * @param simSerialNo
+	 *            String
+	 * @return svcMangNo
+	 */
+	public String getSvcMangNo(String mdn, String deviceTelecom, String nativeId, String simSerialNo){
+
+		String svcMangNo = null;
+		if(StringUtils.isBlank(mdn)){
+			throw new StorePlatformException("SAC_MEM_0001", "mdn");
+		}
+
+		if(StringUtils.isBlank(deviceTelecom)){
+			throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
+		}
+
+		if (!StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)
+				&& !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)
+				&& !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
+		}
+
+		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)
+				|| !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)){
+			if(StringUtils.isBlank(nativeId)){
+				throw new StorePlatformException("SAC_MEM_0001", "nativeId");
+			}
+			if(StringUtils.isBlank(simSerialNo)){
+				throw new StorePlatformException("SAC_MEM_0001", "simSerialNo");
+			}
+		}
+
+		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			UserEcRes userRes = this.getMappingInfo(mdn, "mdn");
+			svcMangNo = userRes.getSvcMngNum();
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
+			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+			marketReq.setTrxNo(new StringBuffer("trx").append("-")
+					.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
+					.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString());
+			marketReq.setDeviceId(mdn);
+			marketReq.setDeviceTelecom(deviceTelecom);
+			marketReq.setNativeId(nativeId);
+			marketReq.setSimSerialNo(simSerialNo);
+			MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
+			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+				svcMangNo = marketRes.getDeviceInfo().getDeviceKey();
+			}
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
+			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+			marketReq.setTrxNo(new StringBuffer("trx").append("-")
+					.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
+					.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString());
+			marketReq.setDeviceId(mdn);
+			marketReq.setDeviceTelecom(deviceTelecom);
+			marketReq.setNativeId(nativeId);
+			marketReq.setSimSerialNo(simSerialNo);
+			MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+				svcMangNo = marketRes.getDeviceInfo().getDeviceKey();
+			}
+		}
+
+		return svcMangNo;
+	}
+
+	/**
+	 * <pre>
+	 * OllehMarket 심플 인증.
+	 * </pre>
+	 *
+	 * @param marketReq
+	 *            MarketAuthorizeEcReq
+	 * @return MarketAuthorizeEcRes
+	 */
+	public MarketAuthorizeEcRes simpleAuthorizeForOllehMarket(MarketAuthorizeEcReq marketReq){
+		return this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
+	}
+
+	/**
+	 * <pre>
+	 * U+ 심플 인증.
+	 * </pre>
+	 *
+	 * @param marketReq
+	 *            MarketAuthorizeEcReq
+	 * @return MarketAuthorizeEcRes
+	 */
+	public MarketAuthorizeEcRes simpleAuthorizeForUplusStore(MarketAuthorizeEcReq marketReq){
+		return this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+	}
+
+	/**
+	 * <pre>
+	 * OllehMarket 인증.
+	 * </pre>
+	 *
+	 * @param marketReq
+	 *            MarketAuthorizeEcReq
+	 * @return MarketAuthorizeEcRes
+	 */
+	public MarketAuthorizeEcRes authorizeForOllehMarket(MarketAuthorizeEcReq marketReq){
+		return this.marketSCI.authorizeForOllehMarket(marketReq);
+	}
+
+	/**
+	 * <pre>
+	 * U+ 인증.
+	 * </pre>
+	 *
+	 * @param marketReq
+	 *            MarketAuthorizeEcReq
+	 * @return MarketAuthorizeEcRes
+	 */
+	public MarketAuthorizeEcRes authorizeForUplusStore(MarketAuthorizeEcReq marketReq){
+		return this.marketSCI.authorizeForUplusStore(marketReq);
 	}
 }

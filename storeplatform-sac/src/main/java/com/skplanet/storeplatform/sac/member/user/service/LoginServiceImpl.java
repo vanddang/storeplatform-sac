@@ -196,9 +196,6 @@ public class LoginServiceImpl implements LoginService {
 	private DeviceSCI deviceSCI;
 
 	@Autowired
-	private MarketSCI marketSCI;
-
-	@Autowired
 	private MemberCommonInternalComponent mcic;
 
 	@Autowired
@@ -1859,7 +1856,7 @@ public class LoginServiceImpl implements LoginService {
 		LOGGER.info("{} authorizeForOllehMarket Request : {}", req.getDeviceId(),
 				ConvertMapperUtils.convertObjectToJson(marketReq));
 
-		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
+		MarketAuthorizeEcRes marketRes = this.commService.simpleAuthorizeForOllehMarket(marketReq);
 
 		AuthorizeForOllehMarketSacRes res = new AuthorizeForOllehMarketSacRes();
 
@@ -2139,7 +2136,7 @@ public class LoginServiceImpl implements LoginService {
 		LOGGER.info("{} authorizeForUplusStore Request : {}", req.getDeviceId(),
 				ConvertMapperUtils.convertObjectToJson(marketReq));
 
-		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+		MarketAuthorizeEcRes marketRes = this.commService.simpleAuthorizeForUplusStore(marketReq);
 
 		AuthorizeForUplusStoreSacRes res = new AuthorizeForUplusStoreSacRes();
 
@@ -2529,11 +2526,11 @@ public class LoginServiceImpl implements LoginService {
 					ConvertMapperUtils.convertObjectToJson(marketReq));
 
 			if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, req.getTenantId())) {
-				marketRes = this.marketSCI.authorizeForOllehMarket(marketReq);
+				marketRes = this.commService.authorizeForOllehMarket(marketReq);
 				LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(),
 						ConvertMapperUtils.convertObjectToJson(marketRes));
 			} else if (StringUtils.equals(MemberConstants.TENANT_ID_UPLUS_STORE, req.getTenantId())) {
-				marketRes = this.marketSCI.authorizeForUplusStore(marketReq);
+				marketRes = this.commService.authorizeForUplusStore(marketReq);
 				LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(),
 						ConvertMapperUtils.convertObjectToJson(marketRes));
 			}
@@ -3591,11 +3588,11 @@ public class LoginServiceImpl implements LoginService {
 				ConvertMapperUtils.convertObjectToJson(marketReq));
 
 		if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, tenantId)) {
-			marketRes = this.marketSCI.authorizeForOllehMarket(marketReq);
+			marketRes = this.commService.authorizeForOllehMarket(marketReq);
 			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(),
 					ConvertMapperUtils.convertObjectToJson(marketRes));
 		} else if (StringUtils.equals(MemberConstants.TENANT_ID_UPLUS_STORE, tenantId)) {
-			marketRes = this.marketSCI.authorizeForUplusStore(marketReq);
+			marketRes = this.commService.authorizeForUplusStore(marketReq);
 			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(),
 					ConvertMapperUtils.convertObjectToJson(marketRes));
 		}
@@ -3947,8 +3944,8 @@ public class LoginServiceImpl implements LoginService {
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @param userKey
-	 *            String
+	 * @param detailRes
+	 *            DetailV2Res
 	 */
 	private void removeMarketUser(SacRequestHeader requestHeader, DetailV2Res detailRes) {
 		// 회원탈퇴처리
@@ -4422,7 +4419,7 @@ public class LoginServiceImpl implements LoginService {
 
 				LOGGER.info("{} authorizeForUplusStore Request : {}", deviceId,
 						ConvertMapperUtils.convertObjectToJson(marketReq));
-				marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+				marketRes = this.commService.simpleAuthorizeForUplusStore(marketReq);
 				LOGGER.info("{} authorizeForUplusStore Response : {}", deviceId,
 						ConvertMapperUtils.convertObjectToJson(marketRes));
 
