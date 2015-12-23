@@ -502,7 +502,6 @@ public class UserServiceImpl implements UserService {
 
 			// 로그인 성공 이력 저장
 			UserMbrLoginLog userMbrLoginLog = new UserMbrLoginLog();
-			userMbrLoginLog.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
 			userMbrLoginLog.setSystemID(loginUserRequest.getCommonRequest().getSystemID());
 			userMbrLoginLog.setUserKey(userMbrRetrieveUserMbrPwd.getUserKey());
 
@@ -3041,7 +3040,6 @@ public class UserServiceImpl implements UserService {
 			simpleLoginResponse.setIsLoginSuccess(Constant.TYPE_YN_N);
 		} else { // 로그인 성공
 			UserMbrLoginLog userMbrLoginLog = new UserMbrLoginLog();
-			userMbrLoginLog.setTenantID(simpleLoginRequest.getCommonRequest().getTenantID());
 			userMbrLoginLog.setSystemID(simpleLoginRequest.getCommonRequest().getSystemID());
 			userMbrLoginLog.setUserKey(simpleLoginResponse.getUserKey());
 			userMbrLoginLog.setIsAutoLogin(Constant.TYPE_YN_Y);
@@ -3302,7 +3300,6 @@ public class UserServiceImpl implements UserService {
 	public MoveUserInfoResponse executeMoveUserMbr(MoveUserInfoRequest moveUserInfoRequest) {
 		LOGGER.debug("### moveUserInfoRequest : {}", moveUserInfoRequest.toString());
 		UserMbr usermbr = new UserMbr();
-		usermbr.setTenantID(moveUserInfoRequest.getCommonRequest().getTenantID());
 		usermbr.setUserKey(moveUserInfoRequest.getUserKey());
 		String moveType = moveUserInfoRequest.getMoveType();
 
@@ -3335,7 +3332,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		MoveUserInfoResponse moveUserInfoResponse = new MoveUserInfoResponse();
-		moveUserInfoResponse.setTenantID(userInfo.getTenantId());
 		moveUserInfoResponse.setUserKey(userInfo.getInsdUserMbrNo());
 		moveUserInfoResponse.setTransCd(moveType);
 		moveUserInfoResponse.setUserMbrNo(userInfo.getUserMbrNo());
@@ -3343,9 +3339,6 @@ public class UserServiceImpl implements UserService {
 		moveUserInfoResponse.setMbrId(userInfo.getMbrId());
 		moveUserInfoResponse.setMbrClasCd(userInfo.getMbrClasCd());
 		moveUserInfoResponse.setEmailAddr(userInfo.getEmailAddr());
-
-		// IDP 연동 결과는 Controller에서 로그 저장시에 직접 셋팅.
-		// moveUserInfoResponse.setIdpResultYn(idpResultYn);
 
 		try {
 			this.commonDAO.queryForObject("User.callMoveUserProcedure", params);
@@ -3529,7 +3522,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateActiveMoveUserLastLoginDt(MoveUserInfoRequest moveUserInfoRequest) {
 		UserMbrLoginLog userMbrLoginLog = new UserMbrLoginLog();
-		userMbrLoginLog.setTenantID(moveUserInfoRequest.getCommonRequest().getTenantID());
 		userMbrLoginLog.setUserKey(moveUserInfoRequest.getUserKey());
 
 		// DA팀의 TB_US_USERMBR.LAST_LOGIN_DT의 update 빈도 줄여 달라는 요청으로 조건 추가
