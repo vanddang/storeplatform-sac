@@ -297,32 +297,22 @@ public class DeviceController {
 	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @RequestBody RemoveDeviceReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		int deviceCount = 0;
 		for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
-			String deviceId = StringUtil.nvl(id.getDeviceId(), "");
-			if (!deviceId.equals("")) {
+			if (StringUtils.isNotBlank(id.getDeviceId())) {
 				deviceCount += 1;
 			}
 		}
 
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		if (userAuthKey.equals("") || userKey.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "userAuthKey && userKey");
+		if (StringUtils.isEmpty(req.getUserKey())) {
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		} else if (deviceCount == 0) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
 
-		req.setUserAuthKey(userAuthKey);
-		req.setUserKey(userKey);
-
 		RemoveDeviceRes res = this.deviceService.remDevice(requestHeader, req);
-
-		/* IDP 회원정보 수정 */
-		this.userService.modProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
 		LOGGER.info("Response : {}", res.getDeviceKeyList().get(0).getDeviceKey());
 

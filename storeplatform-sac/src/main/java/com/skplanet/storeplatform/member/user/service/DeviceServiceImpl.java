@@ -406,9 +406,7 @@ public class DeviceServiceImpl implements DeviceService {
 		// ACTION 3. 휴대기기 속성의 USE_YN, AUTH_YN 을 N 으로 update.
 		// ACTION 4. 휴대기기 부가정보 삭제
 		// ACTION 5. 휴대기기 삭제 카운트 증가
-		// ACTION 6-1. 회원 이력 테이블 insert.
-		// ACTION 6-2. 휴대기기 보유 카운트 감소
-		// ACTION 6-3. 휴대기기 설정정보 초기화
+		// ACTION 6. 휴대기기 설정정보 초기화
 
 		LOGGER.debug(">>>> >>> DeviceServiceImpl removeDevice : {}", removeDeviceRequest);
 		String isDormant = StringUtils.isBlank(removeDeviceRequest.getIsDormant()) ? Constant.TYPE_YN_N : removeDeviceRequest
@@ -423,13 +421,12 @@ public class DeviceServiceImpl implements DeviceService {
 		RemoveDeviceResponse removeDeviceResponse = new RemoveDeviceResponse();
 		removeDeviceResponse.setDelDeviceCount(0);
 		Integer row = 0;
-		String tenantID = removeDeviceRequest.getCommonRequest().getTenantID();
 		String userKey = removeDeviceRequest.getUserKey();
 		String lastDeviceKey = "";
 		List<String> deviceKeyList = removeDeviceRequest.getDeviceKey();
 		int sizeList = deviceKeyList.size();
 
-		// ACTION 1. 단말 존재여부 확인 : tenantID, deviceKey, userKey로 단말 조회
+		// ACTION 1. 단말 존재여부 확인 : deviceKey, userKey로 단말 조회
 		for (int i = 0; i < sizeList; i++) {
 			UserMbrDevice userMbrDevice = new UserMbrDevice();
 			userMbrDevice.setUserKey(userKey);
@@ -471,47 +468,24 @@ public class DeviceServiceImpl implements DeviceService {
 			UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setUserKey(userKey);
 			userMbrDeviceDetail.setDeviceKey(deviceKeyList.get(i));
-			// userMbrDeviceDetail.setExtraProfile(DeviceManagementCode.DOTORI_YN.getCode()); // 도토리 인증여부 CD_ID
-			// userMbrDeviceDetail.setExtraProfileValue(Constant.TYPE_YN_N);
 
-			// row = dao.update("Device.removeDotori", userMbrDeviceDetail);
-			dao.delete("removeDeviceExtraProfile", userMbrDeviceDetail);
-			// 예외처리 삭제 : 토토리 관리항목이 없는 경우가 있음.
-			// if (row <= 0) {
-			// throw new Exception("Unknown Error.");
-			// }
-			LOGGER.debug("### removeDotori row : {}", row);
+			dao.delete("Device.removeDeviceExtraProfile", userMbrDeviceDetail);
+			LOGGER.debug("### Device.removeDeviceExtraProfile row : {}", row);
 
 			// ACTION 5. 휴대기기 삭제 카운트 증가
 			int delDeviceCount = removeDeviceResponse.getDelDeviceCount();
 			delDeviceCount = delDeviceCount + 1;
 			removeDeviceResponse.setDelDeviceCount(delDeviceCount);
 
-			// ACTION 6-1. 회원 이력 테이블 insert.
-			if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
-				UserMbr usermbr = new UserMbr();
-				usermbr.setUserKey(removeDeviceRequest.getUserKey());
-				usermbr.setTenantID(removeDeviceRequest.getCommonRequest().getTenantID());
-				row = dao.update("User.insertUpdateStatusHistory", usermbr);
-				LOGGER.debug("### insertUpdateStatusHistory row : {}", row);
-				if (row <= 0) {
-					throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
-				}
-			}
-
-			// ACTION 6-2. 휴대기기 보유 카운트 감소
-			row = dao.update("Device.updateCountDevice2", userMbrDevice);
-			LOGGER.debug("### Device.updateCountMinus row : {}", row);
-			lastDeviceKey = userMbrDevice.getDeviceKey();
-
-			// ACTION 6-3. 휴대기기 설정정보 초기화
+			// ACTION 6. 휴대기기 설정정보 초기화
 			UserMbrDeviceSet userMbrDeviceSet = new UserMbrDeviceSet();
 			userMbrDeviceSet.setUserKey(userKey);
 			userMbrDeviceSet.setDeviceKey(deviceKeyList.get(i));
 			userMbrDeviceSet.setPinNo("");
 			userMbrDeviceSet.setAuthCnt("0");
 			userMbrDeviceSet.setAuthLockYn("N");
-			this.commonDAO.delete("DeviceSet.modifyDeviceSet", userMbrDeviceSet);
+			// TODO 테이블 변경 사항 확인!!
+//			this.commonDAO.delete("DeviceSet.modifyDeviceSet", userMbrDeviceSet);
 		}
 
 		// TLog

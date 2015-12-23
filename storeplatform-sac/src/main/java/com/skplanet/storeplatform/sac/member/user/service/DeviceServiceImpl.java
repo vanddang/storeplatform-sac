@@ -1355,7 +1355,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -1378,7 +1377,7 @@ public class DeviceServiceImpl implements DeviceService {
 		List<String> removeKeyList = new ArrayList<String>();
 		for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
 
-			UserInfo userInfo = this.commService.getUserBaseInfo("deviceId", id.getDeviceId(), requestHeader);
+			UserInfo userInfo = this.commService.getUserBaseInfo("mdn", id.getDeviceId(), requestHeader);
 			if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
 				throw new StorePlatformException("SAC_MEM_0006");
 			}
@@ -1388,7 +1387,7 @@ public class DeviceServiceImpl implements DeviceService {
 			String isPrimary = "";
 			String deviceKey = "";
 
-			deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, id.getDeviceId(),
+			deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN, id.getDeviceId(),
 					req.getUserKey());
 			if (deviceInfo == null) {
 				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
@@ -1398,12 +1397,12 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceKey = deviceInfo.getDeviceKey();
 
 			/* 삭제 가능여부 판단 */
-			Integer deviceCount = Integer.parseInt(userInfo.getDeviceCount());
-			if ((userInfo.getImSvcNo() != null && !"".equals(userInfo.getImSvcNo()))
-					|| userInfo.getUserType().equals(MemberConstants.USER_TYPE_IDPID)) { // 통합/IDP 회원
+			Integer deviceCount = Integer.parseInt(userInfo.getTotalDeviceCount());
+			if ((StringUtil.isNotEmpty(userInfo.getImSvcNo())
+					|| userInfo.getUserType().equals(MemberConstants.USER_TYPE_IDPID))) { // 통합/IDP 회원
 
 				/* 단말 1개이상 보유이고, 삭제할 단말이 대표기기인 경우 에러 */
-				if (deviceCount > 1 && isPrimary.equals("Y")) {
+				if (deviceCount > 1 && isPrimary.equals(MemberConstants.USE_Y)) {
 					throw new StorePlatformException("SAC_MEM_1510");
 				}
 
