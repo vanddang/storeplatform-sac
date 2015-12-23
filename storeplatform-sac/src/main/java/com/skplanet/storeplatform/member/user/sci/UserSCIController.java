@@ -974,15 +974,27 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (updatePasswordUserRequest.getCommonRequest().getTenantID() == null
-				|| updatePasswordUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, pwRegDate
 		if (updatePasswordUserRequest.getMbrPwd().getPwRegDate() == null
 				|| updatePasswordUserRequest.getMbrPwd().getPwRegDate().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		// 필수 파라미터, userKey
+		if (updatePasswordUserRequest.getMbrPwd().getMemberKey() == null
+				|| updatePasswordUserRequest.getMbrPwd().getMemberKey().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		// 필수 파라미터, oldPW
+		if (updatePasswordUserRequest.getMbrPwd().getOldPW() == null
+				|| updatePasswordUserRequest.getMbrPwd().getOldPW().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		// 필수 파라미터, memberPW
+		if (updatePasswordUserRequest.getMbrPwd().getMemberPW() == null
+				|| updatePasswordUserRequest.getMbrPwd().getMemberPW().length() <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 		}
 
@@ -993,9 +1005,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return updatePasswordUserResponse;
 
@@ -1025,12 +1034,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (resetPasswordUserRequest.getCommonRequest().getTenantID() == null
-				|| resetPasswordUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		try {
 
 			resetPasswordUserResponse = this.service.updateResetPasswordUser(resetPasswordUserRequest);
@@ -1038,9 +1041,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return resetPasswordUserResponse;
 

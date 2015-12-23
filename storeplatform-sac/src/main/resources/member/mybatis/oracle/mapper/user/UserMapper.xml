@@ -43,45 +43,48 @@
       )
     </update>
 
-    <!--  회원 비밀번호 변경.(tenantID, memberID) -->
+    <!-- 회원 비밀번호 존재여부 체크 -->
+    <select id="checkUserPassword" parameterType="chkUserPwdRequest">
+        SELECT /* UserMapper.xml, checkPasswordUser, SAC(SC), 최진호, 2015-12-23 */
+            INSD_USERMBR_NO
+        FROM
+            TB_US_OUSERMBR_PWD
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
+            AND PWD = #{userPw}
+    </select>
+
+    <!--  회원 비밀번호 변경. -->
     <update id="updatePasswordUser" parameterType="mbrPwd">
-       MERGE  /* UserMapper.updatePasswordUser,  회원 비밀번호 변경, incross_cmlee80, 2015-05-27 */
-              INTO tb_us_ousermbr_pwd u
-              USING DUAL ON 
-              (
-                    u.insd_usermbr_no  =
-                                       (
-                                           SELECT  insd_usermbr_no
-                                             FROM  tb_us_ousermbr
-                                            WHERE  mbr_id = #{memberID}
-                                              AND  mbr_status_main_cd != 'US010202'
-                                       )
-              )
-
-      /* 비밀번호가 존재하는 경우 기존 비밀번호 초기화 */
-      WHEN MATCHED THEN
-     UPDATE
-        SET  upd_dt = TO_DATE(#{pwRegDate},'YYYYMMDDHH24MISS')
-             , fail_cnt = 0
-
-      /* 비밀번호가 없는 경우 비밀번호 추가 */
-      WHEN NOT MATCHED THEN
-     INSERT 
-             (
-                   insd_usermbr_no
-                 , upd_dt
-                 , fail_cnt 
-             )
-     VALUES  (
-                 (
-                     SELECT  insd_usermbr_no
-                       FROM  tb_us_ousermbr
-                      WHERE  mbr_id = #{memberID}
-                        AND  mbr_status_main_cd != 'US010202'
-                 )
-                 ,SYSDATE
-                 ,0
-             )
+        MERGE  /* UserMapper.xml, updatePasswordUser, SAC(SC), 최진호, 2015-12-22 */
+        INTO tb_us_ousermbr_pwd u
+        USING DUAL ON
+            (
+                u.insd_usermbr_no  = #{memberKey}
+            )
+        /* 비밀번호가 존재하는 경우 신규비밀번호로 업데이트 */
+        WHEN MATCHED THEN
+            UPDATE
+                SET
+                    pwd = #{memberPW}
+                    ,upd_dt = TO_DATE(#{pwRegDate},'YYYYMMDDHH24MISS')
+                    ,fail_cnt = 0
+        /* 비밀번호가 없는 경우 비밀번호 추가 */
+        WHEN NOT MATCHED THEN
+            INSERT
+                (
+                    insd_usermbr_no
+                    ,pwd
+                    ,upd_dt
+                    ,fail_cnt
+                )
+            VALUES
+                (
+                    #{memberKey}
+                    ,#{memberPW}
+                    ,SYSDATE
+                    ,0
+                )
     </update>
 
     <!-- 사용자 정보 조회 -->
@@ -755,6 +758,17 @@
           FROM  tb_us_ousermbr
          WHERE  mbr_id = #{userID}
            AND  mbr_status_main_cd != 'US010202'
+    </select>
+
+    <!-- 사용자키 조회(userKey) -->
+    <select id="isRegisteredUserKey" parameterType="userMbr" resultType="String">
+        SELECT  /* UserMapper.xml, isRegisteredUserKey, SAC(SC), 최진호, 2015-12-22 */
+            INSD_USERMBR_NO as userKey
+        FROM
+            TB_US_OUSERMBR
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
+            AND  MBR_STATUS_MAIN_CD != 'US010202'
     </select>
     
     <!-- Key에 사용할 시퀀스 조회(사용자) -->
@@ -2255,16 +2269,5 @@
               <if test="regDt != null">,TO_DATE(#{regDt}, 'YYYYMMDDHH24MISS')</if>
               <if test="updDt != null">,TO_DATE(#{updDt}, 'YYYYMMDDHH24MISS')</if> )
     </insert>
-
-    <!-- ID, PW 일치 체크 -->
-    <select id="checkUserPwd" parameterType="chkUserPwdRequest" resultType="String">
-        SELECT /* UserMapper.xml, searchAfterUserKey, SAC(SC), 최진호, 2015-12-21 */
-            INSD_USERMBR_NO               AS userKey
-        FROM
-            TB_US_OUSERMBR_PWD
-        WHERE
-            INSD_USERMBR_NO = #{userKey}
-            AND PWD = #{userPw}
-    </select>
 
 </mapper>
