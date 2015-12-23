@@ -266,7 +266,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 		// }
 
 		// SAP
-		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
+		if (!StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
 			List<String> paymentMtdCdList = new ArrayList<String>();
 			for (PaymentInfo paymentNotiReq : notifyPaymentReq.getPaymentInfoList()) {
 				paymentMtdCdList.add(PaymethodUtil.convert2StoreCode(paymentNotiReq.getPaymentMtdCd()));
