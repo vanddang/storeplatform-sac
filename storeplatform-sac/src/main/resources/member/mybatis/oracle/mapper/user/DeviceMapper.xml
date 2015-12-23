@@ -139,23 +139,23 @@
 
     <!-- 휴대기기 단건 조회 -->
     <select id="getDevice" resultMap="getDeviceResultMap">
-            SELECT  /* DeviceMapper.getDevice, 휴대기기 단건 조회, 황정택/와이즈스톤, 2013-12-05 */
+            SELECT  /* DeviceMapper.xml, getDevice, SAC(SC), 윤보영, 2015-12-23 */
                     insd_usermbr_no
                     , insd_device_id
                     , device_id
-                    , mdn
                     , device_model_cd
                     , mno_cd
+                    , mdn
                     , rep_device_yn
                     , TO_CHAR( auth_dt,'YYYYMMDDHH24MISS') AS auth_dt
-                    , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS')
                     , sms_recv_yn
                     , device_natv_id
-                    , svc_mang_no
-                    , entry_chnl_cd
                     , device_sim_nm
+                    , entry_chnl_cd
+                    , svc_mang_no
+                    , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS') AS upd_dt
                     , last_login_dt
-              FROM  tb_us_usermbr_device
+              FROM  tb_us_ousermbr_device
              WHERE  auth_yn = 'Y'
                 AND insd_usermbr_no = #{userKey}
             <if test="isMainDevice != null and isMainDevice.equalsIgnoreCase('Y')">
@@ -170,8 +170,8 @@
             <if test="keyType != null and keyType.equals('SVC_MANG_NO')">
                 AND svc_mang_no = #{keyString}
             </if>
-            <if test="keySearch.keyType.equalsIgnoreCase('MDN')">
-                AND mdn = #{keySearch.keyString}
+            <if test="keyType != null and keyType.equals('MDN')">
+                AND mdn = #{keyString}
             </if>
     </select>
     
@@ -374,7 +374,7 @@
     
     <!-- 휴대기기 삭제 -->
     <update id="removeDevice" parameterType="userMbrDevice">
-       UPDATE /* DeviceMapper.removeDevice, 휴대기기 삭제, 황정택/와이즈스톤, 2013-12-20 */
+       UPDATE /* DeviceMapper.xml, removeDevice, SAC(SC), 윤보영, 2015-12-20 */
        tb_us_ousermbr_device
           SET auth_yn = #{isUsed},
               rep_device_yn = 'N',
@@ -421,7 +421,7 @@
         
     <!-- 휴대기기 Key 조회(userKey, deviceKey로 조회) -->
     <select id="isRegisteredKey" parameterType="userMbrDevice" resultType="String">
-        SELECT /* DeviceMapper.isRegisteredKey, 휴대기기 Key 조회(userKey, deviceKey로 조회), 황정택/와이즈스톤, 2013-12-23 */
+        SELECT /* DeviceMapper.xml, isRegisteredKey, 휴대기기 Key 조회(userKey, deviceKey로 조회), 황정택/와이즈스톤, 2013-12-23 */
                insd_device_id AS deviceKey
         FROM tb_us_ousermbr_device
         WHERE insd_device_id = #{deviceKey}
@@ -429,7 +429,7 @@
         <if test="userKey != null">AND insd_usermbr_no = #{userKey}</if>
     </select>
     
-    <!-- 휴대기기 Key 조회(userKey, deviceKey로 조회) -->
+    <!-- 휴대기기 Key 조회(userKey, deviceKey로 조회), 사용 안함 (삭제 예정), 윤보영-->
     <select id="isRegisteredKeyAndID" parameterType="userMbrDevice" resultType="userMbrDevice">
         SELECT  /* DeviceMapper.isRegisteredKeyAndID, 휴대기기 Key 조회(userKey, deviceKey로 조회), 황정택/와이즈스톤, 2013-12-23 */
                     DISTINCT(l.nativeID) AS nativeID
@@ -604,54 +604,54 @@
     
     <!-- 휴대기기 이력 테이블 insert -->
     <update id="insertUpdateDeviceHistory" parameterType="userMbrDevice">
-        INSERT /* DeviceMapper.insertUpdateDeviceHistory, device 변경 히스토리 추가, 황정택/와이즈스톤, 2014-01-15 */
+        INSERT /* DeviceMapper.xml, insertUpdateDeviceHistory, SAC(SC), 윤보영, 2015-12-23 */
                INTO tb_us_ousermbr_device_his (
-                   seq, 
-                   insd_usermbr_no, 
+                   seq,
+                   insd_usermbr_no,
                    insd_device_id,
                    start_dt,
                    end_dt,
                    device_id,
-                   mdn, 
-                   device_model_cd, 
-                   mno_cd, 
-                   rep_device_yn, 
+                   device_model_cd,
+                   mno_cd,
+                   mdn,
+                   rep_device_yn,
                    auth_yn,
                    auth_dt,
                    upd_dt,
                    sms_recv_yn,
-                   device_natv_id, 
+                   device_natv_id,
+                   device_sim_nm,
                    entry_chnl_cd,
-                   ins_dt, 
-                   svc_mang_no, 
+                   ins_dt,
+                   svc_mang_no,
                    reg_dt,
-                   chg_case_cd,
-                   last_login_dt
+                   chg_case_cd
                )
         SELECT sq_us_ousermbr_device_his.NEXTVAL AS seq,
-               insd_usermbr_no, 
-               insd_device_id,
-               start_dt,
-               SYSDATE, /* end_dt */
-               device_id,
-               mdn,
-               device_model_cd, 
-               mno_cd, 
-               rep_device_yn, 
-               auth_yn,
-               auth_dt,
-               SYSDATE, /* upd_dt */
-               sms_recv_yn,
-               device_natv_id, 
-               entry_chnl_cd,
-               SYSDATE, 
-               svc_mang_no, 
-               reg_dt,
-               chg_case_cd,
-               last_login_dt
-          FROM tb_us_ousermbr_device 
-         WHERE insd_usermbr_no = #{userKey}
-           AND insd_device_id = #{deviceKey}
+              insd_usermbr_no,
+              insd_device_id,
+              start_dt,
+              SYSDATE,                                                /* end_dt */
+              device_id,
+              device_model_cd,
+              mno_cd,
+              mdn,
+              rep_device_yn,
+              auth_yn,
+              auth_dt,
+              SYSDATE,                                                /* upd_dt */
+              sms_recv_yn,
+              device_natv_id,
+              DEVICE_SIM_NM,
+              entry_chnl_cd,
+              SYSDATE,
+              svc_mang_no,
+              reg_dt,
+              chg_case_cd
+         FROM tb_us_ousermbr_device
+        WHERE insd_usermbr_no = #{userKey}
+          AND insd_device_id = #{deviceKey}
     </update>
     
     <!-- 휴대기기 이력 테이블 insert -->
@@ -765,17 +765,17 @@
        WHERE insd_usermbr_no = #{userKey}
     </update>
     
-    <!-- 휴대기기 보유 카운트 업데이트 -->
-    <update id="updateCountDevice2" parameterType="userMbrDevice">
-       UPDATE /* DeviceMapper.updateCountDevice2,  휴대기기 보유 카운트 증가, 황정택/와이즈스톤, 2013-12-26 */
-       tb_us_ousermbr
-          SET device_reg_cnt = (SELECT COUNT(*)
-                                FROM tb_us_ousermbr_device 
-                                WHERE insd_usermbr_no = #{userKey} 
-                                      AND auth_yn = 'Y'),
-              upd_dt = SYSDATE
-       WHERE insd_usermbr_no = #{userKey}
-    </update>
+    <!-- 휴대기기 보유 카운트 업데이트, schema 변경으로 삭제 처리 -->
+    <!--<update id="updateCountDevice2" parameterType="userMbrDevice">-->
+       <!--UPDATE /* DeviceMapper.updateCountDevice2,  휴대기기 보유 카운트 증가, 황정택/와이즈스톤, 2013-12-26 */-->
+       <!--tb_us_ousermbr-->
+          <!--SET device_reg_cnt = (SELECT COUNT(*)-->
+                                <!--FROM tb_us_ousermbr_device -->
+                                <!--WHERE insd_usermbr_no = #{userKey} -->
+                                      <!--AND auth_yn = 'Y'),-->
+              <!--upd_dt = SYSDATE-->
+       <!--WHERE insd_usermbr_no = #{userKey}-->
+    <!--</update>-->
     
     <!-- 휴대기기 속성의 auth_yn = N -->
     <update id="doCancelDevice" parameterType="userMbrDevice">
