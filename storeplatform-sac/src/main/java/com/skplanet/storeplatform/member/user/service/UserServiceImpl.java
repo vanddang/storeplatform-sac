@@ -2739,19 +2739,6 @@ public class UserServiceImpl implements UserService {
 			resultMbrMangItemPtcrList = new ArrayList<MbrMangItemPtcr>();
 		}
 
-		// 2014-12-01. vanddang 원아이디인 경우 원아이디 가입상태코드 조회 추가
-		if (StringUtils.isNotBlank(resultUserMbr.getImSvcNo())) {
-			MbrOneID mbrOneID = new MbrOneID();
-			mbrOneID.setIntgSvcNumber(resultUserMbr.getImSvcNo());
-			mbrOneID.setTenantID(searchExtentUserRequest.getCommonRequest().getTenantID());
-			mbrOneID = dao.queryForObject("User.getOneIDDetail", mbrOneID, MbrOneID.class);
-			if (mbrOneID != null) {
-				if (StringUtils.isNotBlank(mbrOneID.getEntryStatusCode())) {
-					resultUserMbr.setEntryStatusCode(mbrOneID.getEntryStatusCode());
-				}
-			}
-		}
-
 		searchExtentUserResponse.setUserMbr(resultUserMbr);
 		searchExtentUserResponse.setMbrMangItemPtcrList(resultMbrMangItemPtcrList);
 
@@ -2772,7 +2759,6 @@ public class UserServiceImpl implements UserService {
 			UserMbrPnsh userMbrPnsh = new UserMbrPnsh();
 			userMbrPnsh.setUserKey(userKey);
 			userMbrPnsh.setIsDormant(isDormant); // 휴면계정인경우 null 리턴
-			userMbrPnsh.setTenantID(searchExtentUserRequest.getCommonRequest().getTenantID());
 
 			resultUserMbrPnsh = dao.queryForObject("User.getUserPunish", userMbrPnsh, UserMbrPnsh.class);
 		}
@@ -2789,7 +2775,6 @@ public class UserServiceImpl implements UserService {
 		if (StringUtils.equals(Constant.TYPE_YN_Y, searchExtentUserRequest.getMbrLglAgentInfoYn())) {
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserKey(userKey);
-			userMbr.setTenantID(searchExtentUserRequest.getCommonRequest().getTenantID());
 			resultMbrLglAgent = dao.queryForObject("User.getRealNameParent", userMbr, MbrLglAgent.class);
 		}
 
@@ -2805,7 +2790,6 @@ public class UserServiceImpl implements UserService {
 		if (StringUtils.equals(Constant.TYPE_YN_Y, searchExtentUserRequest.getMbrAuthInfoYn())) {
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserKey(userKey);
-			userMbr.setTenantID(searchExtentUserRequest.getCommonRequest().getTenantID());
 			resultMbrAuth = dao.queryForObject("User.getRealNameOwn", userMbr, MbrAuth.class);
 		}
 
@@ -2821,7 +2805,6 @@ public class UserServiceImpl implements UserService {
 		if (StringUtils.equals(Constant.TYPE_YN_Y, searchExtentUserRequest.getGradeInfoYn())) {
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserKey(userKey);
-			userMbr.setTenantID(searchExtentUserRequest.getCommonRequest().getTenantID());
 			resultGrade = this.commonDAO.queryForObject("User.getUserGrade", userMbr, Grade.class);
 
 			// 회원 등급 미존재시 Default : gold
@@ -3222,26 +3205,26 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * <pre>
-	 * 사용자 실명인증 정보 초기화.
+	 * 사용자 성인인증 정보 초기화.
 	 * </pre>
 	 * 
 	 * @param updateRealNameRequest
-	 *            사용자 실명인증 정보 수정 요청 Value Object
-	 * @return UpdateRealNameResponse - 사용자 실명인증 정보 수정 응답 Value Object
+	 *            사용자 성인인증 정보 수정 요청 Value Object
+	 * @return UpdateRealNameResponse - 사용자 성인인증 정보 수정 응답 Value Object
 	 */
 	@Override
 	public UpdateRealNameResponse executeInitRealName(UpdateRealNameRequest updateRealNameRequest) {
 
 		LOGGER.debug("\n\n\n\n\n");
 		LOGGER.debug("==================================================================================");
-		LOGGER.debug("서비스 - 실명인증 정보 초기화");
+		LOGGER.debug("서비스 - 성인인증 정보 초기화");
 		LOGGER.debug("==================================================================================\n\n\n\n\n");
 
 		UserMbr usermbr = new UserMbr();
 		usermbr.setTenantID(updateRealNameRequest.getCommonRequest().getTenantID());
 		usermbr.setUserKey(updateRealNameRequest.getUserKey());
 
-		// 실명인증 정보 제거
+		// 성인인증 정보 제거
 		Integer row = this.commonDAO.delete("User.removeUserMbrAuth", usermbr);
 		LOGGER.debug("### removeUserMbrAuth row : {}", row);
 
@@ -3252,7 +3235,7 @@ public class UserServiceImpl implements UserService {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 		}
 
-		// 실명인증 초기화 update
+		// 성인인증 초기화 update
 		row = this.commonDAO.update("User.updateInitRealName", updateRealNameRequest);
 		if (row <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));

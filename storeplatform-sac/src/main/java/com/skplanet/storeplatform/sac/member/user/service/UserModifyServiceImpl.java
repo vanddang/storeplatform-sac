@@ -733,7 +733,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 	/**
 	 * <pre>
-	 * 실명 인증 정보 초기화.
+	 * 성인 인증 정보 초기화.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -748,24 +748,29 @@ public class UserModifyServiceImpl implements UserModifyService {
 		searchUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 		/**
-		 * 회원 정보 조회 - 실명 인증 정보 조회
+		 * 회원 정보 조회 - 성인 인증 정보 조회
 		 */
-		DetailReq detailReq = new DetailReq();
-		detailReq.setUserKey(req.getUserKey());
-		SearchExtentReq searchExtent = new SearchExtentReq();
-		searchExtent.setMbrAuthInfoYn(MemberConstants.USE_Y);
-		detailReq.setSearchExtent(searchExtent);
-		DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		searchExtentUserRequest.setCommonRequest(commonRequest);
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+		searchExtentUserRequest.setMbrAuthInfoYn(MemberConstants.USE_Y);
+		SearchExtentUserResponse detailRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
 
 		/**
-		 * 실명 인증 정보가 존재하지 않을 경우
+		 * 성인인증 정보가 존재하지 않을 경우
 		 */
 		if (StringUtil.equals(detailRes.getMbrAuth().getIsRealName(), Constant.TYPE_YN_N)) {
-			throw new StorePlatformException("SAC_MEM_0002", "실명 인증");
+			throw new StorePlatformException("SAC_MEM_0002", "성인 인증");
 		}
 
 		/**
-		 * 실명인증 초기화 기본 req setting.
+		 * 성인인증 초기화 기본 req setting.
 		 */
 		UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
 		updateRealNameRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
