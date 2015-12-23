@@ -27,7 +27,6 @@ import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
 import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
 import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
 import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1472,23 +1471,9 @@ public class UserServiceImpl implements UserService {
 		} else {
 			dao = this.idleDAO;
 		}
-		// userID가 존재하는지 여부 확인
-		String isRegistered = null;
-		UserMbr usermbr = new UserMbr();
-		usermbr.setTenantID(updatePasswordUserRequest.getCommonRequest().getTenantID());
-		usermbr.setUserID(updatePasswordUserRequest.getMbrPwd().getMemberID());
-		isRegistered = dao.queryForObject("User.isRegisteredUserID", usermbr, String.class);
-		if (isRegistered == null || isRegistered.length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
-		}
-
-		updatePasswordUserRequest.getMbrPwd().setTenantID(updatePasswordUserRequest.getCommonRequest().getTenantID());
-
-		LOGGER.debug("### tenantID : {}", updatePasswordUserRequest.getMbrPwd().getTenantID());
-		LOGGER.debug("### memberID : {}", updatePasswordUserRequest.getMbrPwd().getMemberID());
 
 		Integer row = dao.update("User.updatePasswordUser", updatePasswordUserRequest.getMbrPwd());
-		LOGGER.debug("### updateStatus row : {}", row);
+
 		if (row == 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
@@ -1496,7 +1481,7 @@ public class UserServiceImpl implements UserService {
 		UpdatePasswordUserResponse updatePasswordUserResponse = new UpdatePasswordUserResponse();
 		updatePasswordUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
-		updatePasswordUserResponse.setUserKey(isRegistered);
+		updatePasswordUserResponse.setUserKey(updatePasswordUserRequest.getMbrPwd().getMemberKey());
 		return updatePasswordUserResponse;
 
 	}
@@ -3988,10 +3973,14 @@ public class UserServiceImpl implements UserService {
 
 		CheckUserPwdResponse checkUserPwdResponse = new CheckUserPwdResponse();
 
-		if(StringUtil.equals(chkUserPwdRequest.getIsDormant(), "N")) {
-			checkUserPwdResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserPwd", chkUserPwdRequest));
+		if(StringUtils.equals(chkUserPwdRequest.getIsDormant(), "N")) {
+			checkUserPwdResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
 		}else{
-			checkUserPwdResponse.setUserKey((String) this.idleDAO.queryForObject("User.checkUserPwd", chkUserPwdRequest));
+			checkUserPwdResponse.setUserKey((String) this.idleDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
+		}
+
+		if( checkUserPwdResponse.getUserKey() == null || checkUserPwdResponse.getUserKey().length() <= 0 ){
+			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
 		}
 
 		checkUserPwdResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
