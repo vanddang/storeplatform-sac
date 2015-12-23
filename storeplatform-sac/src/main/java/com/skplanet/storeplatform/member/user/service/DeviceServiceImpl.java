@@ -245,7 +245,7 @@ public class DeviceServiceImpl implements DeviceService {
 				updateMbrDevice.setUserKey(searchDeviceResponse.getUserKey());
 				updateMbrDevice.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
 				updateMbrDevice.setMdn("");
-				updateMbrDevice.setDeviceSimMn("");
+				updateMbrDevice.setDeviceSimNm("");
 				updateMbrDevice.setNativeID("");
 				this.commonDAO.update("Device.updateDevice", updateMbrDevice);
 			}
@@ -355,7 +355,7 @@ public class DeviceServiceImpl implements DeviceService {
 					updateMbrDevice.setUserKey(userKey);
 					updateMbrDevice.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
 					updateMbrDevice.setMdn(createDeviceRequest.getUserMbrDevice().getMdn());
-					updateMbrDevice.setDeviceSimMn(createDeviceRequest.getUserMbrDevice().getDeviceSimMn());
+					updateMbrDevice.setDeviceSimNm(createDeviceRequest.getUserMbrDevice().getDeviceSimNm());
 					updateMbrDevice.setNativeID(createDeviceRequest.getUserMbrDevice().getNativeID());
 					updateMbrDevice.setDeviceTelecom(createDeviceRequest.getUserMbrDevice().getDeviceTelecom());
 					updateMbrDevice.setSvcMangNum(createDeviceRequest.getUserMbrDevice().getSvcMangNum());
@@ -369,7 +369,7 @@ public class DeviceServiceImpl implements DeviceService {
 			updateMbrDevice.setUserKey(userKey);
 			updateMbrDevice.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
 			updateMbrDevice.setMdn(createDeviceRequest.getUserMbrDevice().getMdn());
-			updateMbrDevice.setDeviceSimMn(createDeviceRequest.getUserMbrDevice().getDeviceSimMn());
+			updateMbrDevice.setDeviceSimNm(createDeviceRequest.getUserMbrDevice().getDeviceSimNm());
 			updateMbrDevice.setNativeID(createDeviceRequest.getUserMbrDevice().getNativeID());
 			updateMbrDevice.setDeviceTelecom(createDeviceRequest.getUserMbrDevice().getDeviceTelecom());
 			updateMbrDevice.setSvcMangNum(createDeviceRequest.getUserMbrDevice().getSvcMangNum());
@@ -384,7 +384,6 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceResponse.setPreviousDeviceKey(previousDeviceKey);
 		createDeviceResponse.setPreUserKey(preUserKey);
 		createDeviceResponse.setPreDeviceKey(preDeviceKey);
-		createDeviceResponse.setPreMbrNo(null);
 
 		return createDeviceResponse;
 	}
@@ -507,7 +506,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 			// ACTION 6-3. 휴대기기 설정정보 초기화
 			UserMbrDeviceSet userMbrDeviceSet = new UserMbrDeviceSet();
-			userMbrDeviceSet.setTenantID(tenantID);
 			userMbrDeviceSet.setUserKey(userKey);
 			userMbrDeviceSet.setDeviceKey(deviceKeyList.get(i));
 			userMbrDeviceSet.setPinNo("");

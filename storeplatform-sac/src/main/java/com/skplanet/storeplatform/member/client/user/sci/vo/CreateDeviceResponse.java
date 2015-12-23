@@ -61,9 +61,6 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	/** 기존 사용자 Key. */
 	private String previousUserKey;
 
-	/** 이전 사용자회원번호. */
-	private String preMbrNo; // PRE_USERMBR_NO
-
 	/** 이전 디바이스 key. */
 	private String preDeviceKey;
 	/** 이전 사용자 key. */
@@ -158,25 +155,6 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	 */
 	public void setPreviousUserKey(String previousUserKey) {
 		this.previousUserKey = previousUserKey;
-	}
-
-	/**
-	 * 이전 사용자회원번호를 리턴한다.
-	 * 
-	 * @return preMbrNo - 이전 사용자회원번호
-	 */
-	public String getPreMbrNo() {
-		return this.preMbrNo;
-	}
-
-	/**
-	 * 이전 사용자회원번호를 설정한다.
-	 * 
-	 * @param preMbrNo
-	 *            이전 사용자회원번호
-	 */
-	public void setPreMbrNo(String preMbrNo) {
-		this.preMbrNo = preMbrNo;
 	}
 
 	/**

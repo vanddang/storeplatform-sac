@@ -169,9 +169,6 @@ public class LoginServiceImpl implements LoginService {
 	private DeviceSCI deviceSCI;
 
 	@Autowired
-	private MarketSCI marketSCI;
-
-	@Autowired
 	private MemberCommonInternalComponent mcic;
 
 	@Autowired
@@ -266,7 +263,7 @@ public class LoginServiceImpl implements LoginService {
 					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 					moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
-					moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
+					//moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
 					this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 				}
 
@@ -566,7 +563,7 @@ public class LoginServiceImpl implements LoginService {
 					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 					moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
-					moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
+					//moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
 					this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 				}
 
@@ -1008,8 +1005,8 @@ public class LoginServiceImpl implements LoginService {
 				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 				moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
-				moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
-				moveUserInfoSacReq.setIdpErrCd(null);
+				//moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
+				//moveUserInfoSacReq.setIdpErrCd(null);
 				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 			}
 
@@ -1202,7 +1199,21 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 
 			/* 휴대기기 헤더 정보 셋팅 */
-			deviceInfo = this.deviceService.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+			/* device header 값 셋팅(OS버젼, SC버젼) */
+			String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
+			String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
+			if (StringUtils.isNotBlank(osVersion)) {
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+						osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
+						deviceInfo.getDeviceExtraInfoList()));
+			}
+			if (StringUtils.isNotBlank(svcVersion)) {
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
+						MemberConstants.DEVICE_EXTRA_SCVERSION,
+						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
+						deviceInfo.getDeviceExtraInfoList()));
+			}
+
 			/* 휴대기기 주요정보 조회 */
 			MajorDeviceInfo majorDeviceInfo = this.commService
 					.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
@@ -1302,8 +1313,20 @@ public class LoginServiceImpl implements LoginService {
 			}
 			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 
-			/* 휴대기기 헤더 정보 셋팅 */
-			deviceInfo = this.deviceService.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+			/* device header 값 셋팅(OS버젼, SC버젼) */
+			String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
+			String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
+			if (StringUtils.isNotBlank(osVersion)) {
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+						osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
+						deviceInfo.getDeviceExtraInfoList()));
+			}
+			if (StringUtils.isNotBlank(svcVersion)) {
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
+						MemberConstants.DEVICE_EXTRA_SCVERSION,
+						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
+						deviceInfo.getDeviceExtraInfoList()));
+			}
 
 			/* 휴대기기 주요정보 조회 */
 			MajorDeviceInfo majorDeviceInfo = this.commService
@@ -1581,7 +1604,7 @@ public class LoginServiceImpl implements LoginService {
 		LOGGER.info("{} authorizeForOllehMarket Request : {}", req.getDeviceId(),
 				ConvertMapperUtils.convertObjectToJson(marketReq));
 
-		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
+		MarketAuthorizeEcRes marketRes = this.commService.simpleAuthorizeForOllehMarket(marketReq);
 
 		AuthorizeForOllehMarketSacRes res = new AuthorizeForOllehMarketSacRes();
 
@@ -1861,7 +1884,7 @@ public class LoginServiceImpl implements LoginService {
 		LOGGER.info("{} authorizeForUplusStore Request : {}", req.getDeviceId(),
 				ConvertMapperUtils.convertObjectToJson(marketReq));
 
-		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+		MarketAuthorizeEcRes marketRes = this.commService.simpleAuthorizeForUplusStore(marketReq);
 
 		AuthorizeForUplusStoreSacRes res = new AuthorizeForUplusStoreSacRes();
 
@@ -2251,11 +2274,11 @@ public class LoginServiceImpl implements LoginService {
 					ConvertMapperUtils.convertObjectToJson(marketReq));
 
 			if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, req.getTenantId())) {
-				marketRes = this.marketSCI.authorizeForOllehMarket(marketReq);
+				marketRes = this.commService.authorizeForOllehMarket(marketReq);
 				LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(),
 						ConvertMapperUtils.convertObjectToJson(marketRes));
 			} else if (StringUtils.equals(MemberConstants.TENANT_ID_UPLUS_STORE, req.getTenantId())) {
-				marketRes = this.marketSCI.authorizeForUplusStore(marketReq);
+				marketRes = this.commService.authorizeForUplusStore(marketReq);
 				LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(),
 						ConvertMapperUtils.convertObjectToJson(marketRes));
 			}
@@ -3313,11 +3336,11 @@ public class LoginServiceImpl implements LoginService {
 				ConvertMapperUtils.convertObjectToJson(marketReq));
 
 		if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, tenantId)) {
-			marketRes = this.marketSCI.authorizeForOllehMarket(marketReq);
+			marketRes = this.commService.authorizeForOllehMarket(marketReq);
 			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(),
 					ConvertMapperUtils.convertObjectToJson(marketRes));
 		} else if (StringUtils.equals(MemberConstants.TENANT_ID_UPLUS_STORE, tenantId)) {
-			marketRes = this.marketSCI.authorizeForUplusStore(marketReq);
+			marketRes = this.commService.authorizeForUplusStore(marketReq);
 			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(),
 					ConvertMapperUtils.convertObjectToJson(marketRes));
 		}
@@ -3751,7 +3774,7 @@ public class LoginServiceImpl implements LoginService {
 		userMbrDevice.setDeviceID(marketRes.getDeviceId()); // 기기 ID
 		userMbrDevice.setDeviceTelecom(marketRes.getDeviceTelecom()); // 이동 통신사
 		userMbrDevice.setDeviceModelNo(MemberConstants.DP_ANY_PHONE_4APP); // 단말 모델
-		userMbrDevice.setDeviceNickName(MemberConstants.DP_ANY_PHONE_4APP_NM); // 단말닉네임
+		//userMbrDevice.setDeviceNickName(MemberConstants.DP_ANY_PHONE_4APP_NM); // 단말닉네임
 		userMbrDevice.setNativeID(nativeId); // 기기고유 ID (imei)
 		userMbrDevice.setIsPrimary(MemberConstants.USE_Y); // 대표기기 유무
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
@@ -4096,8 +4119,6 @@ public class LoginServiceImpl implements LoginService {
 			MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 			moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 			moveUserInfoSacReq.setUserKey(userMbr.getUserKey());
-			moveUserInfoSacReq.setIdpResultYn(idpResultYn);
-			moveUserInfoSacReq.setIdpErrCd(idpResultErrorCode);
 			this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 		}
 	}
@@ -4144,7 +4165,7 @@ public class LoginServiceImpl implements LoginService {
 
 				LOGGER.info("{} authorizeForUplusStore Request : {}", deviceId,
 						ConvertMapperUtils.convertObjectToJson(marketReq));
-				marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+				marketRes = this.commService.simpleAuthorizeForUplusStore(marketReq);
 				LOGGER.info("{} authorizeForUplusStore Response : {}", deviceId,
 						ConvertMapperUtils.convertObjectToJson(marketRes));
 

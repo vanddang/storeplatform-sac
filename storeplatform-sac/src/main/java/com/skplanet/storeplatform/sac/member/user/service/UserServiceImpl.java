@@ -218,21 +218,7 @@ public class UserServiceImpl implements UserService {
 		// Constant.USERMBR_MOVE_TYPE_ACTIVATE(정상 처리), Constant.USERMBR_MOVE_TYPE_DORMANT(휴면 처리)
 		moveUserInfoRequest.setMoveType(moveUserInfoSacReq.getMoveType());
 
-		moveUserInfoRequest.setIdpResultYn(moveUserInfoSacReq.getIdpResultYn());
-		moveUserInfoRequest.setIdpErrCd(moveUserInfoSacReq.getIdpErrCd());
 		MoveUserInfoResponse moveUserInfoResponse = this.userSCI.executeMoveUserMbr(moveUserInfoRequest);
-
-		// IDP 결과값이 N일 경우 이력만 저장하고 return.
-		// IDP ERROR CODE가 2031, 2031X000 : 변경 요청된 상태값과 현재의 상태값이 같습니다 오류가 아닐 경우
-		if (StringUtils.equals(moveUserInfoSacReq.getIdpResultYn(), MemberConstants.USE_N)
-				&& !StringUtils.equals(moveUserInfoSacReq.getIdpErrCd(), IdpConstants.IDP_RES_CODE_STATUS_ALREAY_APPLY)
-				&& !StringUtils.equals(moveUserInfoSacReq.getIdpErrCd(),
-						ImIdpConstants.IDP_RES_CODE_STATUS_ALREAY_APPLY)) {
-			MoveUserInfoSacRes moveUserInfoSacRes = new MoveUserInfoSacRes();
-			moveUserInfoSacRes.setUserKey(moveUserInfoResponse.getUserKey());
-
-			return moveUserInfoSacRes;
-		}
 
 		// 전환 처리가 SUCCESS && 휴면계정 상태 해제 && 메일 계정이 있을 경우 휴면계정 상태 해제 메일 발송
 		if (StringUtils.equals(moveUserInfoSacReq.getUserKey(), moveUserInfoResponse.getUserKey())) {

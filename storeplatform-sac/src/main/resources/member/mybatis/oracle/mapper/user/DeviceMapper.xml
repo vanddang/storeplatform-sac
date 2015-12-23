@@ -153,6 +153,8 @@
                     , device_natv_id
                     , svc_mang_no
                     , entry_chnl_cd
+                    , device_sim_nm
+                    , last_login_dt
               FROM  tb_us_usermbr_device
              WHERE  auth_yn = 'Y'
                 AND insd_usermbr_no = #{userKey}
@@ -256,6 +258,7 @@
                    <if test="keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') ">AND insd_device_id =  #{keySearch.keyString} </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID') ">AND device_id =  #{keySearch.keyString} </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('MDN') ">AND mdn =  #{keySearch.keyString} </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') ">AND svc_mang_no =  #{keySearch.keyString} </if>
                </foreach>
                 ) u
     </select>

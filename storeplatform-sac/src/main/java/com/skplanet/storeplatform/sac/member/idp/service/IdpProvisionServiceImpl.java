@@ -176,12 +176,12 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					} else {
 						modelCd = device.getDeviceModelCd();
 						// 저장된 정보가 미지원단말인경우 디폴트 모델명을 닉네임으로 셋팅
-						if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(),
+						/*if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(),
 								MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
 								&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(),
 										MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 							deviceNickName = device.getModelNm();
-						}
+						}*/
 					}
 				}
 
@@ -194,7 +194,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userMbrDevice.setDeviceModelNo(modelCd);
 				userMbrDevice.setSvcMangNum(svcMngNum);
 				userMbrDevice.setDeviceTelecom(deviceTelecom);
-				userMbrDevice.setDeviceNickName(deviceNickName);
+				//userMbrDevice.setDeviceNickName(deviceNickName);
 				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
 
 				if (StringUtils.isNotBlank(uacd)) {
@@ -252,12 +252,12 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 						modelCd = device.getDeviceModelCd();
 						// 저장된 정보가 미지원단말인경우 디폴트 모델명을 닉네임으로 셋팅
-						if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(),
+						/*if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(),
 								MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
 								&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(),
 										MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 							deviceNickName = device.getModelNm();
-						}
+						}*/
 						if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
 
 							/* 테스트 단말여부 확인 */
@@ -308,7 +308,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userMbrDevice.setDeviceModelNo(modelCd);
 				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
 				userMbrDevice.setDeviceTelecom(deviceTelecom);
-				userMbrDevice.setDeviceNickName(deviceNickName);
+				//userMbrDevice.setDeviceNickName(deviceNickName);
 
 				if (StringUtils.isNotBlank(uacd)) {
 					List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
@@ -529,12 +529,12 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 				modelCd = device.getDeviceModelCd();
 				// 저장된 정보가 미지원단말인경우 디폴트 모델명을 닉네임으로 셋팅
-				if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(),
+				/*if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(),
 						MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
 						&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(),
 								MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 					deviceNickName = device.getModelNm();
-				}
+				}*/
 
 				if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
 
@@ -593,7 +593,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			userMbrDevice.setDeviceKey(deviceKey);
 			userMbrDevice.setDeviceModelNo(modelCd);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
-			userMbrDevice.setDeviceNickName(deviceNickName);
+			//userMbrDevice.setDeviceNickName(deviceNickName);
 			/*
 			 * 기기변경시 nativeId 가 변경되어 변동성 확인 API에서 지메일까지 불일치 하면 회원이 탈퇴처리 되므로 기기변경프로비져닝에서 변경된 기기의 nativeId를 업데이트 한다.
 			 */
@@ -1191,7 +1191,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 									modifyDevice.setDeviceKey(userMbrDevice.getDeviceKey());
 									modifyDevice.setDeviceID(deviceId);
 									modifyDevice.setDeviceModelNo(deviceModelNo);
-									if (device == null) {
+									/*if (device == null) {
 										modifyDevice.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
 									} else {
 										modifyDevice.setDeviceTelecom(this.mcc.convertDeviceTelecomCode(deviceTelecom));
@@ -1202,7 +1202,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 														MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 											modifyDevice.setDeviceNickName(device.getModelNm());
 										}
-									}
+									}*/
 
 									modifyDevice.setSvcMangNum(svcMangNum);
 
@@ -1319,7 +1319,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 								modifyDevice.setDeviceKey(userMbrDevice.getDeviceKey());
 								modifyDevice.setDeviceID(deviceId);
 								modifyDevice.setDeviceModelNo(deviceModelNo);
-								if (device == null) {
+								/*if (device == null) {
 									modifyDevice.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
 								} else {
 									modifyDevice.setDeviceTelecom(this.mcc.convertDeviceTelecomCode(deviceTelecom));
@@ -1330,7 +1330,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 													MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 										modifyDevice.setDeviceNickName(device.getModelNm());
 									}
-								}
+								}*/
 								modifyDevice.setSvcMangNum(svcMangNum);
 
 								List<UserMbrDeviceDetail> modifyDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();

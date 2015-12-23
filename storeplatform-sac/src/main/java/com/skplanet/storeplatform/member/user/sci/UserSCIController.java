@@ -2628,12 +2628,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		// if (searchExtentUserRequest.getCommonRequest().getTenantID() == null
-		// || searchExtentUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		// }
-
 		// 필수 파라미터, keySearchList
 		if (searchExtentUserRequest.getKeySearchList() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -2950,12 +2944,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (updateRealNameRequest.getCommonRequest().getTenantID() == null
-				|| updateRealNameRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, UserKey
 		if (updateRealNameRequest.getUserKey() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -3057,44 +3045,9 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 		}
 
-		// 필수 파라미터, IdpResultYn
-		if (moveUserInfoRequest.getIdpResultYn() == null) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-		}
-
-		// IdpResultYn 값 검사 ("Y" : 성공, "N" : 실패)
-		if (!moveUserInfoRequest.getIdpResultYn().equals(Constant.TYPE_YN_Y)
-				&& !moveUserInfoRequest.getIdpResultYn().equals(Constant.TYPE_YN_N)) {
-			throw new StorePlatformException(this.getMessage("response.ResultMessage.wrongKeyType", ""));
-		}
-
-		// IdpResultYn 값이 'N' 인 경우 로그만 DB 저장, idpErrCd는 idpResultYn이 'N' 인 경우만 저장
-		// IDP ERROR CODE가 2031, 2031X000 : 변경 요청된 상태값과 현재의 상태값이 같습니다. 오류가 아닐 경우.
-		if (moveUserInfoRequest.getIdpResultYn().equals(Constant.TYPE_YN_N)
-				&& !StringUtils.equals(moveUserInfoRequest.getIdpErrCd(), Constant.EC_IDP_2031)
-				&& !StringUtils.equals(moveUserInfoRequest.getIdpErrCd(), Constant.EC_IDP_2031X000)) {
-			moveUserInfoResponse = new MoveUserInfoResponse();
-			moveUserInfoResponse.setTenantID(moveUserInfoRequest.getCommonRequest().getTenantID());
-			moveUserInfoResponse.setUserKey(moveUserInfoRequest.getUserKey());
-			moveUserInfoResponse.setTransCd(moveUserInfoRequest.getMoveType());
-			moveUserInfoResponse.setIdpResultYn(Constant.TYPE_YN_N);
-			moveUserInfoResponse.setIdpErrCd(moveUserInfoRequest.getIdpErrCd());
-
-			this.service.insertUserMbrTransHis(moveUserInfoResponse, Constant.TYPE_YN_N);
-			return moveUserInfoResponse;
-		}
-
 		try {
 			// 유휴회원 이관
 			moveUserInfoResponse = this.service.executeMoveUserMbr(moveUserInfoRequest);
-			// IDP 결과값 셋팅
-			moveUserInfoResponse.setIdpResultYn(moveUserInfoRequest.getIdpResultYn());
-
-			// 2031, 2031X000 일 경우만 idpErrCd를 남김
-			if (StringUtils.equals(moveUserInfoRequest.getIdpErrCd(), Constant.EC_IDP_2031)
-					|| StringUtils.equals(moveUserInfoRequest.getIdpErrCd(), Constant.EC_IDP_2031X000)) {
-				moveUserInfoResponse.setIdpErrCd(moveUserInfoRequest.getIdpErrCd());
-			}
 
 			// 유휴 회원 이관 성공 이력 추가
 			this.service.insertUserMbrTransHis(moveUserInfoResponse, Constant.TYPE_YN_Y);
@@ -3105,7 +3058,6 @@ public class UserSCIController implements UserSCI {
 			moveUserInfoResponse.setTenantID(moveUserInfoRequest.getCommonRequest().getTenantID());
 			moveUserInfoResponse.setUserKey(moveUserInfoRequest.getUserKey());
 			moveUserInfoResponse.setTransCd(moveUserInfoRequest.getMoveType());
-			moveUserInfoResponse.setIdpResultYn(moveUserInfoRequest.getIdpResultYn());
 			this.service.insertUserMbrTransHis(moveUserInfoResponse, Constant.TYPE_YN_N);
 
 			throw ex;
