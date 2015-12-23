@@ -139,7 +139,7 @@ public class DeviceUtil {
 		deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
 		deviceInfo.setIsDormant(userMbrDevice.getIsDormant());
 		deviceInfo.setMdn(userMbrDevice.getMdn());
-		deviceInfo.setDeviceSimMn(userMbrDevice.getDeviceSimMn());
+		deviceInfo.setDeviceSimNm(userMbrDevice.getDeviceSimNm());
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 
 		return deviceInfo;
@@ -199,7 +199,7 @@ public class DeviceUtil {
 		userMbrDevice.setJoinId(deviceInfo.getJoinId());
 		userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 		userMbrDevice.setMdn(deviceInfo.getMdn());
-		userMbrDevice.setDeviceSimMn(deviceInfo.getDeviceSimMn());
+		userMbrDevice.setDeviceSimNm(deviceInfo.getDeviceSimNm());
 		userMbrDevice.setUserMbrDeviceDetail(getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		return userMbrDevice;

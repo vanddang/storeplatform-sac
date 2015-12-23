@@ -421,7 +421,7 @@ public class UserServiceImpl implements UserService {
 			}
 
 			userMbrRetrieveUserMbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
-			userMbrRetrieveUserMbrPwd.setUserID(tempDevice.getDeviceNickName()); // 조회된 deviceNickName이 mbr_id 이다...
+			//userMbrRetrieveUserMbrPwd.setUserID(tempDevice.getDeviceNickName()); // 조회된 deviceNickName이 mbr_id 이다...
 			userMbrRetrieveUserMbrPwd = this.commonDAO.queryForObject("User.getUserMbrRetrievePWD",
 					userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
 

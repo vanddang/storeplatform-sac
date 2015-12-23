@@ -263,7 +263,7 @@ public class LoginServiceImpl implements LoginService {
 					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 					moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
-					moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
+					//moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
 					this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 				}
 
@@ -563,7 +563,7 @@ public class LoginServiceImpl implements LoginService {
 					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 					moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
-					moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
+					//moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
 					this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 				}
 
@@ -1005,8 +1005,8 @@ public class LoginServiceImpl implements LoginService {
 				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 				moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
-				moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
-				moveUserInfoSacReq.setIdpErrCd(null);
+				//moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
+				//moveUserInfoSacReq.setIdpErrCd(null);
 				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 			}
 
@@ -1199,7 +1199,21 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 
 			/* 휴대기기 헤더 정보 셋팅 */
-			deviceInfo = this.deviceService.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+			/* device header 값 셋팅(OS버젼, SC버젼) */
+			String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
+			String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
+			if (StringUtils.isNotBlank(osVersion)) {
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+						osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
+						deviceInfo.getDeviceExtraInfoList()));
+			}
+			if (StringUtils.isNotBlank(svcVersion)) {
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
+						MemberConstants.DEVICE_EXTRA_SCVERSION,
+						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
+						deviceInfo.getDeviceExtraInfoList()));
+			}
+
 			/* 휴대기기 주요정보 조회 */
 			MajorDeviceInfo majorDeviceInfo = this.commService
 					.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
@@ -1299,8 +1313,20 @@ public class LoginServiceImpl implements LoginService {
 			}
 			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 
-			/* 휴대기기 헤더 정보 셋팅 */
-			deviceInfo = this.deviceService.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+			/* device header 값 셋팅(OS버젼, SC버젼) */
+			String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
+			String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
+			if (StringUtils.isNotBlank(osVersion)) {
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+						osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
+						deviceInfo.getDeviceExtraInfoList()));
+			}
+			if (StringUtils.isNotBlank(svcVersion)) {
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
+						MemberConstants.DEVICE_EXTRA_SCVERSION,
+						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
+						deviceInfo.getDeviceExtraInfoList()));
+			}
 
 			/* 휴대기기 주요정보 조회 */
 			MajorDeviceInfo majorDeviceInfo = this.commService
@@ -3748,7 +3774,7 @@ public class LoginServiceImpl implements LoginService {
 		userMbrDevice.setDeviceID(marketRes.getDeviceId()); // 기기 ID
 		userMbrDevice.setDeviceTelecom(marketRes.getDeviceTelecom()); // 이동 통신사
 		userMbrDevice.setDeviceModelNo(MemberConstants.DP_ANY_PHONE_4APP); // 단말 모델
-		userMbrDevice.setDeviceNickName(MemberConstants.DP_ANY_PHONE_4APP_NM); // 단말닉네임
+		//userMbrDevice.setDeviceNickName(MemberConstants.DP_ANY_PHONE_4APP_NM); // 단말닉네임
 		userMbrDevice.setNativeID(nativeId); // 기기고유 ID (imei)
 		userMbrDevice.setIsPrimary(MemberConstants.USE_Y); // 대표기기 유무
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
@@ -4093,8 +4119,6 @@ public class LoginServiceImpl implements LoginService {
 			MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 			moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 			moveUserInfoSacReq.setUserKey(userMbr.getUserKey());
-			moveUserInfoSacReq.setIdpResultYn(idpResultYn);
-			moveUserInfoSacReq.setIdpErrCd(idpResultErrorCode);
 			this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 		}
 	}
