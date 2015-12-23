@@ -191,7 +191,7 @@
     
     <!-- 사용자 회원정보(userID, tenantID), 로그인 -->
     <select id="getUserMbrRetrievePWD" parameterType="userMbrRetrieveUserMbrPwd" resultType="userMbrRetrieveUserMbrPwd">
-         SELECT  /* UserMapper.getUserMbrRetrievePWD, 사용자 회원정보, incross_cmlee80, 2015-05-27 */
+         SELECT  /* UserMapper.xml, getUserMbrRetrievePWD, SAC(SC), 최진호, 2015-12-21 */
                  a.insd_usermbr_no           userKey,
                  a.usermbr_no                imMbrNo,
                  a.mbr_clas_cd               userType,
@@ -773,7 +773,7 @@
     
     <!--  회원 비밀번호 로그인 success. -->
     <update id="updateLoginSuccess" parameterType="mbrPwd">
-       MERGE  /* UserMapper.updateLoginSuccess,  회원 비밀번호 success, wisestone_mikepark, 2013-12-26 */
+       MERGE  /* UserMapper.xml, updateLoginSuccess, SAC(SC), 최진호, 2015-12-21 */
               INTO tb_us_ousermbr_pwd m
        USING  DUAL ON 
               (
@@ -803,7 +803,7 @@
 
     <!--  회원 비밀번호 로그인 fail. -->
     <update id="updateLoginFail" parameterType="mbrPwd">
-       MERGE  /* UserMapper.updateLoginFail,  회원 비밀번호 fail, wisestone_mikepark, 2013-12-26 */
+       MERGE  /* UserMapper.xml, updateLoginFail,  SAC(SC), 최진호, 2015-12-21 */
               INTO tb_us_ousermbr_pwd m
        USING  DUAL ON 
               ( 
@@ -1384,7 +1384,7 @@
 
     <!-- 로그인 요청 로그 기록 -->
     <insert id="insertLoginLog" parameterType="userMbrLoginLog">
-        INSERT /* UserMapper.insertLoginLog, 로그인 요청 로그 기록, incross_cmlee80, 2014-07-28 */
+        INSERT /* UserMapper.xml, insertLoginLog, SAC(SC), 최진호, 2015-12-21 */
                INTO tb_us_ousermbr_login_log 
                (
                     insd_usermbr_no
@@ -1872,7 +1872,7 @@
     
     <!-- 마지막 로그인일자 컬럼 체크  -->
     <select id="selectAlreadyLastLoginDtUpdateYn" parameterType="userMbrLoginLog" resultType="String">
-      SELECT  /* UserMapper.xml, selectAlreadyLastLoginDtUpdateYn, SAC(SC), 이창민, 2015-10-27 */
+      SELECT  /* UserMapper.xml, selectAlreadyLastLoginDtUpdateYn, SAC(SC), 최진호, 2015-12-21 */
                    TO_CHAR(last_login_dt, 'YYYYMMDD') AS lastLoginDt
           FROM  tb_us_ousermbr
          WHERE insd_usermbr_no = #{userKey}
@@ -1882,7 +1882,7 @@
     
     <!-- 마지막 로그인일자 업데이트-->
     <update id="updateLastLoginDt" parameterType="userMbrLoginLog">
-        UPDATE /* UserMapper.xml, updateLastLoginDt, SAC(SC), 반범진, 2015-05-13 */
+        UPDATE /* UserMapper.xml, updateLastLoginDt, SAC(SC), 최진호, 2015-12-21 */
             tb_us_ousermbr
             SET LAST_LOGIN_DT = TRUNC(SYSDATE)
         WHERE INSD_USERMBR_NO = #{userKey}
@@ -2255,5 +2255,16 @@
               <if test="regDt != null">,TO_DATE(#{regDt}, 'YYYYMMDDHH24MISS')</if>
               <if test="updDt != null">,TO_DATE(#{updDt}, 'YYYYMMDDHH24MISS')</if> )
     </insert>
-   
+
+    <!-- ID, PW 일치 체크 -->
+    <select id="checkUserPwd" parameterType="chkUserPwdRequest" resultType="String">
+        SELECT /* UserMapper.xml, searchAfterUserKey, SAC(SC), 최진호, 2015-12-21 */
+            INSD_USERMBR_NO               AS userKey
+        FROM
+            TB_US_OUSERMBR_PWD
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
+            AND PWD = #{userPw}
+    </select>
+
 </mapper>

@@ -9,12 +9,25 @@
  */
 package com.skplanet.storeplatform.member.user.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
+import com.skplanet.storeplatform.member.client.common.constant.Constant;
+import com.skplanet.storeplatform.member.client.common.util.Utils;
+import com.skplanet.storeplatform.member.client.common.vo.*;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
+import com.skplanet.storeplatform.member.common.code.DeviceManagementCode;
+import com.skplanet.storeplatform.member.common.code.MainStateCode;
+import com.skplanet.storeplatform.member.common.code.SubStateCode;
+import com.skplanet.storeplatform.member.common.code.UserTypeCode;
+import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
+import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
+import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
+import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,164 +37,11 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
-import com.skplanet.storeplatform.member.client.common.constant.Constant;
-import com.skplanet.storeplatform.member.client.common.util.Utils;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.CommonResponse;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
-import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
-import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
-import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
-import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
-import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
-import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
-import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
-import com.skplanet.storeplatform.member.client.common.vo.MemberPoint;
-import com.skplanet.storeplatform.member.client.common.vo.RemoveMemberPointRequest;
-import com.skplanet.storeplatform.member.client.common.vo.RemoveMemberPointResponse;
-import com.skplanet.storeplatform.member.client.common.vo.RemovePolicyRequest;
-import com.skplanet.storeplatform.member.client.common.vo.RemovePolicyResponse;
-import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointRequest;
-import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointResponse;
-import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
-import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointRequest;
-import com.skplanet.storeplatform.member.client.common.vo.UpdateMemberPointResponse;
-import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
-import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyResponse;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ChangedDeviceLog;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateGiftChargeInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateGiftChargeInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceMbrStatus;
-import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceSystemStats;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.GiftChargeInfo;
-import com.skplanet.storeplatform.member.client.user.sci.vo.Grade;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.MoveUserInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.MoveUserInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.NonMbrSegment;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveMbrOneIDRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveMbrOneIDResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ResetPasswordUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ResetPasswordUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAfterUserKeyRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAfterUserKeyResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeActivateUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeActivateUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfo;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrSapUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrSapUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchSocialAccountRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchSocialAccountResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserExtraInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserExtraInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserSegmentRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserSegmentResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserkeyTrackRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserkeyTrackResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SocialAccount;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TlogRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TlogResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateNonMbrSegmentRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateNonMbrSegmentResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyValueRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyValueResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserMbrSegmentRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserMbrSegmentResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrInfo;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrPnsh;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrSegment;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserkeyTrack;
-import com.skplanet.storeplatform.member.common.code.DeviceManagementCode;
-import com.skplanet.storeplatform.member.common.code.MainStateCode;
-import com.skplanet.storeplatform.member.common.code.SubStateCode;
-import com.skplanet.storeplatform.member.common.code.UserTypeCode;
-import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
-import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
-import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
-import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 사용자 기능 implementation.
@@ -465,9 +325,7 @@ public class UserServiceImpl implements UserService {
 
 		// TO DO.
 		// ACTION 1. 회원인경우 회원정보 리턴
-		// ACTION 2-1. 회원은 아니지만 keyType 통합서비스 관리 번호인 경우
-		// ACTION 2-2. 회원은 아니지만 keyType UserID인 경우
-		// ACTION 3. 나머지는 등록 안됨으로 리턴
+		// ACTION 2. 나머지는 등록 안됨으로 리턴
 
 		LOGGER.debug("\n\n\n\n\n");
 		LOGGER.debug("==================================================================================");
@@ -521,7 +379,6 @@ public class UserServiceImpl implements UserService {
 		if (userKey != null && userKey.length() > 0) {
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserKey(userKey);
-			userMbr.setTenantID(checkDuplicationRequest.getCommonRequest().getTenantID());
 			userMbr = dao.queryForObject("User.getUserDetail", userMbr, UserMbr.class);
 			userMbr.setIsDormant(isDormant); // 휴면계정유무
 			checkDuplicationResponse.setUserMbr(userMbr);
@@ -598,7 +455,6 @@ public class UserServiceImpl implements UserService {
 
 		} else { // 아이디 회원
 
-			userMbrRetrieveUserMbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
 			userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
 
 			// TODO. 동일한 userId가 2개 존재한경우 에러가 발생한다. 1건만 조회하도록 수정할지는 추후에 확인 필요.
@@ -608,7 +464,6 @@ public class UserServiceImpl implements UserService {
 			if (userMbrRetrieveUserMbrPwd == null) {
 				// 휴면DB조회
 				userMbrRetrieveUserMbrPwd = new UserMbrRetrieveUserMbrPwd();
-				userMbrRetrieveUserMbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
 				userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
 				userMbrRetrieveUserMbrPwd = this.idleDAO.queryForObject("User.getUserMbrRetrievePWD",
 						userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
@@ -4151,6 +4006,23 @@ public class UserServiceImpl implements UserService {
 				"response.ResultMessage.success"));
 
 		return transferGiftChrgInfoResponse;
+	}
+
+	@Override
+	public CheckUserPwdResponse checkUserPwd(CheckUserPwdRequest chkUserPwdRequest){
+
+		CheckUserPwdResponse checkUserPwdResponse = new CheckUserPwdResponse();
+
+		if(StringUtil.equals(chkUserPwdRequest.getIsDormant(), "N")) {
+			checkUserPwdResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserPwd", chkUserPwdRequest));
+		}else{
+			checkUserPwdResponse.setUserKey((String) this.idleDAO.queryForObject("User.checkUserPwd", chkUserPwdRequest));
+		}
+
+		checkUserPwdResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+
+		return checkUserPwdResponse;
 	}
 
 }
