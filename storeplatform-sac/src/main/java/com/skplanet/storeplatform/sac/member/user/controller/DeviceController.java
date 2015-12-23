@@ -151,52 +151,6 @@ public class DeviceController {
 	}
 
 	/**
-	 * 휴대기기 등록 V2.
-	 *
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            CreateDeviceReq
-	 * @return CreateDeviceRes
-	 */
-	@RequestMapping(value = "/createDevice/v2", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateDeviceRes createDeviceV2(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) {
-
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		if (StringUtil.isBlank(req.getUserKey())) {
-			throw new StorePlatformException("SAC_MEM_0001", "userKey");
-		}
-
-		if (StringUtil.isBlank(req.getRegMaxCnt())) {
-			throw new StorePlatformException("SAC_MEM_0001", "regMaxCnt");
-		}
-
-		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceId())) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
-		}
-
-		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceTelecom())) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
-		}
-
-		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceModelNo())) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceModelNo");
-		}
-
-		if (StringUtil.isBlank(req.getDeviceInfo().getIsPrimary())) {
-			throw new StorePlatformException("SAC_MEM_0001", "isPrimary");
-		}
-
-		CreateDeviceRes res = this.deviceService.regDevice(requestHeader, req);
-
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
-
-		return res;
-	}
-
-	/**
 	 * 휴대기기 수정.
 	 * 
 	 * @param requestHeader
