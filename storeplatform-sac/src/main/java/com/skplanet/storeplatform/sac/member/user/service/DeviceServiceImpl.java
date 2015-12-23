@@ -169,21 +169,25 @@ public class DeviceServiceImpl implements DeviceService {
 	public CreateDeviceRes regDevice(SacRequestHeader requestHeader, CreateDeviceReq req) {
 
 		/* 모번호 조회 */
-		req.getDeviceInfo().setMdn(this.commService.getOpmdMdnInfo(req.getDeviceInfo().getMdn()));
+		if(StringUtils.equals(req.getDeviceInfo().getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
+			req.getDeviceInfo().setMdn(this.commService.getOpmdMdnInfo(req.getDeviceInfo().getMdn()));
+		}
 
 		/* 회원 정보 조회 */
 		UserInfo userInfo = this.srhUser(requestHeader, req.getUserKey());
 
-		/* 등록 가능한 휴대기기 개수 초과 */
-		if (Integer.parseInt(userInfo.getDeviceCount()) >= Integer.parseInt(req.getRegMaxCnt())) {
-			throw new StorePlatformException("SAC_MEM_1501");
-		}
-
-		/* 이미 등록된 휴대기기 체크 */
+		/* 보유한 휴대기기 리스트 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 		listDeviceReq.setIsMainDevice("N");
 		listDeviceReq.setUserKey(req.getUserKey());
 		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
+
+		/* 등록 가능한 휴대기기 개수 초과 */
+		if (listDeviceRes.getDeviceInfoList().size() >= Integer.parseInt(req.getRegMaxCnt())) {
+			throw new StorePlatformException("SAC_MEM_1501");
+		}
+
+		/*	기등록된 휴대기기 체크 */
 		if (listDeviceRes != null && listDeviceRes.getDeviceInfoList() != null) {
 			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
 				if (StringUtils.equals(deviceInfo.getMdn(), req.getDeviceInfo().getMdn())) {
@@ -192,12 +196,17 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
-		/* device header 값 셋팅(OS버젼, SC버젼) */
+		/* device header 값 셋팅(OS버젼, SC버젼, 유심번호) */
 		req.setDeviceInfo(this.setDeviceHeader(requestHeader.getDeviceHeader(), req.getDeviceInfo()));
 
-		/* 휴대기기 주요정보 확인 */
-		// TODO. 각 통신사에 따라 svc_mang_no 구하는 공통 로직 추가 필요
-		req.setDeviceInfo(this.getDeviceMajorInfo(req.getDeviceInfo()));
+		/* gmail 정보 파싱 */
+		if(StringUtils.isNotBlank(req.getDeviceInfo().getDeviceAccount())){
+			req.getDeviceInfo().setDeviceAccount(DeviceUtil.getGmailStr(req.getDeviceInfo().getDeviceAccount()));
+		}
+
+		/* 서비스관리번호 조회 */
+		String svcMangNo = this.commService.getSvcMangNo(req.getDeviceInfo().getMdn(), req.getDeviceInfo().getDeviceTelecom(), req.getDeviceInfo().getNativeId(), req.getDeviceInfo().getDeviceSimMn());
+		req.getDeviceInfo().setSvcMangNum(svcMangNo);
 
 		/* 휴대기기 등록 처리 */
 		String deviceKey = this.regDeviceInfo(requestHeader.getTenantHeader().getSystemId(), req.getUserKey(), req.getDeviceInfo());
@@ -455,11 +464,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 1. 휴대기기 정보 등록 요청 */
 		createDeviceReq.setCommonRequest(commonRequest);
 		createDeviceReq.setUserKey(userKey);
-
-		// 휴대기기 등록 v1에서만 gmail정보를 받는다.
-		if (StringUtils.isNotBlank(deviceInfo.getDeviceAccount())) {
-			deviceInfo.setDeviceAccount(DeviceUtil.getGmailStr(deviceInfo.getDeviceAccount()));
-		}
 
 		UserMbrDevice userMbrDevice = DeviceUtil.getConverterUserMbrDeviceInfo(deviceInfo);
 		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
@@ -1196,6 +1200,9 @@ public class DeviceServiceImpl implements DeviceService {
 			String model = deviceheader.getModel(); // 단말모델코드
 			String osVersion = deviceheader.getOs(); // OS버젼
 			String svcVersion = deviceheader.getSvc(); // SC버젼
+			// TODO. deviceHeader에서 usim 번호 추가 확인 필요
+			String deviceSimMn = "";
+			//String deviceSimMn = deviceheader.getSimno;
 
 			// deviceInfo에 모델정보가 존재하면 헤더 모델정보를 셋팅하지 않는다.
 			if (StringUtils.isBlank(deviceInfo.getDeviceModelNo()) && StringUtils.isNotBlank(model)) {
@@ -1214,6 +1221,10 @@ public class DeviceServiceImpl implements DeviceService {
 						MemberConstants.DEVICE_EXTRA_SCVERSION,
 						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
 						deviceInfo.getDeviceExtraInfoList()));
+			}
+
+			if(StringUtils.isNotBlank(deviceSimMn)){
+				deviceInfo.setDeviceSimMn(deviceSimMn);
 			}
 		}
 

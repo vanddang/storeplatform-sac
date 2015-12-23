@@ -142,6 +142,7 @@ public class DeviceController {
 			req.getDeviceInfo().setDeviceId("");
 			req.getDeviceInfo().setMdn(req.getDeviceInfo().getDeviceId());
 		}
+
 		CreateDeviceRes res = this.deviceService.regDevice(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
@@ -184,13 +185,12 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceModelNo");
 		}
 
-		if (StringUtil.isBlank(req.getDeviceInfo().getIsPrimary())) {
-			throw new StorePlatformException("SAC_MEM_0001", "isPrimary");
+		if (StringUtil.isBlank(req.getDeviceInfo().getNativeId())) {
+			throw new StorePlatformException("SAC_MEM_0001", "nativeId");
 		}
 
-		// TODO. deviceHeader에서 유심번호 추출 후 필수 파라메터 체크 로직 추가 필요.
-		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceSimMn())) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceSimMn");
+		if (StringUtil.isBlank(req.getDeviceInfo().getIsPrimary())) {
+			throw new StorePlatformException("SAC_MEM_0001", "isPrimary");
 		}
 
 		CreateDeviceRes res = this.deviceService.regDevice(requestHeader, req);
