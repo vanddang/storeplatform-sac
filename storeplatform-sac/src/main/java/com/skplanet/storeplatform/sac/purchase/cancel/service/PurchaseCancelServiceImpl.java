@@ -9,28 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.sap.sci.SapPurchaseSCI;
 import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiEcReq;
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundDetailEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSpecificRefundEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.*;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
@@ -55,23 +39,13 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.*;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.sci.ShoppingInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusDetailSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.repository.PurchaseCancelRepository;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacResult;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.*;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -80,6 +54,17 @@ import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayR
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShoppingOrderRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderMakeDataService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 구매 취소 Service Implements.
@@ -1139,17 +1124,29 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			PurchaseCancelSacParam purchaseCancelSacParam) {
 
 		String userEmail = null;
+		String deviceId = null;
+		String marketDeviceKey = null;
 
 		// userKey, deviceKey 를 이용한 회원정보조회
-		SearchUserDeviceSacRes searchUserDeviceSacRes = this.purchaseCancelRepository.searchUserByDeviceKey(
-				prchsSacParam.getTenantId(), prchsSacParam.getInsdUsermbrNo(), prchsSacParam.getInsdDeviceId());
-		UserDeviceInfoSac userDeviceInfoSac = searchUserDeviceSacRes.getUserDeviceInfo().get(
-				prchsSacParam.getInsdDeviceId());
+		try
+		{
+			SearchUserDeviceSacRes searchUserDeviceSacRes = this.purchaseCancelRepository.searchUserByDeviceKey(
+					prchsSacParam.getTenantId(), prchsSacParam.getInsdUsermbrNo(), prchsSacParam.getInsdDeviceId());
+			UserDeviceInfoSac userDeviceInfoSac = searchUserDeviceSacRes.getUserDeviceInfo().get(
+							prchsSacParam.getInsdDeviceId());
+			deviceId = userDeviceInfoSac.getDeviceId();
+			marketDeviceKey = userDeviceInfoSac.getMarketDeviceKey();
+		} catch (Exception ignore){
+			deviceId = prchsSacParam.getDeviceId();
+			marketDeviceKey = this.purchaseOrderMakeDataService
+					.parseReservedDataByMap(purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0).getPrchsResvDesc()).get(
+					PurchaseConstants.IF_MEMBER_RES_MARKET_DEVICE_KEY);
+		}
 
 		SendPurchaseNotiEcReq sendPurchaseNotiEcReq = new SendPurchaseNotiEcReq();
 		sendPurchaseNotiEcReq.setTenantId(prchsSacParam.getTenantId());
-		sendPurchaseNotiEcReq.setDeviceId(userDeviceInfoSac.getDeviceId());
-		sendPurchaseNotiEcReq.setDeviceKey(userDeviceInfoSac.getMarketDeviceKey());
+		sendPurchaseNotiEcReq.setDeviceId(deviceId);
+		sendPurchaseNotiEcReq.setDeviceKey(marketDeviceKey);
 		sendPurchaseNotiEcReq.setUserEmail(userEmail);
 		sendPurchaseNotiEcReq.setPrchsId(prchsSacParam.getPrchsId());
 		sendPurchaseNotiEcReq.setPrchsDt(prchsSacParam.getPrchsDt());
