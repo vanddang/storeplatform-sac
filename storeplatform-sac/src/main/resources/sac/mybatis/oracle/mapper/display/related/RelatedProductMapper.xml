@@ -96,8 +96,7 @@
         FROM
           TB_DP_PROD_RELA PR
         WHERE 1=1
-        --  TO-DO: 추후 배치 수정이 이루어지면 MAX 제거 BC.TENANT_ID = 'S00' 으로 변경 필요.
-        AND STD_DT = (SELECT MAX(BC.STD_DT) FROM TB_DP_BATCH_COMPT BC WHERE BC.TENANT_ID IN ('S00', 'S01') AND BC.BATCH_ID = #{relaType})
+        AND STD_DT = (SELECT BC.STD_DT FROM TB_DP_BATCH_COMPT BC WHERE BC.TENANT_ID = 'S00' AND BC.BATCH_ID = #{relaType})
         AND RELA_TYPE = #{relaType}
         AND PROD_ID = #{prodId}
     </select>
