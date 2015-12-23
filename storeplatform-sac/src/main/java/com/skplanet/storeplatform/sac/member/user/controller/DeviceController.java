@@ -185,10 +185,6 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceModelNo");
 		}
 
-		if (StringUtil.isBlank(req.getDeviceInfo().getNativeId())) {
-			throw new StorePlatformException("SAC_MEM_0001", "nativeId");
-		}
-
 		if (StringUtil.isBlank(req.getDeviceInfo().getIsPrimary())) {
 			throw new StorePlatformException("SAC_MEM_0001", "isPrimary");
 		}

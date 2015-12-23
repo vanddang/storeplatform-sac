@@ -207,17 +207,4 @@ public interface DeviceService {
 	 */
 	public boolean isEqualsLoginDevice(String deviceId, String reqVal, String dbVal, String equalsType);
 
-	/**
-	 * <pre>
-	 * 휴대기기 관련 헤더 정보 셋팅.
-	 * </pre>
-	 * 
-	 * @param deviceheader
-	 *            DeviceHeader
-	 * @param deviceInfo
-	 *            DeviceInfo
-	 * @return DeviceInfo
-	 */
-	public DeviceInfo setDeviceHeader(DeviceHeader deviceheader, DeviceInfo deviceInfo);
-
 }

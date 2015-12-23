@@ -15,9 +15,7 @@ public class UserMbrDeviceSet extends CommonInfo {
 	/** The Constant serial Version UID. */
 	private static final long serialVersionUID = 1L;
 
-	/** 테넌트 ID. */
-	private String tenantID; // TENANT_ID
-	/** 테넌트의 시스템 ID. */
+	/** 시스템 ID. */
 	private String systemID; // SYSTEM_ID
 	/** 사용자 ID. */
 	private String userID; // MBR_ID
@@ -68,21 +66,6 @@ public class UserMbrDeviceSet extends CommonInfo {
 
 	/** 조건 객체. */
 	private List<KeySearch> keySearchList;
-
-	/**
-	 * @return the tenantID
-	 */
-	public String getTenantID() {
-		return this.tenantID;
-	}
-
-	/**
-	 * @param tenantID
-	 *            the tenantID to set
-	 */
-	public void setTenantID(String tenantID) {
-		this.tenantID = tenantID;
-	}
 
 	/**
 	 * @return the systemID

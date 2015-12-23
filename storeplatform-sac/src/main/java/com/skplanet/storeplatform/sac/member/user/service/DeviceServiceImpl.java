@@ -196,8 +196,20 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
-		/* device header 값 셋팅(OS버젼, SC버젼, 유심번호) */
-		req.setDeviceInfo(this.setDeviceHeader(requestHeader.getDeviceHeader(), req.getDeviceInfo()));
+		/* device header 값 셋팅(OS버젼, SC버젼) */
+		String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
+		String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
+		if (StringUtils.isNotBlank(osVersion)) {
+			req.getDeviceInfo().setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
+					req.getDeviceInfo().getDeviceExtraInfoList()));
+		}
+		if (StringUtils.isNotBlank(svcVersion)) {
+			req.getDeviceInfo().setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
+					MemberConstants.DEVICE_EXTRA_SCVERSION,
+					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
+					req.getDeviceInfo().getDeviceExtraInfoList()));
+		}
 
 		/* gmail 정보 파싱 */
 		if(StringUtils.isNotBlank(req.getDeviceInfo().getDeviceAccount())){
@@ -205,8 +217,42 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 서비스관리번호 조회 */
-		String svcMangNo = this.commService.getSvcMangNo(req.getDeviceInfo().getMdn(), req.getDeviceInfo().getDeviceTelecom(), req.getDeviceInfo().getNativeId(), req.getDeviceInfo().getDeviceSimMn());
+		String svcMangNo = this.commService.getSvcMangNo(req.getDeviceInfo().getMdn(), req.getDeviceInfo().getDeviceTelecom(), req.getDeviceInfo().getNativeId(), req.getDeviceInfo().getDeviceSimNm());
 		req.getDeviceInfo().setSvcMangNum(svcMangNo);
+
+		// 기등록된 회원이 휴면아이디에 붙은 MDN인지 체크
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MDN);
+		keySchUserKey.setKeyString(req.getDeviceInfo().getMdn());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		searchExtentUserRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+		searchExtentUserRequest.setUserInfoYn("Y");
+		try {
+			SearchExtentUserResponse schUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
+
+			// 등록될 MDN이 휴면아이디 회원에 붙은 MDN인 경우 복구처리한다.
+			if (StringUtils.equals(schUserRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)
+					&& !StringUtils.equals(schUserRes.getUserKey(), req.getUserKey())
+					&& !StringUtils.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+				moveUserInfoSacReq.setUserKey(schUserRes.getUserKey());
+				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+
+				// 복구한 회원 마지막 로그인일자 업데이트
+				MoveUserInfoRequest moveUserInfoRequest = new MoveUserInfoRequest();
+				moveUserInfoRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
+				moveUserInfoRequest.setUserKey(schUserRes.getUserKey());
+				this.userSCI.updateActiveMoveUserLastLoginDt(moveUserInfoRequest);
+			}
+		} catch (StorePlatformException e) {
+			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				throw e;
+			}
+		}
 
 		/* 휴대기기 등록 처리 */
 		String deviceKey = this.regDeviceInfo(requestHeader.getTenantHeader().getSystemId(), req.getUserKey(), req.getDeviceInfo());
@@ -421,45 +467,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(systemId);
-
-		// 기등록된 회원이 휴면아이디에 붙은 MDN인지 체크
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MDN);
-		keySchUserKey.setKeyString(deviceInfo.getMdn());
-		keySearchList.add(keySchUserKey);
-		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
-		searchExtentUserRequest.setCommonRequest(commonRequest);
-		searchExtentUserRequest.setKeySearchList(keySearchList);
-		searchExtentUserRequest.setUserInfoYn("Y");
-		SearchExtentUserResponse schUserRes = null;
-		try {
-			schUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
-
-			// 등록될 MDN이 휴면아이디 회원에 붙은 MDN인 경우 복구처리한다.
-			if (StringUtils.equals(schUserRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)
-					&& !StringUtils.equals(schUserRes.getUserKey(), userKey)
-					&& !StringUtils.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
-				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
-				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
-				moveUserInfoSacReq.setUserKey(schUserRes.getUserKey());
-				SacRequestHeader requestHeader = new SacRequestHeader();
-				TenantHeader tenant = new TenantHeader();
-				tenant.setSystemId(systemId);
-				requestHeader.setTenantHeader(tenant);
-				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
-
-				// 복구한 회원 마지막 로그인일자 업데이트
-				MoveUserInfoRequest moveUserInfoRequest = new MoveUserInfoRequest();
-				moveUserInfoRequest.setCommonRequest(commonRequest);
-				moveUserInfoRequest.setUserKey(schUserRes.getUserKey());
-				this.userSCI.updateActiveMoveUserLastLoginDt(moveUserInfoRequest);
-			}
-		} catch (StorePlatformException e) {
-			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-				throw e;
-			}
-		}
 
 		/* 1. 휴대기기 정보 등록 요청 */
 		createDeviceReq.setCommonRequest(commonRequest);
@@ -1184,51 +1191,6 @@ public class DeviceServiceImpl implements DeviceService {
 				throw ex;
 			}
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService# setDeviceHeader
-	 * (com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader,
-	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
-	 */
-	@Override
-	public DeviceInfo setDeviceHeader(DeviceHeader deviceheader, DeviceInfo deviceInfo) {
-
-		if (deviceheader != null) {
-			String model = deviceheader.getModel(); // 단말모델코드
-			String osVersion = deviceheader.getOs(); // OS버젼
-			String svcVersion = deviceheader.getSvc(); // SC버젼
-			// TODO. deviceHeader에서 usim 번호 추가 확인 필요
-			String deviceSimMn = "";
-			//String deviceSimMn = deviceheader.getSimno;
-
-			// deviceInfo에 모델정보가 존재하면 헤더 모델정보를 셋팅하지 않는다.
-			if (StringUtils.isBlank(deviceInfo.getDeviceModelNo()) && StringUtils.isNotBlank(model)) {
-				deviceInfo.setDeviceModelNo(model);
-			}
-
-			if (StringUtils.isNotBlank(osVersion)) {
-				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
-						MemberConstants.DEVICE_EXTRA_OSVERSION,
-						osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
-						deviceInfo.getDeviceExtraInfoList()));
-			}
-
-			if (StringUtils.isNotBlank(svcVersion)) {
-				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
-						MemberConstants.DEVICE_EXTRA_SCVERSION,
-						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
-						deviceInfo.getDeviceExtraInfoList()));
-			}
-
-			if(StringUtils.isNotBlank(deviceSimMn)){
-				deviceInfo.setDeviceSimMn(deviceSimMn);
-			}
-		}
-
-		return deviceInfo;
 	}
 
 	/**
