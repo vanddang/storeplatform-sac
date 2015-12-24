@@ -654,6 +654,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.debug("======================= ## CreateByMdnReq");
 			CreateByMdnReq req = (CreateByMdnReq) obj;
+			deviceInfo.setUserKey(userKey);
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
@@ -675,6 +676,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.debug("======================= ## CreateByAgreementReq");
 			CreateByAgreementReq req = (CreateByAgreementReq) obj;
+			deviceInfo.setUserKey(userKey);
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
@@ -695,6 +697,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.debug("======================= ## CreateBySimpleReq");
 			CreateBySimpleReq req = (CreateBySimpleReq) obj;
+			deviceInfo.setUserKey(userKey);
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
@@ -715,6 +718,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.debug("======================= ## CreateSaveAndSyncReq");
 			CreateSaveAndSyncReq req = (CreateSaveAndSyncReq) obj;
+			deviceInfo.setUserKey(userKey);
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(""); // 가입 채널 코드
@@ -740,7 +744,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 휴대기기 등록 모듈 호출.
 			 */
 			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
-			String deviceKey = this.deviceService.regDeviceInfo(sacHeader.getTenantHeader().getSystemId(), userKey, deviceInfo);
+			String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
 
 			if (deviceKey == null || StringUtils.equals(deviceKey, "")) {
 				throw new StorePlatformException("SAC_MEM_0002", "deviceKey");

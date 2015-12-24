@@ -2176,7 +2176,7 @@ public class LoginServiceImpl implements LoginService {
 						CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 						createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 						createDeviceReq.setUserKey(detailRes.getUserKey());
-						createDeviceReq.setIsNew("N");
+						//createDeviceReq.setIsNew("N");
 						createDeviceReq.setUserMbrDevice(userMbrDevice);
 						this.deviceSCI.createDevice(createDeviceReq);
 					} else {
@@ -2601,7 +2601,7 @@ public class LoginServiceImpl implements LoginService {
 					CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 					createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 					createDeviceReq.setUserKey(detailRes.getUserKey());
-					createDeviceReq.setIsNew("N");
+					//createDeviceReq.setIsNew("N");
 					createDeviceReq.setUserMbrDevice(userMbrDevice);
 					this.deviceSCI.createDevice(createDeviceReq);
 				} else {
@@ -3766,7 +3766,7 @@ public class LoginServiceImpl implements LoginService {
 		// SC 휴대기기 등록
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 		createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-		createDeviceReq.setIsNew("Y");
+		//createDeviceReq.setIsNew("Y");
 		createDeviceReq.setUserKey(createUserResponse.getUserKey());
 
 		UserMbrDevice userMbrDevice = new UserMbrDevice();
