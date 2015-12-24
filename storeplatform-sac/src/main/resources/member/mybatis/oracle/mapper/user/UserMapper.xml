@@ -201,8 +201,7 @@
                  a.mbr_status_main_cd        userMainStatus,
                  a.mbr_status_sub_cd         userSubStatus,
                  a.login_status_cd           loginStatusCode,
-                 a.device_reg_cnt            deviceCount,
-                 a.start_dt,                 
+                 a.start_dt,
                  a.end_dt,
                  a.mbr_id                    userID,
                  a.email_addr                userEmail,
@@ -230,7 +229,6 @@
                 mbr_status_main_cd      userMainStatus,
                 mbr_status_sub_cd       userSubStatus,
                 login_status_cd         loginStatusCode,
-                device_reg_cnt          deviceCount,
                 start_dt,
                 end_dt,
                 mbr_id                  userID,
@@ -614,7 +612,6 @@
                     ,mbr_status_main_cd
                     ,mbr_status_sub_cd
                     ,login_status_cd
-                    ,device_reg_cnt
                     ,entry_day
                     ,bolter_day
                     ,bolter_reason_cd
@@ -642,7 +639,6 @@
                 ,mbr_status_main_cd
                 ,mbr_status_sub_cd
                 ,login_status_cd
-                ,device_reg_cnt
                 ,entry_day
                 ,bolter_day
                 ,bolter_reason_cd
@@ -854,8 +850,7 @@
                bolter_day = #{secedeDate},                       /* 탈퇴_일 */
                start_dt = SYSDATE,
                end_dt = SYSDATE,
-               upd_dt = SYSDATE,
-               device_reg_cnt = 0        /* 휴대기기 보유 카운트 초기화 */
+               upd_dt = SYSDATE
         WHERE  insd_usermbr_no = #{userKey}
     </update>
 
@@ -917,7 +912,6 @@
                mbr_status_sub_cd,
                entry_day,
                start_dt,
-               device_reg_cnt,  /* 휴대기기 보유 카운트 */
                upd_dt
                <if test="userID != null">,mbr_id </if>
                <if test="userName != null">,mbr_nm </if>
@@ -938,7 +932,6 @@
             #{userSubStatus},
             #{regDate}, /* entry_day */
             SYSDATE, /* start_dt */
-            0, /* device_reg_cnt */
             SYSDATE /* upd_dt */
             <if test="userID != null">,#{userID} </if>
             <if test="userName != null">,#{userName} </if>
@@ -962,7 +955,6 @@
            SET  insd_usermbr_no = #{userKey},
                 upd_dt = SYSDATE,
                 start_dt = SYSDATE
-                <if test="deviceCount != null">,device_reg_cnt = #{deviceCount}</if>
                 <if test="userID != null">,mbr_id = #{userID}</if>
                 <if test="userName != null">,mbr_nm = #{userName}</if>
                 <if test="userBirthDay != null">,birth = #{userBirthDay}</if>
@@ -1493,7 +1485,6 @@
                 mbr_status_main_cd      userMainStatus,
                 mbr_status_sub_cd       userSubStatus,
                 login_status_cd         loginStatusCode,
-                device_reg_cnt          deviceCount,
                 start_dt,
                 end_dt,
                 mbr_id                  userID,
@@ -1918,7 +1909,7 @@
             ,mbr_clas_cd              as mbrClasCd           
             ,mbr_status_main_cd       as mbrStatusMainCd     
             ,mbr_status_sub_cd        as mbrStatusSubCd      
-            ,device_reg_cnt           as deviceRegCnt        
+
             ,entry_day                as entryDay            
             ,bolter_day               as bolterDay           
             ,bolter_reason_cd         as bolterReasonCd      
@@ -1955,7 +1946,6 @@
                     ,mbr_clas_cd
                     ,mbr_status_main_cd
                     ,mbr_status_sub_cd
-                    <if test="deviceRegCnt != null">,device_reg_cnt</if>
                     <if test="entryDay != null">,entry_day</if>
                     <if test="bolterDay != null">,bolter_day</if>
                     <if test="bolterReasonCd != null">,bolter_reason_cd</if>
@@ -1986,7 +1976,6 @@
                     ,#{mbrClasCd}
                     ,#{mbrStatusMainCd}
                     ,#{mbrStatusSubCd}
-                    <if test="deviceRegCnt != null">,#{deviceRegCnt}</if>
                     <if test="entryDay != null">,#{entryDay}</if>
                     <if test="bolterDay != null">,#{bolterDay}</if>
                     <if test="bolterReasonCd != null">,#{bolterReasonCd}</if>
