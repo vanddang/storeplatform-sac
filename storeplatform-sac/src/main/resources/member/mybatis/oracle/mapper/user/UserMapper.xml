@@ -2,49 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
 <mapper namespace="User">
 
-    <!--  회원 비밀번호 관련 필드 초기화.(tenantID,memberID)  -->
+    <!--  회원 비밀번호 관련 필드 초기화.  -->
     <update id="resetPasswordUser" parameterType="mbrPwd">
-       MERGE  /* UserMapper.resetPasswordUser,  회원 비밀번호 관련 필드 초기화, incross_cmlee80, 2015-05-27 */
-              INTO tb_us_ousermbr_pwd m
-       USING  DUAL ON
-              (
-                  m.insd_usermbr_no = (
-                                        SELECT  insd_usermbr_no
-                                          FROM  tb_us_ousermbr
-                                         WHERE  mbr_id = #{memberID}
-                                           AND  mbr_status_main_cd != 'US010202' /* US010202 = 탈퇴 */
-                                        )
-               )
-
-       /* 비밀번호가 존재하는 경우 기존 비밀번호 초기화 */
+        MERGE  /* UserMapper.xml, resetPasswordUser,  SAC(SC), 최진호, 2015-12-24 */
+        INTO tb_us_ousermbr_pwd m
+        USING  DUAL ON
+            (
+                m.insd_usermbr_no  = #{memberKey}
+            )
+        /* 비밀번호가 존재하는 경우 기존 비밀번호 초기화 */
         WHEN  MATCHED THEN
-      UPDATE
-         SET
-              m.upd_dt = SYSDATE
-           ,  m.fail_cnt = 0
-       /* 비밀번호가 없는 경우 비밀번호 추가 */
+            UPDATE
+                SET
+                    m.pwd = #{memberPW}
+                    ,m.act_tk = null
+                    ,m.upd_dt = SYSDATE
+                    ,m.fail_cnt = 0
+        /* 비밀번호가 없는 경우 비밀번호 추가 */
         WHEN  NOT MATCHED THEN
-      INSERT  
-      (
-              insd_usermbr_no
-           ,  upd_dt
-           ,  fail_cnt
-      )
-      VALUES
-      (
-              (
-                SELECT  insd_usermbr_no
-                  FROM  tb_us_ousermbr
-                 WHERE  mbr_id = #{memberID} 
-                   AND  mbr_status_main_cd != 'US010202' /* US010202 = 탈퇴 */
-              ) 
-           ,  SYSDATE 
-           ,  0
-      )
+            INSERT
+                (
+                    m.insd_usermbr_no
+                    ,m.pwd
+                    ,m.upd_dt
+                    ,m.fail_cnt
+                )
+            VALUES
+                (
+                    #{memberKey}
+                    ,#{memberPW}
+                    ,SYSDATE
+                    ,0
+                )
     </update>
 
     <!-- 회원 비밀번호 존재여부 체크 -->
-    <select id="checkUserPassword" parameterType="chkUserPwdRequest">
+    <select id="checkUserPassword" parameterType="chkUserPwdRequest" resultType="String">
         SELECT /* UserMapper.xml, checkPasswordUser, SAC(SC), 최진호, 2015-12-23 */
             INSD_USERMBR_NO
         FROM
@@ -62,21 +55,22 @@
             (
                 u.insd_usermbr_no  = #{memberKey}
             )
-        /* 비밀번호가 존재하는 경우 신규비밀번호로 업데이트 */
+        /* 비밀번호가 존재하는 경우 신규비밀번호로 업데이트 및 토큰삭제 */
         WHEN MATCHED THEN
             UPDATE
                 SET
-                    pwd = #{memberPW}
-                    ,upd_dt = TO_DATE(#{pwRegDate},'YYYYMMDDHH24MISS')
-                    ,fail_cnt = 0
+                    u.pwd = #{memberPW}
+                    ,u.act_tk = null
+                    ,u.upd_dt = TO_DATE(#{pwRegDate},'YYYYMMDDHH24MISS')
+                    ,u.fail_cnt = 0
         /* 비밀번호가 없는 경우 비밀번호 추가 */
         WHEN NOT MATCHED THEN
             INSERT
                 (
-                    insd_usermbr_no
-                    ,pwd
-                    ,upd_dt
-                    ,fail_cnt
+                    u.insd_usermbr_no
+                    ,u.pwd
+                    ,u.upd_dt
+                    ,u.fail_cnt
                 )
             VALUES
                 (
@@ -196,7 +190,6 @@
     <select id="getUserMbrRetrievePWD" parameterType="userMbrRetrieveUserMbrPwd" resultType="userMbrRetrieveUserMbrPwd">
          SELECT  /* UserMapper.xml, getUserMbrRetrievePWD, SAC(SC), 최진호, 2015-12-21 */
                  a.insd_usermbr_no           userKey,
-                 a.usermbr_no                imMbrNo,
                  a.mbr_clas_cd               userType,
                  a.mbr_status_main_cd        userMainStatus,
                  a.mbr_status_sub_cd         userSubStatus,

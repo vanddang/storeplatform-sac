@@ -765,6 +765,7 @@ public class LoginServiceImpl implements LoginService {
 		String oDeviceId = req.getDeviceId(); // 자번호
 		boolean isOpmd = this.commService.isOpmd(oDeviceId);
 		String isVariability = "Y"; // 변동성 체크 성공 유무
+		String isModifyInfo = "N"; // 휴대기기 정보 업데이트 여부
 		String userKey = null;
 		String deviceKey = null;
 		DeviceInfo deviceInfo = null;
@@ -794,18 +795,16 @@ public class LoginServiceImpl implements LoginService {
 				userKey = deviceInfo.getUserKey();
 				deviceKey = deviceInfo.getDeviceKey();
 
-				/* 통산사가 일치한 경우 IMEI와 GMAIL이 다르면 변동성 체크 실패 */
+				/* req, DB의 통신사가 일치한 경우 */
 				if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(),
 						deviceInfo.getDeviceTelecom(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
-
+					/* req, DB의 통신사가 일치 하고 IMEI가 다르면 */
 					if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getNativeId(),
 							deviceInfo.getNativeId(), MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
-
+						 /* req, DB의 통신사와 IMEI가 일치 하나 GMAIL이 다르면 변동성 체크 실패 */
 						if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(),
 								deviceInfo.getDeviceAccount(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
-
 							isVariability = "N";
-
 						}
 
 					}
@@ -855,13 +854,10 @@ public class LoginServiceImpl implements LoginService {
 			if (!isOpmd) { // OPMD 단말인경우 휴대기기 정보 업데이트를 하지 않는다.
 				LOGGER.info("{} 변동성 체크 성공", req.getDeviceId());
 
-				/* 휴대기기 정보 수정 (통신사, GMAIL) */
+				/* 휴대기기 정보 수정 (GMAIL) */
 				DeviceInfo paramDeviceInfo = new DeviceInfo();
 				paramDeviceInfo.setUserKey(userKey);
 				paramDeviceInfo.setDeviceId(req.getDeviceId());
-				if (StringUtils.isNotBlank(req.getDeviceTelecom())) {
-					paramDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-				}
 				if (StringUtils.isNotBlank(req.getDeviceAccount())) {
 					paramDeviceInfo.setDeviceAccount(req.getDeviceAccount());
 				}

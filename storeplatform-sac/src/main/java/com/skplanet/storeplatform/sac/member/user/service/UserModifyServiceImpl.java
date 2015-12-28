@@ -116,7 +116,10 @@ public class UserModifyServiceImpl implements UserModifyService {
 		chkUserPwdRequest.setUserKey(userInfo.getUserKey());
 		chkUserPwdRequest.setUserPw(req.getOldPassword());
 		chkUserPwdRequest.setIsDormant(userInfo.getIsDormant());
-		this.userSCI.checkUserPwd(chkUserPwdRequest);
+		CheckUserPwdResponse chkUserPwdResponse = this.userSCI.checkUserPwd(chkUserPwdRequest);
+		if( chkUserPwdResponse.getUserKey() == null || chkUserPwdResponse.getUserKey().length() <=0 ){
+			throw new StorePlatformException("SAC_MEM_1204", userInfo.getUserKey());
+		}
 
 		/**
 		 * SC 회원 비밀번호 변경 요청.

@@ -48,6 +48,9 @@ public final class MemberConstants {
 	public static final String USER_TYPE_MOBILE = "US011501"; // 기기사용자
 	public static final String USER_TYPE_IDPID = "US011502"; // IDP사용자
 	public static final String USER_TYPE_ONEID = "US011503"; // OneID사용자
+	public static final String USER_TYPE_NAVER = "US011504"; // 네이버ID사용자
+	public static final String USER_TYPE_GOOGLE = "US011505"; // 구글ID사용자
+	public static final String USER_TYPE_FACEBOOK = "US011506"; // 페이스북ID사용자
 
 	/** 메인상태코드. */
 	public static final String MAIN_STATUS_NORMAL = "US010201"; // 정상
