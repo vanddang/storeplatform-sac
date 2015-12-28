@@ -73,9 +73,14 @@ public class UserSearchController {
 	@ResponseBody
 	public ExistRes exist(@RequestBody ExistReq req, SacRequestHeader sacHeader) {
 
-		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")
-				&& StringUtil.nvl(req.getUserId(), "").equals("") && StringUtil.nvl(req.getUserKey(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
+		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getUserId(), "").equals("")
+				&& StringUtil.nvl(req.getUserKey(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceKey");
+		}
+
+		//TODO. reference 변경후 VO의 deviceId 변경 필요
+		if (StringUtils.isNotEmpty(req.getDeviceId())){
+			throw new StorePlatformException("SAC_MEM_0007", "deviceId");
 		}
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
@@ -318,7 +323,7 @@ public class UserSearchController {
 	 * 2.1.56. 가입 테넌트 정보 조회.
 	 * </pre>
 	 * 
-	 * @param sacHeader
+	 * @param requestHeader
 	 *            공통 헤더
 	 * @param req
 	 *            Request Value Object
