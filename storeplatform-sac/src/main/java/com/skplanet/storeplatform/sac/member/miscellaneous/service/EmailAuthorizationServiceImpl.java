@@ -4,13 +4,9 @@ import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyEmailEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEmIDPEcReq;
-import com.skplanet.storeplatform.external.client.inicis.sci.InicisSCI;
-import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
-import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
@@ -28,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -46,37 +41,18 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 
 	@Autowired
 	private MemberCommonComponent commonComponent; // 회원 공통기능 컴포넌트
-
 	@Autowired
 	private UserSCI userSCI; // 회원 Component 사용자 기능 Interface.
-	@Autowired
-	private DeviceSCI deviceSCI; // 회원 Component 휴대기기 기능 Interface.
-
 	@Autowired
 	private IdpSCI idpSCI; // IDP 연동 Interface.
 	@Autowired
 	private ImIdpSCI imIdpSCI; // IMIDP 연동 Interface.
 	@Autowired
-	private UapsSCI uapsSCI; // UAPS 연동 Interface.
-	@Autowired
-	private MessageSCI messageSCI; // 메시지전송 기능 Interface.
-	@Autowired
-	private InicisSCI inicisSCI; // 이니시스 연동 Interface.
-	@Autowired
 	private UserSearchService userSearchService;
-
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor; // Message Properties
-
-	@Autowired
-	private MemberCommonComponent mcc;
 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDao;
-
-	@Value("#{propertiesForSac['sms.auth.cnt']}")
-	private int smsAuthCnt;
 
 	@Value("#{propertiesForSac['email.auth.url']}")
 	private String mobileEmailAuthUrl;
