@@ -210,7 +210,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 				createDeviceReq.setCommonRequest(commonRequest);
 				createDeviceReq.setUserKey(userKey);
-				createDeviceReq.setIsNew("N");
+				//createDeviceReq.setIsNew("N");
 				createDeviceReq.setUserMbrDevice(userMbrDevice);
 
 				this.deviceSCI.createDevice(createDeviceReq);
@@ -323,7 +323,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 				createDeviceReq.setCommonRequest(commonRequest);
 				createDeviceReq.setUserKey(userKey);
-				createDeviceReq.setIsNew("N");
+				//createDeviceReq.setIsNew("N");
 				createDeviceReq.setUserMbrDevice(userMbrDevice);
 
 				this.deviceSCI.createDevice(createDeviceReq);
@@ -611,7 +611,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			createDeviceReq.setCommonRequest(commonRequest);
 			createDeviceReq.setUserKey(userKey);
-			createDeviceReq.setIsNew("N");
+			//createDeviceReq.setIsNew("N");
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
 
 			this.deviceSCI.createDevice(createDeviceReq);
@@ -765,7 +765,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 					createDeviceReq.setCommonRequest(commonRequest);
 					createDeviceReq.setUserKey(userKey);
-					createDeviceReq.setIsNew("N");
+					//createDeviceReq.setIsNew("N");
 					createDeviceReq.setUserMbrDevice(userMbrDevice);
 					this.deviceSCI.createDevice(createDeviceReq);
 
@@ -1218,7 +1218,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 									CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 									createDeviceReq.setCommonRequest(commonRequest);
 									createDeviceReq.setUserKey(userKey);
-									createDeviceReq.setIsNew("N");
+									//createDeviceReq.setIsNew("N");
 									createDeviceReq.setUserMbrDevice(modifyDevice);
 
 									this.deviceSCI.createDevice(createDeviceReq);
@@ -1345,7 +1345,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 								CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 								createDeviceReq.setCommonRequest(commonRequest);
 								createDeviceReq.setUserKey(userKey);
-								createDeviceReq.setIsNew("N");
+								//createDeviceReq.setIsNew("N");
 								createDeviceReq.setUserMbrDevice(modifyDevice);
 
 								this.deviceSCI.createDevice(createDeviceReq);

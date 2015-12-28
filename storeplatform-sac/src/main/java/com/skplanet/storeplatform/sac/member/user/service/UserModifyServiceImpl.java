@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,20 @@ public class UserModifyServiceImpl implements UserModifyService {
 		searchExtentUserRequest.setCommonRequest(commonRequest);
 		searchExtentUserRequest.setKeySearchList(keySearchList);
 		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
-		this.userSCI.searchExtentUser(searchExtentUserRequest);
+        SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+
+        /**
+         * 변경 가능 상테 체크 (매인, 서브상태 정상인 회원- 단 휴면 제외)
+         */
+        if(!StringUtils.equalsIgnoreCase(res.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_NORMAL)
+                || !StringUtils.equalsIgnoreCase(res.getUserMbr().getUserSubStatus(), MemberConstants.SUB_STATUS_NORMAL)){
+            throw new StorePlatformException("SAC_MEM_2001", res.getUserMbr().getUserMainStatus(),
+                    res.getUserMbr().getUserSubStatus());
+        }
+
+        if(StringUtils.equalsIgnoreCase(res.getUserMbr().getIsDormant(), MemberConstants.USE_Y)){
+            throw new StorePlatformException("SAC_MEM_0006");
+        }
 
 		/**
 		 * SC 회원 수정.
@@ -206,6 +220,31 @@ public class UserModifyServiceImpl implements UserModifyService {
 		if (StringUtils.equals(res.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
 			throw new StorePlatformException("SAC_MEM_0006");
 		}
+
+        /**
+         * 이메일주소 유효성 확인
+         */
+        if(!ValidationCheckUtils.isEmail(req.getNewEmail())){
+            throw new StorePlatformException("SAC_MEM_0007", req.getNewEmail());
+        }
+
+        /**
+         * 변경할 이메일 주소 중복 체크
+         */
+        keySearchList = new ArrayList<KeySearch>();
+        keySchUserKey = new KeySearch();
+        keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_EMAIL_ADDR);
+        keySchUserKey.setKeyString(req.getNewEmail());
+        keySearchList.add(keySchUserKey);
+
+        CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
+        chkDupReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+        chkDupReq.setKeySearchList(keySearchList);
+        CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
+
+        if (StringUtil.isNotEmpty(chkDupRes.getUserID())) {
+            throw new StorePlatformException("SAC_MEM_1404");
+        }
 
 		/**
 		 * 사용자 기본정보 setting.

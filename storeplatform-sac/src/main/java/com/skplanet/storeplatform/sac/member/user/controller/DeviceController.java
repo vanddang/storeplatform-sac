@@ -139,8 +139,8 @@ public class DeviceController {
 
 		// onebrand에서 mdn 컬럼이 추가되어, deviceIdType이 msisdn인 경우 deviceId를 mdn 필드로 셋팅한다.
 		if(StringUtils.equals(req.getDeviceInfo().getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
-			req.getDeviceInfo().setDeviceId("");
 			req.getDeviceInfo().setMdn(req.getDeviceInfo().getDeviceId());
+			req.getDeviceInfo().setDeviceId("");
 		}
 
 		CreateDeviceRes res = this.deviceService.regDevice(requestHeader, req);
