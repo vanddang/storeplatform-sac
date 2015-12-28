@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Captcha Controller
  * 
  * Updated on : 2014. 1. 7. Updated by : 김다슬, 인크로스.
+ * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Micellaneos 클래스에서 Captcha 관련 기능 클래스 분리
  */
 @Controller
 @RequestMapping(value = "/member/miscellaneous")
