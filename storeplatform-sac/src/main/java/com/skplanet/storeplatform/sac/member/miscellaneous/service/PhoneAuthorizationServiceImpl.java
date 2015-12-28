@@ -2,16 +2,15 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,7 +174,7 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 			smsReq.setRecvMdn(request.getRecvMdn());
 			smsReq.setTeleSvcId(request.getTeleSvcId());
 			// tenantId 별 prefix 설정
-			smsReq.setMsg(StringUtil.isNotEmpty(prefixMessageText) ? prefixMessageText + messageText : messageText);
+			smsReq.setMsg(StringUtils.isNotEmpty(prefixMessageText) ? prefixMessageText + messageText : messageText);
 			// 통신사정보 Optional
 			smsReq.setCarrier(StringUtils.defaultIfBlank(request.getCarrier(), null));
 			// 발송_순서 | 1~9, 1: 높음, 9:낮음
@@ -306,7 +305,7 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 		res.setComptYn(resultInfo.getAuthComptYn());
 		res.setRegDt(resultInfo.getRegDt());
 		// 인증번호만 요청한 상태 공백처리
-		res.setUpdDt(StringUtil.nvl(resultInfo.getUpdDt(), ""));
+		res.setUpdDt(StringUtils.defaultIfEmpty(resultInfo.getUpdDt(), ""));
 		return res;
 	}
 }

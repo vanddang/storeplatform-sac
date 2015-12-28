@@ -3,21 +3,7 @@
  */
 package com.skplanet.storeplatform.sac.member.miscellaneous.sci;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.sci.MiscellaneousSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacRes;
@@ -31,6 +17,18 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.miscellaneous.sci.service.MiscellaneousSCIService;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 기타 기능 내부메소드 호출 Controller.
@@ -84,13 +82,13 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 
 		for (IndividualPolicyInfo policyList : getIndividualPolicyRes.getPolicyList()) {
 			IndividualPolicyInfoSac infoSac = new IndividualPolicyInfoSac();
-			infoSac.setIsUsed(StringUtil.setTrim(policyList.getIsUsed()));
-			infoSac.setKey(StringUtil.setTrim(policyList.getKey()));
-			infoSac.setLimitAmount(StringUtil.setTrim(policyList.getLimitAmount()));
-			infoSac.setPermissionType(StringUtil.setTrim(policyList.getPermissionType()));
-			infoSac.setPolicyCode(StringUtil.setTrim(policyList.getPolicyCode()));
-			infoSac.setPreLimitAmount(StringUtil.setTrim(policyList.getPreLimitAmount()));
-			infoSac.setValue(StringUtil.setTrim(policyList.getValue()));
+			infoSac.setIsUsed(StringUtils.trimToEmpty(policyList.getIsUsed()));
+			infoSac.setKey(StringUtils.trimToEmpty(policyList.getKey()));
+			infoSac.setLimitAmount(StringUtils.trimToEmpty(policyList.getLimitAmount()));
+			infoSac.setPermissionType(StringUtils.trimToEmpty(policyList.getPermissionType()));
+			infoSac.setPolicyCode(StringUtils.trimToEmpty(policyList.getPolicyCode()));
+			infoSac.setPreLimitAmount(StringUtils.trimToEmpty(policyList.getPreLimitAmount()));
+			infoSac.setValue(StringUtils.trimToEmpty(policyList.getValue()));
 
 			infoSacList.add(infoSac);
 		}
