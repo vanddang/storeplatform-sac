@@ -12,13 +12,13 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
+import com.skplanet.storeplatform.member.client.common.vo.*;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,72 +28,14 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.FindPasswdEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.FindPasswdEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
 import com.skplanet.storeplatform.external.client.syrup.sci.SyrupSCI;
 import com.skplanet.storeplatform.external.client.syrup.vo.SsoCredentialCreateEcReq;
 import com.skplanet.storeplatform.external.client.syrup.vo.SsoCredentialCreateEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
-import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
-import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
-import com.skplanet.storeplatform.member.client.common.vo.SearchMbrSapUserInfo;
-import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
-import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceMbrStatus;
-import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceSystemStats;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.GiftChargeInfo;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAfterUserKeyRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAfterUserKeyResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfo;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeliveryInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOSNumberResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrSapUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrSapUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchSocialAccountRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchSocialAccountResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserEmailResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
@@ -509,119 +451,75 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* 회원 정보 조회 */
 		UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
 
 		String checkId = "";
-		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
 
-			if (!req.getUserEmail().equals("")) {
-				/* UserId와 Email이 일치하는지 체크 */
-				if (info.getUserEmail().equals(req.getUserEmail())) {
-					checkId = "Y";
-				} else {
-					checkId = "N";
-				}
-			} else if (!req.getUserPhone().equals("")) {
-				/* UserId와 Phone이 일치하는지 체크 */
+		if (!req.getUserEmail().equals("")) {
+			/* UserId와 Email이 일치하는지 체크 */
+			if (info.getUserEmail().equals(req.getUserEmail())) {
+				checkId = "Y";
+			} else {
+				checkId = "N";
+			}
+		} else if (!req.getUserPhone().equals("")) {
+			/* UserId와 Phone이 일치하는지 체크 */
 
-				String opmdMdn = this.mcc.getOpmdMdnInfo(req.getUserPhone());
-				req.setUserPhone(opmdMdn);
+			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getUserPhone());
+			req.setUserPhone(opmdMdn);
 
-				ListDeviceReq scReq = new ListDeviceReq();
-				scReq.setUserKey(info.getUserKey());
-				scReq.setDeviceId(req.getUserPhone());
-				scReq.setIsMainDevice("Y");
+			ListDeviceReq scReq = new ListDeviceReq();
+			scReq.setUserKey(info.getUserKey());
+			scReq.setDeviceId(req.getUserPhone());
+			scReq.setIsMainDevice("Y");
 
-				ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
+			ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
 
-				if (listDeviceRes.getUserKey() != null) {
-					checkId = "Y";
-				} else {
-					checkId = "N";
-				}
+			if (listDeviceRes.getUserKey() != null) {
+				checkId = "Y";
+			} else {
+				checkId = "N";
 			}
 		}
 
+		/* 사용자 이메일 혹은 Phone 이 일치하지 않으면 Exception */
 		if (checkId.equals("N")) {
 			throw new StorePlatformException("SAC_MEM_0002", "Email or Phone");
 		}
 
 		SearchPasswordSacRes res = new SearchPasswordSacRes();
-		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
-			if (info.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
-				// 무선회원
-				throw new StorePlatformException("SAC_MEM_1300", info.getUserType());
-			} else if (info.getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
-				// IDP 회원
-				FindPasswdEcReq ecReqFindpass = new FindPasswdEcReq();
-				ecReqFindpass.setKeyType("3");
-				ecReqFindpass.setKey(info.getUserId());
-				ecReqFindpass.setWatermarkAuth("2");
 
-				FindPasswdEcRes ecResFindpass = this.idpSCI.findPasswd(ecReqFindpass);
+		if(info.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)
+				|| info.getUserType().equals(MemberConstants.USER_TYPE_NAVER)
+				|| info.getUserType().equals(MemberConstants.USER_TYPE_GOOGLE)
+				|| info.getUserType().equals(MemberConstants.USER_TYPE_FACEBOOK)){
+			/* 모바일, 네이버, 구글, 페이스북 아이디 사용자는 비밀번호 찾기 불가 */
+			throw new StorePlatformException("SAC_MEM_1300", info.getUserType());
+		}else{
+			/* 그외의 사용자는 비밀번호 찾기 가능 - SAC에서 리셋한 비밀번호를 줌 */
+			/* 새로운 암호 생성 및 암호화하여 DB 저장 */
+			MbrPwd mbrPwd = new MbrPwd();
+			mbrPwd.setMemberKey(info.getUserKey());
 
-				LOGGER.debug("## IDP Request FindPasswd : {}", ecReqFindpass.toString());
-				LOGGER.debug("## IDP Response FindPasswd : {}", ecResFindpass.getCommonRes().getResultText());
+			ResetPasswordUserRequest scRPUReq = new ResetPasswordUserRequest();
+			scRPUReq.setCommonRequest(commonRequest);
+			scRPUReq.setMbrPwd(mbrPwd);
 
-				res.setUserPw(ecResFindpass.getTempPasswd());
+			ResetPasswordUserResponse scRPURes = this.userSCI.updateResetPasswordUser(scRPUReq);
 
-				if (!req.getUserEmail().equals("")) {
-					res.setSendInfo(StringUtil.setTrim(req.getUserEmail()));
-					res.setSendMean("01");
-				} else if (!req.getUserPhone().equals("")) {
-					res.setSendInfo(StringUtil.setTrim(req.getUserPhone()));
-					res.setSendMean("02");
-				} else if (req.getUserEmail().equals("") && req.getUserPhone().equals("")) {
-					throw new StorePlatformException("SAC_MEM_0001", "userEmail or userPhone");
-				}
+			/* 3. DB에 저장이 잘 되었으면 req의 userEmail, userPhone에 따라 응답값 설정 */
+			res.setUserPw(scRPURes.getUserPW());
+			if (!req.getUserEmail().equals("")) {
+				res.setSendInfo(StringUtil.setTrim(req.getUserEmail()));
+				res.setSendMean("01");
+			} else if (!req.getUserPhone().equals("")) {
+				res.setSendInfo(StringUtil.setTrim(req.getUserPhone()));
+				res.setSendMean("02");
+			} else if (req.getUserEmail().equals("") && req.getUserPhone().equals("")) {
+				throw new StorePlatformException("SAC_MEM_0001", "userEmail or userPhone");
 			}
-
-		} else {
-
-			// 통합ID회원
-			UserInfoIdpSearchServerEcReq ecReqUserInfo = new UserInfoIdpSearchServerEcReq();
-			ecReqUserInfo.setKey(info.getImSvcNo()); // 통합 서비스 관리번호
-			ecReqUserInfo.setKeyType("1");
-			UserInfoIdpSearchServerEcRes ecResUserInfo = this.imIdpSCI.userInfoIdpSearchServer(ecReqUserInfo);
-
-			LOGGER.debug("## ImIDP Request UserSearch : {}", ecReqUserInfo.toString());
-			LOGGER.debug("## ImIDP Response UserSearch{}", ecResUserInfo.toString());
-
-			// 통합ID회원 패스워드 리셋
-			ResetUserPwdIdpEcReq ecReqResetUserPwd = new ResetUserPwdIdpEcReq();
-			Date dtCur = new Date();
-			ecReqResetUserPwd.setKeyType("1");
-			ecReqResetUserPwd.setKey(info.getImSvcNo());
-			ecReqResetUserPwd.setLangCode("KOR");
-			ecReqResetUserPwd.setModifyReqDate(new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(dtCur));
-			ecReqResetUserPwd.setModifyReqTime(new SimpleDateFormat("HHmmss", Locale.KOREA).format(dtCur));
-
-			if (ecResUserInfo.getIsUserTnAuth().equals("Y")) {
-				// 휴대폰 인증
-				ecReqResetUserPwd.setUserTn(ecResUserInfo.getUserTn());
-				ecReqResetUserPwd.setUserTnNationCd("82");
-				ecReqResetUserPwd.setUserTnType("M");
-				ecReqResetUserPwd.setIsUserTnAuth("Y");
-				ecReqResetUserPwd.setIsEmailAuth("N");
-			} else if (ecResUserInfo.getIsEmailAuth().equals("Y")) {
-				// 이메일 인증
-				ecReqResetUserPwd.setIsEmailAuth("Y");
-				ecReqResetUserPwd.setUserEmail(ecResUserInfo.getUserEmail());
-				ecReqResetUserPwd.setIsUserTnAuth("N");
-			}
-
-			LOGGER.debug("## ImIDP Request ResetUserPWD : {}", ecReqResetUserPwd.toString());
-
-			ResetUserPwdIdpEcRes ecResResetUserPwd = this.imIdpSCI.resetUserPwdIdp(ecReqResetUserPwd);
-
-			LOGGER.debug("## ImIDP Response ResetUserPWD : {}", ecResResetUserPwd.getCommonRes().getResultText());
-
-			res.setSendInfo("");
-			res.setUserPw("");
-			res.setSendMean("03");
 		}
 
 		return res;

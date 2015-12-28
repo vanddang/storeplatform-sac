@@ -9,11 +9,11 @@
  */
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonResponse;
+
+import java.io.Serializable;
 
 /**
  * 사용자회원 비밀번호 변경 응답 Value Object

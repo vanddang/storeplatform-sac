@@ -36,6 +36,8 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1498,28 +1500,57 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResetPasswordUserResponse updateResetPasswordUser(ResetPasswordUserRequest resetPasswordUserRequest) {
 
-		// userID가 존재하는지 여부 확인
+		// userKey가 존재하는지 여부 확인
 		String isRegistered = null;
 		UserMbr usermbr = new UserMbr();
-		usermbr.setTenantID(resetPasswordUserRequest.getCommonRequest().getTenantID());
-		usermbr.setUserID(resetPasswordUserRequest.getMbrPwd().getMemberID());
-		isRegistered = this.commonDAO.queryForObject("User.isRegisteredUserID", usermbr, String.class);
+		usermbr.setUserKey(resetPasswordUserRequest.getMbrPwd().getMemberKey());
+		isRegistered = this.commonDAO.queryForObject("User.isRegisteredUserKey", usermbr, String.class);
 		if (isRegistered == null || isRegistered.length() <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
 		}
 
-		MbrPwd mbrPwd = resetPasswordUserRequest.getMbrPwd();
-		mbrPwd.setTenantID(resetPasswordUserRequest.getCommonRequest().getTenantID());
+		// userKey가 존재한다면 pw 생성 및 암호화
+		// 1. 비밀번호 생성
+		StringBuffer newPW = new StringBuffer();
+		for(int i=0; i < 7; i++){
+			if(i<4){
+				// 영어 소문자 3개
+				newPW.append((char)((Math.random()*26)+97));
+			}else{
+				// 숫자 3개
+				newPW.append((int)(Math.random()*10));
+			}
+		}
+		// 2. 생성된 비밀번호 암호화 (MD5 or SHA-128)
+		String encNewPw;
+		try{
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(newPW.toString().getBytes());
 
-		Integer row = this.commonDAO.update("User.resetPasswordUser", mbrPwd);
+			byte byteData[] = md.digest();
+			StringBuffer sb = new StringBuffer();
+
+			for(int i = 0 ; i < byteData.length ; i++){
+				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+			}
+			encNewPw = sb.toString();
+		}catch(NoSuchAlgorithmException e){
+			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+		}
+
+		resetPasswordUserRequest.getMbrPwd().setMemberPW(encNewPw);
+
+		Integer row = this.commonDAO.update("User.resetPasswordUser", resetPasswordUserRequest.getMbrPwd());
 		LOGGER.debug("### updateStatus row : {}", row);
 		if (row == 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
 
 		ResetPasswordUserResponse resetPasswordUserResponse = new ResetPasswordUserResponse();
+		resetPasswordUserResponse.setUserPW(encNewPw);
 		resetPasswordUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
+
 		return resetPasswordUserResponse;
 
 	}
@@ -3976,11 +4007,7 @@ public class UserServiceImpl implements UserService {
 		if(StringUtils.equals(chkUserPwdRequest.getIsDormant(), "N")) {
 			checkUserPwdResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
 		}else{
-			checkUserPwdResponse.setUserKey((String) this.idleDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
-		}
-
-		if( checkUserPwdResponse.getUserKey() == null || checkUserPwdResponse.getUserKey().length() <= 0 ){
-			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
+			checkUserPwdResponse.setUserKey((String)this.idleDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
 		}
 
 		checkUserPwdResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
