@@ -9,6 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import com.skplanet.storeplatform.member.client.common.constant.Constant;
+import com.skplanet.storeplatform.member.client.common.util.Utils;
+import com.skplanet.storeplatform.sac.common.util.CommonUtils;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +86,37 @@ public class UserModifyController {
 		LOGGER.debug("#################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+        /**
+         *  request 데이터 값/형식 및 길이 체크
+         */
+        //01. 이메일 수신 여부
+        if(StringUtils.isNotBlank(req.getIsRecvEmail()) && (!StringUtils.equalsIgnoreCase(req.getIsRecvEmail(), MemberConstants.USE_Y)
+                && !StringUtils.equalsIgnoreCase(req.getIsRecvEmail(), MemberConstants.USE_N))){
+            throw new StorePlatformException("SAC_MEM_0007", "isRecvEmail");
+        }
+
+        // 02. 사용자 성별
+        if(StringUtils.isNotBlank(req.getUserSex()) && (!StringUtils.equalsIgnoreCase(req.getUserSex(), MemberConstants.SEX_TYPE_MALE)
+                && !StringUtils.equalsIgnoreCase(req.getUserSex(), MemberConstants.SEX_TYPE_FEMALE))){
+            throw new StorePlatformException("SAC_MEM_0007", "userSex");
+        }
+
+        // 03. 사용자 생년월일
+        if(StringUtils.isNotBlank(req.getUserBirthDay()) && StringUtils.isEmpty(CommonUtils.regxNumber(req.getUserBirthDay()))){
+            throw new StorePlatformException("SAC_MEM_0007", "userBirthDay");
+        }
+
+        // 04. 사용자 생일
+        if(StringUtils.isNotBlank(req.getUserCalendar()) && (!StringUtils.equalsIgnoreCase(req.getUserCalendar(), MemberConstants.BIRTHDAY_TYPE_SOCAL)
+                && !StringUtils.equalsIgnoreCase(req.getUserCalendar(), MemberConstants.BIRTHDAY_TYPE_LUCAL))){
+            throw new StorePlatformException("SAC_MEM_0007", "userCalendar");
+        }
+
+        // 05. 사용자 업데이트 이메일
+        if(StringUtils.isNotBlank(req.getUserUpdEmail()) && !ValidationCheckUtils.isEmail(req.getUserUpdEmail())){
+            throw new StorePlatformException("SAC_MEM_0007", "userUpdEmail");
+        }
 
 		/**
 		 * 회원 정보 수정 Biz
