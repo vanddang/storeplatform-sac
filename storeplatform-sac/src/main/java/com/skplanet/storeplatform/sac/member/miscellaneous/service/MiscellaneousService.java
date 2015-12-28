@@ -22,19 +22,6 @@ public interface MiscellaneousService {
 	 *            AuthorizeAccountReq
 	 * @return AuthorizeAccountRes
 	 */
-	public AuthorizeAccountRes authorizeAccount(AuthorizeAccountReq request);
-
-	/**
-	 * <pre>
-	 * 2.1.60.	휴대기기 PIN 번호 인증 여부 확인.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param request
-	 *            PinAuthorizationCheckReq
-	 * @return PinAuthorizationCheckRes
-	 */
-	public PinAuthorizationCheckRes pinAuthorizationCheck(SacRequestHeader header, PinAuthorizationCheckReq request);
+	AuthorizeAccountRes authorizeAccount(AuthorizeAccountReq request);
 
 }
