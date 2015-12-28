@@ -108,26 +108,6 @@ public interface MiscellaneousService {
 
 	/**
 	 * <pre>
-	 * Captcha 문자 발급.
-	 * </pre>
-	 * 
-	 * @return GetCaptchaRes
-	 */
-	public GetCaptchaRes getCaptcha();
-
-	/**
-	 * <pre>
-	 * Captcha 문자 확인.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            ConfirmCaptchaReq
-	 * @return ConfirmCaptchaRes
-	 */
-	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request);
-
-	/**
-	 * <pre>
 	 * 이메일 인증 코드 생성.
 	 * </pre>
 	 * 

@@ -1,32 +1,9 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
-import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ImageRes;
-import com.skplanet.storeplatform.external.client.idp.vo.JoinSupServiceRequestEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.JoinSupServiceRequestEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.ModifyEmailEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ServiceSubscriptionCheckEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ServiceSubscriptionCheckEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthImageEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.*;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEmIDPEcReq;
 import com.skplanet.storeplatform.external.client.inicis.sci.InicisSCI;
 import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcReq;
@@ -42,64 +19,12 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
-import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
-import com.skplanet.storeplatform.member.client.common.vo.RemovePolicyRequest;
-import com.skplanet.storeplatform.member.client.common.vo.RemovePolicyResponse;
-import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
-import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
-import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
-import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyResponse;
+import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationUrlSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationUrlSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationUrlSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationUrlSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
-import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.*;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -107,6 +32,19 @@ import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * 
@@ -134,8 +72,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private UapsSCI uapsSCI; // UAPS 연동 Interface.
 	@Autowired
 	private MessageSCI messageSCI; // 메시지전송 기능 Interface.
-	@Autowired
-	private ImageSCI imageSCI; // 이미지를 String으로 변환 Interface.
 	@Autowired
 	private InicisSCI inicisSCI; // 이니시스 연동 Interface.
 	@Autowired
@@ -462,74 +398,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		res.setUserPhone(userPhone);
 		LOGGER.debug("## Response : {}", res);
 		return res;
-	}
-
-	/**
-	 * <pre>
-	 * Captcha 문자 발급.
-	 * </pre>
-	 * 
-	 * @return GetCaptchaRes
-	 */
-	@Override
-	public GetCaptchaRes getCaptcha() {
-		String waterMarkImageUrl = "";
-		String waterMarkImageSign = "";
-		String waterMarkImageString = "";
-		String signData = "";
-		GetCaptchaRes response = new GetCaptchaRes();
-
-		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
-
-		WaterMarkAuthImageEcRes waterMarkAuthImageEcRes = this.idpSCI.warterMarkImageUrl();
-
-		if (waterMarkAuthImageEcRes != null && StringUtils.isNotBlank(waterMarkAuthImageEcRes.getImageUrl())) {
-			waterMarkImageUrl = waterMarkAuthImageEcRes.getImageUrl();
-			waterMarkImageSign = waterMarkAuthImageEcRes.getImageSign();
-			signData = waterMarkAuthImageEcRes.getSignData();
-
-			LOGGER.debug("[MiscellaneousService.getCaptcha] SAC<-IDP Response : {}", waterMarkAuthImageEcRes);
-
-			String urlPath = waterMarkImageUrl.substring(waterMarkImageUrl.indexOf("/watermark"));
-
-			ImageReq req = new ImageReq();
-			req.setProtocol(waterMarkImageUrl.substring(0, 5).equals("https") ? "https" : "http"); // HTTP or HTTPS
-			req.setUrlPath(urlPath);
-			ImageRes imageRes = this.imageSCI.convert(req);
-
-			if (imageRes != null && StringUtils.isNotBlank(imageRes.getImgData())) {
-				waterMarkImageString = imageRes.getImgData();
-			}
-		}
-
-		response.setImageData(waterMarkImageString);
-		response.setImageSign(waterMarkImageSign);
-		response.setSignData(signData);
-
-		return response;
-	}
-
-	/**
-	 * <pre>
-	 * Captcha 문자 확인.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            ConfirmCaptchaReq
-	 * @return ConfirmCaptchaRes
-	 */
-	@Override
-	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) {
-
-		WaterMarkAuthEcReq waterMarkAuthEcReq = new WaterMarkAuthEcReq();
-		waterMarkAuthEcReq.setUserCode(request.getAuthCode());
-		waterMarkAuthEcReq.setImageSign(request.getImageSign());
-		waterMarkAuthEcReq.setSignData(request.getSignData());
-
-		this.idpSCI.waterMarkAuth(waterMarkAuthEcReq);
-
-		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
-		return response;
 	}
 
 	/**
@@ -958,7 +826,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * 
 	 * @param header
 	 *            SacRequestHeader
-	 * @param request
+	 * @param req
 	 *            ConfirmPhoneAuthorizationCheckReq
 	 * @return ConfirmPhoneAuthorizationCheckRes
 	 */
@@ -1156,7 +1024,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * 
 	 * @param header
 	 *            SacRequestHeader
-	 * @param request
+	 * @param req
 	 *            PinAuthorizationCheckReq
 	 * @return PinAuthorizationCheckRes
 	 */

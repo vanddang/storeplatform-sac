@@ -1,5 +1,12 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,48 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationUrlSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationUrlSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationUrlSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationUrlSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
-import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 
 /**
  * 
@@ -179,42 +144,6 @@ public class MiscellaneousController {
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
 		return response;
 
-	}
-
-	/**
-	 * <pre>
-	 * Captcha 문자 발급.
-	 * </pre>
-	 * 
-	 * @return GetCaptchaRes
-	 */
-	@RequestMapping(value = "/getCaptcha/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public GetCaptchaRes getCaptcha() {
-
-		LOGGER.info("Request : {}");
-		GetCaptchaRes response = this.service.getCaptcha();
-		LOGGER.info("Response : imageSign : {}", response.getImageSign());
-		return response;
-	}
-
-	/**
-	 * <pre>
-	 *  Captcha 문자 확인.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            ConfirmCaptchaReq
-	 * @return ConfirmCaptchaRes - 인증 성공:null, 인증 실패:Exception
-	 */
-	@RequestMapping(value = "/confirmCaptcha/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public ConfirmCaptchaRes confirmCaptcha(@Validated @RequestBody ConfirmCaptchaReq request) {
-
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
-		ConfirmCaptchaRes response = this.service.confirmCaptcha(request);
-		LOGGER.info("Response : SUCC.");
-		return response;
 	}
 
 	/**
