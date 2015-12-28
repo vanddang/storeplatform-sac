@@ -99,80 +99,9 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (createDeviceRequest.getCommonRequest().getTenantID() == null
-				|| createDeviceRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 사용자키 없음
 		if (createDeviceRequest.getUserKey() == null || createDeviceRequest.getUserKey().length() <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-		}
-		if (createDeviceRequest.getIsNew() == null || createDeviceRequest.getIsNew().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-		}
-		if (createDeviceRequest.getUserMbrDevice() == null) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-		}
-
-		// 수정 또는 추가할 기기 없음
-		if (createDeviceRequest.getIsNew().equals(Constant.TYPE_YN_N)) {
-			if (createDeviceRequest.getUserMbrDevice().getDeviceKey() == null
-					|| createDeviceRequest.getUserMbrDevice().getDeviceKey().length() <= 0) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-			}
-			if (createDeviceRequest.getUserMbrDevice().getDeviceID() == null
-					|| createDeviceRequest.getUserMbrDevice().getDeviceID().length() <= 0) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-			}
-		}
-		if (createDeviceRequest.getIsNew().equals(Constant.TYPE_YN_Y)) {
-			// TLog
-			new TLogUtil().set(new ShuttleSetter() {
-				@Override
-				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL_SC_MEM_0003");
-				}
-			});
-
-			if (createDeviceRequest.getUserMbrDevice().getIsPrimary() == null
-					|| createDeviceRequest.getUserMbrDevice().getIsPrimary().length() <= 0) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-			}
-			if (createDeviceRequest.getUserMbrDevice().getDeviceID() == null
-					|| createDeviceRequest.getUserMbrDevice().getDeviceID().length() <= 0) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-			}
-			if (createDeviceRequest.getUserMbrDevice().getDeviceModelNo() == null
-					|| createDeviceRequest.getUserMbrDevice().getDeviceModelNo().length() <= 0) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-			}
-
-			// TLog
-			final String tlogDeviceID = createDeviceRequest.getUserMbrDevice().getDeviceID();
-			final String tlogUserKey = createDeviceRequest.getUserKey();
-			final String tlogImSvcNo = createDeviceRequest.getUserMbrDevice().getSvcMangNum();
-			final String tlogMNO = createDeviceRequest.getUserMbrDevice().getDeviceTelecom();
-			final String tlogIEMI = createDeviceRequest.getUserMbrDevice().getNativeID();
-			final String tlogMODEL = createDeviceRequest.getUserMbrDevice().getDeviceModelNo();
-			// 자사폰 여부 company_own_phone_yn
-			String isSKTelecom = "N";
-			if (createDeviceRequest.getUserMbrDevice().getDeviceTelecom() != null
-					&& createDeviceRequest.getUserMbrDevice().getDeviceTelecom().equals("US001201")) {
-				isSKTelecom = "Y";
-			}
-			final String tlogCompanyOwnPhoneYn = isSKTelecom;
-			final String tlogSystemID = createDeviceRequest.getCommonRequest().getSystemID();
-
-			new TLogUtil().set(new ShuttleSetter() {
-				@Override
-				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.insd_usermbr_no(tlogUserKey).device_id(tlogDeviceID).svc_mng_no(tlogImSvcNo)
-							.company_own_phone_yn(tlogCompanyOwnPhoneYn).mno_type(tlogMNO).system_id(tlogSystemID)
-							.imei(tlogIEMI).phone_model(tlogMODEL);
-				}
-			});
 		}
 
 		try {
@@ -217,12 +146,6 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchDeviceListRequest.getCommonRequest().getTenantID() == null
-				|| searchDeviceListRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, keySearch
 		if (searchDeviceListRequest.getKeySearchList() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -256,7 +179,8 @@ public class DeviceSCIController implements DeviceSCI {
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_IDP_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_ONEID_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_KEY)
-					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_ID)) {
+					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_ID)
+					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.wrongKeyType", ""));
 			}
 		}

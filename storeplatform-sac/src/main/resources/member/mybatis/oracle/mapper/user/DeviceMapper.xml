@@ -29,8 +29,9 @@
             FROM (
                     SELECT  a.insd_usermbr_no AS userKey
                          ,  a.mbr_id AS userID
-                      FROM  tb_us_ousermbr a
+                      FROM  tb_us_ousermbr a, tb_us_ousermbr_device b
                      WHERE  a.mbr_status_main_cd != 'US010202'
+                            and a.insd_usermbr_no = b.insd_usermbr_no
                <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                    <if test="keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO')">
                        a.insd_usermbr_no = #{keySearch.keyString}
@@ -40,7 +41,7 @@
                    </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('USERMBR_NO')">
                        a.usermbr_no = #{keySearch.keyString}
-                   </if>                     
+                   </if>
                </foreach>
                 ) l
     </select>
@@ -66,7 +67,10 @@
                    </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('MDN')">
                        b.mdn = #{keySearch.keyString}
-                   </if>                        
+                   </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO')">
+                       b.svc_mang_no = #{keySearch.keyString}
+                   </if>
                </foreach>
                 ORDER BY b.auth_dt DESC) l
                 WHERE ROWNUM = 1
@@ -80,8 +84,9 @@
                     , #{isMainDevice} AS isMainDevice
               FROM  (
                       SELECT  a.insd_usermbr_no AS userKey
-                        FROM  tb_us_ousermbr a
+                        FROM  tb_us_ousermbr a, tb_us_ousermbr_device b
                        WHERE  a.mbr_status_main_cd != 'US010202'
+                              and a.insd_uermbr_no = b.insd_usermbr_no
                <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                    <if test="keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO')">
                        a.insd_usermbr_no = #{keySearch.keyString}
@@ -91,7 +96,7 @@
                    </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('USERMBR_NO')">
                        a.usermbr_no = #{keySearch.keyString}
-                   </if>               
+                   </if>
                </foreach>
                 ) l
     </select>
@@ -116,7 +121,10 @@
                    </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('MDN')">
                        b.mdn = #{keySearch.keyString}
-                   </if>                        
+                   </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO')">
+                       b.svc_mang_no = #{keySearch.keyString}
+                   </if>
                </foreach>
                 ORDER BY b.auth_dt DESC) l
                 WHERE ROWNUM = 1
@@ -406,7 +414,7 @@
                mdn,
                auth_yn AS isUsed
         FROM  tb_us_ousermbr_device
-        WHERE device_id = #{userMbrDevice.deviceID}
+        WHERE mdn = #{userMbrDevice.mdn}
         ORDER BY auth_dt
     </select>
     
@@ -1056,4 +1064,27 @@
         WHERE ROWNUM = 1
     </select>
 
+    <!-- 휴대기기 목록 조회 -->
+    <select id="searchDeviceListForOneBrand" parameterType="searchDeviceListRequest" resultType="userMbrDevice">
+        SELECT
+          a.insd_usermbr_no as userKey,
+          a.user_id as userId,
+          b.insd_device_id as deviceKey,
+          b.device_id as deviceId,
+          b.mdn as mdn,
+          b.svc_mang_no as svcMangNo,
+          b.mno_cd as deviceTelecom
+      FROM TB_US_OUSERMBR a
+        INNER JOIN TB_US_OUSERMBR_DEVICE b ON a.insd_usermbr_no = b.insd_usermbr_no
+        WHERE auth_yn = 'Y'
+        <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID')">
+            AND b.device_id = #{keySearch.keyString}
+        </if>
+        <if test="keySearch.keyType.equalsIgnoreCase('MDN')">
+            AND b.mdn = #{keySearch.keyString}
+        </if>
+        <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO')">
+            AND b.svc_mang_no = #{keySearch.keyString}
+        </if>
+    </select>
 </mapper>

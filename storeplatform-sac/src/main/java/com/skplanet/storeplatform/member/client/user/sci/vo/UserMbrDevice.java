@@ -91,6 +91,9 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	/** 마지막 로그인 일자. */
 	private String lastloginDt;
 
+	/** 휴대기기 보유자 ID. */
+	private String userID;
+
 	/**
 	 * 시작일자를 리턴한다.
 	 * 
@@ -539,5 +542,27 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	 */
 	public void setLastloginDt(String lastloginDt) {
 		this.lastloginDt = lastloginDt;
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 보유자 ID를 리턴한다..
+	 * </pre>
+	 *
+	 * @return userID
+	 */
+	public String getUserID() {
+		return userID;
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 보유자 ID를 설정한다.
+	 * </pre>
+	 *
+	 * @param userID
+	 */
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 }

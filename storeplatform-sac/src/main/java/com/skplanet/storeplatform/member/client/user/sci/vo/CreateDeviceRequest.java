@@ -47,9 +47,6 @@ public class CreateDeviceRequest extends CommonInfo implements Serializable {
 		this.commonRequest = commonRequest;
 	}
 
-	/** 등록여부. */
-	private String isNew;
-
 	/** 사용자 Key. */
 	private String userKey;
 
@@ -83,25 +80,6 @@ public class CreateDeviceRequest extends CommonInfo implements Serializable {
 	@Override
 	public String toString() {
 		return Utils.printKeyValues(this);
-	}
-
-	/**
-	 * 휴대기기 등록 여부(Y/N)를 리턴한다.
-	 * 
-	 * @return isNew - 휴대기기 등록 여부(Y/N)
-	 */
-	public String getIsNew() {
-		return this.isNew;
-	}
-
-	/**
-	 * 휴대기기 등록 여부를 설정한다. Example : Y/N
-	 * 
-	 * @param isNew
-	 *            휴대기기 등록 여부(Y/N)
-	 */
-	public void setIsNew(String isNew) {
-		this.isNew = isNew;
 	}
 
 	/**

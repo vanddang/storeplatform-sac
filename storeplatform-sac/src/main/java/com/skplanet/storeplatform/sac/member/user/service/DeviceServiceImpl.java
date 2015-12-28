@@ -14,12 +14,15 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.skplanet.storeplatform.framework.test.StoreplatformMediaType;
+import com.skplanet.storeplatform.member.client.common.util.RandomString;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
@@ -158,6 +161,9 @@ public class DeviceServiceImpl implements DeviceService {
 	@Autowired
 	private MemberCommonInternalComponent mcic;
 
+	@Value("#{propertiesForSac['sac.member.device.max.cnt']}")
+	private Integer deviceRegManCnt;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -173,59 +179,40 @@ public class DeviceServiceImpl implements DeviceService {
 			req.getDeviceInfo().setMdn(this.commService.getOpmdMdnInfo(req.getDeviceInfo().getMdn()));
 		}
 
-		/* 회원 정보 조회 */
-		UserInfo userInfo = this.srhUser(requestHeader, req.getUserKey());
-
 		/* 보유한 휴대기기 리스트 조회 */
-		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setIsMainDevice("N");
-		listDeviceReq.setUserKey(req.getUserKey());
-		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
-
-		/* 등록 가능한 휴대기기 개수 초과 */
-		if (listDeviceRes.getDeviceInfoList().size() >= Integer.parseInt(req.getRegMaxCnt())) {
-			throw new StorePlatformException("SAC_MEM_1501");
-		}
-
-		/*	기등록된 휴대기기 체크 */
-		if (listDeviceRes != null && listDeviceRes.getDeviceInfoList() != null) {
-			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
-				if (StringUtils.equals(deviceInfo.getMdn(), req.getDeviceInfo().getMdn())) {
-					throw new StorePlatformException("SAC_MEM_1502");
+		SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
+		schDeviceListReq.setCommonRequest(commService.getSCCommonRequest(requestHeader));
+		schDeviceListReq.setUserKey(req.getUserKey());
+		schDeviceListReq.setIsMainDevice(MemberConstants.USE_N); // 대표기기만 조회(Y), 모든기기 조회(N)
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		key.setKeyString(req.getUserKey());
+		keySearchList.add(key);
+		schDeviceListReq.setKeySearchList(keySearchList);
+		try{
+			SearchDeviceListResponse schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
+			/*	기등록된 휴대기기 체크 */
+			if (schDeviceListRes != null && schDeviceListRes.getUserMbrDevice() != null) {
+				for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
+					if (StringUtils.equals(userMbrDevice.getMdn(), req.getDeviceInfo().getMdn())) {
+						throw new StorePlatformException("SAC_MEM_1502");
+					}
 				}
+			}
+		}catch(StorePlatformException e){
+			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+				throw e;
 			}
 		}
 
-		/* device header 값 셋팅(OS버젼, SC버젼) */
-		String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
-		String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
-		if (StringUtils.isNotBlank(osVersion)) {
-			req.getDeviceInfo().setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
-					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
-					req.getDeviceInfo().getDeviceExtraInfoList()));
-		}
-		if (StringUtils.isNotBlank(svcVersion)) {
-			req.getDeviceInfo().setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
-					MemberConstants.DEVICE_EXTRA_SCVERSION,
-					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
-					req.getDeviceInfo().getDeviceExtraInfoList()));
-		}
-
-		/* gmail 정보 파싱 */
-		if(StringUtils.isNotBlank(req.getDeviceInfo().getDeviceAccount())){
-			req.getDeviceInfo().setDeviceAccount(DeviceUtil.getGmailStr(req.getDeviceInfo().getDeviceAccount()));
-		}
-
-		/* 서비스관리번호 조회 */
-		String svcMangNo = this.commService.getSvcMangNo(req.getDeviceInfo().getMdn(), req.getDeviceInfo().getDeviceTelecom(), req.getDeviceInfo().getNativeId(), req.getDeviceInfo().getDeviceSimNm());
-		req.getDeviceInfo().setSvcMangNum(svcMangNo);
 
 		// 기등록된 회원이 휴면아이디에 붙은 MDN인지 체크
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MDN);
-		keySchUserKey.setKeyString(req.getDeviceInfo().getMdn());
-		keySearchList.add(keySchUserKey);
+		keySearchList = new ArrayList<KeySearch>();
+		key = new KeySearch();
+		key.setKeyType(MemberConstants.KEY_TYPE_MDN);
+		key.setKeyString(req.getDeviceInfo().getMdn());
+		keySearchList.add(key);
 		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
 		searchExtentUserRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
 		searchExtentUserRequest.setKeySearchList(keySearchList);
@@ -255,7 +242,8 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 휴대기기 등록 처리 */
-		String deviceKey = this.regDeviceInfo(requestHeader.getTenantHeader().getSystemId(), req.getUserKey(), req.getDeviceInfo());
+		req.getDeviceInfo().setUserKey(req.getUserKey());
+		String deviceKey = this.regDeviceInfo(requestHeader, req.getDeviceInfo());
 
 		CreateDeviceRes res = new CreateDeviceRes();
 		res.setDeviceId(req.getDeviceInfo().getDeviceId());
@@ -460,29 +448,62 @@ public class DeviceServiceImpl implements DeviceService {
 	 * java.lang.String, java.lang.String, com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public String regDeviceInfo(String systemId, String userKey, DeviceInfo deviceInfo) {
+	public String regDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+		String userKey = deviceInfo.getUserKey();
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(systemId);
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 
-		/* 1. 휴대기기 정보 등록 요청 */
+		/* 서비스관리번호 조회 */
+		//TODO. LOCAL 테스트를 위해 Exception 예외 처리
+		String svcMangNo = null;
+		try{
+			svcMangNo = this.commService.getSvcMangNo(deviceInfo.getMdn(), deviceInfo.getDeviceTelecom(), deviceInfo.getNativeId(), deviceInfo.getDeviceSimNm());
+			deviceInfo.setSvcMangNum(svcMangNo);
+		}catch(Exception e){
+			svcMangNo = RandomString.getString(8, RandomString.TYPE_NUMBER);
+			deviceInfo.setSvcMangNum(svcMangNo);
+		}
+
+		/* 등록 가능한 휴대기기 개수 초과 채크 */
+		this.checkDeviceRegMaxCnt(requestHeader, userKey, deviceInfo.getDeviceId(), deviceInfo.getSvcMangNum());
+
+		/* device header 값 셋팅(OS버젼, SC버젼) */
+		String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
+		String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
+		if (StringUtils.isNotBlank(osVersion)) {
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
+					deviceInfo.getDeviceExtraInfoList()));
+		}
+		if (StringUtils.isNotBlank(svcVersion)) {
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
+					MemberConstants.DEVICE_EXTRA_SCVERSION,
+					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
+					deviceInfo.getDeviceExtraInfoList()));
+		}
+
+		/* gmail 정보 파싱 */
+		if(StringUtils.isNotBlank(deviceInfo.getDeviceAccount())){
+			deviceInfo.setDeviceAccount(DeviceUtil.getGmailStr(deviceInfo.getDeviceAccount()));
+		}
+
+		/* 휴대기기 정보 등록 요청 */
 		createDeviceReq.setCommonRequest(commonRequest);
 		createDeviceReq.setUserKey(userKey);
-
 		UserMbrDevice userMbrDevice = DeviceUtil.getConverterUserMbrDeviceInfo(deviceInfo);
 		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
-
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		if (StringUtils.isBlank(createDeviceRes.getDeviceKey())) {
 			throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 등록에 실패하였습니다.
 		}
 
-		/* 2. 기등록된 회원이 존재하는지 확인(모바일 회원에 대해서만 previous* 값들이 리턴됨) */
+		/* 기등록된 회원이 존재하는지 확인(모바일 회원에 대해서만 previous* 값들이 리턴됨) */
 		String previousUserKey = createDeviceRes.getPreviousUserKey();
 		String previousDeviceKey = createDeviceRes.getPreviousDeviceKey();
 		String deviceKey = createDeviceRes.getDeviceKey();
@@ -498,11 +519,11 @@ public class DeviceServiceImpl implements DeviceService {
 					deviceInfo.getDeviceId(), previousDeviceKey, deviceKey, previousUserKey, userKey,
 					previousIsDormant, preUserKey, preDeviceKey);
 
-			/* 3. 전시/기타, 구매 파트 키 변경 */
-			this.mcic.excuteInternalMethod(true, systemId, userKey, previousUserKey, deviceKey,
+			/* 전시/기타, 구매 파트 키 변경 */
+			this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), userKey, previousUserKey, deviceKey,
 					previousDeviceKey);
 
-			/* 4. 실명인증 비교 후 이관 or 초기화 */
+			/* 실명인증 비교 후 이관 or 초기화 */
 			SearchRealNameRequest schRealNameReq = new SearchRealNameRequest();
 			schRealNameReq.setCommonRequest(commonRequest);
 			schRealNameReq.setUserKey(previousUserKey);
@@ -629,7 +650,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		/* 7. MQ 연동 */
+		/* MQ 연동 - 휴대기기 등록 */
 		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
 		try {
 			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
@@ -814,7 +835,7 @@ public class DeviceServiceImpl implements DeviceService {
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 		createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 		createDeviceReq.setUserKey(dbUserMbrDevice.getUserKey());
-		createDeviceReq.setIsNew("N");
+		//createDeviceReq.setIsNew("N");
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
@@ -1148,7 +1169,7 @@ public class DeviceServiceImpl implements DeviceService {
 			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 			createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 			createDeviceReq.setUserKey(dbDeviceInfo.getUserKey());
-			createDeviceReq.setIsNew("N");
+			//createDeviceReq.setIsNew("N");
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
 			CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
@@ -1680,5 +1701,110 @@ public class DeviceServiceImpl implements DeviceService {
 		LOGGER.info("{} {} 일치여부 : {}, request : {}, db : {}", deviceId, equalsType, isEquals, reqVal, dbVal);
 
 		return isEquals;
+	}
+
+	/**
+	 * 등록 가능한 휴대기기 개수 초과 채크(device_id, svc_mang_no로 조회시 정보가 없으면 신규저장 케이스로 판단해서 최대 휴대기기 등록 가능한 개수 초과 체크)).
+	 *
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userKey
+	 *            String
+	 * @param deviceId
+	 *            String
+	 * @param svcMangNo
+	 *            String
+	 */
+	private void checkDeviceRegMaxCnt(SacRequestHeader requestHeader, String userKey, String deviceId, String svcMangNo){
+		SearchDeviceListResponse schDeviceListResByDeviceId = null;
+		SearchDeviceListResponse schDeviceListResBySvcMangNo = null;
+		SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
+		schDeviceListReq.setCommonRequest(commService.getSCCommonRequest(requestHeader));
+		schDeviceListReq.setUserKey(userKey);
+		schDeviceListReq.setIsMainDevice(MemberConstants.USE_N); // 대표기기만 조회(Y), 모든기기 조회(N)
+		List<KeySearch> keySearchList = null;
+		KeySearch key = null;
+		if(StringUtils.isBlank(deviceId)){
+			try {
+				keySearchList = new ArrayList<KeySearch>();
+				key = new KeySearch();
+				key.setKeyType(MemberConstants.KEY_TYPE_SVC_MANG_NO);
+				key.setKeyString(svcMangNo);
+				keySearchList.add(key);
+				schDeviceListReq.setKeySearchList(keySearchList);
+				schDeviceListResBySvcMangNo = this.deviceSCI.searchDeviceList(schDeviceListReq);
+			}catch(StorePlatformException e){
+				if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+					throw e;
+				}
+			}
+
+			if(schDeviceListResBySvcMangNo == null){
+				keySearchList = new ArrayList<KeySearch>();
+				key = new KeySearch();
+				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+				key.setKeyString(userKey);
+				keySearchList.add(key);
+				schDeviceListReq.setKeySearchList(keySearchList);
+				try{
+					SearchDeviceListResponse schDeviceListResByUserKey = this.deviceSCI.searchDeviceList(schDeviceListReq);
+					/* 등록 가능한 휴대기기 개수 초과 */
+					if (schDeviceListResByUserKey.getUserMbrDevice().size() >= deviceRegManCnt) {
+						throw new StorePlatformException("SAC_MEM_1501");
+					}
+				}catch(StorePlatformException e){
+					if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+						throw e;
+					}
+				}
+			}
+		}else{
+			try {
+				keySearchList = new ArrayList<KeySearch>();
+				key = new KeySearch();
+				key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+				key.setKeyString(deviceId);
+				keySearchList.add(key);
+				schDeviceListReq.setKeySearchList(keySearchList);
+				schDeviceListResByDeviceId = this.deviceSCI.searchDeviceList(schDeviceListReq);
+			}catch(StorePlatformException e){
+				if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+					throw e;
+				}
+			}
+			try {
+				keySearchList = new ArrayList<KeySearch>();
+				key = new KeySearch();
+				key.setKeyType(MemberConstants.KEY_TYPE_SVC_MANG_NO);
+				key.setKeyString(svcMangNo);
+				keySearchList.add(key);
+				schDeviceListReq.setKeySearchList(keySearchList);
+				schDeviceListResBySvcMangNo = this.deviceSCI.searchDeviceList(schDeviceListReq);
+			}catch(StorePlatformException e){
+				if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+					throw e;
+				}
+			}
+
+			if(schDeviceListResByDeviceId == null && schDeviceListResBySvcMangNo == null){
+				keySearchList = new ArrayList<KeySearch>();
+				key = new KeySearch();
+				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+				key.setKeyString(userKey);
+				keySearchList.add(key);
+				schDeviceListReq.setKeySearchList(keySearchList);
+				try{
+					SearchDeviceListResponse schDeviceListResByUserKey = this.deviceSCI.searchDeviceList(schDeviceListReq);
+					/* 등록 가능한 휴대기기 개수 초과 */
+					if (schDeviceListResByUserKey.getUserMbrDevice().size() >= deviceRegManCnt) {
+						throw new StorePlatformException("SAC_MEM_1501");
+					}
+				}catch(StorePlatformException e){
+					if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+						throw e;
+					}
+				}
+			}
+		}
 	}
 }
