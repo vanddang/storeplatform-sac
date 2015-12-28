@@ -71,7 +71,20 @@ public class UserModifyServiceImpl implements UserModifyService {
 		searchExtentUserRequest.setCommonRequest(commonRequest);
 		searchExtentUserRequest.setKeySearchList(keySearchList);
 		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
-		this.userSCI.searchExtentUser(searchExtentUserRequest);
+        SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+
+        /**
+         * 변경 가능 상테 체크 (매인, 서브상태 정상인 회원- 단 휴면 제외)
+         */
+        if(!StringUtils.equalsIgnoreCase(res.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_NORMAL)
+                || !StringUtils.equalsIgnoreCase(res.getUserMbr().getUserSubStatus(), MemberConstants.SUB_STATUS_NORMAL)){
+            throw new StorePlatformException("SAC_MEM_2001", res.getUserMbr().getUserMainStatus(),
+                    res.getUserMbr().getUserSubStatus());
+        }
+
+        if(StringUtils.equalsIgnoreCase(res.getUserMbr().getIsDormant(), MemberConstants.USE_Y)){
+            throw new StorePlatformException("SAC_MEM_0006");
+        }
 
 		/**
 		 * SC 회원 수정.

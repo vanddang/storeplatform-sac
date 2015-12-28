@@ -391,6 +391,14 @@ public final class MemberConstants {
 	/** SMS SendOrder 1. */
 	public static final String SMS_SEND_ORDER_FIRST = "1";
 
+    /** 회원 사용자 성별 코드 */
+    public static final String SEX_TYPE_MALE = "M"; // 남자
+    public static final String SEX_TYPE_FEMALE = "F"; // 여자
+
+    /** 회원 사용자 생일 코드 */
+    public static final String BIRTHDAY_TYPE_SOCAL = "1"; // 양력
+    public static final String BIRTHDAY_TYPE_LUCAL = "2"; // 음력
+
 	/**
 	 * 판매자 회원 상수들.
 	 * 
