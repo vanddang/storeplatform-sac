@@ -472,7 +472,7 @@
     <!-- Key에 사용할 시퀀스 조회(휴대기기) -->
     <select id="getUserSequence" resultType="Integer">
         SELECT /* DeviceMapper.getUserSequence, 시퀀스 조회, 황정택/와이즈스톤, 2013-12-23 */
-               sq_us_ousermbr_device.NEXTVAL AS nextval
+               sq_us_usermbr_device.NEXTVAL AS nextval
         FROM DUAL
     </select>
     
@@ -482,13 +482,13 @@
         INTO tb_us_ousermbr_device (
                insd_usermbr_no,
                insd_device_id,
-               device_id,
                device_model_cd,
                start_dt,
                upd_dt,
                reg_dt,
                auth_dt,
-               auth_yn
+               auth_yn,
+               <if test="deviceId != null">,device_id </if>
                <if test="mdn != null">,mdn </if>
                <if test="deviceTelecom != null">,mno_cd </if>
                <if test="isPrimary != null">,rep_device_yn </if>
@@ -507,6 +507,7 @@
             SYSDATE,
             SYSDATE,
             'Y'
+            <if test="deviceId != null">,#{deviceId} </if>
             <if test="mdn != null">,#{mdn} </if>
             <if test="deviceTelecom != null">,#{deviceTelecom} </if>
             <if test="isPrimary != null">,#{isPrimary} </if>
@@ -605,6 +606,7 @@
                <if test="deviceID != null">,device_id = #{deviceID} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
+               <if test="deviceSimNm != null">,device_sim_nm = #{deviceSimNm} </if>
         WHERE insd_usermbr_no = #{userKey}
           AND insd_device_id = #{deviceKey}
           AND auth_yn = 'Y'
@@ -816,6 +818,7 @@
                <if test="joinId != null">,entry_chnl_cd = #{joinId} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
+               <if test="deviceSimNm != null">,device_sim_nm = #{deviceSimNm} </if>
         WHERE insd_usermbr_no = #{userKey}
           AND insd_device_id = #{deviceKey}
     </update>
@@ -1051,24 +1054,30 @@
     
     <!-- onebrand 추가 쿼리 -->
     
-    <!-- 서비스관리번호(svcMangNo)로 최근 로그인된 휴대기기의 userKey 조회 -->
+    <!-- 서비스관리번호(svcMangNo)로 최근 로그인된 휴대기기의 userKey 조회(모바일 회원 로그인) -->
     <select id="searchDeviceOrderBySvcMangNo" parameterType="String" resultType="String">
-        SELECT insd_usermbr_no
-        FROM
-        (
-	        SELECT insd_usermbr_no
-	        FROM tb_us_ousermbr_device
-	        WHERE svc_mang_no =  #{svcMangNo}
-	        ORDER BY last_login_dt DESC
-        )
-        WHERE ROWNUM = 1
+        SELECT a.insd_usermbr_no
+        FROM TB_US_OUSERMBR a INNER JOIN (
+            SELECT insd_usermbr_no
+            FROM
+            (
+                SELECT insd_usermbr_no
+                FROM tb_us_ousermbr_device
+                WHERE svc_mang_no =  #{svcMangNo}
+                      AND auth_yn = 'Y'
+                ORDER BY last_login_dt DESC
+            )
+            WHERE ROWNUM = 1
+        ) b ON a.insd_usermbr_no = b.insd_usermbr_no
+        WHERE a.mbr_status_main_cd != 'US010202'
+              AND a.mbr_clas_cd = 'US011501'
     </select>
 
     <!-- 휴대기기 목록 조회 -->
     <select id="searchDeviceListForOneBrand" parameterType="searchDeviceListRequest" resultType="userMbrDevice">
         SELECT
           a.insd_usermbr_no as userKey,
-          a.user_id as userId,
+          a.mbr_id as userId,
           b.insd_device_id as deviceKey,
           b.device_id as deviceId,
           b.mdn as mdn,
@@ -1076,15 +1085,18 @@
           b.mno_cd as deviceTelecom
       FROM TB_US_OUSERMBR a
         INNER JOIN TB_US_OUSERMBR_DEVICE b ON a.insd_usermbr_no = b.insd_usermbr_no
-        WHERE auth_yn = 'Y'
-        <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID')">
-            AND b.device_id = #{keySearch.keyString}
-        </if>
-        <if test="keySearch.keyType.equalsIgnoreCase('MDN')">
-            AND b.mdn = #{keySearch.keyString}
-        </if>
-        <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO')">
-            AND b.svc_mang_no = #{keySearch.keyString}
-        </if>
+        WHERE a.mbr_status_main_cd != 'US010202'
+            AND b.auth_yn = 'Y'
+        <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+            <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID')">
+                b.device_id = #{keySearch.keyString}
+            </if>
+            <if test="keySearch.keyType.equalsIgnoreCase('MDN')">
+                b.mdn = #{keySearch.keyString}
+            </if>
+            <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO')">
+                b.svc_mang_no = #{keySearch.keyString}
+            </if>
+        </foreach>
     </select>
 </mapper>
