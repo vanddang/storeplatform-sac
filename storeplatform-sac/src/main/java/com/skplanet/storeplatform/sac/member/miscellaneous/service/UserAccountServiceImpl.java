@@ -3,38 +3,27 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 import com.skplanet.storeplatform.external.client.inicis.sci.InicisSCI;
 import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcReq;
 import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcRes;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
  * 
- * 기타 기능 관련 인터페이스 구현체
+ * 결제 계좌 기능 관련 인터페이스 구현체
  * 
  * Updated on : 2014. 1. 7. Updated by : 김다슬, 인크로스.
+ * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Micellaneos 클래스에서 결제 계좌 관련 기능 클래스 분리
  */
 @Service
-public class MiscellaneousServiceImpl implements MiscellaneousService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MiscellaneousServiceImpl.class);
+public class UserAccountServiceImpl implements UserAccountService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountServiceImpl.class);
 
 	@Autowired
-	private MemberCommonComponent commonComponent; // 회원 공통기능 컴포넌트
-	@Autowired
 	private InicisSCI inicisSCI; // 이니시스 연동 Interface.
-	@Autowired
-	@Qualifier("sac")
-	private CommonDAO commonDao;
 
 
 	/**
