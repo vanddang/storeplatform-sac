@@ -44,7 +44,7 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 	@Override
 	public GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header, GetIndividualPolicyReq req) {
 
-		LOGGER.debug("###### MiscellaneousServiceImpl.createIndividualPolicy [START] ######");
+		LOGGER.debug("###### IndividualPolicyService.createIndividualPolicy [START] ######");
 
 		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
 		SearchPolicyRequest policyRequest = new SearchPolicyRequest();
@@ -106,7 +106,7 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 	@Override
 	public CreateIndividualPolicyRes regIndividualPolicy(SacRequestHeader header, CreateIndividualPolicyReq req) {
 
-		LOGGER.debug("###### MiscellaneousServiceImpl.createIndividualPolicy [START] ######");
+		LOGGER.debug("###### IndividualPolicyService.createIndividualPolicy [START] ######");
 
 		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
 		UpdatePolicyRequest updatePolicyRequest = new UpdatePolicyRequest();
@@ -149,7 +149,7 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 		}
 
 		LOGGER.debug("==>>[SAC] CreateIndividualPolicyRes.toString() : {}", res.toString());
-		LOGGER.debug("###### MiscellaneousServiceImpl.createIndividualPolicy [START] ######");
+		LOGGER.debug("###### IndividualPolicyService.createIndividualPolicy [START] ######");
 		return res;
 	}
 

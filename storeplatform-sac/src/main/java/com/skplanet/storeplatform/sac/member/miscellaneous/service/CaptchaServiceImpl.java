@@ -56,7 +56,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 			waterMarkImageSign = waterMarkAuthImageEcRes.getImageSign();
 			signData = waterMarkAuthImageEcRes.getSignData();
 
-			LOGGER.debug("[MiscellaneousService.getCaptcha] SAC<-IDP Response : {}", waterMarkAuthImageEcRes);
+			LOGGER.debug("[CaptchaService.getCaptcha] SAC<-IDP Response : {}", waterMarkAuthImageEcRes);
 
 			String urlPath = waterMarkImageUrl.substring(waterMarkImageUrl.indexOf("/watermark"));
 

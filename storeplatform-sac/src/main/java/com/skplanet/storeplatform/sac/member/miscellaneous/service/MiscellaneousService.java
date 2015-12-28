@@ -15,33 +15,6 @@ public interface MiscellaneousService {
 
 	/**
 	 * <pre>
-	 * UA 코드 정보 조회.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            GetUaCodeReq
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @return GetUaCodeRes
-	 * 
-	 */
-	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, GetUaCodeReq request);
-
-	/**
-	 * <pre>
-	 * OPMD 모회선 번호 조회.
-	 * 989로 시작하는 MSISDN이 들어오면 모번호를 조회해서 반환하고, 
-	 * 989로 시작하지 않는경우 파라미터로 받은 MSISDN을 그대로 반환.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            GetOpmdReq
-	 * @return GetOpmdRes
-	 */
-	public GetOpmdRes getOpmd(GetOpmdReq request);
-
-	/**
-	 * <pre>
 	 * 부가서비스 가입 - IDP 연동.
 	 * </pre>
 	 * 
@@ -61,17 +34,6 @@ public interface MiscellaneousService {
 	 * @return GetAdditionalServiceRes
 	 */
 	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request);
-
-	/**
-	 * <pre>
-	 * 단말 모델코드 조회.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            GetModelCodeReq
-	 * @return GetModelCodeRes
-	 */
-	public GetModelCodeRes getModelCode(GetModelCodeReq request);
 
 	/**
 	 * <pre>

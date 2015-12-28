@@ -181,7 +181,7 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 			// 발송_순서 | 1~9, 1: 높음, 9:낮음
 			smsReq.setSendOrder(MemberConstants.SMS_SEND_ORDER_FIRST);
 
-			LOGGER.debug("[MiscellaneousService.getPhoneAuthorizationCode] SAC->SMS 발송 Request : {}", smsReq);
+			LOGGER.debug("[PhoneAuthorizationService.getPhoneAuthorizationCode] SAC->SMS 발송 Request : {}", smsReq);
 			this.messageSCI.smsSend(smsReq);
 
 			response.setPhoneSign(authSign);
