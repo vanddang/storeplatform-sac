@@ -63,10 +63,9 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 
 	/** 이전 디바이스 key. */
 	private String preDeviceKey;
+
 	/** 이전 사용자 key. */
 	private String preUserKey;
-
-	private String previousUserID;
 
 	/** 이전 사용자 휴면계정유무. */
 	private String previousIsDormant;
@@ -75,11 +74,6 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	 * 휴대기기 등록한 사용자 휴면계정유무.
 	 */
 	private String isDormant;
-
-	/**
-	 * 사용자 부가정보 및 관리항목 Value Object List.
-	 */
-	private List<MbrMangItemPtcr> mbrMangItemPtcrList;
 
 	/**
 	 * 사용자 Key를 리턴한다.
@@ -205,21 +199,6 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the previousUserID
-	 */
-	public String getPreviousUserID() {
-		return this.previousUserID;
-	}
-
-	/**
-	 * @param previousUserID
-	 *            the previousUserID to set
-	 */
-	public void setPreviousUserID(String previousUserID) {
-		this.previousUserID = previousUserID;
-	}
-
-	/**
 	 * @return previousIsDormant
 	 */
 	public String getPreviousIsDormant() {
@@ -232,21 +211,6 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	 */
 	public void setPreviousIsDormant(String previousIsDormant) {
 		this.previousIsDormant = previousIsDormant;
-	}
-
-	/**
-	 * @return the mbrMangItemPtcrList
-	 */
-	public List<MbrMangItemPtcr> getMbrMangItemPtcrList() {
-		return this.mbrMangItemPtcrList;
-	}
-
-	/**
-	 * @param mbrMangItemPtcrList
-	 *            the mbrMangItemPtcrList to set
-	 */
-	public void setMbrMangItemPtcrList(List<MbrMangItemPtcr> mbrMangItemPtcrList) {
-		this.mbrMangItemPtcrList = mbrMangItemPtcrList;
 	}
 
 	/**

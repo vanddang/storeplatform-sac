@@ -206,28 +206,36 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		// 모바일 회원 전환 케이스 확인
-		UserMbrDevice mobileUserMbrDevice = this.commonDAO.queryForObject("Device.searchDeviceOrderBySvcMangNo", createDeviceRequest.getUserMbrDevice().getSvcMangNum(), UserMbrDevice.class);
-		if(mobileUserMbrDevice == null){
-			mobileUserMbrDevice = this.idleDAO.queryForObject("Device.searchDeviceOrderBySvcMangNo", createDeviceRequest.getUserMbrDevice().getSvcMangNum(), UserMbrDevice.class);
-			if(mobileUserMbrDevice != null){
-				previousIsDormant = Constant.TYPE_YN_Y;
+		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
+			UserMbrDevice mobileUserMbrDevice = this.commonDAO.queryForObject("Device.searchDeviceOrderBySvcMangNo", createDeviceRequest.getUserMbrDevice().getSvcMangNum(), UserMbrDevice.class);
+			if(mobileUserMbrDevice == null){
+				mobileUserMbrDevice = this.idleDAO.queryForObject("Device.searchDeviceOrderBySvcMangNo", createDeviceRequest.getUserMbrDevice().getSvcMangNum(), UserMbrDevice.class);
+				if(mobileUserMbrDevice != null){
+					previousIsDormant = Constant.TYPE_YN_Y;
+				}
 			}
-		}
-		if(mobileUserMbrDevice != null && !StringUtils.equals(Constant.USER_TYPE_MOBILE, createUserMbr.getUserType())){
-			previousUserKey = mobileUserMbrDevice.getUserKey();
-			previousDeviceKey = mobileUserMbrDevice.getDeviceKey();
+			if(mobileUserMbrDevice != null && !StringUtils.equals(Constant.USER_TYPE_MOBILE, createUserMbr.getUserType())){
+				previousUserKey = mobileUserMbrDevice.getUserKey();
+				previousDeviceKey = mobileUserMbrDevice.getDeviceKey();
 
-			createDeviceResponse.setPreviousUserKey(previousUserKey);
-			createDeviceResponse.setPreviousDeviceKey(previousDeviceKey);
-			createDeviceResponse.setPreviousIsDormant(previousIsDormant);
+				createDeviceResponse.setPreviousUserKey(previousUserKey);
+				createDeviceResponse.setPreviousDeviceKey(previousDeviceKey);
+				createDeviceResponse.setPreviousIsDormant(previousIsDormant);
+
+				// 모바일 회원 전환이력 저장
+				UserkeyTrack userkeyTrack = new UserkeyTrack();
+				userkeyTrack.setPreUserKey(mobileUserMbrDevice.getUserKey());
+				userkeyTrack.setAfterUserKey(createUserMbr.getUserKey());
+				userkeyTrack.setRegID(createUserMbr.getUserID());
+				this.commonDAO.update("Device.insertUserkeyTrack", userkeyTrack);
+			}
 		}
 
 		/** 타인 정보 처리 start */
 		LOGGER.info("타인 정보 처리 start");
 		// device_id 존재 체크
 		if (StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getDeviceID())) {
-			userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_DEVICE_ID, createDeviceRequest
-					.getUserMbrDevice().getDeviceID(), Constant.TYPE_YN_Y);
+			userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_DEVICE_ID, createDeviceRequest.getUserMbrDevice().getDeviceID(), Constant.TYPE_YN_Y);
 
 			if(userMbrDeviceList != null && userMbrDeviceList.size() > 0){
 				for(UserMbrDevice userMbrDevice : userMbrDeviceList){
@@ -281,8 +289,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// MDN 존재 체크
 		if (StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getMdn())) {
-			userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_MDN, createDeviceRequest.getUserMbrDevice()
-					.getMdn(), Constant.TYPE_YN_Y);
+			userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_MDN, createDeviceRequest.getUserMbrDevice().getMdn(), Constant.TYPE_YN_Y);
 
 			if(userMbrDeviceList != null && userMbrDeviceList.size() > 0){
 				for(UserMbrDevice userMbrDevice : userMbrDeviceList){
@@ -309,71 +316,72 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		// 서비스 관리 번호 체크
-		userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest
-				.getUserMbrDevice().getSvcMangNum(), Constant.TYPE_YN_Y);
-		if(userMbrDeviceList != null && userMbrDeviceList.size() > 0){
-			for(UserMbrDevice userMbrDevice : userMbrDeviceList){
-				if (!StringUtils.equals(userKey, userMbrDevice.getUserKey())) {
-					LOGGER.info("{} : {} 서비스관리번호로 가등록된 회원이 존재", userKey, createDeviceRequest.getUserMbrDevice().getSvcMangNum());
-					String isDormant = StringUtils.isBlank(userMbrDevice.getIsDormant()) ? Constant.TYPE_YN_N : userMbrDevice.getIsDormant(); // 휴면 회원 유무
+		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
+			userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest.getUserMbrDevice().getSvcMangNum(), Constant.TYPE_YN_Y);
+			if(userMbrDeviceList != null && userMbrDeviceList.size() > 0){
+				for(UserMbrDevice userMbrDevice : userMbrDeviceList){
+					if (!StringUtils.equals(userKey, userMbrDevice.getUserKey())) {
+						LOGGER.info("{} : {} 서비스관리번호로 가등록된 회원이 존재", userKey, createDeviceRequest.getUserMbrDevice().getSvcMangNum());
+						String isDormant = StringUtils.isBlank(userMbrDevice.getIsDormant()) ? Constant.TYPE_YN_N : userMbrDevice.getIsDormant(); // 휴면 회원 유무
 
-					// 회원 정보 조회
-					UserMbr preUserMbr = new UserMbr();
-					preUserMbr.setUserKey(userMbrDevice.getUserKey());
-					if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-						preUserMbr = this.commonDAO.queryForObject("User.getUserDetail", preUserMbr, UserMbr.class);
-					}else{
-						preUserMbr = this.idleDAO.queryForObject("User.getUserDetail", preUserMbr, UserMbr.class);
-					}
-
-					if (StringUtils.isBlank(userMbrDevice.getDeviceID())) { // device_id가 없는 경우 auth_yn
-						// 휴대기기 설정정보 이관처리를 위한 회원키 조회
-						UserMbrDeviceSet userMbrDeviceSet = new UserMbrDeviceSet();
-						userMbrDeviceSet.setUserKey(userMbrDevice.getUserKey());
-						userMbrDeviceSet.setDeviceKey(userMbrDevice.getDeviceKey());
-						UserMbrDeviceSet searchUserMbrDeviceSet = null;
+						// 회원 정보 조회
+						UserMbr preUserMbr = new UserMbr();
+						preUserMbr.setUserKey(userMbrDevice.getUserKey());
 						if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-							searchUserMbrDeviceSet = this.commonDAO.queryForObject(
-									"DeviceSet.searchDeviceSetInfo", userMbrDeviceSet, UserMbrDeviceSet.class);
+							preUserMbr = this.commonDAO.queryForObject("User.getUserDetail", preUserMbr, UserMbr.class);
 						}else{
-							searchUserMbrDeviceSet = this.idleDAO.queryForObject(
-									"DeviceSet.searchDeviceSetInfo", userMbrDeviceSet, UserMbrDeviceSet.class);
+							preUserMbr = this.idleDAO.queryForObject("User.getUserDetail", preUserMbr, UserMbr.class);
 						}
 
-						if (searchUserMbrDeviceSet != null) {
-							preUserKey = searchUserMbrDeviceSet.getUserKey();
-							preDeviceKey = searchUserMbrDeviceSet.getDeviceKey();
-						}
-
-						if (Constant.USER_TYPE_MOBILE.equals(preUserMbr.getUserType())) { // 모바일 회원
-							LOGGER.info("{} : {} 모바일 회원 탈퇴(device_id 없음)", userKey, userMbrDevice.getUserKey());
-							int tempKey = this.doRemoveUser(preUserMbr, isDormant);
-							if (tempKey < 1)
-								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound",
-										""));
-						} else { // 아이디 회원
-							LOGGER.info("{} : {} invalid 처리(device_id 없음)", userKey, userMbrDevice.getUserKey());
-							int tempKey = this.doDeactivateDevice(userMbrDevice, isDormant);
-							if (tempKey < 1)
-								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound",
-										""));
-						}
-					} else {
-						// device_id가 존재하고 ID 회원인 경우 svc_no, mno_cd 널 처리
-						if (!Constant.USER_TYPE_MOBILE.equals(preUserMbr.getUserType())) {
-							LOGGER.info("{} : {} 회원 svc_mang_no, mno_cd 초기화(device_id 있음)", userKey, userMbrDevice.getUserKey());
-							UserMbrDevice updateMbrDevice = new UserMbrDevice();
-							updateMbrDevice.setUserKey(userMbrDevice.getUserKey());
-							updateMbrDevice.setDeviceKey(userMbrDevice.getDeviceKey());
-							updateMbrDevice.setSvcMangNum("");
-							updateMbrDevice.setDeviceTelecom("");
+						if (StringUtils.isBlank(userMbrDevice.getDeviceID())) { // device_id가 없는 경우 auth_yn
+							// 휴대기기 설정정보 이관처리를 위한 회원키 조회
+							UserMbrDeviceSet userMbrDeviceSet = new UserMbrDeviceSet();
+							userMbrDeviceSet.setUserKey(userMbrDevice.getUserKey());
+							userMbrDeviceSet.setDeviceKey(userMbrDevice.getDeviceKey());
+							UserMbrDeviceSet searchUserMbrDeviceSet = null;
 							if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-								this.commonDAO.update("Device.insertUpdateDeviceHistory", userMbrDevice);
-								this.commonDAO.update("Device.updateDevice", updateMbrDevice);
+								searchUserMbrDeviceSet = this.commonDAO.queryForObject(
+										"DeviceSet.searchDeviceSetInfo", userMbrDeviceSet, UserMbrDeviceSet.class);
 							}else{
-								this.idleDAO.update("Device.updateDevice", updateMbrDevice);
+								searchUserMbrDeviceSet = this.idleDAO.queryForObject(
+										"DeviceSet.searchDeviceSetInfo", userMbrDeviceSet, UserMbrDeviceSet.class);
 							}
-							LOGGER.info("{} : {} 회원 svc_mang_no, mno_cd 초기화(device_id 있음), {} -> svc_mang_no, {} -> mno_cd", userKey, userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceTelecom());
+
+							if (searchUserMbrDeviceSet != null) {
+								preUserKey = searchUserMbrDeviceSet.getUserKey();
+								preDeviceKey = searchUserMbrDeviceSet.getDeviceKey();
+							}
+
+							if (Constant.USER_TYPE_MOBILE.equals(preUserMbr.getUserType())) { // 모바일 회원
+								LOGGER.info("{} : {} 모바일 회원 탈퇴(device_id 없음)", userKey, userMbrDevice.getUserKey());
+								int tempKey = this.doRemoveUser(preUserMbr, isDormant);
+								if (tempKey < 1)
+									throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound",
+											""));
+							} else { // 아이디 회원
+								LOGGER.info("{} : {} invalid 처리(device_id 없음)", userKey, userMbrDevice.getUserKey());
+								int tempKey = this.doDeactivateDevice(userMbrDevice, isDormant);
+								if (tempKey < 1)
+									throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound",
+											""));
+							}
+						} else {
+							// device_id가 존재하고 ID 회원인 경우 svc_no, mno_cd 널 처리
+							if (!Constant.USER_TYPE_MOBILE.equals(preUserMbr.getUserType())) {
+								LOGGER.info("{} : {} 회원 svc_mang_no, mno_cd 초기화(device_id 있음)", userKey, userMbrDevice.getUserKey());
+								UserMbrDevice updateMbrDevice = new UserMbrDevice();
+								updateMbrDevice.setUserKey(userMbrDevice.getUserKey());
+								updateMbrDevice.setDeviceKey(userMbrDevice.getDeviceKey());
+								updateMbrDevice.setSvcMangNum("");
+								updateMbrDevice.setDeviceTelecom("");
+								if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
+									this.commonDAO.update("Device.insertUpdateDeviceHistory", userMbrDevice);
+									this.commonDAO.update("Device.updateDevice", updateMbrDevice);
+								}else{
+									this.idleDAO.update("Device.updateDevice", updateMbrDevice);
+								}
+								LOGGER.info("{} : {} 회원 svc_mang_no, mno_cd 초기화(device_id 있음), {} -> svc_mang_no, {} -> mno_cd", userKey, userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceTelecom());
+							}
 						}
 					}
 				}
@@ -384,14 +392,21 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/** 본인 정보 처리 start */
 		LOGGER.info("본인 정보 처리 start");
+
 		// device_id 존재 체크
-		userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_DEVICE_ID, createDeviceRequest
-				.getUserMbrDevice().getDeviceID(), Constant.TYPE_YN_N);
+		if(StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getDeviceID())){
+			userMbrDeviceList = null;
+		}else{
+			userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_DEVICE_ID, createDeviceRequest.getUserMbrDevice().getDeviceID(), Constant.TYPE_YN_N);
+		}
 
 		if(userMbrDeviceList == null || userMbrDeviceList.size() == 0){
 			// svc_mang_no 조회
-			userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest
-					.getUserMbrDevice().getSvcMangNum(), Constant.TYPE_YN_N);
+			if(StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
+				userMbrDeviceList = null;
+			}else{
+				userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest.getUserMbrDevice().getSvcMangNum(), Constant.TYPE_YN_N);
+			}
 			if(userMbrDeviceList == null || userMbrDeviceList.size() == 0){
 				LOGGER.info("{} {} {} 신규 단말 등록", userKey, createDeviceRequest.getUserMbrDevice().getDeviceID(), createDeviceRequest.getUserMbrDevice().getMdn());
 

@@ -16,9 +16,6 @@
             <if test="userID != null">
                mbr_id = #{userID}
             </if>
-            <if test="imMbrNo != null">
-               usermbr_no = #{imMbrNo}
-            </if>
     </select>
 
     <!-- 휴대기기 목록 조회 -->
@@ -38,9 +35,6 @@
                    </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('MBR_ID')">
                        a.mbr_id = #{keySearch.keyString}
-                   </if>
-                   <if test="keySearch.keyType.equalsIgnoreCase('USERMBR_NO')">
-                       a.usermbr_no = #{keySearch.keyString}
                    </if>
                </foreach>
                 ) l
@@ -93,9 +87,6 @@
                    </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('MBR_ID')">
                        a.mbr_id = #{keySearch.keyString}
-                   </if>
-                   <if test="keySearch.keyType.equalsIgnoreCase('USERMBR_NO')">
-                       a.usermbr_no = #{keySearch.keyString}
                    </if>
                </foreach>
                 ) l
@@ -460,8 +451,7 @@
     <!-- 서브상태가 변동처리대상인지 여부 확인 -->
     <select id="isSubCodeChangeManagement" parameterType="reviveUserRequest" resultType="userMbr">
        SELECT  /* DeviceMapper.isSubCodeChangeManagement, 서브상태가 변동처리대상인지 여부 확인, 황정택/와이즈스톤, 2014-03-11 */
-               insd_usermbr_no AS userKey,
-               usermbr_no AS imMbrNo,
+               insd_usermbr_no AS userKey
                mbr_id AS userID
          FROM  tb_us_ousermbr
         WHERE  insd_usermbr_no = #{userKey}
@@ -720,12 +710,10 @@
     <select id="retrieveUserInfo" parameterType="CreateDeviceRequest" resultType="userMbr">
         SELECT /* DeviceMapper.retrieveUserInfo, 사용자 정보 조회, 황정택/와이즈스톤, 2013-12-23 */
                 insd_usermbr_no         userKey,
-                usermbr_no              imMbrNo,
                 mbr_clas_cd             userType,
                 mbr_status_main_cd      userMainStatus,
                 mbr_status_sub_cd       userSubStatus,
                 login_status_cd         loginStatusCode,
-                device_reg_cnt          deviceCount,
                 mbr_id                  userID
            FROM tb_us_ousermbr
           WHERE insd_usermbr_no = #{userKey}
@@ -744,26 +732,26 @@
            AND insd_usermbr_no = #{userKey}
     </select>
     
-    <!-- 휴대기기 보유 카운트 증가 -->
-    <update id="updateCountPlus" parameterType="CreateDeviceRequest">
+    <!-- 휴대기기 보유 카운트 증가, schema 변경으로 삭제 처리  -->
+    <!--<update id="updateCountPlus" parameterType="CreateDeviceRequest">
        UPDATE /* DeviceMapper.updateCountPlus,  휴대기기 보유 카운트 증가, 황정택/와이즈스톤, 2013-12-26 */
        tb_us_ousermbr
           SET device_reg_cnt = device_reg_cnt+1,
               upd_dt = SYSDATE
        WHERE insd_usermbr_no = #{userKey}
-    </update>
+    </update>-->
     
-    <!-- 휴대기기 보유 카운트 감소 -->
-    <update id="updateCountMinus" parameterType="userMbrDevice">
+    <!-- 휴대기기 보유 카운트 감소, schema 변경으로 삭제 처리  -->
+    <!--<update id="updateCountMinus" parameterType="userMbrDevice">
        UPDATE /* DeviceMapper.updateCountMinus,  휴대기기 보유 카운트 감소, 황정택/와이즈스톤, 2013-12-26 */
        tb_us_ousermbr
           SET device_reg_cnt = device_reg_cnt-1,
               upd_dt = SYSDATE
        WHERE insd_usermbr_no = #{userKey}
-    </update>
+    </update>-->
     
-    <!-- 휴대기기 보유 카운트 업데이트 -->
-    <update id="updateCountDevice" parameterType="CreateDeviceRequest">
+    <!-- 휴대기기 보유 카운트 업데이트, schema 변경으로 삭제 처리  -->
+    <!--<update id="updateCountDevice" parameterType="CreateDeviceRequest">
        UPDATE /* DeviceMapper.updateCountDevice,  휴대기기 보유 카운트 증가, 황정택/와이즈스톤, 2013-12-26 */
        tb_us_ousermbr
           SET device_reg_cnt = (SELECT COUNT(*)
@@ -772,7 +760,7 @@
                                       AND auth_yn = 'Y'),
               upd_dt = SYSDATE
        WHERE insd_usermbr_no = #{userKey}
-    </update>
+    </update>-->
     
     <!-- 휴대기기 보유 카운트 업데이트, schema 변경으로 삭제 처리 -->
     <!--<update id="updateCountDevice2" parameterType="userMbrDevice">-->
@@ -832,7 +820,6 @@
               bolter_day = #{secedeDate},
               start_dt = SYSDATE,
               end_dt = SYSDATE,
-              device_reg_cnt = 0,        /* 휴대기기 보유 카운트 초기화 */
               upd_dt = SYSDATE
        WHERE  insd_usermbr_no = #{userKey}
     </update>
@@ -845,14 +832,10 @@
                 seq
                 ,pre_insd_usermbr_no
                 ,after_insd_usermbr_no
-                ,reg_dt
-                ,reg_id
         ) VALUES (
                 sq_us_ousermbr_idmbr_trfm_chas.NEXTVAL
                 ,#{preUserKey}
                 ,#{afterUserKey}
-                ,SYSDATE
-	            ,#{regID}
         )
     </insert>
     
@@ -886,8 +869,7 @@
                chg_case_cd AS code,
                upd_dt,
                mbr_status_main_cd AS isActive,
-               mbr_status_sub_cd AS userSubStatus,
-               usermbr_no AS imMbrNo
+               mbr_status_sub_cd AS userSubStatus
           FROM (SELECT 
                t1.insd_device_id,
                t1.device_id,
@@ -896,8 +878,7 @@
                t1.chg_case_cd,
                t1.upd_dt,
                t2.mbr_status_main_cd,
-               t2.mbr_status_sub_cd,
-               t2.usermbr_no
+               t2.mbr_status_sub_cd
           FROM tb_us_ousermbr_device_his t1
           JOIN tb_us_ousermbr t2
            ON t1.insd_usermbr_no=t2.insd_usermbr_no 
@@ -923,8 +904,7 @@
 		               svcMangNo,
 		               upd_dt,
 		               isActive,
-		               userSubStatus,
-		               imMbrNo
+		               userSubStatus
 		FROM
 		    (
 		    SELECT
@@ -936,8 +916,7 @@
 		            t1.svc_mang_no AS svcMangNo,
 		            t1.upd_dt,
 		            t2.mbr_status_main_cd AS isActive,
-		            t2.mbr_status_sub_cd AS userSubStatus,
-		            t2.usermbr_no AS imMbrNo
+		            t2.mbr_status_sub_cd AS userSubStatus
 		    FROM spmbr.tb_us_ousermbr_device_his t1
 		        JOIN spmbr.tb_us_ousermbr t2 ON t1.insd_usermbr_no=t2.insd_usermbr_no
 		    WHERE t1.pre_mdn = #{deviceID}
