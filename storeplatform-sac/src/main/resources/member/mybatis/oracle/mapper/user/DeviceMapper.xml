@@ -472,13 +472,13 @@
     <!-- Key에 사용할 시퀀스 조회(휴대기기) -->
     <select id="getUserSequence" resultType="Integer">
         SELECT /* DeviceMapper.getUserSequence, 시퀀스 조회, 황정택/와이즈스톤, 2013-12-23 */
-               sq_us_usermbr_device.NEXTVAL AS nextval
+               sq_us_ousermbr_device.NEXTVAL AS nextval
         FROM DUAL
     </select>
     
     <!-- 휴대기기 등록 -->
     <update id="createDevice" parameterType="userMbrDevice">
-        INSERT /* DeviceMapper.createDevice, 휴대기기 등록, 황정택/와이즈스톤, 2013-12-23 */
+        INSERT /* DeviceMapper.createDevice, 휴대기기 등록, SAC(SC), 반범진, 2015-12-28 */
         INTO tb_us_ousermbr_device (
                insd_usermbr_no,
                insd_device_id,
@@ -487,8 +487,8 @@
                upd_dt,
                reg_dt,
                auth_dt,
-               auth_yn,
-               <if test="deviceId != null">,device_id </if>
+               auth_yn
+               <if test="deviceID != null">,device_id </if>
                <if test="mdn != null">,mdn </if>
                <if test="deviceTelecom != null">,mno_cd </if>
                <if test="isPrimary != null">,rep_device_yn </if>
@@ -500,14 +500,13 @@
         ) VALUES (
             #{userKey},
             #{deviceKey},
-            #{deviceID},
             #{deviceModelNo},
             SYSDATE,
             SYSDATE,
             SYSDATE,
             SYSDATE,
             'Y'
-            <if test="deviceId != null">,#{deviceId} </if>
+            <if test="deviceID != null">,#{deviceID} </if>
             <if test="mdn != null">,#{mdn} </if>
             <if test="deviceTelecom != null">,#{deviceTelecom} </if>
             <if test="isPrimary != null">,#{isPrimary} </if>
@@ -1054,14 +1053,15 @@
     
     <!-- onebrand 추가 쿼리 -->
     
-    <!-- 서비스관리번호(svcMangNo)로 최근 로그인된 휴대기기의 userKey 조회(모바일 회원 로그인) -->
-    <select id="searchDeviceOrderBySvcMangNo" parameterType="String" resultType="String">
-        SELECT a.insd_usermbr_no
+    <!-- 서비스관리번호(svcMangNo)로 최근 로그인된 모바일 회원 휴대기기 정보 조회 -->
+    <select id="searchDeviceOrderBySvcMangNo" parameterType="String" resultType="userMbrDevice">
+        SELECT b.insd_usermbr_no as userKey,
+                b.insd_device_id as deviceKey
         FROM TB_US_OUSERMBR a INNER JOIN (
-            SELECT insd_usermbr_no
+            SELECT insd_usermbr_no, insd_device_id
             FROM
             (
-                SELECT insd_usermbr_no
+                SELECT insd_usermbr_no, insd_device_id
                 FROM tb_us_ousermbr_device
                 WHERE svc_mang_no =  #{svcMangNo}
                       AND auth_yn = 'Y'
@@ -1074,7 +1074,7 @@
     </select>
 
     <!-- 휴대기기 목록 조회 -->
-    <select id="searchDeviceListForOneBrand" parameterType="searchDeviceListRequest" resultType="userMbrDevice">
+    <select id="searchDeviceList3" parameterType="searchDeviceListRequest" resultType="userMbrDevice">
         SELECT
           a.insd_usermbr_no as userKey,
           a.mbr_id as userId,
@@ -1086,7 +1086,9 @@
       FROM TB_US_OUSERMBR a
         INNER JOIN TB_US_OUSERMBR_DEVICE b ON a.insd_usermbr_no = b.insd_usermbr_no
         WHERE a.mbr_status_main_cd != 'US010202'
+        <if test="isUsed.equalsIgnoreCase('Y')">
             AND b.auth_yn = 'Y'
+        </if>
         <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
             <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID')">
                 b.device_id = #{keySearch.keyString}

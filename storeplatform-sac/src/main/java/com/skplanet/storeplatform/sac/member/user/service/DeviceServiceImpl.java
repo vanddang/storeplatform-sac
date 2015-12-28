@@ -458,15 +458,17 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 
 		/* 서비스관리번호 조회 */
-		//TODO. LOCAL 테스트를 위해 Exception 예외 처리
-		String svcMangNo = null;
-		try{
-			svcMangNo = this.commService.getSvcMangNo(deviceInfo.getMdn(), deviceInfo.getDeviceTelecom(), deviceInfo.getNativeId(), deviceInfo.getDeviceSimNm());
-			deviceInfo.setSvcMangNum(svcMangNo);
-		}catch(Exception e){
-			//svcMangNo = RandomString.getString(8, RandomString.TYPE_NUMBER);
-			svcMangNo = "7243371580";
-			deviceInfo.setSvcMangNum(svcMangNo);
+		if(StringUtils.isNotBlank(deviceInfo.getMdn())){
+			String svcMangNo = null;
+			try{
+				svcMangNo = this.commService.getSvcMangNo(deviceInfo.getMdn(), deviceInfo.getDeviceTelecom(), deviceInfo.getNativeId(), deviceInfo.getDeviceSimNm());
+				deviceInfo.setSvcMangNum(svcMangNo);
+			}catch(Exception e){
+				//svcMangNo = RandomString.getString(8, RandomString.TYPE_NUMBER);
+				//TODO. LOCAL 테스트를 위해 하드코딩
+				svcMangNo = "7243371580";
+				deviceInfo.setSvcMangNum(svcMangNo);
+			}
 		}
 
 		/* 등록 가능한 휴대기기 개수 초과 채크 */
