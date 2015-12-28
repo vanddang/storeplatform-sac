@@ -9,41 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.Resource;
-import javax.validation.Valid;
-
-import com.skplanet.storeplatform.member.client.user.sci.vo.*;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.AmqpException;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
-import com.skplanet.storeplatform.external.client.market.sci.MarketSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.*;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
 import com.skplanet.storeplatform.external.client.market.vo.MarketClauseExtraInfoEc;
@@ -59,55 +28,17 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UserDownloadInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MarketPinInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
-import com.skplanet.storeplatform.sac.client.member.vo.common.TstoreEtcInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserAuthMethod;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.*;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceAmqpSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
@@ -120,7 +51,25 @@ import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
-import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
+import com.skplanet.storeplatform.sac.member.miscellaneous.service.AdditionalServiceService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 회원 로그인 관련 인터페이스 구현체.
@@ -154,7 +103,7 @@ public class LoginServiceImpl implements LoginService {
 	private UserWithdrawService userWithdrawService;
 
 	@Autowired
-	private MiscellaneousService miscellaneousService;
+	private AdditionalServiceService additionalServiceService;
 
 	@Autowired
 	private ImIdpSCI imIdpSCI;
@@ -2743,7 +2692,7 @@ public class LoginServiceImpl implements LoginService {
 			GetAdditionalServiceReq req = new GetAdditionalServiceReq();
 			req.setMsisdn(deviceId);
 			req.setSvcCode("NA00004184");
-			GetAdditionalServiceRes res = this.miscellaneousService.getAdditionalService(req);
+			GetAdditionalServiceRes res = this.additionalServiceService.getAdditionalService(req);
 
 			tstoreEtcInfo.setSvcJoinResult(res.getSvcJoinResult());
 		}

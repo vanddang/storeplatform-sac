@@ -1,7 +1,13 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
-import static org.junit.Assert.assertEquals;
-
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
+import com.skplanet.storeplatform.framework.test.SuccessCallback;
+import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
+import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,15 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.test.RequestBodySetter;
-import com.skplanet.storeplatform.framework.test.SuccessCallback;
-import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
-import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
+import static org.junit.Assert.assertEquals;
 
 /**
  * 휴대폰 인증 코드 확인 JUnit Test.
@@ -47,9 +43,6 @@ import com.skplanet.storeplatform.sac.member.miscellaneous.service.Miscellaneous
 public class ConfirmPhoneAuthorizationCodeTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmPhoneAuthorizationCodeTest.class);
-
-	@Autowired
-	private MiscellaneousService miscellaneousService;
 
 	@Autowired
 	private WebApplicationContext wac;

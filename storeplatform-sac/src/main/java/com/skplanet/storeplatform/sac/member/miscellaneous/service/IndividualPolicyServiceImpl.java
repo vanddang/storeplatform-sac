@@ -167,7 +167,7 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 	@Override
 	public RemoveIndividualPolicyRes remIndividualPolicy(SacRequestHeader header, RemoveIndividualPolicyReq req) {
 
-		LOGGER.debug("###### MiscellaneousServiceImpl.removeIndividualPolicy [START] ######");
+		LOGGER.debug("###### removeIndividualPolicy [START] ######");
 
 		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
 		RemovePolicyRequest removePolicyRequest = new RemovePolicyRequest();
@@ -195,7 +195,7 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 		res.setKey(req.getKey());
 
 		LOGGER.debug("==>>[SAC] RemoveIndividualPolicyRes.toString() : {}", res.toString());
-		LOGGER.debug("###### MiscellaneousServiceImpl.removeIndividualPolicy [END] ######");
+		LOGGER.debug("###### removeIndividualPolicy [END] ######");
 		return res;
 	}
 }

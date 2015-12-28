@@ -1,9 +1,8 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.*;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,51 +27,6 @@ public class MiscellaneousController {
 
 	@Autowired
 	private MiscellaneousService service;
-
-	/**
-	 * <pre>
-	 * 부가서비스 가입.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            CreateAdditionalServiceReq
-	 * @return CreateAdditionalServiceRes
-	 */
-	@RequestMapping(value = "/createAdditionalService/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request) {
-		LOGGER.info("Request : {}", ConvertMapperUtils.defaultConvertObjectToJson(request));
-
-		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
-			throw new StorePlatformException("SAC_MEM_3004");
-		}
-		CreateAdditionalServiceRes response = this.service.regAdditionalService(request);
-		LOGGER.info("Response : msisdn : {}", response.getMsisdn());
-		return response;
-	}
-
-	/**
-	 * <pre>
-	 * 부가서비스 가입 조회.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            GetAdditionalServiceReq
-	 * @return GetAdditionalServiceRes
-	 */
-	@RequestMapping(value = "/getAdditionalService/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public GetAdditionalServiceRes getAdditionalService(@Validated @RequestBody GetAdditionalServiceReq request) {
-
-		LOGGER.info("Request : {}", ConvertMapperUtils.defaultConvertObjectToJson(request));
-
-		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
-			throw new StorePlatformException("SAC_MEM_3004");
-		}
-		GetAdditionalServiceRes response = this.service.getAdditionalService(request);
-		LOGGER.info("Response : join result : {}", response.getSvcJoinResult());
-		return response;
-	}
 
 	/**
 	 * <pre>

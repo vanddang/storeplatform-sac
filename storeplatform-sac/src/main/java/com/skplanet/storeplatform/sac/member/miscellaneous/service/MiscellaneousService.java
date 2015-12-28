@@ -15,28 +15,6 @@ public interface MiscellaneousService {
 
 	/**
 	 * <pre>
-	 * 부가서비스 가입 - IDP 연동.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            CreateAdditionalServiceReq
-	 * @return CreateAdditionalServiceRes
-	 */
-	public CreateAdditionalServiceRes regAdditionalService(CreateAdditionalServiceReq request);
-
-	/**
-	 * <pre>
-	 * 부가서비스 가입 조회 - IDP 연동.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            GetAdditionalServiceReq
-	 * @return GetAdditionalServiceRes
-	 */
-	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request);
-
-	/**
-	 * <pre>
 	 * 결제 계좌 정보 인증.
 	 * </pre>
 	 * 
