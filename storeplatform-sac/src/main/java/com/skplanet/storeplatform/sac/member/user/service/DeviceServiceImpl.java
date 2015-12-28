@@ -464,7 +464,8 @@ public class DeviceServiceImpl implements DeviceService {
 			svcMangNo = this.commService.getSvcMangNo(deviceInfo.getMdn(), deviceInfo.getDeviceTelecom(), deviceInfo.getNativeId(), deviceInfo.getDeviceSimNm());
 			deviceInfo.setSvcMangNum(svcMangNo);
 		}catch(Exception e){
-			svcMangNo = RandomString.getString(8, RandomString.TYPE_NUMBER);
+			//svcMangNo = RandomString.getString(8, RandomString.TYPE_NUMBER);
+			svcMangNo = "7243371580";
 			deviceInfo.setSvcMangNum(svcMangNo);
 		}
 
@@ -472,8 +473,8 @@ public class DeviceServiceImpl implements DeviceService {
 		this.checkDeviceRegMaxCnt(requestHeader, userKey, deviceInfo.getDeviceId(), deviceInfo.getSvcMangNum());
 
 		/* device header 값 셋팅(OS버젼, SC버젼) */
-		String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
-		String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
+		String osVersion = requestHeader.getDeviceHeader().getOs();
+		String svcVersion = requestHeader.getDeviceHeader().getSvc();
 		if (StringUtils.isNotBlank(osVersion)) {
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
 					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
@@ -511,7 +512,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String previousIsDormant = createDeviceRes.getPreviousIsDormant(); // 기등록된 회원의 휴면계정유무
 		String preDeviceKey = createDeviceRes.getPreDeviceKey();
 		String preUserKey = createDeviceRes.getPreUserKey();
-		String isDormant = createDeviceRes.getIsDormant(); // 등록회원의 휴면계정유무
+		//String isDormant = createDeviceRes.getIsDormant(); // 등록회원의 휴면계정유무
 		if (StringUtils.isNotBlank(previousUserKey) && StringUtils.isNotBlank(previousDeviceKey)) {
 
 			LOGGER.info(
@@ -531,7 +532,7 @@ public class DeviceServiceImpl implements DeviceService {
 			SearchRealNameResponse preSchRealNameRes = this.userSCI.searchRealName(schRealNameReq);
 
 			schRealNameReq.setUserKey(userKey);
-			schRealNameReq.setIsDormant(isDormant);
+			schRealNameReq.setIsDormant(MemberConstants.USE_N);
 			SearchRealNameResponse schRealNameRes = this.userSCI.searchRealName(schRealNameReq);
 
 			if (preSchRealNameRes.getMbrAuth() != null
@@ -547,7 +548,7 @@ public class DeviceServiceImpl implements DeviceService {
 					updateRealNameRequest.setIsRealName(MemberConstants.USE_Y);
 					updateRealNameRequest.setUserKey(userKey);
 					updateRealNameRequest.setUserMbrAuth(preSchRealNameRes.getMbrAuth());
-					updateRealNameRequest.setIsDormant(isDormant);
+					updateRealNameRequest.setIsDormant(MemberConstants.USE_N);
 					UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
 					if (StringUtils.isBlank(updateRealNameResponse.getUserKey())) {
 						throw new StorePlatformException("SAC_MEM_0002", "userKey");
@@ -571,7 +572,7 @@ public class DeviceServiceImpl implements DeviceService {
 						mbrAuth.setCi(" ");
 						mbrAuth.setIsRealName("N");
 						updRealNameReq.setUserMbrAuth(mbrAuth);
-						updRealNameReq.setIsDormant(isDormant);
+						updRealNameReq.setIsDormant(MemberConstants.USE_N);
 						this.userSCI.updateRealName(updRealNameReq);
 					}
 				}
@@ -635,7 +636,7 @@ public class DeviceServiceImpl implements DeviceService {
 			transferDeviceSetInfoRequest.setCommonRequest(commonRequest);
 			transferDeviceSetInfoRequest.setUserKey(userKey);
 			transferDeviceSetInfoRequest.setDeviceKey(deviceKey);
-			transferDeviceSetInfoRequest.setIsDormant(isDormant);
+			transferDeviceSetInfoRequest.setIsDormant(MemberConstants.USE_N);
 			transferDeviceSetInfoRequest.setPreUserKey(preUserKey);
 			transferDeviceSetInfoRequest.setPreDeviceKey(preDeviceKey);
 			transferDeviceSetInfoRequest.setPreIsDormant(previousIsDormant);
@@ -1739,7 +1740,7 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 
-			if(schDeviceListResBySvcMangNo == null){
+			if(schDeviceListResBySvcMangNo == null || schDeviceListResBySvcMangNo.getUserMbrDevice().size() == 0){
 				keySearchList = new ArrayList<KeySearch>();
 				key = new KeySearch();
 				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -1786,7 +1787,8 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 
-			if(schDeviceListResByDeviceId == null && schDeviceListResBySvcMangNo == null){
+			if( (schDeviceListResByDeviceId == null || schDeviceListResByDeviceId.getUserMbrDevice().size() == 0)
+					&& (schDeviceListResBySvcMangNo == null || schDeviceListResBySvcMangNo.getUserMbrDevice().size() == 0) ){
 				keySearchList = new ArrayList<KeySearch>();
 				key = new KeySearch();
 				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);

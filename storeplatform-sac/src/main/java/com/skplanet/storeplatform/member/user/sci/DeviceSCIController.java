@@ -99,8 +99,11 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 사용자키 없음
-		if (createDeviceRequest.getUserKey() == null || createDeviceRequest.getUserKey().length() <= 0) {
+		// 필수 파라메터 체크
+		if (createDeviceRequest.getUserKey() == null
+				|| createDeviceRequest.getUserMbrDevice().getDeviceModelNo() == null
+				|| createDeviceRequest.getUserMbrDevice().getDeviceTelecom() == null
+				|| createDeviceRequest.getUserMbrDevice().getSvcMangNum() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 		}
 
@@ -112,9 +115,6 @@ public class DeviceSCIController implements DeviceSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return createDeviceResponse;
 	}
