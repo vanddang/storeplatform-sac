@@ -97,14 +97,14 @@
             a.MBR_ID AS userID,
             b.INSD_USERMBR_NO AS userKey,
             b.INSD_DEVICE_ID AS deviceKey,
-            b.PIN_NO AS pinNo,
-            b.AUTH_CNT AS authCnt,
-            b.AUTH_LOCK_YN AS authLockYn,
+            /*b.PIN_NO AS pinNo,
+            b.AUTH_CNT AS authCnt,*/
+            /*b.AUTH_LOCK_YN AS authLockYn,*/
             b.AUTO_UPDT_YN AS isAutoUpdate,
             b.AUTO_UPDT_SET_CLSF AS autoUpdateSet,
             b.WI_FI_AUTO_UPDT_YN AS isAutoUpdateWifi,
             b.LOGIN_LOCK_YN AS isLoginLock,
-            b.APPR_PIN_REINS_YN AS isPinRetry,
+            /*b.APPR_PIN_REINS_YN AS isPinRetry,*/
             b.ADULT_CONTENTS_LOCK_YN AS isAdult,
             b.ADULT_CONTENTS_LIMT_YN AS isAdultLock,
             b.WI_FI_AUTO_DWLD_YN AS isDownloadWifiOnly,
@@ -112,15 +112,14 @@
             b.REG_ID AS regID,
             TO_CHAR(b.UPD_DT,'YYYYMMDDHH24MISS') updateDate,
             b.UPD_ID AS updateID,
-            b.SYSTEM_ID AS systemID,
-            b.ICAS_AUTH_YN AS isIcasAuth,
-            TO_CHAR(b.REAL_NAME_DATE,'YYYYMMDDHH24MISS') AS realNameDate,
-            b.REAL_NAME_MDN AS realNameMdn
+            b.SYSTEM_ID AS systemID
+            /*b.ICAS_AUTH_YN AS isIcasAuth,*/
+            /*TO_CHAR(b.REAL_NAME_DATE,'YYYYMMDDHH24MISS') AS realNameDate,*/
+            /*b.REAL_NAME_MDN AS realNameMdn*/
         FROM
             TB_US_OUSERMBR a
         LEFT JOIN
-          TB_US_OUSERMBR_DEVICE_SET b
-          AND a.INSD_USERMBR_NO = b.INSD_USERMBR_NO
+          TB_US_OUSERMBR_DEVICE_SET b ON a.INSD_USERMBR_NO = b.INSD_USERMBR_NO
         WHERE a.MBR_STATUS_MAIN_CD != 'US010202'
         AND b.INSD_USERMBR_NO = #{userKey}
         AND b.INSD_DEVICE_ID = #{deviceKey}

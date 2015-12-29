@@ -70,10 +70,11 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	/** 이전 사용자 휴면계정유무. */
 	private String previousIsDormant;
 
-	/**
-	 * 휴대기기 등록한 사용자 휴면계정유무.
-	 */
-	private String isDormant;
+	/** 이전 사용자의 아이디 */
+	private String previousUserID;
+
+	/** 이전 사용자의 프로필 이미지 경로 */
+	private String previousProfileImgPath;
 
 	/**
 	 * 사용자 Key를 리턴한다.
@@ -214,25 +215,40 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return isDormant
+	 * @return previousUserID
 	 */
-	public String getIsDormant() {
-		return this.isDormant;
+	public String getPreviousUserID() {
+		return previousUserID;
 	}
 
 	/**
-	 * @param isDormant
+	 * @param previousUserID
 	 *            String
 	 */
-	public void setIsDormant(String isDormant) {
-		this.isDormant = isDormant;
+	public void setPreviousUserID(String previousUserID) {
+		this.previousUserID = previousUserID;
+	}
+
+	/**
+	 * @return previousProfileImgPath
+	 */
+	public String getPreviousProfileImgPath() {
+		return previousProfileImgPath;
+	}
+
+	/**
+	 * @param previousProfileImgPath
+	 *            String
+	 */
+	public void setPreviousProfileImgPath(String previousProfileImgPath) {
+		this.previousProfileImgPath = previousProfileImgPath;
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.framework.core.common.vo.CommonInfo#toString()
-	 */
+         * (non-Javadoc)
+         *
+         * @see com.skplanet.storeplatform.framework.core.common.vo.CommonInfo#toString()
+         */
 	@Override
 	public String toString() {
 		return Utils.printKeyValues(this);

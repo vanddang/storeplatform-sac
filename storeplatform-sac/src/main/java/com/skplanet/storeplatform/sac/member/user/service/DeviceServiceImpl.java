@@ -10,12 +10,14 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import com.skplanet.storeplatform.framework.test.StoreplatformMediaType;
 import com.skplanet.storeplatform.member.client.common.util.RandomString;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -471,14 +473,21 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 서비스관리번호 조회 */
 		if(StringUtils.isNotBlank(deviceInfo.getMdn())){
-			String svcMangNo = null;
-			try{
-				svcMangNo = this.commService.getSvcMangNo(deviceInfo.getMdn(), deviceInfo.getDeviceTelecom(), deviceInfo.getNativeId(), deviceInfo.getDeviceSimNm());
-				deviceInfo.setSvcMangNum(svcMangNo);
-			}catch(Exception e){
-				//svcMangNo = RandomString.getString(8, RandomString.TYPE_NUMBER);
-				//TODO. LOCAL 테스트를 위해 하드코딩
-				svcMangNo = "7243371580";
+			if(System.getProperty("spring.profiles.active", "local").equals("local")) {
+				// local에서는 외부연동이 안되므로 하드코딩
+				HashMap<String, String> mdnMap = new HashMap<String, String>();
+				mdnMap.put("01011110001", "svc001");
+				mdnMap.put("01011110002", "svc002");
+				mdnMap.put("01011110003", "svc003");
+				mdnMap.put("01011110004", "svc004");
+				mdnMap.put("01011110005", "svc005");
+				if(mdnMap.get(deviceInfo.getMdn()) != null){
+					deviceInfo.setSvcMangNum(mdnMap.get(deviceInfo.getMdn()));
+				}else{
+					throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
+				}
+			}else{
+				String svcMangNo = this.commService.getSvcMangNo(deviceInfo.getMdn(), deviceInfo.getDeviceTelecom(), deviceInfo.getNativeId(), deviceInfo.getDeviceSimNm());
 				deviceInfo.setSvcMangNum(svcMangNo);
 			}
 		}
@@ -525,7 +534,6 @@ public class DeviceServiceImpl implements DeviceService {
 		String previousIsDormant = createDeviceRes.getPreviousIsDormant(); // 기등록된 회원의 휴면계정유무
 		String preDeviceKey = createDeviceRes.getPreDeviceKey();
 		String preUserKey = createDeviceRes.getPreUserKey();
-		//String isDormant = createDeviceRes.getIsDormant(); // 등록회원의 휴면계정유무
 		if (StringUtils.isNotBlank(previousUserKey) && StringUtils.isNotBlank(previousDeviceKey)) {
 
 			LOGGER.info(
@@ -591,8 +599,7 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 
-			/* 배송지 정보 이관 (2015-10-27) */
-
+			/* 배송지 정보 이관 */
 			TransferDeliveryRequest transferDeliveryRequest = new TransferDeliveryRequest();
 			transferDeliveryRequest.setCommonRequest(commonRequest);
 			transferDeliveryRequest.setUserKey(userKey);
@@ -602,7 +609,7 @@ public class DeviceServiceImpl implements DeviceService {
 				LOGGER.info("기등록된 모바일 회원 배송지 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
 			}
 
-			/* 회원 전환 시 상품권 충전소 정보 이관 (2015-11-11) */
+			/* 회원 전환 시 상품권 충전소 정보 이관 */
 			TransferGiftChrgInfoRequest transferGiftChrgInfoRequest = new TransferGiftChrgInfoRequest();
 			transferGiftChrgInfoRequest.setCommonRequest(commonRequest);
 			transferGiftChrgInfoRequest.setPreUserKey(previousUserKey); // 기등록된 회원키
@@ -618,23 +625,12 @@ public class DeviceServiceImpl implements DeviceService {
 			 * MQ 연동(회원 탈퇴) - 모바일 회원.
 			 */
 			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
-
 			try {
-
-				//mqInfo.setUserId(previousUserId);
+				mqInfo.setUserId(createDeviceRes.getPreviousUserID());
 				mqInfo.setUserKey(previousUserKey);
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 				mqInfo.setDeviceId(deviceInfo.getDeviceId());
-				// TODO. SC에서 리턴받아서 처리하는데 여기서 조회해서 처리 하도록 수정필요!
-				/*List<MbrMangItemPtcr> list = createDeviceRes.getMbrMangItemPtcrList();
-				if (list != null) {
-					for (int i = 0; i < list.size(); i++) {
-						MbrMangItemPtcr extraInfo = list.get(i);
-						if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
-							mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
-						}
-					}
-				}*/
+				mqInfo.setProfileImgPath(createDeviceRes.getPreviousProfileImgPath());
 				mqInfo.setChgMemberYn(MemberConstants.USE_Y);
 				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
