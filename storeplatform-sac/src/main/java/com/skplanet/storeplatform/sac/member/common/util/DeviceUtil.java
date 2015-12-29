@@ -141,6 +141,7 @@ public class DeviceUtil {
 		deviceInfo.setMdn(userMbrDevice.getMdn());
 		deviceInfo.setDeviceSimNm(userMbrDevice.getDeviceSimNm());
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
+        deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount()); // 기기 계정
 
 		return deviceInfo;
 	}

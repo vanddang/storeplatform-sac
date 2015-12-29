@@ -62,6 +62,9 @@ public class SearchUserResponse extends CommonInfo implements Serializable {
 	/** 사용자 변동성 여부. */
 	private String isChangeSubject;
 
+    /** 사용자 휴대기기(valid) 등록 대수. */
+    private String deviceCount;
+
 	/** 사용자 휴대기기 전체 등록 대수. */
 	private String totalDeviceCount;
 
@@ -284,4 +287,11 @@ public class SearchUserResponse extends CommonInfo implements Serializable {
 		return Utils.printKeyValues(this);
 	}
 
+    public String getDeviceCount() {
+        return deviceCount;
+    }
+
+    public void setDeviceCount(String deviceCount) {
+        this.deviceCount = deviceCount;
+    }
 }

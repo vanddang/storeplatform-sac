@@ -5,7 +5,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * [REQUEST] 휴대기기 목록 조회.
  * 
- * Updated on : 2014. 1. 3. Updated by : 반범진. 지티소프트.
+ * Updated on : 2015. 12. 28. Updated by : 윤보영. 카레즈.
  */
 public class ListDeviceReq extends CommonInfo {
 
@@ -32,14 +32,14 @@ public class ListDeviceReq extends CommonInfo {
 	private String deviceKey;
 
 	/**
-	 * 외부 연동 Key.
-	 */
-	private String mbrNo;
-
-	/**
 	 * 대표기기 여부.
 	 */
 	private String isMainDevice;
+
+    /**
+     * MDN.
+     */
+    private String mdn;
 
 	/**
 	 * @return userId
@@ -116,19 +116,11 @@ public class ListDeviceReq extends CommonInfo {
 		this.deviceKey = deviceKey;
 	}
 
-	/**
-	 * @return mbrNo
-	 */
-	public String getMbrNo() {
-		return this.mbrNo;
-	}
+    public String getMdn() {
+        return mdn;
+    }
 
-	/**
-	 * @param mbrNo
-	 *            String
-	 */
-	public void setMbrNo(String mbrNo) {
-		this.mbrNo = mbrNo;
-	}
-
+    public void setMdn(String mdn) {
+        this.mdn = mdn;
+    }
 }

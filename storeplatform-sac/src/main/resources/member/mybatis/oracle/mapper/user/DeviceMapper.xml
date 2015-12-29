@@ -80,7 +80,7 @@
                       SELECT  a.insd_usermbr_no AS userKey
                         FROM  tb_us_ousermbr a, tb_us_ousermbr_device b
                        WHERE  a.mbr_status_main_cd != 'US010202'
-                              and a.insd_uermbr_no = b.insd_usermbr_no
+                              and a.insd_usermbr_no = b.insd_usermbr_no
                <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                    <if test="keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO')">
                        a.insd_usermbr_no = #{keySearch.keyString}
@@ -139,7 +139,7 @@
     <!-- 휴대기기 단건 조회 -->
     <select id="getDevice" resultMap="getDeviceResultMap">
             SELECT  /* DeviceMapper.xml, getDevice, SAC(SC), 윤보영, 2015-12-23 */
-                    insd_usermbr_no
+                      insd_usermbr_no
                     , insd_device_id
                     , device_id
                     , device_model_cd
@@ -154,6 +154,7 @@
                     , svc_mang_no
                     , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS') AS upd_dt
                     , last_login_dt
+                    , device_acct AS device_account
               FROM  tb_us_ousermbr_device
              WHERE  auth_yn = 'Y'
                 AND insd_usermbr_no = #{userKey}
@@ -1080,4 +1081,13 @@
             </if>
         </foreach>
     </select>
+
+    <!-- 등록된 휴대기기 보유 카운트 조회-->
+    <select id="searchValidDeviceCount" parameterType="userMbr" resultType="int">
+        SELECT COUNT(*) AS deviceCount
+          FROM tb_us_ousermbr_device
+         WHERE insd_usermbr_no = #{userKey}
+           AND auth_yn ='Y'
+    </select>
+
 </mapper>
