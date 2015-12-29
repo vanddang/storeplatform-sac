@@ -9,11 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import com.skplanet.storeplatform.member.client.common.constant.Constant;
-import com.skplanet.storeplatform.member.client.common.util.Utils;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
-import com.skplanet.storeplatform.sac.common.util.DateUtils;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import com.skplanet.storeplatform.sac.member.user.service.UserModifyService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,34 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.user.service.UserModifyService;
 
 /**
  * 회원 수정 서비스 Controller
@@ -145,7 +120,7 @@ public class UserModifyController {
 	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, @Validated @RequestBody ModifyPasswordReq req) {
 
 		LOGGER.debug("################################");
-		LOGGER.debug("##### 2.1.14. 비밀번호 수정 #####");
+		LOGGER.debug("##### 2.1.13. 비밀번호 수정 #####");
 		LOGGER.debug("################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));

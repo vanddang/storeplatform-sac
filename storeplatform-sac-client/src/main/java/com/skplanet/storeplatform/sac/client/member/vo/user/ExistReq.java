@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [REQUEST] 회원가입 여부 조회 (ID/MSISDN 기반)
+ *  회원 가입여부 조회 내부 사용
  * 
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */

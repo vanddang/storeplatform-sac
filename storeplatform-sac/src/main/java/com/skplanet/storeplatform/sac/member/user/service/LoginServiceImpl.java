@@ -714,7 +714,6 @@ public class LoginServiceImpl implements LoginService {
 		String oDeviceId = req.getDeviceId(); // 자번호
 		boolean isOpmd = this.commService.isOpmd(oDeviceId);
 		String isVariability = "Y"; // 변동성 체크 성공 유무
-		String isModifyInfo = "N"; // 휴대기기 정보 업데이트 여부
 		String userKey = null;
 		String deviceKey = null;
 		DeviceInfo deviceInfo = null;
@@ -723,13 +722,13 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
 
 		/* deviceId의 mdn여부 체크 */
-		String reqKeyType = MemberConstants.KEY_TYPE_DEVICE_ID;
+		String keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
 		if (ValidationCheckUtils.isMdn(req.getDeviceId())) {
-			reqKeyType = MemberConstants.KEY_TYPE_MDN;
+			keyType = MemberConstants.KEY_TYPE_MDN;
 		}
 
 		/* mdn 회원유무 조회 */
-		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, reqKeyType, req.getDeviceId());
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, keyType, req.getDeviceId());
 		if (chkDupRes.getUserMbr() != null) {
 			LOGGER.info("{} 휴면계정유무 : {}", oDeviceId, chkDupRes.getUserMbr().getIsDormant());
 		}
@@ -738,8 +737,7 @@ public class LoginServiceImpl implements LoginService {
 
 			if (!isOpmd) { // OPMD단말인경우 변동성 체크를 하지 않는다.
 				/* 휴대기기 정보 조회 */
-				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
-						req.getDeviceId(), null);
+				deviceInfo = this.deviceService.srhDevice(requestHeader, keyType, req.getDeviceId(), null);
 
 				userKey = deviceInfo.getUserKey();
 				deviceKey = deviceInfo.getDeviceKey();

@@ -23,9 +23,6 @@ public class SearchIdSac extends CommonInfo {
 	/* 등록일 */
 	private String regDate;
 
-	/* 통합 서비스 관리 번호 */
-	private String imSvcNo;
-
 	/* UserEmail */
 	private String userEmail;
 
@@ -55,14 +52,6 @@ public class SearchIdSac extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	public String getImSvcNo() {
-		return this.imSvcNo;
-	}
-
-	public void setImSvcNo(String imSvcNo) {
-		this.imSvcNo = imSvcNo;
 	}
 
 	public String getUserEmail() {

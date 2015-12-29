@@ -53,20 +53,16 @@ public class UserLockServiceImpl implements UserLockService {
 		 */
 		CheckDuplicationResponse checkDuplicationResponse = this.checkDisAgree(sacHeader, req);
 
-		if(checkDuplicationResponse.getUserMbr().getLoginStatusCode().equals(MemberConstants.USER_LOGIN_STATUS_PAUSE)){
-			throw new StorePlatformException("SAC_MEM_1415", MemberConstants.USER_LOGIN_STATUS_PAUSE);
-		}
-
-		/**
-		 * 회원 계정 잠금
-		 */
-		this.modLoginStatus(sacHeader, req.getUserId());
-
-		/**
-		 * 결과 setting.
-		 */
 		LockAccountSacRes response = new LockAccountSacRes();
-		response.setUserId(req.getUserId());
+
+		// 이미 잠겨 있으면 리턴 셋팅
+		if(checkDuplicationResponse.getUserMbr().getLoginStatusCode().equals(MemberConstants.USER_LOGIN_STATUS_PAUSE)){
+			response.setUserId(req.getUserId());
+		// 잠겨 있지 않으면 회원 계정 잠금
+		}else {
+			this.modLoginStatus(sacHeader, req.getUserId());
+			response.setUserId(req.getUserId());
+		}
 
 		return response;
 	}

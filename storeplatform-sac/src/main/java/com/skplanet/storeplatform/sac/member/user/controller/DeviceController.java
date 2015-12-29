@@ -9,10 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import javax.validation.Valid;
-
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
+import com.skplanet.storeplatform.sac.member.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,27 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
-import com.skplanet.storeplatform.sac.member.user.service.UserService;
+import javax.validation.Valid;
 
 /**
  * 휴대기기관련 Controller.
@@ -72,18 +57,29 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) {
+	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceRemoveDeviceIdReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		/* userKey, userId 조회 요청한 걸로 판단하여 isMainDevice 필수 파라메터 체크 */
-		if (StringUtil.isBlank(req.getDeviceId()) && StringUtil.isBlank(req.getDeviceKey())
-				&& StringUtil.isBlank(req.getIsMainDevice())) {
-			throw new StorePlatformException("SAC_MEM_0001", "isMainDevice");
+		// userId, userKey 조회시 isMainDevice는 필수
+		if (StringUtils.isEmpty(req.getDeviceKey())){
+			if (StringUtils.isEmpty(req.getIsMainDevice())) {
+				throw new StorePlatformException("SAC_MEM_0001", "isMainDevice");
+			}
+		// deviceKey로 조회시 userKey 필수
+		}else{
+			if (StringUtils.isEmpty(req.getUserKey())) {
+				throw new StorePlatformException("SAC_MEM_0001", "userKey");
+			}
 		}
 
-		ListDeviceRes res = this.deviceService.listDevice(requestHeader,
-				(ListDeviceReq) ConvertMapperUtils.convertObject(req));
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setUserId(req.getUserId());
+		listDeviceReq.setUserKey(req.getUserKey());
+		listDeviceReq.setDeviceKey(req.getDeviceKey());
+		listDeviceReq.setIsMainDevice(req.getIsMainDevice());
+
+		ListDeviceRes res = this.deviceService.listDevice(requestHeader, listDeviceReq);
 
 		if (res.getDeviceInfoList() == null) {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");

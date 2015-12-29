@@ -1475,6 +1475,11 @@ public class UserServiceImpl implements UserService {
 			dao = this.idleDAO;
 		}
 
+		updatePasswordUserRequest.getMbrPwd().setMemberPW(
+				createUserPwdEncyp(updatePasswordUserRequest.getMbrPwd().getMemberPW()));
+		updatePasswordUserRequest.getMbrPwd().setOldPW(
+				createUserPwdEncyp(updatePasswordUserRequest.getMbrPwd().getOldPW()));
+
 		Integer row = dao.update("User.updatePasswordUser", updatePasswordUserRequest.getMbrPwd());
 
 		if (row == 0) {
@@ -1533,7 +1538,8 @@ public class UserServiceImpl implements UserService {
 		}
 
 		// 2. 생성된 비밀번호 암호화 (MD5)
-		String encNewPw = createUserPwdEncyp(String.valueOf(charPwd)+intPwd[0]+intPwd[1]+intPwd[2]);
+		String newPw = String.valueOf(charPwd)+intPwd[0]+intPwd[1]+intPwd[2];
+		String encNewPw = createUserPwdEncyp(newPw);
 
 		resetPasswordUserRequest.getMbrPwd().setMemberPW(encNewPw);
 
@@ -1544,7 +1550,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		ResetPasswordUserResponse resetPasswordUserResponse = new ResetPasswordUserResponse();
-		resetPasswordUserResponse.setUserPW(encNewPw);
+		resetPasswordUserResponse.setUserPW(newPw);
 		resetPasswordUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
 
