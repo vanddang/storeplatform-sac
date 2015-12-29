@@ -100,10 +100,9 @@ public class DeviceSCIController implements DeviceSCI {
 		}
 
 		// 필수 파라메터 체크
-		if (createDeviceRequest.getUserKey() == null
-				|| createDeviceRequest.getUserMbrDevice().getDeviceModelNo() == null
-				|| createDeviceRequest.getUserMbrDevice().getDeviceTelecom() == null
-				|| createDeviceRequest.getUserMbrDevice().getSvcMangNum() == null) {
+		if (createDeviceRequest.getUserMbrDevice() == null
+				|| createDeviceRequest.getUserKey() == null
+				|| createDeviceRequest.getUserMbrDevice().getDeviceModelNo() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 		}
 
