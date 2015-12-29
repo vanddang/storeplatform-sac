@@ -1,5 +1,15 @@
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import com.skplanet.storeplatform.sac.member.miscellaneous.service.PinService;
+import com.skplanet.storeplatform.sac.member.user.service.DeviceSetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,30 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckDevicePinSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckDevicePinSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDevicePinSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDevicePinSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDevicePinSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDevicePinSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceSetInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceSetInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDevicePinSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDevicePinSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
-import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
-import com.skplanet.storeplatform.sac.member.user.service.DeviceSetService;
 
 /**
  * 휴대기기 설정 관련 Controller
@@ -50,7 +36,7 @@ public class DeviceSetController {
 	private DeviceSetService deviceSetService;
 
 	@Autowired
-	private MiscellaneousService service;
+	private PinService pinService;
 
 	/**
 	 * <pre>
@@ -218,7 +204,7 @@ public class DeviceSetController {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
 
-		PinAuthorizationCheckRes response = this.service.pinAuthorizationCheck(header, request);
+		PinAuthorizationCheckRes response = this.pinService.pinAuthorizationCheck(header, request);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
 		return response;
 	}

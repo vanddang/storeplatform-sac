@@ -9,14 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.miscellaneous.sci.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
@@ -25,6 +17,13 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividu
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 기타 기능 내부메소드 호출 Service 구현체.
@@ -53,7 +52,7 @@ public class MiscellaneousSCIServiceImpl implements MiscellaneousSCIService {
 	@Override
 	public GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header, GetIndividualPolicyReq req) {
 
-		LOGGER.debug("###### MiscellaneousServiceImpl.createIndividualPolicy [START] ######");
+		LOGGER.debug("###### createIndividualPolicy [START] ######");
 
 		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
 		SearchPolicyRequest policyRequest = new SearchPolicyRequest();
