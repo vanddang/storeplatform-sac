@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 회원 정보 수정 서비스 (CoreStoreBusiness) 구현체
@@ -123,6 +124,57 @@ public class UserModifyServiceImpl implements UserModifyService {
 		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 		/**
+		 * 비밀 번호 유효성 체크
+		 *  1. 길이 체크
+		 *  2. 비밀번호에 ID일부 문자 사용 체크
+		 *  3. 숫자만 구성 체크
+		 *  4. 문자만 구성 체크
+		 *  5. 사용할수 없는 문자 사용 체크
+		 *  6. 기타 비밀번호 제약사항 체크 (공백 체크)
+		 *  7. 기타 비밀번호 제약사항 체크 (숫자/문자 연속 3자 이상)
+		 *
+		 *  비밀번호 제약 사항 (One Id 사이트 동일)
+		 *  비밀번호는 6~20자의 영문 대소문자,숫자,특수기호만 사용할 수 있습니다.(공백입력불가)
+		 *  사용 가능한 특수기호 : !@#$%^&*()-_+=|[]{}'";:/?.>,<
+		 *  3자 이상 연속 영문/숫자 조합은 불가,
+		 *  아이디에 포함된 문자/숫자와 연속 3자 이상 동일한 비밀번호는 설정이 불가합니다.
+		 */
+		String newPassword = req.getNewPassword();
+		// 1. 길이 체크
+		if(newPassword.length() < 6 || newPassword.length() > 20){
+			throw new StorePlatformException("SAC_MEM_1407", userInfo.getUserKey());
+		}
+		// 2. 비밀번호에 ID일부 문자 포함
+		for(int i=0; i<newPassword.length()-2; i++){
+			if(userInfo.getUserId().indexOf(newPassword.substring(i, i + 3)) > -1){
+				throw new StorePlatformException("SAC_MEM_1408", userInfo.getUserKey());
+			}
+		}
+		// 3. 숫자만 구성 체크
+		if(Pattern.matches("^[0-9]*$", newPassword)){
+			throw new StorePlatformException("SAC_MEM_1409", userInfo.getUserKey());
+		}
+		// 4. 문자만 구성 체크
+		if(Pattern.matches("^[A-Za-z]*$", newPassword)){
+			throw new StorePlatformException("SAC_MEM_1410", userInfo.getUserKey());
+		}
+		// 5. 사용할수 없는 문자 사용 체크
+		if(!Pattern.matches("^[A-Za-z0-9!@#$%^&*()-_+=|\\[\\]\\{\\}'\";:/?.>,<]+$", newPassword)){
+			throw new StorePlatformException("SAC_MEM_1411", userInfo.getUserKey());
+		}
+		// 6. 기타 비밀번호 제약사항 체크 (공백 체크)
+		if (newPassword.indexOf(' ') > 0){
+			throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
+		}
+		// 7. 기타 비밀번호 제약사항 체크 (숫자/문자 연속 3자 이상)
+		for(int i=0; i<newPassword.length()-1 ; i++){
+			if(newPassword.charAt(i+1) - newPassword.charAt(i) == 1
+					&& newPassword.charAt(i+2) - newPassword.charAt(i+1) == 1){
+				throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
+			}
+		}
+
+		/**
 		 * SC 회원 사용자키, 비밀번호 일치 여부 확인
 		 */
 		CheckUserPwdRequest chkUserPwdRequest = new CheckUserPwdRequest();
@@ -132,7 +184,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		chkUserPwdRequest.setIsDormant(userInfo.getIsDormant());
 		CheckUserPwdResponse chkUserPwdResponse = this.userSCI.checkUserPwd(chkUserPwdRequest);
 		if( chkUserPwdResponse.getUserKey() == null || chkUserPwdResponse.getUserKey().length() <=0 ){
-			throw new StorePlatformException("SAC_MEM_1204", userInfo.getUserKey());
+			throw new StorePlatformException("SAC_MEM_1406", userInfo.getUserKey());
 		}
 
 		/**

@@ -1511,32 +1511,28 @@ public class UserServiceImpl implements UserService {
 
 		// userKey가 존재한다면 pw 생성 및 암호화
 		// 1. 비밀번호 생성
-		StringBuffer newPW = new StringBuffer();
-		for(int i=0; i < 7; i++){
-			if(i<4){
-				// 영어 소문자 3개
-				newPW.append((char)((Math.random()*26)+97));
-			}else{
-				// 숫자 3개
-				newPW.append((int)(Math.random()*10));
-			}
-		}
-		// 2. 생성된 비밀번호 암호화 (MD5 or SHA-128)
-		String encNewPw;
-		try{
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(newPW.toString().getBytes());
+		char[] charPwd = {(char)((Math.random()*26)+97), (char)((Math.random()*26)+97), (char)((Math.random()*26)+97)};
+		int[] intPwd = {(int)(Math.random()*10), (int)(Math.random()*10), (int)(Math.random()*10)};
 
-			byte byteData[] = md.digest();
-			StringBuffer sb = new StringBuffer();
-
-			for(int i = 0 ; i < byteData.length ; i++){
-				sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
-			}
-			encNewPw = sb.toString();
-		}catch(NoSuchAlgorithmException e){
-			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+		// 연속하지 않고 일치 하지 않은 문자 3개
+		while( (charPwd[2]-charPwd[1] == 1 && charPwd[1]-charPwd[0] == 1)
+				|| (charPwd[2]-charPwd[1] == 0 || charPwd[1]-charPwd[0] == 0) ){
+			System.out.println("char while문 돌았음"+String.valueOf(charPwd));
+			charPwd[0] = (char)((Math.random()*26)+97);
+			charPwd[1] = (char)((Math.random()*26)+97);
+			charPwd[2] = (char)((Math.random()*26)+97);
 		}
+		// 연속하지 않고 일치 하지 않은 숫자 3개
+		while( (intPwd[2]-intPwd[1] == 1 && intPwd[1]-intPwd[0] == 1)
+				|| (intPwd[2]-intPwd[1] == 0 || intPwd[1]-intPwd[0] == 0) ){
+			System.out.println("int while문 돌았음"+intPwd[0]+intPwd[1]+intPwd[2]);
+			intPwd[0] = (int)(Math.random()*10);
+			intPwd[1] = (int)(Math.random()*10);
+			intPwd[2] = (int)(Math.random()*10);
+		}
+
+		// 2. 생성된 비밀번호 암호화 (MD5)
+		String encNewPw = createUserPwdEncyp(String.valueOf(charPwd)+intPwd[0]+intPwd[1]+intPwd[2]);
 
 		resetPasswordUserRequest.getMbrPwd().setMemberPW(encNewPw);
 
@@ -4004,6 +4000,9 @@ public class UserServiceImpl implements UserService {
 
 		CheckUserPwdResponse checkUserPwdResponse = new CheckUserPwdResponse();
 
+		// 신규비밀번호 암호화
+		chkUserPwdRequest.setUserPw(createUserPwdEncyp(chkUserPwdRequest.getUserPw()));
+
 		if(StringUtils.equals(chkUserPwdRequest.getIsDormant(), "N")) {
 			checkUserPwdResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
 		}else{
@@ -4014,6 +4013,29 @@ public class UserServiceImpl implements UserService {
 				"response.ResultMessage.success"));
 
 		return checkUserPwdResponse;
+	}
+
+	public String createUserPwdEncyp(String pwd){
+
+		String encNewPw;
+		try{
+			StringBuffer sb = new StringBuffer();
+
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(pwd.toString().getBytes());
+
+			byte[] msgStr = md.digest() ;
+
+			for(int i = 0 ; i < msgStr.length ; i++){
+				sb.append(Integer.toHexString((int)msgStr[i] & 0x00FF));
+			}
+			encNewPw = sb.toString();
+		}catch(NoSuchAlgorithmException e){
+			throw new StorePlatformException(this.getMessage("response.ResultMessage.fail", ""));
+		}
+
+		return encNewPw;
+
 	}
 
 }
