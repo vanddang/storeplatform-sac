@@ -1135,6 +1135,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserKey(userMbrDevice.getUserKey());
+
+		// 회원정보 변경전 이력저장
 		if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
 			row = dao.update("User.insertUpdateStatusHistory", userMbr);
 			if (row <= 0) {
@@ -1148,6 +1150,12 @@ public class DeviceServiceImpl implements DeviceService {
 		userMbr.setUserSubStatus(SubStateCode.WITHDRAW.getCode()); // 탈퇴완료 SUB CODE
 		userMbr.setSecedeDate(Utils.getLocalDateTimeinYYYYMMDD());
 		row = dao.update("Device.removeOwner", userMbr);
+		if (row <= 0) {
+			return row;
+		}
+
+		// 휴대기기 변경전 이력 저장
+		row = dao.update("Device.insertUpdateDeviceHistory", userMbrDevice); // ok
 		if (row <= 0) {
 			return row;
 		}

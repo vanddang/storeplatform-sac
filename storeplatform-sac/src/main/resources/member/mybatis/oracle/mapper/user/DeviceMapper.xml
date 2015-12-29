@@ -189,6 +189,7 @@
                     , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS')
                     , sms_recv_yn
                     , device_natv_id
+                    , device_acct
                     , svc_mang_no
                     , entry_chnl_cd
                     , auth_yn
@@ -488,6 +489,7 @@
                <if test="joinId != null">,entry_chnl_cd </if>
                <if test="changeCaseCode != null">,chg_case_cd </if>
                <if test="deviceSimNm != null">,device_sim_nm </if>
+               <if test="deviceAccount != null">,device_acct </if>
         ) VALUES (
             #{userKey},
             #{deviceKey},
@@ -507,6 +509,7 @@
             <if test="joinId != null">,#{joinId} </if>
             <if test="changeCaseCode != null">,#{changeCaseCode} </if>
             <if test="deviceSimNm != null">,#{deviceSimNm} </if>
+            <if test="deviceAccount != null">,#{deviceAccount} </if>
         )
     </update>
     
@@ -566,6 +569,7 @@
                <if test="authenticationDate != null">,auth_dt = TO_DATE(#{authenticationDate},'YYYYMMDDHH24MISS') </if>
                <if test="isRecvSMS != null">,sms_recv_yn = #{isRecvSMS} </if>
                <if test="nativeID != null">,device_natv_id = #{nativeID} </if>
+               <if test="deviceAccount != null">,device_acct = #{deviceAccount} </if>
                <if test="svcMangNum != null">,svc_mang_no = #{svcMangNum} </if>
                <if test="joinId != null">,entry_chnl_cd = #{joinId} </if>
                <if test="deviceID != null">,device_id = #{deviceID} </if>
@@ -593,6 +597,7 @@
                <if test="authenticationDate != null">,auth_dt = TO_DATE(#{authenticationDate},'YYYYMMDDHH24MISS') </if>
                <if test="isRecvSMS != null">,sms_recv_yn = #{isRecvSMS} </if>
                <if test="nativeID != null">,device_natv_id = #{nativeID} </if>
+               <if test="deviceAccount != null">,device_acct = #{deviceAccount} </if>
                <if test="svcMangNum != null">,svc_mang_no = #{svcMangNum} </if>
                <if test="joinId != null">,entry_chnl_cd = #{joinId} </if>
                <if test="deviceID != null">,device_id = #{deviceID} </if>
@@ -623,6 +628,7 @@
                    upd_dt,
                    sms_recv_yn,
                    device_natv_id,
+                   device_acct,
                    device_sim_nm,
                    entry_chnl_cd,
                    ins_dt,
@@ -645,7 +651,8 @@
               SYSDATE,                                                /* upd_dt */
               sms_recv_yn,
               device_natv_id,
-              DEVICE_SIM_NM,
+              device_acct,
+              device_sim_nm,
               entry_chnl_cd,
               SYSDATE,
               svc_mang_no,
@@ -675,7 +682,8 @@
                    auth_dt,
                    upd_dt,
                    sms_recv_yn,
-                   device_natv_id, 
+                   device_natv_id,
+                   device_acct,
                    entry_chnl_cd,
                    ins_dt, 
                    svc_mang_no,
@@ -698,7 +706,8 @@
                auth_dt,
                SYSDATE, /* upd_dt */
                sms_recv_yn,
-               device_natv_id, 
+               device_natv_id,
+               device_acct,
                entry_chnl_cd,
                SYSDATE, 
                svc_mang_no,
@@ -804,6 +813,7 @@
                <if test="authenticationDate != null">,auth_dt = TO_DATE(#{authenticationDate},'YYYYMMDDHH24MISS') </if>
                <if test="isRecvSMS != null">,sms_recv_yn = #{isRecvSMS} </if>
                <if test="nativeID != null">,device_natv_id = #{nativeID} </if>
+               <if test="deviceAccount != null">,device_acct = #{deviceAccount} </if>
                <if test="svcMangNum != null">,svc_mang_no = #{svcMangNum} </if>
                <if test="joinId != null">,entry_chnl_cd = #{joinId} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>

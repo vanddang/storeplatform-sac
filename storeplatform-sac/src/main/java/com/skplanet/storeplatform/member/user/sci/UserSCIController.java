@@ -2392,12 +2392,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchRealNameRequest.getCommonRequest().getTenantID() == null
-				|| searchRealNameRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, UserKey
 		if (searchRealNameRequest.getUserKey() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -3457,12 +3451,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (transferDeliveryRequest.getCommonRequest().getTenantID() == null
-				|| transferDeliveryRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, userKey
 		if (transferDeliveryRequest.getUserKey() == null || transferDeliveryRequest.getPreUserKey() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -3579,12 +3567,6 @@ public class UserSCIController implements UserSCI {
 		// 공통 파라미터 없음
 		if (transferGiftChrgInfoRequest.getCommonRequest() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
-		}
-
-		// 테넌트 아이디 없음
-		if (transferGiftChrgInfoRequest.getCommonRequest().getTenantID() == null
-				|| transferGiftChrgInfoRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
 		}
 
 		// 필수 파라미터, userKey

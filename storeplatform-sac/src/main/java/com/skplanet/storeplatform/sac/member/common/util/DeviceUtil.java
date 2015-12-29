@@ -140,6 +140,7 @@ public class DeviceUtil {
 		deviceInfo.setIsDormant(userMbrDevice.getIsDormant());
 		deviceInfo.setMdn(userMbrDevice.getMdn());
 		deviceInfo.setDeviceSimNm(userMbrDevice.getDeviceSimNm());
+		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
         deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount()); // 기기 계정
 
@@ -201,6 +202,7 @@ public class DeviceUtil {
 		userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 		userMbrDevice.setMdn(deviceInfo.getMdn());
 		userMbrDevice.setDeviceSimNm(deviceInfo.getDeviceSimNm());
+		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
 		userMbrDevice.setUserMbrDeviceDetail(getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		return userMbrDevice;
