@@ -127,7 +127,7 @@ public final class MemberConstants {
 	public static final String USER_EXTRA_FACEBOOKREVIEW = "US010906"; // Facebook 후기 연동 여부
 	public static final String USER_EXTRA_MEMBERPOINTJOIN = "US010907"; // 통합포인트 가입 여부
 	public static final String USER_EXTRA_FACEBOOK_ID = "US010911"; // Facebook ID
-	public static final String USER_EXTRA_PROFILEIMGPATH = "US010912"; // 통합포인트 가입 여부
+	public static final String USER_EXTRA_PROFILEIMGPATH = "US010912"; // 프로필 이미지 경로
 
 	// 2015-07-28 추가 적용.
 	public static final String USER_EXTRA_SOCIAL_ACCT_TYPE = "US010913";

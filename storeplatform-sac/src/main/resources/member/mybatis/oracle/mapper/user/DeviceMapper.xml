@@ -80,7 +80,7 @@
                       SELECT  a.insd_usermbr_no AS userKey
                         FROM  tb_us_ousermbr a, tb_us_ousermbr_device b
                        WHERE  a.mbr_status_main_cd != 'US010202'
-                              and a.insd_uermbr_no = b.insd_usermbr_no
+                              and a.insd_usermbr_no = b.insd_usermbr_no
                <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                    <if test="keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO')">
                        a.insd_usermbr_no = #{keySearch.keyString}
@@ -354,7 +354,6 @@
        tb_us_ousermbr_device
           SET rep_device_yn = 'N',
               start_dt = SYSDATE,
-              end_dt = TO_DATE('29991231235959', 'YYYYMMDDHH24MISS'),
               upd_dt = SYSDATE
         WHERE insd_usermbr_no = #{userKey}
            AND device_id = #{deviceID}
@@ -375,7 +374,7 @@
     <update id="removeDevice" parameterType="userMbrDevice">
        UPDATE /* DeviceMapper.xml, removeDevice, SAC(SC), 윤보영, 2015-12-20 */
        tb_us_ousermbr_device
-          SET auth_yn = #{isUsed},
+          SET auth_yn = 'N',
               rep_device_yn = 'N',
               start_dt = SYSDATE,
               end_dt = SYSDATE,
@@ -487,6 +486,7 @@
                <if test="svcMangNum != null">,svc_mang_no </if>
                <if test="joinId != null">,entry_chnl_cd </if>
                <if test="changeCaseCode != null">,chg_case_cd </if>
+               <if test="deviceSimNm != null">,device_sim_nm </if>
         ) VALUES (
             #{userKey},
             #{deviceKey},
@@ -505,6 +505,7 @@
             <if test="svcMangNum != null">,#{svcMangNum} </if>
             <if test="joinId != null">,#{joinId} </if>
             <if test="changeCaseCode != null">,#{changeCaseCode} </if>
+            <if test="deviceSimNm != null">,#{deviceSimNm} </if>
         )
     </update>
     
@@ -569,6 +570,7 @@
                <if test="deviceID != null">,device_id = #{deviceID} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
+               <if test="deviceSimNm != null">,device_sim_nm = #{deviceSimNm}</if>
                <choose>
                <when test="changeCaseCode != null">,chg_case_cd = #{changeCaseCode} </when>
                <otherwise>,chg_case_cd = 'US012001' </otherwise>
@@ -832,10 +834,14 @@
                 seq
                 ,pre_insd_usermbr_no
                 ,after_insd_usermbr_no
+                ,reg_dt
+                ,reg_id
         ) VALUES (
                 sq_us_ousermbr_idmbr_trfm_chas.NEXTVAL
                 ,#{preUserKey}
                 ,#{afterUserKey}
+                ,SYSDATE
+	            ,#{regID}
         )
     </insert>
     
@@ -1034,7 +1040,8 @@
     
     <!-- 서비스관리번호(svcMangNo)로 최근 로그인된 모바일 회원 휴대기기 정보 조회 -->
     <select id="searchDeviceOrderBySvcMangNo" parameterType="String" resultType="userMbrDevice">
-        SELECT b.insd_usermbr_no as userKey,
+        SELECT  a.mbr_id as userID,
+                b.insd_usermbr_no as userKey,
                 b.insd_device_id as deviceKey
         FROM TB_US_OUSERMBR a INNER JOIN (
             SELECT insd_usermbr_no, insd_device_id
