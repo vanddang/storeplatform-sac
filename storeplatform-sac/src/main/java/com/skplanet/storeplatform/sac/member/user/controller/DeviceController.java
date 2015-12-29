@@ -171,6 +171,12 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceKey || deviceId");
 		}
 
+		// deviceIdType = msisdn인경우 mdn필드에 셋팅
+		if(StringUtils.equals(req.getDeviceInfo().getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+			req.getDeviceInfo().setMdn(req.getDeviceInfo().getDeviceId());
+			req.getDeviceInfo().setDeviceId("");
+		}
+
 		ModifyDeviceRes res = this.deviceService.modDevice(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));

@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.member.user.sci;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,29 +28,6 @@ import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.member.client.common.vo.CommonResponse;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateDeviceManagementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateDeviceManagementResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.user.service.DeviceService;
 
 /**
@@ -805,6 +783,47 @@ public class DeviceSCIController implements DeviceSCI {
 				updateDeviceManagementResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 						"response.ResultMessage.success"));
 				return updateDeviceManagementResponse;
+			}
+			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
+
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+	}
+
+	@Override
+	public ModifyDeviceResponse modifyDevice(ModifyDeviceRequest modifyDeviceRequest) {
+		ModifyDeviceResponse modifyDeviceResponse = null;
+
+		// 입력 파라미터가 없음
+		if (modifyDeviceRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (modifyDeviceRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 필수 파라미터 userKey
+		if (modifyDeviceRequest.getUserKey() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		if(modifyDeviceRequest.getUserMbrDevice().getDeviceKey() == null
+				&& modifyDeviceRequest.getUserMbrDevice().getDeviceID() == null
+				&& modifyDeviceRequest.getUserMbrDevice().getMdn() == null){
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+
+			modifyDeviceResponse = this.device.modifyDevice(modifyDeviceRequest);
+
+			if (modifyDeviceResponse != null) {
+				modifyDeviceResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+						"response.ResultMessage.success"));
+				return modifyDeviceResponse;
 			}
 			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
 
