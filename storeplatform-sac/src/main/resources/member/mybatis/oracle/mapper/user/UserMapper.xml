@@ -621,6 +621,7 @@
                     ,system_id
                     ,mbr_clas_cd
                     ,upd_email_addr
+                    ,last_login_dt
                     ,last_prchs_dt
                 )
         SELECT  SQ_US_USERMBR_HIS.NEXTVAL as SEQ
@@ -643,6 +644,7 @@
                 ,email_recv_yn
                 ,realnm_auth_yn
                 ,lgl_agent_agree_yn
+                ,nation_cd
                 ,lang_cd
                 ,system_id
                 ,mbr_clas_cd

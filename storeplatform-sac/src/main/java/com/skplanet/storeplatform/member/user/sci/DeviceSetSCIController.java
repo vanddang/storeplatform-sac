@@ -420,12 +420,6 @@ public class DeviceSetSCIController implements DeviceSetSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (transferDeviceSetInfoRequest.getCommonRequest().getTenantID() == null
-				|| transferDeviceSetInfoRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, deviceKey, userKey
 		if (transferDeviceSetInfoRequest.getUserKey() == null || transferDeviceSetInfoRequest.getDeviceKey() == null
 				|| transferDeviceSetInfoRequest.getPreUserKey() == null
