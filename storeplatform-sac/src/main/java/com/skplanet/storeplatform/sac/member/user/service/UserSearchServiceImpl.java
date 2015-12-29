@@ -1524,7 +1524,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		detailV2Res.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
 		detailV2Res.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
 
-		// 회원정보 성절
+		// 회원정보 설정
 		if (StringUtils.equals(MemberConstants.USE_Y, req.getSearchExtent().getUserInfoYn())) {
 			detailV2Res.setUserInfo(this.userInfoV2(schUserRes));
 		}

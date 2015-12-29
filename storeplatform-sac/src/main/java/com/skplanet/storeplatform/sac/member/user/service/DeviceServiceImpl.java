@@ -503,6 +503,7 @@ public class DeviceServiceImpl implements DeviceService {
 				mdnMap.put("01011110003", "svc003");
 				mdnMap.put("01011110004", "svc004");
 				mdnMap.put("01011110005", "svc005");
+                mdnMap.put("01066786220", "7243371580");
 				if(mdnMap.get(deviceInfo.getMdn()) != null){
 					deviceInfo.setSvcMangNum(mdnMap.get(deviceInfo.getMdn()));
 				}else{

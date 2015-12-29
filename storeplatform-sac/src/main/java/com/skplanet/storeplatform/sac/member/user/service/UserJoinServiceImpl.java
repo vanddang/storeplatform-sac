@@ -115,7 +115,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
 		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(),
-				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType(), true);
+				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType(), false);
 
 		/**
 		 * 약관 맵핑정보 세팅.
@@ -166,14 +166,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 휴대기기 등록. - 휴대기기 등록 SC 작업 완료 후 재작업
 		 */
-		// String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
+        String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
 
 		/**
 		 * 결과 세팅
 		 */
 		CreateByMdnRes response = new CreateByMdnRes();
 		response.setUserKey(createUserResponse.getUserKey());
-		response.setDeviceKey("");
+		response.setDeviceKey(deviceKey);
 		return response;
 
 	}
@@ -655,9 +655,15 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.debug("======================= ## CreateByMdnReq");
 			CreateByMdnReq req = (CreateByMdnReq) obj;
 			deviceInfo.setUserKey(userKey);
-			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
-			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
+
+            if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+                deviceInfo.setDeviceId("");
+                deviceInfo.setMdn(req.getDeviceId()); // MDN 번호
+            }else {
+                deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+            }
+            deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 //			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());// 단말 모델
