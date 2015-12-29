@@ -397,7 +397,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* 회원 정보 조회 */
 		List<SearchIdSac> sacList = new ArrayList<SearchIdSac>();
@@ -415,10 +414,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 			UserInfo info = this.mcc.getUserBaseInfo(reqKeyType, req.getDeviceId(), sacHeader);
 			SearchIdSac sac = new SearchIdSac();
-			sac.setImSvcNo(StringUtil.setTrim(info.getImSvcNo()));
-			sac.setRegDate(StringUtil.setTrim(info.getRegDate()));
 			sac.setUserId(StringUtil.setTrim(info.getUserId()));
 			sac.setUserType(StringUtil.setTrim(info.getUserType()));
+			sac.setRegDate(StringUtil.setTrim(info.getRegDate()));
 			sac.setUserEmail(StringUtil.setTrim(info.getUserEmail()));
 
 			if (info.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
@@ -543,7 +541,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 				sac.setUserId(StringUtil.setTrim(userMbr.getUserID()));
 				sac.setUserType(StringUtil.setTrim(userMbr.getUserType()));
 				sac.setRegDate(StringUtil.setTrim(userMbr.getRegDate()));
-				sac.setImSvcNo(StringUtil.setTrim(userMbr.getImSvcNo()));
 				sac.setUserEmail(StringUtil.setTrim(userMbr.getUserEmail()));
 
 				searchIdList.add(sac);

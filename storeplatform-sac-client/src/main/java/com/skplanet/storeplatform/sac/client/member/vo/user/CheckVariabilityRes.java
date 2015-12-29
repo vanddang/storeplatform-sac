@@ -9,20 +9,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserAuthMethod;
 /**
  * [RESPONSE] 변동성 회원 체크.
  * 
- * Updated on : 2014. 3. 11. Updated by : 반범진. 지티소프트.
+ * Updated on : 2015. 12. 28. Updated by : 최진호, 보고지티.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class CheckVariabilityRes extends CommonInfo {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 변동성 체크 성공유무(Y/N).
-	 */
-	private String isVariability;
 
 	/**
 	 * 사용자 키.
@@ -35,24 +27,14 @@ public class CheckVariabilityRes extends CommonInfo {
 	private String deviceKey;
 
 	/**
+	 * 변동성 체크 성공유무(Y/N).
+	 */
+	private String isVariability;
+
+	/**
 	 * 변동성 회원 추가 인증 정보.
 	 */
 	private UserAuthMethod userAuthMethod;
-
-	/**
-	 * @return isVariability
-	 */
-	public String getIsVariability() {
-		return this.isVariability;
-	}
-
-	/**
-	 * @param isVariability
-	 *            String
-	 */
-	public void setIsVariability(String isVariability) {
-		this.isVariability = isVariability;
-	}
 
 	/**
 	 * @return userKey
@@ -82,6 +64,21 @@ public class CheckVariabilityRes extends CommonInfo {
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return isVariability
+	 */
+	public String getIsVariability() {
+		return this.isVariability;
+	}
+
+	/**
+	 * @param isVariability
+	 *            String
+	 */
+	public void setIsVariability(String isVariability) {
+		this.isVariability = isVariability;
 	}
 
 	/**

@@ -154,7 +154,7 @@
                     , svc_mang_no
                     , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS') AS upd_dt
                     , last_login_dt
-                    , device_acct AS device_account
+                    , device_acct
               FROM  tb_us_ousermbr_device
              WHERE  auth_yn = 'Y'
                 AND insd_usermbr_no = #{userKey}
