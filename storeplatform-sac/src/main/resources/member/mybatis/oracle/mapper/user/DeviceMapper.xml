@@ -305,8 +305,8 @@
         SELECT  /* DeviceMapper.xml, searchDeviceIDOnly, SAC(SC), 최진호, 2015-12-21 */
                       l.insd_usermbr_no AS userKey
                       ,  l.mbr_id AS userID
-                      ,  'DEVICE_ID' AS keyType
-                      ,  l.device_id AS keyString
+                      ,  'INSD_DEVICE_ID' AS keyType
+                      ,  l.insd_device_id AS keyString
                  FROM ( SELECT  b.insd_device_id AS insd_device_id
                       ,  a.mbr_id AS mbr_id
                       ,  a.insd_usermbr_no AS insd_usermbr_no
@@ -317,6 +317,7 @@
                <foreach collection="keySearchList" item="keySearch"   open="" close="" separator="">
                    <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> AND  b.device_id =  #{keySearch.keyString} </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('MDN') "> AND  b.mdn =  #{keySearch.keyString} </if>
+                   <if test="keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') "> AND  b.insd_device_id =  #{keySearch.keyString} </if>
                </foreach>
                 ORDER BY b.auth_dt DESC) l
                 WHERE ROWNUM = 1

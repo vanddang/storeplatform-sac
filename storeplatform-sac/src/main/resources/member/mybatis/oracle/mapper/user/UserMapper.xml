@@ -1721,6 +1721,24 @@
                </foreach>
     </select>
 
+    <!-- 회원 등급 조회 -->
+    <select id="getUserGrade" resultType="userGrade">
+        SELECT /* UserMapper.getUserGrade, 사용자 회원등급정보, Burkhan, 2014-07-31 */
+                DECODE (MBR_LVL_CD,  '1', 'platinum',  '2', 'gold',  '3', 'silver') AS userGradeCd,
+                BASE_YM AS baseYm,
+                MLG_SEQ AS mlgSeq,
+                MBR_NO AS mbrNo,
+                MBR_LVL_CD AS mbrLvlCd,
+                WINBACK_YN AS winbackYn,
+                CUST_PAY_AMT AS custPayAmt,
+                REPAY_PNT_AMT AS repayPntAmt,
+                OPER_NM AS operNm,
+                TO_CHAR(OPER_DTM ,'YYYYMMDDHH24MISS') AS operDtm
+        FROM TB_US_USERMBR_MILG
+       WHERE MBR_NO = #{userKey}
+         AND BASE_YM = TO_CHAR (ADD_MONTHS (SYSDATE, -1), 'YYYYMM')
+    </select>
+
     <select id="searchUserSegment" parameterType="searchUserSegmentRequest" resultType="searchUserSegmentResponse">
         SELECT /* UserMapper.searchUserSegment, 회원 segment 정보, burkhan_rejoice, 2014-12-30 */
                insd_usermbr_no AS userKey,
