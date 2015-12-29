@@ -84,7 +84,6 @@
     <!-- 사용자 정보 조회 -->
     <select id="searchUser" parameterType="searchUserRequest" resultMap="searchUserResultMap">
         SELECT /* UserMapper.xml, searchUser, SAC(SC), 최진호, 2015-12-21 */
-               #{commonRequest.tenantID} AS tenantID, 
                a.insd_usermbr_no AS userKey,
                (
                SELECT TO_CHAR(upd_dt ,'YYYYMMDDHH24MISS')
@@ -110,7 +109,6 @@
     <select id="searchUserD" parameterType="searchUserRequest" resultMap="searchUserResultMap">
         SELECT  /* UserMapper.xml, searchUserD, SAC(SC), 최진호, 2015-12-21 */
                 DISTINCT(l.userKey) as userKey,
-                #{commonRequest.tenantID} as tenantID,
                 (
                  SELECT  TO_CHAR(upd_dt ,'YYYYMMDDHH24MISS')
                    FROM  tb_us_ousermbr_pwd

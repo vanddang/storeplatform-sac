@@ -153,9 +153,24 @@ public class DeviceInfo extends CommonInfo {
 	private String isSCUpdate;
 
 	/**
-	 * 휴대기기 마지막 로그인 일자.
-	 */
-	private String lastLoginDt;
+     * 휴대기기 마지막 로그인 일자.
+     */
+    private String lastLoginDt;
+
+    /**
+     * 휴대기기 제조사명.
+     */
+    private String makeComp;
+
+    /**
+     * 휴대기기 OS 플랫폼.
+     */
+    private String vmType;
+
+    /**
+     * 휴대기기 모델 설명.
+     */
+    private String modelNm;
 
 	/**
 	 * @return deviceKey
@@ -576,4 +591,30 @@ public class DeviceInfo extends CommonInfo {
 	public void setLastLoginDt(String lastLoginDt) {
 		this.lastLoginDt = lastLoginDt;
 	}
+
+    public String getMakeComp() {
+        return makeComp;
+    }
+
+    public void setMakeComp(String makeComp) {
+        this.makeComp = makeComp;
+    }
+
+    public String getVmType() {
+        return vmType;
+    }
+
+    public void setVmType(String vmType) {
+        this.vmType = vmType;
+    }
+
+    public String getModelNm() {
+        return modelNm;
+    }
+
+    public void setModelNm(String modelNm) {
+        this.modelNm = modelNm;
+    }
+
+
 }

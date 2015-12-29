@@ -1066,9 +1066,6 @@ public class UserServiceImpl implements UserService {
 				isDormant = Constant.TYPE_YN_Y;
 		}
 
-		// SearchUserResponse searchUserResponse = this.commonDAO.queryForObject("User.joinTest", searchUserRequest,
-		// SearchUserResponse.class);
-
 		if (searchUserResponse == null || searchUserResponse.getUserMbr() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
 		}
@@ -1077,7 +1074,11 @@ public class UserServiceImpl implements UserService {
 		if (searchUserResponse.getUserMbr() != null) {
 			searchUserResponse.setUserKey(searchUserResponse.getUserMbr().getUserKey());
 			searchUserResponse.getUserMbr().setIsDormant(isDormant); // 휴면계정유무
-		}
+
+            // TODO 사용자 휴대기기 등록대수
+            int validDeviceCnt = this.commonDAO.queryForInt("Device.searchValidDeviceCount", searchUserResponse.getUserMbr().getUserKey());
+            searchUserResponse.setDeviceCount(String.valueOf(validDeviceCnt));
+        }
 
 		// 징계정보
 		if (searchUserResponse.getUserMbrPnsh() == null) {
@@ -2723,7 +2724,12 @@ public class UserServiceImpl implements UserService {
 			if (resultUserMbr != null) {
 				resultUserMbr.setIsDormant(isDormant);
 			}
-			// TODO 여기까지!!
+
+            // TODO 사용자 휴대기기 등록대수
+            int validDeviceCnt = dao.queryForInt("Device.searchValidDeviceCount", userMbr.getUserKey());
+            resultUserMbr.setDeviceCount(String.valueOf(validDeviceCnt));
+
+            // TODO 여기까지!!
 			resultMbrMangItemPtcrList = dao.queryForList("User.getManagementItemList", userMbr, MbrMangItemPtcr.class);
 
 			// 회원 정보 중 성별, 생년월일, 이름 정보 설정 우선순위 (1.인증정보 , 2.회원정보)

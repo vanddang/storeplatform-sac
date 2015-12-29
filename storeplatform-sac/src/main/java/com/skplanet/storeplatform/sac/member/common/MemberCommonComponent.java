@@ -203,20 +203,7 @@ public class MemberCommonComponent {
 	 * <pre>
 	 * 폰 정보 조회.
 	 * </pre>
-	 * 
-	 * @param deviceModelCd
-	 *            deviceModelCd
-	 * @return DeviceHeader
-	 */
-	public Device getPhoneInfo(String deviceModelCd) {
-		return this.repository.searchPhoneInfo(deviceModelCd);
-	}
-
-	/**
-	 * <pre>
-	 * 폰 정보 조회.
-	 * </pre>
-	 * 
+	 *
 	 * @param uacd
 	 *            uacd
 	 * @return Device
@@ -224,6 +211,19 @@ public class MemberCommonComponent {
 	public Device getPhoneInfoByUacd(String uacd) {
 		return this.repository.searchPhoneInfoByUacd(uacd);
 	}
+
+    /**
+     * <pre>
+     * 폰 정보 조회.
+     * </pre>
+     *
+     * @param deviceModelCd
+     *            deviceModelCd
+     * @return DeviceHeader
+     */
+    public Device getPhoneInfo(String deviceModelCd) {
+        return this.repository.searchPhoneInfo(deviceModelCd);
+    }
 
 	/**
 	 * <pre>
@@ -502,31 +502,20 @@ public class MemberCommonComponent {
 
 		userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
 		userInfo.setTotalDeviceCount(StringUtil.setTrim(schUserRes.getTotalDeviceCount()));
-		userInfo.setImMbrNo(StringUtil.setTrim(schUserRes.getUserMbr().getImMbrNo()));
-		userInfo.setImRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
-		userInfo.setImSiteCode(StringUtil.setTrim(schUserRes.getUserMbr().getImSiteCode()));
-		userInfo.setImSvcNo(StringUtil.setTrim(schUserRes.getUserMbr().getImSvcNo()));
-		userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
-		userInfo.setIsImChanged(StringUtil.setTrim(schUserRes.getUserMbr().getIsImChanged()));
-		userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
 		userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
-		userInfo.setIsRecvSMS(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvSMS()));
 		userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
 		userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
 		userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
 		userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
 		userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
-		userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
 		userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
 		userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
 		userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
 		userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
 		userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
 		userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
-		userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
-		userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
 		userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
 		userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
 		userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));

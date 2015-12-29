@@ -312,13 +312,10 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	@Override
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req) {
-		commService.getOpmdMdnInfo(req.getDeviceId());
-		String str = "111";
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		String userKey = req.getUserKey();
 
@@ -331,8 +328,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		ListDeviceRes res = new ListDeviceRes();
 
-		if (StringUtils.isNotBlank(req.getDeviceId())) {
-
+		if (StringUtils.isNotEmpty(req.getDeviceId())) {
 			/* 모번호 조회 및 셋팅 */
 			req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
@@ -348,7 +344,24 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 			return res;
-		} else if (StringUtils.isNotBlank(req.getDeviceKey())) {
+
+		}else if (StringUtils.isNotEmpty(req.getMdn())) {
+            /* 모번호 조회 및 셋팅 */
+            req.setMdn(this.commService.getOpmdMdnInfo(req.getMdn()));
+
+            /* 단건 조회 처리 */
+            DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN,
+                    req.getMdn(), userKey);
+            if (deviceInfo != null) {
+                res.setUserId(deviceInfo.getUserId());
+                res.setUserKey(deviceInfo.getUserKey());
+                List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+                deviceInfoList.add(deviceInfo);
+                res.setDeviceInfoList(deviceInfoList);
+            }
+            return res;
+
+        } else if (StringUtils.isNotEmpty(req.getDeviceKey())) {
 			/* 단건 조회 처리 */
 			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 					req.getDeviceKey(), userKey);
@@ -360,18 +373,20 @@ public class DeviceServiceImpl implements DeviceService {
 				res.setDeviceInfoList(deviceInfoList);
 			}
 			return res;
-		} else if (StringUtils.isNotBlank(req.getUserId())) {
+
+        }  else if (StringUtils.isNotEmpty(req.getUserId())) {
 			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 			key.setKeyString(req.getUserId());
-		} else if (StringUtils.isNotBlank(req.getUserKey())) {
+
+		} else if (StringUtils.isNotEmpty(req.getUserKey())) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
 			key.setKeyString(req.getUserKey());
-		} else if (StringUtils.isNotBlank(req.getMbrNo())) {
-			key.setKeyType(MemberConstants.KEY_TYPE_USERMBR_NO);
-			key.setKeyString(req.getMbrNo());
 		}
 
-		keySearchList.add(key);
+        /**
+         * KEY_TYPE_MBR_ID / KEY_TYPE_INSD_USERMBR_NO 조회 시 DeviceList 조회
+         */
+        keySearchList.add(key);
 		schDeviceListReq.setKeySearchList(keySearchList);
 		schDeviceListReq.setCommonRequest(commonRequest);
 
@@ -390,13 +405,13 @@ public class DeviceServiceImpl implements DeviceService {
 				DeviceInfo deviceInfo = DeviceUtil.getConverterDeviceInfo(userMbrDevice);
 
 				/* 폰정보 DB 조회하여 추가 정보 반영 */
-				/*Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
+				Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
 				if (device != null) {
 					deviceInfo.setMakeComp(device.getMnftCompCd());
 					deviceInfo.setModelNm(device.getModelNm());
 					deviceInfo.setVmType(device.getVmTypeCd());
 				}
-				deviceInfoList.add(deviceInfo);*/
+				deviceInfoList.add(deviceInfo);
 			}
 			res.setDeviceInfoList(deviceInfoList);
 
@@ -421,7 +436,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 		searchDeviceRequest.setCommonRequest(commonRequest);
@@ -445,6 +459,14 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
 			deviceInfo.setUserId(schDeviceRes.getUserID());
 			deviceInfo.setUserKey(schDeviceRes.getUserKey());
+
+            /* 폰정보 DB 조회하여 추가 정보 반영 */
+            Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
+            if (device != null) {
+                deviceInfo.setMakeComp(device.getMnftCompCd());
+                deviceInfo.setModelNm(device.getModelNm());
+                deviceInfo.setVmType(device.getVmTypeCd());
+            }
 
 		} catch (StorePlatformException ex) {
 			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
@@ -1429,8 +1451,9 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceKey = deviceInfo.getDeviceKey();
 
 			/* 삭제 가능여부 판단 */
-			Integer deviceCount = Integer.parseInt(userInfo.getTotalDeviceCount());
-			if ((StringUtil.isNotEmpty(userInfo.getImSvcNo())
+            Integer deviceCount = Integer.parseInt(userInfo.getDeviceCount());
+
+            if ((StringUtil.isNotEmpty(deviceInfo.getSvcMangNum())
 					|| userInfo.getUserType().equals(MemberConstants.USER_TYPE_IDPID))) { // 통합/IDP 회원
 
 				/* 단말 1개이상 보유이고, 삭제할 단말이 대표기기인 경우 에러 */

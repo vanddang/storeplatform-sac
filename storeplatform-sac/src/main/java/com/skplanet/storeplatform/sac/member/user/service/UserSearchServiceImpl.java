@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import org.apache.commons.lang.ObjectUtils;
@@ -199,7 +200,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -606,35 +606,26 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/* SC API 회원정보 조회 */
 	@Override
 	public DetailRes srhUser(DetailReq req, SacRequestHeader sacHeader) {
-
-		String userId = StringUtil.nvl(req.getUserId(), "");
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
-		String mbrNo = StringUtil.nvl(req.getMbrNo(), "");
-
 		String keyType = "";
 		String keyValue = "";
-		if (!userKey.equals("")) {
+
+		if (StringUtils.isNotEmpty(req.getUserKey())) {
 			keyType = "userKey";
-			keyValue = userKey;
-		} else if (!userId.equals("")) {
+			keyValue = req.getUserKey();
+		} else if (StringUtils.isNotEmpty(req.getUserId())) {
 			keyType = "userId";
-			keyValue = userId;
-		} else if (!deviceKey.equals("")) {
+			keyValue = req.getUserId();
+		} else if (StringUtils.isNotEmpty(req.getDeviceKey())) {
 			keyType = "deviceKey";
-			keyValue = deviceKey;
-		} else if (!deviceId.equals("")) {
-			if (ValidationCheckUtils.isMdn(deviceId)) {
+			keyValue = req.getDeviceKey();
+		} else if (StringUtils.isNotEmpty(req.getDeviceId())) {
+			if (ValidationCheckUtils.isMdn(req.getDeviceId())) {
 				keyType = "mdn";
-				keyValue = deviceId;
+				keyValue = req.getDeviceId();
 			} else {
 				keyType = "deviceId";
-				keyValue = deviceId;
+				keyValue = req.getDeviceId();
 			}
-		} else if (!mbrNo.equals("")) {
-			keyType = "mbrNo";
-			keyValue = mbrNo;
 		}
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
@@ -642,7 +633,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
 		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
-		keyTypeMap.put("mbrNo", MemberConstants.KEY_TYPE_USERMBR_NO);
 		keyTypeMap.put("mdn", MemberConstants.KEY_TYPE_MDN);
 
 		/**
@@ -660,7 +650,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 		searchUserRequest.setCommonRequest(commonRequest);
 		searchUserRequest.setKeySearchList(keySearchList);
 
@@ -751,7 +740,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		mbrPnsh.setRestrictOwner(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictOwner()));
 		mbrPnsh.setRestrictRegisterDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictRegisterDate()));
 		mbrPnsh.setRestrictStartDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictStartDate()));
-		mbrPnsh.setTenantId(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getTenantID()));
 		mbrPnsh.setUserKey(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getUserKey()));
 
 		return mbrPnsh;
@@ -824,33 +812,22 @@ public class UserSearchServiceImpl implements UserSearchService {
 	private UserInfo userInfo(SearchUserResponse schUserRes) {
 		UserInfo userInfo = new UserInfo();
 
-		userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
+		userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getDeviceCount()));
 		userInfo.setTotalDeviceCount(StringUtil.setTrim(schUserRes.getTotalDeviceCount()));
-		userInfo.setImMbrNo(StringUtil.setTrim(schUserRes.getUserMbr().getImMbrNo()));
-		userInfo.setImRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
-		userInfo.setImSiteCode(StringUtil.setTrim(schUserRes.getUserMbr().getImSiteCode()));
-		userInfo.setImSvcNo(StringUtil.setTrim(schUserRes.getUserMbr().getImSvcNo()));
-		userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
-		userInfo.setIsImChanged(StringUtil.setTrim(schUserRes.getUserMbr().getIsImChanged()));
-		userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
 		userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
-		userInfo.setIsRecvSMS(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvSMS()));
 		userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
 		userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
 		userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
 		userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
 		userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
-		userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
 		userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
 		userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
 		userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
 		userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
 		userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
 		userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
-		userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
-		userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
 		userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
 		userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
 		userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
@@ -958,46 +935,29 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader) {
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 
-		String userId = StringUtil.nvl(req.getUserId(), "");
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
-		String mbrNo = StringUtil.nvl(req.getMbrNo(), "");
-
-		ExistReq existReq = new ExistReq();
-		ExistRes existRes = new ExistRes();
-
-		if (!userKey.equals("")) {
+		if (StringUtils.isNotEmpty(req.getUserKey())) {
 			listDeviceReq.setUserKey(req.getUserKey());
-			listDeviceReq.setIsMainDevice("N");
-		} else if (!userId.equals("")) {
-			existReq.setUserId(req.getUserId());
-			existRes = this.exist(sacHeader, existReq);
+			listDeviceReq.setIsMainDevice(Constant.TYPE_YN_N);
 
-			listDeviceReq.setUserKey(existRes.getUserKey());
+		} else if (StringUtils.isNotEmpty(req.getUserId())) {
+			listDeviceReq.setUserKey(req.getUserKey());
 			listDeviceReq.setUserId(req.getUserId());
-			listDeviceReq.setIsMainDevice("N");
-		} else if (!deviceKey.equals("")) {
-			existReq.setDeviceKey(req.getDeviceKey());
-			existRes = this.exist(sacHeader, existReq);
+			listDeviceReq.setIsMainDevice(Constant.TYPE_YN_N);
 
-			listDeviceReq.setUserKey(existRes.getUserKey());
+		} else if (StringUtils.isNotEmpty(req.getDeviceKey())) {
+			listDeviceReq.setUserKey(req.getUserKey());
 			listDeviceReq.setDeviceKey(req.getDeviceKey());
-			listDeviceReq.setIsMainDevice("N");
-		} else if (!deviceId.equals("")) {
-			existReq.setDeviceId(req.getDeviceId());
-			existRes = this.exist(sacHeader, existReq);
+			listDeviceReq.setIsMainDevice(Constant.TYPE_YN_N);
 
-			listDeviceReq.setUserKey(existRes.getUserKey());
-			listDeviceReq.setDeviceId(req.getDeviceId());
-			listDeviceReq.setIsMainDevice("N");
-		} else if (!mbrNo.equals("")) {
-			existReq.setMbrNo(req.getMbrNo());
-			existRes = this.exist(sacHeader, existReq);
+		} else if (StringUtils.isNotEmpty(req.getDeviceId())){
+			listDeviceReq.setUserKey(req.getUserKey());
+            listDeviceReq.setIsMainDevice(Constant.TYPE_YN_N);
 
-			listDeviceReq.setUserKey(existRes.getUserKey());
-			listDeviceReq.setMbrNo(req.getMbrNo());
-			listDeviceReq.setIsMainDevice("N");
+            if (ValidationCheckUtils.isMdn(req.getDeviceId())) {
+                listDeviceReq.setMdn(req.getDeviceId());
+            }else{
+                listDeviceReq.setDeviceId(req.getDeviceId());
+            }
 		}
 
 		ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, listDeviceReq);

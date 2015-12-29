@@ -87,9 +87,6 @@ public class DeviceServiceImpl implements DeviceService {
 		LOGGER.debug("### searchDeviceListRequest : {}", searchDeviceListRequest.toString());
 		CommonDAO dao = this.commonDAO;
 		UserMbr userMbr = null;
-		CommonRequest commonRequest = new CommonRequest();
-
-		commonRequest.setTenantID(searchDeviceListRequest.getCommonRequest().getTenantID());
 
 		boolean isDeviceRequest = false;
 		List<KeySearch> keySearchList = searchDeviceListRequest.getKeySearchList();
@@ -122,6 +119,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (userMbr == null || userMbr.getUserID() == null)
 			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
 
+        CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(userMbr.getUserID());
 		searchDeviceListRequest.setCommonRequest(commonRequest);
 

@@ -175,11 +175,10 @@ public class DeviceSCIController implements DeviceSCI {
 			// 잘못된 키값
 			if (!keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_USER_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_USER_ID)
-					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_IDP_KEY)
-					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_ONEID_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_ID)
-					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
+					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)
+                    && !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_MDN)) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.wrongKeyType", ""));
 			}
 		}
@@ -203,10 +202,6 @@ public class DeviceSCIController implements DeviceSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
-
 	}
 
 	/**
@@ -344,7 +339,7 @@ public class DeviceSCIController implements DeviceSCI {
 		// 검색 조건에 서비스 관리번호가 포함되었는지 여부
 		boolean isSvcMangNoExist = false;
 		for (KeySearch keySearch : keySearchList) {
-			if (keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_KEY)) {
+			if (keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
 				isSvcMangNoExist = true;
 			}
 		}
