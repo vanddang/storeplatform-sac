@@ -1260,7 +1260,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		DetailRepresentationDeviceRes res = new DetailRepresentationDeviceRes();
 		ListDeviceRes listRes = new ListDeviceRes();
@@ -1292,7 +1291,6 @@ public class DeviceServiceImpl implements DeviceService {
 				addData.setDeviceModelNo(StringUtil.setTrim(info.getDeviceModelNo()));
 				addData.setSvcMangNum(StringUtil.setTrim(info.getSvcMangNum()));
 				addData.setDeviceTelecom(StringUtil.setTrim(info.getDeviceTelecom()));
-				//addData.setDeviceNickName(StringUtil.setTrim(info.getDeviceNickName()));
 				addData.setIsPrimary(StringUtil.setTrim(info.getIsPrimary()));
 				addData.setIsRecvSms(StringUtil.setTrim(info.getIsRecvSms()));
 				addData.setNativeId(StringUtil.setTrim(info.getNativeId()));
@@ -1329,30 +1327,9 @@ public class DeviceServiceImpl implements DeviceService {
 		SetMainDeviceRequest setMainDeviceRequest = new SetMainDeviceRequest();
 		SetMainDeviceRes setMainDeviceRes = new SetMainDeviceRes();
 
-		/**
-		 * 모번호 조회 (989 일 경우만)
-		 */
-		if (req.getDeviceId() != null) {
-			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId()); // TODO
-			req.setDeviceId(opmdMdn);
-
-			ListDeviceReq deviceReq = new ListDeviceReq();
-			deviceReq.setUserKey(req.getUserKey());
-			deviceReq.setDeviceId(req.getDeviceId());
-
-			ListDeviceRes deviceRes = this.listDevice(requestHeader, deviceReq);
-
-			if (deviceRes.getDeviceInfoList() != null) {
-
-				String deviceKey = deviceRes.getDeviceInfoList().get(0).getDeviceKey();
-				req.setDeviceKey(deviceKey);
-			}
-		}
-
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 		setMainDeviceRequest.setCommonRequest(commonRequest);
 
 		/* userKey, deviceKey 회원존재여부 체크 */
@@ -1361,7 +1338,29 @@ public class DeviceServiceImpl implements DeviceService {
 
 		ExistRes existRes = this.userSearchService.exist(requestHeader, existReq);
 
+		// 회원이라면 해당 userKey셋팅
 		if (existRes.getUserKey() != null) {
+			ListDeviceReq deviceReq = new ListDeviceReq();
+			deviceReq.setUserKey(req.getUserKey());
+			// req에 deviceId가 있을 경우 mdn여부를 판단하여 DB를 통해 deviceKey를 셋팅
+			if (req.getDeviceId() != null) {
+				String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
+				req.setDeviceId(opmdMdn);
+
+				if( ValidationCheckUtils.isMdn(req.getDeviceId())){
+					deviceReq.setMdn(req.getDeviceId());
+				}else{
+					deviceReq.setDeviceId(req.getDeviceId());
+				}
+
+				ListDeviceRes deviceRes = this.listDevice(requestHeader, deviceReq);
+
+				if (deviceRes.getDeviceInfoList() != null) {
+					String deviceKey = deviceRes.getDeviceInfoList().get(0).getDeviceKey();
+					req.setDeviceKey(deviceKey);
+				}
+			}
+
 			setMainDeviceRequest.setDeviceKey(req.getDeviceKey());
 			setMainDeviceRequest.setUserKey(req.getUserKey());
 
