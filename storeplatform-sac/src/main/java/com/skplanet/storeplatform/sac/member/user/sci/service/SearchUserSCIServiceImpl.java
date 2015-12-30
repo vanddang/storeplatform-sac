@@ -782,7 +782,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	private UserInfo userInfo(SearchUserResponse schUserRes) {
 		UserInfo userInfo = new UserInfo();
 
-		userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
+		userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getDeviceCount()));
 		userInfo.setTotalDeviceCount(StringUtil.setTrim(schUserRes.getTotalDeviceCount()));
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
