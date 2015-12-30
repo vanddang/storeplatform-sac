@@ -18,6 +18,9 @@ public class RemoveDeviceReq extends CommonInfo {
 	/* MDN List */
 	List<RemoveDeviceListSacReq> deviceIdList;
 
+    /* deviceKey List */
+    List<RemoveDeviceKeyListSacReq> deviceKeyList;
+
 	public String getUserKey() {
 		return userKey;
 	}
@@ -33,4 +36,12 @@ public class RemoveDeviceReq extends CommonInfo {
 	public void setDeviceIdList(List<RemoveDeviceListSacReq> deviceIdList) {
 		this.deviceIdList = deviceIdList;
 	}
+
+    public List<RemoveDeviceKeyListSacReq> getDeviceKeyList() {
+        return deviceKeyList;
+    }
+
+    public void setDeviceKeyList(List<RemoveDeviceKeyListSacReq> deviceKeyList) {
+        this.deviceKeyList = deviceKeyList;
+    }
 }

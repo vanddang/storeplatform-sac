@@ -302,4 +302,38 @@ public class DeviceController {
 
 		return res;
 	}
+
+    /**
+     * 휴대기기 단말 삭제v2.
+     *
+     * @param requestHeader
+     *            SacRequestHeader
+     * @param req
+     *            RemoveDeviceReq
+     * @return RemoveDeviceRes
+     */
+    @RequestMapping(value = "/removeDevice/v2", method = RequestMethod.POST)
+    @ResponseBody
+    public RemoveDeviceRes removeDeviceV2(SacRequestHeader requestHeader, @RequestBody RemoveDeviceReq req) {
+        LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+        int deviceCount = 0;
+        for (RemoveDeviceKeyListSacReq deviceKeyList : req.getDeviceKeyList()) {
+            if (StringUtils.isNotBlank(deviceKeyList.getDeviceKey())) {
+                deviceCount += 1;
+            }
+        }
+
+        if (StringUtils.isEmpty(req.getUserKey())) {
+            throw new StorePlatformException("SAC_MEM_0001", "userKey");
+        } else if (deviceCount == 0) {
+            throw new StorePlatformException("SAC_MEM_0001", "deviceKey");
+        }
+
+        RemoveDeviceRes res = this.deviceService.remDeviceV2(requestHeader, req);
+
+        LOGGER.info("Response : {}", res.getDeviceKeyList().get(0).getDeviceKey());
+
+        return res;
+    }
 }

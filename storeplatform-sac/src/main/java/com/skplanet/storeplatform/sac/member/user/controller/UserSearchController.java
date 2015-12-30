@@ -270,8 +270,8 @@ public class UserSearchController {
 	@ResponseBody
 	public DetailV2Res detailV2(@RequestBody DetailReq req, SacRequestHeader sacHeader) {
 
-		if (StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getDeviceId())
-				&& StringUtil.isBlank(req.getUserId()) && StringUtil.isBlank(req.getUserKey())) {
+		if (StringUtils.isBlank(req.getDeviceKey()) && StringUtils.isBlank(req.getDeviceId())
+				&& StringUtils.isBlank(req.getUserId()) && StringUtils.isBlank(req.getUserKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
