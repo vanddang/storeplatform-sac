@@ -48,6 +48,7 @@ public class SearchDeviceRequest extends CommonInfo implements Serializable {
 	 * 검색조건 Value Object List.
 	 * INSD_DEVICE_ID : Device 내부키
 	 * DEVICE_ID : Device 고유ID.
+	 * MDN : 휴대기기 MDN
 	 * SVC_MANG_NO : 서비스 관리 번호
 	 * </pre>
 	 */

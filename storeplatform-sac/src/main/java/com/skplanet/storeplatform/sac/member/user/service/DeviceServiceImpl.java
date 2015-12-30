@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 
 import com.skplanet.storeplatform.framework.test.StoreplatformMediaType;
 import com.skplanet.storeplatform.member.client.common.util.RandomString;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -43,33 +44,6 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.MoveUserInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
@@ -260,7 +234,11 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceKey = this.regDeviceInfo(requestHeader, req.getDeviceInfo());
 
 		CreateDeviceRes res = new CreateDeviceRes();
-		res.setDeviceId(req.getDeviceInfo().getDeviceId());
+		if(StringUtils.equals(req.getDeviceInfo().getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+			res.setDeviceId(req.getDeviceInfo().getMdn());
+		}else{
+			res.setDeviceId(req.getDeviceInfo().getDeviceId());
+		}
 		res.setUserKey(req.getUserKey());
 		res.setDeviceKey(deviceKey);
 
@@ -279,26 +257,20 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public ModifyDeviceRes modDevice(SacRequestHeader requestHeader, ModifyDeviceReq req) {
 
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
-		DeviceInfo deviceInfo = req.getDeviceInfo();
-
 		/* 모번호 조회 */
-		if (StringUtils.isNotBlank(deviceInfo.getDeviceId())) {
-			deviceInfo.setDeviceId(this.commService.getOpmdMdnInfo(deviceInfo.getDeviceId()));
+		if (StringUtils.isNotBlank(req.getDeviceInfo().getMdn())) {
+			req.getDeviceInfo().setMdn(this.commService.getOpmdMdnInfo(req.getDeviceInfo().getMdn()));
 		}
 
-		/* 수정할 userKey 값 셋팅 */
-		deviceInfo.setUserKey(req.getUserKey());
-
-		/* 휴대기기 정보 수정 */
-		String deviceKey = this.modDeviceInfo(requestHeader, deviceInfo, false);
+		ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+		modifyDeviceRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
+		modifyDeviceRequest.setUserKey(req.getUserKey());
+		modifyDeviceRequest.setUserMbrDevice(DeviceUtil.getConverterUserMbrDeviceInfo(req.getDeviceInfo()));
+		ModifyDeviceResponse modifyDeviceResponse = deviceSCI.modifyDevice(modifyDeviceRequest);
 
 		ModifyDeviceRes res = new ModifyDeviceRes();
-		res.setDeviceKey(deviceKey);
-		res.setUserKey(req.getUserKey());
+		res.setUserKey(modifyDeviceResponse.getUserKey());
+		res.setDeviceKey(modifyDeviceResponse.getDeviceKey());
 
 		return res;
 	}
