@@ -205,4 +205,15 @@ public interface DeviceService {
 	 */
 	public boolean isEqualsLoginDevice(String deviceId, String reqVal, String dbVal, String equalsType);
 
+    /**
+     * 휴대기기 삭제v2.
+     *
+     * @param requestHeader
+     *            SacRequestHeader
+     * @param req
+     *            RemoveDeviceReq
+     * @return List<DeviceInfo>
+     */
+    public RemoveDeviceRes remDeviceV2(SacRequestHeader requestHeader, RemoveDeviceReq req);
+
 }

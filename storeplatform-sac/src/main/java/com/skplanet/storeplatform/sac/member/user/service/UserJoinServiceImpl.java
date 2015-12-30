@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -90,6 +91,34 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Override
 	public CreateByMdnRes regByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
 
+        /**
+         * MDN 회원 가가입 체크
+         */
+        try {
+            String keyType = null;
+            if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+                /**
+                 * 모번호 조회 (989 일 경우만)
+                 */
+                req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+                keyType = StringUtils.lowerCase(MemberConstants.KEY_TYPE_MDN);
+            } else {
+                keyType = StringUtils.lowerCase(MemberConstants.KEY_TYPE_DEVICE_ID);
+            }
+
+            UserInfo userInfo = this.mcc.getUserBaseInfo(keyType, req.getDeviceId(), sacHeader);
+            if (userInfo != null) {
+                throw new StorePlatformException("SAC_MEM_1101");
+            }
+        } catch (StorePlatformException ex) {
+            if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+                    || StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+                // SKIP
+            }else{
+                throw ex;
+            }
+        }
+
 		/**
 		 * 법정대리인 나이 유효성 체크.
 		 */
@@ -105,11 +134,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
 		}
-
-		/**
-		 * 모번호 조회 (989 일 경우만)
-		 */
-		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
