@@ -811,7 +811,6 @@
               upd_dt = SYSDATE
               <if test="isPrimary != null">,rep_device_yn = #{isPrimary} </if>
               <if test="deviceTelecom != null">,mno_cd = #{deviceTelecom} </if>
-               <if test="authenticationDate != null">,auth_dt = TO_DATE(#{authenticationDate},'YYYYMMDDHH24MISS') </if>
                <if test="isRecvSMS != null">,sms_recv_yn = #{isRecvSMS} </if>
                <if test="nativeID != null">,device_natv_id = #{nativeID} </if>
                <if test="deviceAccount != null">,device_acct = #{deviceAccount} </if>
@@ -820,6 +819,7 @@
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
                <if test="deviceSimNm != null">,device_sim_nm = #{deviceSimNm} </if>
+               <if test="deviceId != null">,device_id = #{deviceId} </if>
         WHERE insd_usermbr_no = #{userKey}
           AND insd_device_id = #{deviceKey}
     </update>
@@ -1084,6 +1084,13 @@
       FROM TB_US_OUSERMBR a
         INNER JOIN TB_US_OUSERMBR_DEVICE b ON a.insd_usermbr_no = b.insd_usermbr_no
         WHERE a.mbr_status_main_cd != 'US010202'
+            AND a.insd_usermbr_no = b.insd_usermbr_no
+        <if test="isMine.equalsIgnoreCase('Y')">
+            AND b.insd_usermbr_no = #{userKey}
+        </if>
+        <if test="isMine.equalsIgnoreCase('N')">
+            AND b.insd_usermbr_no != #{userKey}
+        </if>
         <if test="isUsed.equalsIgnoreCase('Y')">
             AND b.auth_yn = 'Y'
         </if>

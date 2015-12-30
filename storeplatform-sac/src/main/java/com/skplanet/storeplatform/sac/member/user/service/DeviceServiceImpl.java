@@ -138,7 +138,7 @@ public class DeviceServiceImpl implements DeviceService {
 	private MemberCommonInternalComponent mcic;
 
 	@Value("#{propertiesForSac['sac.member.device.max.cnt']}")
-	private Integer deviceRegManCnt;
+	private Integer deviceRegMaxCnt;
 
 	/*
 	 * (non-Javadoc)
@@ -190,7 +190,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 
-		// 휴면아이디에 기등록 여부 조회
+		/*// 휴면아이디에 기등록 여부 조회
 		keySearchList = new ArrayList<KeySearch>();
 		key = new KeySearch();
 		if(StringUtils.equals(req.getDeviceInfo().getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
@@ -227,7 +227,7 @@ public class DeviceServiceImpl implements DeviceService {
 			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				throw e;
 			}
-		}
+		}*/
 
 		/* 휴대기기 등록 처리 */
 		req.getDeviceInfo().setUserKey(req.getUserKey());
@@ -262,6 +262,11 @@ public class DeviceServiceImpl implements DeviceService {
 			req.getDeviceInfo().setMdn(this.commService.getOpmdMdnInfo(req.getDeviceInfo().getMdn()));
 		}
 
+		// gmail 정보 파싱
+		if (StringUtils.isNotBlank(req.getDeviceInfo().getDeviceAccount())) {
+			req.getDeviceInfo().setDeviceAccount(DeviceUtil.getGmailStr(req.getDeviceInfo().getDeviceAccount()));
+
+		}
 		ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
 		modifyDeviceRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
 		modifyDeviceRequest.setUserKey(req.getUserKey());
@@ -1731,7 +1736,8 @@ public class DeviceServiceImpl implements DeviceService {
 		schDeviceListReq.setIsMainDevice(MemberConstants.USE_N); // 대표기기만 조회(Y), 모든기기 조회(N)
 		List<KeySearch> keySearchList = null;
 		KeySearch key = null;
-		if(StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(svcMangNo)){
+
+		if(StringUtils.isNotBlank(deviceId)){
 			try {
 				keySearchList = new ArrayList<KeySearch>();
 				key = new KeySearch();
@@ -1745,6 +1751,9 @@ public class DeviceServiceImpl implements DeviceService {
 					throw e;
 				}
 			}
+		}
+
+		if(StringUtils.isNotBlank(svcMangNo)){
 			try {
 				keySearchList = new ArrayList<KeySearch>();
 				key = new KeySearch();
@@ -1758,65 +1767,25 @@ public class DeviceServiceImpl implements DeviceService {
 					throw e;
 				}
 			}
+		}
 
-			if( (schDeviceListResByDeviceId == null || schDeviceListResByDeviceId.getUserMbrDevice().size() == 0)
-					&& (schDeviceListResBySvcMangNo == null || schDeviceListResBySvcMangNo.getUserMbrDevice().size() == 0) ){
-				keySearchList = new ArrayList<KeySearch>();
-				key = new KeySearch();
-				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-				key.setKeyString(userKey);
-				keySearchList.add(key);
-				schDeviceListReq.setKeySearchList(keySearchList);
-				try{
-					SearchDeviceListResponse schDeviceListResByUserKey = this.deviceSCI.searchDeviceList(schDeviceListReq);
+		if( (schDeviceListResByDeviceId == null || schDeviceListResByDeviceId.getUserMbrDevice().size() == 0)
+				&& (schDeviceListResBySvcMangNo == null || schDeviceListResBySvcMangNo.getUserMbrDevice().size() == 0) ){
+			keySearchList = new ArrayList<KeySearch>();
+			key = new KeySearch();
+			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+			key.setKeyString(userKey);
+			keySearchList.add(key);
+			schDeviceListReq.setKeySearchList(keySearchList);
+			try{
+				SearchDeviceListResponse schDeviceListResByUserKey = this.deviceSCI.searchDeviceList(schDeviceListReq);
 					/* 등록 가능한 휴대기기 개수 초과 */
-					if (schDeviceListResByUserKey.getUserMbrDevice().size() >= deviceRegManCnt) {
-						throw new StorePlatformException("SAC_MEM_1501");
-					}
-				}catch(StorePlatformException e){
-					if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-						throw e;
-					}
+				if (schDeviceListResByUserKey.getUserMbrDevice().size() >= deviceRegMaxCnt) {
+					throw new StorePlatformException("SAC_MEM_1501");
 				}
-			}
-		}else{
-			try {
-				keySearchList = new ArrayList<KeySearch>();
-				key = new KeySearch();
-				if(StringUtils.isBlank(deviceId)){
-					key.setKeyType(MemberConstants.KEY_TYPE_SVC_MANG_NO);
-					key.setKeyString(svcMangNo);
-					keySearchList.add(key);
-				}else{
-					key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-					key.setKeyString(deviceId);
-					keySearchList.add(key);
-				}
-				schDeviceListReq.setKeySearchList(keySearchList);
-				schDeviceListResBySvcMangNo = this.deviceSCI.searchDeviceList(schDeviceListReq);
 			}catch(StorePlatformException e){
 				if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 					throw e;
-				}
-			}
-
-			if(schDeviceListResBySvcMangNo == null || schDeviceListResBySvcMangNo.getUserMbrDevice().size() == 0){
-				keySearchList = new ArrayList<KeySearch>();
-				key = new KeySearch();
-				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-				key.setKeyString(userKey);
-				keySearchList.add(key);
-				schDeviceListReq.setKeySearchList(keySearchList);
-				try{
-					SearchDeviceListResponse schDeviceListResByUserKey = this.deviceSCI.searchDeviceList(schDeviceListReq);
-					/* 등록 가능한 휴대기기 개수 초과 */
-					if (schDeviceListResByUserKey.getUserMbrDevice().size() >= deviceRegManCnt) {
-						throw new StorePlatformException("SAC_MEM_1501");
-					}
-				}catch(StorePlatformException e){
-					if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-						throw e;
-					}
 				}
 			}
 		}

@@ -51,6 +51,10 @@ public class SearchDeviceListRequest extends CommonInfo implements Serializable 
 
 	/** 휴대기기 auth_yn 여부. */
 	private String isUsed;
+
+	/** 내 휴대기기 리스트 여부 Y/N. */
+	private String isMine;
+
 	/**
 	 * 공통 요청 Value Object를 리턴한다.
 	 * 
@@ -145,11 +149,25 @@ public class SearchDeviceListRequest extends CommonInfo implements Serializable 
 		this.isUsed = isUsed;
 	}
 
+	/**
+	 * @return isMine
+	 */
+	public String getIsMine() {
+		return isMine;
+	}
+
+	/**
+	 * @param isMine
+	 */
+	public void setIsMine(String isMine) {
+		this.isMine = isMine;
+	}
+
 	/*
-         * (non-Javadoc)
-         *
-         * @see com.skplanet.storeplatform.framework.core.common.vo.CommonInfo#toString()
-         */
+             * (non-Javadoc)
+             *
+             * @see com.skplanet.storeplatform.framework.core.common.vo.CommonInfo#toString()
+             */
 	@Override
 	public String toString() {
 		return Utils.printKeyValues(this);
