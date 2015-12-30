@@ -199,11 +199,11 @@ public class DeviceController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		if (StringUtil.nvl(req.getUserKey(), "").equals("")) {
+		if (StringUtils.isBlank(req.getUserKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
-		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")) {
+		if (StringUtils.isBlank(req.getDeviceKey()) && StringUtils.isBlank(req.getDeviceId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceKey || deviceId");
 		}
 
