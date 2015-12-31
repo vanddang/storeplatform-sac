@@ -464,23 +464,11 @@ public class DeviceServiceImpl implements DeviceService {
 					if(StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getDeviceSimNm())){
 						createDeviceRequest.getUserMbrDevice().setDeviceSimNm("");
 					}
+
+					createDeviceRequest.getUserMbrDevice().setUserID(createUserMbr.getUserID());
 					if(StringUtils.equals(userMbrDevice.getIsUsed(), Constant.TYPE_YN_Y)){
-						this.insertDeviceHistory(userMbrDevice, createDeviceRequest.getUserMbrDevice());
-						this.commonDAO.update("Device.updateDevice", createDeviceRequest.getUserMbrDevice());
-						// 휴대기기 부가속성
-						if (createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail() != null) {
-							List<UserMbrDeviceDetail> userMbrDeviceDetailList = createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail();
-							for (int i = 0; i < userMbrDeviceDetailList.size(); i++) {
-								UserMbrDeviceDetail record = userMbrDeviceDetailList.get(i);
-								record.setUserKey(userKey);
-								record.setDeviceKey(userMbrDevice.getDeviceKey());
-								record.setSystemID(createDeviceRequest.getCommonRequest().getSystemID());
-								record.setRegID(createUserMbr.getUserID());
-								this.commonDAO.update("Device.updateDeviceDetail", record);
-							}
-						}
+						this.updateDeviceInfo(userMbrDevice, createDeviceRequest);
 					}else{
-						createDeviceRequest.getUserMbrDevice().setUserID(createUserMbr.getUserID());
 						this.doActivateDevice(userMbrDevice, createDeviceRequest); // auth_yn = 'Y'처리
 					}
 					deviceKey = userMbrDevice.getDeviceKey();
@@ -489,23 +477,10 @@ public class DeviceServiceImpl implements DeviceService {
 		} else {
 			for(UserMbrDevice userMbrDevice : userMbrDeviceList) {
 				LOGGER.info("{} deviceId로 동일 정보 존재 단말정보 update", userKey);
+				createDeviceRequest.getUserMbrDevice().setUserID(createUserMbr.getUserID());
 				if(StringUtils.equals(userMbrDevice.getIsUsed(), Constant.TYPE_YN_Y)){
-					this.insertDeviceHistory(userMbrDevice, createDeviceRequest.getUserMbrDevice());
-					this.commonDAO.update("Device.updateDevice", createDeviceRequest.getUserMbrDevice());
-					// 휴대기기 부가속성
-					if (createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail() != null) {
-						List<UserMbrDeviceDetail> userMbrDeviceDetailList = createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail();
-						for (int i = 0; i < userMbrDeviceDetailList.size(); i++) {
-							UserMbrDeviceDetail record = userMbrDeviceDetailList.get(i);
-							record.setUserKey(userKey);
-							record.setDeviceKey(userMbrDevice.getDeviceKey());
-							record.setSystemID(createDeviceRequest.getCommonRequest().getSystemID());
-							record.setRegID(createUserMbr.getUserID());
-							this.commonDAO.update("Device.updateDeviceDetail", record);
-						}
-					}
+					this.updateDeviceInfo(userMbrDevice, createDeviceRequest);
 				}else{
-					createDeviceRequest.getUserMbrDevice().setUserID(createUserMbr.getUserID());
 					this.doActivateDevice(userMbrDevice, createDeviceRequest);
 				}
 				deviceKey = userMbrDevice.getDeviceKey();
@@ -1546,29 +1521,53 @@ public class DeviceServiceImpl implements DeviceService {
 		return userMbrDeviceList;
 	}
 
-	private void insertDeviceHistory(UserMbrDevice userMbrDevice, UserMbrDevice reqUserMbrDevice){
+	/**
+	 * <pre>
+	 * 휴대기기 정보업데이트.
+	 * request와 DB의 정보를 비교하여 틀린경우만 처리한다.
+	 * </pre>
+	 *
+	 * @param userMbrDevice DB 휴대기기 정보
+	 * @param createDeviceRequest request 휴대기기 정보
+	 */
+	private void updateDeviceInfo(UserMbrDevice userMbrDevice, CreateDeviceRequest createDeviceRequest){
 		boolean isUpdate = false;
-		if(!StringUtils.equals(userMbrDevice.getDeviceID(), reqUserMbrDevice.getDeviceID())){
+		if(!StringUtils.equals(userMbrDevice.getDeviceID(), createDeviceRequest.getUserMbrDevice().getDeviceID())){
 			isUpdate = true;
-		}else if(!StringUtils.equals(userMbrDevice.getDeviceModelNo(), reqUserMbrDevice.getDeviceModelNo())){
+		}else if(!StringUtils.equals(userMbrDevice.getDeviceModelNo(), createDeviceRequest.getUserMbrDevice().getDeviceModelNo())){
 			isUpdate = true;
-		}else if(!StringUtils.equals(userMbrDevice.getDeviceTelecom(), reqUserMbrDevice.getDeviceTelecom())){
+		}else if(!StringUtils.equals(userMbrDevice.getDeviceTelecom(), createDeviceRequest.getUserMbrDevice().getDeviceTelecom())){
 			isUpdate = true;
-		}else if(!StringUtils.equals(userMbrDevice.getIsRecvSMS(), reqUserMbrDevice.getIsRecvSMS())){
+		}else if(!StringUtils.equals(userMbrDevice.getIsRecvSMS(), createDeviceRequest.getUserMbrDevice().getIsRecvSMS())){
 			isUpdate = true;
-		}else if(!StringUtils.equals(userMbrDevice.getNativeID(), reqUserMbrDevice.getNativeID())){
+		}else if(!StringUtils.equals(userMbrDevice.getNativeID(), createDeviceRequest.getUserMbrDevice().getNativeID())){
 			isUpdate = true;
-		}else if(!StringUtils.equals(userMbrDevice.getDeviceSimNm(), reqUserMbrDevice.getDeviceSimNm())){
+		}else if(!StringUtils.equals(userMbrDevice.getDeviceSimNm(), createDeviceRequest.getUserMbrDevice().getDeviceSimNm())){
 			isUpdate = true;
-		}else if(!StringUtils.equals(userMbrDevice.getSvcMangNum(), reqUserMbrDevice.getSvcMangNum())){
+		}else if(!StringUtils.equals(userMbrDevice.getSvcMangNum(), createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
 			isUpdate = true;
-		}else if(!StringUtils.equals(userMbrDevice.getDeviceAccount(), reqUserMbrDevice.getDeviceAccount())){
+		}else if(!StringUtils.equals(userMbrDevice.getDeviceAccount(), createDeviceRequest.getUserMbrDevice().getDeviceAccount())){
 			isUpdate = true;
 		}
 
 		if(isUpdate){
-			reqUserMbrDevice.setDeviceKey(userMbrDevice.getDeviceKey());
-			this.commonDAO.update("Device.insertUpdateDeviceHistory", reqUserMbrDevice);
+			createDeviceRequest.getUserMbrDevice().setUserKey(userMbrDevice.getUserKey());
+			createDeviceRequest.getUserMbrDevice().setDeviceKey(userMbrDevice.getDeviceKey());
+			this.commonDAO.update("Device.insertUpdateDeviceHistory", createDeviceRequest.getUserMbrDevice());
+
+			this.commonDAO.update("Device.updateDevice", createDeviceRequest.getUserMbrDevice());
+			// 휴대기기 부가속성
+			if (createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail() != null) {
+				List<UserMbrDeviceDetail> userMbrDeviceDetailList = createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail();
+				for (int i = 0; i < userMbrDeviceDetailList.size(); i++) {
+					UserMbrDeviceDetail record = userMbrDeviceDetailList.get(i);
+					record.setUserKey(userMbrDevice.getUserKey());
+					record.setDeviceKey(userMbrDevice.getDeviceKey());
+					record.setSystemID(createDeviceRequest.getCommonRequest().getSystemID());
+					record.setRegID(createDeviceRequest.getUserMbrDevice().getUserID());
+					this.commonDAO.update("Device.updateDeviceDetail", record);
+				}
+			}
 		}
 	}
 
