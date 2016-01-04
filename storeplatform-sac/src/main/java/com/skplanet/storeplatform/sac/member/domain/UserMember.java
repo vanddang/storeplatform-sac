@@ -42,7 +42,7 @@ public class UserMember {
 
     private Character sex;
 
-    private String EmailAddr;
+    private String emailAddr;
 
 
     public String getInsdUsermbrNo() {
@@ -110,10 +110,10 @@ public class UserMember {
     }
 
     public String getEmailAddr() {
-        return EmailAddr;
+        return emailAddr;
     }
 
     public void setEmailAddr(String emailAddr) {
-        EmailAddr = emailAddr;
+        emailAddr = emailAddr;
     }
 }

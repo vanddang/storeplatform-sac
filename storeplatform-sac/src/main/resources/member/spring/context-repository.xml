@@ -17,6 +17,9 @@
                            http://www.springframework.org/schema/aop
                            http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
 
+    <!-- Transaction configuration -->
+    <tx:annotation-driven transaction-manager="transactionManagerForMember" />
+
     <tx:advice id="transactionAdviceForScMember" transaction-manager="transactionManagerForMember" >
         <tx:attributes>
             <tx:method name="create*" propagation="REQUIRED" read-only="false" /> <!-- 생성 -->
@@ -66,6 +69,8 @@
             <list>
                 <ref bean="transactionManagerForScMember" />
                 <ref bean="transactionManagerForScIdleMember" />
+                <ref bean="transactionManagerForJpaMember" />
+                <ref bean="transactionManagerForJpaIdleMember" />
             </list>
         </constructor-arg>
     </bean>
@@ -77,6 +82,38 @@
     <bean id="transactionManagerForScIdleMember" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="defaultDataSourceForScIdleMember" />
         <property name="nestedTransactionAllowed" value="false" />
+    </bean>
+
+    <!-- JPA -->
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+    <bean id="transactionManagerForJpaMember" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactoryForMbr"/>
+        <!--<property name="dataSource" ref="defaultDataSourceForScMember"/>-->
+    </bean>
+    <bean id="transactionManagerForJpaIdleMember" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactoryForIdleMbr"/>
+        <!--<property name="dataSource" ref="defaultDataSourceForScIdleMember"/>-->
+    </bean>
+
+    <bean id="entityManagerFactoryForMbr" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="puMbr"/>
+        <property name="dataSource" ref="defaultDataSourceForScMember"/>
+        <property name="packagesToScan" value="com.skplanet.storeplatform.sac.member.domain"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties" ref="config" />
+    </bean>
+
+    <bean id="entityManagerFactoryForIdleMbr" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="puIdleMbr"/>
+        <property name="dataSource" ref="defaultDataSourceForScIdleMember"/>
+        <property name="packagesToScan" value="com.skplanet.storeplatform.sac.member.domain.idle"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties" ref="config" />
     </bean>
 
 </beans>

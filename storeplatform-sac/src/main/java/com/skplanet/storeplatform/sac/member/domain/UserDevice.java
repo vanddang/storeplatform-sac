@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.domain;
 
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -109,14 +107,12 @@ public class UserDevice {
     /**
      * 대표 기기 여부
      */
-    @Type(type = "yes_no")  // 기본 등록은?
-    private Boolean repDeviceYn;
+    private Character repDeviceYn;
 
     /**
      * 인증 여부
      */
-    @Type(type = "yes_no")
-    private Boolean authYn;
+    private Character authYn;
 
     /**
      * 인증 일자
@@ -126,8 +122,7 @@ public class UserDevice {
     /**
      * SMS 수신 여부
      */
-    @Type(type = "yes_no")
-    private Boolean smsRecvYn;
+    private Character smsRecvYn;
 
     private String deviceNatvId;
 
@@ -213,27 +208,27 @@ public class UserDevice {
         this.mdn = mdn;
     }
 
-    public Boolean getRepDeviceYn() {
+    public Character getRepDeviceYn() {
         return repDeviceYn;
     }
 
-    public void setRepDeviceYn(Boolean repDeviceYn) {
+    public void setRepDeviceYn(Character repDeviceYn) {
         this.repDeviceYn = repDeviceYn;
     }
 
-    public Boolean getAuthYn() {
+    public Character getAuthYn() {
         return authYn;
     }
 
-    public void setAuthYn(Boolean authYn) {
+    public void setAuthYn(Character authYn) {
         this.authYn = authYn;
     }
 
-    public Boolean getSmsRecvYn() {
+    public Character getSmsRecvYn() {
         return smsRecvYn;
     }
 
-    public void setSmsRecvYn(Boolean smsRecvYn) {
+    public void setSmsRecvYn(Character smsRecvYn) {
         this.smsRecvYn = smsRecvYn;
     }
 
