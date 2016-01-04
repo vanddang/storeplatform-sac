@@ -1864,9 +1864,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 
-		if (!this.commonSupportDeviceShopping(header)) {
-			return res;
-		}
+		//단말 Provisioning 로직 제거 - 박남규 매니저 요청
+		//if (!this.commonSupportDeviceShopping(header)) {
+		//	return res;
+		//}
+
 		// ID list 조회
 		List<MetaInfo> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetail", reqMap,
 				MetaInfo.class);
