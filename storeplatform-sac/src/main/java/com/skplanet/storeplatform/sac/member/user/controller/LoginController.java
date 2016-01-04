@@ -9,8 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import javax.validation.Valid;
-
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,35 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.user.service.LoginService;
+import javax.validation.Valid;
 
 /**
  * 로그인 Controller.
@@ -144,7 +124,8 @@ public class LoginController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
-				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
+				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)
+				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_OMD)) {
 			throw new StorePlatformException("SAC_MEM_1203");
 		}
 
