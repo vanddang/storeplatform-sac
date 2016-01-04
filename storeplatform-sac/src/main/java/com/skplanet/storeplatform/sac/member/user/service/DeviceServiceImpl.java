@@ -190,46 +190,6 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
-
-		/*// 휴면아이디에 기등록 여부 조회
-		keySearchList = new ArrayList<KeySearch>();
-		key = new KeySearch();
-		if(StringUtils.equals(req.getDeviceInfo().getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
-			key.setKeyType(MemberConstants.KEY_TYPE_MDN);
-			key.setKeyString(req.getDeviceInfo().getMdn());
-		}else{
-			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			key.setKeyString(req.getDeviceInfo().getDeviceId());
-		}
-		keySearchList.add(key);
-		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
-		searchExtentUserRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
-		searchExtentUserRequest.setKeySearchList(keySearchList);
-		searchExtentUserRequest.setUserInfoYn("Y");
-		try {
-			SearchExtentUserResponse schUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
-
-			// 등록될 MDN이 휴면아이디 회원에 붙은 MDN인 경우 복구처리한다.
-			if (StringUtils.equals(schUserRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)
-					&& !StringUtils.equals(schUserRes.getUserKey(), req.getUserKey())
-					&& !StringUtils.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
-				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
-				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
-				moveUserInfoSacReq.setUserKey(schUserRes.getUserKey());
-				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
-
-				// 복구한 회원 마지막 로그인일자 업데이트
-				MoveUserInfoRequest moveUserInfoRequest = new MoveUserInfoRequest();
-				moveUserInfoRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
-				moveUserInfoRequest.setUserKey(schUserRes.getUserKey());
-				this.userSCI.updateActiveMoveUserLastLoginDt(moveUserInfoRequest);
-			}
-		} catch (StorePlatformException e) {
-			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-				throw e;
-			}
-		}*/
-
 		/* 휴대기기 등록 처리 */
 		req.getDeviceInfo().setUserKey(req.getUserKey());
 		String deviceKey = this.regDeviceInfo(requestHeader, req.getDeviceInfo());
@@ -484,6 +444,7 @@ public class DeviceServiceImpl implements DeviceService {
                 mdnMap.put("01065261233", "4486071533");
                 mdnMap.put("01065261234", "4486071534");
                 mdnMap.put("01065261235", "4486071535");
+				mdnMap.put("01066786220", "7243371580");
 				if(mdnMap.get(deviceInfo.getMdn()) != null){
 					deviceInfo.setSvcMangNum(mdnMap.get(deviceInfo.getMdn()));
 				}else{
