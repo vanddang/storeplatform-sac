@@ -3738,9 +3738,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 
-		if (!this.commonSupportDeviceShopping(header)) {
-			return res;
-		}
+		//단말 Provisioning 로직 제거 - 박남규 매니저님 요청 사항
+		//if (!this.commonSupportDeviceShopping(header)) {
+		//	return res;
+		//}
+
 		// ID list 조회
 		List<MetaInfo> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetailV2", reqMap,
 				MetaInfo.class); //쇼핑상세(채널) 조회, 김형식/SK플래닛
