@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRemoveDeviceIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
@@ -71,16 +72,21 @@ public class UserSearchController {
 
 	@RequestMapping(value = "/member/user/exist/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ExistRes exist(@RequestBody ExistReq req, SacRequestHeader sacHeader) {
+	public ExistRes exist(@RequestBody ExistRemoveDeviceIdReq req, SacRequestHeader sacHeader) {
 
-		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")
-				&& StringUtil.nvl(req.getUserId(), "").equals("") && StringUtil.nvl(req.getUserKey(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
+		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getUserId(), "").equals("")
+				&& StringUtil.nvl(req.getUserKey(), "").equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceKey");
 		}
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		ExistRes res = this.svc.exist(sacHeader, req);
+		ExistReq oldReq = new ExistReq();
+		oldReq.setUserKey(req.getUserKey());
+		oldReq.setUserId(req.getUserId());
+		oldReq.setDeviceKey(req.getDeviceKey());
+
+		ExistRes res = this.svc.exist(sacHeader, oldReq);
 
 		LOGGER.info("Response : {}", res.getUserKey());
 
@@ -264,8 +270,8 @@ public class UserSearchController {
 	@ResponseBody
 	public DetailV2Res detailV2(@RequestBody DetailReq req, SacRequestHeader sacHeader) {
 
-		if (StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getDeviceId())
-				&& StringUtil.isBlank(req.getUserId()) && StringUtil.isBlank(req.getUserKey())) {
+		if (StringUtils.isBlank(req.getDeviceKey()) && StringUtils.isBlank(req.getDeviceId())
+				&& StringUtils.isBlank(req.getUserId()) && StringUtils.isBlank(req.getUserKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
@@ -318,7 +324,7 @@ public class UserSearchController {
 	 * 2.1.56. 가입 테넌트 정보 조회.
 	 * </pre>
 	 * 
-	 * @param sacHeader
+	 * @param requestHeader
 	 *            공통 헤더
 	 * @param req
 	 *            Request Value Object

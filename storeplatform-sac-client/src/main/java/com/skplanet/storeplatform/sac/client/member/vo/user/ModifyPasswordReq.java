@@ -20,12 +20,6 @@ public class ModifyPasswordReq extends CommonInfo {
 	private String userKey = "";
 
 	/**
-	 * IDP 인증 Key.
-	 */
-	@NotEmpty
-	private String userAuthKey = "";
-
-	/**
 	 * 기존 비밀번호.
 	 */
 	@NotEmpty
@@ -50,21 +44,6 @@ public class ModifyPasswordReq extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	/**
-	 * @return String : userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String : the userAuthKey to set
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
 	}
 
 	/**

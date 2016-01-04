@@ -61,28 +61,20 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	/** 기존 사용자 Key. */
 	private String previousUserKey;
 
-	/** 이전 사용자회원번호. */
-	private String preMbrNo; // PRE_USERMBR_NO
-
 	/** 이전 디바이스 key. */
 	private String preDeviceKey;
+
 	/** 이전 사용자 key. */
 	private String preUserKey;
-
-	private String previousUserID;
 
 	/** 이전 사용자 휴면계정유무. */
 	private String previousIsDormant;
 
-	/**
-	 * 휴대기기 등록한 사용자 휴면계정유무.
-	 */
-	private String isDormant;
+	/** 이전 사용자의 아이디 */
+	private String previousUserID;
 
-	/**
-	 * 사용자 부가정보 및 관리항목 Value Object List.
-	 */
-	private List<MbrMangItemPtcr> mbrMangItemPtcrList;
+	/** 이전 사용자의 프로필 이미지 경로 */
+	private String previousProfileImgPath;
 
 	/**
 	 * 사용자 Key를 리턴한다.
@@ -161,25 +153,6 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 이전 사용자회원번호를 리턴한다.
-	 * 
-	 * @return preMbrNo - 이전 사용자회원번호
-	 */
-	public String getPreMbrNo() {
-		return this.preMbrNo;
-	}
-
-	/**
-	 * 이전 사용자회원번호를 설정한다.
-	 * 
-	 * @param preMbrNo
-	 *            이전 사용자회원번호
-	 */
-	public void setPreMbrNo(String preMbrNo) {
-		this.preMbrNo = preMbrNo;
-	}
-
-	/**
 	 * 이전 기기 key를 리턴한다.
 	 * 
 	 * @return the preDeviceKey
@@ -227,21 +200,6 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the previousUserID
-	 */
-	public String getPreviousUserID() {
-		return this.previousUserID;
-	}
-
-	/**
-	 * @param previousUserID
-	 *            the previousUserID to set
-	 */
-	public void setPreviousUserID(String previousUserID) {
-		this.previousUserID = previousUserID;
-	}
-
-	/**
 	 * @return previousIsDormant
 	 */
 	public String getPreviousIsDormant() {
@@ -257,40 +215,40 @@ public class CreateDeviceResponse extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the mbrMangItemPtcrList
+	 * @return previousUserID
 	 */
-	public List<MbrMangItemPtcr> getMbrMangItemPtcrList() {
-		return this.mbrMangItemPtcrList;
+	public String getPreviousUserID() {
+		return previousUserID;
 	}
 
 	/**
-	 * @param mbrMangItemPtcrList
-	 *            the mbrMangItemPtcrList to set
-	 */
-	public void setMbrMangItemPtcrList(List<MbrMangItemPtcr> mbrMangItemPtcrList) {
-		this.mbrMangItemPtcrList = mbrMangItemPtcrList;
-	}
-
-	/**
-	 * @return isDormant
-	 */
-	public String getIsDormant() {
-		return this.isDormant;
-	}
-
-	/**
-	 * @param isDormant
+	 * @param previousUserID
 	 *            String
 	 */
-	public void setIsDormant(String isDormant) {
-		this.isDormant = isDormant;
+	public void setPreviousUserID(String previousUserID) {
+		this.previousUserID = previousUserID;
+	}
+
+	/**
+	 * @return previousProfileImgPath
+	 */
+	public String getPreviousProfileImgPath() {
+		return previousProfileImgPath;
+	}
+
+	/**
+	 * @param previousProfileImgPath
+	 *            String
+	 */
+	public void setPreviousProfileImgPath(String previousProfileImgPath) {
+		this.previousProfileImgPath = previousProfileImgPath;
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.framework.core.common.vo.CommonInfo#toString()
-	 */
+         * (non-Javadoc)
+         *
+         * @see com.skplanet.storeplatform.framework.core.common.vo.CommonInfo#toString()
+         */
 	@Override
 	public String toString() {
 		return Utils.printKeyValues(this);

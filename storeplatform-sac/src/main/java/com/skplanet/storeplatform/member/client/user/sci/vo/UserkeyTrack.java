@@ -26,20 +26,11 @@ public class UserkeyTrack extends CommonInfo implements Serializable {
 	/** 변환추적 테이블 키. */
 	private String trackNo; // SEQUENCE
 
-	/** 이전 테넌트 ID. */
-	private String preTenantID; // PRE_TENANT_ID
-
 	/** 이전 사용자 Key. */
 	private String preUserKey; // PRE_INSD_USERMBR_NO
 
-	/** 이후 테넌트 ID. */
-	private String afterTenantID; // AFTER_TENANT_ID
-
 	/** 이후 사용자 Key. */
 	private String afterUserKey; // AFTER_INSD_USERMBR_NO
-
-	/** 휴대기기 ID(MDN/UUID/MAC). */
-	private String deviceID;
 
 	/** 등록 ID. */
 	private String regID; // REG_ID
@@ -67,25 +58,6 @@ public class UserkeyTrack extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 이전 Tenant ID를 리턴한다.
-	 * 
-	 * @return preTenantID - 이전 Tenant ID
-	 */
-	public String getPreTenantID() {
-		return this.preTenantID;
-	}
-
-	/**
-	 * 이전 Tenant ID를 설정한다.
-	 * 
-	 * @param preTenantID
-	 *            이전 Tenant ID
-	 */
-	public void setPreTenantID(String preTenantID) {
-		this.preTenantID = preTenantID;
-	}
-
-	/**
 	 * 이전 사용자 Key를 리턴한다.
 	 * 
 	 * @return preUserKey - 이전 사용자 Key
@@ -105,25 +77,6 @@ public class UserkeyTrack extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 이후 Tenant ID를 리턴한다.
-	 * 
-	 * @return afterTenantID - 이후 Tenant ID
-	 */
-	public String getAfterTenantID() {
-		return this.afterTenantID;
-	}
-
-	/**
-	 * 이후 Tenant ID를 설정한다.
-	 * 
-	 * @param afterTenantID
-	 *            이후 Tenant ID
-	 */
-	public void setAfterTenantID(String afterTenantID) {
-		this.afterTenantID = afterTenantID;
-	}
-
-	/**
 	 * 이후 사용자 Key를 리턴한다.
 	 * 
 	 * @return afterUserKey - 이후 사용자 Key
@@ -140,25 +93,6 @@ public class UserkeyTrack extends CommonInfo implements Serializable {
 	 */
 	public void setAfterUserKey(String afterUserKey) {
 		this.afterUserKey = afterUserKey;
-	}
-
-	/**
-	 * 휴대기기 ID(MDN/UUID/MAC) 정보를 리턴한다.
-	 * 
-	 * @return deviceID - 휴대기기 ID(MDN/UUID/MAC) 정보
-	 */
-	public String getDeviceID() {
-		return this.deviceID;
-	}
-
-	/**
-	 * 휴대기기 ID(MDN/UUID/MAC) 정보를 설정한다.
-	 * 
-	 * @param deviceID
-	 *            휴대기기 ID(MDN/UUID/MAC) 정보
-	 */
-	public void setDeviceID(String deviceID) {
-		this.deviceID = deviceID;
 	}
 
 	/**

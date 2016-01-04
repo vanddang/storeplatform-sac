@@ -23,9 +23,6 @@ public class UserMbrLoginLog extends CommonInfo implements Serializable {
 	/** The Constant serial Version UID. */
 	private static final long serialVersionUID = 1L;
 
-	/** 테넌트 ID. */
-	private String tenantID;
-
 	/** 테넌트의 시스템 ID. */
 	private String systemID;
 
@@ -55,25 +52,6 @@ public class UserMbrLoginLog extends CommonInfo implements Serializable {
 
 	/** 기기_OS_버전. */
 	private String deviceOsVersion;
-
-	/**
-	 * Tenant ID를 리턴한다.
-	 * 
-	 * @return tenantID - Tenant ID
-	 */
-	public String getTenantID() {
-		return this.tenantID;
-	}
-
-	/**
-	 * Tenant ID를 설정한다.
-	 * 
-	 * @param tenantID
-	 *            Tenant ID
-	 */
-	public void setTenantID(String tenantID) {
-		this.tenantID = tenantID;
-	}
 
 	/**
 	 * System ID를 리턴한다.

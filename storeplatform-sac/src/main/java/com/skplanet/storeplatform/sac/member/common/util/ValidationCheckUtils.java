@@ -28,4 +28,24 @@ public class ValidationCheckUtils {
 
 		return matcher.matches();
 	}
+
+    /**
+     * <pre>
+     * 이메일주소 유효성 검사
+     * </pre>
+     *
+     * @param email
+     *            String
+     * @return boolean
+     */
+    public static boolean isEmail(String email) {
+        boolean err = false;
+        String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(email);
+        if (m.matches()) {
+            err = true;
+        }
+        return err;
+    }
 }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -90,6 +91,34 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Override
 	public CreateByMdnRes regByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
 
+        /**
+         * MDN 회원 가가입 체크
+         */
+        try {
+            String keyType = null;
+            if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+                /**
+                 * 모번호 조회 (989 일 경우만)
+                 */
+                req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+                keyType = StringUtils.lowerCase(MemberConstants.KEY_TYPE_MDN);
+            } else {
+                keyType = StringUtils.lowerCase(MemberConstants.KEY_TYPE_DEVICE_ID);
+            }
+
+            UserInfo userInfo = this.mcc.getUserBaseInfo(keyType, req.getDeviceId(), sacHeader);
+            if (userInfo != null) {
+                throw new StorePlatformException("SAC_MEM_1101");
+            }
+        } catch (StorePlatformException ex) {
+            if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+                    || StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+                // SKIP
+            }else{
+                throw ex;
+            }
+        }
+
 		/**
 		 * 법정대리인 나이 유효성 체크.
 		 */
@@ -107,15 +136,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
 		/**
-		 * 모번호 조회 (989 일 경우만)
-		 */
-		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
-
-		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
 		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(),
-				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType(), true);
+				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType(), false);
 
 		/**
 		 * 약관 맵핑정보 세팅.
@@ -166,14 +190,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 휴대기기 등록. - 휴대기기 등록 SC 작업 완료 후 재작업
 		 */
-		// String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
+        String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
 
 		/**
 		 * 결과 세팅
 		 */
 		CreateByMdnRes response = new CreateByMdnRes();
 		response.setUserKey(createUserResponse.getUserKey());
-		response.setDeviceKey("");
+		response.setDeviceKey(deviceKey);
 		return response;
 
 	}
@@ -654,9 +678,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.debug("======================= ## CreateByMdnReq");
 			CreateByMdnReq req = (CreateByMdnReq) obj;
-			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+			deviceInfo.setUserKey(userKey);
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
-			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
+
+            if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+                deviceInfo.setDeviceId("");
+                deviceInfo.setMdn(req.getDeviceId()); // MDN 번호
+            }else {
+                deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+            }
+            deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 //			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());// 단말 모델
@@ -675,6 +706,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.debug("======================= ## CreateByAgreementReq");
 			CreateByAgreementReq req = (CreateByAgreementReq) obj;
+			deviceInfo.setUserKey(userKey);
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
@@ -695,6 +727,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.debug("======================= ## CreateBySimpleReq");
 			CreateBySimpleReq req = (CreateBySimpleReq) obj;
+			deviceInfo.setUserKey(userKey);
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
@@ -715,6 +748,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.debug("======================= ## CreateSaveAndSyncReq");
 			CreateSaveAndSyncReq req = (CreateSaveAndSyncReq) obj;
+			deviceInfo.setUserKey(userKey);
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(""); // 가입 채널 코드
@@ -740,7 +774,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 휴대기기 등록 모듈 호출.
 			 */
 			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
-			String deviceKey = this.deviceService.regDeviceInfo(sacHeader.getTenantHeader().getSystemId(), userKey, deviceInfo);
+			String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
 
 			if (deviceKey == null || StringUtils.equals(deviceKey, "")) {
 				throw new StorePlatformException("SAC_MEM_0002", "deviceKey");

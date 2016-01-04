@@ -139,8 +139,10 @@ public class DeviceUtil {
 		deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
 		deviceInfo.setIsDormant(userMbrDevice.getIsDormant());
 		deviceInfo.setMdn(userMbrDevice.getMdn());
-		deviceInfo.setDeviceSimMn(userMbrDevice.getDeviceSimMn());
+		deviceInfo.setDeviceSimNm(userMbrDevice.getDeviceSimNm());
+		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
+        deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount()); // 기기 계정
 
 		return deviceInfo;
 	}
@@ -199,7 +201,8 @@ public class DeviceUtil {
 		userMbrDevice.setJoinId(deviceInfo.getJoinId());
 		userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 		userMbrDevice.setMdn(deviceInfo.getMdn());
-		userMbrDevice.setDeviceSimMn(deviceInfo.getDeviceSimMn());
+		userMbrDevice.setDeviceSimNm(deviceInfo.getDeviceSimNm());
+		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
 		userMbrDevice.setUserMbrDeviceDetail(getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		return userMbrDevice;

@@ -130,7 +130,7 @@ public class DeviceInfo extends CommonInfo {
 	/**
 	 * usim 번호.
 	 */
-	private String deviceSimMn;
+	private String deviceSimNm;
 
 	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회.
@@ -151,6 +151,26 @@ public class DeviceInfo extends CommonInfo {
 	 * 샵클 업데이트 필요 여부(SAP 간편회원인증 API 필드).
 	 */
 	private String isSCUpdate;
+
+	/**
+     * 휴대기기 마지막 로그인 일자.
+     */
+    private String lastLoginDt;
+
+    /**
+     * 휴대기기 제조사명.
+     */
+    private String makeComp;
+
+    /**
+     * 휴대기기 OS 플랫폼.
+     */
+    private String vmType;
+
+    /**
+     * 휴대기기 모델 설명.
+     */
+    private String modelNm;
 
 	/**
 	 * @return deviceKey
@@ -543,17 +563,58 @@ public class DeviceInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return deviceSimMn
+	 * @return deviceSimNm
 	 */
-	public String getDeviceSimMn() {
-		return deviceSimMn;
+	public String getDeviceSimNm() {
+		return deviceSimNm;
 	}
 
 	/**
-	 * @param deviceSimMn
+	 * @param deviceSimNm
 	 *            String
 	 */
-	public void setDeviceSimMn(String deviceSimMn) {
-		this.deviceSimMn = deviceSimMn;
+	public void setDeviceSimNm(String deviceSimNm) {
+		this.deviceSimNm = deviceSimNm;
 	}
+
+	/**
+	 * @return lastLoginDt
+	 */
+	public String getLastLoginDt() {
+		return lastLoginDt;
+	}
+
+	/**
+	 * @param lastLoginDt
+	 *            String
+	 */
+	public void setLastLoginDt(String lastLoginDt) {
+		this.lastLoginDt = lastLoginDt;
+	}
+
+    public String getMakeComp() {
+        return makeComp;
+    }
+
+    public void setMakeComp(String makeComp) {
+        this.makeComp = makeComp;
+    }
+
+    public String getVmType() {
+        return vmType;
+    }
+
+    public void setVmType(String vmType) {
+        this.vmType = vmType;
+    }
+
+    public String getModelNm() {
+        return modelNm;
+    }
+
+    public void setModelNm(String modelNm) {
+        this.modelNm = modelNm;
+    }
+
+
 }

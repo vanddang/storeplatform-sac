@@ -9,88 +9,31 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
-import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ModifyAuthInfoEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.CheckIdPwdAuthEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.ModifyPwdEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateGuardianEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserNameEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
-import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
-import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
-import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
-import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
-import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
+import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
-import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 회원 정보 수정 서비스 (CoreStoreBusiness) 구현체
@@ -107,12 +50,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 	@Autowired
 	private UserSCI userSCI;
-
-	@Autowired
-	private IdpSCI idpSCI;
-
-	@Autowired
-	private ImIdpSCI imIdpSCI;
 
 	@Autowired
 	private UserSearchService userSearchService;
@@ -135,7 +72,20 @@ public class UserModifyServiceImpl implements UserModifyService {
 		searchExtentUserRequest.setCommonRequest(commonRequest);
 		searchExtentUserRequest.setKeySearchList(keySearchList);
 		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
-		this.userSCI.searchExtentUser(searchExtentUserRequest);
+        SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+
+        /**
+         * 변경 가능 상테 체크 (매인, 서브상태 정상인 회원- 단 휴면 제외)
+         */
+        if(!StringUtils.equalsIgnoreCase(res.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_NORMAL)
+                || !StringUtils.equalsIgnoreCase(res.getUserMbr().getUserSubStatus(), MemberConstants.SUB_STATUS_NORMAL)){
+            throw new StorePlatformException("SAC_MEM_2001", res.getUserMbr().getUserMainStatus(),
+                    res.getUserMbr().getUserSubStatus());
+        }
+
+        if(StringUtils.equalsIgnoreCase(res.getUserMbr().getIsDormant(), MemberConstants.USE_Y)){
+            throw new StorePlatformException("SAC_MEM_0006");
+        }
 
 		/**
 		 * SC 회원 수정.
@@ -174,80 +124,73 @@ public class UserModifyServiceImpl implements UserModifyService {
 		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 		/**
-		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
+		 * 비밀 번호 유효성 체크
+		 *  1. 길이 체크
+		 *  2. 비밀번호에 ID일부 문자 사용 체크
+		 *  3. 숫자만 구성 체크
+		 *  4. 문자만 구성 체크
+		 *  5. 사용할수 없는 문자 사용 체크
+		 *  6. 기타 비밀번호 제약사항 체크 (공백 체크)
+		 *  7. 기타 비밀번호 제약사항 체크 (숫자/문자 연속 3자 이상)
+		 *
+		 *  비밀번호 제약 사항 (One Id 사이트 동일)
+		 *  비밀번호는 6~20자의 영문 대소문자,숫자,특수기호만 사용할 수 있습니다.(공백입력불가)
+		 *  사용 가능한 특수기호 : !@#$%^&*()-_+=|[]{}'";:/?.>,<
+		 *  3자 이상 연속 영문/숫자 조합은 불가,
+		 *  아이디에 포함된 문자/숫자와 연속 3자 이상 동일한 비밀번호는 설정이 불가합니다.
 		 */
-		LOGGER.debug("## 사용자 타입  : {}", userInfo.getUserType());
-		LOGGER.debug("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
-		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
-
-			LOGGER.debug("## ====================================================");
-			LOGGER.debug("## One ID 통합회원 [{}]", userInfo.getUserName());
-			LOGGER.debug("## ====================================================");
-
-			/**
-			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
-			 */
-			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
-
-				/**
-				 * 통합IDP 패스워드 확인 연동 (cmd - authIntegratedSPPW))
-				 */
-				CheckIdPwdAuthEcReq checkIdPwdAuthEcReq = new CheckIdPwdAuthEcReq();
-				checkIdPwdAuthEcReq.setUserId(userInfo.getUserId());
-				checkIdPwdAuthEcReq.setUserPasswd(req.getOldPassword());
-				this.imIdpSCI.checkIdPwdAuth(checkIdPwdAuthEcReq);
-
-				/**
-				 * 통합IDP 비밀번호 변경 연동(cmd - TXUpdateUserPwdIDP)
-				 */
-				ModifyPwdEcReq modifyPwdEcReq = new ModifyPwdEcReq();
-				modifyPwdEcReq.setKey(req.getUserAuthKey()); // IDP 인증 Key
-				modifyPwdEcReq.setKey(userInfo.getImSvcNo()); // 통합 서비스 관리번호
-				modifyPwdEcReq.setUserPasswd(req.getNewPassword()); // 신규 비밀번호
-				modifyPwdEcReq.setUserPasswdType("1"); // 비밀번호유형코드 (1: 정상, 2: 임시)
-				modifyPwdEcReq.setUserPasswdModifyDate(DateUtil.getToday()); // 비밀번호변경일자 (YYYYMMDD)
-				this.imIdpSCI.modifyPwd(modifyPwdEcReq);
-
+		String newPassword = req.getNewPassword();
+		// 1. 길이 체크
+		if(newPassword.length() < 6 || newPassword.length() > 20){
+			throw new StorePlatformException("SAC_MEM_1407", userInfo.getUserKey());
+		}
+		// 2. 비밀번호에 ID일부 문자 포함
+		for(int i=0; i<newPassword.length()-2; i++){
+			if(userInfo.getUserId().indexOf(newPassword.substring(i, i + 3)) > -1){
+				throw new StorePlatformException("SAC_MEM_1408", userInfo.getUserKey());
 			}
-
-		} else {
-
-			LOGGER.debug("## ====================================================");
-			LOGGER.debug("## 기존 IDP 회원 [{}]", userInfo.getUserName());
-			LOGGER.debug("## ====================================================");
-
-			/**
-			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
-			 */
-			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
-
-				/**
-				 * IDP 패스워드 확인 연동 (cmd - authForId)
-				 */
-				AuthForIdEcReq authForIdEcReq = new AuthForIdEcReq();
-				authForIdEcReq.setUserId(userInfo.getUserId());
-				authForIdEcReq.setUserPasswd(req.getOldPassword());
-				this.idpSCI.authForId(authForIdEcReq);
-
-				/**
-				 * IDP 비밀번호 변경 연동 (cmd - modifyAuthInfo)
-				 */
-				ModifyAuthInfoEcReq modifyAuthInfoEcReq = new ModifyAuthInfoEcReq();
-				modifyAuthInfoEcReq.setUserAuthKey(req.getUserAuthKey()); // IDP 연동 Key
-				modifyAuthInfoEcReq.setKeyType("2"); // 변경할 인증 정보의 type (1=Email, 2=password, default=1)
-				modifyAuthInfoEcReq.setUserKey(userInfo.getImMbrNo()); // MBR_NO
-				modifyAuthInfoEcReq.setPreKey(req.getOldPassword()); // 기존 패스워드
-				modifyAuthInfoEcReq.setKey(req.getNewPassword()); // 신규 패스워드
-				this.idpSCI.modifyAuthInfo(modifyAuthInfoEcReq);
-
+		}
+		// 3. 숫자만 구성 체크
+		if(Pattern.matches("^[0-9]*$", newPassword)){
+			throw new StorePlatformException("SAC_MEM_1409", userInfo.getUserKey());
+		}
+		// 4. 문자만 구성 체크
+		if(Pattern.matches("^[A-Za-z]*$", newPassword)){
+			throw new StorePlatformException("SAC_MEM_1410", userInfo.getUserKey());
+		}
+		// 5. 사용할수 없는 문자 사용 체크
+		if(!Pattern.matches("^[A-Za-z0-9!@#$%^&*()-_+=|\\[\\]\\{\\}'\";:/?.>,<]+$", newPassword)){
+			throw new StorePlatformException("SAC_MEM_1411", userInfo.getUserKey());
+		}
+		// 6. 기타 비밀번호 제약사항 체크 (공백 체크)
+		if (newPassword.indexOf(' ') > 0){
+			throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
+		}
+		// 7. 기타 비밀번호 제약사항 체크 (숫자/문자 연속 3자 이상)
+		for(int i=0; i<newPassword.length()-1 ; i++){
+			if(newPassword.charAt(i+1) - newPassword.charAt(i) == 1
+					&& newPassword.charAt(i+2) - newPassword.charAt(i+1) == 1){
+				throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
 			}
+		}
 
+		/**
+		 * SC 회원 사용자키, 비밀번호 일치 여부 확인
+		 */
+		CheckUserPwdRequest chkUserPwdRequest = new CheckUserPwdRequest();
+		chkUserPwdRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		chkUserPwdRequest.setUserKey(userInfo.getUserKey());
+		chkUserPwdRequest.setUserPw(req.getOldPassword());
+		chkUserPwdRequest.setIsDormant(userInfo.getIsDormant());
+		CheckUserPwdResponse chkUserPwdResponse = this.userSCI.checkUserPwd(chkUserPwdRequest);
+		if( chkUserPwdResponse.getUserKey() == null || chkUserPwdResponse.getUserKey().length() <=0 ){
+			throw new StorePlatformException("SAC_MEM_1406", userInfo.getUserKey());
 		}
 
 		/**
 		 * SC 회원 비밀번호 변경 요청.
 		 */
-		this.modPasswordUser(sacHeader, req, userInfo.getUserId());
+		this.modPasswordUser(sacHeader, req, userInfo.getIsDormant());
 
 		/**
 		 * 결과 setting.
@@ -277,6 +220,31 @@ public class UserModifyServiceImpl implements UserModifyService {
 		if (StringUtils.equals(res.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
 			throw new StorePlatformException("SAC_MEM_0006");
 		}
+
+        /**
+         * 이메일주소 유효성 확인
+         */
+        if(!ValidationCheckUtils.isEmail(req.getNewEmail())){
+            throw new StorePlatformException("SAC_MEM_0007", req.getNewEmail());
+        }
+
+        /**
+         * 변경할 이메일 주소 중복 체크
+         */
+        keySearchList = new ArrayList<KeySearch>();
+        keySchUserKey = new KeySearch();
+        keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_EMAIL_ADDR);
+        keySchUserKey.setKeyString(req.getNewEmail());
+        keySearchList.add(keySchUserKey);
+
+        CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
+        chkDupReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+        chkDupReq.setKeySearchList(keySearchList);
+        CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
+
+        if (StringUtil.isNotEmpty(chkDupRes.getUserID())) {
+            throw new StorePlatformException("SAC_MEM_1404");
+        }
 
 		/**
 		 * 사용자 기본정보 setting.
@@ -704,25 +672,19 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 *            공통 헤더
 	 * @param req
 	 *            Request Value Object
-	 * @param userId
-	 *            사용자 아이디
 	 */
-	private void modPasswordUser(SacRequestHeader sacHeader, ModifyPasswordReq req, String userId) {
+	private void modPasswordUser(SacRequestHeader sacHeader, ModifyPasswordReq req, String isDormant) {
 
 		UpdatePasswordUserRequest updatePasswordUserRequest = new UpdatePasswordUserRequest();
 		updatePasswordUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 		MbrPwd mbrPwd = new MbrPwd();
-		mbrPwd.setMemberID(userId); // 사용자 아이디
 		mbrPwd.setMemberKey(req.getUserKey()); // 사용자 Key
-		/**
-		 * IDP에서 비밀번호를 관리하고 SC에서는 비밀번호를 관리하지 않기 때문에 비밀번호 관련 필드만 업데이트함.
-		 * 
-		 * 패스워드 검증은 IDP에서 함.
-		 */
-		// mbrPwd.setMemberPW(req.getNewPassword()); // 신규 비밀번호
+		mbrPwd.setOldPW(req.getOldPassword()); // 기존 패스워드
+		mbrPwd.setMemberPW(req.getNewPassword()); // 신규 패스워드
 		mbrPwd.setPwRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 비밀번호 변경 일시
 		updatePasswordUserRequest.setMbrPwd(mbrPwd);
+		updatePasswordUserRequest.setIsDormant(isDormant);
 
 		/**
 		 * SC 회원 비밀번호 변경 요청.
@@ -733,7 +695,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 	/**
 	 * <pre>
-	 * 실명 인증 정보 초기화.
+	 * 성인 인증 정보 초기화.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -748,24 +710,29 @@ public class UserModifyServiceImpl implements UserModifyService {
 		searchUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 		/**
-		 * 회원 정보 조회 - 실명 인증 정보 조회
+		 * 회원 정보 조회 - 성인 인증 정보 조회
 		 */
-		DetailReq detailReq = new DetailReq();
-		detailReq.setUserKey(req.getUserKey());
-		SearchExtentReq searchExtent = new SearchExtentReq();
-		searchExtent.setMbrAuthInfoYn(MemberConstants.USE_Y);
-		detailReq.setSearchExtent(searchExtent);
-		DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		searchExtentUserRequest.setCommonRequest(commonRequest);
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+		searchExtentUserRequest.setMbrAuthInfoYn(MemberConstants.USE_Y);
+		SearchExtentUserResponse detailRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
 
 		/**
-		 * 실명 인증 정보가 존재하지 않을 경우
+		 * 성인인증 정보가 존재하지 않을 경우
 		 */
 		if (StringUtil.equals(detailRes.getMbrAuth().getIsRealName(), Constant.TYPE_YN_N)) {
-			throw new StorePlatformException("SAC_MEM_0002", "실명 인증");
+			throw new StorePlatformException("SAC_MEM_0002", "성인 인증");
 		}
 
 		/**
-		 * 실명인증 초기화 기본 req setting.
+		 * 성인인증 초기화 기본 req setting.
 		 */
 		UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
 		updateRealNameRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));

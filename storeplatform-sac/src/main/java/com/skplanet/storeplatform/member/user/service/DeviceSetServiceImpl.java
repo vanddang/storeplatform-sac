@@ -82,7 +82,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 		List<KeySearch> keySearchList = createDevicePinRequest.getKeySearchList();
 		userMbrDeviceSet.setKeySearchList(keySearchList);
-		userMbrDeviceSet.setTenantID(createDevicePinRequest.getCommonRequest().getTenantID());
 		userMbrDeviceSet.setSystemID(createDevicePinRequest.getCommonRequest().getSystemID());
 
 		userMbrDeviceSet = this.commonDAO.queryForObject("DeviceSet.searchUserKey", userMbrDeviceSet,
@@ -170,7 +169,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 		List<KeySearch> keySearchList = modifyDevicePinRequest.getKeySearchList();
 		userMbrDeviceSet.setKeySearchList(keySearchList);
-		userMbrDeviceSet.setTenantID(modifyDevicePinRequest.getCommonRequest().getTenantID());
 		userMbrDeviceSet.setSystemID(modifyDevicePinRequest.getCommonRequest().getSystemID());
 
 		userMbrDeviceSet = this.commonDAO.queryForObject("DeviceSet.searchUserKey", userMbrDeviceSet,
@@ -257,7 +255,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 		List<KeySearch> keySearchList = searchDevicePinRequest.getKeySearchList();
 		userMbrDeviceSet.setKeySearchList(keySearchList);
-		userMbrDeviceSet.setTenantID(searchDevicePinRequest.getCommonRequest().getTenantID());
 		userMbrDeviceSet.setSystemID(searchDevicePinRequest.getCommonRequest().getSystemID());
 
 		userMbrDeviceSet = this.commonDAO.queryForObject("DeviceSet.searchUserKey", userMbrDeviceSet,
@@ -339,7 +336,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 		List<KeySearch> keySearchList = checkDevicePinRequest.getKeySearchList();
 		userMbrDeviceSet.setKeySearchList(keySearchList);
-		userMbrDeviceSet.setTenantID(checkDevicePinRequest.getCommonRequest().getTenantID());
 		userMbrDeviceSet.setSystemID(checkDevicePinRequest.getCommonRequest().getSystemID());
 
 		userMbrDeviceSet = this.commonDAO.queryForObject("DeviceSet.searchUserKey", userMbrDeviceSet,
@@ -433,7 +429,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 		List<KeySearch> keySearchList = searchDeviceSetInfoRequest.getKeySearchList();
 		userMbrDeviceSet.setKeySearchList(keySearchList);
-		userMbrDeviceSet.setTenantID(searchDeviceSetInfoRequest.getCommonRequest().getTenantID());
 		userMbrDeviceSet.setSystemID(searchDeviceSetInfoRequest.getCommonRequest().getSystemID());
 
 		userMbrDeviceSet = this.commonDAO.queryForObject("DeviceSet.searchUserKey", userMbrDeviceSet,
@@ -495,7 +490,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 		List<KeySearch> keySearchList = modifyDeviceSetInfoRequest.getKeySearchList();
 		userMbrDeviceSet.setKeySearchList(keySearchList);
-		userMbrDeviceSet.setTenantID(modifyDeviceSetInfoRequest.getCommonRequest().getTenantID());
 		userMbrDeviceSet.setSystemID(modifyDeviceSetInfoRequest.getCommonRequest().getSystemID());
 
 		userMbrDeviceSet = this.commonDAO.queryForObject("DeviceSet.searchUserKey", userMbrDeviceSet,
@@ -518,7 +512,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		modifyUserMbrDeviceSet.setUserKey(userMbrDeviceSet.getUserKey());
 		modifyUserMbrDeviceSet.setDeviceKey(userMbrDeviceSet.getDeviceKey());
 		modifyUserMbrDeviceSet.setUserID(userMbrDeviceSet.getUserID());
-		modifyUserMbrDeviceSet.setTenantID(modifyDeviceSetInfoRequest.getCommonRequest().getTenantID());
 		modifyUserMbrDeviceSet.setSystemID(modifyDeviceSetInfoRequest.getCommonRequest().getSystemID());
 
 		if (checkUserMbrDeviceSet == null) { // 등록
@@ -584,7 +577,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		UserMbrDeviceSet userMbrDeviceSet = new UserMbrDeviceSet();
 		userMbrDeviceSet.setUserKey(transferDeviceSetInfoRequest.getPreUserKey());
 		userMbrDeviceSet.setDeviceKey(transferDeviceSetInfoRequest.getPreDeviceKey());
-		userMbrDeviceSet.setTenantID(transferDeviceSetInfoRequest.getCommonRequest().getTenantID());
 		userMbrDeviceSet.setSystemID(transferDeviceSetInfoRequest.getCommonRequest().getSystemID());
 
 		// 이전 휴대기기 설정정보 조회

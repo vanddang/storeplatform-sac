@@ -9,16 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -30,6 +20,14 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.LockAccountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 회원 계정 잠금 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -53,18 +51,18 @@ public class UserLockServiceImpl implements UserLockService {
 		/**
 		 * 미동의 회원 체크및 회원 정보 조회.
 		 */
-		this.checkDisAgree(sacHeader, req);
+		CheckDuplicationResponse checkDuplicationResponse = this.checkDisAgree(sacHeader, req);
 
-		/**
-		 * 회원 계정 잠금
-		 */
-		this.modLoginStatus(sacHeader, req.getUserId());
-
-		/**
-		 * 결과 setting.
-		 */
 		LockAccountSacRes response = new LockAccountSacRes();
-		response.setUserId(req.getUserId());
+
+		// 이미 잠겨 있으면 리턴 셋팅
+		if(checkDuplicationResponse.getUserMbr().getLoginStatusCode().equals(MemberConstants.USER_LOGIN_STATUS_PAUSE)){
+			response.setUserId(req.getUserId());
+		// 잠겨 있지 않으면 회원 계정 잠금
+		}else {
+			this.modLoginStatus(sacHeader, req.getUserId());
+			response.setUserId(req.getUserId());
+		}
 
 		return response;
 	}

@@ -10,28 +10,7 @@
 package com.skplanet.storeplatform.member.client.user.sci;
 
 import com.skplanet.storeplatform.framework.core.proxy.SCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateDeviceManagementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateDeviceManagementResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 
 /**
  * 휴대기기 기능을 제공하는 Interface
@@ -162,4 +141,15 @@ public interface DeviceSCI {
 	 */
 	public UpdateDeviceManagementResponse updateDeviceManagement(
 			UpdateDeviceManagementRequest updateDeviceManagementRequest);
+
+	/**
+	 * <pre>
+	 * 단말 정보 수정 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param modifyDeviceRequest
+	 *            - 단말 수정 요청 Value Object
+	 * @return ModifyDeviceResponse - 단말 수정 응답 Value Object
+	 */
+	public ModifyDeviceResponse modifyDevice(ModifyDeviceRequest modifyDeviceRequest);
 }

@@ -80,16 +80,14 @@ public interface DeviceService {
 
 	/**
 	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인 경우 IDP에 무선회원 해지 요청.
-	 * 
-	 * @param systemId
-	 *            String
-	 * @param userKey
-	 *            String
+	 *
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param deviceInfo
 	 *            DeviceInfo
 	 * @return deviceKey String
 	 */
-	public String regDeviceInfo(String systemId, String userKey, DeviceInfo deviceInfo);
+	public String regDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo);
 
 	/**
 	 * 기기정보 update.
@@ -207,17 +205,15 @@ public interface DeviceService {
 	 */
 	public boolean isEqualsLoginDevice(String deviceId, String reqVal, String dbVal, String equalsType);
 
-	/**
-	 * <pre>
-	 * 휴대기기 관련 헤더 정보 셋팅.
-	 * </pre>
-	 * 
-	 * @param deviceheader
-	 *            DeviceHeader
-	 * @param deviceInfo
-	 *            DeviceInfo
-	 * @return DeviceInfo
-	 */
-	public DeviceInfo setDeviceHeader(DeviceHeader deviceheader, DeviceInfo deviceInfo);
+    /**
+     * 휴대기기 삭제v2.
+     *
+     * @param requestHeader
+     *            SacRequestHeader
+     * @param req
+     *            RemoveDeviceReq
+     * @return List<DeviceInfo>
+     */
+    public RemoveDeviceRes remDeviceV2(SacRequestHeader requestHeader, RemoveDeviceReq req);
 
 }

@@ -9,6 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.CommonUtils;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import com.skplanet.storeplatform.sac.member.user.service.UserModifyService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,34 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.user.service.UserModifyService;
 
 /**
  * 회원 수정 서비스 Controller
@@ -82,6 +62,37 @@ public class UserModifyController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+        /**
+         *  request 데이터 값/형식 및 길이 체크
+         */
+        //01. 이메일 수신 여부
+        if(StringUtils.isNotBlank(req.getIsRecvEmail()) && (!StringUtils.equalsIgnoreCase(req.getIsRecvEmail(), MemberConstants.USE_Y)
+                && !StringUtils.equalsIgnoreCase(req.getIsRecvEmail(), MemberConstants.USE_N))){
+            throw new StorePlatformException("SAC_MEM_0007", "isRecvEmail");
+        }
+
+        // 02. 사용자 성별
+        if(StringUtils.isNotBlank(req.getUserSex()) && (!StringUtils.equalsIgnoreCase(req.getUserSex(), MemberConstants.SEX_TYPE_MALE)
+                && !StringUtils.equalsIgnoreCase(req.getUserSex(), MemberConstants.SEX_TYPE_FEMALE))){
+            throw new StorePlatformException("SAC_MEM_0007", "userSex");
+        }
+
+        // 03. 사용자 생년월일
+        if(StringUtils.isNotBlank(req.getUserBirthDay()) && StringUtils.isEmpty(CommonUtils.regxNumber(req.getUserBirthDay()))){
+            throw new StorePlatformException("SAC_MEM_0007", "userBirthDay");
+        }
+
+        // 04. 사용자 생일
+        if(StringUtils.isNotBlank(req.getUserCalendar()) && (!StringUtils.equalsIgnoreCase(req.getUserCalendar(), MemberConstants.BIRTHDAY_TYPE_SOCAL)
+                && !StringUtils.equalsIgnoreCase(req.getUserCalendar(), MemberConstants.BIRTHDAY_TYPE_LUCAL))){
+            throw new StorePlatformException("SAC_MEM_0007", "userCalendar");
+        }
+
+        // 05. 사용자 업데이트 이메일
+        if(StringUtils.isNotBlank(req.getUserUpdEmail()) && !ValidationCheckUtils.isEmail(req.getUserUpdEmail())){
+            throw new StorePlatformException("SAC_MEM_0007", "userUpdEmail");
+        }
+
 		/**
 		 * 회원 정보 수정 Biz
 		 */
@@ -109,7 +120,7 @@ public class UserModifyController {
 	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, @Validated @RequestBody ModifyPasswordReq req) {
 
 		LOGGER.debug("################################");
-		LOGGER.debug("##### 2.1.14. 비밀번호 수정 #####");
+		LOGGER.debug("##### 2.1.13. 비밀번호 수정 #####");
 		LOGGER.debug("################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
@@ -271,7 +282,7 @@ public class UserModifyController {
 
 	/**
 	 * <pre>
-	 * 실명 인증 정보 초기화.
+	 * 성인 인증 정보 초기화.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -285,7 +296,7 @@ public class UserModifyController {
 	public InitRealNameRes initRealName(SacRequestHeader sacHeader, @Validated @RequestBody InitRealNameReq req) {
 
 		LOGGER.debug("####################################");
-		LOGGER.debug("##### 2.1.57 실명 인증 정보 초기화   #####");
+		LOGGER.debug("##### 2.1.57 성인 인증 정보 초기화   #####");
 		LOGGER.debug("####################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));

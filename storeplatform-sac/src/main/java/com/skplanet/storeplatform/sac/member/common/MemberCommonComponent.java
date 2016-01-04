@@ -9,33 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.member.common;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import com.skplanet.storeplatform.external.client.csp.sci.CspSCI;
-import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerCardEcReq;
-import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerCardEcRes;
-import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcReq;
-import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
-import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcReq;
-import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcRes;
+import com.skplanet.storeplatform.external.client.csp.vo.*;
+import com.skplanet.storeplatform.external.client.market.sci.MarketSCI;
+import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
+import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.client.common.util.RandomString;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
@@ -52,14 +36,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
+import com.skplanet.storeplatform.sac.client.member.vo.common.*;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
@@ -71,6 +48,16 @@ import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 공통 기능을 임시로 정의해서 사용한다.
@@ -97,6 +84,9 @@ public class MemberCommonComponent {
 	@Autowired
 	private SellerSCI sellerSCI;
 
+	@Autowired
+	private MarketSCI marketSCI;
+
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	public String fixedMobileUserAuthKey;
 
@@ -122,7 +112,7 @@ public class MemberCommonComponent {
 			OpmdEcRes opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
 			if (opmdRes != null) {
 				resMsisdn = opmdRes.getMobileMdn();
-				LOGGER.debug("[MiscellaneousService.getOpmd] SAC<-UPAS Connection Response : {}", opmdRes);
+				LOGGER.debug("[getOpmd] SAC<-UPAS Connection Response : {}", opmdRes);
 			}
 		}
 		// 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환
@@ -213,20 +203,7 @@ public class MemberCommonComponent {
 	 * <pre>
 	 * 폰 정보 조회.
 	 * </pre>
-	 * 
-	 * @param deviceModelCd
-	 *            deviceModelCd
-	 * @return DeviceHeader
-	 */
-	public Device getPhoneInfo(String deviceModelCd) {
-		return this.repository.searchPhoneInfo(deviceModelCd);
-	}
-
-	/**
-	 * <pre>
-	 * 폰 정보 조회.
-	 * </pre>
-	 * 
+	 *
 	 * @param uacd
 	 *            uacd
 	 * @return Device
@@ -234,6 +211,19 @@ public class MemberCommonComponent {
 	public Device getPhoneInfoByUacd(String uacd) {
 		return this.repository.searchPhoneInfoByUacd(uacd);
 	}
+
+    /**
+     * <pre>
+     * 폰 정보 조회.
+     * </pre>
+     *
+     * @param deviceModelCd
+     *            deviceModelCd
+     * @return DeviceHeader
+     */
+    public Device getPhoneInfo(String deviceModelCd) {
+        return this.repository.searchPhoneInfo(deviceModelCd);
+    }
 
 	/**
 	 * <pre>
@@ -510,33 +500,22 @@ public class MemberCommonComponent {
 	private UserInfo userInfo(SearchUserResponse schUserRes) {
 		UserInfo userInfo = new UserInfo();
 
-		userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
+		userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getDeviceCount()));
 		userInfo.setTotalDeviceCount(StringUtil.setTrim(schUserRes.getTotalDeviceCount()));
-		userInfo.setImMbrNo(StringUtil.setTrim(schUserRes.getUserMbr().getImMbrNo()));
-		userInfo.setImRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
-		userInfo.setImSiteCode(StringUtil.setTrim(schUserRes.getUserMbr().getImSiteCode()));
-		userInfo.setImSvcNo(StringUtil.setTrim(schUserRes.getUserMbr().getImSvcNo()));
-		userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
-		userInfo.setIsImChanged(StringUtil.setTrim(schUserRes.getUserMbr().getIsImChanged()));
-		userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
 		userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
-		userInfo.setIsRecvSMS(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvSMS()));
 		userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
 		userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
 		userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
 		userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
 		userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
-		userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
 		userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
 		userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
 		userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
 		userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
 		userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
 		userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
-		userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
-		userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
 		userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
 		userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
 		userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
@@ -1249,5 +1228,135 @@ public class MemberCommonComponent {
 			userStatusText = MemberConstants.INAPP_USER_STATUS_SYSTEM_ERROR_TEXT;
 		}
 		return userStatusText;
+	}
+
+	/**
+	 * <pre>
+	 * SKT, KT, U+ 각 통신사의 서비스관리번호를 구한다.
+	 * SKT는 mdn, deviceTelecom 파라메터만 필수.
+	 * KT/U+는 모든 파라메터 필수.
+	 * </pre>
+	 *
+	 * @param mdn
+	 *            String
+	 * @param deviceTelecom
+	 *            String
+	 * @param nativeId
+	 *            String
+	 * @param simSerialNo
+	 *            String
+	 * @return svcMangNo
+	 */
+	public String getSvcMangNo(String mdn, String deviceTelecom, String nativeId, String simSerialNo){
+
+		String svcMangNo = null;
+		if(StringUtils.isBlank(mdn)){
+			throw new StorePlatformException("SAC_MEM_0001", "mdn");
+		}
+
+		if(StringUtils.isBlank(deviceTelecom)){
+			throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
+		}
+
+		if (!StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)
+				&& !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)
+				&& !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
+		}
+
+		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)
+				|| !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)){
+			if(StringUtils.isBlank(nativeId)){
+				throw new StorePlatformException("SAC_MEM_0001", "nativeId");
+			}
+			if(StringUtils.isBlank(simSerialNo)){
+				throw new StorePlatformException("SAC_MEM_0001", "simSerialNo");
+			}
+		}
+
+		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			UserEcRes userRes = this.getMappingInfo(mdn, "mdn");
+			svcMangNo = userRes.getSvcMngNum();
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
+			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+			marketReq.setTrxNo(new StringBuffer("trx").append("-")
+					.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
+					.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString());
+			marketReq.setDeviceId(mdn);
+			marketReq.setDeviceTelecom(deviceTelecom);
+			marketReq.setNativeId(nativeId);
+			marketReq.setSimSerialNo(simSerialNo);
+			MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
+			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+				svcMangNo = marketRes.getDeviceInfo().getDeviceKey();
+			}
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
+			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+			marketReq.setTrxNo(new StringBuffer("trx").append("-")
+					.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
+					.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString());
+			marketReq.setDeviceId(mdn);
+			marketReq.setDeviceTelecom(deviceTelecom);
+			marketReq.setNativeId(nativeId);
+			marketReq.setSimSerialNo(simSerialNo);
+			MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+				svcMangNo = marketRes.getDeviceInfo().getDeviceKey();
+			}
+		}
+
+		return svcMangNo;
+	}
+
+	/**
+	 * <pre>
+	 * OllehMarket 심플 인증.
+	 * </pre>
+	 *
+	 * @param marketReq
+	 *            MarketAuthorizeEcReq
+	 * @return MarketAuthorizeEcRes
+	 */
+	public MarketAuthorizeEcRes simpleAuthorizeForOllehMarket(MarketAuthorizeEcReq marketReq){
+		return this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
+	}
+
+	/**
+	 * <pre>
+	 * U+ 심플 인증.
+	 * </pre>
+	 *
+	 * @param marketReq
+	 *            MarketAuthorizeEcReq
+	 * @return MarketAuthorizeEcRes
+	 */
+	public MarketAuthorizeEcRes simpleAuthorizeForUplusStore(MarketAuthorizeEcReq marketReq){
+		return this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+	}
+
+	/**
+	 * <pre>
+	 * OllehMarket 인증.
+	 * </pre>
+	 *
+	 * @param marketReq
+	 *            MarketAuthorizeEcReq
+	 * @return MarketAuthorizeEcRes
+	 */
+	public MarketAuthorizeEcRes authorizeForOllehMarket(MarketAuthorizeEcReq marketReq){
+		return this.marketSCI.authorizeForOllehMarket(marketReq);
+	}
+
+	/**
+	 * <pre>
+	 * U+ 인증.
+	 * </pre>
+	 *
+	 * @param marketReq
+	 *            MarketAuthorizeEcReq
+	 * @return MarketAuthorizeEcRes
+	 */
+	public MarketAuthorizeEcRes authorizeForUplusStore(MarketAuthorizeEcReq marketReq){
+		return this.marketSCI.authorizeForUplusStore(marketReq);
 	}
 }

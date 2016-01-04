@@ -55,9 +55,6 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	/** 휴대기기 통신사 코드. */
 	private String deviceTelecom;
 
-	/** 휴대기기 별명. */
-	private String deviceNickName;
-
 	/** 대표기기 여부. */
 	private String isPrimary;
 
@@ -89,7 +86,13 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	private String isDormant;
 
 	/** 휴대기기 usim 번호. */
-	private String deviceSimMn;
+	private String deviceSimNm;
+
+	/** 마지막 로그인 일자. */
+	private String lastloginDt;
+
+	/** 휴대기기 보유자 ID. */
+	private String userID;
 
 	/**
 	 * 시작일자를 리턴한다.
@@ -260,25 +263,6 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	 */
 	public void setDeviceTelecom(String deviceTelecom) {
 		this.deviceTelecom = deviceTelecom;
-	}
-
-	/**
-	 * 휴대기기 별명을 리턴한다.
-	 * 
-	 * @return deviceNickName - 휴대기기 별명
-	 */
-	public String getDeviceNickName() {
-		return this.deviceNickName;
-	}
-
-	/**
-	 * 휴대기기 별명을 설정한다.
-	 * 
-	 * @param deviceNickName
-	 *            휴대기기 별명
-	 */
-	public void setDeviceNickName(String deviceNickName) {
-		this.deviceNickName = deviceNickName;
 	}
 
 	/**
@@ -521,10 +505,10 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	 * 휴대기기 usim번호를 리턴한다.
 	 * </pre>
 	 *
-	 * @return deviceSimMn
+	 * @return deviceSimNm
 	 */
-	public String getDeviceSimMn() {
-		return deviceSimMn;
+	public String getDeviceSimNm() {
+		return deviceSimNm;
 	}
 
 	/**
@@ -532,9 +516,53 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	 * 휴대기기 usim번호를 설정한다.
 	 * </pre>
 	 *
-	 * @param deviceSimMn
+	 * @param deviceSimNm
 	 */
-	public void setDeviceSimMn(String deviceSimMn) {
-		this.deviceSimMn = deviceSimMn;
+	public void setDeviceSimNm(String deviceSimNm) {
+		this.deviceSimNm = deviceSimNm;
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 마지막 로그인일자를 리턴한다.
+	 * </pre>
+	 *
+	 * @return lastloginDt
+	 */
+	public String getLastloginDt() {
+		return lastloginDt;
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 마지막 로그인 일자를 설정한다.
+	 * </pre>
+	 *
+	 * @param lastloginDt
+	 */
+	public void setLastloginDt(String lastloginDt) {
+		this.lastloginDt = lastloginDt;
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 보유자 ID를 리턴한다..
+	 * </pre>
+	 *
+	 * @return userID
+	 */
+	public String getUserID() {
+		return userID;
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 보유자 ID를 설정한다.
+	 * </pre>
+	 *
+	 * @param userID
+	 */
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 }

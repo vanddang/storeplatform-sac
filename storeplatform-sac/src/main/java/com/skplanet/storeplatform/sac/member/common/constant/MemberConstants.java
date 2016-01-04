@@ -48,6 +48,9 @@ public final class MemberConstants {
 	public static final String USER_TYPE_MOBILE = "US011501"; // 기기사용자
 	public static final String USER_TYPE_IDPID = "US011502"; // IDP사용자
 	public static final String USER_TYPE_ONEID = "US011503"; // OneID사용자
+	public static final String USER_TYPE_NAVER = "US011504"; // 네이버ID사용자
+	public static final String USER_TYPE_GOOGLE = "US011505"; // 구글ID사용자
+	public static final String USER_TYPE_FACEBOOK = "US011506"; // 페이스북ID사용자
 
 	/** 메인상태코드. */
 	public static final String MAIN_STATUS_NORMAL = "US010201"; // 정상
@@ -124,7 +127,7 @@ public final class MemberConstants {
 	public static final String USER_EXTRA_FACEBOOKREVIEW = "US010906"; // Facebook 후기 연동 여부
 	public static final String USER_EXTRA_MEMBERPOINTJOIN = "US010907"; // 통합포인트 가입 여부
 	public static final String USER_EXTRA_FACEBOOK_ID = "US010911"; // Facebook ID
-	public static final String USER_EXTRA_PROFILEIMGPATH = "US010912"; // 통합포인트 가입 여부
+	public static final String USER_EXTRA_PROFILEIMGPATH = "US010912"; // 프로필 이미지 경로
 
 	// 2015-07-28 추가 적용.
 	public static final String USER_EXTRA_SOCIAL_ACCT_TYPE = "US010913";
@@ -387,6 +390,14 @@ public final class MemberConstants {
 
 	/** SMS SendOrder 1. */
 	public static final String SMS_SEND_ORDER_FIRST = "1";
+
+    /** 회원 사용자 성별 코드 */
+    public static final String SEX_TYPE_MALE = "M"; // 남자
+    public static final String SEX_TYPE_FEMALE = "F"; // 여자
+
+    /** 회원 사용자 생일 코드 */
+    public static final String BIRTHDAY_TYPE_SOCAL = "1"; // 양력
+    public static final String BIRTHDAY_TYPE_LUCAL = "2"; // 음력
 
 	/**
 	 * 판매자 회원 상수들.

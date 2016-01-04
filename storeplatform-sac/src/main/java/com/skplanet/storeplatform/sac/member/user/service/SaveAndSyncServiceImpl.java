@@ -398,7 +398,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		 */
 		CreateDeviceRequest createDeviceRequest = new CreateDeviceRequest();
 		createDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-		createDeviceRequest.setIsNew(MemberConstants.USE_N);
+		//createDeviceRequest.setIsNew(MemberConstants.USE_N);
 		createDeviceRequest.setUserKey(userKey);
 		UserMbrDevice userMbrDevice = new UserMbrDevice();
 		userMbrDevice.setUserKey(userKey);

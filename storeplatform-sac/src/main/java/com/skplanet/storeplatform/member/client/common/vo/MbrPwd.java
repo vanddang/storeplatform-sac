@@ -9,10 +9,10 @@
  */
 package com.skplanet.storeplatform.member.client.common.vo;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
+
+import java.io.Serializable;
 
 // TODO: Auto-generated Javadoc
 /**
