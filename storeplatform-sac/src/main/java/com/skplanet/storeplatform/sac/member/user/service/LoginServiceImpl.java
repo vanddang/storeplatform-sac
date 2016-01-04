@@ -794,6 +794,8 @@ public class LoginServiceImpl implements LoginService {
 				});
 			}
 
+		} else {
+			throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
 		}
 
 		if (StringUtils.equals(isVariability, "Y")) {
@@ -825,8 +827,7 @@ public class LoginServiceImpl implements LoginService {
 			UserAuthMethod userAuthMethod = this.srhUserAuthMethod(requestHeader, req.getDeviceId(), userKey);
 
 			if (StringUtils.isBlank(userAuthMethod.getUserId())
-					&& StringUtils.equals(userAuthMethod.getIsRealName(), "N")) { // 인증수단이
-																				  // 없는경우
+					&& StringUtils.equals(userAuthMethod.getIsRealName(), "N")) { // 인증수단이 없는경우
 
 				LOGGER.info("{} 추가인증수단 없음, 탈퇴처리", req.getDeviceId());
 
@@ -925,10 +926,12 @@ public class LoginServiceImpl implements LoginService {
 		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
 
-		/*  2-1. 일시정지 / 로그인제한 */
-		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
+		/*  2-1. 가가입 상태 - 가가입자는 Save&Sync 인증을 통해서만 인증이 처리된다.  */
+		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_WATING)){
+			throw new StorePlatformException("SAC_MEM_2001", userMainStatus, userSubStatus);
+		/* 일시정지 / 로그인제한 */
+		}else if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
 				|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
-
 			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
@@ -948,8 +951,6 @@ public class LoginServiceImpl implements LoginService {
 				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 				moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
-				//moveUserInfoSacReq.setIdpResultYn(MemberConstants.USE_Y);
-				//moveUserInfoSacReq.setIdpErrCd(null);
 				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 			}
 
