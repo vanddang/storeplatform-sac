@@ -990,6 +990,50 @@ public class LoginServiceImpl implements LoginService {
 
 	}
 
+	/**
+	 * ID기반(Tstore ID / Social ID)회원의 인증 기능을 제공한다. [OneStore 단말을 위한 신규규격].
+	 *
+	 * @param requestHeader SacRequestHeader
+	 * @param req           AuthorizeByIdV2SacReq
+	 * @return AuthorizeByIdV2SacRes
+	 */
+	@Override
+	public AuthorizeByIdV2SacRes authorizeByIdV2(SacRequestHeader requestHeader, AuthorizeByIdV2SacReq req) {
+
+		AuthorizeByIdV2SacRes res = new AuthorizeByIdV2SacRes();
+
+		/* 회원정보 조회 (ID로 조회) */
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, req.getUserId());
+
+		/*  회원정보 없으면 Exception (ID자체가 없음) */
+		if (chkDupRes.getUserMbr() == null) {
+			/* 회원 정보가 존재 하지 않습니다. */
+			throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
+		}
+
+		/*	userType에 따라 userAuthToken 유효성 체크 */
+
+		/*	휴대기기 처리 */
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setUserKey(chkDupRes.getUserMbr().getUserKey());
+		deviceInfo.setDeviceId(req.getDeviceId());
+		deviceInfo.setMdn(req.getMdn());
+		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+		deviceInfo.setNativeId(req.getNativeId());
+		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
+		String deviceKey = this.deviceService.regDeviceInfo(requestHeader, deviceInfo);
+
+		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
+		res.setDeviceKey(deviceKey);
+		res.setUserType(chkDupRes.getUserMbr().getUserType());
+		res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
+		res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
+		res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
+		res.setLoginFailCount("0");
+		res.setIsLoginSuccess(MemberConstants.USE_Y);
+		return res;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.member.user.controller;
 
 import javax.validation.Valid;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,26 +27,6 @@ import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -172,6 +153,27 @@ public class LoginController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeByIdRes res = this.loginService.authorizeById(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
+
+	}
+
+	/**
+	 * ID기반(Tstore ID / Social ID)회원의 인증 기능을 제공한다. [OneStore 단말을 위한 신규규격].
+	 *
+	 * @param requestHeader SacRequestHeader
+	 * @param req           AuthorizeByIdV2SacReq
+	 * @return AuthorizeByIdV2SacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeById/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeByIdV2SacRes authorizeByIdV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdV2SacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		AuthorizeByIdV2SacRes res = this.loginService.authorizeByIdV2(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
