@@ -103,7 +103,16 @@
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
-        <property name="jpaProperties" ref="config" />
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.implicit_naming_strategy">${hibernate.implicit_naming_strategy}</prop>
+                <prop key="hibernate.id.new_generator_mappings">${hibernate.id.new_generator_mappings}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+            </props>
+        </property>
     </bean>
 
     <bean id="entityManagerFactoryForIdleMbr" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -113,7 +122,16 @@
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
-        <property name="jpaProperties" ref="config" />
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.implicit_naming_strategy">${hibernate.implicit_naming_strategy}</prop>
+                <prop key="hibernate.id.new_generator_mappings">${hibernate.id.new_generator_mappings}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+            </props>
+        </property>
     </bean>
 
 </beans>
