@@ -106,7 +106,6 @@ public class CreateDeviceTest {
 						public Object requestBody() {
 
 							CreateDeviceReq req = new CreateDeviceReq();
-							req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
 							req.setUserKey(CreateDeviceTest.this.userKey);
 							req.setRegMaxCnt("100");
 
@@ -119,7 +118,6 @@ public class CreateDeviceTest {
 							deviceInfo.setNativeId("358362045580844");
 							deviceInfo.setDeviceAccount("vanddang@gmail.com");
 							deviceInfo.setIsRecvSms("Y");
-							deviceInfo.setDeviceNickName("SHP-110S(임시)");
 							deviceInfo.setDeviceModelNo("SHP-110S");
 
 							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
@@ -187,7 +185,6 @@ public class CreateDeviceTest {
 					@Override
 					public Object requestBody() {
 						RemoveDeviceReq req = new RemoveDeviceReq();
-						req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
 						req.setUserKey(CreateDeviceTest.this.userKey);
 
 						List<RemoveDeviceListSacReq> removeDeviceIdList = new ArrayList<RemoveDeviceListSacReq>();

@@ -86,7 +86,6 @@ public class CreateRealNameTest {
 						 * 기존 IDP 회원
 						 */
 						reqJson.setUserKey("US201402061029476470001812");
-						reqJson.setUserAuthKey("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
@@ -133,7 +132,6 @@ public class CreateRealNameTest {
 						 * 기존 IDP 회원
 						 */
 						reqJson.setUserKey("US201402061029476470001812");
-						reqJson.setUserAuthKey("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
 						reqJson.setIsOwn("PARENT"); // 실명인증 대상
 						reqJson.setParentType("F"); // 법정대리인 관계코드 (F/M/O)
@@ -182,7 +180,6 @@ public class CreateRealNameTest {
 						 * 통합 IDP 회원
 						 */
 						reqJson.setUserKey("US201402141711554720002579");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
@@ -229,7 +226,6 @@ public class CreateRealNameTest {
 						 * 통합 IDP 회원
 						 */
 						reqJson.setUserKey("US201402141711554720002579");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
 						reqJson.setIsOwn("PARENT"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMdd")); // 실명인증 일시 (YYYYMMDD)
@@ -276,7 +272,6 @@ public class CreateRealNameTest {
 						 * 통합 IDP 회원
 						 */
 						reqJson.setUserKey("US201402141746333040002583");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
 						reqJson.setIsOwn("CORP"); // 실명인증 대상
 						reqJson.setResident("local"); // 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
@@ -320,7 +315,6 @@ public class CreateRealNameTest {
 						 */
 						// simdae12 (사이트에서 가입하고 이용동의 가입한다. 사이트 들어가서 본인인증 한다.)
 						reqJson.setUserKey("US201402141746333040002583");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시

@@ -178,7 +178,6 @@ public class CreateBySimpleTest {
 					public Object requestBody() {
 						WithdrawReq reqJson = new WithdrawReq();
 						reqJson.setUserId(userId);
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
 						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
