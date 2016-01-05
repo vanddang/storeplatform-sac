@@ -294,6 +294,7 @@
                 AND MP.MENU_ID = CT.MENU_ID
                 AND MP.BASE_YN = 'Y'
                 AND CT.USE_YN = 'Y'
+
                 <if test="arrayProdGradeCd != null">
                 AND PD.PROD_GRD_CD  IN
                               <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
