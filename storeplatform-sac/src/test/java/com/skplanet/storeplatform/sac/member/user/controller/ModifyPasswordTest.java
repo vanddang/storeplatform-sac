@@ -85,7 +85,6 @@ public class ModifyPasswordTest {
 						 * 기존 IDP 회원
 						 */
 						reqJson.setUserKey("US201402181518403440002941");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 						// reqJson.setUserAuthKey("4c77e935ee2f4eae8dcf2d22b199d504"); // Fixed userAuthKey
 						reqJson.setOldPassword("12qwer"); // 기존 패스워드.
 						reqJson.setNewPassword("12qwer"); // 신규 패스워드.
@@ -123,7 +122,6 @@ public class ModifyPasswordTest {
 						 * 기존 IDP 회원
 						 */
 						reqJson.setUserKey("US201402181518403440002941");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 						reqJson.setOldPassword("111111"); // 기존 패스워드.
 						reqJson.setNewPassword("111111"); // 신규 패스워드.
 
@@ -160,7 +158,6 @@ public class ModifyPasswordTest {
 						 * 통합 IDP 회원
 						 */
 						reqJson.setUserKey("US201402061944577200001815");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 						// reqJson.setUserAuthKey("4c77e935ee2f4eae8dcf2d22b199d504"); // Fixed userAuthKey
 						reqJson.setOldPassword("!@34qwer"); // 기존 패스워드.
 						reqJson.setNewPassword("!@34qwer"); // 신규 패스워드.
@@ -198,7 +195,6 @@ public class ModifyPasswordTest {
 						 * 통합 IDP 회원
 						 */
 						reqJson.setUserKey("US201402061944577200001815");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 						// reqJson.setUserAuthKey("4c77e935ee2f4eae8dcf2d22b199d504"); // Fixed userAuthKey
 						reqJson.setOldPassword("111111"); // 기존 패스워드.
 						reqJson.setNewPassword("111111"); // 신규 패스워드.

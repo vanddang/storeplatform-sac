@@ -123,7 +123,6 @@ public class UserWithdrawSimpleTest {
 					public Object requestBody() {
 						WithdrawReq req = new WithdrawReq();
 						req.setUserId("sacusertest1");
-						req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
 						logger.debug("request param : {}", req.toString());
 						return req;
 					}
@@ -150,7 +149,6 @@ public class UserWithdrawSimpleTest {
 					public Object requestBody() {
 						WithdrawReq req = new WithdrawReq();
 						req.setUserId("");
-						req.setUserAuthKey("");
 						logger.debug("request param : {}", req.toString());
 						return req;
 					}
@@ -177,7 +175,6 @@ public class UserWithdrawSimpleTest {
 					public Object requestBody() {
 						WithdrawReq req = new WithdrawReq();
 						req.setUserId("");
-						req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
 						logger.debug("request param : {}", req.toString());
 						return req;
 					}
@@ -204,7 +201,6 @@ public class UserWithdrawSimpleTest {
 					public Object requestBody() {
 						WithdrawReq req = new WithdrawReq();
 						req.setUserId("tstore44");
-						req.setUserAuthKey("");
 						logger.debug("request param : {}", req.toString());
 						return req;
 					}
@@ -231,7 +227,6 @@ public class UserWithdrawSimpleTest {
 					public Object requestBody() {
 						WithdrawReq req = new WithdrawReq();
 						req.setUserId("tstore44");
-						req.setUserAuthKey("114127a7ff42667669819dad5df8d820c");
 						logger.debug("request param : {}", req.toString());
 						return req;
 					}
