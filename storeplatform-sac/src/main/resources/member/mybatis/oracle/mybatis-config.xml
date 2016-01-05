@@ -35,10 +35,9 @@
         <typeAlias alias="limitTarget"                    type="com.skplanet.storeplatform.member.client.common.vo.LimitTarget"/>
         <typeAlias alias="memberPoint"                    type="com.skplanet.storeplatform.member.client.common.vo.MemberPoint"/>
         <typeAlias alias="searchPolicyResponse"           type="com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse"/>
-        <typeAlias alias="searchPolicyRequest"           type="com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest"/>
+        <typeAlias alias="searchPolicyRequest"            type="com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest"/>
         <typeAlias alias="searchMemberPointResponse"      type="com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointResponse"/>
         <typeAlias alias="searchMemberPointRequest"       type="com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointRequest"/>
-
 
         <!-- user -->
         <typeAlias alias="userMbrDevice"                  type="com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice"/>
@@ -96,8 +95,8 @@
         <typeAlias alias="searchUserSegmentRequest"       type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserSegmentRequest"/>
         <typeAlias alias="searchUserSegmentResponse"      type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserSegmentResponse"/>
         <typeAlias alias="searchUserExtraInfoRequest"     type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserExtraInfoRequest"/>
-        <typeAlias alias="searchManagementRequest"               type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest"/>
-        <typeAlias alias="searchManagementResponse"               type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementResponse"/>
+        <typeAlias alias="searchManagementRequest"        type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest"/>
+        <typeAlias alias="searchManagementResponse"       type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementResponse"/>
         
         <!-- 2014.12.12 추가 -->
         <typeAlias alias="existListRequest"               type="com.skplanet.storeplatform.member.client.user.sci.vo.ExistListRequest"/>
@@ -118,8 +117,11 @@
         <typeAlias alias="createGiftChargeInfoRequest"    type="com.skplanet.storeplatform.member.client.user.sci.vo.CreateGiftChargeInfoRequest"/>
         <typeAlias alias="searchGiftChargeInfoRequest"    type="com.skplanet.storeplatform.member.client.user.sci.vo.SearchGiftChargeInfoRequest"/>
 
-        <!-- OneStore ID 기반 회원 인증 2015.12.21 -->
+        <!-- 회원 비밀번호 존재여부 체크 2015.12.21 -->
         <typeAlias alias="chkUserPwdRequest"              type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserPwdRequest"/>
+        <!-- 사용자 인증 토큰 체크 2016.01.04 -->
+        <typeAlias alias="chkUserAuthTkRequest"           type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenRequest"/>
+        <typeAlias alias="chkUserAuthTkResponse"          type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenResponse"/>
                 
         <!-- seller -->
         <typeAlias alias="searchSellerRequest"            type="com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest"/>

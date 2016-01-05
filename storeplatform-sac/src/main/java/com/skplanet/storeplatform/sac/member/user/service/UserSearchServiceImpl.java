@@ -149,7 +149,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -452,6 +451,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		/* 회원 정보 조회 */
 		UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
+
+		// 가가입 상태일 경우 오류
+		if (StringUtils.equals(info.getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) {
+			throw new StorePlatformException("SAC_MEM_2001", info.getUserMainStatus(), info.getUserSubStatus());
+		}
 
 		String checkId = "";
 
@@ -1517,7 +1521,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		DetailV2Res detailV2Res = new DetailV2Res();
 
 		// 기본정보 설정
-		detailV2Res.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
 		detailV2Res.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
 		detailV2Res.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
 

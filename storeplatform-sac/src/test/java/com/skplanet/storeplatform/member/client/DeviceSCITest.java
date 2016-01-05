@@ -1047,12 +1047,10 @@ public class DeviceSCITest {
 		commonRequest.setTenantID("S01");
 
 		createDeviceRequest.setUserKey("US201401272118331600001099"); // US201401290924483520001291 : skp_test1
-		createDeviceRequest.setIsNew("Y");
 
 		userMbrDevice.setDeviceID("04029634785-");
 		userMbrDevice.setDeviceModelNo("LG-SH810");
 		userMbrDevice.setDeviceTelecom("US001201");
-		userMbrDevice.setDeviceNickName("w1");
 		userMbrDevice.setIsPrimary("Y");
 		userMbrDevice.setIsUsed("Y");
 		userMbrDevice.setNativeID("IMEI152157");
@@ -1172,12 +1170,10 @@ public class DeviceSCITest {
 		commonRequest.setTenantID("S01");
 
 		createDeviceRequest.setUserKey("US201401272118331600001099"); // US201401270222082320000833
-		createDeviceRequest.setIsNew("Y");
 
 		userMbrDevice.setDeviceID("0501234569");
 		userMbrDevice.setDeviceModelNo("SHW-M110S");
 		userMbrDevice.setDeviceTelecom("US001201");
-		userMbrDevice.setDeviceNickName("갤럭시S");
 		userMbrDevice.setIsPrimary("Y");
 		userMbrDevice.setIsUsed("Y");
 		userMbrDevice.setAuthenticationDate("20140127");
@@ -1235,12 +1231,10 @@ public class DeviceSCITest {
 		commonRequest.setTenantID("S01");
 		// 'IF1023030650220091223142444'; -- 01062496961
 		createDeviceRequest.setUserKey("IF1023030650220091223142444");
-		createDeviceRequest.setIsNew("Y");
 
 		userMbrDevice.setDeviceID("01049896725");
 		userMbrDevice.setDeviceModelNo("LG-SH810");
 		userMbrDevice.setDeviceTelecom("US001201");
-		userMbrDevice.setDeviceNickName("testese");
 		userMbrDevice.setIsPrimary("Y");
 		userMbrDevice.setIsUsed("Y");
 		userMbrDevice.setAuthenticationDate("20130112120000");
@@ -1298,12 +1292,10 @@ public class DeviceSCITest {
 		commonRequest.setTenantID("S01");
 
 		createDeviceRequest.setUserKey("IW1023791056020101204201045"); // US201401270222082320000833
-		createDeviceRequest.setIsNew("Y");
 
 		userMbrDevice.setDeviceID("01020029019"); // 01090882431 01020951368 01089050946 01092810230 01031257491
 		userMbrDevice.setDeviceModelNo("LG-SH810");
 		userMbrDevice.setDeviceTelecom("US001201");
-		userMbrDevice.setDeviceNickName("testeses");
 		userMbrDevice.setIsPrimary("Y");
 		userMbrDevice.setIsUsed("Y");
 		userMbrDevice.setAuthenticationDate("20130102120000");
@@ -1361,12 +1353,10 @@ public class DeviceSCITest {
 		commonRequest.setTenantID("S01");
 
 		createDeviceRequest.setUserKey("IF1527627020140611202715"); // US201401270222082320000833
-		createDeviceRequest.setIsNew("Y");
 
 		userMbrDevice.setDeviceID("01066786220");
 		userMbrDevice.setDeviceModelNo("LG-SH810");
 		userMbrDevice.setDeviceTelecom("US001201");
-		userMbrDevice.setDeviceNickName("testese");
 		userMbrDevice.setIsPrimary("Y");
 		userMbrDevice.setIsUsed("Y");
 		userMbrDevice.setAuthenticationDate("20130102120000");
@@ -1426,12 +1416,10 @@ public class DeviceSCITest {
 		// IF1023002708420090928145937
 		// IF1023228643620110104192713
 		createDeviceRequest.setUserKey("US201401272118331600001099"); // US201401270222082320000833
-		createDeviceRequest.setIsNew("Y");
 
 		userMbrDevice.setDeviceID("0501234569");
 		userMbrDevice.setDeviceModelNo("LG-SH810");
 		userMbrDevice.setDeviceTelecom("US001201");
-		userMbrDevice.setDeviceNickName("testese");
 		userMbrDevice.setIsPrimary("Y");
 		userMbrDevice.setIsUsed("Y");
 		userMbrDevice.setAuthenticationDate("20130102120000");
@@ -1581,7 +1569,6 @@ public class DeviceSCITest {
 		// 요청 필수
 		createDeviceRequest.setCommonRequest(commonRequest);
 
-		createDeviceRequest.setIsNew("N");
 		createDeviceRequest.setUserMbrDevice(userMbrDevice);
 
 		CreateDeviceResponse createDeviceResponse = this.deviceSCI.createDevice(createDeviceRequest);
@@ -1630,7 +1617,6 @@ public class DeviceSCITest {
 
 		userMbrDevice.setDeviceModelNo("SHW-M110S");
 		userMbrDevice.setDeviceTelecom("US001201");
-		userMbrDevice.setDeviceNickName("갤럭시S");
 		userMbrDevice.setSvcMangNum("7012s59534");
 		userMbrDevice.setIsRecvSMS("Y");
 		userMbrDevice.setNativeID("A000s0031648sE9");
@@ -1641,7 +1627,6 @@ public class DeviceSCITest {
 		// 요청 필수
 		createDeviceRequest.setCommonRequest(commonRequest);
 
-		createDeviceRequest.setIsNew("N");
 		createDeviceRequest.setUserMbrDevice(userMbrDevice);
 
 		CreateDeviceResponse createDeviceResponse = this.deviceSCI.createDevice(createDeviceRequest);
@@ -1899,7 +1884,6 @@ public class DeviceSCITest {
 		userMbrDevice.setDeviceID("10312355631");
 		userMbrDevice.setDeviceModelNo("SHW-M110S");
 		userMbrDevice.setDeviceTelecom("US001202");
-		userMbrDevice.setDeviceNickName("갤2럭시sS");
 		userMbrDevice.setSvcMangNum("7012s55534");
 		userMbrDevice.setIsRecvSMS("Y");
 		userMbrDevice.setNativeID("A023s0031648sE9");
@@ -1912,7 +1896,6 @@ public class DeviceSCITest {
 		// 요청 필수
 		createDeviceRequest.setCommonRequest(commonRequest);
 		createDeviceRequest.setUserKey("US201402071236505060001967");
-		createDeviceRequest.setIsNew("N");
 		createDeviceRequest.setUserMbrDevice(userMbrDevice);
 
 		CreateDeviceResponse createDeviceResponse = this.deviceSCI.createDevice(createDeviceRequest);

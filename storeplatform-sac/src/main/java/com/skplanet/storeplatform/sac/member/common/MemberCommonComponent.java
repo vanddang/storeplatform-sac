@@ -282,7 +282,6 @@ public class MemberCommonComponent {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 		searchUserRequest.setCommonRequest(commonRequest);
 		searchUserRequest.setKeySearchList(keySearchList);
 
