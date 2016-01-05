@@ -1021,6 +1021,29 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 		deviceInfo.setNativeId(req.getNativeId());
 		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
+		deviceInfo.setIsRecvSms(MemberConstants.USE_N);
+
+		// 대표기기 여부(최초 신규등록이면 Y)
+		SearchDeviceListRequest searchDeviceListRequest = new SearchDeviceListRequest();
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		key.setKeyString(chkDupRes.getUserMbr().getUserKey());
+		keySearchList.add(key);
+		searchDeviceListRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
+		searchDeviceListRequest.setKeySearchList(keySearchList);
+		searchDeviceListRequest.setIsMainDevice(MemberConstants.USE_N);
+		try{
+			SearchDeviceListResponse searchDeviceListResponse = this.deviceSCI.searchDeviceList(searchDeviceListRequest);
+			deviceInfo.setIsPrimary(MemberConstants.USE_N);
+		}catch(StorePlatformException e){
+			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+				deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+			}else{
+				throw e;
+			}
+		}
+
 		String deviceKey = this.deviceService.regDeviceInfo(requestHeader, deviceInfo);
 
 		res.setUserKey(chkDupRes.getUserMbr().getUserKey());

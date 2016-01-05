@@ -459,7 +459,10 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 등록 가능한 휴대기기 개수 초과 채크 */
 		this.checkDeviceRegMaxCnt(requestHeader, userKey, deviceInfo.getDeviceId(), deviceInfo.getSvcMangNum());
 
-		/* device header 값 셋팅(OS버젼, SC버젼) */
+		/* device header 값 셋팅(단말모델, OS버젼, SC버젼) */
+		if(StringUtils.isBlank(deviceInfo.getDeviceModelNo())){ // 휴대기기 등록 API에서는 deviceInfo에 단말모델을 파라메터로 받는다. 그외 API에서는 디바이스헤더정보의 단말모델로 처리한다.
+			deviceInfo.setDeviceModelNo(requestHeader.getDeviceHeader().getModel());
+		}
 		String osVersion = requestHeader.getDeviceHeader().getOs();
 		String svcVersion = requestHeader.getDeviceHeader().getSvc();
 		if (StringUtils.isNotBlank(osVersion)) {

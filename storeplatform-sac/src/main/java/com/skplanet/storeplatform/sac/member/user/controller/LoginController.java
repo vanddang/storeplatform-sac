@@ -173,6 +173,13 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+		if(StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)
+				|| StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)
+				|| StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+			if(StringUtils.isBlank(req.getUserAuthToken())){
+				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
+			}
+		}
 		AuthorizeByIdV2SacRes res = this.loginService.authorizeByIdV2(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));

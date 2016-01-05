@@ -31,7 +31,6 @@ public class AuthorizeByIdV2SacReq extends CommonInfo implements Serializable {
 	/**
 	 * 사용자 인증 토큰.
 	 */
-	@NotEmpty
 	private String userAuthToken;
 
 	/**
