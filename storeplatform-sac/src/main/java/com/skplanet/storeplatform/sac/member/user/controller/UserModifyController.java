@@ -157,6 +157,13 @@ public class UserModifyController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+        /**
+         * 이메일주소 유효성 확인
+         */
+        if(!ValidationCheckUtils.isEmail(req.getNewEmail())){
+            throw new StorePlatformException("SAC_MEM_0007", "newEmail");
+        }
+
 		/**
 		 * 이메일 주소 Biz
 		 */

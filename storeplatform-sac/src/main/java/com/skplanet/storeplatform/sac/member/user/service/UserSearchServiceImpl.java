@@ -1521,7 +1521,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		DetailV2Res detailV2Res = new DetailV2Res();
 
 		// 기본정보 설정
-		detailV2Res.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
 		detailV2Res.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
 		detailV2Res.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
 
