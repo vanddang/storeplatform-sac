@@ -39,7 +39,7 @@ public class UserClauseAgree {
 
     private Character agreeYn;
 
-    private String mandAgreeYn; // FIXME
+    private Character mandAgreeYn;
 
     private String clauseVer;
 
@@ -123,11 +123,11 @@ public class UserClauseAgree {
         this.agreeYn = agreeYn;
     }
 
-    public String getMandAgreeYn() {
+    public Character getMandAgreeYn() {
         return mandAgreeYn;
     }
 
-    public void setMandAgreeYn(String mandAgreeYn) {
+    public void setMandAgreeYn(Character mandAgreeYn) {
         this.mandAgreeYn = mandAgreeYn;
     }
 
