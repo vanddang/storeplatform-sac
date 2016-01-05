@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * 사용자 기능을 제공하는 Controller
  * 
- * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2016. 1. 5. Updated by : 최진호, 보고지티.
  */
 @LocalSCI
 public class UserSCIController implements UserSCI {
@@ -3606,6 +3606,41 @@ public class UserSCIController implements UserSCI {
 		}
 
 		return checkUserPwdResponse;
+
+	}
+
+	@Override
+	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust){
+
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - userAuthToken의 유효성 체크 ");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		CheckUserAuthTokenResponse checkUserAuthTkResponse = null;
+
+		// 입력 파라미터가 없음
+		if (chkUserAuthTkReqeust == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (chkUserAuthTkReqeust.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 필수 파라미터
+		if (chkUserAuthTkReqeust.getUserKey() == null || chkUserAuthTkReqeust.getUserAuthToken() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+			checkUserAuthTkResponse = this.service.checkUserAuthToken(chkUserAuthTkReqeust);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return checkUserAuthTkResponse;
 
 	}
 

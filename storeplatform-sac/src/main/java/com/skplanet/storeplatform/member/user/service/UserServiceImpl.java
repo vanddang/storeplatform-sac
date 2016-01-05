@@ -47,7 +47,7 @@ import java.util.Map.Entry;
 /**
  * 사용자 기능 implementation.
  * 
- * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2016. 1. 5. Updated by : 최진호, 보고지티.
  */
 @Service
 public class UserServiceImpl implements UserService {
@@ -4047,6 +4047,18 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return encNewPw;
+
+	}
+
+	@Override
+	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust){
+
+		CheckUserAuthTokenResponse checkUserAuthTkResponse = (CheckUserAuthTokenResponse)this.commonDAO.queryForObject("User.checkUserAuthToken", chkUserAuthTkReqeust);
+
+		checkUserAuthTkResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+
+		return checkUserAuthTkResponse;
 
 	}
 

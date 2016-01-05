@@ -804,15 +804,19 @@ public class LoginServiceImpl implements LoginService {
 				LOGGER.info("{} 변동성 체크 성공", req.getDeviceId());
 
 				/* 휴대기기 정보 수정 (GMAIL) */
-				DeviceInfo paramDeviceInfo = new DeviceInfo();
-				paramDeviceInfo.setUserKey(userKey);
-				paramDeviceInfo.setDeviceId(req.getDeviceId());
+				ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+				UserMbrDevice userMbrDevice = new UserMbrDevice();
+				modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+				modifyDeviceRequest.setUserKey(userKey);
+				userMbrDevice.setDeviceID(req.getDeviceId());
 				if (StringUtils.isNotBlank(req.getDeviceAccount())) {
-					paramDeviceInfo.setDeviceAccount(req.getDeviceAccount());
+					userMbrDevice.setDeviceAccount(req.getDeviceAccount());
 				}
+				modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
 
-				deviceKey = this.deviceService.modDeviceInfo(requestHeader, paramDeviceInfo, false);
-				res.setDeviceKey(deviceKey);
+				ModifyDeviceResponse modifyDeviceResponse = this.deviceSCI.modifyDevice(modifyDeviceRequest);
+				res.setDeviceKey(modifyDeviceResponse.getDeviceKey());
+
 			} else {
 				res.setDeviceKey(deviceKey);
 				LOGGER.info("{} {} OPMD 단말 변동성 휴대기기 업데이트 안함", req.getDeviceId(), oDeviceId);

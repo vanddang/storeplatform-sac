@@ -4,8 +4,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * [REQUEST] 회원 탈퇴 기능을 제공한다.
- * 
- * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
+ *
+ * Updated on : 2016. 1. 5. Updated by : 최진호, 보고지티.
  */
 public class WithdrawReq extends CommonInfo {
 
@@ -16,7 +16,7 @@ public class WithdrawReq extends CommonInfo {
 	/* 사용자 아이디 */
 	private String userId;
 	/* IDP 인증 Key */
-	private String userAuthKey;
+	private String userAuthToken;
 
 	public String getDeviceId() {
 		return this.deviceId;
@@ -34,12 +34,12 @@ public class WithdrawReq extends CommonInfo {
 		this.userId = userId;
 	}
 
-	public String getUserAuthKey() {
-		return this.userAuthKey;
+	public String getUserAuthToken() {
+		return this.userAuthToken;
 	}
 
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
+	public void setUserAuthToken(String userAuthToken) {
+		this.userAuthToken = userAuthToken;
 	}
 
 	public static long getSerialversionuid() {

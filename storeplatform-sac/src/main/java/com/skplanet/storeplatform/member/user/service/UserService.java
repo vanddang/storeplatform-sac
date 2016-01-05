@@ -28,9 +28,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.*;
  * 회원서비스인터페이스.
  * </pre>
  * 
- * Created on : 2013-09-01 Created by :
+ * Updated on : 2016. 1. 5. Updated by : 최진호, 보고지티.
  */
-
 public interface UserService {
 
 	/**
@@ -718,5 +717,16 @@ public interface UserService {
 	 * @return CheckUserPwdResponse
 	 */
 	public CheckUserPwdResponse checkUserPwd(CheckUserPwdRequest chkUserPwdRequest);
+
+	/**
+	 * <pre>
+	 * userAuthToken의 유효성을 검증하는 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param chkUserAuthTkReqeust
+	 *            CheckUserAuthTokenRequest
+	 * @return CheckUserAuthTokenResponse
+	 */
+	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust);
 
 }
