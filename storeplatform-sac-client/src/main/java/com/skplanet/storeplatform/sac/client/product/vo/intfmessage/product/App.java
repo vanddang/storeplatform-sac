@@ -36,6 +36,7 @@ public class App extends CommonInfo {
 	private String filePath; // 파일경로
 	private String scid; // sub contents Id
 	private List<Device> supportDeviceList;
+    @Deprecated // 테턴트 패치 완료후 삭제 예정.
 	private String isDeviceSupported; // 현재 단말기 지원 여부
     private String descriptionVideoUrl;    // 설명 Video URL
     private String hasDiffPkgYn; // 테넌트별 PKG명 차이 여부

@@ -220,6 +220,8 @@ public class AppServiceImpl implements AppService {
         rights.setAgeAllowedFrom(commonService.getAllowedAge(appDetail.getTopMenuId(), appDetail.getProdGrdCd()));
         product.setRights(rights);
 
+        product.setIsDeviceSupported(checkAvailability(param.getSdkCd(), param.getOsVersion(), appDetail) ? "Y" : "N");
+
         // App
         App app = new App();
         product.setApp(app);
