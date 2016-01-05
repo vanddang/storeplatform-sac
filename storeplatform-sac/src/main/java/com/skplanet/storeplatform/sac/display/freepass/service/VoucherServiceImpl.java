@@ -1034,7 +1034,7 @@ public class VoucherServiceImpl implements VoucherService {
 			result = supportDevice.getVodFixisttSprtYn();
 		}else if(topMenuId.equals("DP13")) {
 			result = supportDevice.getEbookSprtYn();
-		}else if(topMenuId.equals("DP13")) {
+		}else if(topMenuId.equals("DP14")) {
 			result = supportDevice.getComicSprtYn();
 		}
 
