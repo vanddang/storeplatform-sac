@@ -1038,6 +1038,7 @@ public class VoucherServiceImpl implements VoucherService {
 			result = supportDevice.getComicSprtYn();
 		}
 
+
 		return result;
 	}
 
