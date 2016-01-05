@@ -383,7 +383,7 @@ public class VoucherServiceImpl implements VoucherService {
 						}
 					}
 					coupon.setPointList(pointList);
-					// 2016.01.05 단말 Provisioning 변경 jade 추가
+					// 2016.01.05 단말 Provisioning 변경 김형식 추가
 					coupon.setIsDeviceSupported(this.commonSupportDeviceVocher(header, metaInfo.getTopMenuId()));
 					couponList.add(coupon);
 
@@ -585,7 +585,7 @@ public class VoucherServiceImpl implements VoucherService {
 					}
 
 					coupon.setPointList(pointList);
-					// 2016.01.05 단말 Provisioning 변경 jade 추가
+					// 2016.01.05 단말 Provisioning 변경 김형식 추가
 					coupon.setIsDeviceSupported(this.commonSupportDeviceVocher(header, metaInfo.getTopMenuId()));
 					// LIST_ID가 존재할 경우
 					if(!StringUtils.isEmpty(metaInfo.getListId())) {
@@ -1031,7 +1031,7 @@ public class VoucherServiceImpl implements VoucherService {
 		}
 
 		if(topMenuId.equals("DP17") || topMenuId.equals("DP18")){
-			result = supportDevice.getVodFixisttSprtYn();
+			result = supportDevice.getSdVideoSprtYn();
 		}else if(topMenuId.equals("DP13")) {
 			result = supportDevice.getEbookSprtYn();
 		}else if(topMenuId.equals("DP14")) {

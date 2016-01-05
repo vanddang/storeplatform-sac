@@ -400,7 +400,7 @@
                         WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
                         AND   DV.USE_YN = 'Y'
                         AND   'Y' = CASE 
-                                WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN DV.VOD_FIXISTT_SPRT_YN
+                                WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN DV.SD_VIDEO_SPRT_YN
                                 WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
                                 WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
                                 ELSE 'Y' END
