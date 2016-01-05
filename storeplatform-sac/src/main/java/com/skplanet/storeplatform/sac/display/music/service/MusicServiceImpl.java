@@ -77,12 +77,6 @@ public class MusicServiceImpl implements MusicService {
 		if (musicDetail == null)
 			return null;
 
-        if(musicDetail.getDeviceModelCd() == null)
-            throw new StorePlatformException("SAC_DSP_0012", param.getDeviceModelCd());
-
-        if(musicDetail.getMusicSprtYn().equals("N"))
-            throw new StorePlatformException("SAC_DSP_0012", param.getDeviceModelCd());
-
         // 서브컨텐트 조회
 		List<SubContent> contentList = this.commonDAO.queryForList("MusicDetail.getSubContentList",
 				musicDetail.getEpsdId(), SubContent.class);
