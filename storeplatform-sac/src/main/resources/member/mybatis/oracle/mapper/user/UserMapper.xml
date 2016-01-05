@@ -2277,4 +2277,15 @@
               <if test="updDt != null">,TO_DATE(#{updDt}, 'YYYYMMDDHH24MISS')</if> )
     </insert>
 
+    <!-- 사용자 인증 토큰 체크 -->
+    <select id="checkUserAuthToken" parameterType="chkUserAuthTkRequest" resultType="chkUserAuthTkResponse">
+        SELECT /* UserMapper.xml, checkUserAuthToken, SAC(SC), 최진호, 2016-01-04 */
+            INSD_USERMBR_NO AS userKey
+        FROM
+            TB_US_OUSERMBR_PWD
+        WHERE
+            ACT_TK = #{userAuthToken}
+            AND INSD_USERMBR_NO = #{userKey}
+    </select>
+
 </mapper>

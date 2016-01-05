@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 /**
  * 사용자 기능을 제공하는 Interface
  * 
- * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2016. 1. 5. Updated by : 최진호, 보고지티.
  */
 @SCI
 public interface UserSCI {
@@ -692,4 +692,16 @@ public interface UserSCI {
 	 * @return CheckUserPwdResponse
 	 */
 	public CheckUserPwdResponse checkUserPwd(CheckUserPwdRequest chkUserPwdRequest);
+
+	/**
+	 * <pre>
+	 * userAuthToken의 유효성을 검증하는 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param chkUserAuthTkReqeust
+	 *            CheckUserAuthTokenRequest
+	 * @return CheckUserAuthTokenResponse
+	 */
+	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust);
+
 }
