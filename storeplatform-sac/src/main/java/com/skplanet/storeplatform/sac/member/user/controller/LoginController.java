@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import javax.validation.Valid;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
@@ -29,8 +31,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.validation.Valid;
 
 /**
  * 로그인 Controller.
@@ -159,6 +159,34 @@ public class LoginController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeByIdRes res = this.loginService.authorizeById(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
+
+	}
+
+	/**
+	 * ID기반(Tstore ID / Social ID)회원의 인증 기능을 제공한다. [OneStore 단말을 위한 신규규격].
+	 *
+	 * @param requestHeader SacRequestHeader
+	 * @param req           AuthorizeByIdV2SacReq
+	 * @return AuthorizeByIdV2SacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeById/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeByIdV2SacRes authorizeByIdV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdV2SacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if(StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)
+				|| StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)
+				|| StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+			if(StringUtils.isBlank(req.getUserAuthToken())){
+				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
+			}
+		}
+		AuthorizeByIdV2SacRes res = this.loginService.authorizeByIdV2(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 

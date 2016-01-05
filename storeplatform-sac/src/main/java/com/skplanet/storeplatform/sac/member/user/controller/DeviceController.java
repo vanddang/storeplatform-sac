@@ -172,7 +172,8 @@ public class DeviceController {
 		}
 
 		// deviceIdType = msisdn인경우 mdn필드에 셋팅
-		if(StringUtils.equals(req.getDeviceInfo().getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+		if(StringUtils.isNotBlank(req.getDeviceInfo().getDeviceIdType())
+				&& StringUtils.equals(req.getDeviceInfo().getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
 			req.getDeviceInfo().setMdn(req.getDeviceInfo().getDeviceId());
 			req.getDeviceInfo().setDeviceId("");
 		}
