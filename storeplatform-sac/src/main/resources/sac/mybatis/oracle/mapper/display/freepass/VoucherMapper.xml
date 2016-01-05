@@ -54,18 +54,6 @@
                     AND TP.TENANT_ID = #{tenantId}
                     AND TP.TENANT_ID = PR.TENANT_ID
                     AND CM.SALE_POC_CD IN ('OR004501','OR004503')
-                    AND EXISTS (
-                        SELECT 'X'
-                        FROM TB_CM_DEVICE DV
-                        WHERE 
-                            DV.DEVICE_MODEL_CD = #{deviceModelCd}
-							AND DV.USE_YN = 'Y'
-							AND 'Y' = CASE 
-                                WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN DV.VOD_FIXISTT_SPRT_YN
-                                WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
-                                WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
-                                ELSE 'Y' END
-                    )
                     AND PD.SVC_GRP_CD ='DP000207'
                     <if test='prodStatusCd != null and prodStatusCd != ""'>
                         AND TP.PROD_STATUS_CD = #{prodStatusCd} /* PD000403 : 판매중 */
@@ -226,17 +214,7 @@
 	            AND DC.LANG_CD = #{langCd}
 	            AND TP.TENANT_ID = #{tenantId}
 	            AND TP.TENANT_ID = PR.TENANT_ID
-	            AND EXISTS (
-		            SELECT 'X' 
-		            FROM TB_CM_DEVICE DV
-		            WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
-		            AND   DV.USE_YN = 'Y'
-		            AND   'Y' = CASE 
-			           WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN DV.VOD_FIXISTT_SPRT_YN
-			           WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
-			           WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
-			           ELSE 'Y' END
-	            )
+
 	            <if test='cmpxProdGrpCd == null or cmpxProdGrpCd == ""'>
 	                AND CM.PROD_ID = #{productId}
 	            </if>
@@ -316,6 +294,7 @@
                 AND MP.MENU_ID = CT.MENU_ID
                 AND MP.BASE_YN = 'Y'
                 AND CT.USE_YN = 'Y'
+
                 <if test="arrayProdGradeCd != null">
                 AND PD.PROD_GRD_CD  IN
                               <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
@@ -329,35 +308,7 @@
                     AND (PD.PLUS19_YN = 'N' OR PD.PLUS19_YN IS NULL)
                 </if>    
                 AND TP.PROD_STATUS_CD = 'PD000403'
-                AND EXISTS (
-                    SELECT 'X'
-                    FROM TB_DP_PROD_RSHP RS, TB_DP_PROD EP, TB_DP_SUB_CONTENTS SC, TB_DP_TENANT_PROD ET
-                    WHERE RS.PROD_ID=PD.PROD_ID
-                    AND EXISTS (
-                        SELECT 'X'
-                        FROM TB_CM_DEVICE DV
-                        WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
-                        AND   DV.USE_YN = 'Y'
-                        AND   'Y' = CASE
-                            WHEN PD.TOP_MENU_ID in ('DP17' , 'DP18') THEN
-                                CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' THEN (CASE WHEN EP.DRM_YN ='N' THEN 'Y' ELSE 'N' END)
-                                ELSE 'Y' END
-                            ELSE 'Y' END
-                        AND 'Y' = CASE WHEN PD.TOP_MENU_ID in ('DP17' , 'DP18') THEN
-                                CASE WHEN DV.HDV_SPRT_YN = 'N' THEN (CASE WHEN SC.DP_PG_QULT_CD in ('PD009701' , 'PD009702') THEN 'Y' ELSE 'N' END)
-                                ELSE 'Y' END
-                            ELSE 'Y' END
-                        AND 'Y' = CASE WHEN PD.TOP_MENU_ID in ('DP17' , 'DP18') THEN DV.VOD_FIXISTT_SPRT_YN
-                            WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
-                            WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
-                            ELSE 'Y' END
-                        )
-                    AND RS.PART_PROD_ID = EP.PROD_ID
-                    AND EP.PROD_ID = SC.PROD_ID
-                    AND EP.PROD_ID = ET.PROD_ID
-                    AND ET.TENANT_ID = #{tenantId}
-                    AND ET.PROD_STATUS_CD = 'PD000403'
-                    )
+
                 ORDER BY FM.EXPO_ORD, PD.LAST_DEPLOY_DT DESC
             ) IV
         ) OV

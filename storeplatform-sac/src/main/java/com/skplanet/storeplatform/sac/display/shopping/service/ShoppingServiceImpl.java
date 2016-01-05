@@ -1864,10 +1864,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 
-		//단말 Provisioning 로직 제거 - 박남규 매니저 요청
-		//if (!this.commonSupportDeviceShopping(header)) {
-		//	return res;
-		//}
 
 		// ID list 조회
 		List<MetaInfo> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetail", reqMap,
@@ -2274,6 +2270,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 					product.setContributor(contributor);
 					product.setSubProductTotalCount(subProductList.size());
 					product.setSubProductList(subProductList);
+					// 2016.01.05 단말 Provisioning 변경 jade 추가
+					product.setIsDeviceSupported(this.commonSupportDeviceShopping(header));
 
 				}
 				res.setProduct(product);
@@ -2386,10 +2384,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * 
 	 * @param header
 	 *            header
-	 * @return boolean
+	 * @return String
 	 */
-	private boolean commonSupportDeviceShopping(SacRequestHeader header) {
-		boolean result = true;
+	private String commonSupportDeviceShopping(SacRequestHeader header) {
+		String result = "N";
 
 		if(StringUtils.isEmpty(header.getDeviceHeader().getModel())){
 			throw new StorePlatformException("SAC_DSP_0029");
@@ -2398,19 +2396,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 단말 지원정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
 				.getModel());
-		
+
 		if(supportDevice == null){
-			throw new StorePlatformException("SAC_DSP_0012", header.getDeviceHeader()
-					.getModel());
+			return result;
 		}
 
-		if (!supportDevice.getSclShpgSprtYn().equals("Y")) {
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("[shopping] supportDevice is empty!");
-			this.log.debug("----------------------------------------------------------------");
-			throw new StorePlatformException("SAC_DSP_0012", header.getDeviceHeader()
-					.getModel());
-		}
+		result = supportDevice.getSclShpgSprtYn();
+
 		return result;
 	}
 
@@ -3740,10 +3732,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 
-		//단말 Provisioning 로직 제거 - 박남규 매니저님 요청 사항
-		//if (!this.commonSupportDeviceShopping(header)) {
-		//	return res;
-		//}
 
 		// ID list 조회
 		List<MetaInfo> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetailV2", reqMap,
@@ -4200,7 +4188,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 					product.setLikeYn(likeYn);
 					product.setSubProductTotalCount(subProductList.size());
 					product.setSubProductList(subProductList);
-
+					// 2016.01.05 단말 Provisioning 변경 jade 추가
+					product.setIsDeviceSupported(this.commonSupportDeviceShopping(header));
 				}
 				res.setProduct(product);
 			} else {
