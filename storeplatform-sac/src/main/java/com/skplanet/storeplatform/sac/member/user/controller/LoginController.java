@@ -102,7 +102,7 @@ public class LoginController {
 
 		AuthorizeByMdnRes res = this.loginService.authorizeByMdnV2(requestHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response :{}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
