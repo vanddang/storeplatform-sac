@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -382,6 +383,8 @@ public class VoucherServiceImpl implements VoucherService {
 						}
 					}
 					coupon.setPointList(pointList);
+					// 2016.01.05 단말 Provisioning 변경 jade 추가
+					coupon.setIsDeviceSupported(this.commonSupportDeviceVocher(header, metaInfo.getTopMenuId()));
 					couponList.add(coupon);
 
 					// 요청한 이용권의 포함된 상품에 대해서만 상품을 조회한다.
@@ -580,8 +583,10 @@ public class VoucherServiceImpl implements VoucherService {
 							pointList.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
 						}
 					}
-					coupon.setPointList(pointList);
 
+					coupon.setPointList(pointList);
+					// 2016.01.05 단말 Provisioning 변경 jade 추가
+					coupon.setIsDeviceSupported(this.commonSupportDeviceVocher(header, metaInfo.getTopMenuId()));
 					// LIST_ID가 존재할 경우
 					if(!StringUtils.isEmpty(metaInfo.getListId())) {
 						String listId = metaInfo.getListId();
@@ -1002,4 +1007,38 @@ public class VoucherServiceImpl implements VoucherService {
 		}
 		return response;
 	}
+
+	/**
+	 * 이용권 지원 여부 .
+	 *
+	 * @param header
+	 *            header
+	 * @return String
+	 */
+	private String commonSupportDeviceVocher(SacRequestHeader header,String topMenuId) {
+		String result = "N";
+
+		if(StringUtils.isEmpty(header.getDeviceHeader().getModel())){
+			throw new StorePlatformException("SAC_DSP_0029");
+		}
+
+		// 단말 지원정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
+				.getModel());
+
+		if(supportDevice == null){
+			return result;
+		}
+
+		if(topMenuId.equals("DP17") || topMenuId.equals("DP18")){
+			result = supportDevice.getVodFixisttSprtYn();
+		}else if(topMenuId.equals("DP13")) {
+			result = supportDevice.getEbookSprtYn();
+		}else if(topMenuId.equals("DP13")) {
+			result = supportDevice.getComicSprtYn();
+		}
+
+		return result;
+	}
+
 }
