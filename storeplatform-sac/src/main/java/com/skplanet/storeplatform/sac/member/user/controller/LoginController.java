@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import javax.validation.Valid;
-import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
@@ -31,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
 
 /**
  * 로그인 Controller.
@@ -534,6 +534,27 @@ public class LoginController {
 
 		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
 				res.getUserMainStatus());
+
+		return res;
+
+	}
+
+	/**
+	 * ID 회원 패스워드 인증(기존 T store ID 회원) 기능을 제공한다. [OneStore 단말을 위한 신규규격].
+	 *
+	 * @param requestHeader SacRequestHeader
+	 * @param req           AuthorizeByPwdSacReq
+	 * @return AuthorizeByPwdSacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeByPassword/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeByPwdSacRes authorizeByPassword(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByPwdSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		AuthorizeByPwdSacRes res = this.loginService.authorizeByPassword(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 

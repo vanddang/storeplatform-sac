@@ -359,9 +359,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return loginUserResponse;
 	}
@@ -3641,6 +3638,41 @@ public class UserSCIController implements UserSCI {
 		}
 
 		return checkUserAuthTkResponse;
+
+	}
+
+	@Override
+	public CreateUserAuthTokenResponse createUserAuthToken(CreateUserAuthTokenRequest createUserAuthTokenRequest){
+
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - userAuthToken 생성 ");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		CreateUserAuthTokenResponse createUserAuthTokenResponse = null;
+
+		// 입력 파라미터가 없음
+		if (createUserAuthTokenRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (createUserAuthTokenRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 필수 파라미터
+		if (createUserAuthTokenRequest.getUserKey() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+			createUserAuthTokenResponse = this.service.createUserAuthToken(createUserAuthTokenRequest);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return createUserAuthTokenResponse;
 
 	}
 

@@ -1,11 +1,10 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import javax.validation.Valid;
-
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import javax.validation.Valid;
 
 /**
  * 회원 로그인 관련 인터페이스.
@@ -190,5 +189,14 @@ public interface LoginService {
 	 * @return AuthorizeByIdV2SacRes
 	 */
 	public AuthorizeByIdV2SacRes authorizeByIdV2(SacRequestHeader requestHeader, AuthorizeByIdV2SacReq req);
+
+	/**
+	 * ID 회원 패스워드 인증(기존 T store ID 회원) 기능을 제공한다. [OneStore 단말을 위한 신규규격].
+	 *
+	 * @param requestHeader SacRequestHeader
+	 * @param req           AuthorizeByPwdSacReq
+	 * @return AuthorizeByPwdSacRes
+	 */
+	public AuthorizeByPwdSacRes authorizeByPassword(SacRequestHeader requestHeader, AuthorizeByPwdSacReq req);
 
 }

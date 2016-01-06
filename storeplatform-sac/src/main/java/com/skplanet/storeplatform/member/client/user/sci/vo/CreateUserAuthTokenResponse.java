@@ -7,11 +7,11 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonResponse;
 import java.io.Serializable;
 
 /**
- * 패스워드 일치 여부 응답 Value Object
+ * 사용자 인증 토크 생성 응답 Value Object
  *
- * Updated on : 2015. 12. 21 Updated by : 최진호, 보고지티.
+ * Updated on : 2016. 1. 6 Updated by : 최진호, 보고지티.
  */
-public class CheckUserPwdResponse extends CommonInfo implements Serializable {
+public class CreateUserAuthTokenResponse  extends CommonInfo implements Serializable {
 
     /** The Constant serial Version UID. */
     private static final long serialVersionUID = 1L;
@@ -21,6 +21,9 @@ public class CheckUserPwdResponse extends CommonInfo implements Serializable {
 
     /** 사용자 Key. */
     private String userKey;
+
+    /** 사용자 인증 토큰 */
+    private String userAuthToken;
 
     /**
      * 공통 응답 Value Object를 리턴한다.
@@ -67,6 +70,25 @@ public class CheckUserPwdResponse extends CommonInfo implements Serializable {
      */
     public static long getSerialversionuid() {
         return serialVersionUID;
+    }
+
+    /**
+     * 사용자 인증 토큰를 리턴한다.
+     *
+     * @return userAuthToken - 사용자 인증 토큰
+     */
+    public String getUserAuthToken() {
+        return this.userAuthToken;
+    }
+
+    /**
+     * 사용자 인증 토큰를 설정한다.
+     *
+     * @param userAuthToken
+     *            사용자 인증 토큰
+     */
+    public void setUserAuthToken(String userAuthToken) {
+        this.userAuthToken = userAuthToken;
     }
 
     /*

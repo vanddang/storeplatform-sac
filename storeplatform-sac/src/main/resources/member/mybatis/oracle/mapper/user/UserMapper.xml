@@ -2288,4 +2288,15 @@
             AND INSD_USERMBR_NO = #{userKey}
     </select>
 
+    <!-- 사용자 인증 토큰 생성 -->
+    <update id="createUserAuthToken" parameterType="createUserAuthTokenRequest">
+        UPDATE  /* UserMapper.xml, createUserAuthToken,  SAC(SC), 최진호, 2016-01-06 */
+            TB_US_OUSERMBR_PWD
+        SET
+            ACT_TK = #{userAuthToken}
+            ,UPD_DT = SYSDATE
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
+    </update>
+
 </mapper>

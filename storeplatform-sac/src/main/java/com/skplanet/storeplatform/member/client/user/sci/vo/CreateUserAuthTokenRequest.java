@@ -7,11 +7,11 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import java.io.Serializable;
 
 /**
- * 패스워드 일치 여부 요청 Value Object
+ * 사용자 인증 토큰 생성 요청 Value Object
  *
- * Updated on : 2015. 12. 21 Updated by : 최진호, 보고지티.
+ * Updated on : 2016. 1. 6 Updated by : 최진호, 보고지티.
  */
-public class CheckUserPwdRequest extends CommonInfo implements Serializable {
+public class CreateUserAuthTokenRequest extends CommonInfo implements Serializable {
 
     /** The Constant serial Version UID. */
     private static final long serialVersionUID = 1L;
@@ -22,11 +22,8 @@ public class CheckUserPwdRequest extends CommonInfo implements Serializable {
     /** 사용자 Key. */
     private String userKey;
 
-    /** 사용자 패스워드. */
-    private String userPw;
-
-    /** 휴면계정 여부. */
-    private String isDormant;
+    /** 사용자 인증 토큰 */
+    private String userAuthToken;
 
     /**
      * 공통 요청 Value Object를 리턴한다.
@@ -47,8 +44,9 @@ public class CheckUserPwdRequest extends CommonInfo implements Serializable {
         this.commonRequest = commonRequest;
     }
 
+
     /**
-     * 사용자 Key 정보를 리턴한다.
+     * 사용자 Key를 리턴한다.
      *
      * @return userKey - 사용자 Key
      */
@@ -57,7 +55,7 @@ public class CheckUserPwdRequest extends CommonInfo implements Serializable {
     }
 
     /**
-     * 사용자 Key 정보를 설정한다.
+     * 사용자 Key를 설정한다.
      *
      * @param userKey
      *            사용자 Key
@@ -67,57 +65,29 @@ public class CheckUserPwdRequest extends CommonInfo implements Serializable {
     }
 
     /**
-     * userPw 정보를 리턴한다.
+     * 사용자 인증 토큰를 리턴한다.
      *
-     * @return userPw - 패스워드 일치 여부 요청 userPw
+     * @return userAuthToken - 사용자 인증 토큰
      */
-    public String getUserPw() {
-        return userPw;
+    public String getUserAuthToken() {
+        return this.userAuthToken;
     }
 
     /**
-     * userPw 정보를 설정한다.
+     * 사용자 인증 토큰를 설정한다.
      *
-     * @param userPw
-     *            패스워드 일치 여부 요청 userPw
+     * @param userAuthToken
+     *            사용자 인증 토큰
      */
-    public void setUserPw(String userPw) {
-        this.userPw = userPw;
-    }
-
-    /**
-     * 휴면계정 여부를 리턴한다.
-     *
-     * @return isDormant - 휴면계정 여부
-     */
-    public String getIsDormant() {
-        return isDormant;
-    }
-
-    /**
-     * 휴면계정 여부를 설정한다.
-     *
-     * @param isDormant
-     *            휴면계정 여부
-     */
-    public void setIsDormant(String isDormant) {
-        this.isDormant = isDormant;
-    }
-
-    /**
-     * Returns the serial version UID.
-     *
-     * @return serialVersionUID - the serial version UID
-     */
-    public static long getSerialversionuid() {
-        return serialVersionUID;
+    public void setUserAuthToken(String userAuthToken) {
+        this.userAuthToken = userAuthToken;
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see com.skplanet.storeplatform.framework.core.common.vo.CommonInfo#toString()
-     */
+	 * (non-Javadoc)
+	 *
+	 * @see com.skplanet.storeplatform.framework.core.common.vo.CommonInfo#toString()
+	 */
     @Override
     public String toString() {
         return Utils.printKeyValues(this);
