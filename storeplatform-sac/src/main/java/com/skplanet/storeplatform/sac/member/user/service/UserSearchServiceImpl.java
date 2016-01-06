@@ -209,59 +209,115 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		/* 회원 기본 정보 */
-		DetailRes res = this.srhUser(req, sacHeader);
+        DetailRes res = null;
+        try{
+             res = this.srhUser(req, sacHeader);
+        }catch(StorePlatformException ex){
+            if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+                    || StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+                String requestNm = null;
+                String requestValue = null;
 
-		/* 정보조회범위 */
-		if (req.getSearchExtent() != null) {
-			/* 회원 정보 + 부가정보 */
-			if (!"Y".equals(req.getSearchExtent().getUserInfoYn())) {
-				res.setUserInfo(null);
-			}
+                if(StringUtils.isNotEmpty(req.getUserId())){
+                    requestNm = "userId";
+                    requestValue = req.getUserId();
+                }else if(StringUtils.isNotEmpty(req.getUserKey())){
+                    requestNm = "userKey";
+                    requestValue = req.getUserKey();
+                }else if(StringUtils.isNotEmpty(req.getDeviceId())) {
+                    requestNm = "deviceId";
+                    requestValue = req.getDeviceId();
+                }else if(StringUtils.isNotEmpty(req.getDeviceKey())){
+                    requestNm = "deviceKey";
+                    requestValue = req.getDeviceKey();
+                }
+                throw new StorePlatformException("SAC_MEM_0003", requestNm, requestValue);
+            }else{
+                throw ex;
+            }
+        }
 
-			/* 단말 + 부가정보 */
-			if ("Y".equals(req.getSearchExtent().getDeviceInfoYn())) {
-				try {
-					ListDeviceRes listDeviceRes = this.listDevice(req, sacHeader);
+        /* 정보조회범위 */
+        if (req.getSearchExtent() != null) {
+            /* 회원 정보 + 부가정보 */
+            if (!"Y".equals(req.getSearchExtent().getUserInfoYn())) {
+                res.setUserInfo(null);
+            }
 
-					if (listDeviceRes.getDeviceInfoList() != null) {
-						res.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
-					} else {
-						List<DeviceInfo> getDeviceInfoList = new ArrayList<DeviceInfo>();
-						res.setDeviceInfoList(getDeviceInfoList);
-					}
+            /* 단말 + 부가정보 */
+            if ("Y".equals(req.getSearchExtent().getDeviceInfoYn())) {
+                try {
+                    ListDeviceRes listDeviceRes = this.listDevice(req, sacHeader);
 
-				} catch (StorePlatformException ex) {
+                    if (listDeviceRes.getDeviceInfoList() != null && listDeviceRes.getDeviceInfoList().size() > 0) {
+                        /**
+                         * 회원정보 v1 Response 중 deviceId는 device_id, mdn 을 구분하여 return
+                         * 1. 단건조회 : device_id, device_key 조회 시 req의 device_id를 device_id로 setting 하여 return
+                         * 2. 다중조회 : userId, user_key 는 isMdn 체크 후 구분하여 return
+                         */
+                        List<DeviceInfo> getDeviceInfoList = new ArrayList<DeviceInfo>();
+                        // 1. 단건 조회
+                        if (StringUtils.isNotEmpty(req.getDeviceKey()) || StringUtils.isNotEmpty(req.getDeviceId())) {
+                            DeviceInfo deviceInfo = new DeviceInfo();
+                            deviceInfo = listDeviceRes.getDeviceInfoList().get(0);
+                            deviceInfo.setDeviceId(req.getDeviceId());
+                            deviceInfo.setMdn(null);
+                            getDeviceInfoList.add(deviceInfo);
+
+                        }else {
+                            // 2. 다중 조회
+                            for(DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()){
+                                // 유효한 MDN 일경우 deviceId setting
+                                if(StringUtils.isNotEmpty(deviceInfo.getMdn()) && ValidationCheckUtils.isMdn(deviceInfo.getMdn()) ){
+                                    DeviceInfo convertDeviceInfo = new DeviceInfo();
+                                    convertDeviceInfo = deviceInfo;
+
+                                    convertDeviceInfo.setDeviceId(deviceInfo.getMdn());
+                                    convertDeviceInfo.setMdn(null);
+                                    getDeviceInfoList.add(convertDeviceInfo);
+                                }else {
+                                    getDeviceInfoList.add(deviceInfo);
+                                }
+                            }
+                        }
+
+                        res.setDeviceInfoList(getDeviceInfoList);
+                    } else {
+                        List<DeviceInfo> getDeviceInfoList = new ArrayList<DeviceInfo>();
+                        res.setDeviceInfoList(getDeviceInfoList);
+                    }
+
+                } catch (StorePlatformException ex) {
 					/* 결과가 없는 경우만 제외하고 throw */
-					if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-						List<DeviceInfo> getDeviceInfoList = new ArrayList<DeviceInfo>();
-						res.setDeviceInfoList(getDeviceInfoList);
-					} else {
-						throw ex;
-					}
-				}
-			}
+                    if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+                        List<DeviceInfo> getDeviceInfoList = new ArrayList<DeviceInfo>();
+                        res.setDeviceInfoList(getDeviceInfoList);
+                    } else {
+                        throw ex;
+                    }
+                }
+            }
 
-			/* 약관동의정보 */
-			if (!"Y".equals(req.getSearchExtent().getAgreementInfoYn())) {
-				res.setAgreementList(null);
-			}
+            /* 약관동의정보 */
+            if (!"Y".equals(req.getSearchExtent().getAgreementInfoYn())) {
+                res.setAgreementList(null);
+            }
 
-			/* 실명인증정보 */
-			if (!"Y".equals(req.getSearchExtent().getMbrAuthInfoYn())) {
-				res.setMbrAuth(null);
-			}
+            /* 실명인증정보 */
+            if (!"Y".equals(req.getSearchExtent().getMbrAuthInfoYn())) {
+                res.setMbrAuth(null);
+            }
 
-			/* 법정대리인정보 */
-			if (!"Y".equals(req.getSearchExtent().getMbrLglAgentInfoYn())) {
-				res.setMbrLglAgent(null);
-			}
+            /* 법정대리인정보 */
+            if (!"Y".equals(req.getSearchExtent().getMbrLglAgentInfoYn())) {
+                res.setMbrLglAgent(null);
+            }
 
-			/* 사용자징계정보 */
-			if (!"Y".equals(req.getSearchExtent().getMbrPnshInfoYn())) {
-				res.setUserMbrPnsh(null);
-			}
-
-		}
+            /* 사용자징계정보 */
+            if (!"Y".equals(req.getSearchExtent().getMbrPnshInfoYn())) {
+                res.setUserMbrPnsh(null);
+            }
+        }
 
 		return res;
 	}
@@ -1415,7 +1471,34 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		/** 회원 기본 정보V2. */
-		DetailV2Res res = this.srhUserV2(req, sacHeader);
+		DetailV2Res res = null;
+        try{
+            res = this.srhUserV2(req, sacHeader);
+        }catch(StorePlatformException ex){
+            if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+                    || StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+                String requestNm = null;
+                String requestValue = null;
+
+                if(StringUtils.isNotEmpty(req.getUserId())){
+                    requestNm = "userId";
+                    requestValue = req.getUserId();
+                }else if(StringUtils.isNotEmpty(req.getUserKey())){
+                    requestNm = "userKey";
+                    requestValue = req.getUserKey();
+                }else if(StringUtils.isNotEmpty(req.getDeviceId())) {
+                    requestNm = "deviceId";
+                    requestValue = req.getDeviceId();
+                }else if(StringUtils.isNotEmpty(req.getDeviceKey())){
+                    requestNm = "deviceKey";
+                    requestValue = req.getDeviceKey();
+                }
+                throw new StorePlatformException("SAC_MEM_0003", requestNm, requestValue);
+            }else{
+                throw ex;
+            }
+        }
+
 
 		/* 정보조회범위 */
 		if (req.getSearchExtent() != null) {

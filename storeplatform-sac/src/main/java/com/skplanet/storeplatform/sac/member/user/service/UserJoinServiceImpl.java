@@ -101,9 +101,9 @@ public class UserJoinServiceImpl implements UserJoinService {
                  * 모번호 조회 (989 일 경우만)
                  */
                 req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
-                keyType = StringUtils.lowerCase(MemberConstants.KEY_TYPE_MDN);
+                keyType = "mdn";
             } else {
-                keyType = StringUtils.lowerCase(MemberConstants.KEY_TYPE_DEVICE_ID);
+                keyType = "deviceId";
             }
 
             UserInfo userInfo = this.mcc.getUserBaseInfo(keyType, req.getDeviceId(), sacHeader);

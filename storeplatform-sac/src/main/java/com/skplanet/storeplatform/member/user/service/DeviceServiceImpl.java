@@ -282,6 +282,19 @@ public class DeviceServiceImpl implements DeviceService {
 						updateMbrDevice.setNativeID("");
 						updateMbrDevice.setUserMbrDeviceDetail(createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail());
 						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, updateMbrDevice, isDormant);
+
+						// tb_us_ousermbr_device_set 테이블의 실명인증일자, mdn을 null 처리
+						UserMbrDeviceSet modifyUserMbrDeviceSet = new UserMbrDeviceSet();
+						modifyUserMbrDeviceSet.setUserKey(updateMbrDevice.getUserKey());
+						modifyUserMbrDeviceSet.setDeviceKey(updateMbrDevice.getDeviceKey());
+						modifyUserMbrDeviceSet.setUserID(updateMbrDevice.getUserID());
+						modifyUserMbrDeviceSet.setRealNameDate("");
+						modifyUserMbrDeviceSet.setRealNameMdn("");
+						if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
+							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+						}else{
+							//this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);  // TODO. 아직 테이블 정의 안됨
+						}
 					}
 				}
 			}
@@ -335,13 +348,26 @@ public class DeviceServiceImpl implements DeviceService {
 					} else {
 						// device_id가 존재하고 ID 회원인 경우 svc_no, mno_cd 널 처리
 						if (!StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) {
-							LOGGER.info("{} : {} deviceId가 존재하는 아이디 회원 존재", userKey, userMbrDevice.getUserKey());
+							LOGGER.info("{} : {} deviceId {} 존재하는 아이디 회원 존재", userKey, userMbrDevice.getUserKey(), userMbrDevice.getDeviceID());
 							LOGGER.info("{} : {} 회원 svcMangNo, deviceTelecom 초기화 처리", userKey);
 							UserMbrDevice updateMbrDevice = new UserMbrDevice();
 							updateMbrDevice.setSvcMangNum("");
 							updateMbrDevice.setDeviceTelecom("");
 							updateMbrDevice.setUserMbrDeviceDetail(createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail());
 							this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, updateMbrDevice, isDormant);
+
+							// tb_us_ousermbr_device_set 테이블의 실명인증일자, mdn을 null 처리
+							UserMbrDeviceSet modifyUserMbrDeviceSet = new UserMbrDeviceSet();
+							modifyUserMbrDeviceSet.setUserKey(updateMbrDevice.getUserKey());
+							modifyUserMbrDeviceSet.setDeviceKey(updateMbrDevice.getDeviceKey());
+							modifyUserMbrDeviceSet.setUserID(updateMbrDevice.getUserID());
+							modifyUserMbrDeviceSet.setRealNameDate("");
+							modifyUserMbrDeviceSet.setRealNameMdn("");
+							if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
+								//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+							}else{
+								//this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+							}
 						}
 					}
 				}
@@ -429,40 +455,21 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}else{
 				for(UserMbrDevice userMbrDevice : userMbrDeviceList){
-					// LOGGER.info("{} req device_id 가 null이 아니고 db의 device_id와 다른 경우 update", userKey);
-					// USIM을 제거하고 올라온 경우 초기화 처리를 위해 공백처리 한다.
-
-					UserMbrDevice updateMbrDevice = new UserMbrDevice();
-					// deviceTelecom
-					if(StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getDeviceTelecom())){
-						updateMbrDevice.setDeviceTelecom("");
-					}
-					// nativeID
-					if(StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getNativeID())){
-						updateMbrDevice.setNativeID("");
-					}
-					// deviceAccount
-					if(StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getDeviceAccount())){
-						updateMbrDevice.setDeviceAccount("");
-					}
-					// svcMangNum
-					if(StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
-						updateMbrDevice.setSvcMangNum("");
-					}
-					// deviceModelNo
-					if(StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getDeviceModelNo())){
-						updateMbrDevice.setDeviceModelNo("");
-					}
-					// mdn
-					if(StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getMdn())){
-						updateMbrDevice.setMdn("");
-					}
-					// deviceSimNm
-					if(StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getDeviceSimNm())){
-						updateMbrDevice.setDeviceSimNm("");
-					}
+					LOGGER.info("{} req device_id 가 null이 아니고 db의 device_id와 다른 경우 update", userKey);
 					if(StringUtils.equals(userMbrDevice.getIsUsed(), Constant.TYPE_YN_Y)){
-						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, updateMbrDevice, Constant.TYPE_YN_N);
+						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, createDeviceRequest.getUserMbrDevice(), Constant.TYPE_YN_N);
+						LOGGER.info("{}, {} OneStore 재설치 ", userKey, userMbrDevice.getSvcMangNum());
+						// mno_cd, svc_mang_no중 하나라도 변경되면 tb_us_ousermbr_device_set 테이블의 실명인증일자, mdn을 null 처리
+						if(!StringUtils.equals(userMbrDevice.getDeviceTelecom(), createDeviceRequest.getUserMbrDevice().getDeviceTelecom())
+								|| !StringUtils.equals(userMbrDevice.getSvcMangNum(), createDeviceRequest.getUserMbrDevice().getSvcMangNum())) {
+							UserMbrDeviceSet modifyUserMbrDeviceSet = new UserMbrDeviceSet();
+							modifyUserMbrDeviceSet.setUserKey(userMbrDevice.getUserKey());
+							modifyUserMbrDeviceSet.setDeviceKey(userMbrDevice.getDeviceKey());
+							modifyUserMbrDeviceSet.setUserID(userMbrDevice.getUserID());
+							modifyUserMbrDeviceSet.setRealNameDate("");
+							modifyUserMbrDeviceSet.setRealNameMdn("");
+							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+						}
 					}else{
 						this.doActivateDevice(userMbrDevice, createDeviceRequest); // auth_yn = 'Y'처리
 					}
@@ -471,9 +478,33 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		} else {
 			for(UserMbrDevice userMbrDevice : userMbrDeviceList) {
-				LOGGER.info("{} deviceId로 동일 정보 존재 단말정보 update", userKey);
+				LOGGER.info("{} : deviceId {} 동일 정보 존재 단말정보 update", userKey, createDeviceRequest.getUserMbrDevice().getDeviceID());
 				if(StringUtils.equals(userMbrDevice.getIsUsed(), Constant.TYPE_YN_Y)){
-					this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, createDeviceRequest.getUserMbrDevice(), Constant.TYPE_YN_N);
+					if(StringUtils.isBlank(userMbrDevice.getMdn()) && StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getMdn())){
+						// usim이 제거된 상태에서는 휴대기기 업데이트를 안한다.
+						LOGGER.info("{}, {} : usim 제거 상태", userKey, userMbrDevice.getDeviceID());
+					}else if(StringUtils.isNotBlank(userMbrDevice.getMdn()) && StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getMdn())){
+						// usim 제거 후 접속했을때 초기화 처리
+						LOGGER.info("{}, {} : usim 제거 후 접속", userKey, userMbrDevice.getDeviceID());
+						UserMbrDevice updateMbrDevice = new UserMbrDevice();
+						updateMbrDevice.setNativeID("");
+						updateMbrDevice.setMdn("");
+						updateMbrDevice.setDeviceSimNm("");
+						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, updateMbrDevice, Constant.TYPE_YN_N);
+					}else{
+						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, createDeviceRequest.getUserMbrDevice(), Constant.TYPE_YN_N);
+						// mno_cd, svc_mang_no중 하나라도 변경되면 tb_us_ousermbr_device_set 테이블의 실명인증일자, mdn을 null 처리
+						if(!StringUtils.equals(userMbrDevice.getDeviceTelecom(), createDeviceRequest.getUserMbrDevice().getDeviceTelecom())
+								|| !StringUtils.equals(userMbrDevice.getSvcMangNum(), createDeviceRequest.getUserMbrDevice().getSvcMangNum())) {
+							UserMbrDeviceSet modifyUserMbrDeviceSet = new UserMbrDeviceSet();
+							modifyUserMbrDeviceSet.setUserKey(userMbrDevice.getUserKey());
+							modifyUserMbrDeviceSet.setDeviceKey(userMbrDevice.getDeviceKey());
+							modifyUserMbrDeviceSet.setUserID(userMbrDevice.getUserID());
+							modifyUserMbrDeviceSet.setRealNameDate("");
+							modifyUserMbrDeviceSet.setRealNameMdn("");
+							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); //TODO. 아직 테이블 정리 안됨
+						}
+					}
 				}else{
 					this.doActivateDevice(userMbrDevice, createDeviceRequest);
 				}
@@ -612,8 +643,7 @@ public class DeviceServiceImpl implements DeviceService {
 			userMbrDeviceSet.setPinNo("");
 			userMbrDeviceSet.setAuthCnt("0");
 			userMbrDeviceSet.setAuthLockYn("N");
-			// TODO 테이블 변경 사항 확인!!
-//			this.commonDAO.delete("DeviceSet.modifyDeviceSet", userMbrDeviceSet);
+//			this.commonDAO.delete("DeviceSet.modifyDeviceSet", userMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
 		}
 
 		// TLog
@@ -1527,7 +1557,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * <pre>
 	 * 휴대기기 정보업데이트.
-	 * request와 DB의 정보를 비교하여 틀린경우만 처리한다.
+	 * request와 DB의 정보를 비교하여 다른 경우만 처리한다.
 	 * </pre>
 	 *
 	 * @param systemID 시스템 ID
@@ -1539,12 +1569,6 @@ public class DeviceServiceImpl implements DeviceService {
 		StringBuffer logBuf = new StringBuffer();
 		String chgCaseCd = userMbrDeviceForReq.getChangeCaseCode() == null ? MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT :  userMbrDeviceForReq.getChangeCaseCode();
 
-		if(userMbrDeviceForReq.getDeviceID() != null && !StringUtils.equals(userMbrDevice.getDeviceID(), userMbrDeviceForReq.getDeviceID())){
-			logBuf.append("[device_id]").append(userMbrDevice.getDeviceID()).append("->").append(userMbrDeviceForReq.getDeviceID());
-		}
-		if(userMbrDeviceForReq.getDeviceModelNo() != null && !StringUtils.equals(userMbrDevice.getDeviceModelNo(), userMbrDeviceForReq.getDeviceModelNo())){
-			logBuf.append("[device_model_no]").append(userMbrDevice.getDeviceModelNo()).append("->").append(userMbrDeviceForReq.getDeviceModelNo());
-		}
 		if(userMbrDeviceForReq.getDeviceTelecom() != null && !StringUtils.equals(userMbrDevice.getDeviceTelecom(), userMbrDeviceForReq.getDeviceTelecom())){
 			logBuf.append("[mno_cd]").append(userMbrDevice.getDeviceTelecom()).append("->").append(userMbrDeviceForReq.getDeviceTelecom());
 		}
@@ -1560,12 +1584,27 @@ public class DeviceServiceImpl implements DeviceService {
 		if(userMbrDeviceForReq.getDeviceAccount() != null && !StringUtils.equals(userMbrDevice.getDeviceAccount(), userMbrDeviceForReq.getDeviceAccount())){
 			logBuf.append("[device_acct]").append(userMbrDevice.getDeviceAccount()).append("->").append(userMbrDeviceForReq.getDeviceAccount());
 		}
-		if(userMbrDeviceForReq.getMdn() != null && !StringUtils.equals(userMbrDevice.getMdn(), userMbrDeviceForReq.getMdn())){
-			logBuf.append("[mdn]").append(userMbrDevice.getMdn()).append("->").append(userMbrDeviceForReq.getMdn());
+
+		// TODO. 휴대기기 이력 변경 코드 우선순위 처리함.
+		if(userMbrDeviceForReq.getDeviceID() != null && !StringUtils.equals(userMbrDevice.getDeviceID(), userMbrDeviceForReq.getDeviceID())){
+			chgCaseCd = MemberConstants.DEVICE_CHANGE_TYPE_DEVICEID_CHANGE;
+			logBuf.append("[device_id]").append(userMbrDevice.getDeviceID()).append("->").append(userMbrDeviceForReq.getDeviceID());
 		}
 		if(userMbrDeviceForReq.getNativeID() != null && !StringUtils.equals(userMbrDevice.getNativeID(), userMbrDeviceForReq.getNativeID())) {
-			chgCaseCd = MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE;
+			if(StringUtils.isNotBlank(userMbrDeviceForReq.getNativeID())){
+				chgCaseCd = MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE;
+			}
 			logBuf.append("[device_natv_id]").append(userMbrDevice.getNativeID()).append("->").append(userMbrDeviceForReq.getNativeID());
+		}
+		if(userMbrDeviceForReq.getDeviceModelNo() != null && !StringUtils.equals(userMbrDevice.getDeviceModelNo(), userMbrDeviceForReq.getDeviceModelNo())){
+			chgCaseCd = MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE;
+			logBuf.append("[device_model_no]").append(userMbrDevice.getDeviceModelNo()).append("->").append(userMbrDeviceForReq.getDeviceModelNo());
+		}
+		if(userMbrDeviceForReq.getMdn() != null && !StringUtils.equals(userMbrDevice.getMdn(), userMbrDeviceForReq.getMdn())){
+			if(StringUtils.isNotBlank(userMbrDeviceForReq.getMdn())){
+				chgCaseCd = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE;
+			}
+			logBuf.append("[mdn]").append(userMbrDevice.getMdn()).append("->").append(userMbrDeviceForReq.getMdn());
 		}
 
 		if(logBuf.length() > 0){

@@ -186,6 +186,19 @@ public class LoginController {
 				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
 			}
 		}
+
+		/*if(StringUtils.isNotBlank(req.getDeviceTelecom())){
+			if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
+					|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)){
+				if(StringUtils.isBlank(req.getNativeId())){
+					throw new StorePlatformException("SAC_MEM_0001", "nativeId");
+				}
+				if(StringUtils.isBlank(req.getSimSerialNo())){
+					throw new StorePlatformException("SAC_MEM_0001", "simSerialNo");
+				}
+			}
+		}*/
+
 		AuthorizeByIdV2SacRes res = this.loginService.authorizeByIdV2(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
