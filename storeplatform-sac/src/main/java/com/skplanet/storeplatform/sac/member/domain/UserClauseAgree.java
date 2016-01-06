@@ -9,10 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -137,6 +134,16 @@ public class UserClauseAgree {
 
     public void setClauseVer(String clauseVer) {
         this.clauseVer = clauseVer;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.regDt = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updDt = new Date();
     }
 
     @Override
