@@ -116,20 +116,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				throw new StorePlatformException("SAC_MEM_0006");
 			}
 
-			/** 소셜 아이디인 경우만 userAuthToken 인증 */
-			if (StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
-				|| StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_GOOGLE)
-				|| StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
-				CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
-				chkUserAuthTkReqeust.setCommonRequest(mcc.getSCCommonRequest(requestHeader));
-				chkUserAuthTkReqeust.setUserKey(userInfo.getUserKey());
-				chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
-				CheckUserAuthTokenResponse chkUserAuthTkResponse = userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
-				if (chkUserAuthTkResponse.getUserKey() == null || chkUserAuthTkResponse.getUserKey().length() <= 0) {
-					throw new StorePlatformException("SAC_MEM_1204");
-				}
-			}
-
 		} else {
 
 			LOGGER.debug("########################################");
@@ -142,7 +128,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
 			/**
-			 * deviceId로 회원 정보 조회.
+			 * deviceId로 회원 정보 조회 이미 탈퇴되었을 경우 오류처리.
 			 */
 			String keyType = "deviceId";
 			if(ValidationCheckUtils.isMdn(req.getDeviceId()) ){
@@ -153,6 +139,24 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				throw new StorePlatformException("SAC_MEM_0006");
 			}
 
+		}
+
+		/** 소셜 아이디인 경우만 userAuthToken 인증
+		 *   - mdn 회원은 인증 단계 없이 탈퇴
+		 *   - 기존 Tstore 아이디는 단말에서 id/pwd 인증 단계 후에 탈퇴 진행되므로 인증 불필요
+		 *   - 신규 소셜 계정 아이디는 인증단계가 없으므로 id/token인증 필요
+		 */
+		if (StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
+				|| StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_GOOGLE)
+				|| StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
+			CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
+			chkUserAuthTkReqeust.setCommonRequest(mcc.getSCCommonRequest(requestHeader));
+			chkUserAuthTkReqeust.setUserKey(userInfo.getUserKey());
+			chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
+			CheckUserAuthTokenResponse chkUserAuthTkResponse = userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
+			if (chkUserAuthTkResponse.getUserKey() == null || chkUserAuthTkResponse.getUserKey().length() <= 0) {
+				throw new StorePlatformException("SAC_MEM_1204");
+			}
 		}
 
 		/** SC회원 탈퇴 요청*/

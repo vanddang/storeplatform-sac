@@ -912,17 +912,17 @@ public class LoginServiceImpl implements LoginService {
 		String isDormant = null;
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
-		/* 1. 회원정보 조회 (ID로 조회) */
+		/** 1. 회원정보 조회 (ID로 조회) */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID,
 				userId);
 
-		/*  1-1. 회원정보 없으면 Exception (ID자체가 없음) */
+		/** 1-1. 회원정보 없으면 Exception (ID자체가 없음) */
 		if (chkDupRes.getUserMbr() == null) {
 			/* 회원 정보가 존재 하지 않습니다. */
 			throw new StorePlatformException("SAC_MEM_0003", "userId", userId);
 		}
 
-		/*  2. 조회된 회원정보 셋팅 */
+		/** 2. 조회된 회원정보 셋팅 */
 		userKey = chkDupRes.getUserMbr().getUserKey();
 		userType = chkDupRes.getUserMbr().getUserType();
 		userMainStatus = chkDupRes.getUserMbr().getUserMainStatus();
@@ -930,11 +930,13 @@ public class LoginServiceImpl implements LoginService {
 		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
 
-		/*  2-1. 가가입 상태 - 가가입자는 Save&Sync 인증을 통해서만 인증이 처리된다.  */
+		/** 2-1. 가가입 상태면 Exception - 가가입자는 Save&Sync 인증을 통해서만 인증이 처리된다.  */
 		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_WATING)){
 			throw new StorePlatformException("SAC_MEM_2001", userMainStatus, userSubStatus);
-		/* 일시정지 / 로그인제한 */
-		}else if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
+		}
+
+		/** 2-2. 일시정지,로그인제한 상태면 응답처리 */
+		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
 				|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 			res.setUserKey(userKey);
 			res.setUserType(userType);
@@ -945,30 +947,30 @@ public class LoginServiceImpl implements LoginService {
 			return res;
 		}
 
-		/*  2-2. req의 id, pwd로 DB 조회 */
+		/** 3. 그외의 회원은 req의 pwd 일치 체크 */
 		CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(requestHeader, userKey, userPw, isDormant);
+
+		/** 3-1. pwd일치 - 로그인 성공 */
 		if(StringUtils.equals(chkUserPwdRes.getUserKey(),userKey)){
 
-			/*  2-2-1. 해당계정이 휴면아이디라면 정상 복구 */
+			/**  3-1-1. 해당계정이 휴면아이디라면 정상 복구 */
 			if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
-				LOGGER.info("{} 휴면 OneID 회원 복구", req.getUserId());
+				LOGGER.info("{} 휴면 회원 복구", req.getUserId());
 				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 				moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
 				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 			}
 
-			/*  2-2-2. 계정잠금해제 요청이라면 로그인상태 코드 정상처리 */
+			/**  3-1-2. 계정잠금해제 요청이라면 로그인상태 코드 정상처리 */
 			if (StringUtils.equals(req.getReleaseLock(), "Y")
 					&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
-
-				/* 로그인 상태코드 정상처리 */
 				this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant,
 						MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
 				loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 			}
 
-			/*  2-2-3. 로그인 성공이력 저장후 리턴 */
+			/**  3-1-3. 로그인 성공이력 저장후 리턴 */
 			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "Y");
 
 			/* 정상 로그인 결과 */
@@ -981,8 +983,9 @@ public class LoginServiceImpl implements LoginService {
 					userKey));
 			res.setIsLoginSuccess("Y");
 
+		/** 3-2. pwd 불일치 - 로그인 실패 */
 		}else{
-			/* 2-3. 로그인 실패이력 저장후 리턴 */
+			/** 3-2-1. 로그인 실패이력 저장후 리턴 */
 			LoginUserResponse loginUserRes = this.regLoginHistory(requestHeader, userId, userPw, "N", "N",
 					req.getIpAddress(), "N", null, "N");
 
@@ -3014,7 +3017,6 @@ public class LoginServiceImpl implements LoginService {
 			String isUpdLastLoginDt) {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		LoginUserRequest loginReq = new LoginUserRequest();
 		loginReq.setCommonRequest(commonRequest);
@@ -3076,7 +3078,6 @@ public class LoginServiceImpl implements LoginService {
 		UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
@@ -4217,7 +4218,6 @@ public class LoginServiceImpl implements LoginService {
 	 *            SacRequestHeader
 	 * @param userKey
 	 *            사용자 Key
-	 *
 	 * @param userPw
 	 *            사용자 PW
 	 *
@@ -4236,6 +4236,133 @@ public class LoginServiceImpl implements LoginService {
 		chkUserPwdReq.setIsDormant(isDormant);
 
 		return this.userSCI.checkUserPwd(chkUserPwdReq);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeById
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq)
+	 */
+	@Override
+	public AuthorizeByPwdSacRes authorizeByPassword(SacRequestHeader requestHeader, AuthorizeByPwdSacReq req){
+
+		String userId = req.getUserId();
+		String userPw = req.getUserPw();
+
+		String userKey = null;
+		String userType = null;
+		String loginStatusCode = null;
+		String userMainStatus = null;
+		String userSubStatus= null;
+		String isDormant = null;
+		AuthorizeByPwdSacRes res = new AuthorizeByPwdSacRes();
+
+		/** 1. 회원정보 조회 (ID로 조회) */
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID,
+				userId);
+
+		/**  1-1. 회원정보 없으면 Exception (ID자체가 없음) */
+		if (chkDupRes.getUserMbr() == null) {
+			/* 회원 정보가 존재 하지 않습니다. */
+			throw new StorePlatformException("SAC_MEM_0003", "userId", userId);
+		}
+
+		/**  2. 조회된 회원정보 셋팅 */
+		userKey = chkDupRes.getUserMbr().getUserKey();
+		userType = chkDupRes.getUserMbr().getUserType();
+		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
+		userMainStatus = chkDupRes.getUserMbr().getUserMainStatus();
+		userSubStatus = chkDupRes.getUserMbr().getUserSubStatus();
+		isDormant = chkDupRes.getUserMbr().getIsDormant();
+
+		/**  2-1. 가가입 상태면 Exception - 가가입자는 Save&Sync 인증을 통해서만 인증이 처리된다.  */
+		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_WATING)){
+			throw new StorePlatformException("SAC_MEM_2001", userMainStatus, userSubStatus);
+		}
+
+		/** 2-2. 로그인제한상태면 응답처리 */
+		if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+			res.setUserKey(userKey);
+			res.setUserType(userType);
+			res.setLoginStatusCode(loginStatusCode);
+			res.setIsLoginSuccess("Y");
+			return res;
+		}
+
+		/** 3. 그외의 회원은 req의 pwd 일치 체크 */
+		CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(requestHeader, userKey, userPw, isDormant);
+		/** 3-1. pwd일치 - 로그인 성공 */
+		if(StringUtils.equals(chkUserPwdRes.getUserKey(),userKey)){
+
+			/** 3-1-1. 해당계정이 휴면아이디라면 정상 복구 */
+			if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
+				LOGGER.info("{} 휴면 회원 복구", req.getUserId());
+				MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+				moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+				moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+			}
+
+			/** 3-1-2. 계정잠금해제 요청이라면 로그인상태 코드 정상처리 */
+			if (StringUtils.equals(req.getReleaseLock(), "Y")
+					&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+				/* 로그인 상태코드 정상처리 */
+				this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant,
+						MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
+				loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
+			}
+
+			/** 3-1-3. 로그인 성공이력 저장후 리턴 */
+			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", null, "N", null, "Y");
+
+			/** 3-1-4. 로그인 성공시 userAuthToken을 생성 및 셋팅 */
+			CreateUserAuthTokenResponse createUserAuthTokenRes = this.createUserAuthToken(requestHeader, userKey);
+
+			/* 정상 로그인 결과 */
+			res.setUserKey(userKey);
+			res.setUserAuthToken(createUserAuthTokenRes.getUserAuthToken());
+			res.setUserType(userType);
+			res.setLoginStatusCode(loginStatusCode);
+			res.setIsLoginSuccess("Y");
+
+		/** 3-2. pwd불일치 - 로그인 실패 */
+		}else{
+			/** 3-2-1. 로그인 실패이력 저장후 리턴 */
+			LoginUserResponse loginUserRes = this.regLoginHistory(requestHeader, userId, userPw, "N", "N",
+					null, "N", null, "N");
+
+			/* 실패 로그인 결과 */
+			res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
+			res.setIsLoginSuccess("N");
+		}
+
+		return res;
+
+	}
+
+	/**
+	 * 사용자 인증 토큰 생성 ( 있으면 새로운 인증토큰 생성후 update).
+	 *
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userKey
+	 *            사용자 Key
+	 *
+	 * @return CreateUserAuthTokenResponse
+	 *
+	 */
+	private CreateUserAuthTokenResponse createUserAuthToken(SacRequestHeader requestHeader, String userKey){
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+
+		CreateUserAuthTokenRequest createUserAuthTokenReq = new CreateUserAuthTokenRequest();
+		createUserAuthTokenReq.setCommonRequest(commonRequest);
+		createUserAuthTokenReq.setUserKey(userKey);
+
+		return this.userSCI.createUserAuthToken(createUserAuthTokenReq);
 	}
 
 }

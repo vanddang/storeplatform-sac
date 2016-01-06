@@ -729,4 +729,15 @@ public interface UserService {
 	 */
 	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust);
 
+	/**
+	 * <pre>
+	 * userAuthToken을 생성하는 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param createUserAuthTokenRequest
+	 *            CreateUserAuthTokenRequest
+	 * @return CreateUserAuthTokenResponse
+	 */
+	public CreateUserAuthTokenResponse createUserAuthToken(CreateUserAuthTokenRequest createUserAuthTokenRequest);
+
 }

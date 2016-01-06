@@ -421,8 +421,6 @@ public class UserServiceImpl implements UserService {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
 			}
 
-			userMbrRetrieveUserMbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
-			//userMbrRetrieveUserMbrPwd.setUserID(tempDevice.getDeviceNickName()); // 조회된 deviceNickName이 mbr_id 이다...
 			userMbrRetrieveUserMbrPwd = this.commonDAO.queryForObject("User.getUserMbrRetrievePWD",
 					userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
 
@@ -486,16 +484,6 @@ public class UserServiceImpl implements UserService {
 				}
 			});
 
-			// 원아이디 유무
-			if (StringUtils.equals(userMbrRetrieveUserMbrPwd.getUserType(), UserTypeCode.ONEID_USER.getCode())) {
-				final String tlogOneId = loginUserRequest.getUserID();
-				new TLogUtil().set(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.one_id(tlogOneId);
-					}
-				});
-			}
 		}
 
 		// 로그인 성공유무에 따른 이력 저장
@@ -4053,12 +4041,55 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust){
 
-		CheckUserAuthTokenResponse checkUserAuthTkResponse = (CheckUserAuthTokenResponse)this.commonDAO.queryForObject("User.checkUserAuthToken", chkUserAuthTkReqeust);
+		CheckUserAuthTokenResponse checkUserAuthTkResponse = (CheckUserAuthTokenResponse)
+				this.commonDAO.queryForObject("User.checkUserAuthToken", chkUserAuthTkReqeust);
 
 		checkUserAuthTkResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
 
 		return checkUserAuthTkResponse;
+
+	}
+
+	@Override
+	public CreateUserAuthTokenResponse createUserAuthToken(CreateUserAuthTokenRequest createUserAuthTokenRequest){
+
+		CreateUserAuthTokenResponse createUserAuthTokenResponse = new CreateUserAuthTokenResponse();
+
+		// userAuthToken 생성
+		String token = null;
+		try {
+			long sysTime = System.currentTimeMillis();
+
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(new Long(sysTime).toString().getBytes());
+			md.update(createUserAuthTokenRequest.getUserKey().getBytes());
+
+			byte[] msgStr = md.digest() ;
+
+			StringBuffer sb = new StringBuffer();
+			for(int i = 0 ; i < msgStr.length ; i++){
+				sb.append(Integer.toHexString((int)msgStr[i] & 0x00FF));
+			}
+			token = sb.toString();
+		} catch (NoSuchAlgorithmException e) {
+			throw new StorePlatformException(this.getMessage("response.ResultMessage.fail", ""));
+		}
+
+		createUserAuthTokenRequest.setUserAuthToken(token);
+
+		Integer row = 0;
+		row = this.commonDAO.update("User.createUserAuthToken", createUserAuthTokenRequest);
+		if (row <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+		}
+
+		createUserAuthTokenResponse.setUserKey(createUserAuthTokenRequest.getUserKey());
+		createUserAuthTokenResponse.setUserAuthToken(token);
+		createUserAuthTokenResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+
+		return createUserAuthTokenResponse;
 
 	}
 

@@ -704,4 +704,15 @@ public interface UserSCI {
 	 */
 	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust);
 
+	/**
+	 * <pre>
+	 * userAuthToken을 생성 하는 기능 제공한다.
+	 * </pre>
+	 *
+	 * @param createUserAuthTokenRequest
+	 *            CreateUserAuthTokenRequest
+	 * @return CreateUserAuthTokenResponse
+	 */
+	public CreateUserAuthTokenResponse createUserAuthToken(CreateUserAuthTokenRequest createUserAuthTokenRequest);
+
 }
