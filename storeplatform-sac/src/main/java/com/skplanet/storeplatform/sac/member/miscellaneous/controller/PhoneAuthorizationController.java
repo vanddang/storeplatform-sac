@@ -45,7 +45,7 @@ public class PhoneAuthorizationController {
 	 */
 	@RequestMapping(value = "/getPhoneAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetPhoneAuthorizationCodeRes getPhoneAutorizationCode(SacRequestHeader requestHeader,
+	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(SacRequestHeader requestHeader,
 			@Validated @RequestBody GetPhoneAuthorizationCodeReq request) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
@@ -73,7 +73,7 @@ public class PhoneAuthorizationController {
 	 */
 	@RequestMapping(value = "/confirmPhoneAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(SacRequestHeader requestHeader,
+	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAuthorizationCode(SacRequestHeader requestHeader,
 			@Validated @RequestBody ConfirmPhoneAuthorizationCodeReq request) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
