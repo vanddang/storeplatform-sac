@@ -1026,7 +1026,6 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 		deviceInfo.setNativeId(req.getNativeId());
 		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
-		deviceInfo.setIsRecvSms(MemberConstants.USE_N);
 
 		// 대표기기 여부(최초 신규등록이면 Y)
 		SearchDeviceListRequest searchDeviceListRequest = new SearchDeviceListRequest();
