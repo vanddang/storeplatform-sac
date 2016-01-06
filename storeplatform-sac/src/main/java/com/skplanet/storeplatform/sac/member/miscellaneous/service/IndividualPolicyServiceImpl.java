@@ -69,20 +69,22 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
 		GetIndividualPolicyRes res = new GetIndividualPolicyRes();
 		List<IndividualPolicyInfo> policyInfos = null;
-		IndividualPolicyInfo policyInfo = null;
-		if (policyResponse.getLimitTargetList().size() > 0) {
+		IndividualPolicyInfo policyInfo;
+		List<LimitTarget> limitTargetList = policyResponse.getLimitTargetList();
+		if (limitTargetList.size() > 0) {
 			policyInfos = new ArrayList<IndividualPolicyInfo>();
-			for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
+			int idx = 0;
+			for(LimitTarget limitTarget : limitTargetList) {
 				policyInfo = new IndividualPolicyInfo();
-				policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
-				policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
-				policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
-				policyInfo.setLimitAmount(policyResponse.getLimitTargetList().get(i).getLimitAmount());
-				policyInfo.setPreLimitAmount(policyResponse.getLimitTargetList().get(i).getPreLimitAmount());
-				policyInfo.setPermissionType(policyResponse.getLimitTargetList().get(i).getPermissionType());
-				policyInfo.setIsUsed(policyResponse.getLimitTargetList().get(i).getIsUsed());
+				policyInfo.setKey(limitTarget.getLimitPolicyKey());
+				policyInfo.setPolicyCode(limitTarget.getLimitPolicyCode());
+				policyInfo.setValue(limitTarget.getPolicyApplyValue());
+				policyInfo.setLimitAmount(limitTarget.getLimitAmount());
+				policyInfo.setPreLimitAmount(limitTarget.getPreLimitAmount());
+				policyInfo.setPermissionType(limitTarget.getPermissionType());
+				policyInfo.setIsUsed(limitTarget.getIsUsed());
 				policyInfos.add(policyInfo);
-				LOGGER.debug("==>>[SAC] IndividualPolicyInfo[{}].toString() : {}", i, policyInfo.toString());
+				LOGGER.debug("==>>[SAC] IndividualPolicyInfo[{}].toString() : {}", (idx++), policyInfo.toString());
 			}
 		}
 		res.setPolicyList(policyInfos);
@@ -139,13 +141,14 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 		CreateIndividualPolicyRes res = new CreateIndividualPolicyRes();
 
 		if (updatePolicyResponse.getLimitTargetList().size() > 0) {
-			res.setKey(updatePolicyResponse.getLimitTargetList().get(0).getLimitPolicyKey());
-			res.setPolicyCode(updatePolicyResponse.getLimitTargetList().get(0).getLimitPolicyCode());
-			res.setValue(updatePolicyResponse.getLimitTargetList().get(0).getPolicyApplyValue());
-			res.setIsUsed(updatePolicyResponse.getLimitTargetList().get(0).getIsUsed());
-			res.setLimitAmount(updatePolicyResponse.getLimitTargetList().get(0).getLimitAmount());
-			res.setPermissionType(updatePolicyResponse.getLimitTargetList().get(0).getPermissionType());
-			res.setPreLimitAmount(updatePolicyResponse.getLimitTargetList().get(0).getPreLimitAmount());
+			LimitTarget limitTarget1 = updatePolicyResponse.getLimitTargetList().get(0);
+			res.setKey(limitTarget1.getLimitPolicyKey());
+			res.setPolicyCode(limitTarget1.getLimitPolicyCode());
+			res.setValue(limitTarget1.getPolicyApplyValue());
+			res.setIsUsed(limitTarget1.getIsUsed());
+			res.setLimitAmount(limitTarget1.getLimitAmount());
+			res.setPermissionType(limitTarget1.getPermissionType());
+			res.setPreLimitAmount(limitTarget1.getPreLimitAmount());
 		}
 
 		LOGGER.debug("==>>[SAC] CreateIndividualPolicyRes.toString() : {}", res.toString());
