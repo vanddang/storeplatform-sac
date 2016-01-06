@@ -15,21 +15,21 @@
 
     <tx:advice id="transactionAdviceForSac" transaction-manager="transactionManagerForSac" >
         <tx:attributes>
-           <tx:method name="create*" propagation="REQUIRED" read-only="false" /> <!-- 생성 -->
-           <tx:method name="insert*" propagation="REQUIRED" read-only="false" /> <!-- 생성 -->
+            <tx:method name="create*" propagation="REQUIRED" read-only="false" /> <!-- 생성 -->
+            <tx:method name="insert*" propagation="REQUIRED" read-only="false" /> <!-- 생성 -->
 
-           <tx:method name="update*" propagation="REQUIRED" read-only="false" /> <!-- 수정 -->
-           <tx:method name="modify*" propagation="REQUIRED" read-only="false" /> <!-- 수정 -->
+            <tx:method name="update*" propagation="REQUIRED" read-only="false" /> <!-- 수정 -->
+            <tx:method name="modify*" propagation="REQUIRED" read-only="false" /> <!-- 수정 -->
 
-           <tx:method name="remove*" propagation="REQUIRED" read-only="false" /> <!-- 삭제 -->
-           <tx:method name="delete*" propagation="REQUIRED" read-only="false" /> <!-- 삭제 -->
+            <tx:method name="remove*" propagation="REQUIRED" read-only="false" /> <!-- 삭제 -->
+            <tx:method name="delete*" propagation="REQUIRED" read-only="false" /> <!-- 삭제 -->
 
-           <tx:method name="execute*" propagation="REQUIRED" read-only="false" /> <!-- 생성,수정,삭제등 복합 비지니스 -->
-           
-           <tx:method name="search*" propagation="SUPPORTS" read-only="true" /> <!-- 조회 Read-only Transaction 설정 -->
+            <tx:method name="execute*" propagation="REQUIRED" read-only="false" /> <!-- 생성,수정,삭제등 복합 비지니스 -->
+
+            <tx:method name="search*" propagation="SUPPORTS" read-only="true" /> <!-- 조회 Read-only Transaction 설정 -->
         </tx:attributes>
     </tx:advice>
-    
+
     <aop:config>
         <aop:advisor advice-ref="transactionAdviceForSac" pointcut-ref="customTransactionPointcutForSac" />
     </aop:config>
@@ -42,7 +42,7 @@
         <property name="dataSource" ref="defaultDataSourceForSac" />
         <property name="nestedTransactionAllowed" value="false" />
     </bean>
-    
+
     <bean id="sqlSessionFactoryForSac" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource"     ref="defaultDataSourceForSac" />
         <property name="configLocation" value="classpath:sac/mybatis/#{propertiesForSac['jdbc.type']}/mybatis-config.xml" />
@@ -50,24 +50,24 @@
             <list>
                 <value>classpath*:/mybatis/#{propertiesForSac['jdbc.type']}/mapper/**/*Mapper.xml</value>
                 <value>classpath*:/sac/mybatis/#{propertiesForSac['jdbc.type']}/mapper/**/*Mapper.xml</value>
-            </list> 
+            </list>
         </property>
     </bean>
-    
+
     <bean id="sqlSessionTemplateForSac" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg ref="sqlSessionFactoryForSac"/>
     </bean>
-    
+
     <bean id="commonDAOForSac" class="com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAOMyBatisImpl">
         <qualifier value="sac"/>
         <property name="sqlSessionTemplate" ref="sqlSessionTemplateForSac" />
     </bean>
-    
+
     <beans profile="dev,qa,stg,real">
         <bean id="defaultDataSourceForSac" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
             <constructor-arg ref="defaultDataSourceForSacJNDI" />
         </bean>
-        <jee:jndi-lookup id="defaultDataSourceForSacJNDI" jndi-name="#{propertiesForSac['jdbc.jndi.lookup']}" /> 
+        <jee:jndi-lookup id="defaultDataSourceForSacJNDI" jndi-name="#{propertiesForSac['jdbc.jndi.lookup']}" />
     </beans>
     <beans profile="local">
         <bean id="defaultDataSourceForSac" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
@@ -95,5 +95,5 @@
                 </bean>
             </property>
         </bean>
-    </beans> 
+    </beans>
 </beans> 
