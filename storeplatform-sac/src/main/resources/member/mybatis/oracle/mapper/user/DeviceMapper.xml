@@ -353,14 +353,17 @@
 
     <!-- 휴대기기 속성의 rep_device_yn = N -->
     <update id="unsetDeviceYn" parameterType="userMbrDevice">
-       UPDATE /* DeviceMapper.unsetDeviceYn, 속성의 rep_device_yn = N, 황정택/와이즈스톤, 2013-12-05 */
-       tb_us_ousermbr_device
-          SET rep_device_yn = 'N',
-              start_dt = SYSDATE,
-              upd_dt = SYSDATE
-        WHERE insd_usermbr_no = #{userKey}
-           AND device_id = #{deviceID}
-          AND auth_yn = 'Y'
+        UPDATE /* Devicemapper.xml, unsetDeviceYn, SAC(SC), 최진호 2016-01-05 */
+            TB_US_OUSERMBR_DEVICE
+        SET
+            REP_DEVICE_YN = 'N',
+            START_DT = SYSDATE,
+            UPD_DT = SYSDATE
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
+            <!-- AND DEVICE_ID = #{deviceID} -->
+            AND INSD_DEVICE_ID  = #{deviceKey}
+            AND AUTH_YN = 'Y'
     </update>
 
     <!-- 휴대기기 대표 설정 -->

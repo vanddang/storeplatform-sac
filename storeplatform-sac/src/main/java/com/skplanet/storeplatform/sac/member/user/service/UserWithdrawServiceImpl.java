@@ -169,7 +169,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		String mqDeviceStr = "";
 		if (listDeviceRes.getDeviceInfoList() != null) {
 			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
-				buf.append(deviceInfo.getDeviceId()).append("|");
+				buf.append(deviceInfo.getMdn()).append("|");
 			}
 			mqDeviceStr = buf.toString();
 			mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
