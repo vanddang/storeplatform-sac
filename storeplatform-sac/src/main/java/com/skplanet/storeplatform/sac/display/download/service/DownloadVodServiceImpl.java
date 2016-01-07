@@ -310,6 +310,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				List<Purchase> purchaseList = new ArrayList<Purchase>(); // 구매내역 List
 
 				for(HistorySacIn historySacIn : historyRes.getHistoryList()) {
+					/**
+					 * 구매ID가 들어올경우 구매ID를 찾을때까지 continue 한다.
+					 */
+					if (StringUtils.isNotBlank(downloadVodV3SacReq.getPrchsId()) && !historySacIn.getPrchsId().equals(downloadVodV3SacReq.getPrchsId())) {
+						continue;
+					}
+
                     String permitDeviceYn = historySacIn.getPermitDeviceYn(); // 허용단말여부
 					String prchsState = setPrchsState(historySacIn); // 구매 상태
 
