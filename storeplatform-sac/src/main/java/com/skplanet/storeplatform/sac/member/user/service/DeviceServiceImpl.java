@@ -431,8 +431,15 @@ public class DeviceServiceImpl implements DeviceService {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 
+		/*	통신사 코드 체크 */
+		deviceInfo.setDeviceTelecom(this.commService.validDeviceTelecomCode(deviceInfo.getDeviceTelecom()));
+
 		/* 서비스관리번호 조회 */
-		if(StringUtils.isNotBlank(deviceInfo.getMdn())){
+		if(StringUtils.isNotBlank(deviceInfo.getMdn()) &&
+				(StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceInfo.getDeviceTelecom())
+					|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceInfo.getDeviceTelecom())
+					|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceInfo.getDeviceTelecom())
+		)){
 			if(System.getProperty("spring.profiles.active", "local").equals("local")) {
 				// local에서는 외부연동이 안되므로 하드코딩
 				HashMap<String, String> mdnMap = new HashMap<String, String>();

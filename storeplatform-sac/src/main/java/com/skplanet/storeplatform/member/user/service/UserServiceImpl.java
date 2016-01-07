@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
 import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
 import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
 import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,6 +165,9 @@ public class UserServiceImpl implements UserService {
 		// ACTION 3-1. 사용자 회원 비밀번호 추가
 		MbrPwd mbrPwd = new MbrPwd();
 		mbrPwd.setMemberKey(generatedUserKey);
+		if(createUserRequest.getMbrPwd() != null && createUserRequest.getMbrPwd().getUserAuthToken() != null){
+			mbrPwd.setUserAuthToken(createUserRequest.getMbrPwd().getUserAuthToken());
+		}
 
 		// 사용자 패스워드 추가
 		row = (Integer) this.commonDAO.insert("User.insertPassword", mbrPwd);
@@ -557,7 +561,7 @@ public class UserServiceImpl implements UserService {
 			// 로그인 실패카운트 초기화
 			if (userMbrRetrieveUserMbrPwd.getFailCnt() > 0) {
 				MbrPwd mbrPwd = new MbrPwd();
-				mbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
+				//mbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
 				mbrPwd.setMemberKey(userMbrRetrieveUserMbrPwd.getUserKey());
 				this.commonDAO.update("User.updateLoginSuccess", mbrPwd);
 			}
@@ -573,7 +577,7 @@ public class UserServiceImpl implements UserService {
 
 			// 2.1.5.ID 기반 회원 인증API에서 비밀번호 불일치인 경우만 해당.
 			MbrPwd mbrPwd = new MbrPwd();
-			mbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
+			//mbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
 			mbrPwd.setMemberKey(userMbrRetrieveUserMbrPwd.getUserKey());
 			if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
 				this.commonDAO.update("User.updateLoginFail", mbrPwd);

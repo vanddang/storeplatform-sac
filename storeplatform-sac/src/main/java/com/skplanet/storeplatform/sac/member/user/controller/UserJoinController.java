@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
@@ -237,4 +230,32 @@ public class UserJoinController {
 
 	}
 
+	/**
+	 * <pre>
+	 * ID기반(Social ID) 회원 가입.
+	 * </pre>
+	 *
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	@RequestMapping(value = "/member/user/createById/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateByIdSacRes createById(SacRequestHeader sacHeader, @Validated @RequestBody CreateByIdSacReq req) {
+
+		LOGGER.debug("#################################");
+		LOGGER.debug("##### 2.1.67. ID기반(Social ID) 회원 가입 #####");
+		LOGGER.debug("#################################");
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		CreateByIdSacRes res = this.svc.createById(sacHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
+
+	}
 }

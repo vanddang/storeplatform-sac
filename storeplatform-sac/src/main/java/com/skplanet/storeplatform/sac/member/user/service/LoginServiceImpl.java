@@ -1019,19 +1019,17 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
 		}
 
-		/*	uuserAuthToken 유효성 체크 */
+		/*	userAuthToken 유효성 체크 */
 		CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
 		chkUserAuthTkReqeust.setCommonRequest(commService.getSCCommonRequest(requestHeader));
 		chkUserAuthTkReqeust.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
 		CheckUserAuthTokenResponse chkUserAuthTkResponse = this.userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
-		if (StringUtils.isBlank(chkUserAuthTkResponse.getUserKey())
-				|| StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_TSTORE)){
-			res.setIsLoginSuccess(MemberConstants.USE_N);
-			return res;
-		}else if(!StringUtils.equals(req.getUserAuthToken(), chkUserAuthTkResponse.getUserKey())){
+		if (StringUtils.isBlank(chkUserAuthTkResponse.getUserKey())){ // 유효성 체크 실패
 			boolean isValid = false;
-			if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+			if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_TSTORE)){
+
+			}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 
 			}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
 
@@ -1071,7 +1069,7 @@ public class LoginServiceImpl implements LoginService {
 		keySearchList.add(key);
 		searchDeviceListRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
 		searchDeviceListRequest.setKeySearchList(keySearchList);
-		searchDeviceListRequest.setIsMainDevice(MemberConstants.USE_N);
+		searchDeviceListRequest.setIsMainDevice(MemberConstants.USE_Y);
 		try{
 			SearchDeviceListResponse searchDeviceListResponse = this.deviceSCI.searchDeviceList(searchDeviceListRequest);
 			deviceInfo.setIsPrimary(MemberConstants.USE_N);
@@ -3925,7 +3923,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// 필수 약관여부, 버젼 맵핑
-		agreementInfoList = this.commService.getClauseMappingInfo(tenantId, agreementInfoList);
+		agreementInfoList = this.commService.getClauseMappingInfo(agreementInfoList);
 
 		for (AgreementInfo info : agreementInfoList) {
 			Agreement agreement = new Agreement();

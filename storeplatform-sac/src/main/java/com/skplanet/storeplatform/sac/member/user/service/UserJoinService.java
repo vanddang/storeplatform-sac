@@ -9,14 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -106,4 +99,17 @@ public interface UserJoinService {
 	 */
 	public CreateSaveAndSyncRes regSaveAndSync(SacRequestHeader sacHeader, CreateSaveAndSyncReq req);
 
+	/**
+	 * <pre>
+	 * ID기반(Social ID) 회원 가입.
+	 * </pre>
+	 *
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateByIdSacReq
+	 * @return CreateByIdSacRes
+	 *
+	 */
+	public CreateByIdSacRes createById(SacRequestHeader sacHeader, CreateByIdSacReq req);
 }
