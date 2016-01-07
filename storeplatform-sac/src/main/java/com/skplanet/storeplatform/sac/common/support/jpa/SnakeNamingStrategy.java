@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.common.support;
+package com.skplanet.storeplatform.sac.common.support.jpa;
 
 import com.google.common.base.CaseFormat;
 import org.hibernate.boot.model.naming.EntityNaming;
