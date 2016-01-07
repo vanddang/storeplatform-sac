@@ -1020,33 +1020,30 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/*	uuserAuthToken 유효성 체크 */
-		/*CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
+		CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
 		chkUserAuthTkReqeust.setCommonRequest(commService.getSCCommonRequest(requestHeader));
 		chkUserAuthTkReqeust.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
 		CheckUserAuthTokenResponse chkUserAuthTkResponse = this.userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
-		if (StringUtils.isBlank(chkUserAuthTkResponse.getUserKey())){
-			throw new StorePlatformException("SAC_MEM_1204");
+		if (StringUtils.isBlank(chkUserAuthTkResponse.getUserKey())
+				|| StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_TSTORE)){
+			res.setIsLoginSuccess(MemberConstants.USE_N);
+			return res;
 		}else if(!StringUtils.equals(req.getUserAuthToken(), chkUserAuthTkResponse.getUserKey())){
-			if(StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_IDPID)){
-				// Tstore 계정인 경우 N으로 내려줘서 "ID 기반 회원 인증 V2"를 호출해서 토큰을 재발급 받게 한다.
+			boolean isValid = false;
+			if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+
+			}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
+
+			}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)){
+
+			}
+
+			if(!isValid){
 				res.setIsLoginSuccess(MemberConstants.USE_N);
 				return res;
-			}else{ // 각 소셜계정 연동해서 토큰 유효성 체크
-				boolean isValid = false;
-				if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
-
-				}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
-
-				}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)){
-
-				}
-
-				if(isValid){
-					// 토근정보 갱신
-				}
 			}
-		}*/
+		}
 
 		/* 휴유회원 복구 */
 		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {

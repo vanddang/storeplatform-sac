@@ -46,7 +46,10 @@ public final class MemberConstants {
 
 	/** 사용자구분코드. */
 	public static final String USER_TYPE_MOBILE = "US011501"; // 기기사용자
+	public static final String USER_TYPE_TSTORE = "US011502"; // Tstore ID 사용자
+	@Deprecated
 	public static final String USER_TYPE_IDPID = "US011502"; // IDP사용자
+	@Deprecated
 	public static final String USER_TYPE_ONEID = "US011503"; // OneID사용자
 	public static final String USER_TYPE_NAVER = "US011504"; // 네이버ID사용자
 	public static final String USER_TYPE_GOOGLE = "US011505"; // 구글ID사용자
