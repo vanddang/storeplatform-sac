@@ -4041,11 +4041,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust){
 
-		CheckUserAuthTokenResponse checkUserAuthTkResponse = (CheckUserAuthTokenResponse)
-				this.commonDAO.queryForObject("User.checkUserAuthToken", chkUserAuthTkReqeust);
+		CheckUserAuthTokenResponse checkUserAuthTkResponse = new CheckUserAuthTokenResponse();
+
+		checkUserAuthTkResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserAuthToken", chkUserAuthTkReqeust));
 
 		checkUserAuthTkResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
-				"response.ResultMessage.success"));
+					"response.ResultMessage.success"));
 
 		return checkUserAuthTkResponse;
 
@@ -4090,6 +4091,38 @@ public class UserServiceImpl implements UserService {
 				"response.ResultMessage.success"));
 
 		return createUserAuthTokenResponse;
+
+	}
+
+	@Override
+	public ModifyIdResponse modifyId(ModifyIdRequest modifyIdRequest){
+
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 서비스 - ID 변경");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		LOGGER.debug(modifyIdRequest.toString());
+
+		ModifyIdResponse modifyIdResponse = new ModifyIdResponse();
+
+		Integer idRow = 0;
+		idRow = this.commonDAO.update("User.updateUserIdNType", modifyIdRequest);
+		if (idRow <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+		}
+
+		Integer tokenRow = 0;
+		tokenRow = this.commonDAO.update("User.updateUserAuthToken", modifyIdRequest);
+		if (tokenRow <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+		}
+
+		modifyIdResponse.setUserKey(modifyIdRequest.getUserKey());
+		modifyIdResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+
+		return modifyIdResponse;
 
 	}
 

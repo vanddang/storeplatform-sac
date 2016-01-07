@@ -3676,4 +3676,42 @@ public class UserSCIController implements UserSCI {
 
 	}
 
+	@Override
+	public ModifyIdResponse modifyId(ModifyIdRequest modifyIdRequest){
+
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - ID 변경");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		ModifyIdResponse modifyIdResponse = null;
+
+		// 입력 파라미터가 없음
+		if (modifyIdRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (modifyIdRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 필수 파라미터
+		if (modifyIdRequest.getUserKey() == null || modifyIdRequest.getUserId() == null
+				|| modifyIdRequest.getUserType() == null || modifyIdRequest.getUserAuthToken() == null
+				|| modifyIdRequest.getNewUserId() == null || modifyIdRequest.getNewUserType() == null
+				|| modifyIdRequest.getNewUserAuthToken() == null ) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+			modifyIdResponse = this.service.modifyId(modifyIdRequest);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return modifyIdResponse;
+
+	}
+
 }

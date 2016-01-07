@@ -1104,4 +1104,100 @@ public class UserModifyServiceImpl implements UserModifyService {
         return res;
 
     }
+
+    /**
+     * <pre>
+     * 2.1.68. ID 변경 [신규 규격].
+     * </pre>
+     *
+     * @param sacHeader
+     *            SacRequestHeader
+     * @param req
+     *            ModifyIdSacReq
+     * @return ModifyIdSacRes
+     */
+    @Override
+    public ModifyIdSacRes modifyId(SacRequestHeader sacHeader, ModifyIdSacReq req) {
+
+        CommonRequest commonRequest = this.mcc.getSCCommonRequest(sacHeader);
+
+        /** 1. 사용자 타입에 따른 오류 */
+        if( StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_MOBILE)
+                || StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_ONEID)){
+            throw new StorePlatformException("SAC_MEM_1403");
+        }
+        if( StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_MOBILE)
+                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_IDPID)
+                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_ONEID)){
+            throw new StorePlatformException("SAC_MEM_1403");
+        }
+
+        /** 2. 그외의 사용자면 회원 정보 조회. */
+        List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+        KeySearch keySchUserKey = new KeySearch();
+
+        try{
+            keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+            keySchUserKey.setKeyString(req.getUserKey());
+            keySearchList.add(keySchUserKey);
+            SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+            searchExtentUserRequest.setCommonRequest(commonRequest);
+            searchExtentUserRequest.setKeySearchList(keySearchList);
+            searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+            SearchExtentUserResponse searchUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
+
+            /** 2-1. 변경 가능 상테(매인, 서브상태 정상인 회원)가 아니면 오류. */
+            if(!StringUtils.equalsIgnoreCase(searchUserRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_NORMAL)
+                    || !StringUtils.equalsIgnoreCase(searchUserRes.getUserMbr().getUserSubStatus(), MemberConstants.SUB_STATUS_NORMAL)){
+                throw new StorePlatformException("SAC_MEM_2001", searchUserRes.getUserMbr().getUserMainStatus(),
+                        searchUserRes.getUserMbr().getUserSubStatus());
+            }
+        } catch (StorePlatformException ex) {
+            /** 2-2. 아이디가 없거나 회원 정보 조회시 exception 오류. */
+            if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+                    || StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+                throw new StorePlatformException("SAC_MEM_0003", "userKey", req.getUserKey());
+            }else{
+                throw ex;
+            }
+        }
+
+        /** 3. userId, userAuthToken 로 인증시도 실패시 오류.  */
+        CheckUserAuthTokenRequest chkUserAuthTkReq = new CheckUserAuthTokenRequest();
+        chkUserAuthTkReq.setCommonRequest(commonRequest);
+        chkUserAuthTkReq.setUserKey(req.getUserKey());
+        chkUserAuthTkReq.setUserAuthToken(req.getUserAuthToken());
+        CheckUserAuthTokenResponse chkUserAuthTkRes =  this.userSCI.checkUserAuthToken(chkUserAuthTkReq);
+
+        if( chkUserAuthTkRes.getUserKey() == null || chkUserAuthTkRes.getUserKey().length() <= 0 ){
+            throw new StorePlatformException("SAC_MEM_1204");
+        }
+
+        /** 4. userAuthToken 인증이 되었으면 ID변경 */
+        ModifyIdSacRes res = new ModifyIdSacRes();
+
+        try {
+            // ID 변경 셋팅
+            ModifyIdRequest scReq = new ModifyIdRequest();
+            scReq.setCommonRequest(commonRequest);
+            scReq.setUserKey(req.getUserKey());
+            scReq.setUserId(req.getUserId());
+            scReq.setUserType(req.getUserType());
+            scReq.setUserAuthToken(req.getUserAuthToken());
+            scReq.setNewUserId(req.getNewUserId());
+            scReq.setNewUserType(req.getNewUserType());
+            scReq.setNewUserAuthToken(req.getNewUserAuthToken());
+
+            // ID 변경 진행
+            ModifyIdResponse scRes = this.userSCI.modifyId(scReq);
+            res.setUserKey(scRes.getUserKey());
+        } catch (StorePlatformException spe) {
+            LOGGER.info("ID 변경 실패 [{}]", req.getUserKey());
+            throw spe;
+        }
+
+        return res;
+
+    }
+
 }
