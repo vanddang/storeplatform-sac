@@ -4,6 +4,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.List;
 
@@ -26,11 +27,13 @@ public class AuthorizeByIdV2SacReq extends CommonInfo implements Serializable {
 	 * 사용자 구분 코드.
 	 */
 	@NotEmpty
+	@Pattern(regexp = "^US011502|^US011504|^US011505|^US011506")
 	private String userType;
 
 	/**
 	 * 사용자 인증 토큰.
 	 */
+	@NotEmpty
 	private String userAuthToken;
 
 	/**

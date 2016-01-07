@@ -1019,7 +1019,42 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
 		}
 
-		/*	userType에 따라 userAuthToken 유효성 체크 */
+		/*	uuserAuthToken 유효성 체크 */
+		/*CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
+		chkUserAuthTkReqeust.setCommonRequest(commService.getSCCommonRequest(requestHeader));
+		chkUserAuthTkReqeust.setUserKey(chkDupRes.getUserMbr().getUserKey());
+		chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
+		CheckUserAuthTokenResponse chkUserAuthTkResponse = this.userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
+		if (StringUtils.isBlank(chkUserAuthTkResponse.getUserKey())){
+			throw new StorePlatformException("SAC_MEM_1204");
+		}else if(!StringUtils.equals(req.getUserAuthToken(), chkUserAuthTkResponse.getUserKey())){
+			if(StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_IDPID)){
+				// Tstore 계정인 경우 N으로 내려줘서 "ID 기반 회원 인증 V2"를 호출해서 토큰을 재발급 받게 한다.
+				res.setIsLoginSuccess(MemberConstants.USE_N);
+				return res;
+			}else{ // 각 소셜계정 연동해서 토큰 유효성 체크
+				boolean isValid = false;
+				if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+
+				}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
+
+				}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)){
+
+				}
+
+				if(isValid){
+					// 토근정보 갱신
+				}
+			}
+		}*/
+
+		/* 휴유회원 복구 */
+		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+			MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+			moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+			moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+			this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+		}
 
 		/*	휴대기기 처리 */
 		DeviceInfo deviceInfo = new DeviceInfo();
@@ -1030,7 +1065,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setNativeId(req.getNativeId());
 		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
 
-		// 대표기기 여부(최초 신규등록이면 Y)
+		// 대표기기 여부
 		SearchDeviceListRequest searchDeviceListRequest = new SearchDeviceListRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
@@ -1058,8 +1093,6 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserType(chkDupRes.getUserMbr().getUserType());
 		res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
 		res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
-		res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
-		res.setLoginFailCount("0");
 		res.setIsLoginSuccess(MemberConstants.USE_Y);
 		return res;
 	}
