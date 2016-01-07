@@ -740,4 +740,15 @@ public interface UserService {
 	 */
 	public CreateUserAuthTokenResponse createUserAuthToken(CreateUserAuthTokenRequest createUserAuthTokenRequest);
 
+	/**
+	 * <pre>
+	 * ID 변경하는 기능을 제공한다 [신규 규격].
+	 * </pre>
+	 *
+	 * @param modifyIdRequest
+	 *            ModifyIdRequest
+	 * @return ModifyIdResponse
+	 */
+	public ModifyIdResponse modifyId(ModifyIdRequest modifyIdRequest);
+
 }

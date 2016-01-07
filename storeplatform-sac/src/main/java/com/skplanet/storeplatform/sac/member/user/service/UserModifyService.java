@@ -9,28 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -182,5 +161,18 @@ public interface UserModifyService {
 	 * @return RemoveDeliveryInfoSacRes
 	 */
 	public RemoveDeliveryInfoSacRes removeDeliveryInfo(SacRequestHeader header, RemoveDeliveryInfoSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.68. ID 변경 [신규 규격].
+	 * </pre>
+	 *
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            ModifyIdSacReq
+	 * @return ModifyIdSacRes
+	 */
+	public ModifyIdSacRes modifyId(SacRequestHeader header, ModifyIdSacReq req);
 
 }
