@@ -14,6 +14,7 @@ import java.io.Serializable;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 
 /**
  * 사용자 로그인 요청을 위한 Value object
@@ -69,6 +70,9 @@ public class LoginUserRequest extends CommonInfo implements Serializable {
 
 	/** 기기_OS_버전. */
 	private String deviceOsVersion;
+
+    /** device 정보 */
+    private DeviceInfo deviceInfo;
 
 	/**
 	 * 로그인 상태 코드를 리턴한다.
@@ -348,11 +352,19 @@ public class LoginUserRequest extends CommonInfo implements Serializable {
 		this.deviceOsVersion = deviceOsVersion;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+    public DeviceInfo getDeviceInfo() {
+        return deviceInfo;
+    }
+
+    public void setDeviceInfo(DeviceInfo deviceInfo) {
+        this.deviceInfo = deviceInfo;
+    }
+
+    /*
+         * (non-Javadoc)
+         *
+         * @see java.lang.Object#toString()
+         */
 	@Override
 	public String toString() {
 		return Utils.printKeyValues(this);

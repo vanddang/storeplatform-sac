@@ -239,7 +239,7 @@
             AND mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
     </select>
 
-    <!-- DeviceID로 MBR_ID 조회(로그인, isMobile=Y) -->
+    <!-- userKey, DeviceKey 로 MBR_ID 조회(로그인, isMobile=Y) -->
     <select id="getUserIDByDeviceID" parameterType="loginUserRequest" resultType="userMbrDevice">
         SELECT  /* UserMapper.getUserIDByDeviceID, DeviceID로 MBR_ID 조회, wisestone_dinga, 2014-01-15 */
                 u.deviceNickName AS deviceNickName,
@@ -255,7 +255,8 @@
           FROM  tb_us_ousermbr_device b 
           JOIN  tb_us_ousermbr a
             ON  b.insd_usermbr_no = a.insd_usermbr_no
-         WHERE  b.device_id = #{userID}
+         WHERE  b.insd_usermbr_no = #{deviceInfo.userKey}
+           AND  b.insd_device_id = #{deviceInfo.deviceKey}
            AND  b.auth_yn = 'Y'
            AND  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
        ORDER BY b.auth_dt DESC) u
@@ -289,6 +290,7 @@
            <if test=" keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') "> b.insd_device_id =  #{keySearch.keyString} </if>
            <if test=" keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> b.device_id =  #{keySearch.keyString} </if>
            <if test=" keySearch.keyType.equalsIgnoreCase('MDN') "> b.mdn =  #{keySearch.keyString} </if>
+           <if test=" keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') "> b.svc_mang_no = #{keySearch.keyString} AND MDN IS NOT NULL</if>
        </foreach>
          ORDER BY b.auth_dt DESC) u
          WHERE ROWNUM = 1

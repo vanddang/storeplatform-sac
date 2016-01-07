@@ -263,7 +263,8 @@ public class UserSCIController implements UserSCI {
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_ID)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_EMAIL)
-					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_MDN)) {
+					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_MDN)
+                    && !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.wrongKeyType", ""));
 			}
 		}
@@ -341,6 +342,11 @@ public class UserSCIController implements UserSCI {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 			}
 		}
+
+        // isMobile 일 경우 deviceInfo 정보 체크
+        if(loginUserRequest.getIsMobile().equals(Constant.TYPE_YN_Y) && loginUserRequest.getDeviceInfo() == null){
+            throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+        }
 
 		// TLog
 		final String tlogIP = loginUserRequest.getIpAddress();
