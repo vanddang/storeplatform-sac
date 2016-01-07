@@ -402,4 +402,25 @@ public class UserModifyController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 2.1.68. ID 변경 [신규 규격].
+	 * </pre>
+	 *
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ModifyIdSacReq
+	 * @return ModifyIdSacRes
+	 */
+	@RequestMapping(value = "/member/user/modifyId/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyIdSacRes modifyId(SacRequestHeader header,
+													   @RequestBody @Validated ModifyIdSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		ModifyIdSacRes res = this.svc.modifyId(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
 }

@@ -483,7 +483,7 @@
                reg_dt,
                auth_dt,
                auth_yn,
-               sms_recv_yn,
+               sms_recv_yn
                <if test="deviceID != null">,device_id </if>
                <if test="mdn != null">,mdn </if>
                <if test="deviceTelecom != null">,mno_cd </if>
@@ -1062,12 +1062,14 @@
         SELECT /* DeviceMapper.xml, searchDeviceOrderBySvcMangNo, SAC(SC), 반범진, 2016-01-04 */
                 a.mbr_id as userID,
                 b.insd_usermbr_no as userKey,
-                b.insd_device_id as deviceKey
+                b.insd_device_id as deviceKey,
+                b.entry_chnl_cd as joinId,
+                b.sms_recv_yn as isRecvSMS
         FROM TB_US_OUSERMBR a INNER JOIN (
-            SELECT insd_usermbr_no, insd_device_id
+            SELECT insd_usermbr_no, insd_device_id, entry_chnl_cd, sms_recv_yn
             FROM
             (
-                SELECT insd_usermbr_no, insd_device_id
+                SELECT insd_usermbr_no, insd_device_id, entry_chnl_cd, sms_recv_yn
                 FROM tb_us_ousermbr_device
                 WHERE svc_mang_no =  #{svcMangNo}
                       AND auth_yn = 'Y'

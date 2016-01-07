@@ -706,7 +706,7 @@ public interface UserSCI {
 
 	/**
 	 * <pre>
-	 * userAuthToken을 생성 하는 기능 제공한다.
+	 * userAuthToken을 생성 하는 기능을 제공한다.
 	 * </pre>
 	 *
 	 * @param createUserAuthTokenRequest
@@ -714,5 +714,16 @@ public interface UserSCI {
 	 * @return CreateUserAuthTokenResponse
 	 */
 	public CreateUserAuthTokenResponse createUserAuthToken(CreateUserAuthTokenRequest createUserAuthTokenRequest);
+
+	/**
+	 * <pre>
+	 * ID를 변경하는 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param modifyIdRequest
+	 *            ModifyIdRequest
+	 * @return ModifyIdResponse
+	 */
+	public ModifyIdResponse modifyId(ModifyIdRequest modifyIdRequest);
 
 }
