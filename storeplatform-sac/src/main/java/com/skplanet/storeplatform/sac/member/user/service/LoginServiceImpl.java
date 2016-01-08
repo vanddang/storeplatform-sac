@@ -686,64 +686,60 @@ public class LoginServiceImpl implements LoginService {
 		boolean isOpmd = this.commService.isOpmd(oDeviceId);
 		String isVariability = "Y"; // 변동성 체크 성공 유무
 		String userKey = null;
-		String deviceKey = null;
 		DeviceInfo deviceInfo = null;
 
-		/* 모번호 조회 및 셋팅 */
+		/** 1. 모번호 조회 및 셋팅 */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
 
-		/* deviceId의 mdn여부 체크 */
+		/** 2. req deviceId keyType 결정 */
 		String keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
 		if (ValidationCheckUtils.isMdn(req.getDeviceId())) {
 			keyType = MemberConstants.KEY_TYPE_MDN;
 		}
 
-		/* mdn 회원유무 조회 */
+		/** 3. 회원 유무 조회 */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, keyType, req.getDeviceId());
 		if (chkDupRes.getUserMbr() != null) {
 			LOGGER.info("{} 휴면계정유무 : {}", oDeviceId, chkDupRes.getUserMbr().getIsDormant());
 		}
 
+		/** 3-1. 회원이라면 */
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
-
-			if (!isOpmd) { // OPMD단말인경우 변동성 체크를 하지 않는다.
-				/* 휴대기기 정보 조회 */
+            /** 3-1-1. OPMD 단말이 아니라면 */
+			if (!isOpmd) {
+				/** 3-1-1-1. 휴대기기 정보 조회후 변동성 체크 */
 				deviceInfo = this.deviceService.srhDevice(requestHeader, keyType, req.getDeviceId(), null);
-
 				userKey = deviceInfo.getUserKey();
-				deviceKey = deviceInfo.getDeviceKey();
 
-				/* req, DB의 통신사가 일치한 경우 */
+				/** req, DB의 통신사가 일치한 경우 */
 				if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(),
 						deviceInfo.getDeviceTelecom(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
-					/* req, DB의 통신사가 일치 하고 IMEI가 다르면 */
+					/** req, DB의 통신사가 일치 하고 IMEI가 다르면 */
 					if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getNativeId(),
 							deviceInfo.getNativeId(), MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
-						 /* req, DB의 통신사와 IMEI가 일치 하나 GMAIL이 다르면 변동성 체크 실패 */
+						/** 3-1-1-2. 변동성 체크 실패 : req, DB의 통신사가 일치, IMEI이 불일치, GMAIL이 불일치 */
 						if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(),
 								deviceInfo.getDeviceAccount(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
 							isVariability = "N";
 						}
 
 					}
-
-				} else { /* 통신사가 다른경우 GMAIL이 다르면 변동성 체크 실패 */
-
+				/** 통신사가 다른경우 */
+				} else {
 					LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceTelecom(),
 							req.getDeviceTelecom());
+					/** 3-1-1-3. 변동성 체크 실패 : req, DB의 통신사와 GMAIL이 불일치 */
 					if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(),
 							deviceInfo.getDeviceAccount(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
-
 						isVariability = "N";
-
 					}
 
 				}
-			} else {
+			}else{
 				LOGGER.info("{} {} OPMD 단말 변동성 성공처리", req.getDeviceId(), oDeviceId);
 			}
 
-			// tLog 정보 셋팅
+			/** tLog 정보 셋팅 */
 			if (deviceInfo != null) {
 				final String tLogDeviceId = req.getDeviceId();
 				final String tLogMnoTypeReq = req.getDeviceTelecom();
@@ -764,22 +760,28 @@ public class LoginServiceImpl implements LoginService {
 					}
 				});
 			}
-
-		} else {
+		/** 회원이 아니라면 오류 처리 */
+		}else{
 			throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
 		}
 
+		/** 4. 변동성 체크 성공 처리 */
 		if (StringUtils.equals(isVariability, "Y")) {
 
-			if (!isOpmd) { // OPMD 단말인경우 휴대기기 정보 업데이트를 하지 않는다.
-				LOGGER.info("{} 변동성 체크 성공", req.getDeviceId());
+			LOGGER.info("{} 변동성 체크 성공", req.getDeviceId());
+            /** 4-1. OPMD 단말이 아니라면 */
+			if (!isOpmd) {
 
-				/* 휴대기기 정보 수정 (GMAIL) */
+				/** 4-1-1. GMAIL 업데이트 */
 				ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
 				UserMbrDevice userMbrDevice = new UserMbrDevice();
 				modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 				modifyDeviceRequest.setUserKey(userKey);
-				userMbrDevice.setDeviceID(req.getDeviceId());
+				if ( StringUtils.equals(keyType, MemberConstants.KEY_TYPE_MDN)) {
+					userMbrDevice.setMdn(req.getDeviceId());
+				} else {
+					userMbrDevice.setDeviceID(req.getDeviceId());
+				}
 				if (StringUtils.isNotBlank(req.getDeviceAccount())) {
 					userMbrDevice.setDeviceAccount(req.getDeviceAccount());
 				}
@@ -788,25 +790,28 @@ public class LoginServiceImpl implements LoginService {
 				ModifyDeviceResponse modifyDeviceResponse = this.deviceSCI.modifyDevice(modifyDeviceRequest);
 				res.setDeviceKey(modifyDeviceResponse.getDeviceKey());
 
-			} else {
-				res.setDeviceKey(deviceKey);
+			}else{
+				res.setDeviceKey(null);
 				LOGGER.info("{} {} OPMD 단말 변동성 휴대기기 업데이트 안함", req.getDeviceId(), oDeviceId);
 			}
+
 			res.setUserKey(userKey);
 
+		/** 5. 변동성 체크 실패 처리 */
 		} else {
 
 			LOGGER.info("{} 변동성 체크 실패", req.getDeviceId());
 
-			/* 인증수단 조회 */
+			/** 5-1. 인증수단 조회 */
 			UserAuthMethod userAuthMethod = this.srhUserAuthMethod(requestHeader, req.getDeviceId(), userKey);
 
+			/** 5-2. 인증수단이 없는 경우 탈퇴 처리 */
 			if (StringUtils.isBlank(userAuthMethod.getUserId())
-					&& StringUtils.equals(userAuthMethod.getIsRealName(), "N")) { // 인증수단이 없는경우
+					&& StringUtils.equals(userAuthMethod.getIsRealName(), "N")) {
 
 				LOGGER.info("{} 추가인증수단 없음, 탈퇴처리", req.getDeviceId());
 
-				/* MQ 연동(회원 탈퇴) */
+				/** 5-2-1. MQ 연동(회원 탈퇴) */
 				DetailReq detailReq = new DetailReq();
 				SearchExtentReq searchExtent = new SearchExtentReq();
 				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
@@ -835,7 +840,7 @@ public class LoginServiceImpl implements LoginService {
 					LOGGER.error("MQ process fail {}", mqInfo);
 				}
 
-				/* SC회원탈퇴 */
+				/** 5-2-2. SC 회원탈퇴 */
 				RemoveUserRequest removeUserReq = new RemoveUserRequest();
 				removeUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 				removeUserReq.setUserKey(userKey);
@@ -845,15 +850,18 @@ public class LoginServiceImpl implements LoginService {
 				removeUserReq.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
 				this.userSCI.remove(removeUserReq);
 
-				/* 회원 정보가 존재 하지 않습니다. */
+				/** 5-2-3. 회원 탈퇴후 오류 처리 회원 정보가 존재 하지 않습니다. */
 				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
 
+			/** 5-2. 인증수단이 있는 경우 응답값 셋팅 처리 */
 			} else {
+
 				LOGGER.info("{} 추가인증수단 userId : {}, 실명인증여부 : {}", req.getDeviceId(), userAuthMethod.getUserId(),
 						userAuthMethod.getIsRealName());
-			}
 
-			res.setUserAuthMethod(userAuthMethod);
+				res.setUserAuthMethod(userAuthMethod);
+
+			}
 
 		}
 
@@ -883,17 +891,17 @@ public class LoginServiceImpl implements LoginService {
 		String isDormant = null;
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
-		/** 1. 회원정보 조회 (ID로 조회) */
+		/** 1. 회원정보 조회 (ID로 조회). */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID,
 				userId);
 
-		/** 1-1. 회원정보 없으면 Exception (ID자체가 없음) */
+		/** 1-1. 회원정보 없으면 오류 - 회원 정보가 존재 하지 않습니다. */
 		if (chkDupRes.getUserMbr() == null) {
 			/* 회원 정보가 존재 하지 않습니다. */
 			throw new StorePlatformException("SAC_MEM_0003", "userId", userId);
 		}
 
-		/** 2. 조회된 회원정보 셋팅 */
+		/** 2. 조회된 회원정보 셋팅. */
 		userKey = chkDupRes.getUserMbr().getUserKey();
 		userType = chkDupRes.getUserMbr().getUserType();
 		userMainStatus = chkDupRes.getUserMbr().getUserMainStatus();
@@ -901,12 +909,12 @@ public class LoginServiceImpl implements LoginService {
 		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
 
-		/** 2-1. 가가입 상태면 Exception - 가가입자는 Save&Sync 인증을 통해서만 인증이 처리된다.  */
+		/** 2-1. 가가입 상태면 오류 - 가가입자는 Save&Sync 인증을 통해서만 인증이 처리된다.  */
 		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_WATING)){
 			throw new StorePlatformException("SAC_MEM_2001", userMainStatus, userSubStatus);
 		}
 
-		/** 2-2. 일시정지,로그인제한 상태면 응답처리 */
+		/** 2-2. 일시정지,로그인제한 상태면 응답처리. */
 		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
 				|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 			res.setUserKey(userKey);

@@ -130,6 +130,7 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+		/** KT, LG 통신사, 자급제단말일 경우 오류 처리*/
 		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
 				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)
 				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_OMD)) {

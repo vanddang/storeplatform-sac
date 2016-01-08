@@ -131,12 +131,15 @@ public class UserModifyServiceImpl implements UserModifyService {
         /**
          * 비밀 번호 유효성 체크
          *  1. 길이 체크
-         *  2. 비밀번호에 ID일부 문자 사용 체크
-         *  3. 숫자만 구성 체크
-         *  4. 문자만 구성 체크
-         *  5. 사용할수 없는 문자 사용 체크
-         *  6. 기타 비밀번호 제약사항 체크 (공백 체크)
-         *  7. 기타 비밀번호 제약사항 체크 (숫자/문자 연속 3자 이상)
+         *  2. 공백 체크 > 기타 비밀번호 제약사항
+         *  3. 사용할수 없는 특수문자( `, ~, \ ) 체크
+         *  4. 숫자만 구성 체크
+         *  5. 문자만 구성 체크
+         *  6. 특수문자만 구성 체크 (숫자와 문자가 아닌 경우)
+         *  7. 숫자없이 구성 (특수문자+문자) 체크 > 기타 비밀번호 제약 사항
+         *  8. 문자없이 구성 (특수문자+숫자) 체크 > 기타 비밀번호 제약 사항
+         *  9. 숫자/문자 연속 3자 이상 체크 > 기타 비밀번호 제약사항 체크
+         *  10. 비밀번호에 ID일부 문자 포함
          *
          *  비밀번호 제약 사항 (One Id 사이트 동일)
          *  비밀번호는 6~20자의 영문 대소문자,숫자,특수기호만 사용할 수 있습니다.(공백입력불가)
@@ -149,33 +152,44 @@ public class UserModifyServiceImpl implements UserModifyService {
         if(newPassword.length() < 6 || newPassword.length() > 20){
             throw new StorePlatformException("SAC_MEM_1407", userInfo.getUserKey());
         }
-        // 2. 비밀번호에 ID일부 문자 포함
-        for(int i=0; i<newPassword.length()-2; i++){
-            if(userInfo.getUserId().indexOf(newPassword.substring(i, i + 3)) > -1){
-                throw new StorePlatformException("SAC_MEM_1408", userInfo.getUserKey());
-            }
-        }
-        // 3. 숫자만 구성 체크
-        if(Pattern.matches("^[0-9]*$", newPassword)){
-            throw new StorePlatformException("SAC_MEM_1409", userInfo.getUserKey());
-        }
-        // 4. 문자만 구성 체크
-        if(Pattern.matches("^[A-Za-z]*$", newPassword)){
-            throw new StorePlatformException("SAC_MEM_1410", userInfo.getUserKey());
-        }
-        // 5. 사용할수 없는 문자 사용 체크
-        if(!Pattern.matches("^[A-Za-z0-9!@#$%^&*()-_+=|\\[\\]\\{\\}'\";:/?.>,<]+$", newPassword)){
-            throw new StorePlatformException("SAC_MEM_1411", userInfo.getUserKey());
-        }
-        // 6. 기타 비밀번호 제약사항 체크 (공백 체크)
+        // 2. 공백 체크 > 기타 비밀번호 제약사항
         if (newPassword.indexOf(' ') > 0){
             throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
         }
-        // 7. 기타 비밀번호 제약사항 체크 (숫자/문자 연속 3자 이상)
-        for(int i=0; i<newPassword.length()-1 ; i++){
-            if(newPassword.charAt(i+1) - newPassword.charAt(i) == 1
-                    && newPassword.charAt(i+2) - newPassword.charAt(i+1) == 1){
+        // 3. 사용할수 없는 특수문자( `, ~, \ ) 체크
+        if(!Pattern.matches("^[0-9A-Za-z!@#$%^&*()-_+=|\\[\\]\\{\\}'\";:/?.>,<]+$", newPassword)){
+            throw new StorePlatformException("SAC_MEM_1411", userInfo.getUserKey());
+        }
+        // 4. 숫자만 구성 체크
+        if(Pattern.matches("^[0-9]*$", newPassword)) {
+            throw new StorePlatformException("SAC_MEM_1409", userInfo.getUserKey());
+        // 5. 문자만 구성 체크
+        }else if(Pattern.matches("^[A-Za-z]*$", newPassword)) {
+            throw new StorePlatformException("SAC_MEM_1410", userInfo.getUserKey());
+        // 6. 특수문자만 구성 체크 (숫자와 문자가 아닌 경우)
+        }else if(Pattern.matches("^[^0-9A-Za-z]*$", newPassword)){
+            throw new StorePlatformException("SAC_MEM_1415", userInfo.getUserKey());
+        // 조합 패스워드
+        }else{
+            // 7. 숫자없이 구성 (특수문자+문자) 체크 > 기타 비밀번호 제약 사항
+            if(Pattern.matches("^[^0-9]*$", newPassword)) {
                 throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
+            }
+            // 8. 문자없이 구성 (특수문자+숫자) 체크 > 기타 비밀번호 제약 사항
+            if(Pattern.matches("^[^A-Za-z]*$", newPassword)) {
+                throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
+            }
+        }
+        // 다른 제약 사항 체크
+        for(int i=0; i<newPassword.length()-2 ; i++){
+            // 9. 숫자/문자 연속 3자 이상 체크 > 기타 비밀번호 제약사항 체크
+            if( (newPassword.charAt(i+1)-newPassword.charAt(i)==1 && newPassword.charAt(i+2)-newPassword.charAt(i+1)==1)
+                    || (newPassword.charAt(i)-newPassword.charAt(i+1)==1 && newPassword.charAt(i+1)-newPassword.charAt(i+2)==1)){
+                throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
+            }
+            // 10. 비밀번호에 ID일부 문자 포함
+            if(userInfo.getUserId().indexOf(newPassword.substring(i, i + 3)) > -1){
+                throw new StorePlatformException("SAC_MEM_1408", userInfo.getUserKey());
             }
         }
 

@@ -27,7 +27,6 @@ import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
 import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
 import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
 import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -345,7 +344,6 @@ public class UserServiceImpl implements UserService {
 
 		SearchUserKey searchUserKey = new SearchUserKey();
 		searchUserKey.setKeySearchList(checkDuplicationRequest.getKeySearchList());
-		searchUserKey.setTenantID(checkDuplicationRequest.getCommonRequest().getTenantID());
 
 		boolean isDeviceRequest = false;
 

@@ -208,8 +208,6 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public MoveUserInfoSacRes moveUserInfo(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq) {
-		/* 헤더 정보 셋팅 */
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		MoveUserInfoRequest moveUserInfoRequest = new MoveUserInfoRequest();
 		moveUserInfoRequest.setCommonRequest(commonRequest);

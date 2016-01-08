@@ -450,35 +450,52 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public SearchIdSacRes srhId(SacRequestHeader sacHeader, SearchIdSacReq req) {
 
-		/* 헤더 정보 셋팅 */
+		/** 1. 헤더 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 
-		/* 회원 정보 조회 */
 		List<SearchIdSac> sacList = new ArrayList<SearchIdSac>();
-		if (!req.getDeviceId().equals("")) {
 
+		/** 2. deviceId로 ID 찾기 */
+		if (!req.getDeviceId().equals("")) {
+			/** 2-1. 모번호 조회 */
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
-			// req의 deviceId mdn여부
-			String reqKeyType = "deviceId";
+			/** 2-2. req deviceId keyType 결정 */
+			String keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
 			if (ValidationCheckUtils.isMdn(opmdMdn)) {
-				reqKeyType = "mdn";
+				keyType = MemberConstants.KEY_TYPE_MDN;
 			}
 
-			UserInfo info = this.mcc.getUserBaseInfo(reqKeyType, req.getDeviceId(), sacHeader);
-			SearchIdSac sac = new SearchIdSac();
-			sac.setUserId(StringUtil.setTrim(info.getUserId()));
-			sac.setUserType(StringUtil.setTrim(info.getUserType()));
-			sac.setRegDate(StringUtil.setTrim(info.getRegDate()));
-			sac.setUserEmail(StringUtil.setTrim(info.getUserEmail()));
+			/** 2-3. SC 회원 정보 조회 */
+			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+			KeySearch keySchUserKey = new KeySearch();
+			keySchUserKey.setKeyType(keyType);
+			keySchUserKey.setKeyString(req.getDeviceId());
+			keySearchList.add(keySchUserKey);
 
-			if (info.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
-				throw new StorePlatformException("SAC_MEM_1300", info.getUserType());
+			SearchExtentUserRequest srhExtUserRequest = new SearchExtentUserRequest();
+			srhExtUserRequest.setCommonRequest(commonRequest);
+			srhExtUserRequest.setKeySearchList(keySearchList);
+			srhExtUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+
+			SearchExtentUserResponse srhExtUserResponse = this.userSCI.searchExtentUser(srhExtUserRequest);
+
+			SearchIdSac sac = new SearchIdSac();
+			sac.setUserId(srhExtUserResponse.getUserMbr().getUserID());
+			sac.setUserType(srhExtUserResponse.getUserMbr().getUserType());
+			sac.setRegDate(srhExtUserResponse.getUserMbr().getRegDate());
+			sac.setUserEmail(srhExtUserResponse.getUserMbr().getUserEmail());
+
+			/** 2-4. 모바일 회원이면 오류처리 */
+			if (StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+				throw new StorePlatformException("SAC_MEM_1300", srhExtUserResponse.getUserMbr().getUserType());
 			}
 
 			sacList.add(sac);
+
+		/** 3. email로 ID 찾기 */
 		} else if (!req.getUserEmail().equals("")) {
 			sacList = this.srhUserEmail(req, sacHeader);
 		}
@@ -502,35 +519,49 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public SearchPasswordSacRes srhPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req) {
 
-		/* 헤더 정보 셋팅 */
+		/** 1. 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 
-		/* 회원 정보 조회 */
-		UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
+		/** 2. 회원 정보 조회 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
+		keySchUserKey.setKeyString(req.getUserId());
+		keySearchList.add(keySchUserKey);
 
-		// 가가입 상태일 경우 오류
-		if (StringUtils.equals(info.getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) {
-			throw new StorePlatformException("SAC_MEM_2001", info.getUserMainStatus(), info.getUserSubStatus());
+		SearchExtentUserRequest srhExtUserRequest = new SearchExtentUserRequest();
+		srhExtUserRequest.setCommonRequest(commonRequest);
+		srhExtUserRequest.setKeySearchList(keySearchList);
+		srhExtUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+
+		SearchExtentUserResponse srhExtUserResponse = this.userSCI.searchExtentUser(srhExtUserRequest);
+
+		//UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
+
+		/** 3. 가가입 상태일 경우 오류. */
+		if (StringUtils.equals(srhExtUserResponse.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) {
+			throw new StorePlatformException("SAC_MEM_2001", srhExtUserResponse.getUserMbr().getUserMainStatus(),
+					srhExtUserResponse.getUserMbr().getUserSubStatus());
 		}
 
 		String checkId = "";
 
+		/** 4. Email값이 있다면 UserId와 Email이 일치하는지 체크 */
 		if (!req.getUserEmail().equals("")) {
-			/* UserId와 Email이 일치하는지 체크 */
-			if (info.getUserEmail().equals(req.getUserEmail())) {
+			if (srhExtUserResponse.getUserMbr().getUserEmail().equals(req.getUserEmail())) {
 				checkId = "Y";
 			} else {
 				checkId = "N";
 			}
+		/** 4-1. Phone이 있다면 UserId와 Phone이 일치하는지 체크 */
 		} else if (!req.getUserPhone().equals("")) {
-			/* UserId와 Phone이 일치하는지 체크 */
-
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getUserPhone());
 			req.setUserPhone(opmdMdn);
 
 			ListDeviceReq scReq = new ListDeviceReq();
-			scReq.setUserKey(info.getUserKey());
-			scReq.setDeviceId(req.getUserPhone());
+			scReq.setUserKey(srhExtUserResponse.getUserMbr().getUserKey());
+			// req의 전호번호는 mdn이다.
+			scReq.setMdn(req.getUserPhone());
 			scReq.setIsMainDevice("Y");
 
 			ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
@@ -542,24 +573,24 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 		}
 
-		/* 사용자 이메일 혹은 Phone 이 일치하지 않으면 Exception */
+		/** 5. 사용자 이메일 혹은 Phone 이 일치하지 않으면 오류처리 */
 		if (checkId.equals("N")) {
 			throw new StorePlatformException("SAC_MEM_0002", "Email or Phone");
 		}
 
 		SearchPasswordSacRes res = new SearchPasswordSacRes();
 
-		if(info.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)
-				|| info.getUserType().equals(MemberConstants.USER_TYPE_NAVER)
-				|| info.getUserType().equals(MemberConstants.USER_TYPE_GOOGLE)
-				|| info.getUserType().equals(MemberConstants.USER_TYPE_FACEBOOK)){
-			/* 모바일, 네이버, 구글, 페이스북 아이디 사용자는 비밀번호 찾기 불가 */
-			throw new StorePlatformException("SAC_MEM_1300", info.getUserType());
+		/** 6. 모바일, 네이버, 구글, 페이스북 아이디 사용자는 비밀번호 찾기 불가 */
+		if(StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)
+				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)
+				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
+				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+			throw new StorePlatformException("SAC_MEM_1300", srhExtUserResponse.getUserMbr().getUserType());
+		/** 7. 그외의 사용자는 비밀번호를 리셋후 응답처리  */
 		}else{
-			/* 그외의 사용자는 비밀번호 찾기 가능 - SAC에서 리셋한 비밀번호를 줌 */
-			/* 새로운 암호 생성 및 암호화하여 DB 저장 */
+			/** 7-1. 새로운 암호 생성 및 암호화하여 DB 저장 */
 			MbrPwd mbrPwd = new MbrPwd();
-			mbrPwd.setMemberKey(info.getUserKey());
+			mbrPwd.setMemberKey(srhExtUserResponse.getUserMbr().getUserKey());
 
 			ResetPasswordUserRequest scRPUReq = new ResetPasswordUserRequest();
 			scRPUReq.setCommonRequest(commonRequest);
@@ -567,7 +598,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 			ResetPasswordUserResponse scRPURes = this.userSCI.updateResetPasswordUser(scRPUReq);
 
-			/* 3. DB에 저장이 잘 되었으면 req의 userEmail, userPhone에 따라 응답값 설정 */
+			/** 7-2. DB에 저장이 잘 되었으면 req의 userEmail, userPhone에 따라 응답값 설정 */
 			res.setUserPw(scRPURes.getUserPW());
 			if (!req.getUserEmail().equals("")) {
 				res.setSendInfo(StringUtil.setTrim(req.getUserEmail()));
