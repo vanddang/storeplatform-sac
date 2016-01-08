@@ -62,6 +62,20 @@ public class UserJoinController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+        /** deviceId 필수 체크 */
+        if(StringUtils.isEmpty(req.getDeviceId())){
+            throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+        }
+
+        /** deviceIdType 필수 체크 */
+        if(StringUtils.isEmpty(req.getDeviceIdType())){
+            throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
+        }
+
+        /** deviceTelecom 필수 체크 */
+        if(StringUtils.isEmpty(req.getDeviceIdType())){
+            throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
+        }
 		// TODO SKT만 가입 처리 되도록 validation 추가
 		if (!StringUtil.equalsIgnoreCase(sacHeader.getTenantHeader().getTenantId(), MemberConstants.TENANT_ID_TSTORE)
 				|| !StringUtil.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
@@ -76,7 +90,6 @@ public class UserJoinController {
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
-
 	}
 
 	/**

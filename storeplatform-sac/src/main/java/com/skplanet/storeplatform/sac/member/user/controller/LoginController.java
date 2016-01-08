@@ -99,12 +99,33 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+        /** deviceId 필수 체크 */
+        if(StringUtils.isEmpty(req.getDeviceId())){
+            throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+        }
+
+        /** deviceIdType 필수 체크 */
+        if(StringUtils.isEmpty(req.getDeviceIdType())){
+            throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
+        }
+
+        /** deviceTelecom 필수 체크 */
+        if(StringUtils.isEmpty(req.getDeviceIdType())){
+            throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
+        }
+
         /** MSIDN 일 경우 SKT/SKM 만 허용 */
         if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
-            if (!StringUtils.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-                    && !StringUtils.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)) {
+            if (!StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+                    && !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)) {
                 throw new StorePlatformException("SAC_MEM_1203", "deviceTelecom");
             }
+        }
+
+        /** SKM 일 경우 NATIVE_ID 필수 처리 */
+        if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
+                && StringUtils.isEmpty(req.getNativeId())){
+            throw new StorePlatformException("SAC_MEM_0001", "nativeId");
         }
 
         AuthorizeByMdnRes res = this.loginService.authorizeByMdnV2(requestHeader, req);

@@ -24,8 +24,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceReque
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceMvnoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceMvnoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
@@ -178,14 +176,4 @@ public interface DeviceSCI {
 	 */
 	public ModifyDeviceResponse modifyDevice(ModifyDeviceRequest modifyDeviceRequest);
 
-    /**
-     * <pre>
-     * MVNO MSIDN DEVICE 정보 조회 기능을 제공한다.
-     * </pre>
-     *
-     * @param SearchDeviceMvnoRequest
-     *            - 단말 수정 요청 Value Object
-     * @return SearchDeviceMvnoResponse - 단말 수정 응답 Value Object
-     */
-    public SearchDeviceMvnoResponse searchDeviceMvno(SearchDeviceMvnoRequest searchDeviceMvnoRequest);
 }
