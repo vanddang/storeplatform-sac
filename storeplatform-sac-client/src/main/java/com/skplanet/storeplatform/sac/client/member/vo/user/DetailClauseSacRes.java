@@ -17,7 +17,13 @@ public class DetailClauseSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	List<ClauseSacRes> detailClauseList;
+    public DetailClauseSacRes() {}
+
+    public DetailClauseSacRes(List<ClauseSacRes> detailClauseList) {
+        this.detailClauseList = detailClauseList;
+    }
+
+    List<ClauseSacRes> detailClauseList;
 
 	public List<ClauseSacRes> getDetailClauseList() {
 		return this.detailClauseList;

@@ -9,7 +9,6 @@
 
         FROM TB_CM_TENANT_CLAUSE 
         WHERE 1=1
-        AND tenant_id = #{tenantId}
         AND clause_id = #{clauseId}
         AND use_yn = 'Y'  
         ORDER BY clause_id ASC
@@ -36,7 +35,6 @@
             reagree_yn AS reAgreeYn             
          FROM TB_CM_CLAUSE 
         WHERE dp_yn='Y'
-        AND tenant_id = #{tenantId}
         AND clause_id = #{clauseId}
         ORDER BY start_day DESC
     </select>
@@ -62,11 +60,9 @@
             reagree_yn AS reAgreeYn             
          FROM TB_CM_CLAUSE A, TB_CM_TENANT_CLAUSE B
         WHERE A.dp_yn='Y'
-        AND A.tenant_id = B.tenant_id
         AND A.clause_id = B.clause_id
         AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[>=]]> a.start_day
         AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
-        AND B.tenant_id = #{tenantId}        
         AND B.use_yn = 'Y'
         ORDER BY A.clause_id ASC
     </select>
@@ -171,7 +167,6 @@
          FROM TB_CM_CLAUSE a
         INNER JOIN TB_CM_TENANT_CLAUSE b 
             ON a.clause_id = b.clause_id
-            AND a.tenant_id = b.tenant_id
         WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[>=]]> a.start_day
           AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
           AND b.use_yn = 'Y'
