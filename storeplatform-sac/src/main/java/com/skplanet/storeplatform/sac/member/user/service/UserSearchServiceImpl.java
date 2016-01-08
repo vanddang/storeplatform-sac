@@ -461,7 +461,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			req.setDeviceId(opmdMdn);
 			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
-			// req의 deviceId mdn여부
+			// req의 deviceId MDN 여부
 			String reqKeyType = MemberConstants.KEY_TYPE_MDN;
 			if (ValidationCheckUtils.isDeviceId(opmdMdn)) {
 				reqKeyType = MemberConstants.KEY_TYPE_DEVICE_ID;

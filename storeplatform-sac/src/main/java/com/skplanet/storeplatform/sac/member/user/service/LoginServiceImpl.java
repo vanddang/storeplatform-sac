@@ -713,7 +713,7 @@ public class LoginServiceImpl implements LoginService {
 		/* 모번호 조회 및 셋팅 */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
 
-		/* deviceId의 mdn여부 체크 */
+		/* deviceId의 MDN 여부 체크 */
 		String keyType = MemberConstants.KEY_TYPE_MDN;
 		if (ValidationCheckUtils.isDeviceId(req.getDeviceId())) {
 			keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
