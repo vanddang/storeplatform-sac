@@ -186,7 +186,6 @@ public class UserJoinServiceImpl implements UserJoinService {
         deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
         deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
         deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
-        deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
         deviceInfo.setNativeId(req.getNativeId()); // 기기 IMEI
         deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
         deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부

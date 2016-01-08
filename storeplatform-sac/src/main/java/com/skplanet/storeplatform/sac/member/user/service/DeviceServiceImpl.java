@@ -435,7 +435,7 @@ public class DeviceServiceImpl implements DeviceService {
 				mdnMap.put("01011110005", "svc005");
                 mdnMap.put("01065261233", "4486071533");
                 mdnMap.put("01065261234", "4486071534");
-                mdnMap.put("01065261240", "4486071540");
+                mdnMap.put("01065261241", "4486071541");
 				mdnMap.put("01066786220", "7243371580");
 				if(mdnMap.get(deviceInfo.getMdn()) != null){
 					deviceInfo.setSvcMangNum(mdnMap.get(deviceInfo.getMdn()));
@@ -659,13 +659,13 @@ public class DeviceServiceImpl implements DeviceService {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 			key.setKeyString(deviceInfo.getDeviceKey());
 		} else if (StringUtils.isNotBlank(deviceInfo.getDeviceId())) {
-			if (ValidationCheckUtils.isMdn(deviceInfo.getDeviceId())) {
-				key.setKeyType(MemberConstants.KEY_TYPE_MDN);
-				key.setKeyString(deviceInfo.getDeviceId());
-			} else {
-				key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-				key.setKeyString(deviceInfo.getDeviceId());
-			}
+            if(ValidationCheckUtils.isDeviceId(deviceInfo.getDeviceId())){
+                key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+                key.setKeyString(deviceInfo.getDeviceId());
+            }else {
+                key.setKeyType(MemberConstants.KEY_TYPE_MDN);
+                key.setKeyString(deviceInfo.getDeviceId());
+            }
 		}
 
 		keySearchList.add(key);
@@ -1311,10 +1311,10 @@ public class DeviceServiceImpl implements DeviceService {
 				String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 				req.setDeviceId(opmdMdn);
 
-				if( ValidationCheckUtils.isMdn(req.getDeviceId())){
-					deviceReq.setMdn(req.getDeviceId());
+				if( ValidationCheckUtils.isDeviceId(req.getDeviceId())){
+                    deviceReq.setDeviceId(req.getDeviceId());
 				}else{
-					deviceReq.setDeviceId(req.getDeviceId());
+                    deviceReq.setMdn(req.getDeviceId());
 				}
 
 				ListDeviceRes deviceRes = this.listDevice(requestHeader, deviceReq);

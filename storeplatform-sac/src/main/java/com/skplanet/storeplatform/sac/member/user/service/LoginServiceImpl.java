@@ -455,6 +455,7 @@ public class LoginServiceImpl implements LoginService {
                     mdnMap.put("01065261234", "4486071534");
                     mdnMap.put("01065261235", "4486071535");
                     mdnMap.put("01065261236", "4486071536");
+                    mdnMap.put("01065261241", "4486071541");
                     mdnMap.put("01066786220", "7243371580");
                     if(mdnMap.get(req.getDeviceId()) != null){
                         svcMangNo = mdnMap.get(req.getDeviceId());
@@ -498,7 +499,7 @@ public class LoginServiceImpl implements LoginService {
         // MDN 인증 처리
         if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
             // 요청 시 mdn 과 서비스 관리번호로 조회된 mdn이 다를 경우 인증 실패
-            if(StringUtils.equals(req.getDeviceId(), dbDeviceInfo.getMdn())){
+            if(!StringUtils.equals(req.getDeviceId(), dbDeviceInfo.getMdn())){
                 throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
             }
 
@@ -713,9 +714,9 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
 
 		/* deviceId의 mdn여부 체크 */
-		String keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
-		if (ValidationCheckUtils.isMdn(req.getDeviceId())) {
-			keyType = MemberConstants.KEY_TYPE_MDN;
+		String keyType = MemberConstants.KEY_TYPE_MDN;
+		if (ValidationCheckUtils.isDeviceId(req.getDeviceId())) {
+			keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
 		}
 
 		/* mdn 회원유무 조회 */

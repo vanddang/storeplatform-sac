@@ -99,21 +99,6 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-        /** deviceId 필수 체크 */
-        if(StringUtils.isEmpty(req.getDeviceId())){
-            throw new StorePlatformException("SAC_MEM_0001", "deviceId");
-        }
-
-        /** deviceIdType 필수 체크 */
-        if(StringUtils.isEmpty(req.getDeviceIdType())){
-            throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
-        }
-
-        /** deviceTelecom 필수 체크 */
-        if(StringUtils.isEmpty(req.getDeviceIdType())){
-            throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
-        }
-
         /** MSIDN 일 경우 SKT/SKM 만 허용 */
         if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
             if (!StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)

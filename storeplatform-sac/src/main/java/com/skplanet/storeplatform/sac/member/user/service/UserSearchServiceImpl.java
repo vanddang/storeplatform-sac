@@ -462,9 +462,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
 			// req의 deviceId mdn여부
-			String reqKeyType = "deviceId";
-			if (ValidationCheckUtils.isMdn(opmdMdn)) {
-				reqKeyType = "mdn";
+			String reqKeyType = MemberConstants.KEY_TYPE_MDN;
+			if (ValidationCheckUtils.isDeviceId(opmdMdn)) {
+				reqKeyType = MemberConstants.KEY_TYPE_DEVICE_ID;
 			}
 
 			UserInfo info = this.mcc.getUserBaseInfo(reqKeyType, req.getDeviceId(), sacHeader);
