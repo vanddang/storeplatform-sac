@@ -68,6 +68,9 @@ public class MbrPwd extends CommonInfo implements Serializable {
 	/** Tenant id. */
 	private String tenantID;
 
+	/** 사용자 인증 토큰. */
+	private String userAuthToken;
+
 	/**
 	 * 내부 회원 키를 리턴한다.
 	 * 
@@ -145,25 +148,6 @@ public class MbrPwd extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * Tenant ID를 리턴한다.
-	 * 
-	 * @return tenantID - Tenant ID
-	 */
-	public String getTenantID() {
-		return this.tenantID;
-	}
-
-	/**
-	 * Tenant ID를 설정한다.
-	 * 
-	 * @param tenantID
-	 *            Tenant ID
-	 */
-	public void setTenantID(String tenantID) {
-		this.tenantID = tenantID;
-	}
-
-	/**
 	 * 비밀번호 변경일시를 리턴한다.
 	 * 
 	 * @return pwRegDate - 비밀번호 변경일시
@@ -183,6 +167,25 @@ public class MbrPwd extends CommonInfo implements Serializable {
 	}
 
 	/**
+	 * Tenant ID를 리턴한다.
+	 *
+	 * @return tenantID - Tenant ID
+	 */
+	public String getTenantID() {
+		return this.tenantID;
+	}
+
+	/**
+	 * Tenant ID를 설정한다.
+	 *
+	 * @param tenantID
+	 *            Tenant ID
+	 */
+	public void setTenantID(String tenantID) {
+		this.tenantID = tenantID;
+	}
+
+	/**
 	 * 로그인 실패 카운트를 리턴한다.
 	 * 
 	 * @return loginFailCount - 로그인 실패 카운트
@@ -199,6 +202,25 @@ public class MbrPwd extends CommonInfo implements Serializable {
 	 */
 	public void setLoginFailCount(int loginFailCount) {
 		this.loginFailCount = loginFailCount;
+	}
+
+	/**
+	 * 사용자 인증 토큰을 리턴한다.
+	 *
+	 * @return userAuthToken - 사용자 인증 토큰
+	 */
+	public String getUserAuthToken() {
+		return userAuthToken;
+	}
+
+	/**
+	 * 사용자 인증 토큰을 설정한다.
+	 *
+	 * @param userAuthToken
+	 *            사용자 인증 토큰
+	 */
+	public void setUserAuthToken(String userAuthToken) {
+		this.userAuthToken = userAuthToken;
 	}
 
 	/**

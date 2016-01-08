@@ -1008,7 +1008,7 @@ public class MemberCommonComponent {
 	 * 맵핑 정보 없을시 SAC_MEM_1105 에러 발생함.
 	 * </pre>
 	 */
-	public List<AgreementInfo> getClauseMappingInfo(String tenantId, List<AgreementInfo> agreementList) {
+	public List<AgreementInfo> getClauseMappingInfo(List<AgreementInfo> agreementList) {
 
 		LOGGER.debug("## >> Before : {}", agreementList);
 
@@ -1024,7 +1024,7 @@ public class MemberCommonComponent {
 				/**
 				 * 맵핑할 약관정보 조회.
 				 */
-				Clause clauseInfo = this.repository.getClauseItemInfo(tenantId, info.getExtraAgreementId());
+				Clause clauseInfo = this.repository.getClauseItemInfo(info.getExtraAgreementId());
 
 				/**
 				 * 유효한 약관정보가 존재 하지 않을경우 에러.

@@ -175,7 +175,6 @@
         WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[>=]]> a.start_day
           AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
           AND b.use_yn = 'Y'
-          AND b.tenant_id = #{tenantId}
           AND b.clause_id = #{clauseId}
           AND a.dp_yn='Y'
     </select>

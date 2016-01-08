@@ -3483,7 +3483,7 @@ public class IdpServiceImpl implements IdpService {
 		agreementList.add(setAgreementInfo);
 
 		// 약관 맵핑정보 세팅. 약관매핑정보를 조회하여 약관정보를 셋팅함
-		List<AgreementInfo> getAgreementInfoList = this.mcc.getClauseMappingInfo(tenantID, agreementList);
+		List<AgreementInfo> getAgreementInfoList = this.mcc.getClauseMappingInfo(agreementList);
 
 		for (AgreementInfo agreementInfo : getAgreementInfoList) {
 			mca = new MbrClauseAgree();

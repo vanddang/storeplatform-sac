@@ -1450,12 +1450,14 @@
                       insd_usermbr_no
                     , fail_cnt
                     , upd_dt
+                    , act_tk
                 ) 
         VALUES  
                 (
                       #{memberKey}
                     , 0
                     , SYSDATE
+                    , #{userAuthToken}
                 )
     </insert>
     

@@ -81,13 +81,11 @@ public interface MemberCommonRepository {
 	 * 공통 약관 코드 정보 조회.
 	 * </pre>
 	 * 
-	 * @param tenantId
-	 *            테넌트 아이디
 	 * @param clauseId
 	 *            약관 코드
 	 * @return Clause
 	 */
-	public Clause getClauseItemInfo(String tenantId, String clauseId);
+	public Clause getClauseItemInfo(String clauseId);
 
 	/**
 	 * <pre>
