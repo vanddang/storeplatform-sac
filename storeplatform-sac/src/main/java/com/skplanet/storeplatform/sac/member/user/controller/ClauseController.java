@@ -38,7 +38,7 @@ public class ClauseController {
 	private ClauseService svc;
 
     /**
-     * [I01000032]
+     * [I01000032] 2.1.31. 약관목록 조회
      * @param sacHeader
      * @return
      */
@@ -51,7 +51,7 @@ public class ClauseController {
 	}
 
     /**
-     *
+     * [I01000033] 2.1.32. 약관목록 상세 조회
      * @param sacHeader
      * @param req
      * @return
