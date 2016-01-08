@@ -89,7 +89,6 @@
               AND MCM.BASE_YN = 'Y'
               AND MD.LANG_CD = PDESC.LANG_CD
               AND RS.PROD_RSHP_CD = 'DP010802'
-              --AND AL_RS.PROD_RSHP_CD = 'DP010804'
               AND EPD.META_CLSF_CD = 'CT25'
               AND TP.TENANT_ID = #{tenantId}
               AND PDESC.LANG_CD = #{langCd}
