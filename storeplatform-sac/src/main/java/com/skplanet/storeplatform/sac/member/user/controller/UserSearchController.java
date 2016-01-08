@@ -216,7 +216,8 @@ public class UserSearchController {
 		return res;
 	}
 
-	@RequestMapping(value = "/member/user/listTermsAgreement/v1", method = RequestMethod.POST)
+    @Deprecated
+//	@RequestMapping(value = "/member/user/listTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ListTermsAgreementSacRes listTermsAgreement(@RequestBody ListTermsAgreementSacReq req,
 			SacRequestHeader sacHeader) {

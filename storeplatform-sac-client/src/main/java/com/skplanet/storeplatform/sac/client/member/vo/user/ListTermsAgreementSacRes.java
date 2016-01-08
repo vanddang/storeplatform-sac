@@ -18,7 +18,14 @@ public class ListTermsAgreementSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String userKey;
+    public ListTermsAgreementSacRes() {}
+
+    public ListTermsAgreementSacRes(String userKey, List<Agreement> agreementList) {
+        this.userKey = userKey;
+        this.agreementList = agreementList;
+    }
+
+    private String userKey;
 
 	/* 약관동의 리스트 */
 	private List<Agreement> agreementList;
@@ -29,10 +36,6 @@ public class ListTermsAgreementSacRes extends CommonInfo {
 
 	public void setAgreementList(List<Agreement> agreementList) {
 		this.agreementList = agreementList;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	public String getUserKey() {

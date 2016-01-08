@@ -1634,14 +1634,15 @@ public class UserServiceImpl implements UserService {
 
 		LOGGER.debug("### searchAgreementListRequest : {}", searchAgreementListRequest);
 
-		String isDormant = StringUtils.isBlank(searchAgreementListRequest.getIsDormant()) ? Constant.TYPE_YN_N : searchAgreementListRequest
-				.getIsDormant();
-		CommonDAO dao = null;
+		String isDormant = StringUtils.isBlank(searchAgreementListRequest.getIsDormant()) ? Constant.TYPE_YN_N : searchAgreementListRequest.getIsDormant();
+
+        CommonDAO dao = null;
 		if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
 			dao = this.commonDAO;
 		} else {
 			dao = this.idleDAO;
 		}
+
 		UserMbr usermbr = new UserMbr();
 		usermbr.setTenantID(searchAgreementListRequest.getCommonRequest().getTenantID());
 		usermbr.setSystemID(searchAgreementListRequest.getCommonRequest().getSystemID());
@@ -1657,8 +1658,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		SearchAgreementListResponse searchAgreementListResponse;
-		searchAgreementListResponse = dao.queryForObject("User.searchAgreementList", searchAgreementListRequest,
-				SearchAgreementListResponse.class);
+		searchAgreementListResponse = dao.queryForObject("User.searchAgreementList", searchAgreementListRequest, SearchAgreementListResponse.class);
 
 		if (searchAgreementListResponse == null || searchAgreementListResponse.getMbrClauseAgreeList() == null
 				|| searchAgreementListResponse.getMbrClauseAgreeList().size() <= 0) {
@@ -1666,8 +1666,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		searchAgreementListResponse.setUserKey(searchAgreementListRequest.getUserKey());
-		searchAgreementListResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
-				"response.ResultMessage.success"));
+		searchAgreementListResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success", "response.ResultMessage.success"));
 		return searchAgreementListResponse;
 
 	}

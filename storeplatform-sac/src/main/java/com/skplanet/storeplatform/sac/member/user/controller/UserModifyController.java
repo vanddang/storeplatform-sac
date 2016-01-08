@@ -186,7 +186,8 @@ public class UserModifyController {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	@RequestMapping(value = "/member/user/createTermsAgreement/v1", method = RequestMethod.POST)
+    @Deprecated
+//	@RequestMapping(value = "/member/user/createTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader,
 			@Validated @RequestBody CreateTermsAgreementReq req) {
@@ -219,7 +220,8 @@ public class UserModifyController {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	@RequestMapping(value = "/member/user/modifyTermsAgreement/v1", method = RequestMethod.POST)
+    @Deprecated
+//	@RequestMapping(value = "/member/user/modifyTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader,
 			@Validated @RequestBody ModifyTermsAgreementReq req) {

@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * [REQUEST] Store의 약관에 대한 동의 목록 조회하는 기능을 제공한다.
@@ -11,6 +12,7 @@ public class ListTermsAgreementSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+    @NotEmpty
 	private String userKey;
 
 	public String getUserKey() {
@@ -20,9 +22,4 @@ public class ListTermsAgreementSacReq extends CommonInfo {
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
 	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 }

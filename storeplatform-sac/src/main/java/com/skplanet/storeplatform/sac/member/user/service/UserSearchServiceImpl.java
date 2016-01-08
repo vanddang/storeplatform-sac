@@ -9,24 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import com.skplanet.storeplatform.member.client.common.constant.Constant;
-import com.skplanet.storeplatform.member.client.common.vo.*;
-import com.skplanet.storeplatform.member.client.user.sci.vo.*;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
@@ -35,72 +19,41 @@ import com.skplanet.storeplatform.external.client.syrup.sci.SyrupSCI;
 import com.skplanet.storeplatform.external.client.syrup.vo.SsoCredentialCreateEcReq;
 import com.skplanet.storeplatform.external.client.syrup.vo.SsoCredentialCreateEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.client.common.constant.Constant;
+import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
-import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeliveryInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.GiftChargeInfoSac;
-import com.skplanet.storeplatform.sac.client.member.vo.common.GradeInfo;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.*;
+import com.skplanet.storeplatform.sac.client.member.vo.common.*;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SocialAccountInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.TenantInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DailyPhone;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DailyPhoneOs;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSac;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
+import com.skplanet.storeplatform.sac.member.domain.UserClauseAgree;
+import com.skplanet.storeplatform.sac.member.repository.UserClauseAgreeRepository;
+import com.skplanet.storeplatform.sac.member.repository.UserMemberRepository;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 회원 조회 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -127,6 +80,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	private static CommonRequest commonRequest;
 
 	static {
+        // FIXME is it correct?
 		commonRequest = new CommonRequest();
 	}
 
@@ -138,6 +92,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	@Autowired
 	private ImIdpSCI imIdpSCI;
+
+    @Autowired
+    private UserClauseAgreeRepository clauseAgreeRepository;
+
+    @Autowired
+    private UserMemberRepository userMemberRepository;
 
 	/**
 	 * 회원 가입 조회
@@ -387,55 +347,29 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/**
 	 * 약관동의 목록 조회
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
+	 *
 	 * @param req
 	 * @return
 	 */
 	@Override
-	public ListTermsAgreementSacRes listTermsAgreement(SacRequestHeader sacHeader, ListTermsAgreementSacReq req)
+    @Transactional("transactionManagerForScMember")
+	public ListTermsAgreementSacRes listTermsAgreement(SacRequestHeader sacHeader, ListTermsAgreementSacReq req) {
 
-	{
+        String userKey = req.getUserKey();
 
-		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+        if(!userMemberRepository.isExist(userKey))
+            throw new StorePlatformException("SC_MEM_9995");
 
-		/* 회원 정보 조회 */
-		// this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+        List<UserClauseAgree> agreeList = clauseAgreeRepository.findByInsdUsermbrNo(userKey);
+        List<Agreement> mbrClauseAgreeList = Lists.transform(agreeList, new Function<UserClauseAgree, Agreement>() {
+            @Override
+            public Agreement apply(UserClauseAgree a) {
+                return a.convertToAgreement();
+            }
+        });
 
-		/* 약관동의 목록 조회 */
-		List<Agreement> agreementList = new ArrayList<Agreement>();
-		SearchAgreementListRequest schAgreementListReq = new SearchAgreementListRequest();
-		schAgreementListReq.setUserKey(req.getUserKey());
-		schAgreementListReq.setCommonRequest(commonRequest);
-		SearchAgreementListResponse scRes = this.userSCI.searchAgreementList(schAgreementListReq);
-
-		ListTermsAgreementSacRes res = new ListTermsAgreementSacRes();
-		res.setUserKey(scRes.getUserKey());
-
-		for (MbrClauseAgree scAgree : scRes.getMbrClauseAgreeList()) {
-			Agreement agree = new Agreement();
-			agree.setExtraAgreementId(StringUtil.setTrim(scAgree.getExtraAgreementID()));
-			agree.setExtraAgreementVersion(StringUtil.setTrim(scAgree.getExtraAgreementVersion()));
-			agree.setIsExtraAgreement(StringUtil.setTrim(scAgree.getIsExtraAgreement()));
-			agree.setIsMandatory(StringUtil.setTrim(scAgree.getIsMandatory()));
-			agree.setRegDate(StringUtil.setTrim(scAgree.getRegDate()));
-			agree.setUpdateDate(StringUtil.setTrim(scAgree.getUpdateDate()));
-			agree.setIsMandatory(StringUtil.setTrim(scAgree.getIsMandatory()));
-
-			agreementList.add(agree);
-		}
-
-		res.setAgreementList(agreementList);
-
-		LOGGER.debug("ListTermsAgreementSacReq : ", res.toString());
-
-		return res;
-	}
+        return new ListTermsAgreementSacRes(userKey, mbrClauseAgreeList);
+    }
 
 	/**
 	 * ID 찾기

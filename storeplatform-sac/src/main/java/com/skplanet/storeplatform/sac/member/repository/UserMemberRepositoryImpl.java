@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
+import com.google.common.base.Strings;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.skplanet.storeplatform.sac.member.domain.QUserMember;
 import com.skplanet.storeplatform.sac.member.domain.UserMember;
@@ -27,14 +28,30 @@ import javax.persistence.PersistenceContext;
 public class UserMemberRepositoryImpl implements UserMemberRepository {
 
     public static final QUserMember $ = QUserMember.userMember;
+
     @PersistenceContext(unitName = "puMbr")
     private EntityManager em;
 
     @Override
-    public UserMember findByEmail(String email) {
-        JPAQuery query = new JPAQuery(em)
-                .from($).where($.emailAddr.eq(email));
+    public UserMember findOne(String userKey) {
+        return new JPAQuery(em).from($)
+                .where($.insdUsermbrNo.eq(userKey))
+                .uniqueResult($);
+    }
 
-        return query.uniqueResult($);
+    @Override
+    public UserMember findByEmail(String email) {
+        return new JPAQuery(em).from($)
+                .where($.emailAddr.eq(email))
+                .uniqueResult($);
+    }
+
+    @Override
+    public boolean isExist(String userKey) {
+        String r = new JPAQuery(em).from($)
+                .where($.insdUsermbrNo.eq(userKey))
+                .uniqueResult($.insdUsermbrNo);
+
+        return !Strings.isNullOrEmpty(r);
     }
 }

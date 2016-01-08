@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.member.domain;
 
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -136,9 +140,18 @@ public class UserClauseAgree {
         this.clauseVer = clauseVer;
     }
 
+    public String getRegDtStr() {
+        return DateUtils.format(regDt);
+    }
+
+    public String getUpdDtStr() {
+        return DateUtils.format(updDt);
+    }
+
     @PrePersist
     public void prePersist() {
         this.regDt = new Date();
+        this.updDt = this.regDt;
     }
 
     @PreUpdate
@@ -163,5 +176,16 @@ public class UserClauseAgree {
         int result = insdUsermbrNo.hashCode();
         result = 31 * result + clauseId.hashCode();
         return result;
+    }
+
+    public Agreement convertToAgreement() {
+        Agreement agree = new Agreement();
+        agree.setExtraAgreementId(clauseId);
+        agree.setExtraAgreementVersion(clauseVer);
+        agree.setIsExtraAgreement(agreeYn.toString());
+        agree.setIsMandatory(mandAgreeYn.toString());
+        agree.setRegDate(getRegDtStr());
+        agree.setUpdateDate(getUpdDtStr());
+        return agree;
     }
 }

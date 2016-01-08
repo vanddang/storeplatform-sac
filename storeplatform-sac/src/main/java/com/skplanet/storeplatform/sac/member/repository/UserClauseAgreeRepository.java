@@ -9,18 +9,20 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
-import com.skplanet.storeplatform.sac.member.domain.UserMember;
+import com.skplanet.storeplatform.sac.member.domain.UserClauseAgree;
+
+import java.util.List;
 
 /**
  * <p>
- * DESC
+ * UserClauseAgreeRepository
  * </p>
- * Updated on : 2016. 01. 04 Updated by : 정희원, SK 플래닛.
+ * Updated on : 2016. 01. 05 Updated by : 정희원, SK 플래닛.
  */
-public interface UserMemberRepository {
+public interface UserClauseAgreeRepository  {
 
-    UserMember findOne(String userKey);
-    UserMember findByEmail(String email);
+    void save(UserClauseAgree v);
 
-    boolean isExist(String userKey);
+    List<UserClauseAgree> findByInsdUsermbrNo(String userKey);
+
 }
