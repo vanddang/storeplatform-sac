@@ -1009,6 +1009,8 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			if(!isValid){
+				// 로그인 실패이력 저장
+				this.regLoginHistory(requestHeader, req.getUserId(), null, "N", "N", req.getDeviceIp(), "N", null, "N");
 				res.setIsLoginSuccess(MemberConstants.USE_N);
 				return res;
 			}
@@ -1053,6 +1055,9 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		String deviceKey = this.deviceService.regDeviceInfo(requestHeader, deviceInfo);
+
+		// 로그인 이력 저장
+		this.regLoginHistory(requestHeader, req.getUserId(), null, "Y", "N", req.getDeviceIp(), "N", null, "Y");
 
 		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		res.setDeviceKey(deviceKey);
@@ -3077,7 +3082,7 @@ public class LoginServiceImpl implements LoginService {
 
         LoginUserRequest loginReq = new LoginUserRequest();
         loginReq.setCommonRequest(commonRequest);
-        loginReq.setUserID(deviceInfo.getUserId()); // 필수 파라메터
+		loginReq.setUserID(deviceInfo.getUserId()); // 필수 파라메터
         loginReq.setDeviceInfo(deviceInfo);
         loginReq.setIsSuccess(isSuccess);
         loginReq.setIsMobile(MemberConstants.USE_Y);
