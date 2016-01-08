@@ -754,9 +754,6 @@ public class VodServiceImpl implements VodService {
 			}
 		}
 
-		// Preview
-		authority.setPreview(this.mapPreview(mapperVO));
-
 		if (vodDetailList != null && vodDetailList.size() > 0) {
 			List<Play> playList = new ArrayList<Play>();
 			List<Store> storeList = new ArrayList<Store>();
@@ -768,12 +765,16 @@ public class VodServiceImpl implements VodService {
 					/** play 정보 */
 					playList.add(this.mapAuthorityPlay(vo, vodDetailList, req));
 				}
-				
+
 				if(StringUtils.isNotEmpty(vo.getStoreProdId())){
 					/** Store 정보 */
 					storeList.add(this.mapAuthorityStore(vo, vodDetailList, req));
 				}
+
+				// Preview
+				authority.setPreview(this.mapPreview(vo));
 			}
+
 			if(playList != null && playList.size() > 0) authority.setPlayList(playList);
 			if(storeList != null && storeList.size() > 0) authority.setStoreList(storeList); 
 		}
