@@ -69,31 +69,31 @@
             <list>
                 <ref bean="transactionManagerForScMember" />
                 <ref bean="transactionManagerForScIdleMember" />
-                <ref bean="transactionManagerForJpaMember" />
-                <ref bean="transactionManagerForJpaIdleMember" />
             </list>
         </constructor-arg>
     </bean>
 
-    <bean id="transactionManagerForScMember" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="defaultDataSourceForScMember" />
-        <property name="nestedTransactionAllowed" value="false" />
-    </bean>
-    <bean id="transactionManagerForScIdleMember" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="defaultDataSourceForScIdleMember" />
-        <property name="nestedTransactionAllowed" value="false" />
-    </bean>
+    <!--<bean id="transactionManagerForScMember" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+        <!--<property name="dataSource" ref="defaultDataSourceForScMember" />-->
+        <!--<property name="nestedTransactionAllowed" value="false" />-->
+    <!--</bean>-->
+    <!--<bean id="transactionManagerForScIdleMember" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+        <!--<property name="dataSource" ref="defaultDataSourceForScIdleMember" />-->
+        <!--<property name="nestedTransactionAllowed" value="false" />-->
+    <!--</bean>-->
 
     <!-- JPA -->
     <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
-    <bean id="transactionManagerForJpaMember" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <bean id="transactionManagerForScMember" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactoryForMbr"/>
-        <!--<property name="dataSource" ref="defaultDataSourceForScMember"/>-->
+        <property name="nestedTransactionAllowed" value="false"/>
+        <property name="persistenceUnitName" value="puMbr"/>
     </bean>
-    <bean id="transactionManagerForJpaIdleMember" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <bean id="transactionManagerForScIdleMember" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactoryForIdleMbr"/>
-        <!--<property name="dataSource" ref="defaultDataSourceForScIdleMember"/>-->
+        <property name="nestedTransactionAllowed" value="false"/>
+        <property name="persistenceUnitName" value="puIdleMbr"/>
     </bean>
 
     <bean id="entityManagerFactoryForMbr" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -101,18 +101,9 @@
         <property name="dataSource" ref="defaultDataSourceForScMember"/>
         <property name="packagesToScan" value="com.skplanet.storeplatform.sac.member.domain"/>
         <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+            <bean class="com.skplanet.storeplatform.sac.common.support.jpa.ImprovedJpaVendorAdapter"/>
         </property>
-        <property name="jpaProperties">
-            <props>
-                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                <prop key="hibernate.implicit_naming_strategy">${hibernate.implicit_naming_strategy}</prop>
-                <prop key="hibernate.id.new_generator_mappings">${hibernate.id.new_generator_mappings}</prop>
-                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
-                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-            </props>
-        </property>
+        <property name="jpaProperties" ref="propertiesForScMember" />
     </bean>
 
     <bean id="entityManagerFactoryForIdleMbr" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -120,18 +111,9 @@
         <property name="dataSource" ref="defaultDataSourceForScIdleMember"/>
         <property name="packagesToScan" value="com.skplanet.storeplatform.sac.member.domain.idle"/>
         <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+            <bean class="com.skplanet.storeplatform.sac.common.support.jpa.ImprovedJpaVendorAdapter"/>
         </property>
-        <property name="jpaProperties">
-            <props>
-                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                <prop key="hibernate.implicit_naming_strategy">${hibernate.implicit_naming_strategy}</prop>
-                <prop key="hibernate.id.new_generator_mappings">${hibernate.id.new_generator_mappings}</prop>
-                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
-                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-            </props>
-        </property>
+        <property name="jpaProperties" ref="propertiesForScMember" />
     </bean>
 
 </beans>
