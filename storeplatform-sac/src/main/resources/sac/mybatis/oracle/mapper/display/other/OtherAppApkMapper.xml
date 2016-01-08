@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OtherAppApk">
+	<select id="getApkSignedKeyHash" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.other.vo.AppApkInfo">
+	  SELECT /* OtherAppApkMapper.searchTagList, OtherAppApk.getApkSignedKeyHash, 양해엽, 2016-01-08 */
+	    APK_PKG_NM,
+        APK_SIGNED_KEY_HASH
+	  FROM TB_DP_SUB_CONTENTS
+	  WHERE 1=1
+	    AND APK_PKG_HASH = #{apkPkgHash}
+	    AND APK_SIGNED_KEY_HASH IS NOT NULL
+	  GROUP BY APK_SIGNED_KEY_HASH, APK_PKG_NM
+ 	</select>
+</mapper>
