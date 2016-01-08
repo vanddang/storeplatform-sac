@@ -15,11 +15,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.skplanet.storeplatform.framework.test.StoreplatformMediaType;
-import com.skplanet.storeplatform.member.client.common.util.RandomString;
 import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceKeyListSacReq;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,16 +29,10 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
-import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -67,7 +58,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacRes;
@@ -79,15 +69,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
-import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
-import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
-import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
@@ -443,7 +428,7 @@ public class DeviceServiceImpl implements DeviceService {
 				mdnMap.put("01011110005", "svc005");
                 mdnMap.put("01065261233", "4486071533");
                 mdnMap.put("01065261234", "4486071534");
-                mdnMap.put("01065261235", "4486071535");
+                mdnMap.put("01065261236", "4486071536");
 				mdnMap.put("01066786220", "7243371580");
 				if(mdnMap.get(deviceInfo.getMdn()) != null){
 					deviceInfo.setSvcMangNum(mdnMap.get(deviceInfo.getMdn()));
@@ -1210,12 +1195,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 		deviceInfo
 				.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
-						deviceInfo.getDeviceExtraInfoList()));
+                        majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
+                        deviceInfo.getDeviceExtraInfoList()));
 
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-				majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
-				deviceInfo.getDeviceExtraInfoList()));
+                majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
+                deviceInfo.getDeviceExtraInfoList()));
 
 		return deviceInfo;
 	}
@@ -1856,5 +1841,45 @@ public class DeviceServiceImpl implements DeviceService {
         removeDeviceRes.setRemoveDeviceCount(String.valueOf(removeDeviceResponse.getDelDeviceCount()));
 
         return removeDeviceRes;
+    }
+
+    @Override
+    public DeviceInfo srhDeviceMvno(SacRequestHeader requestHeader, String mdn, String deviceNatvId) {
+
+		/* 헤더 정보 셋팅 */
+        CommonRequest commonRequest = new CommonRequest();
+        commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+
+        SearchDeviceMvnoRequest searchDeviceMvnoRequest = new SearchDeviceMvnoRequest();
+        searchDeviceMvnoRequest.setCommonRequest(commonRequest);
+        searchDeviceMvnoRequest.setMdn(mdn);
+        searchDeviceMvnoRequest.setDeviceNatvId(deviceNatvId);
+
+        DeviceInfo deviceInfo = null;
+
+        try {
+
+            SearchDeviceMvnoResponse schDeviceRes = this.deviceSCI.searchDeviceMvno(searchDeviceMvnoRequest);
+
+            deviceInfo = new DeviceInfo();
+            deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
+            deviceInfo.setUserId(schDeviceRes.getUserID());
+            deviceInfo.setUserKey(schDeviceRes.getUserKey());
+
+            /* 폰정보 DB 조회하여 추가 정보 반영 */
+            Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
+            if (device != null) {
+                deviceInfo.setMakeComp(device.getMnftCompCd());
+                deviceInfo.setModelNm(device.getModelNm());
+                deviceInfo.setVmType(device.getVmTypeCd());
+            }
+
+        } catch (StorePlatformException ex) {
+            if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+                throw ex;
+            }
+        }
+
+        return deviceInfo;
     }
 }

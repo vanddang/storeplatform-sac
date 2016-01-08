@@ -150,9 +150,9 @@ public class UserServiceImpl implements UserService {
 		if (usermbr.getLoginStatusCode() == null || usermbr.getLoginStatusCode().length() <= 0) {
 			usermbr.setLoginStatusCode(Constant.LOGIN_STATUS_CODE);
 		}
-		if (usermbr.getStopStatusCode() == null || usermbr.getStopStatusCode().length() <= 0) {
-			usermbr.setStopStatusCode(Constant.STOP_STATUS_CODE);
-		}
+//		if (usermbr.getStopStatusCode() == null || usermbr.getStopStatusCode().length() <= 0) {
+//			usermbr.setStopStatusCode(Constant.STOP_STATUS_CODE);
+//		}
 
 		// ACTION 3. 사용자 회원 추가
 		row = (Integer) this.commonDAO.insert("User.createUser", usermbr);
@@ -344,11 +344,13 @@ public class UserServiceImpl implements UserService {
 		searchUserKey.setTenantID(checkDuplicationRequest.getCommonRequest().getTenantID());
 
 		boolean isDeviceRequest = false;
+
 		List<KeySearch> keySearchList = checkDuplicationRequest.getKeySearchList();
 		for (KeySearch keySearch : keySearchList) {
 			if (keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_KEY)
 					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)
-					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)) {
+					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)
+                    || keySearch.getKeyType().equals(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
 				isDeviceRequest = true;
 			}
 		}
@@ -421,6 +423,7 @@ public class UserServiceImpl implements UserService {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
 			}
 
+            userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
 			userMbrRetrieveUserMbrPwd = this.commonDAO.queryForObject("User.getUserMbrRetrievePWD",
 					userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
 

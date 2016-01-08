@@ -124,16 +124,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
 
-			if (StringUtils.isBlank(req.getOwnBirth())) {
-				throw new StorePlatformException("SAC_MEM_0002", "ownBirth");
-			}
+            if (StringUtils.isBlank(req.getOwnBirth())) {
+                throw new StorePlatformException("SAC_MEM_0002", "ownBirth");
+            }
 
-			if (StringUtils.isBlank(req.getParentBirthDay())) {
-				throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
-			}
+            if (StringUtils.isBlank(req.getParentBirthDay())) {
+                throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
+            }
 
-			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
-		}
+            this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
+        }
 
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.

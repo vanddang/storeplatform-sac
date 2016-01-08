@@ -216,4 +216,17 @@ public interface DeviceService {
      */
     public RemoveDeviceRes remDeviceV2(SacRequestHeader requestHeader, RemoveDeviceReq req);
 
+    /**
+     * 휴대기기(MVNO) 단건 조회.
+     *
+     * @param requestHeader
+     *            SacRequestHeader
+     * @param mdn
+     *            String
+     * @param deviceNatvId
+     *            String
+     * @return DeviceInfo
+     */
+    public DeviceInfo srhDeviceMvno(SacRequestHeader requestHeader, String mdn, String deviceNatvId);
+
 }

@@ -1140,4 +1140,25 @@
            AND auth_yn ='Y'
     </select>
 
+    <!-- MVNO 휴대기기 정보 조회 -->
+    <select id="searchDeviceMvno" parameterType="searchDeviceMvnoRequest" resultMap="searchDeviceResultMap">
+        SELECT /* DeviceMapper.xml, searchDeviceMvno, SAC(SC), 윤보영, 2016-01-06 */
+              a.mbr_id AS userId,
+              a.insd_usermbr_no AS userKey,
+              'INSD_DEVICE_ID' AS keyType,
+              b.insd_device_id AS keyString
+          FROM    TB_US_OUSERMBR a
+               INNER JOIN
+                  (SELECT insd_usermbr_no, insd_device_id
+                     FROM (  SELECT insd_usermbr_no, insd_device_id
+                               FROM tb_us_ousermbr_device
+                              WHERE mdn = #{mdn}
+                                AND device_natv_id = #{deviceNatvId}
+                                AND auth_yn = 'Y'
+                           ORDER BY auth_dt DESC)
+                    WHERE ROWNUM = 1) b
+               ON a.insd_usermbr_no = b.insd_usermbr_no
+         WHERE a.mbr_status_main_cd != 'US010202'
+    </select>
+
 </mapper>

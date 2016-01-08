@@ -150,4 +150,15 @@ public interface DeviceService {
 	 * @return ModifyDeviceResponse - 단말 수정 응답 Value Object
 	 */
 	public ModifyDeviceResponse modifyDevice(ModifyDeviceRequest modifyDeviceRequest);
+
+    /**
+     * <pre>
+     * 회원의 등록된 휴대기기(MVNO) 상세정보를 조회하는 기능을 제공한다.
+     * </pre>
+     *
+     * @param SearchDeviceMvnoRequest
+     *            휴대기기 조회 요청 Value Object
+     * @return SearchDeviceMvnoResponse - 휴대기기 조회 응답 Value Object
+     */
+    public SearchDeviceMvnoResponse searchDeviceMvno(SearchDeviceMvnoRequest searchDeviceMvnoRequest);
 }

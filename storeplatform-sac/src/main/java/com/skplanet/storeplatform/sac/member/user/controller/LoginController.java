@@ -99,10 +99,12 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-        /** SKT만 인증 처리 되도록 validation 추가 */
-        if (!StringUtils.equalsIgnoreCase(requestHeader.getTenantHeader().getTenantId(), MemberConstants.TENANT_ID_TSTORE)
-                || !StringUtils.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-            throw new StorePlatformException("SAC_MEM_1203", "deviceTelecom");
+        /** MSIDN 일 경우 SKT/SKM 만 허용 */
+        if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+            if (!StringUtils.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+                    && !StringUtils.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)) {
+                throw new StorePlatformException("SAC_MEM_1203", "deviceTelecom");
+            }
         }
 
         AuthorizeByMdnRes res = this.loginService.authorizeByMdnV2(requestHeader, req);
@@ -110,7 +112,6 @@ public class LoginController {
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
-
 	}
 
 	/**
