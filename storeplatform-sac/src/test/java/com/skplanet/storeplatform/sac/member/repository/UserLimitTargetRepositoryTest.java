@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +41,7 @@ public class UserLimitTargetRepositoryTest {
         String limtPolicyCd = "OR003101";
 
         //When
-        List<UserLimitTarget> userLimitTarget = limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(limtPolicyKey, Arrays.asList(new String[]{limtPolicyCd}));
+        List<UserLimitTarget> userLimitTarget = limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(limtPolicyKey, Arrays.asList(limtPolicyCd));
 
         //Then
         System.out.println(userLimitTarget);
@@ -67,7 +65,7 @@ public class UserLimitTargetRepositoryTest {
         List<String> limtPolicyCdList = null;
 
         //When
-        List<UserLimitTarget> userLimitTargets = limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(limtPolicyKey, limtPolicyCdList);
+        limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(limtPolicyKey, limtPolicyCdList);
 
         // Then
     }
@@ -76,13 +74,14 @@ public class UserLimitTargetRepositoryTest {
     public void findByLimitPolicyKeyAndLimtPolicyCdIn_limtPolicyKey_and_limtPolicyCdList() {
         //Given
         String limtPolicyKey = "01088870008";
-        List<String> limtPolicyCdList = Arrays.asList(new String[]{"OR003101", "OR003103"});
+        List<String> limtPolicyCdList = Arrays.asList("OR003101", "OR003103");
 
         //When
-        List<UserLimitTarget> userLimitTargets = limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(limtPolicyKey, limtPolicyCdList);
+        //List<UserLimitTarget> userLimitTargets =
+        limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(limtPolicyKey, limtPolicyCdList);
 
         // Then
-        System.out.println(userLimitTargets);
+        //System.out.println(userLimitTargets);
     }
 
     //void saveLimitPolicy(List<LimitTarget> limitTargets) throws ParseException;
@@ -96,7 +95,7 @@ public class UserLimitTargetRepositoryTest {
         limitTargetRepository.saveLimitPolicy(userLimitTarget);
 
         // Then
-        List<UserLimitTarget> limitTargets = limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(userLimitTarget.getLimtPolicyKey(), Arrays.asList(new String[]{userLimitTarget.getLimtPolicyCd()}));
+        List<UserLimitTarget> limitTargets = limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(userLimitTarget.getLimtPolicyKey(), Arrays.asList(userLimitTarget.getLimtPolicyCd()));
         assertTrue(limitTargets.size() == 1);
 
     }
@@ -108,7 +107,6 @@ public class UserLimitTargetRepositoryTest {
         userLimitTarget.setLimtPolicyCd("0000");
         userLimitTarget.setEndDtString(sdFormat, "29991231235959");
         userLimitTarget.setLimtAmt("1000");
-        userLimitTarget.setTenantId("S01");
         userLimitTarget.setStartDt(new Date());
         userLimitTarget.setRegId("test");
         userLimitTarget.setPolicyApplyValue("apply_value");
@@ -119,20 +117,19 @@ public class UserLimitTargetRepositoryTest {
     @Transactional
     public void saveLimitPolicy_DataIntegrityViolationException() {
         //Given
-        DateFormat sdFormat = new SimpleDateFormat("yyyyMMddHHmmSS");
-        Date endDt = null;
-        try { endDt = sdFormat.parse("29991231235959"); } catch (ParseException ignore) {}
+        //DateFormat sdFormat = new SimpleDateFormat("yyyyMMddHHmmSS");
+        //Date endDt = null;
+        //try { endDt = sdFormat.parse("29991231235959"); } catch (ParseException ignore) {}
 
         UserLimitTarget userLimitTarget = new UserLimitTarget();
         userLimitTarget.setLimtPolicyKey("0000");
         userLimitTarget.setLimtPolicyCd("0000");
-        userLimitTarget.setEndDt(endDt);
+        userLimitTarget.setEndDt(null); //필수값 테스트
         userLimitTarget.setLimtAmt("1000");
-        userLimitTarget.setTenantId(null); //필수값 테스트
 
         //When
         limitTargetRepository.saveLimitPolicy(userLimitTarget);
-        limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(userLimitTarget.getLimtPolicyKey(), Arrays.asList(new String[]{userLimitTarget.getLimtPolicyCd()}));
+        limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(userLimitTarget.getLimtPolicyKey(), Arrays.asList(userLimitTarget.getLimtPolicyCd()));
 
         assertTrue("필수값이 없기 때문에 Exception 이 발생해야 함", false);
     }

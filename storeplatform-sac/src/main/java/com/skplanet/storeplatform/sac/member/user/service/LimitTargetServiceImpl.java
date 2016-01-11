@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.List;
  * Updated on : 2015. 1. 7. Updated by : 임근대, SKP.
  */
 @Service
+@Transactional("transactionManagerForMember")
 public class LimitTargetServiceImpl implements LimitTargetService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LimitTargetServiceImpl.class);
@@ -112,8 +114,6 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 
 		SearchPolicyResponse searchPolicyResponse = new SearchPolicyResponse();
 
-
-
 		List<LimitTarget> limitTargetList = searchPolicyList(searchPolicyRequest.getLimitPolicyKey(), searchPolicyRequest.getLimitPolicyCodeList());
 
 		if (limitTargetList == null || limitTargetList.size() <= 0) {
@@ -146,7 +146,7 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 
         for (int i = 0; i < limitTargetList.size(); i++) {
             LimitTarget limitTarget = limitTargetList.get(i);
-            limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+            //limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 
 			/*
              * if (limitTarget.getLimitTargetNo() == null) { int seq =
@@ -155,7 +155,7 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 			 */
             LOGGER.debug(">>>> >>> UserServiceImpl before updatePolicy : {}", limitTarget);
             //row = this.commonDAO.update("User.updatePolicy", limitTarget);
-            saveLimitPolicy(limitTarget);
+			row = saveLimitPolicy(limitTarget);
 
             LOGGER.debug("### row : {}", row);
             if (row <= 0) {
@@ -170,9 +170,9 @@ public class LimitTargetServiceImpl implements LimitTargetService {
     }
 
     @Override
-    public Long saveLimitPolicy(LimitTarget limitTarget) {
+    public Integer saveLimitPolicy(LimitTarget limitTarget) {
         limitTargetRepository.saveLimitPolicy(UserLimitTarget.createUserLimitTargetFromVo(limitTarget));
-        return 1l;
+        return 1;
     }
 
 	/**
@@ -197,7 +197,7 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTargetNo = limitTargetList.get(i);
-			limitTargetNo.setTenantID(removePolicyRequest.getCommonRequest().getTenantID());
+			//limitTargetNo.setTenantID(removePolicyRequest.getCommonRequest().getTenantID());
 
 			LOGGER.debug(">>>> >>> UserServiceImpl before removePolicy : {}", limitTargetNo);
 			//row = this.commonDAO.delete("User.removePolicy", limitTargetNo);
@@ -282,7 +282,7 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 			//row = this.commonDAO.update("User.updatePolicyHistory", limitTarget);
             row = limitTargetRepository.updateLimitPolicyHistory(Integer.parseInt(limitTarget.getLimitTargetNo()), limitTarget.getUpdateID());
 			if (row <= 0) {
@@ -314,7 +314,7 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			Integer row = 0;
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 			//row = this.commonDAO.update("User.insertPolicy", limitTarget);
             limitTargetRepository.saveLimitPolicy(UserLimitTarget.createUserLimitTargetFromVo(limitTarget));
 			row = 1;

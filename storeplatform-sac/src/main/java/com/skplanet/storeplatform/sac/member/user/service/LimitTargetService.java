@@ -52,7 +52,7 @@ public interface LimitTargetService {
 	 * @param limitTarget 서비스 제한 정책
 	 * @return 저장 건수
 	 */
-	Long saveLimitPolicy(LimitTarget limitTarget);
+	Integer saveLimitPolicy(LimitTarget limitTarget);
 
 	/**
 	 * <pre>

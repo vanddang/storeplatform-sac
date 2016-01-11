@@ -1,10 +1,10 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
 import com.skplanet.storeplatform.member.client.common.vo.*;
-import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.user.service.LimitTargetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.List;
  * 사용자별 정책 기능 관련 인터페이스 구현체
  * 
  * Updated on : 2014. 1. 7. Updated by : 김다슬, 인크로스.
- * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Micellaneos 클래스에서 사용자별 정책 관련 기능 클래스 분리
+ * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Miscellaneous 클래스에서 사용자별 정책 관련 기능 클래스 분리
  */
 @Service
 public class IndividualPolicyServiceImpl implements IndividualPolicyService {
@@ -28,7 +28,8 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 	private MemberCommonComponent commonComponent; // 회원 공통기능 컴포넌트
 
 	@Autowired
-	private UserSCI userSCI; // 회원 Component 사용자 기능 Interface.
+	private LimitTargetService limitTargetService;
+	//private UserSCI userSCI;
 
 	/**
 	 * <pre>
@@ -46,7 +47,7 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 
 		LOGGER.debug("###### IndividualPolicyService.createIndividualPolicy [START] ######");
 
-		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
+		/** 1. SC 회원[UserSCI] Req 생성 및 주입 시작. */
 		SearchPolicyRequest policyRequest = new SearchPolicyRequest();
 		List<String> codeList = new ArrayList<String>();
 		for (int i = 0; i < req.getPolicyCodeList().size(); i++) {
@@ -63,10 +64,11 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 
 		LOGGER.debug("==>>[SC] SearchPolicyRequest.toString() : {}", policyRequest.toString());
 
-		/** 3. SC회원[searchPolicyList] Call. */
-		SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+		/** 3. SC 회원[searchPolicyList] Call. */
+		SearchPolicyResponse policyResponse = limitTargetService.searchPolicyList(policyRequest);
+		//SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
 
-		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
+		/** 4. SC 회원 Call 결과 값으로 Response 생성 및 주입. */
 		GetIndividualPolicyRes res = new GetIndividualPolicyRes();
 		List<IndividualPolicyInfo> policyInfos = null;
 		IndividualPolicyInfo policyInfo;
@@ -110,7 +112,7 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 
 		LOGGER.debug("###### IndividualPolicyService.createIndividualPolicy [START] ######");
 
-		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
+		/** 1. SC 회원[UserSCI] Req 생성 및 주입 시작. */
 		UpdatePolicyRequest updatePolicyRequest = new UpdatePolicyRequest();
 		List<LimitTarget> limitTargets = new ArrayList<LimitTarget>();
 		LimitTarget limitTarget = new LimitTarget();
@@ -134,10 +136,11 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 
 		LOGGER.debug("==>>[SC] UpdatePolicyRequest.toString() : {}", updatePolicyRequest.toString());
 
-		/** 3. SC회원[updatePolicy] Call. */
-		UpdatePolicyResponse updatePolicyResponse = this.userSCI.updatePolicy(updatePolicyRequest);
+		/** 3. SC 회원[updatePolicy] Call. */
+		//UpdatePolicyResponse updatePolicyResponse = this.userSCI.updatePolicy(updatePolicyRequest);
+		UpdatePolicyResponse updatePolicyResponse = this.limitTargetService.updatePolicy(updatePolicyRequest);
 
-		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
+		/** 4. SC 회원 Call 결과 값으로 Response 생성 및 주입. */
 		CreateIndividualPolicyRes res = new CreateIndividualPolicyRes();
 
 		if (updatePolicyResponse.getLimitTargetList().size() > 0) {
@@ -172,7 +175,7 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 
 		LOGGER.debug("###### removeIndividualPolicy [START] ######");
 
-		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
+		/** 1. SC 회원[UserSCI] Req 생성 및 주입 시작. */
 		RemovePolicyRequest removePolicyRequest = new RemovePolicyRequest();
 		List<LimitTarget> limitTargetList = new ArrayList<LimitTarget>();
 		LimitTarget limitTarget = new LimitTarget();
@@ -189,10 +192,11 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 
 		LOGGER.debug("==>>[SC] RemovePolicyRequest.toString() : {}", removePolicyRequest.toString());
 
-		/** 3. SC회원[updatePolicy] Call. */
-		RemovePolicyResponse removePolicyResponse = this.userSCI.removePolicy(removePolicyRequest);
+		/** 3. SC 회원[updatePolicy] Call. */
+		//RemovePolicyResponse removePolicyResponse = this.userSCI.removePolicy(removePolicyRequest);
+		RemovePolicyResponse removePolicyResponse = this.limitTargetService.removePolicy(removePolicyRequest);
 
-		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
+		/** 4. SC 회원 Call 결과 값으로 Response 생성 및 주입. */
 		RemoveIndividualPolicyRes res = new RemoveIndividualPolicyRes();
 		res.setPolicyCode(removePolicyResponse.getLimitPolicyCodeList().get(0));
 		res.setKey(req.getKey());

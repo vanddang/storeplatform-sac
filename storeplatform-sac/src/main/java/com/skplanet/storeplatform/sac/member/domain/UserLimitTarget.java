@@ -212,24 +212,25 @@ public class UserLimitTarget {
         if(StringUtils.isNotEmpty(regDt)) try { this.setRegDt(simpleDateFormat.parse(regDt)); } catch (ParseException ignore) {}
     }
 
-    public String getUpdDtString(SimpleDateFormat simpleDateFormat) {
-        return simpleDateFormat.format(updDt);
-    }
-
     public void setUpdDtString(SimpleDateFormat simpleDateFormat, String updDt) {
         if(StringUtils.isNotEmpty(updDt)) try { this.setUpdDt(simpleDateFormat.parse(updDt)); } catch (ParseException ignore) {}
     }
 
+
+    public String getUpdDtString(SimpleDateFormat simpleDateFormat) {
+        return updDt != null ? simpleDateFormat.format(updDt) : null;
+    }
+
     public String getRegDtString(SimpleDateFormat simpleDateFormat) {
-        return simpleDateFormat.format(regDt);
+        return regDt != null ? simpleDateFormat.format(regDt) : null;
     }
 
     public String getEndDtString(SimpleDateFormat simpleDateFormat) {
-        return simpleDateFormat.format(endDt);
+        return endDt != null ? simpleDateFormat.format(endDt) : null;
     }
 
     public String getStartDtString(SimpleDateFormat simpleDateFormat) {
-        return simpleDateFormat.format(startDt);
+        return startDt != null ? simpleDateFormat.format(startDt) : null;
     }
 
 

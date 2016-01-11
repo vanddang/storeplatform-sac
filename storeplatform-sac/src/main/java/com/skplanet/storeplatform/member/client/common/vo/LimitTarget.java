@@ -9,10 +9,10 @@
  */
 package com.skplanet.storeplatform.member.client.common.vo;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
+
+import java.io.Serializable;
 
 /**
  * 제한 정책 Value Object
@@ -22,9 +22,6 @@ import com.skplanet.storeplatform.member.client.common.util.Utils;
 public class LimitTarget extends CommonInfo implements Serializable {
 	/** The Constant serial Version UID. */
 	private static final long serialVersionUID = 1L;
-
-	/** Tenant ID. */
-	private String tenantID; // TENANT_ID
 
 	/** 제한 정책 테이블 키. */
 	private String limitTargetNo; // SEQUENCE
@@ -150,25 +147,6 @@ public class LimitTarget extends CommonInfo implements Serializable {
 	 */
 	public void setPreLimitAmount(String preLimitAmount) {
 		this.preLimitAmount = preLimitAmount;
-	}
-
-	/**
-	 * Tenant ID를 리턴한다.
-	 * 
-	 * @return tenantID - Tenant ID
-	 */
-	public String getTenantID() {
-		return this.tenantID;
-	}
-
-	/**
-	 * Tenant ID를 설정한다.
-	 * 
-	 * @param tenantID
-	 *            Tenant ID
-	 */
-	public void setTenantID(String tenantID) {
-		this.tenantID = tenantID;
 	}
 
 	/**
