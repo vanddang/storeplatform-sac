@@ -246,12 +246,16 @@
                 u.nativeID AS nativeID,
                 u.deviceTelecom AS deviceTelecom,
                 u.svcMangNum AS svcMangNum,
-                u.deviceModelNo AS deviceModelNo
+                u.deviceModelNo AS deviceModelNo,
+                u.deviceId AS deviceId,
+                u.mdn AS mdn
         FROM ( SELECT a.mbr_id AS deviceNickName,
                 b.device_natv_id AS nativeID,
                 b.mno_cd AS deviceTelecom,
                 b.svc_mang_no AS svcMangNum,
-                b.device_model_cd AS deviceModelNo
+                b.device_model_cd AS deviceModelNo,
+                b.device_id AS deviceId,
+                b.mdn AS mdn
           FROM  tb_us_ousermbr_device b 
           JOIN  tb_us_ousermbr a
             ON  b.insd_usermbr_no = a.insd_usermbr_no

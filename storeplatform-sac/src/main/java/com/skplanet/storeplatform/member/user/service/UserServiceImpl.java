@@ -415,29 +415,24 @@ public class UserServiceImpl implements UserService {
 		LoginUserResponse loginUserResponse = new LoginUserResponse();
 		UserMbrRetrieveUserMbrPwd userMbrRetrieveUserMbrPwd = new UserMbrRetrieveUserMbrPwd();
 		String isDormant = Constant.TYPE_YN_N;
+		UserMbrDevice tempDevice = null;
+		if(StringUtils.isNotBlank(loginUserRequest.getDeviceKey())){
+			// 휴대기기 정보 조회
+			tempDevice = this.commonDAO.queryForObject("User.getUserIDByDeviceKey", loginUserRequest,
+					UserMbrDevice.class);
+		}
 
 		// 회원타입별 회원정보 조회
 		if (StringUtils.equals(loginUserRequest.getIsMobile(), Constant.TYPE_YN_Y)) { // 모바일 회원
-
-			// 휴대기기 정보 조회
-			UserMbrDevice tempDevice = this.commonDAO.queryForObject("User.getUserIDByDeviceKey", loginUserRequest,
-					UserMbrDevice.class);
 
 			if (tempDevice == null) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
 			}
 
-            userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
-			userMbrRetrieveUserMbrPwd = this.commonDAO.queryForObject("User.getUserMbrRetrievePWD",
-					userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
-
-			if (userMbrRetrieveUserMbrPwd == null) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
-			}
-
 			// TLog
-			final String tlogUserKey = userMbrRetrieveUserMbrPwd.getUserKey();
-			final String tlogDeviceID = loginUserRequest.getUserID();
+			final String tlogUserKey = tempDevice.getUserKey();
+			final String tlogDeviceID = tempDevice.getDeviceID();
+			final String tlogMdn = tempDevice.getMdn();// TODO.mdn 필드 확인 필요
 			final String tlogImSvcNo = tempDevice.getSvcMangNum();
 			final String tlogMNO = tempDevice.getDeviceTelecom();
 			final String tlogIEMI = tempDevice.getNativeID();
@@ -448,13 +443,12 @@ public class UserServiceImpl implements UserService {
 				isSKTelecom = "Y";
 			}
 			final String tlogCompanyOwnPhoneYn = isSKTelecom;
-			final String tlogImMbrNo = userMbrRetrieveUserMbrPwd.getImMbrNo();
 
 			new TLogUtil().set(new ShuttleSetter() {
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
 					shuttle.device_id(tlogDeviceID).insd_usermbr_no(tlogUserKey).svc_mng_no(tlogImSvcNo)
-							.company_own_phone_yn(tlogCompanyOwnPhoneYn).mno_type(tlogMNO).usermbr_no(tlogImMbrNo)
+							.company_own_phone_yn(tlogCompanyOwnPhoneYn).mno_type(tlogMNO)
 							.imei(tlogIEMI).phone_model(tlogMODEL);
 				}
 			});
@@ -483,14 +477,35 @@ public class UserServiceImpl implements UserService {
 			// TLog
 			final String tlogUserID = loginUserRequest.getUserID();
 			final String tlogUserKey = userMbrRetrieveUserMbrPwd.getUserKey();
-			final String tlogImMbrNo = userMbrRetrieveUserMbrPwd.getImMbrNo();
 			new TLogUtil().set(new ShuttleSetter() {
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.mbr_id(tlogUserID).insd_usermbr_no(tlogUserKey).usermbr_no(tlogImMbrNo);
+					shuttle.mbr_id(tlogUserID).insd_usermbr_no(tlogUserKey);
 				}
 			});
+			if(tempDevice != null){
+				final String tlogDeviceID = tempDevice.getStartDate();
+				final String tlogMdn = tempDevice.getMdn();// TODO.mdn 필드 확인 필요
+				final String tlogImSvcNo = tempDevice.getSvcMangNum();
+				final String tlogMNO = tempDevice.getDeviceTelecom();
+				final String tlogIEMI = tempDevice.getNativeID();
+				final String tlogMODEL = tempDevice.getDeviceModelNo();
+				String isSKTelecom = "N"; // 자사폰여부
+				if (StringUtils.isNotBlank(tempDevice.getDeviceTelecom())
+						&& StringUtils.equals(tempDevice.getDeviceTelecom(), "US001201")) {
+					isSKTelecom = "Y";
+				}
+				final String tlogCompanyOwnPhoneYn = isSKTelecom;
 
+				new TLogUtil().set(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.device_id(tlogDeviceID).svc_mng_no(tlogImSvcNo)
+								.company_own_phone_yn(tlogCompanyOwnPhoneYn).mno_type(tlogMNO)
+								.imei(tlogIEMI).phone_model(tlogMODEL);
+					}
+				});
+			}
 		}
 
 		// 로그인 성공유무에 따른 이력 저장
@@ -562,13 +577,8 @@ public class UserServiceImpl implements UserService {
 
 				if(StringUtils.isNotBlank(loginUserRequest.getDeviceKey())){
 					userMbrLoginLog.setDeviceKey(loginUserRequest.getDeviceKey());
-					// 휴대기기 정보 조회
-					UserMbrDevice tempDevice = this.commonDAO.queryForObject("User.getUserIDByDeviceKey", loginUserRequest,
-							UserMbrDevice.class);
-					if(tempDevice != null){
-						// 휴대기기 로그인 일자 업데이트
-						this.commonDAO.update("Device.updateLastLoginDt", userMbrLoginLog);
-					}
+					// 휴대기기 로그인 일자 업데이트
+					this.commonDAO.update("Device.updateLastLoginDt", userMbrLoginLog);
 				}
 			}
 
