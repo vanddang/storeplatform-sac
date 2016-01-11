@@ -559,6 +559,17 @@ public class UserServiceImpl implements UserService {
 				if (todayAlreadyUpdatedLastLoginDt == null) {
 					this.commonDAO.update("User.updateLastLoginDt", userMbrLoginLog);
 				}
+
+				if(StringUtils.isNotBlank(loginUserRequest.getDeviceKey())){
+					userMbrLoginLog.setDeviceKey(loginUserRequest.getDeviceKey());
+					// 휴대기기 정보 조회
+					UserMbrDevice tempDevice = this.commonDAO.queryForObject("User.getUserIDByDeviceKey", loginUserRequest,
+							UserMbrDevice.class);
+					if(tempDevice != null){
+						// 휴대기기 로그인 일자 업데이트
+						this.commonDAO.update("Device.updateLastLoginDt", userMbrLoginLog);
+					}
+				}
 			}
 
 			// 로그인 실패카운트 초기화

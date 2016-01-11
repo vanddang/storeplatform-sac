@@ -29,6 +29,9 @@ public class UserMbrLoginLog extends CommonInfo implements Serializable {
 	/** 사용자 Key. */
 	private String userKey;
 
+	/** 휴대기기 Key. */
+	private String deviceKey;
+
 	/** 접속_일시. */
 	private String connDate;
 
@@ -231,4 +234,19 @@ public class UserMbrLoginLog extends CommonInfo implements Serializable {
 		this.deviceOsVersion = deviceOsVersion;
 	}
 
+
+	/**
+	 * @return the deviceKey
+	 */
+	public String getDeviceKey() {
+		return deviceKey;
+	}
+
+	/**
+	 * @param deviceKey
+	 *            the deviceKey to set
+	 */
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
 }

@@ -239,7 +239,7 @@
             AND mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
     </select>
 
-    <!-- userKey, DeviceKey 로 MBR_ID 조회(로그인, isMobile=Y) -->
+    <!-- DeviceKey 로 MBR_ID 조회(로그인) -->
     <select id="getUserIDByDeviceKey" parameterType="loginUserRequest" resultType="userMbrDevice">
         SELECT  /* UserMapper.xml, getUserIDByDeviceKey, SAC(SC), 윤보영, 2016-01-06 */
                 u.deviceNickName AS deviceNickName,
@@ -255,8 +255,7 @@
           FROM  tb_us_ousermbr_device b 
           JOIN  tb_us_ousermbr a
             ON  b.insd_usermbr_no = a.insd_usermbr_no
-         WHERE  b.insd_usermbr_no = #{deviceInfo.userKey}
-           AND  b.insd_device_id = #{deviceInfo.deviceKey}
+         WHERE  b.insd_device_id = #{deviceKey}
            AND  b.auth_yn = 'Y'
            AND  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
        ORDER BY b.auth_dt DESC) u
