@@ -28,6 +28,7 @@ import javax.validation.Valid;
  * 약관 조회 서비스 Controller
  * - 단순 조회 API의 경우 req, res 로깅 제거함
  * Updated on : 2014. 2. 12. Updated by : 강신완, 부르칸.
+ * Updated on : 2016. 1. 11. Updated by : 정희원/SKP
  */
 @Controller
 public class ClauseController {

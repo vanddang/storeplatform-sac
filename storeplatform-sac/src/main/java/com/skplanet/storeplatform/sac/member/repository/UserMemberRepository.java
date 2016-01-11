@@ -21,12 +21,6 @@ public interface UserMemberRepository {
 
     UserMember findOne(String userKey);
 
-    /**
-     * 아무 데이터를 조회한다. 테스트용 메소드
-     * @return
-     */
-    UserMember findAny();
-
     UserMember findByEmail(String email);
 
     boolean isExist(String userKey);

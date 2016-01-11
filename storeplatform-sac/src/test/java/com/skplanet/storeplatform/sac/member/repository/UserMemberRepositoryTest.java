@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.*;
 
 /**
- * Created with IntelliJ IDEA.
+ * UserMemberRepositoryTest
  * User: 1002210
  * Date: 16. 1. 4.
  * Time: 오후 7:36
@@ -20,11 +20,14 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @ActiveProfiles("local")
-@Transactional("transactionManagerForJpaMember")
+@Transactional("transactionManagerForScMember")
 public class UserMemberRepositoryTest {
 
     @Autowired
     UserMemberRepository userMemberRepository;
+
+    @Autowired
+    UserMemberTestRepository userMemberTestRepository;
 
     @Test
     public void test01() {

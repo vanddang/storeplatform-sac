@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.member.domain;
 
 import com.skplanet.storeplatform.sac.member.repository.UserClauseAgreeRepository;
-import com.skplanet.storeplatform.sac.member.repository.UserMemberRepository;
+import com.skplanet.storeplatform.sac.member.repository.UserMemberTestRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import static org.junit.Assert.*;
 
 /**
  * UserClauseAgreeTest
@@ -34,11 +32,11 @@ public class UserClauseAgreeTest {
     UserClauseAgreeRepository userClauseAgreeRepository;
 
     @Autowired
-    UserMemberRepository memberRepository;
+    UserMemberTestRepository memberTestRepository;
 
     @Test
     public void test01() {
-        UserMember anyMem = memberRepository.findAny();
+        UserMember anyMem = memberTestRepository.findAny();
         UserClauseAgree a = new UserClauseAgree();
         a.setMember(anyMem);
         a.setAgreeYn("Y");

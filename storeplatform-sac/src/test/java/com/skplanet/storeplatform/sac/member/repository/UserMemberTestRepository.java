@@ -7,17 +7,21 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.member.user.service;
+package com.skplanet.storeplatform.sac.member.repository;
 
 import com.skplanet.storeplatform.sac.member.domain.UserMember;
 
 /**
  * <p>
- * DESC
+ * UserMemberTestRepository
  * </p>
- * Updated on : 2016. 01. 08 Updated by : 정희원, SK 플래닛.
+ * Updated on : 2016. 01. 11 Updated by : 정희원, SK 플래닛.
  */
-public interface UserMemberService {
+public interface UserMemberTestRepository {
 
-    UserMember _findOne(String userKey);
+    /**
+     * 아무 데이터를 조회한다. 테스트용 메소드
+     * @return
+     */
+    UserMember findAny();
 }

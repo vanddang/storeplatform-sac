@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
-import com.google.common.base.Strings;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.skplanet.storeplatform.sac.member.domain.QUserMember;
 import com.skplanet.storeplatform.sac.member.domain.UserMember;
@@ -20,12 +19,12 @@ import javax.persistence.PersistenceContext;
 
 /**
  * <p>
- * UserMemberRepositoryImpl
+ * UserMemberTestRepositoryImpl
  * </p>
- * Updated on : 2016. 01. 04 Updated by : 정희원, SK 플래닛.
+ * Updated on : 2016. 01. 11 Updated by : 정희원, SK 플래닛.
  */
 @Repository
-public class UserMemberRepositoryImpl implements UserMemberRepository {
+public class UserMemberTestRepositoryImpl implements UserMemberTestRepository {
 
     public static final QUserMember $ = QUserMember.userMember;
 
@@ -33,25 +32,9 @@ public class UserMemberRepositoryImpl implements UserMemberRepository {
     private EntityManager em;
 
     @Override
-    public UserMember findOne(String userKey) {
+    public UserMember findAny() {
         return new JPAQuery(em).from($)
-                .where($.insdUsermbrNo.eq(userKey))
-                .uniqueResult($);
-    }
-
-    @Override
-    public UserMember findByEmail(String email) {
-        return new JPAQuery(em).from($)
-                .where($.emailAddr.eq(email))
-                .uniqueResult($);
-    }
-
-    @Override
-    public boolean isExist(String userKey) {
-        String r = new JPAQuery(em).from($)
-                .where($.insdUsermbrNo.eq(userKey))
-                .uniqueResult($.insdUsermbrNo);
-
-        return !Strings.isNullOrEmpty(r);
+                .innerJoin($.devices)
+                .singleResult($);
     }
 }
