@@ -184,6 +184,8 @@ public class CouponConstants {
 
 	public static final String LANG_CD_KO = "ko"; // ko 한글 코드값
 	public static final String TENANT_ID = "S01"; // S01 값
+	public static final String TENANT_ID_S02 = "S02"; // S02 값
+	public static final String TENANT_ID_S03 = "S03"; // S03 값
 	public static final String PROD_RSHP_CD = "DP010802"; // 채널-에피소드 상품 관계
 
 	public static final String ANDROID_STANDARD2 = "android_standard2"; // 디바이스 정보셋팅

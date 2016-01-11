@@ -936,8 +936,15 @@
                             AND E.PART_PROD_ID = G.PROD_ID
                             AND E.PART_PROD_ID = H.PROD_ID
                             AND E.PART_PROD_ID = I.PROD_ID
-                            AND G.TENANT_ID = H.TENANT_ID 
-                            AND NVL(B.CHNL_CNT, 0) > 0
+                            AND G.TENANT_ID = H.TENANT_ID
+                            AND EXISTS(
+                                    SELECT 'X'
+                                    FROM TB_DP_TENANT_PROD
+                                    WHERE TENANT_ID =#{tenantId}
+                                    AND PROD_ID =B.CATALOG_ID
+                                    AND PROD_STATUS_CD ='PD000403'
+                                    AND EXPO_YN = 'Y'
+								 )
                             AND A.USE_YN ='Y'
                             AND C.USE_YN ='Y'
                             AND D.USE_YN ='Y'
