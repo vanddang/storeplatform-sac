@@ -28,9 +28,6 @@ public class DetailV2Res extends CommonInfo {
 
 	private String message;
 
-	/* 사용자 변동성 여부 */
-	private String isChangeSubject;
-
 	/* 비밀번호 변경일자 */
 	private String pwRegDate;
 
@@ -86,21 +83,6 @@ public class DetailV2Res extends CommonInfo {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
-	}
-
-	/**
-	 * @return the isChangeSubject
-	 */
-	public String getIsChangeSubject() {
-		return this.isChangeSubject;
-	}
-
-	/**
-	 * @param isChangeSubject
-	 *            the isChangeSubject to set
-	 */
-	public void setIsChangeSubject(String isChangeSubject) {
-		this.isChangeSubject = isChangeSubject;
 	}
 
 	/**

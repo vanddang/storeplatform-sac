@@ -27,9 +27,6 @@ public class DetailRes extends CommonInfo {
 
 	private String message;
 
-	/* 사용자 변동성 여부 */
-	private String isChangeSubject;
-
 	/* 비밀번호 변경일자 */
 	private String pwRegDate;
 
@@ -53,14 +50,6 @@ public class DetailRes extends CommonInfo {
 
 	/* 징계정보 */
 	private UserMbrPnsh userMbrPnsh;
-
-	public String getIsChangeSubject() {
-		return this.isChangeSubject;
-	}
-
-	public void setIsChangeSubject(String isChangeSubject) {
-		this.isChangeSubject = isChangeSubject;
-	}
 
 	public String getPwRegDate() {
 		return this.pwRegDate;

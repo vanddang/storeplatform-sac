@@ -82,7 +82,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	public CreateByMdnRes regByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
 
         /**
-         * MDN 회원 가가입 체크
+         * MDN 회원 기가입 체크
          */
         try {
             String keyType = null;
@@ -124,12 +124,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 
             this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
         }
-
-		/**
-		 * 단말등록시 필요한 기본 정보 세팅.
-		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(),
-				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType(), false);
 
 		/**
 		 * 약관 맵핑정보 세팅.
@@ -177,9 +171,27 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
 		/**
-		 * 휴대기기 등록. - 휴대기기 등록 SC 작업 완료 후 재작업
+		 * 휴대기기 등록.
 		 */
-        String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
+        DeviceInfo deviceInfo = new DeviceInfo();
+        deviceInfo.setUserKey(createUserResponse.getUserKey());
+        deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
+
+        if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+            deviceInfo.setDeviceId("");
+            deviceInfo.setMdn(req.getDeviceId()); // MDN 번호
+        }else {
+            deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+        }
+        deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
+        deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+        deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
+        deviceInfo.setNativeId(req.getNativeId()); // 기기 IMEI
+        deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
+        deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
+        deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 단말부가정보
+
+        String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
 
 		/**
 		 * 결과 세팅

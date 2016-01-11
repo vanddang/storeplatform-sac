@@ -420,7 +420,7 @@ public class UserServiceImpl implements UserService {
 		if (StringUtils.equals(loginUserRequest.getIsMobile(), Constant.TYPE_YN_Y)) { // 모바일 회원
 
 			// 휴대기기 정보 조회
-			UserMbrDevice tempDevice = this.commonDAO.queryForObject("User.getUserIDByDeviceID", loginUserRequest,
+			UserMbrDevice tempDevice = this.commonDAO.queryForObject("User.getUserIDByDeviceKey", loginUserRequest,
 					UserMbrDevice.class);
 
 			if (tempDevice == null) {

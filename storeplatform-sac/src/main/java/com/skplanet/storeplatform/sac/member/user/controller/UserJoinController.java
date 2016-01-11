@@ -76,7 +76,6 @@ public class UserJoinController {
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
-
 	}
 
 	/**

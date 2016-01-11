@@ -120,9 +120,9 @@ public class DeviceServiceImpl implements DeviceService {
 		if (userMbr == null || userMbr.getUserID() == null)
 			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
 
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(userMbr.getUserID());
-		searchDeviceListRequest.setCommonRequest(commonRequest);
+//		CommonRequest commonRequest = new CommonRequest();
+//		commonRequest.setSystemID(userMbr.getUserID());
+//		searchDeviceListRequest.setCommonRequest(commonRequest);
 
 		SearchDeviceListResponse searchDeviceListResponse;
 
@@ -305,7 +305,7 @@ public class DeviceServiceImpl implements DeviceService {
 			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest.getUserMbrDevice().getSvcMangNum(), userKey, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
 			if(ownerUserMbrDeviceList != null && ownerUserMbrDeviceList.size() > 0){
 				for(UserMbrDevice userMbrDevice : ownerUserMbrDeviceList){
-					LOGGER.info("{} : {} 회원이 {} 서비스관리번호로 등록된 회원이 존재", userKey, userMbrDevice.getUserKey(), createDeviceRequest.getUserMbrDevice().getSvcMangNum());
+					LOGGER.info("{} : {} 회원이 {} 서비스관리번호로 존재", userKey, userMbrDevice.getUserKey(), createDeviceRequest.getUserMbrDevice().getSvcMangNum());
 					String isDormant = StringUtils.isBlank(userMbrDevice.getIsDormant()) ? Constant.TYPE_YN_N : userMbrDevice.getIsDormant(); // 휴면 회원 유무
 
 					// 회원 정보 조회
@@ -1092,9 +1092,17 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// 대표기기가 invalid된 경우 최신 등록 기기를 대표기기로 등록한다.
 		if (StringUtils.equals(userMbrDevice.getIsPrimary(), Constant.TYPE_YN_Y)) {
-			row = this.commonDAO.update("Device.updatePrimary", userMbrDevice);
-			if (row <= 0) {
-				row = 1;
+			UserMbrDevice userMbrDeviceOrderByUpdDt = this.commonDAO.queryForObject("Device.searchDeviceOrderbyUpdDt", userMbrDevice, UserMbrDevice.class);
+			if(userMbrDeviceOrderByUpdDt != null){
+				row = dao.update("Device.insertUpdateDeviceHistory", userMbrDeviceOrderByUpdDt);
+				if (row <= 0) {
+					return row;
+				}
+				userMbrDeviceOrderByUpdDt.setIsPrimary(Constant.TYPE_YN_Y);
+				row = dao.update("Device.updateDevice", userMbrDeviceOrderByUpdDt);
+				if (row <= 0) {
+					return row;
+				}
 			}
 		}
 
@@ -1754,43 +1762,4 @@ public class DeviceServiceImpl implements DeviceService {
 		return modifyDeviceResponse;
 	}
 
-    /**
-     * <pre>
-     * 회원의 등록된 휴대기기(MVNO) 상세정보를 조회하는 기능을 제공한다.
-     * </pre>
-     *
-     * @param SearchDeviceMvnoRequest
-     *            휴대기기 조회 요청 Value Object
-     * @return SearchDeviceMvnoResponse - 휴대기기 조회 응답 Value Object
-     */
-    public SearchDeviceMvnoResponse searchDeviceMvno(SearchDeviceMvnoRequest searchDeviceMvnoRequest){
-        LOGGER.debug("### SearchDeviceMvnoRequest : {}", searchDeviceMvnoRequest.toString());
-
-        SearchDeviceMvnoResponse searchDeviceMvnoResponse = new SearchDeviceMvnoResponse();
-        CommonDAO dao = this.commonDAO;
-        String isDormant = Constant.TYPE_YN_N;
-
-        // mdn, imei 조회
-        SearchDeviceResponse searchDeviceResponse = dao.queryForObject("Device.searchDeviceMvno", searchDeviceMvnoRequest, SearchDeviceResponse.class);
-
-        if (searchDeviceResponse == null) { // 휴면DB 조회
-            dao = this.idleDAO;
-            searchDeviceResponse = dao.queryForObject("Device.searchDeviceMvno", searchDeviceMvnoRequest, SearchDeviceResponse.class);
-            isDormant = Constant.TYPE_YN_Y;
-        }
-
-        if (searchDeviceResponse == null) {
-            throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
-        }
-
-        searchDeviceMvnoResponse.setUserID(searchDeviceResponse.getUserID());
-        searchDeviceMvnoResponse.setUserKey(searchDeviceResponse.getUserKey());
-        searchDeviceMvnoResponse.setUserMbrDevice(searchDeviceResponse.getUserMbrDevice());
-        searchDeviceMvnoResponse.getUserMbrDevice().setIsDormant(isDormant);
-
-        LOGGER.debug("### searchDeviceResponse : {}", searchDeviceMvnoResponse.toString());
-        searchDeviceMvnoResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
-                "response.ResultMessage.success"));
-        return searchDeviceMvnoResponse;
-    }
 }

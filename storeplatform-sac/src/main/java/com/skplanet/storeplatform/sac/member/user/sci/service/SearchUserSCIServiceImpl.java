@@ -408,7 +408,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		DetailRes detailRes = new DetailRes();
 
 		/* 기본정보 세팅 */
-		detailRes.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
+//		detailRes.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
 		detailRes.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
 		detailRes.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
 

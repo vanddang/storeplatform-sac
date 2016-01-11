@@ -101,10 +101,16 @@ public class LoginController {
 
         /** MSIDN 일 경우 SKT/SKM 만 허용 */
         if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
-            if (!StringUtils.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-                    && !StringUtils.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)) {
+            if (!StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+                    && !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)) {
                 throw new StorePlatformException("SAC_MEM_1203", "deviceTelecom");
             }
+        }
+
+        /** SKM 일 경우 NATIVE_ID 필수 처리 */
+        if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
+                && StringUtils.isEmpty(req.getNativeId())){
+            throw new StorePlatformException("SAC_MEM_0001", "nativeId");
         }
 
         AuthorizeByMdnRes res = this.loginService.authorizeByMdnV2(requestHeader, req);

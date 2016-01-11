@@ -361,7 +361,7 @@ public class MemberCommonComponent {
 
 		/* 기본정보 세팅 */
 		DetailRes detailRes = new DetailRes();
-		detailRes.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
+//		detailRes.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
 		detailRes.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
 		detailRes.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
 
@@ -732,12 +732,9 @@ public class MemberCommonComponent {
 			 */
 			LOGGER.debug("## 미지원 단말 세팅.");
 			LOGGER.info("<getDeviceBaseInfo> NOT SUPPORT DEVICE. mdn : {}, model : {}", mdn, model);
-			majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
 			majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
-			majorDeviceInfo.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM); // 기기명
 
 		} else {
-
 			Device deviceDTO = this.getPhoneInfo(model);
 			if (deviceDTO == null) {
 				/**
@@ -745,15 +742,10 @@ public class MemberCommonComponent {
 				 */
 				LOGGER.debug("## 미지원 단말 세팅.");
 				LOGGER.info("<getDeviceBaseInfo> NOT SUPPORT DEVICE. mdn : {}, model : {}", mdn, model);
-				majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
 				majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
-				majorDeviceInfo.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM); // 기기명
 
 			} else {
-
-				majorDeviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
 				majorDeviceInfo.setDeviceModelNo(deviceDTO.getDeviceModelCd()); // 기기 모델 번호
-				majorDeviceInfo.setDeviceNickName(deviceDTO.getModelNm()); // 기기명
 
 				/**
 				 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
@@ -764,14 +756,6 @@ public class MemberCommonComponent {
 						LOGGER.warn("##### UUID 일때는 무조건 이동통신사 코드를 IOS로 줘야 한다. AI-IS 로직 반영.... #####");
 						LOGGER.warn("###############################################################################");
 					}
-				}
-
-				/**
-				 * OMD 단말 setting.
-				 */
-				if (this.repository.searchOmdCount(deviceDTO.getUaCd()) > 0) {
-					LOGGER.debug("## OMD 단말 setting.");
-					majorDeviceInfo.setOmdUacd(deviceDTO.getUaCd());
 				}
 			}
 

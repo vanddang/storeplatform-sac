@@ -124,25 +124,25 @@ public class DeviceUtil {
 	public static DeviceInfo getConverterDeviceInfo(UserMbrDevice userMbrDevice) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
+        deviceInfo.setUserId(userMbrDevice.getUserID());
 		deviceInfo.setUserKey(userMbrDevice.getUserKey());
 		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
 		deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
 		deviceInfo.setDeviceModelNo(userMbrDevice.getDeviceModelNo());
 		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
 		deviceInfo.setIsPrimary(userMbrDevice.getIsPrimary());
+        deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
+        deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
+        deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
 		deviceInfo.setIsRecvSms(userMbrDevice.getIsRecvSMS());
 		deviceInfo.setNativeId(userMbrDevice.getNativeID());
 		deviceInfo.setJoinId(userMbrDevice.getJoinId());
-		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
-		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
-		// deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
-		deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
-		deviceInfo.setIsDormant(userMbrDevice.getIsDormant());
 		deviceInfo.setMdn(userMbrDevice.getMdn());
 		deviceInfo.setDeviceSimNm(userMbrDevice.getDeviceSimNm());
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
         deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount()); // 기기 계정
+        deviceInfo.setIsDormant(userMbrDevice.getIsDormant());
 
 		return deviceInfo;
 	}
