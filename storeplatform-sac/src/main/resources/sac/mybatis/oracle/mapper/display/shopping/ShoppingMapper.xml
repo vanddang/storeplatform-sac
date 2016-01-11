@@ -4233,12 +4233,12 @@
 													   ,TB_DP_PROD_RSHP BB
 												 WHERE  AA.PROD_ID =BB.PART_PROD_ID
 												   AND BB.PROD_ID = H.PROD_ID
-												   AND BB.PROD_RSHP_CD =#{prodRshpCd}
+												   AND BB.PROD_RSHP_CD ='DP010802'
                                                    AND AA.EXPO_YN='Y'
-												   AND AA.TENANT_ID=#{tenantHeader.tenantId}
+												   AND AA.TENANT_ID=#{tenantId}
 												   AND AA.PROD_STATUS_CD ='PD000403'
 											 )>0
-										THEN (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE TENANT_ID=#{tenantHeader.tenantId} AND PROD_ID=H.PROD_ID) 
+										THEN (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE TENANT_ID=#{tenantId} AND PROD_ID=H.PROD_ID)
 								    ELSE 'PD000404' END
 								  ) PROD_STATUS_CD    
                                 ,I.B2B_PROD_YN                  /* B2B_상품_여부 */  
@@ -4314,14 +4314,14 @@
                         AND H.PROD_RSHP_CD = 'DP010802'    /*채널-에피소드 상품 관계*/
                         <if test="sellingOnly">
 						AND EXISTS(
-								SELECT 'X' 
+								SELECT 'X'
 								  FROM TB_DP_TENANT_PROD
 								 WHERE TENANT_ID =#{tenantId}
 								   AND PROD_ID =B.CATALOG_ID
 								   AND PROD_STATUS_CD ='PD000403'
 								   AND EXPO_YN = 'Y'
-							)  
-                        AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */       
+							)
+                        AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                         </if>                
                         AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
                         AND F.LANG_CD= #{langCd}          /* ko : 한국어 */
