@@ -36,7 +36,7 @@ import java.util.List;
  * Updated on : 2015. 1. 7. Updated by : 임근대, SKP.
  */
 @Service
-@Transactional("transactionManagerForMember")
+@Transactional("transactionManagerForScMember")
 public class LimitTargetServiceImpl implements LimitTargetService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LimitTargetServiceImpl.class);
