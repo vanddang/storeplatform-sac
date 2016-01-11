@@ -236,7 +236,7 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req) {
 
-		/* 헤더 정보 셋팅 */
+		/** 1. 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 
@@ -251,11 +251,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 		ListDeviceRes res = new ListDeviceRes();
 
+		/** 2. deviceId가 있으면 단건 조회후 응답 처리*/
 		if (StringUtils.isNotEmpty(req.getDeviceId())) {
-			/* 모번호 조회 및 셋팅 */
+			/** 2-1. 모번호 조회 및 셋팅 */
 			req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
-			/* 단건 조회 처리 */
+			/** 2-2. 단건 조회 처리 */
 			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
 					req.getDeviceId(), userKey);
 			if (deviceInfo != null) {
@@ -268,11 +269,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 			return res;
 
+		/** 3. mdn이 있으면 단건 조회후 응답 처리 */
 		}else if (StringUtils.isNotEmpty(req.getMdn())) {
-            /* 모번호 조회 및 셋팅 */
+            /** 3-1. 모번호 조회 및 셋팅 */
             req.setMdn(this.commService.getOpmdMdnInfo(req.getMdn()));
 
-            /* 단건 조회 처리 */
+            /** 3-2. 단건 조회 처리 */
             DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN,
                     req.getMdn(), userKey);
             if (deviceInfo != null) {
@@ -284,8 +286,9 @@ public class DeviceServiceImpl implements DeviceService {
             }
             return res;
 
+		/** 4. deviceKey가 있으면 단건 조회후 응답 처리 */
         } else if (StringUtils.isNotEmpty(req.getDeviceKey())) {
-			/* 단건 조회 처리 */
+			/** 4-1. 단건 조회 처리 */
 			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 					req.getDeviceKey(), userKey);
 			if (deviceInfo != null) {
@@ -297,18 +300,18 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 			return res;
 
+		/** 5. userId가 있으면 searchkey 셋팅 */
         }  else if (StringUtils.isNotEmpty(req.getUserId())) {
 			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 			key.setKeyString(req.getUserId());
 
+		/** 6. userKey가 있으면 searchkey 셋팅 */
 		} else if (StringUtils.isNotEmpty(req.getUserKey())) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
 			key.setKeyString(req.getUserKey());
 		}
 
-        /**
-         * KEY_TYPE_MBR_ID / KEY_TYPE_INSD_USERMBR_NO 조회 시 DeviceList 조회
-         */
+        /** 7. userId > KEY_TYPE_MBR_ID / userKey > KEY_TYPE_INSD_USERMBR_NO 조회 시 DeviceList 조회 */
         keySearchList.add(key);
 		schDeviceListReq.setKeySearchList(keySearchList);
 		schDeviceListReq.setCommonRequest(commonRequest);
@@ -1252,7 +1255,11 @@ public class DeviceServiceImpl implements DeviceService {
 				List<DeviceExtraInfo> listExtraInfo = new ArrayList<DeviceExtraInfo>();
 
 				addData.setDeviceKey(StringUtil.setTrim(info.getDeviceKey()));
-				addData.setDeviceId(StringUtil.setTrim(info.getDeviceId()));
+				if ( StringUtils.isNotBlank(info.getMdn()) ){
+					addData.setDeviceId(StringUtil.setTrim(info.getMdn()));
+				} else {
+					addData.setDeviceId(StringUtil.setTrim(info.getDeviceId()));
+				}
 				addData.setDeviceModelNo(StringUtil.setTrim(info.getDeviceModelNo()));
 				addData.setSvcMangNum(StringUtil.setTrim(info.getSvcMangNum()));
 				addData.setDeviceTelecom(StringUtil.setTrim(info.getDeviceTelecom()));
@@ -1292,22 +1299,22 @@ public class DeviceServiceImpl implements DeviceService {
 		SetMainDeviceRequest setMainDeviceRequest = new SetMainDeviceRequest();
 		SetMainDeviceRes setMainDeviceRes = new SetMainDeviceRes();
 
-		/* 헤더 정보 셋팅 */
+		/** 1. 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		setMainDeviceRequest.setCommonRequest(commonRequest);
 
-		/* userKey, deviceKey 회원존재여부 체크 */
+		/** 2. userKey, deviceKey 회원존재여부 체크 */
 		ExistReq existReq = new ExistReq();
 		existReq.setUserKey(req.getUserKey());
 
 		ExistRes existRes = this.userSearchService.exist(requestHeader, existReq);
 
-		// 회원이라면 해당 userKey셋팅
+		/** 3. 회원이라면 userKey 셋팅 */
 		if (existRes.getUserKey() != null) {
 			ListDeviceReq deviceReq = new ListDeviceReq();
 			deviceReq.setUserKey(req.getUserKey());
-			// req에 deviceId가 있을 경우 mdn여부를 판단하여 DB를 통해 deviceKey를 셋팅
+			/** 4. req에 deviceId가 있을 경우 mdn 여부를 판단 후 휴대기기 존재여부 확인 */
 			if (req.getDeviceId() != null) {
 				String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 				req.setDeviceId(opmdMdn);
@@ -1326,6 +1333,7 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 
+			/** 휴대기기가 존재하면 조회된 deviceKey로 대표기기 설정 */
 			setMainDeviceRequest.setDeviceKey(req.getDeviceKey());
 			setMainDeviceRequest.setUserKey(req.getUserKey());
 

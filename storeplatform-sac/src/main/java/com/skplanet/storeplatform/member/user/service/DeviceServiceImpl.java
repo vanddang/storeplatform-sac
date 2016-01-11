@@ -179,11 +179,15 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// 모바일 회원 전환 케이스 확인
 		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
-			mobileUserMbrDevice = this.commonDAO.queryForObject("Device.searchDeviceOrderBySvcMangNo", createDeviceRequest.getUserMbrDevice().getSvcMangNum(), UserMbrDevice.class);
+			SearchDeviceResponse searchDeviceResponse = this.commonDAO.queryForObject("Device.searchDeviceOrderBySvcMangNo", createDeviceRequest.getUserMbrDevice().getSvcMangNum(), SearchDeviceResponse.class);
+			if(searchDeviceResponse != null && searchDeviceResponse.getUserMbrDevice() != null){
+				mobileUserMbrDevice = searchDeviceResponse.getUserMbrDevice();
+			}
 			String previousIsDormant = Constant.TYPE_YN_N;
 			if(mobileUserMbrDevice == null){
-				mobileUserMbrDevice = this.idleDAO.queryForObject("Device.searchDeviceOrderBySvcMangNo", createDeviceRequest.getUserMbrDevice().getSvcMangNum(), UserMbrDevice.class);
-				if(mobileUserMbrDevice != null){
+				searchDeviceResponse = this.idleDAO.queryForObject("Device.searchDeviceOrderBySvcMangNo", createDeviceRequest.getUserMbrDevice().getSvcMangNum(), SearchDeviceResponse.class);
+				if(searchDeviceResponse != null && searchDeviceResponse.getUserMbrDevice() != null){
+					mobileUserMbrDevice = searchDeviceResponse.getUserMbrDevice();
 					previousIsDormant = Constant.TYPE_YN_Y;
 				}
 			}
@@ -215,6 +219,16 @@ public class DeviceServiceImpl implements DeviceService {
 				userkeyTrack.setAfterUserKey(createUserMbr.getUserKey());
 				userkeyTrack.setRegID(createUserMbr.getUserID());
 				this.commonDAO.update("Device.insertUserkeyTrack", userkeyTrack);
+
+				// sms수신여부, 가입채널, PUSH수신동의 이관
+				createDeviceRequest.getUserMbrDevice().setIsRecvSMS(mobileUserMbrDevice.getIsRecvSMS());
+				createDeviceRequest.getUserMbrDevice().setJoinId(mobileUserMbrDevice.getJoinId());
+				for(UserMbrDeviceDetail userMbrDeviceDetail : mobileUserMbrDevice.getUserMbrDeviceDetail()){
+					if(StringUtils.equals(userMbrDeviceDetail.getExtraProfile(), MemberConstants.DEVICE_EXTRA_PUSH_YN)){
+						createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail().add(userMbrDeviceDetail);
+						break;
+					}
+				}
 			}
 		}
 
@@ -379,12 +393,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/** 본인 정보 처리 start */
 		LOGGER.info("본인 정보 처리 start");
 
-		// 모바일 회원 전환시에 sms수신여부, 가입채널 이관
-		if(mobileUserMbrDevice != null){
-			createDeviceRequest.getUserMbrDevice().setIsRecvSMS(mobileUserMbrDevice.getIsRecvSMS());
-			createDeviceRequest.getUserMbrDevice().setJoinId(mobileUserMbrDevice.getJoinId());
-		}
-
 		// device_id 존재 체크
 		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getDeviceID())){
 			userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_DEVICE_ID, createDeviceRequest.getUserMbrDevice().getDeviceID(), userKey, Constant.TYPE_YN_Y, Constant.TYPE_YN_N);
@@ -524,8 +532,8 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceResponse.setPreUserKey(preUserKey);
 		createDeviceResponse.setPreDeviceKey(preDeviceKey);
 
-		// 모바일 회원 전환인 경우 userKey(insd_usermbr_no)변경 tlog 남김
-		if(mobileUserMbrDevice != null){
+		// 모바일 회원 전환 tlog
+		if(mobileUserMbrDevice != null && !StringUtils.equals(Constant.USER_TYPE_MOBILE, createUserMbr.getUserType())){
 			final String tlogUserKey = createDeviceRequest.getUserKey();
 			final String tlogDeviceId = createDeviceRequest.getUserMbrDevice().getDeviceID();
 			final String tlogMdn = createDeviceRequest.getUserMbrDevice().getMdn(); // TODO. mdn 필드 추가할건지 확인 필요.

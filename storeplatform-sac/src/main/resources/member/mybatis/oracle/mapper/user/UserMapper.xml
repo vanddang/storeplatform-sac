@@ -239,24 +239,27 @@
             AND mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
     </select>
 
-    <!-- userKey, DeviceKey 로 MBR_ID 조회(로그인, isMobile=Y) -->
+    <!-- DeviceKey 로 MBR_ID 조회(로그인) -->
     <select id="getUserIDByDeviceKey" parameterType="loginUserRequest" resultType="userMbrDevice">
         SELECT  /* UserMapper.xml, getUserIDByDeviceKey, SAC(SC), 윤보영, 2016-01-06 */
                 u.deviceNickName AS deviceNickName,
                 u.nativeID AS nativeID,
                 u.deviceTelecom AS deviceTelecom,
                 u.svcMangNum AS svcMangNum,
-                u.deviceModelNo AS deviceModelNo
+                u.deviceModelNo AS deviceModelNo,
+                u.deviceId AS deviceId,
+                u.mdn AS mdn
         FROM ( SELECT a.mbr_id AS deviceNickName,
                 b.device_natv_id AS nativeID,
                 b.mno_cd AS deviceTelecom,
                 b.svc_mang_no AS svcMangNum,
-                b.device_model_cd AS deviceModelNo
+                b.device_model_cd AS deviceModelNo,
+                b.device_id AS deviceId,
+                b.mdn AS mdn
           FROM  tb_us_ousermbr_device b 
           JOIN  tb_us_ousermbr a
             ON  b.insd_usermbr_no = a.insd_usermbr_no
-         WHERE  b.insd_usermbr_no = #{deviceInfo.userKey}
-           AND  b.insd_device_id = #{deviceInfo.deviceKey}
+         WHERE  b.insd_device_id = #{deviceKey}
            AND  b.auth_yn = 'Y'
            AND  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
        ORDER BY b.auth_dt DESC) u
@@ -1450,14 +1453,14 @@
                       insd_usermbr_no
                     , fail_cnt
                     , upd_dt
-                    , act_tk
+                    <if test="userAuthToken != userAuthToken">, act_tk</if>
                 ) 
         VALUES  
                 (
                       #{memberKey}
                     , 0
                     , SYSDATE
-                    , #{userAuthToken}
+                    <if test="userAuthToken != userAuthToken">, #{userAuthToken}</if>
                 )
     </insert>
     

@@ -81,12 +81,13 @@ public class UserSearchController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		ExistReq oldReq = new ExistReq();
-		oldReq.setUserKey(req.getUserKey());
-		oldReq.setUserId(req.getUserId());
-		oldReq.setDeviceKey(req.getDeviceKey());
+		// request에서는 deviceId를 사용하지 않으나 내부적으로는 사용하므로 다시 셋팅한다.
+		ExistReq existReq = new ExistReq();
+		existReq.setUserKey(req.getUserKey());
+		existReq.setUserId(req.getUserId());
+		existReq.setDeviceKey(req.getDeviceKey());
 
-		ExistRes res = this.svc.exist(sacHeader, oldReq);
+		ExistRes res = this.svc.exist(sacHeader, existReq);
 
 		LOGGER.info("Response : {}", res.getUserKey());
 
