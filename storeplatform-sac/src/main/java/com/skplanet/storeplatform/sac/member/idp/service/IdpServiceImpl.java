@@ -3419,7 +3419,7 @@ public class IdpServiceImpl implements IdpService {
 	 * </pre>
 	 * 
 	 * @param tenantID
-	 * @param strList
+	 * @param mbrClauseAgreeArray
 	 * @return
 	 */
 	private List<MbrClauseAgree> getMbrClauseAgreeList(String tenantID, String[] mbrClauseAgreeArray) {

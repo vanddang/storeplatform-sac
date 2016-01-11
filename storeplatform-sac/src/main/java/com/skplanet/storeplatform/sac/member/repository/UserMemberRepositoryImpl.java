@@ -40,6 +40,13 @@ public class UserMemberRepositoryImpl implements UserMemberRepository {
     }
 
     @Override
+    public UserMember findAny() {
+        return new JPAQuery(em).from($)
+                .innerJoin($.devices)
+                .singleResult($);
+    }
+
+    @Override
     public UserMember findByEmail(String email) {
         return new JPAQuery(em).from($)
                 .where($.emailAddr.eq(email))

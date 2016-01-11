@@ -13,13 +13,20 @@ import com.skplanet.storeplatform.sac.member.domain.UserMember;
 
 /**
  * <p>
- * DESC
+ * UserMemberRepository
  * </p>
  * Updated on : 2016. 01. 04 Updated by : 정희원, SK 플래닛.
  */
 public interface UserMemberRepository {
 
     UserMember findOne(String userKey);
+
+    /**
+     * 아무 데이터를 조회한다. 테스트용 메소드
+     * @return
+     */
+    UserMember findAny();
+
     UserMember findByEmail(String email);
 
     boolean isExist(String userKey);

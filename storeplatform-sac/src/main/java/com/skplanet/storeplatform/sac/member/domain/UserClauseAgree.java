@@ -9,7 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.member.domain;
 
-import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.google.common.base.Objects;
+import com.google.common.base.Strings;
+import com.google.common.primitives.Doubles;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 
@@ -28,24 +30,8 @@ import java.util.Date;
 @IdClass(UserClauseAgree.PK.class)
 public class UserClauseAgree {
 
-    @Id
-    private String insdUsermbrNo;
-
-    @Id
-    private String clauseId;
-
-    private Date regDt;
-
-    private Date updDt;
-
-    private Character agreeYn;
-
-    private Character mandAgreeYn;
-
-    private String clauseVer;
-
     public static class PK implements Serializable {
-        private String insdUsermbrNo;
+        private UserMember member;
         private String clauseId;
 
         public String getClauseId() {
@@ -56,40 +42,55 @@ public class UserClauseAgree {
             this.clauseId = clauseId;
         }
 
-        public String getInsdUsermbrNo() {
-            return insdUsermbrNo;
+        public UserMember getMember() {
+            return member;
         }
 
-        public void setInsdUsermbrNo(String insdUsermbrNo) {
-            this.insdUsermbrNo = insdUsermbrNo;
+        public void setMember(UserMember member) {
+            this.member = member;
         }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-
             PK pk = (PK) o;
-
-            if (!insdUsermbrNo.equals(pk.insdUsermbrNo)) return false;
-            return clauseId.equals(pk.clauseId);
-
+            return Objects.equal(member, pk.member) &&
+                    Objects.equal(clauseId, pk.clauseId);
         }
 
         @Override
         public int hashCode() {
-            int result = insdUsermbrNo.hashCode();
-            result = 31 * result + clauseId.hashCode();
-            return result;
+            return Objects.hashCode(member, clauseId);
         }
     }
 
-    public String getInsdUsermbrNo() {
-        return insdUsermbrNo;
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "INSD_USERMBR_NO")
+    private UserMember member;
+
+    @Id
+    private String clauseId;
+
+    private Date regDt;
+
+    private Date updDt;
+
+    @Column(columnDefinition = "char(1)")
+    private String agreeYn;
+
+    @Column(columnDefinition = "char(1)")
+    private String mandAgreeYn;
+
+    private String clauseVer;
+
+    public UserMember getMember() {
+        return member;
     }
 
-    public void setInsdUsermbrNo(String insdUsermbrNo) {
-        this.insdUsermbrNo = insdUsermbrNo;
+    public void setMember(UserMember member) {
+        this.member = member;
     }
 
     public String getClauseId() {
@@ -116,19 +117,19 @@ public class UserClauseAgree {
         this.updDt = updDt;
     }
 
-    public Character getAgreeYn() {
+    public String getAgreeYn() {
         return agreeYn;
     }
 
-    public void setAgreeYn(Character agreeYn) {
+    public void setAgreeYn(String agreeYn) {
         this.agreeYn = agreeYn;
     }
 
-    public Character getMandAgreeYn() {
+    public String getMandAgreeYn() {
         return mandAgreeYn;
     }
 
-    public void setMandAgreeYn(Character mandAgreeYn) {
+    public void setMandAgreeYn(String mandAgreeYn) {
         this.mandAgreeYn = mandAgreeYn;
     }
 
@@ -159,33 +160,34 @@ public class UserClauseAgree {
         this.updDt = new Date();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserClauseAgree that = (UserClauseAgree) o;
-
-        if (!insdUsermbrNo.equals(that.insdUsermbrNo)) return false;
-        return clauseId.equals(that.clauseId);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = insdUsermbrNo.hashCode();
-        result = 31 * result + clauseId.hashCode();
-        return result;
-    }
-
+    ////////// Business //////////
     public Agreement convertToAgreement() {
         Agreement agree = new Agreement();
         agree.setExtraAgreementId(clauseId);
         agree.setExtraAgreementVersion(clauseVer);
-        agree.setIsExtraAgreement(agreeYn.toString());
-        agree.setIsMandatory(mandAgreeYn.toString());
+        agree.setIsExtraAgreement(agreeYn);
+        agree.setIsMandatory(mandAgreeYn);
         agree.setRegDate(getRegDtStr());
         agree.setUpdateDate(getUpdDtStr());
         return agree;
+    }
+
+    /**
+     * targetVer와 비교해서 더 높은 버전을 지정한다
+     * @param targetVer 비교 버전
+     */
+    public void setMaxClauseVer(String targetVer) {
+        if(Strings.isNullOrEmpty(targetVer))
+            return;
+
+        Double selfVer = Doubles.tryParse(clauseVer),
+                tgtVer = Doubles.tryParse(targetVer);
+
+        if (selfVer != null && tgtVer != null)
+            clauseVer = (selfVer < tgtVer ? tgtVer : selfVer).toString();
+        else if (selfVer == null && tgtVer == null)
+            clauseVer = null;
+        else
+            clauseVer = (selfVer != null ? selfVer : tgtVer).toString();
     }
 }

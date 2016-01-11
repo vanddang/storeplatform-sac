@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.google.common.base.Function;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.member.client.common.vo.*;
@@ -24,12 +28,20 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
+import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import com.skplanet.storeplatform.sac.member.domain.UserClauseAgree;
+import com.skplanet.storeplatform.sac.member.domain.UserMember;
+import com.skplanet.storeplatform.sac.member.repository.UserClauseAgreeRepository;
+import com.skplanet.storeplatform.sac.member.repository.UserMemberRepository;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -48,10 +60,19 @@ public class UserModifyServiceImpl implements UserModifyService {
     private MemberCommonComponent mcc;
 
     @Autowired
+    private MemberCommonRepository mcr;
+
+    @Autowired
     private UserSCI userSCI;
 
     @Autowired
     private UserSearchService userSearchService;
+
+    @Autowired
+    private UserMemberRepository memberRepository;
+
+    @Autowired
+    private UserClauseAgreeRepository clauseAgreeRepository;
 
     @Override
     public ModifyRes modUser(SacRequestHeader sacHeader, ModifyReq req) {
@@ -298,37 +319,52 @@ public class UserModifyServiceImpl implements UserModifyService {
     }
 
     @Override
-    public CreateTermsAgreementRes regTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req) {
+    @Transactional("transactionManagerForScMember")
+    public void _mergeTermsAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreeList) {
 
-        /**
-         * SC Store 약관동의 등록/수정 연동.
-         */
-        this.modAgreement(sacHeader, req.getUserKey(), req.getAgreementList(), MemberConstants.TYPE_CREATE);
+        UserMember member = memberRepository.findOne(userKey);
 
-        /**
-         * 결과 setting.
-         */
-        CreateTermsAgreementRes response = new CreateTermsAgreementRes();
-        response.setUserKey(req.getUserKey());
+        if(member == null || !member.isAvailable())
+            throw new StorePlatformException("SAC_MEM_0003", "userKey", userKey);
 
-        return response;
-    }
+        List<UserClauseAgree> userClauseAgrees = clauseAgreeRepository.findByInsdUsermbrNo(userKey);
+        ImmutableMap<String, UserClauseAgree> userAgreeMap = Maps.uniqueIndex(userClauseAgrees, new Function<UserClauseAgree, String>() {
+            @Nullable
+            @Override
+            public String apply(UserClauseAgree input) {
+                return input.getClauseId();
+            }
+        });
 
-    @Override
-    public ModifyTermsAgreementRes modTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req) {
+        for (AgreementInfo agreementInfo : agreeList) {
+            UserClauseAgree userClauseAgree = userAgreeMap.get(agreementInfo.getExtraAgreementId());
 
-        /**
-         * SC Store 약관동의 등록/수정 연동.
-         */
-        this.modAgreement(sacHeader, req.getUserKey(), req.getAgreementList(), MemberConstants.TYPE_MODIFY);
+            Clause clause = mcr.getClauseItemInfo(agreementInfo.getExtraAgreementId());
+            if(clause == null)
+                throw new StorePlatformException("SAC_MEM_1105", agreementInfo.getExtraAgreementId());
 
-        /**
-         * 결과 setting.
-         */
-        ModifyTermsAgreementRes response = new ModifyTermsAgreementRes();
-        response.setUserKey(req.getUserKey());
+            String lastVer = clause.getClauseVer(),
+                    mandAgreeYn = clause.getMandAgreeYn();
 
-        return response;
+            if(userClauseAgree == null) {
+                // NEW
+                UserClauseAgree newAgree = new UserClauseAgree();
+                newAgree.setMember(member);
+                newAgree.setClauseId(agreementInfo.getExtraAgreementId());
+                newAgree.setAgreeYn(agreementInfo.getIsExtraAgreement());
+                newAgree.setMandAgreeYn(mandAgreeYn);
+                newAgree.setClauseVer(!Strings.isNullOrEmpty(agreementInfo.getExtraAgreementVersion()) ?
+                                                            agreementInfo.getExtraAgreementVersion() : lastVer);
+                clauseAgreeRepository.save(newAgree);
+            }
+            else {
+                // UPDATE
+                userClauseAgree.setMandAgreeYn(mandAgreeYn);
+                userClauseAgree.setMaxClauseVer(agreementInfo.getExtraAgreementVersion());
+                if(Strings.isNullOrEmpty(userClauseAgree.getClauseVer()))
+                    userClauseAgree.setClauseVer(lastVer);
+            }
+        }
     }
 
     @Override

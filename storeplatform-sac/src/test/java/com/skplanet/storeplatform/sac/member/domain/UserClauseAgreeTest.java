@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.member.domain;
 
 import com.skplanet.storeplatform.sac.member.repository.UserClauseAgreeRepository;
+import com.skplanet.storeplatform.sac.member.repository.UserMemberRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +33,18 @@ public class UserClauseAgreeTest {
     @Autowired
     UserClauseAgreeRepository userClauseAgreeRepository;
 
+    @Autowired
+    UserMemberRepository memberRepository;
+
     @Test
     public void test01() {
+        UserMember anyMem = memberRepository.findAny();
         UserClauseAgree a = new UserClauseAgree();
-        a.setInsdUsermbrNo("IM120000055210220140602152221");
-        a.setAgreeYn('Y');
+        a.setMember(anyMem);
+        a.setAgreeYn("Y");
         a.setClauseId("US010605");
         a.setClauseVer("1.1");
-        a.setMandAgreeYn('Y');
+        a.setMandAgreeYn("Y");
 
         userClauseAgreeRepository.save(a);
         assert a.getRegDt() != null;

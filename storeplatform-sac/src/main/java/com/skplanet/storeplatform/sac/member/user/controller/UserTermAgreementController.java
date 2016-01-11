@@ -85,16 +85,12 @@ public class UserTermAgreementController {
         LOGGER.debug("##### 2.1.16 Store 약관 동의 등록 #####");
         LOGGER.debug("#####################################");
 
-        LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
         /**
          * Store 약관 동의 등록 Biz
          */
-        CreateTermsAgreementRes res = this.modifyService.regTermsAgreement(sacHeader, req);
+        this.modifyService._mergeTermsAgreement(sacHeader, req.getUserKey(), req.getAgreementList());
 
-        LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
-
-        return res;
+        return new CreateTermsAgreementRes(req.getUserKey());
 
     }
 
@@ -117,16 +113,12 @@ public class UserTermAgreementController {
         LOGGER.debug("##### 2.1.17 Store 약관 동의 수정 #####");
         LOGGER.debug("#####################################");
 
-        LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
         /**
          * Store 약관 동의 수정 Biz
          */
-        ModifyTermsAgreementRes res = this.modifyService.modTermsAgreement(sacHeader, req);
+        this.modifyService._mergeTermsAgreement(sacHeader, req.getUserKey(), req.getAgreementList());
 
-        LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
-
-        return res;
+        return new ModifyTermsAgreementRes(req.getUserKey());
 
     }
 

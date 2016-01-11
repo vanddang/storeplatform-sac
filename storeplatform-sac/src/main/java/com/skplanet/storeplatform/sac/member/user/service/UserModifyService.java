@@ -9,8 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+
+import java.util.List;
 
 /**
  * 회원 정보 수정 서비스 인터페이스(CoreStoreBusiness)
@@ -60,29 +63,14 @@ public interface UserModifyService {
 
 	/**
 	 * <pre>
-	 * Store 약관 동의 등록.
+	 * Store 약관 동의 등록/수정.
 	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @param req
-	 *            Request Value Object
-	 * @return Response Value Object
-	 */
-	public CreateTermsAgreementRes regTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req);
-
-	/**
-	 * <pre>
-	 * Store 약관 동의 수정.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @param req
-	 *            Request Value Object
-	 * @return Response Value Object
-	 */
-	public ModifyTermsAgreementRes modTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req);
+	 * @param sacHeader 공통 헤더
+     * @param userKey
+     * @param agreeList
+     * @return Response Value Object
+     */
+	void _mergeTermsAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreeList);
 
 	/**
 	 * <pre>

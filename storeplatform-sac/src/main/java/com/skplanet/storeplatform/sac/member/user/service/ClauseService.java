@@ -17,13 +17,13 @@ public interface ClauseService {
 	 * 
 	 * @return ListClauseSacRes
 	 */
-	public ListClauseSacRes listClause(SacRequestHeader sacHeader);
+	ListClauseSacRes listClause(SacRequestHeader sacHeader);
 
 	/**
 	 * 약관목록 상세 조회.
 	 * 
 	 * @return ListClauseSacRes
 	 */
-	public DetailClauseSacRes detailClauseList(SacRequestHeader sacHeader, DetailClauseSacReq req);
+	DetailClauseSacRes detailClauseList(SacRequestHeader sacHeader, DetailClauseSacReq req);
 
 }

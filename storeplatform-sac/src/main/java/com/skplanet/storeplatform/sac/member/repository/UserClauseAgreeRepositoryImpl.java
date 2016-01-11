@@ -18,8 +18,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-import static com.skplanet.storeplatform.sac.member.domain.QUserClauseAgree.userClauseAgree;
-
 /**
  * <p>
  * UserClauseAgreeRepositoryImpl
@@ -28,6 +26,8 @@ import static com.skplanet.storeplatform.sac.member.domain.QUserClauseAgree.user
  */
 @Repository
 public class UserClauseAgreeRepositoryImpl implements UserClauseAgreeRepository {
+
+    public static final QUserClauseAgree $ = QUserClauseAgree.userClauseAgree;
 
     @PersistenceContext(unitName = "puMbr")
     private EntityManager em;
@@ -40,9 +40,9 @@ public class UserClauseAgreeRepositoryImpl implements UserClauseAgreeRepository 
     @Override
     public List<UserClauseAgree> findByInsdUsermbrNo(String userKey) {
         JPAQuery q = new JPAQuery(em)
-                .from(userClauseAgree)
-                .where(userClauseAgree.insdUsermbrNo.eq(userKey));
+                .from($)
+                .where($.member.insdUsermbrNo.eq(userKey));
 
-        return q.list(userClauseAgree);
+        return q.list($);
     }
 }
