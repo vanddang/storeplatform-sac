@@ -35,6 +35,9 @@ public class LoginUserRequest extends CommonInfo implements Serializable {
 	/** 사용자 패스워드. */
 	private String userPW;
 
+	/** 휴대기기 Key. */
+	private String deviceKey;
+
 	/** OneID 사용 여부. */
 	private String isOneID;
 
@@ -352,7 +355,22 @@ public class LoginUserRequest extends CommonInfo implements Serializable {
 		this.deviceOsVersion = deviceOsVersion;
 	}
 
-    public DeviceInfo getDeviceInfo() {
+	/**
+	 * @return the deviceKey
+	 */
+	public String getDeviceKey() {
+		return deviceKey;
+	}
+
+	/**
+	 * @param deviceKey
+	 *            the deviceKey to set
+	 */
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+
+	public DeviceInfo getDeviceInfo() {
         return deviceInfo;
     }
 
