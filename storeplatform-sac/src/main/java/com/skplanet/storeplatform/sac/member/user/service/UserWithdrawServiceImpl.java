@@ -14,6 +14,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +32,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
@@ -90,31 +88,16 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) {
 
-		/**
-		 * 회원 정보 조회 Value Object.
-		 */
-		UserInfo userInfo = null;
+		/** 1. 요청 파라미터에 따라서 회원 조회 key값 설정 */
+		DetailReq detailReq = new DetailReq();
 
-		/**
-		 * 요청 파라미터에 따라서 분기 처리한다.
-		 *
-		 * 1. userId, userAuthToken 둘다 존재 or 모두 존재 Case.
-		 *
-		 * 2. deviceId만 존재하는 Case.
-		 */
-		if (StringUtils.isNotBlank(req.getUserId()) && StringUtils.isNotBlank(req.getUserAuthToken())) {
+		if (StringUtils.isNotBlank(req.getUserId())) {
 
 			LOGGER.debug("########################################");
-			LOGGER.info("userId, userAuthToken 둘다 존재 or 모두 존재 Case.");
+			LOGGER.info("userId 존재 Case.");
 			LOGGER.debug("########################################");
 
-			/**
-			 * userId로 회원 정보 조회. 이미 탈퇴되었을 경우 오류처리
-			 */
-			userInfo = this.mcc.getUserBaseInfo("userId", req.getUserId(), requestHeader);
-			if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
-				throw new StorePlatformException("SAC_MEM_0006");
-			}
+			detailReq.setUserId(req.getUserId());
 
 		} else {
 
@@ -122,98 +105,143 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			LOGGER.info("deviceId 존재 Case.");
 			LOGGER.debug("########################################");
 
-			/**
-			 * 모번호 조회 (989 일 경우만)
-			 */
+			/** 모번호 조회 (989 일 경우만) */
 			req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
-
-			/**
-			 * deviceId로 회원 정보 조회 이미 탈퇴되었을 경우 오류처리.
-			 */
-            String keyType = MemberConstants.KEY_TYPE_MDN;
-            if (ValidationCheckUtils.isDeviceId(req.getDeviceId())) {
-                keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
-            }
-			userInfo = this.mcc.getUserBaseInfo(keyType, req.getDeviceId(), requestHeader);
-			if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
-				throw new StorePlatformException("SAC_MEM_0006");
-			}
+			detailReq.setDeviceId(req.getDeviceId());
 
 		}
 
-		/** 소셜 아이디인 경우만 userAuthToken 인증
+		/** 2. 회원 정보 조회. */
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+
+		DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+		/**
+		 * 3. 소셜 아이디인 경우만 userAuthToken 인증후 회원 탈퇴
 		 *   - mdn 회원은 인증 단계 없이 탈퇴
 		 *   - 기존 Tstore 아이디는 단말에서 id/pwd 인증 단계 후에 탈퇴 진행되므로 인증 불필요
 		 *   - 신규 소셜 계정 아이디는 인증단계가 없으므로 id/token인증 필요
 		 */
-		if (StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
-				|| StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_GOOGLE)
-				|| StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
+		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
+				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
+				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER)) {
+
+			LOGGER.info("소셜 아이디(Facebook, google, naver) > userAuthToken 인증");
+
+			/** 소셜 아이디인 경우 사용자 인증토큰이 필수 값 */
+			if (req.getUserAuthToken() == null || req.getUserAuthToken().length() <= 0) {
+				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
+			}
+
 			CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
 			chkUserAuthTkReqeust.setCommonRequest(mcc.getSCCommonRequest(requestHeader));
-			chkUserAuthTkReqeust.setUserKey(userInfo.getUserKey());
+			chkUserAuthTkReqeust.setUserKey(detailRes.getUserInfo().getUserKey());
 			chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
 			CheckUserAuthTokenResponse chkUserAuthTkResponse = userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
 			if (chkUserAuthTkResponse.getUserKey() == null || chkUserAuthTkResponse.getUserKey().length() <= 0) {
 				throw new StorePlatformException("SAC_MEM_1204");
 			}
+
 		}
-
-		/** SC회원 탈퇴 요청*/
-		this.rem(requestHeader, userInfo.getUserKey(), userInfo.getIsDormant());
-
-		/** MQ 연동을 위해 userId가 가지고 있는 휴대기기 목록 조회 */
-		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setUserId(userInfo.getUserId());
-		listDeviceReq.setIsMainDevice("N");
-		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
-
-		/** MQ 연동 (회원 탈퇴) */
-		StringBuffer buf = new StringBuffer();
-		String mqDeviceStr = "";
-		if (listDeviceRes.getDeviceInfoList() != null) {
-			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
-				buf.append(deviceInfo.getMdn()).append("|");
-			}
-			mqDeviceStr = buf.toString();
-			mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
-		}
-		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
-		mqInfo.setUserId(userInfo.getUserId());
-		mqInfo.setUserKey(userInfo.getUserKey());
-		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-
-		List<UserExtraInfo> list = userInfo.getUserExtraInfoList();
-		if (list != null) {
-			for (int i = 0; i < list.size(); i++) {
-				UserExtraInfo extraInfo = list.get(i);
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
-					mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
-				}
-			}
-		}
-
-		if (StringUtils.isNotBlank(mqDeviceStr)) {
-			mqInfo.setDeviceId(mqDeviceStr);
-		}
-
-		LOGGER.info("{} 탈퇴 MQ device : {}", req.getUserId(), mqDeviceStr);
-
-		try {
-
-			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
-
-		} catch (AmqpException ex) {
-			LOGGER.error("MQ process fail {}", mqInfo);
-		}
-
-		LOGGER.info("IDP 탈퇴처리, DB 탈퇴처리 모두 완료.");
 
 		/**
-		 * 결과 세팅
+		 *  4-1. 요청 파라미터에 따라서 분기 처리한다.
+		 *  userId 탈퇴요청
+		 *   - 아이디, 휴대기기 삭제
+		 *   - MQ연동 : memberRetireAmqpTemplate
+		 *
+		 *  deviceId 탈퇴요청
+		 *   - 모바일회원, 소셜아이디 회원일 경우 >> 아이디, 휴대기기삭제
+		 *   	- MQ연동 : memberRetireAmqpTemplate
 		 */
+		if( StringUtils.isNotBlank(detailReq.getUserId())
+				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)
+				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
+				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
+				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER) ) {
+
+			/** 4-1-1. 회원 탈퇴 */
+			this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes.getUserInfo().getIsDormant());
+
+			/** 4-1-2. MQ 연동 (회원 탈퇴) */
+			StringBuffer buf = new StringBuffer();
+			String mqDeviceStr = "";
+			if (detailRes.getDeviceInfoList() != null && detailRes.getDeviceInfoList().size() > 0) {
+				for (DeviceInfo deviceInfo : detailRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
+					buf.append(deviceInfo.getDeviceId()).append("|");
+				}
+				mqDeviceStr = buf.toString();
+				mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
+			}
+			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+			mqInfo.setUserId(detailRes.getUserInfo().getUserId());
+			mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+
+			List<UserExtraInfo> list = detailRes.getUserInfo().getUserExtraInfoList();
+			if (list != null) {
+				for (int i = 0; i < list.size(); i++) {
+					UserExtraInfo extraInfo = list.get(i);
+					if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
+						mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+					}
+				}
+			}
+
+			if (StringUtils.isNotBlank(mqDeviceStr)) {
+				mqInfo.setDeviceId(mqDeviceStr);
+			}
+			try {
+
+				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+
+			} catch (AmqpException ex) {
+				LOGGER.error("MQ process fail {}", mqInfo);
+			}
+		/**
+		 * 4-2 deviceId 요청이면서 모바일, 소셜아이디 타입이 아닌경우
+		 * 	 - 휴대기기삭제
+		 *   - MQ연동 : memberDelDeviceAmqpTemplate
+		 */
+		} else {
+
+			/** 4-2-1. 휴대기기 삭제 */
+			this.deviceIdInvalid(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(),
+					detailRes.getUserInfo().getIsDormant());
+
+			/** 4-2-2. MQ 연동 (휴대기기 삭제) */
+			String keyType = MemberConstants.KEY_TYPE_MDN;
+			if ( ValidationCheckUtils.isDeviceId(req.getDeviceId()) ) {
+				keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
+			}
+
+			DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, keyType,
+					req.getDeviceId(), detailRes.getUserInfo().getUserKey());
+
+			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
+			try {
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+				mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+				mqInfo.setDeviceKey(deviceInfo.getDeviceKey());
+				mqInfo.setDeviceId(deviceInfo.getDeviceId());
+				mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
+				mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
+
+				this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
+			} catch (AmqpException ex) {
+				LOGGER.info("MQ process fail {}", mqInfo);
+
+			}
+		}
+
+		LOGGER.info("MQ 탈퇴처리, DB 탈퇴처리 모두 완료.");
+
+		/** 결과 세팅. */
 		WithdrawRes response = new WithdrawRes();
-		response.setUserKey(userInfo.getUserKey());
+		response.setUserKey(detailRes.getUserInfo().getUserKey());
 		return response;
 
 	}
@@ -462,11 +490,16 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 */
 	public void deviceIdInvalid(SacRequestHeader requestHeader, String userKey, String deviceId, String isDormant) {
 
+		/** deviceId mdn여부 확인 */
+		String keyType = MemberConstants.KEY_TYPE_MDN;
+		if( ValidationCheckUtils.isDeviceId(deviceId)){
+			keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
+		}
+
 		/**
 		 * SC 휴대기기 단건 조회.
 		 */
-		DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
-				deviceId, userKey);
+		DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, keyType, deviceId, userKey);
 
 		/**
 		 * SC 휴대기기 삭제요청.

@@ -27,7 +27,6 @@ import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
 import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
 import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
 import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -669,7 +668,6 @@ public class UserServiceImpl implements UserService {
 		RemoveUserResponse removeUserResponse = new RemoveUserResponse();
 
 		UserMbr usermbr = new UserMbr();
-		usermbr.setTenantID(removeUserRequest.getCommonRequest().getTenantID());
 		usermbr.setUserKey(removeUserRequest.getUserKey());
 
 		String isRegistered = null;
@@ -692,7 +690,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		usermbr = new UserMbr();
-		usermbr.setTenantID(removeUserRequest.getCommonRequest().getTenantID());
 		usermbr.setUserKey(removeUserRequest.getUserKey());
 		usermbr.setSecedeReasonCode(removeUserRequest.getSecedeReasonCode());
 		usermbr.setSecedeReasonMessage(removeUserRequest.getSecedeReasonMessage());
