@@ -317,7 +317,6 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchDeviceListResponse schDeviceListRes = null;
 
 		try {
-
 			schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
 			/* response 셋팅 */
 			res.setUserId(schDeviceListRes.getUserID());
@@ -326,6 +325,7 @@ public class DeviceServiceImpl implements DeviceService {
 			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
 			for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
 				DeviceInfo deviceInfo = DeviceUtil.getConverterDeviceInfo(userMbrDevice);
+                deviceInfo.setUserId(schDeviceListRes.getUserID());
 
 				/* 폰정보 DB 조회하여 추가 정보 반영 */
 				Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
@@ -439,7 +439,7 @@ public class DeviceServiceImpl implements DeviceService {
 				mdnMap.put("01011110005", "svc005");
                 mdnMap.put("01065261233", "4486071533");
                 mdnMap.put("01065261234", "4486071534");
-                mdnMap.put("01065261236", "4486071536");
+                mdnMap.put("01065261241", "4486071541");
 				mdnMap.put("01066786220", "7243371580");
 				if(mdnMap.get(deviceInfo.getMdn()) != null){
 					deviceInfo.setSvcMangNum(mdnMap.get(deviceInfo.getMdn()));
@@ -660,13 +660,13 @@ public class DeviceServiceImpl implements DeviceService {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 			key.setKeyString(deviceInfo.getDeviceKey());
 		} else if (StringUtils.isNotBlank(deviceInfo.getDeviceId())) {
-			if (ValidationCheckUtils.isMdn(deviceInfo.getDeviceId())) {
-				key.setKeyType(MemberConstants.KEY_TYPE_MDN);
-				key.setKeyString(deviceInfo.getDeviceId());
-			} else {
-				key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-				key.setKeyString(deviceInfo.getDeviceId());
-			}
+            if(ValidationCheckUtils.isDeviceId(deviceInfo.getDeviceId())){
+                key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+                key.setKeyString(deviceInfo.getDeviceId());
+            }else {
+                key.setKeyType(MemberConstants.KEY_TYPE_MDN);
+                key.setKeyString(deviceInfo.getDeviceId());
+            }
 		}
 
 		keySearchList.add(key);
@@ -1312,10 +1312,10 @@ public class DeviceServiceImpl implements DeviceService {
 				String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 				req.setDeviceId(opmdMdn);
 
-				if( ValidationCheckUtils.isMdn(req.getDeviceId())){
-					deviceReq.setMdn(req.getDeviceId());
+				if( ValidationCheckUtils.isDeviceId(req.getDeviceId())){
+                    deviceReq.setDeviceId(req.getDeviceId());
 				}else{
-					deviceReq.setDeviceId(req.getDeviceId());
+                    deviceReq.setMdn(req.getDeviceId());
 				}
 
 				ListDeviceRes deviceRes = this.listDevice(requestHeader, deviceReq);
@@ -1851,43 +1851,4 @@ public class DeviceServiceImpl implements DeviceService {
         return removeDeviceRes;
     }
 
-    @Override
-    public DeviceInfo srhDeviceMvno(SacRequestHeader requestHeader, String mdn, String deviceNatvId) {
-
-		/* 헤더 정보 셋팅 */
-        CommonRequest commonRequest = new CommonRequest();
-        commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-
-        SearchDeviceMvnoRequest searchDeviceMvnoRequest = new SearchDeviceMvnoRequest();
-        searchDeviceMvnoRequest.setCommonRequest(commonRequest);
-        searchDeviceMvnoRequest.setMdn(mdn);
-        searchDeviceMvnoRequest.setDeviceNatvId(deviceNatvId);
-
-        DeviceInfo deviceInfo = null;
-
-        try {
-
-            SearchDeviceMvnoResponse schDeviceRes = this.deviceSCI.searchDeviceMvno(searchDeviceMvnoRequest);
-
-            deviceInfo = new DeviceInfo();
-            deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
-            deviceInfo.setUserId(schDeviceRes.getUserID());
-            deviceInfo.setUserKey(schDeviceRes.getUserKey());
-
-            /* 폰정보 DB 조회하여 추가 정보 반영 */
-            Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
-            if (device != null) {
-                deviceInfo.setMakeComp(device.getMnftCompCd());
-                deviceInfo.setModelNm(device.getModelNm());
-                deviceInfo.setVmType(device.getVmTypeCd());
-            }
-
-        } catch (StorePlatformException ex) {
-            if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-                throw ex;
-            }
-        }
-
-        return deviceInfo;
-    }
 }

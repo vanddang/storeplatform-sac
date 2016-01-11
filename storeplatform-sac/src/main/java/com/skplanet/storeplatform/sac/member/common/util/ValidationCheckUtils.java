@@ -48,4 +48,20 @@ public class ValidationCheckUtils {
         }
         return err;
     }
+
+    /**
+     * <pre>
+     * deviceId 유효성 검사
+     * </pre>
+     *
+     * @param deviceId
+     *            String
+     * @return boolean
+     */
+    public static boolean isDeviceId(String deviceId) {
+        Pattern pattern = Pattern.compile(".*[a-zA-Z:.].*");
+        Matcher matcher = pattern.matcher(deviceId);
+
+        return matcher.matches();
+    }
 }

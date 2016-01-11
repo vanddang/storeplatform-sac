@@ -130,10 +130,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			/**
 			 * deviceId로 회원 정보 조회 이미 탈퇴되었을 경우 오류처리.
 			 */
-			String keyType = "deviceId";
-			if(ValidationCheckUtils.isMdn(req.getDeviceId()) ){
-				keyType = "mdn";
-			}
+            String keyType = MemberConstants.KEY_TYPE_MDN;
+            if (ValidationCheckUtils.isDeviceId(req.getDeviceId())) {
+                keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
+            }
 			userInfo = this.mcc.getUserBaseInfo(keyType, req.getDeviceId(), requestHeader);
 			if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
 				throw new StorePlatformException("SAC_MEM_0006");

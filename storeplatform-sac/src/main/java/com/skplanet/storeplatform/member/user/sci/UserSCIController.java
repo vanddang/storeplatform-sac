@@ -2835,7 +2835,7 @@ public class UserSCIController implements UserSCI {
 		}
 
 		try {
-
+			//
 			existListResponse = this.service.existList(existListRequest);
 
 		} catch (StorePlatformException ex) {

@@ -163,13 +163,13 @@ public class UserModifyServiceImpl implements UserModifyService {
         // 4. 숫자만 구성 체크
         if(Pattern.matches("^[0-9]*$", newPassword)) {
             throw new StorePlatformException("SAC_MEM_1409", userInfo.getUserKey());
-        // 5. 문자만 구성 체크
+            // 5. 문자만 구성 체크
         }else if(Pattern.matches("^[A-Za-z]*$", newPassword)) {
             throw new StorePlatformException("SAC_MEM_1410", userInfo.getUserKey());
-        // 6. 특수문자만 구성 체크 (숫자와 문자가 아닌 경우)
+            // 6. 특수문자만 구성 체크 (숫자와 문자가 아닌 경우)
         }else if(Pattern.matches("^[^0-9A-Za-z]*$", newPassword)){
             throw new StorePlatformException("SAC_MEM_1415", userInfo.getUserKey());
-        // 조합 패스워드
+            // 조합 패스워드
         }else{
             // 7. 숫자없이 구성 (특수문자+문자) 체크 > 기타 비밀번호 제약 사항
             if(Pattern.matches("^[^0-9]*$", newPassword)) {

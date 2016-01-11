@@ -21,11 +21,6 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	private String userKey = "";
 
 	/**
-	 * IDP 인증 Key.
-	 */
-	private String userAuthKey = "";
-
-	/**
 	 * 사용자 구분코드.
 	 */
 	private String userType = "";
@@ -59,11 +54,6 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	 * 로그인 성공여부(Y/N).
 	 */
 	private String isLoginSuccess = "";
-
-	/**
-	 * Tcloud 약관동의 노출 여부
-	 */
-	private String tcloudAgreeViewYn = "";
 
 	/**
 	 * @return userKey
@@ -183,36 +173,6 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	 */
 	public void setIsLoginSuccess(String isLoginSuccess) {
 		this.isLoginSuccess = isLoginSuccess;
-	}
-
-	/**
-	 * @return userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
-	}
-
-	/**
-	 * @return tcloudAgreeViewYn
-	 */
-	public String getTcloudAgreeViewYn() {
-		return this.tcloudAgreeViewYn;
-	}
-
-	/**
-	 * @param tcloudAgreeViewYn
-	 *            String
-	 */
-	public void setTcloudAgreeViewYn(String tcloudAgreeViewYn) {
-		this.tcloudAgreeViewYn = tcloudAgreeViewYn;
 	}
 
 }

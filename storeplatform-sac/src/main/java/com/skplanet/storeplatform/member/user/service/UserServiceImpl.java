@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
 import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
 import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
 import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -344,6 +345,7 @@ public class UserServiceImpl implements UserService {
 
 		SearchUserKey searchUserKey = new SearchUserKey();
 		searchUserKey.setKeySearchList(checkDuplicationRequest.getKeySearchList());
+		searchUserKey.setTenantID(checkDuplicationRequest.getCommonRequest().getTenantID());
 
 		boolean isDeviceRequest = false;
 
@@ -418,7 +420,7 @@ public class UserServiceImpl implements UserService {
 		if (StringUtils.equals(loginUserRequest.getIsMobile(), Constant.TYPE_YN_Y)) { // 모바일 회원
 
 			// 휴대기기 정보 조회
-			UserMbrDevice tempDevice = this.commonDAO.queryForObject("User.getUserIDByDeviceID", loginUserRequest,
+			UserMbrDevice tempDevice = this.commonDAO.queryForObject("User.getUserIDByDeviceKey", loginUserRequest,
 					UserMbrDevice.class);
 
 			if (tempDevice == null) {

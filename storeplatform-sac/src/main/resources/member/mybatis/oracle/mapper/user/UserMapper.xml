@@ -240,8 +240,8 @@
     </select>
 
     <!-- userKey, DeviceKey 로 MBR_ID 조회(로그인, isMobile=Y) -->
-    <select id="getUserIDByDeviceID" parameterType="loginUserRequest" resultType="userMbrDevice">
-        SELECT  /* UserMapper.getUserIDByDeviceID, DeviceID로 MBR_ID 조회, wisestone_dinga, 2014-01-15 */
+    <select id="getUserIDByDeviceKey" parameterType="loginUserRequest" resultType="userMbrDevice">
+        SELECT  /* UserMapper.xml, getUserIDByDeviceKey, SAC(SC), 윤보영, 2016-01-06 */
                 u.deviceNickName AS deviceNickName,
                 u.nativeID AS nativeID,
                 u.deviceTelecom AS deviceTelecom,
@@ -1450,14 +1450,14 @@
                       insd_usermbr_no
                     , fail_cnt
                     , upd_dt
-                    <if test="userAuthToken != userAuthToken">, act_tk</if>
-                )
+                    , act_tk
+                ) 
         VALUES  
                 (
                       #{memberKey}
                     , 0
                     , SYSDATE
-                    <if test="userAuthToken != userAuthToken">, #{userAuthToken}</if>
+                    , #{userAuthToken}
                 )
     </insert>
     
