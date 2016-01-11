@@ -26,7 +26,14 @@
 		       AND TP.PROD_ID = TPP.PROD_ID
 		       AND TP.TENANT_ID = TPP.TENANT_ID  
 		       AND PCM.USE_YN = 'Y'
-		       AND SC.CHNL_CNT > 0
+			   AND EXISTS(
+					   SELECT 'X'
+						 FROM TB_DP_TENANT_PROD
+						WHERE TENANT_ID =#{tenantHeader.tenantId}
+						  AND PROD_ID =SC.CATALOG_ID
+						  AND PROD_STATUS_CD ='PD000403'
+						  AND EXPO_YN = 'Y'
+					)
 		       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
 		       <if test = "list !=null">
 		       AND PR.PART_PROD_ID IN
