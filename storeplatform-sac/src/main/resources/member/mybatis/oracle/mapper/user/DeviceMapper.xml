@@ -864,6 +864,21 @@
         )
     </insert>
 
+    <select id="searchDeviceOrderbyUpdDt" parameterType="userMbrDevice" resultType="userMbrDevice">
+        SELECT /* DeviceMapper.searchDeviceOrderbyStartDt, 최근에 수정된 휴대기기 정보 조회, SAC(SC), 반범진, 2016-01-08 */
+            insd_usermbr_no as userKey,
+            insd_device_id as deviceKey
+        FROM
+          (
+          SELECT insd_usermbr_no, insd_device_id
+              FROM tb_us_ousermbr_device
+             WHERE auth_yn = 'Y'
+               AND insd_usermbr_no = #{userKey}
+            ORDER BY upd_dt DESC
+          )
+          WHERE ROWNUM = 1
+    </select>
+
     <!-- 최신등록기기 대표기기 설정 -->
     <update id="updatePrimary" parameterType="userMbrDevice">
        UPDATE /* DeviceMapper.updatePrimary, 최신등록기기 대표기기 설정, 황정택/와이즈스톤, 2014-02-03 */
@@ -1096,7 +1111,8 @@
             b.sms_recv_yn as isRecvSMS,
             b.device_natv_id as nativeID,
             b.device_sim_nm as deviceSimNm,
-            b.device_acct as deviceAccount
+            b.device_acct as deviceAccount,
+            b.rep_device_yn as isPrimary
         FROM TB_US_OUSERMBR a
         INNER JOIN TB_US_OUSERMBR_DEVICE b ON a.insd_usermbr_no = b.insd_usermbr_no
         WHERE a.mbr_status_main_cd != 'US010202'

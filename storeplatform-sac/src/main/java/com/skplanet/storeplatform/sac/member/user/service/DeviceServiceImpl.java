@@ -409,8 +409,12 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String regDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
-		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 		String userKey = deviceInfo.getUserKey();
+
+		/* 등록 가능한 휴대기기 개수 초과 채크 */
+		this.checkDeviceRegMaxCnt(requestHeader, userKey, deviceInfo.getDeviceId(), deviceInfo.getSvcMangNum());
+
+		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -447,9 +451,6 @@ public class DeviceServiceImpl implements DeviceService {
 				deviceInfo.setSvcMangNum(svcMangNo);
 			}
 		}
-
-		/* 등록 가능한 휴대기기 개수 초과 채크 */
-		this.checkDeviceRegMaxCnt(requestHeader, userKey, deviceInfo.getDeviceId(), deviceInfo.getSvcMangNum());
 
 		/* device header 값 셋팅(단말모델, OS버젼, SC버젼) */
 		if(StringUtils.isBlank(deviceInfo.getDeviceModelNo())){ // 휴대기기 등록 API에서는 deviceInfo에 단말모델을 파라메터로 받는다. 그외 API에서는 디바이스헤더정보의 단말모델로 처리한다.
@@ -1202,11 +1203,11 @@ public class DeviceServiceImpl implements DeviceService {
 
 		deviceInfo
 				.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-                        majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
-                        deviceInfo.getDeviceExtraInfoList()));
+						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
+						deviceInfo.getDeviceExtraInfoList()));
 
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-                majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
+				majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
                 deviceInfo.getDeviceExtraInfoList()));
 
 		return deviceInfo;
@@ -1220,7 +1221,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	@Override
 	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader,
-			DetailRepresentationDeviceReq req) {
+																	   DetailRepresentationDeviceReq req) {
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
