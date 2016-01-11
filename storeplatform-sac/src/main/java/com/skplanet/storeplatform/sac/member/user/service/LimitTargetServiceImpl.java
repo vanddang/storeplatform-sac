@@ -200,7 +200,6 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 			limitTargetNo.setTenantID(removePolicyRequest.getCommonRequest().getTenantID());
 
 			LOGGER.debug(">>>> >>> UserServiceImpl before removePolicy : {}", limitTargetNo);
-            //FIXME:
 			//row = this.commonDAO.delete("User.removePolicy", limitTargetNo);
             row = limitTargetRepository.removePolicy(limitTargetNo.getLimitPolicyKey(), limitTargetNo.getLimitPolicyCode());
 			LOGGER.debug("### row : {}", row);
@@ -285,7 +284,7 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 			LimitTarget limitTarget = limitTargetList.get(i);
 			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 			//row = this.commonDAO.update("User.updatePolicyHistory", limitTarget);
-            limitTargetRepository.updateLimitPolicyHistory(Integer.parseInt(limitTarget.getLimitTargetNo()), limitTarget.getUpdateID());
+            row = limitTargetRepository.updateLimitPolicyHistory(Integer.parseInt(limitTarget.getLimitTargetNo()), limitTarget.getUpdateID());
 			if (row <= 0) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 			}
@@ -307,24 +306,21 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 	@Override
 	public UpdatePolicyResponse insertPolicy(UpdatePolicyRequest updatePolicyRequest) {
 		UpdatePolicyResponse updatePolicyResponse = new UpdatePolicyResponse();
-		Integer row = 0;
 
 		List<LimitTarget> limitTargetList = updatePolicyRequest.getLimitTargetList();
 		List<LimitTarget> limitCodeList;
 		limitCodeList = new ArrayList<LimitTarget>();
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
+			Integer row = 0;
 			LimitTarget limitTarget = limitTargetList.get(i);
 			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
-            //TODO: 에러 처리
 			//row = this.commonDAO.update("User.insertPolicy", limitTarget);
             limitTargetRepository.saveLimitPolicy(UserLimitTarget.createUserLimitTargetFromVo(limitTarget));
-            /*
-            row = 1;
+			row = 1;
 			if (row <= 0) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 			}
-			*/
 			limitCodeList.add(limitTarget);
 		}
 

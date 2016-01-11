@@ -25,7 +25,7 @@ import java.util.Date;
  * Updated on : 2016. 1. 6 Updated by : 임근대, SK 플래닛.
  */
 @Entity
-@Table(name = "TB_US_LIMT_TARGET")
+@Table(name = "TB_US_OLIMT_TARGET")
 public class UserLimitTarget {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LIMIT_TARGET_SEQ")
@@ -34,7 +34,6 @@ public class UserLimitTarget {
             allocationSize=20)
     private Integer seq;
 
-    private String tenantId;
     private String limtPolicyCd;
     private Date startDt;
     private Date endDt;
@@ -60,14 +59,6 @@ public class UserLimitTarget {
 
     public void setSeq(Integer seq) {
         this.seq = seq;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
     }
 
     public Date getStartDt() {
@@ -250,7 +241,6 @@ public class UserLimitTarget {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         LimitTarget limitTargetVo = new LimitTarget();
 
-        limitTargetVo.setTenantID(this.getTenantId());
         limitTargetVo.setLimitTargetNo(String.valueOf(this.getSeq()));
         limitTargetVo.setLimitPolicyKey(this.getLimtPolicyKey());
         limitTargetVo.setLimitPolicyCode(this.getLimtPolicyCd());
@@ -281,7 +271,6 @@ public class UserLimitTarget {
         UserLimitTarget userLimitTargetDomain = new UserLimitTarget();
 
         if(StringUtils.isNumeric(limitTarget.getLimitTargetNo())) userLimitTargetDomain.setSeq(Integer.parseInt(limitTarget.getLimitTargetNo()));
-        userLimitTargetDomain.setTenantId(limitTarget.getTenantID());
         userLimitTargetDomain.setLimtPolicyKey(limitTarget.getLimitPolicyKey());
         userLimitTargetDomain.setLimtPolicyCd(limitTarget.getLimitPolicyCode());
         userLimitTargetDomain.setPolicyApplyValue(limitTarget.getPolicyApplyValue());
