@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +61,6 @@ public class ProductListServiceImpl implements ProductListService{
 
 	@Autowired
 	private MetaInfoService metaInfoService;
-
-	@Autowired
-	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	/**
 	 * <pre>
@@ -164,8 +163,7 @@ public class ProductListServiceImpl implements ProductListService{
 		response.setDate(date);
 	}
 
-	private String getBatchStdDateStringFromDB(ProductListSacReq requestVO,
-			SacRequestHeader header) {
+	private String getBatchStdDateStringFromDB( ProductListSacReq requestVO, SacRequestHeader header ) {
 		TenantHeader tenantHeader = header.getTenantHeader();
 
 		// 배치완료 기준일시 조회
@@ -185,7 +183,7 @@ public class ProductListServiceImpl implements ProductListService{
 
 			if( productList.size() >= limitCount ) break;
 
-			Product prodMeta = getProduct( header, prod );
+			Product prodMeta = getProduct( prod );
 
 			if( prodMeta != null ) productList.add( prodMeta );
 
@@ -195,8 +193,7 @@ public class ProductListServiceImpl implements ProductListService{
 
 	private void setStartKey(ProductListSacRes response) {
 		List<Product> prodList = response.getProductList();
-		if(prodList.size()==0)
-			return;
+		if( prodList.size() == 0) return;
 		String startKey = prodList.get(prodList.size()-1).getExpoOrd() + "/";
 		startKey       += prodList.get(prodList.size()-1).getExpoOrdSub();
 		response.setStartKey(startKey);
@@ -206,104 +203,11 @@ public class ProductListServiceImpl implements ProductListService{
 		response.setCount( response.getProductList().size() );
 	}
 
-	@Override
-	public Product getProduct( SacRequestHeader header, ListProduct productInList ) {
+	private Product getProduct( ListProduct productInList ) {
 
         if ( productInList == null ) return null;
 
-		Product product   = null;
-
-		String  prodId    = productInList.getProdId();
-		String  topMenuId = productInList.getTopMenuId();
-		String  svcGrpCd  = productInList.getSvcGrpCd();
-
-		MetaInfo            metaInfo;   // 메타정보 VO
-		AlbumMeta           albumMeta;  // 메타정보 VO
-		ProductBasicInfo    productInfo = new ProductBasicInfo(); // 메타정보 조회용 상품 파라미터
-		Map<String, Object> paramMap    = new HashMap<String, Object>(); // 메타정보 조회용 파라미터
-
-		// 메타정보 조회를 위한 파라미터 세팅
-		productInfo.setProdId(prodId);
-		productInfo.setPartProdId(prodId);
-		productInfo.setCatalogId(prodId);
-		productInfo.setTopMenuId(topMenuId);
-		productInfo.setContentsTypeCd(productInList.getContentsTypeCd());
-		productInfo.setSvcGrpCd(svcGrpCd);
-		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		paramMap.put("tenantHeader", header.getTenantHeader());
-		paramMap.put("deviceHeader", header.getDeviceHeader());
-		paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-		paramMap.put("productBasicInfo", productInfo);
-
-		// APP
-		if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
-				|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
-				|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
-				|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
-			paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-			metaInfo = metaInfoService.getAppMetaInfo(paramMap);
-			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateAppProduct(metaInfo);
-		}// 이북
-		else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)){
-			paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-			metaInfo = metaInfoService.getEbookComicMetaInfo(paramMap);
-			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateEbookProduct(metaInfo);
-		}// 코믹
-		else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
-			paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-			metaInfo = metaInfoService.getEbookComicMetaInfo(paramMap);
-			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateComicProduct(metaInfo);
-		}// 웹툰
-		else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) {
-			paramMap.put("imageCd", DisplayConstants.DP_WEBTOON_TOP_MENU_ID);
-			metaInfo = metaInfoService.getWebtoonMetaInfo(paramMap);
-			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateWebtoonProduct(metaInfo);
-		}
-		// 영화
-		else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)){
-			paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-			metaInfo = metaInfoService.getVODMetaInfo(paramMap);
-			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateMovieProduct(metaInfo);
-		}
-		// 방송
-		else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-			paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-			metaInfo = metaInfoService.getVODMetaInfo(paramMap);
-			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
-		}
-		// 통합뮤직||폰꾸미기
-		else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)||
-				DisplayConstants.DP_DISPLAY_PHONE_TOP_MENU_ID.equals(topMenuId)) {
-			paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-			//멀티미디어(뮤직)||폰꾸미기(링,벨)
-			if(svcGrpCd.equals("DP000203")|| svcGrpCd.equals("DP000204")) {
-                paramMap.put(DisplayConstants.META_MUSIC_USE_CONTENT_TP, "Y");
-				metaInfo = metaInfoService.getMusicMetaInfo(paramMap);
-				if(metaInfo!=null)
-					product = responseInfoGenerateFacade.generateMusicProduct(metaInfo);
-	        } //앨범
-			else if(svcGrpCd.equals("DP000208")) {
-	        	albumMeta = metaInfoService.getAlbumMetaInfo(paramMap);
-				if(albumMeta!=null)
-					product = responseInfoGenerateFacade.generateAlbumProduct(albumMeta);
-	        }
-		}
-		// 쇼핑
-		else if (prodId.startsWith("CL")) {
-			paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			metaInfo = metaInfoService.getShoppingMetaInfo(paramMap);
-			if(metaInfo!=null) {
-				product = responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
-				// 쇼핑 4.0 일 경우 특가 상품 여부 추가
-				product.setSpecialProdYn(metaInfo.getSpecialSaleYn());
-			}
-		}
+		Product product = metaInfoService.getProductMeta( productInList.getProdId() );
 
 		if( product == null ) return null;
 

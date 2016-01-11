@@ -147,6 +147,8 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 		// reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+
+		// fixme : 앱가이드인데 앱상품을 조회하지 않으면... 어쩌자는 이야기인가 ??
 		// 추천 리스트 조회시에는 앱 상품까지 조회하지만, 메타정보 조회시 서비스 그룹코드(svcGrpCd)를 멀티미디어 그룹코드 값을 넣어주기 때문에 앱 상품은 조회되지 않는다.
 		if (!productBasicInfoList.isEmpty()) {
 
@@ -170,7 +172,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 				// APP 상품의 경우
 				if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getAppMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 						productList.add(product);
@@ -181,7 +183,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 					if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 							|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-						retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 
 						if (retMetaInfo != null) {
 							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
@@ -193,7 +195,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 						}
 					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
 						reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 						if (retMetaInfo != null) {
 							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
 								product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
@@ -206,7 +208,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 
 					} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 						reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getMusicMetaInfo(productBasicInfo);
 						if (retMetaInfo != null) {
 							// product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
 							product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
@@ -215,7 +217,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 
 					} else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // WEBTOON 상품의 경우
 						reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(productBasicInfo);
 						if (retMetaInfo != null) {
 							product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
 							productList.add(product);
@@ -224,7 +226,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 					}
 				} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
 					reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);

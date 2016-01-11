@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.cache.vo.AppMeta;
@@ -7,6 +9,7 @@ import com.skplanet.storeplatform.sac.display.cache.vo.EbookComicMeta;
 import com.skplanet.storeplatform.sac.display.cache.vo.FreepassMeta;
 import com.skplanet.storeplatform.sac.display.cache.vo.MenuInfo;
 import com.skplanet.storeplatform.sac.display.cache.vo.MusicMeta;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
 import com.skplanet.storeplatform.sac.display.cache.vo.ShoppingMeta;
 import com.skplanet.storeplatform.sac.display.cache.vo.SubContent;
 import com.skplanet.storeplatform.sac.display.cache.vo.VodMeta;
@@ -16,13 +19,14 @@ import com.skplanet.storeplatform.sac.display.common.ContentType;
 import com.skplanet.storeplatform.sac.display.meta.util.MetaBeanUtils;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * Meta 정보 조회 Service 구현체
  * 
- * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
+ * Updated on : 2016-01-11. Updated by : 정화수, SK Planet
  */
 @Service
 public class MetaInfoServiceImpl implements MetaInfoService {
@@ -30,25 +34,127 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	@Autowired
 	private ProductInfoManager productInfoManager;
 
-	@Override
-	public String getProdIdByContentsType( ProductBasicInfo productBasicInfo ) {
+	@Autowired
+	private ResponseInfoGenerateFacade responseWriter;
 
-		switch( ContentType.forCode( productBasicInfo.getContentsTypeCd() ) ) {
-			case Channel:
-				return productBasicInfo.getProdId();
-			case Episode:
-				return productBasicInfo.getPartProdId();
+	@Override
+	public Product getProductMeta( String prodId ) {
+
+		if( prodId == null ) return null;
+
+		// 쇼핑카탈로그
+		if( prodId.startsWith( "CL" ) ) {
+			return responseWriter.generateShoppingProduct( getShoppingMetaInfo(prodId) );
+
+		} else {
+
+			ProductBaseInfo baseInfo = productInfoManager.getBaseInformation( prodId );
+
+			if( baseInfo == null ) return null;
+
+			switch( baseInfo.getProductType() ) {
+
+				case App:
+				case InApp:
+					return responseWriter.generateAppProduct( getAppMetaInfo(prodId) );
+				case VodMovie:
+					return responseWriter.generateMovieProduct( getVODMetaInfo(prodId) );
+				case VodTv:
+					return responseWriter.generateBroadcastProduct( getVODMetaInfo(prodId) );
+				case Ebook:
+					return responseWriter.generateEbookProduct( getEbookComicMetaInfo(prodId) );
+				case Comic:
+					return responseWriter.generateComicProduct( getEbookComicMetaInfo(prodId));
+				case Webtoon:
+					return responseWriter.generateWebtoonProduct( getWebtoonMetaInfo(prodId) );
+				case Music:
+				case RingBell:
+					return responseWriter.generateMusicProduct( getMusicMetaInfo(prodId) );
+				case Album:
+					return responseWriter.generateAlbumProduct( getAlbumMetaInfo(prodId) );
+				case Shopping:
+					return responseWriter.generateShoppingProduct( getShoppingMetaInfo(prodId) );
+				case Voucher:
+					return responseWriter.generateVoucherProduct( getVoucherMetaInfo(prodId) );
+				default:
+					throw new RuntimeException("아직 구현되지 않았습니다.");
+
+			}
+
 		}
 
-		return productBasicInfo.getProdId();
+	}
+
+	@Override
+	public Product getProductMeta( ProductBasicInfo productInfo ) {
+
+		if( productInfo == null ) return null;
+
+		String prodId    = StringUtil.nvlStr( productInfo.getProdId(),    "" );
+		String catalogId = StringUtil.nvlStr( productInfo.getCatalogId(), "" );
+
+		// 쇼핑카탈로그
+		if( prodId.startsWith("CL") || catalogId.startsWith("CL") ) {
+			return responseWriter.generateShoppingProduct( getShoppingMetaInfo(prodId) );
+
+		} else {
+
+			ProductBaseInfo baseInfo = productInfoManager.getBaseInformation( prodId );
+
+			if( baseInfo == null ) return null;
+
+			switch( baseInfo.getProductType() ) {
+
+				case App:
+				case InApp:
+					return responseWriter.generateAppProduct( getAppMetaInfo(productInfo) );
+				case VodMovie:
+					return responseWriter.generateMovieProduct( getVODMetaInfo(productInfo) );
+				case VodTv:
+					return responseWriter.generateBroadcastProduct( getVODMetaInfo(productInfo) );
+				case Ebook:
+					return responseWriter.generateEbookProduct( getEbookComicMetaInfo(productInfo) );
+				case Comic:
+					return responseWriter.generateComicProduct( getEbookComicMetaInfo(productInfo));
+				case Webtoon:
+					return responseWriter.generateWebtoonProduct( getWebtoonMetaInfo(productInfo) );
+				case Music:
+				case RingBell:
+					return responseWriter.generateMusicProduct( getMusicMetaInfo(productInfo) );
+				case Album:
+					return responseWriter.generateAlbumProduct( getAlbumMetaInfo(productInfo) );
+				case Shopping:
+					return responseWriter.generateShoppingProduct( getShoppingMetaInfo(productInfo) );
+				case Voucher:
+					return responseWriter.generateVoucherProduct( getVoucherMetaInfo(productInfo) );
+				default:
+					throw new RuntimeException("아직 구현되지 않았습니다.");
+
+			}
+
+		}
+
+	}
+
+	@Override
+	public String getProdIdByContentsType( ProductBasicInfo productInfo ) {
+
+		switch( ContentType.forCode( productInfo.getContentsTypeCd() ) ) {
+			case Channel:
+				return productInfo.getProdId();
+			case Episode:
+				return productInfo.getPartProdId();
+		}
+
+		return productInfo.getProdId();
 
 	}
 
 	/*
-         * (non-Javadoc)
-         *
-         * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getAppMetaInfo(java.util.Map)
-         */
+	 * (non-Javadoc)
+	 *
+	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getAppMetaInfo(java.util.Map)
+	 */
 	@Override
 	public MetaInfo getAppMetaInfo( String channelProdId ) {
 
@@ -77,8 +183,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	}
 
 	@Override
-	public MetaInfo getAppMetaInfo( ProductBasicInfo productBasicInfo ) {
-		return getAppMetaInfo( productBasicInfo.getProdId() );
+	public MetaInfo getAppMetaInfo( ProductBasicInfo productInfo ) {
+		return getAppMetaInfo( productInfo.getProdId() );
 	}
 
 	/*
@@ -101,8 +207,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	}
 
 	@Override
-	public MetaInfo getMusicMetaInfo( ProductBasicInfo productBasicInfo ) {
-		return getMusicMetaInfo( productBasicInfo.getProdId() );
+	public MetaInfo getMusicMetaInfo( ProductBasicInfo productInfo ) {
+		return getMusicMetaInfo( productInfo.getProdId() );
 	}
 
 	/*
@@ -147,8 +253,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	}
 
 	@Override
-	public MetaInfo getVODMetaInfo( ProductBasicInfo productBasicInfo ) {
-		return getVODMetaInfo( getProdIdByContentsType( productBasicInfo ) );
+	public MetaInfo getVODMetaInfo( ProductBasicInfo productInfo ) {
+		return getVODMetaInfo( getProdIdByContentsType( productInfo ) );
 	}
 
 	/*
@@ -192,8 +298,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	}
 
 	@Override
-	public MetaInfo getEbookComicMetaInfo( ProductBasicInfo productBasicInfo ) {
-		return getEbookComicMetaInfo( getProdIdByContentsType( productBasicInfo ) );
+	public MetaInfo getEbookComicMetaInfo( ProductBasicInfo productInfo ) {
+		return getEbookComicMetaInfo( getProdIdByContentsType( productInfo ) );
 	}
 
 	/*
@@ -229,8 +335,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	}
 
 	@Override
-	public MetaInfo getWebtoonMetaInfo( ProductBasicInfo productBasicInfo ) {
-		return getWebtoonMetaInfo( getProdIdByContentsType( productBasicInfo ) );
+	public MetaInfo getWebtoonMetaInfo( ProductBasicInfo productInfo ) {
+		return getWebtoonMetaInfo( getProdIdByContentsType( productInfo ) );
 	}
 
 	/*
@@ -255,8 +361,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	}
 
 	@Override
-	public MetaInfo getShoppingMetaInfo( ProductBasicInfo productBasicInfo ) {
-		return getShoppingMetaInfo( productBasicInfo.getCatalogId() );
+	public MetaInfo getShoppingMetaInfo( ProductBasicInfo productInfo ) {
+		return getShoppingMetaInfo( productInfo.getCatalogId() );
 	}
 
 	/*
@@ -279,8 +385,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	}
 
 	@Override
-	public MetaInfo getFreepassMetaInfo( ProductBasicInfo productBasicInfo ) {
-		return getFreepassMetaInfo( productBasicInfo.getProdId() );
+	public MetaInfo getFreepassMetaInfo( ProductBasicInfo productInfo ) {
+		return getFreepassMetaInfo( productInfo.getProdId() );
 	}
 
 	/*
@@ -300,8 +406,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	}
 
 	@Override
-	public AlbumMeta getAlbumMetaInfo( ProductBasicInfo productBasicInfo ) {
-		return getAlbumMetaInfo( productBasicInfo.getProdId() );
+	public AlbumMeta getAlbumMetaInfo( ProductBasicInfo productInfo ) {
+		return getAlbumMetaInfo( productInfo.getProdId() );
 	}
 
 	/*
@@ -322,8 +428,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	}
 
 	@Override
-	public MetaInfo getVoucherMetaInfo( ProductBasicInfo productBasicInfo ) {
-		return getVoucherMetaInfo( productBasicInfo.getProdId() );
+	public MetaInfo getVoucherMetaInfo( ProductBasicInfo productInfo ) {
+		return getVoucherMetaInfo( productInfo.getProdId() );
 	}
 
 }

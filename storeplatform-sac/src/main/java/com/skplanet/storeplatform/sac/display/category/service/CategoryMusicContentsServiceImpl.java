@@ -156,28 +156,11 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 
 		List<Product> productList = new ArrayList<Product>();
 
-		// Meta DB 조회 파라미터 생성
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		TenantHeader tenantHeader = requestHeader.getTenantHeader();
-		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
-		reqMap.put("req", requestVO);
-		reqMap.put("tenantHeader", tenantHeader);
-		reqMap.put("deviceHeader", deviceHeader);
-		reqMap.put("stdDt", requestVO.getStdDt());
-		reqMap.put("lang", tenantHeader.getLangCd());
-		reqMap.put("chartClsfCd", requestVO.getChartClsfCd());
-
-		reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-		reqMap.put("svcGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
-		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-		reqMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-
 		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
 
 				// Meta 정보 조회
-				MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+				MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo( productBasicInfo );
 
 				if (retMetaInfo != null) {
 					// Response Generate

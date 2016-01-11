@@ -107,7 +107,7 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 
 		BoughtTogetherProductSacRes boughtTogetherProductSacRes = new BoughtTogetherProductSacRes(); // 이 상품과 함께 구매한 상품 조회 API의 응답 규격 위한 최종 변수(상품의 meta 정보 포함)
 		CommonResponse commonResponse = new CommonResponse();
-		Map<String, Object> reqMap = new HashMap<String, Object>(); // Meta 조회를 위한 요청 Parameter를 담을 Map 변수
+
 		MetaInfo retMetaInfo = null; // Meta 조회 데이터를 담을 변수
 		Product product = null; // 상품 변수
 		List<Product> productList = null; // 상품의 List 변수
@@ -115,52 +115,47 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 		if (!boughtTogetherProductList.isEmpty()) {
 			productList = new ArrayList<Product>();
 
-			reqMap.put("tenantHeader", requestHeader.getTenantHeader());
-			reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 현재 판매중인 상품만 조회
-
 			for (ProductBasicInfo productBasicInfo : boughtTogetherProductList) {
 
-				reqMap.put("productBasicInfo", productBasicInfo);
-
 				if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap); // Ebook Meta 정보 조회
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo); // Ebook Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap); // Comic Meta 정보 조회
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo); // Comic Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap); // 영화 Meta 정보 조회
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo); // 영화 Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap); // TV/방송 Meta 정보 조회
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo); // TV/방송 Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+
+					Map<String, Object> reqMap = new HashMap<String, Object>(); // Meta 조회를 위한 요청 Parameter를 담을 Map 변수
+
+					reqMap.put("tenantHeader",     requestHeader.getTenantHeader());
+					reqMap.put("imageCd",          DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+					reqMap.put("productBasicInfo", productBasicInfo);
+
 					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap, MetaInfo.class); // 뮤직 메타
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else {
-					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getAppMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 						productList.add(product);
@@ -219,7 +214,6 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 
 		BoughtTogetherProductSacRes boughtTogetherProductSacRes = new BoughtTogetherProductSacRes(); // 이 상품과 함께 구매한 상품 조회 API의 응답 규격 위한 최종 변수(상품의 meta 정보 포함)
 		CommonResponse commonResponse = new CommonResponse();
-		Map<String, Object> reqMap = new HashMap<String, Object>(); // Meta 조회를 위한 요청 Parameter를 담을 Map 변수
 		MetaInfo retMetaInfo = null; // Meta 조회 데이터를 담을 변수
 		Product product = null; // 상품 변수
 		List<Product> productList = null; // 상품의 List 변수
@@ -227,43 +221,40 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 		if (!boughtTogetherProductList.isEmpty()) {
 			productList = new ArrayList<Product>();
 
-			reqMap.put("tenantHeader", requestHeader.getTenantHeader());
-			reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 현재 판매중인 상품만 조회함
-
 			for (ProductBasicInfo productBasicInfo : boughtTogetherProductList) {
 
-				reqMap.put("productBasicInfo", productBasicInfo);
-
 				if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap); // Ebook Meta 정보 조회
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo); // Ebook Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap); // Comic Meta 정보 조회
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo); // Comic Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD); // 영화 Meta 정보 조회
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)) {
-					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD); // TV/방송 Meta 정보 조회
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 						productList.add(product);
 					}
 				} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
+
+					Map<String, Object> reqMap = new HashMap<String, Object>();
+
+					reqMap.put("tenantHeader",     requestHeader.getTenantHeader());
+					reqMap.put("imageCd",          DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+					reqMap.put("productBasicInfo", productBasicInfo);
+
 					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,MetaInfo.class); // 뮤직 메타
 					if (retMetaInfo != null) {
@@ -271,8 +262,7 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 						productList.add(product);
 					}
 				} else {
-					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap); // App Meta 정보 조회
+					retMetaInfo = this.metaInfoService.getAppMetaInfo(productBasicInfo); // App Meta 정보 조회
 					if (retMetaInfo != null) {
 						product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 						productList.add(product);
@@ -295,12 +285,10 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 	 * 19+ 상품 여부 조회.
 	 * </pre>
 	 * 
-	 * @param string prodId
+	 * @param prodId
 	 * @return prodGrdExtraYn
 	 */
 	public String getPlus19Yn(String prodId) {
-		String prodGrdExtraYn = (String) this.commonDAO.queryForObject("SimilarProduct.getPlus19Yn", prodId);
-
-		return prodGrdExtraYn;
+		return (String) this.commonDAO.queryForObject("SimilarProduct.getPlus19Yn", prodId);
 	}
 }

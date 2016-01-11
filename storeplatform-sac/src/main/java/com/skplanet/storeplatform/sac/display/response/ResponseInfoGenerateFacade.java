@@ -62,7 +62,7 @@ public interface ResponseInfoGenerateFacade {
 	 * Music 상품 Product 생성.
 	 * </pre>
 	 * 
-	 * @param metaInfo
+	 * @param albumMeta
 	 *            metaInfo
 	 * 
 	 * @return Product
@@ -74,7 +74,7 @@ public interface ResponseInfoGenerateFacade {
 	 * Music 상품 Product 생성.
 	 * </pre>
 	 * 
-	 * @param metaInfo
+	 * @param albumMeta
 	 *            metaInfo
 	 * 
 	 * @return Product

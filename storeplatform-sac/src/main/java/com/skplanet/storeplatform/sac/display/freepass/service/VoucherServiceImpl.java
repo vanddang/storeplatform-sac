@@ -98,7 +98,6 @@ public class VoucherServiceImpl implements VoucherService {
 	 */
 	@Override
 	public VoucherListRes searchVoucherList(VoucherListReq req, SacRequestHeader header) {
-		// TODO Auto-generated method stub
 
 		// 공통 응답 변수 선언
 		VoucherListRes responseVO = null;
@@ -107,7 +106,6 @@ public class VoucherServiceImpl implements VoucherService {
 		Coupon coupon = null;
 		List<Coupon> couponList = new ArrayList<Coupon>();
 
-		Map<String, Object> reqMap = new HashMap<String, Object>();
 		List<ProductBasicInfo> productBasicInfoList = null;
 		MetaInfo retMetaInfo = null;
 
@@ -190,18 +188,13 @@ public class VoucherServiceImpl implements VoucherService {
 
 		// 이용권 목록 Meta / Cache 조회
 		if (productBasicInfoList.size() > 0) {
-			reqMap.put("tenantHeader", header.getTenantHeader());
-			reqMap.put("deviceHeader", header.getDeviceHeader());
-			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
+
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
 
 				// #############################################################################
 				// 이용권 목록 Meta / Cache 조회
 				// #############################################################################
-				retMetaInfo = this.metaInfoService.getVoucherMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getVoucherMetaInfo(productBasicInfo.getProdId());
 				// #############################################################################
 
 				// Generate
@@ -397,22 +390,13 @@ public class VoucherServiceImpl implements VoucherService {
 								VoucherProdMap.class);
 						// ###########################################################################
 
-						reqMap.put("tenantHeader", header.getTenantHeader());
-						reqMap.put("deviceHeader", header.getDeviceHeader());
-						reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-
 						for (VoucherProdMap prodMap : mapList) {
-							productBasicInfo.setProdId(prodMap.getPartProdId());
-							productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
-							productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-							reqMap.put("productBasicInfo", productBasicInfo);
 
-							commonResponse.setTotalCount(prodMap.getTotalCount());
+							commonResponse.setTotalCount( prodMap.getTotalCount() );
 
 							// Ebook
 							if ("DP13".equals(prodMap.getTopMenuId())) {
-								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+								metaInfo = this.metaInfoService.getEbookComicMetaInfo( prodMap.getPartProdId() );
 								if (metaInfo == null) {
 									minusCount += 1;
 									continue;
@@ -421,8 +405,7 @@ public class VoucherServiceImpl implements VoucherService {
 
 							// 코믹
 							} else if ("DP14".equals(prodMap.getTopMenuId())) {
-								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+								metaInfo = this.metaInfoService.getEbookComicMetaInfo( prodMap.getPartProdId() );
 								if (metaInfo == null) {
 									minusCount += 1;
 									continue;
@@ -431,8 +414,7 @@ public class VoucherServiceImpl implements VoucherService {
 
 							// 영화
 							} else if ("DP17".equals(prodMap.getTopMenuId())) {
-								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+								metaInfo = this.metaInfoService.getVODMetaInfo( prodMap.getPartProdId() );
 								if (metaInfo == null) {
 									minusCount += 1;
 									continue;
@@ -441,8 +423,7 @@ public class VoucherServiceImpl implements VoucherService {
 
 							// TV 방송
 							} else if ("DP18".equals(prodMap.getTopMenuId())) {
-								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+								metaInfo = this.metaInfoService.getVODMetaInfo( prodMap.getPartProdId() );
 								if (metaInfo == null) {
 									minusCount += 1;
 									continue;
@@ -715,17 +696,14 @@ public class VoucherServiceImpl implements VoucherService {
 		int totalCnt = 0;
 		// 정액제 상품 메타 조회
 		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
-			reqMap.put("tenantHeader", header.getTenantHeader());
-			reqMap.put("deviceHeader", header.getDeviceHeader());
-			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
+
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 				// 판매중지는 기구매 체크대상
 				if (productBasicInfo.getProdStatusCd().equals(DisplayConstants.DP_PASS_SALE_STAT_STOP)) {
 					prodIdList.add(productBasicInfo.getProdId());
 				}
 			}
+
 			if (StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
 				if (prodIdList.size() > 0) { // 판매 중지가 있는 상품에 대해서만 기구매 체크를 해야함
 					try {
@@ -745,8 +723,7 @@ public class VoucherServiceImpl implements VoucherService {
 				if (productBasicInfo.getProdStatusCd().equals(DisplayConstants.DP_PASS_SALE_STAT_ING)) { // 판매중이면
 																										 // 정상적으로
 					totalCnt++;
-					reqMap.put("productBasicInfo", productBasicInfo);
-					retMetaInfo = this.metaInfoService.getVoucherMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getVoucherMetaInfo( productBasicInfo.getProdId() );
 					coupon = this.responseInfoGenerateFacade.generateVoucherProduct(retMetaInfo);
 					couponList.add(coupon);
 					commonResponse.setTotalCount(totalCnt);
@@ -764,7 +741,7 @@ public class VoucherServiceImpl implements VoucherService {
 						if (purchaseYn) {
 							totalCnt++;
 							reqMap.put("productBasicInfo", productBasicInfo);
-							retMetaInfo = this.metaInfoService.getVoucherMetaInfo(reqMap);
+							retMetaInfo = this.metaInfoService.getVoucherMetaInfo( productBasicInfo.getProdId() );
 							coupon = this.responseInfoGenerateFacade.generateVoucherProduct(retMetaInfo);
 							couponList.add(coupon);
 							commonResponse.setTotalCount(totalCnt);
@@ -916,11 +893,6 @@ public class VoucherServiceImpl implements VoucherService {
 		int totalCnt = 0;
 		// 정액제 상품 메타 조회
 		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
-			reqMap.put("tenantHeader", header.getTenantHeader());
-			reqMap.put("deviceHeader", header.getDeviceHeader());
-			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 				// 판매중지는 기구매 체크대상
 				if (productBasicInfo.getProdStatusCd().equals(DisplayConstants.DP_PASS_SALE_STAT_STOP)) {
@@ -942,15 +914,18 @@ public class VoucherServiceImpl implements VoucherService {
 			}
 
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+
 				prodIdList.add(productBasicInfo.getProdId());
+
 				if (productBasicInfo.getProdStatusCd().equals(DisplayConstants.DP_PASS_SALE_STAT_ING)) { // 판매중이면
 																										 // 정상적으로
 					totalCnt++;
 					reqMap.put("productBasicInfo", productBasicInfo);
-					retMetaInfo = this.metaInfoService.getVoucherMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getVoucherMetaInfo( productBasicInfo.getProdId() );
 					coupon = this.responseInfoGenerateFacade.generateVoucherProduct(retMetaInfo);
 					couponList.add(coupon);
 					commonResponse.setTotalCount(totalCnt);
+
 				} else {
 					if (StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
 						// 기구매 여부 조회
@@ -965,7 +940,7 @@ public class VoucherServiceImpl implements VoucherService {
 						if (purchaseYn) {
 							totalCnt++;
 							reqMap.put("productBasicInfo", productBasicInfo);
-							retMetaInfo = this.metaInfoService.getVoucherMetaInfo(reqMap);
+							retMetaInfo = this.metaInfoService.getVoucherMetaInfo( productBasicInfo.getProdId() );
 							coupon = this.responseInfoGenerateFacade.generateVoucherProduct(retMetaInfo);
 							couponList.add(coupon);
 							commonResponse.setTotalCount(totalCnt);

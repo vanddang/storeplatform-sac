@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="MetaInfo">
+  <!-- Meta 로직 정리 후 ProductInfo로 SQL 통합 (삭제가능) -->
      <resultMap id="AppMetaInfoMap" type="MetaInfo" autoMapping="true">
          <association property="support" javaType="java.util.HashMap">
                  <result column="DRM_YN" property="drm" />
@@ -8,6 +9,7 @@
          </association>
      </resultMap>
     <select id="getAppMetaInfo" parameterType="Map" resultType="MetaInfo">
+      <!-- Meta 로직 정리 후 ProductInfo로 SQL 통합 (삭제가능) -->
         SELECT /* MetaInfoMapper.xml, getAppMetaInfo, SAC 전시, 2014-01-07 */
                 TB.TOP_MENU_ID
               , TB.UP_MENU_ID
@@ -130,6 +132,7 @@
        ) TB
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="MetaInfo">
+      <!-- Meta 로직 정리 후 ProductInfo로 SQL 통합 (삭제가능) -->
         SELECT /* MetaInfoMapper.xml, getVODMetaInfo, SAC 전시, 2014-01-07 */
 		       A1.UP_MENU_ID
 		     , A1.TOP_MENU_ID
@@ -322,6 +325,7 @@
     </select>
     
     <select id="getMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
+      <!-- Meta 로직 정리 후 ProductInfo로 SQL 통합 (삭제가능) -->
        SELECT /* MetaInfoMapper.xml, getMusicMetaInfo, SAC 전시, 2014-01-07 */
               CP.PROD_ID 
             , CP.PART_PROD_ID
@@ -453,6 +457,7 @@
     </select>
     
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="MetaInfo">
+      <!-- Meta 로직 정리 후 ProductInfo로 SQL 통합 (삭제가능) -->
        SELECT /* MetaInfoMapper.xml, getEbookComicMetaInfo, SAC 전시, 2014-01-07 */
                TB.UP_MENU_ID
              , (SELECT MENU_NM
@@ -697,6 +702,7 @@
     </select>
     
     <select id="getWebtoonMetaInfo" parameterType="Map" resultType="MetaInfo">
+      <!-- Meta 로직 정리 후 ProductInfo로 SQL 통합 (삭제가능) -->
        SELECT /* MetaInfoMapper.xml, getWebtoonMetaInfo, SAC 전시, 2014-01-07 */
                TB.UP_MENU_ID
              , (SELECT MENU_NM
@@ -845,6 +851,7 @@
     </select>
     
     <select id="getShoppingMetaInfo" parameterType="Map" resultType="MetaInfo">
+      <!-- Meta 로직 정리 후 ProductInfo로 SQL 통합 (삭제가능) -->
         SELECT  *  /* MetaInfoMapper.xml, getShoppingMetaInfo, 쇼핑 메타 정보 조회, 김형식/SK플래닛, 2014-01-07 */
                    FROM (
                           SELECT 
@@ -982,6 +989,7 @@
     
     <!-- 정액제 상품 메타 조회 -->
     <select id="getFreepassMetaInfo" parameterType="Map" resultType="MetaInfo">
+      <!-- Meta 로직 정리 후 ProductInfo로 SQL 통합 (삭제가능) -->
 	SELECT  /* MetaInfoMapper.getFreepassMetaInfo, 정액제 상품 메타 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
 		IV.*
 		, NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
@@ -1066,6 +1074,7 @@
     
     <!-- 이용권 상품 메타 조회 -->
     <select id="getVoucherMetaInfo" parameterType="Map" resultType="MetaInfo">
+      <!-- Meta 로직 정리 후 ProductInfo로 SQL 통합 (삭제가능) -->
         SELECT /* MetaInfoMapper.getVoucherMetaInfo, 이용권 상품 메타 조회, 이태균/IS-PLUS, 2015-05-08 */
               CPROD.PROD_ID
             , CPROD.TOP_MENU_ID

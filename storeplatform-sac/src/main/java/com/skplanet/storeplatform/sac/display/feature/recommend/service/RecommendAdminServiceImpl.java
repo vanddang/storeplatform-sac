@@ -116,25 +116,12 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		List<Product> productList = new ArrayList<Product>();
 
 		// DB 조회 파라미터 생성
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
-		reqMap.put("req", requestVO);
-		reqMap.put("tenantHeader", tenantHeader);
-		reqMap.put("deviceHeader", deviceHeader);
-		reqMap.put("stdDt", stdDt);
-		reqMap.put("lang", tenantHeader.getLangCd());
-
-		reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-		reqMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
-		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
 		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
 
 				// App Meta 정보 조회
-				MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+				MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo( productBasicInfo.getProdId() );
 
 				if (retMetaInfo != null) {
 					// App Response Generate

@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -14,6 +16,36 @@ import java.util.Map;
 public interface MetaInfoService {
 
 	/**
+	 * 상품정보를 구한다.
+	 *
+	 * @param prodId 상품ID
+	 * @return 상품정보 (Product or Coupon)
+	 * <pre>
+	 *   {@link com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product}
+	 *   {@link com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon}
+	 * </pre>
+	 */
+	Product getProductMeta( String prodId );
+
+	/**
+	 * 상품정보를 구한다.
+	 *
+	 * <pre>
+	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
+	 * </pre>
+	 *
+	 * @param productInfo 상품기본정보
+	 * @return 상품정보 (Product or Coupon)
+	 * <pre>
+	 *   {@link com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product}
+	 *   {@link com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon}
+	 * </pre>
+	 */
+	@Deprecated
+	Product getProductMeta( ProductBasicInfo productInfo );
+
+
+	/**
 	 * 컨텐츠타입(채널/에피소드)에 대응되는 상품ID를 구한다.
 	 *
 	 * <pre>
@@ -22,11 +54,11 @@ public interface MetaInfoService {
 	 *
 	 * (임시로직)
 	 *
-	 * @param productBasicInfo 상품기본정보
+	 * @param productInfo 상품기본정보
 	 * @return 상품ID
 	 */
 	@Deprecated
-	String getProdIdByContentsType( ProductBasicInfo productBasicInfo );
+	String getProdIdByContentsType( ProductBasicInfo productInfo );
 
 	/**
 	 * App 메타정보를 조회한다.
@@ -43,11 +75,11 @@ public interface MetaInfoService {
 	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
 	 *
-	 * @param productBasicInfo 상품기본정보
+	 * @param productInfo 상품기본정보
 	 * @return 상품메타정보
 	 */
 	@Deprecated
-	MetaInfo getAppMetaInfo( ProductBasicInfo productBasicInfo );
+	MetaInfo getAppMetaInfo( ProductBasicInfo productInfo );
 
 	/**
 	 * 음악 메타정보를 조회한다.
@@ -64,11 +96,11 @@ public interface MetaInfoService {
 	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
 	 *
-	 * @param productBasicInfo 상품기본정보
+	 * @param productInfo 상품기본정보
 	 * @return 상품메타정보
 	 */
 	@Deprecated
-	MetaInfo getMusicMetaInfo( ProductBasicInfo productBasicInfo );
+	MetaInfo getMusicMetaInfo( ProductBasicInfo productInfo );
 
 	/**
 	 * VOD (VideoOnDemand) 메타정보를 조회한다.
@@ -85,11 +117,11 @@ public interface MetaInfoService {
 	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
 	 *
-	 * @param productBasicInfo 상품기본정보
+	 * @param productInfo 상품기본정보
 	 * @return 상품메타정보
 	 */
 	@Deprecated
-	MetaInfo getVODMetaInfo( ProductBasicInfo productBasicInfo );
+	MetaInfo getVODMetaInfo( ProductBasicInfo productInfo );
 
 	/**
 	 * EBook(이북) / Comic(코믹) 메타정보를 조회한다.
@@ -108,11 +140,11 @@ public interface MetaInfoService {
 	 *
 	 * (임시로직)
 	 *
-	 * @param productBasicInfo 상품기본정보
+	 * @param productInfo 상품기본정보
 	 * @return 상품메타정보
 	 */
 	@Deprecated
-	MetaInfo getEbookComicMetaInfo( ProductBasicInfo productBasicInfo );
+	MetaInfo getEbookComicMetaInfo( ProductBasicInfo productInfo );
 
 	/**
 	 * 웹툰 메타정보를 조회한다.
@@ -129,11 +161,11 @@ public interface MetaInfoService {
 	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
 	 *
-	 * @param productBasicInfo 상품기본정보
+	 * @param productInfo 상품기본정보
 	 * @return 상품메타정보
 	 */
 	@Deprecated
-	MetaInfo getWebtoonMetaInfo( ProductBasicInfo productBasicInfo );
+	MetaInfo getWebtoonMetaInfo( ProductBasicInfo productInfo );
 
 	/**
 	 * 쇼핑 카탈로그 메타정보를 조회한다.
@@ -154,11 +186,11 @@ public interface MetaInfoService {
 	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
 	 *
-	 * @param productBasicInfo 상품기본정보
+	 * @param productInfo 상품기본정보
 	 * @return 상품메타정보
 	 */
 	@Deprecated
-	MetaInfo getShoppingMetaInfo( ProductBasicInfo productBasicInfo );
+	MetaInfo getShoppingMetaInfo( ProductBasicInfo productInfo );
 
 	/**
 	 * 정액권 메타정보를 조회한다.
@@ -180,11 +212,11 @@ public interface MetaInfoService {
 	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
 	 *
-	 * @param productBasicInfo 상품기본정보
+	 * @param productInfo 상품기본정보
 	 * @return 상품메타정보
 	 */
 	@Deprecated
-	MetaInfo getFreepassMetaInfo( ProductBasicInfo productBasicInfo );
+	MetaInfo getFreepassMetaInfo( ProductBasicInfo productInfo );
 
 	/**
 	 * 앨범 메타정보를 조회한다.
@@ -197,11 +229,11 @@ public interface MetaInfoService {
 	/**
 	 * 앨범 메타정보를 조회한다.
 	 *
-	 * @param productBasicInfo 상품기본정보
+	 * @param productInfo 상품기본정보
 	 * @return 상품메타정보
 	 */
 	@Deprecated
-	AlbumMeta getAlbumMetaInfo( ProductBasicInfo productBasicInfo );
+	AlbumMeta getAlbumMetaInfo( ProductBasicInfo productInfo );
 
 	/**
 	 * 이용권 메타정보를 조회한다.
@@ -218,10 +250,10 @@ public interface MetaInfoService {
 	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
 	 *
-	 * @param productBasicInfo 상품기본정보
+	 * @param productInfo 상품기본정보
 	 * @return 상품메타정보
 	 */
 	@Deprecated
-	MetaInfo getVoucherMetaInfo( ProductBasicInfo productBasicInfo );
+	MetaInfo getVoucherMetaInfo( ProductBasicInfo productInfo );
 
 }

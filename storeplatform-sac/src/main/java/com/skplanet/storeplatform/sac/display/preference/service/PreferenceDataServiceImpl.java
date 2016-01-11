@@ -67,7 +67,7 @@ public class PreferenceDataServiceImpl implements PreferenceDataService {
 		List<Product> productList = new ArrayList<Product>();
 		for (int i = 0; i < count; i++) {
 			String itemId = offerList.get(i).getItemId();
-			Product prdouct = itemService.findProd(itemId, header);
+			Product prdouct = itemService.findProd( itemId );
 			productList.add(prdouct);
 		}
 

@@ -79,6 +79,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateAppProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.appGenerator.generateIdentifierList(metaInfo));
 
@@ -134,6 +137,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateAppProductShort(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.appGenerator.generateIdentifierList(metaInfo));
 
@@ -179,6 +185,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateMusicProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		// Identifier 설정
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
@@ -228,6 +237,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 	@Override
 	public Product generateMusicProductShort(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		// Identifier 설정
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
@@ -273,6 +285,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateAlbumProduct(AlbumMeta albumMeta) {
+
+		if( albumMeta == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.albumInfoGenerator.generateIdentifierList(albumMeta));
 		product.setTitle(this.albumInfoGenerator.generateTitle(albumMeta));
@@ -294,6 +309,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateAlbumDetailProduct(AlbumMeta albumMeta) {
+
+		if( albumMeta == null ) return null;
+
 		Product product = this.generateAlbumProduct(albumMeta);
 		product.setLikeYn(albumMeta.getLikeYn());
 		return product;
@@ -308,6 +326,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateMovieProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		// Identifier 설정
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
@@ -365,6 +386,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateMovieProductShort(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		// Identifier 설정
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
@@ -413,6 +437,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateBroadcastProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
@@ -471,6 +498,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateBroadcastProductShort(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
@@ -519,6 +549,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateEbookProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
@@ -576,6 +609,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 * @param rights
 	 */
 	private void generateEpubPreview(MetaInfo metaInfo, Rights rights) {
+
 		// 미리보기
 		if (StringUtils.isNotBlank(metaInfo.getSamplUrl())) {
 			Preview preview = new Preview();
@@ -601,6 +635,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateEbookProductShort(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
@@ -651,6 +688,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateComicProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
@@ -709,6 +749,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateComicProductShort(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
@@ -758,6 +801,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateWebtoonProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
@@ -813,6 +859,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateShoppingProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 
@@ -843,6 +892,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSalesOption(salesOption);
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
+		// 특가상품여부
+		product.setSpecialProdYn(metaInfo.getSpecialSaleYn());
 
 		// Tstore멤버십 적립율 정보
 		this.appendMileageInfo(metaInfo, product);
@@ -859,6 +910,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateShoppingProductShort(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 
@@ -903,6 +957,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateSpecificAppProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		List<Identifier> identifierList = this.appGenerator.generateSpecificIdentifierList(metaInfo);
 		// App용 SupportList 설정
@@ -951,6 +1008,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateSpecificMusicProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
@@ -981,6 +1041,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateSpecificMovieProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 
 		// Identifier 설정
@@ -1024,6 +1087,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateSpecificBroadcastProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 
 		// Identifier 설정
@@ -1084,6 +1150,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateSpecificEbookProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 		String productExplain = metaInfo.getProdBaseDesc();
 		String productDetailExplain = metaInfo.getProdDtlDesc();
@@ -1135,6 +1204,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateSpecificComicProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 
 		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
@@ -1184,6 +1256,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Product generateSpecificWebtoonProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 
 		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
@@ -1230,6 +1305,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
     // 로직은 generateShoppingProduct와 동일함
 	@Override
 	public Product generateSpecificShoppingProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Product product = new Product();
 
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
@@ -1258,6 +1336,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Coupon generateFreepassProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Coupon coupon = new Coupon();
 
 		// Identifier 생성
@@ -1302,6 +1383,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 */
 	@Override
 	public Coupon generateVoucherProduct(MetaInfo metaInfo) {
+
+		if( metaInfo == null ) return null;
+
 		Coupon coupon = new Coupon();
 
 		// Identifier 생성
@@ -1353,6 +1437,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	}
 
 	private void appendMileageInfo(MetaInfo metaInfo, Product product) {
+
 		MileageInfo mileageInfo = metaInfo.getMileageInfo();
 		if (mileageInfo == null || product == null)
 			return;

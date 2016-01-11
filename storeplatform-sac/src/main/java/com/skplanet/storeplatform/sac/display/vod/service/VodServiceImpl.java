@@ -642,7 +642,7 @@ public class VodServiceImpl implements VodService {
 		// 평점정보
 		Accrual accrual = new Accrual();
 		// 3사 통함 평점, 구매수, 참여수 조회 (캐쉬적용)
-		ProductStats productStats = this.productInfoManager.getProductStats(new ProductStatsParam(channelId));
+		ProductStats productStats = this.productInfoManager.getProductStats( channelId );
 		accrual.setVoterCount(productStats.getParticipantCount());
 		accrual.setDownloadCount(productStats.getPurchaseCount());
 		accrual.setScore(productStats.getAverageScore());
@@ -1782,7 +1782,7 @@ public class VodServiceImpl implements VodService {
 	/**
 	 * 이용정책 set (최신 Chapter Episode의 이용정책)
 	 * 
-	 * @param epubDetail
+	 * @param vodDetail
 	 * @param usePolicyInfo
 	 * @return EpubDetail
 	 */

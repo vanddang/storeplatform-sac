@@ -89,8 +89,7 @@ public class MusicServiceImpl implements MusicService {
         List<RelatedProduct> relProdList = this.commonDAO.queryForList("MusicDetail.getRelatedProductList", relProdListReq, RelatedProduct.class);
 
         // 통계 정보 조회
-        ProductStatsParam productStatsParam = new ProductStatsParam(musicDetail.getChnlId());
-        ProductStats productStats = productInfoManager.getProductStats(productStatsParam);
+        ProductStats productStats = productInfoManager.getProductStats( musicDetail.getChnlId() );
         musicDetail.setAvgEvluScore(productStats.getAverageScore());
         musicDetail.setDwldCnt(productStats.getPurchaseCount());
         musicDetail.setPaticpersCnt(productStats.getParticipantCount());

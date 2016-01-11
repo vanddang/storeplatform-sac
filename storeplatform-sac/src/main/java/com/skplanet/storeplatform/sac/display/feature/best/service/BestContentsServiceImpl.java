@@ -146,23 +146,16 @@ public class BestContentsServiceImpl implements BestContentsService {
         }
 
         if (!productBasicInfoList.isEmpty()) {
-            Map<String, Object> reqMap = new HashMap<String, Object>();
-            reqMap.put("tenantHeader", tenantHeader);
-            reqMap.put("deviceHeader", deviceHeader);
-            reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
             for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-                reqMap.put("productBasicInfo", productBasicInfo);
-                MetaInfo retMetaInfo = null;
+                MetaInfo retMetaInfo;
                 if ("movie".equals(bestContentsReq.getFilteredBy())
                         || "broadcast".equals(bestContentsReq.getFilteredBy())
                         || "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
                     // 영화, 방송 Meta 정보 조회 (Step 2)
-                    reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-                    retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+                    retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
                 } else {
                     // 이북, 코믹 Meta 정보 조회 (Step 2)
-                    reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-                    retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+                    retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
                 }
 
                 if (retMetaInfo != null) {

@@ -101,34 +101,12 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 
 		List<Product> productList = new ArrayList<Product>();
 
-		// Meta DB 조회 파라미터 생성
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
-		reqMap.put("req", requestVO);
-		reqMap.put("tenantHeader", tenantHeader);
-		reqMap.put("deviceHeader", deviceHeader);
-		reqMap.put("stdDt", requestVO.getStdDt());
-		reqMap.put("lang", tenantHeader.getLangCd());
-
-		// DP13 : eBook DP14 : 코믹 DP16 : 뮤직
-		if ("DP16".equals(requestVO.getTopMenuId())) {
-			reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-		} else {
-			reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-		}
-
-		reqMap.put("svcGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
-		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-
 		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
 
 				if ("DP16".equals(requestVO.getTopMenuId())) {
 					// Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo(productBasicInfo);
 
 					if (retMetaInfo != null) {
 						// Response Generate
@@ -137,7 +115,7 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 					}
 				} else {
 					// Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 
 					if (retMetaInfo != null) {
 						if ("DP13".equals(requestVO.getTopMenuId())) {

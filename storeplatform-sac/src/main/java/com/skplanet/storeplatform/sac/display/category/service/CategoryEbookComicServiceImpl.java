@@ -136,14 +136,9 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 				req, ProductBasicInfo.class);
 
 		if (!ebookComicList.isEmpty()) {
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+
 			for (ProductBasicInfo productBasicInfo : ebookComicList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
-				reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-				MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+				MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo( productBasicInfo );
 
 				if (retMetaInfo != null) {
 					// Tstore멤버십 적립율 정보

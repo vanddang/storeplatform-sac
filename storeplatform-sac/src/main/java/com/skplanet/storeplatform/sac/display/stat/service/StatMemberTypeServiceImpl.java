@@ -84,7 +84,7 @@ public class StatMemberTypeServiceImpl implements StatMemberTypeService {
 				cntShar = 0;
 			}
 			
-			Object item = itemService.findItem(each, header, preferredCategoryInfo);
+			Object item = itemService.findItem( each, preferredCategoryInfo );
 			
 			if (item == null) {
 				continue;

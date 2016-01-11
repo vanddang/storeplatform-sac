@@ -136,7 +136,7 @@ public class AuthorProductServiceImpl implements AuthorProductService {
 					reqMap.put("productBasicInfo", productBasicInfo);
 
 					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo( productBasicInfo );
                     if(retMetaInfo == null)
                         continue;
 

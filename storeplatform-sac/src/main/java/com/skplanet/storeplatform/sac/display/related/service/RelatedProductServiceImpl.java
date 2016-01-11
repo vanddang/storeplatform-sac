@@ -6,11 +6,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.related.RelatedProductSa
 import com.skplanet.storeplatform.sac.client.display.vo.related.RelatedProductSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
-import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
-import com.skplanet.storeplatform.sac.display.feature.product.service.ProductListService;
-import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProduct;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.related.vo.RelatedProduct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +28,7 @@ public class RelatedProductServiceImpl implements RelatedProductService {
     private CommonDAO commonDAO;
 
     @Autowired
-    private ProductListService productListService;
-
-    @Autowired
-    private CachedExtraInfoManager cachedExtraInfoManager;
-
+    private MetaInfoService metaInfoService;
 
     @Override
     public RelatedProductSacRes searchRelatedProductList(RelatedProductSacReq requestVO, SacRequestHeader requestHeader) {
@@ -55,12 +47,12 @@ public class RelatedProductServiceImpl implements RelatedProductService {
         int count = 0;
         int startKey = Integer.valueOf(requestVO.getStartKey());
         for(String prodId : prodIds){
+
             log.debug("add prodId={}",prodId);
-            ListProduct lp = newListProduct(prodId);
-            Product p = productListService.getProduct(requestHeader, lp);
-            if (!isValidToDisplay(p, requestVO.getProdGradeCd())) {
-                continue;
-            }
+
+            Product p = metaInfoService.getProductMeta( prodId );
+
+            if ( ! isValidToDisplay(p, requestVO.getProdGradeCd()) ) continue;
 
             if (nextStartKey < startKey) {
                 nextStartKey++;
@@ -75,6 +67,7 @@ public class RelatedProductServiceImpl implements RelatedProductService {
             productList.add(p);
             count++;
             nextStartKey++;
+
         }
 
         RelatedProductSacRes relatedProductSacRes = new RelatedProductSacRes();
@@ -84,21 +77,6 @@ public class RelatedProductServiceImpl implements RelatedProductService {
         relatedProductSacRes.setProductList(productList);
         return relatedProductSacRes;
     }
-
-    private ListProduct newListProduct(String prodId) {
-        ProductBaseInfo baseInfo = cachedExtraInfoManager.getProductBaseInfo(new GetProductBaseInfoParam(prodId));
-        if (baseInfo == null)
-            return null;
-
-        ListProduct lp = new ListProduct();
-        lp.setProdId(prodId);
-        lp.setTopMenuId(baseInfo.getTopMenuId());
-        lp.setSvcGrpCd(baseInfo.getSvcGrpCd());
-        lp.setContentsTypeCd(baseInfo.getContentsTypeCd());
-        return lp;
-    }
-
-
 
     private Map<String, Object> getRequestMapForRelatedProduct(RelatedProductSacReq requestVO) {
         Map<String, Object> reqMap = new HashMap<String, Object>();

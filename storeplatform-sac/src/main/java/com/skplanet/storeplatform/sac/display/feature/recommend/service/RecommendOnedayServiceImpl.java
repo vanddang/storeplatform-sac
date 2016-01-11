@@ -131,16 +131,6 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 		List<Product> productList = new ArrayList<Product>();
 		List<Date> dateList = null;
 
-		// Meta DB 조회 파라미터 생성
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
-		reqMap.put("req", requestVO);
-		reqMap.put("tenantHeader", tenantHeader);
-		reqMap.put("deviceHeader", deviceHeader);
-		reqMap.put("stdDt", requestVO.getStdDt());
-		reqMap.put("lang", tenantHeader.getLangCd());
-
 		if (!recommendOnedayList.isEmpty()) {
 
 			Product product = null;
@@ -149,6 +139,7 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 			for (RecommendOneday recommendOneday : recommendOnedayList) {
 				String topMenuId = recommendOneday.getTopMenuId();
 				String svcGrpCd = recommendOneday.getSvcGrpCd();
+
 				ProductBasicInfo basicInfo = new ProductBasicInfo();
 				basicInfo.setProdId(recommendOneday.getProdId());
 				basicInfo.setMenuId(recommendOneday.getMenuId());
@@ -156,11 +147,6 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 				basicInfo.setTopMenuId(recommendOneday.getTopMenuId());
 				basicInfo.setContentsTypeCd(recommendOneday.getContentsTypeCd());
 				basicInfo.setTenantId(recommendOneday.getTenantId());
-				reqMap.put("productBasicInfo", basicInfo);
-				reqMap.put("req", reqMap);
-				reqMap.put("tenantHeader", tenantHeader);
-				reqMap.put("deviceHeader", deviceHeader);
-				reqMap.put("lang", tenantHeader.getLangCd());
 
 				product = new Product(); // 결과물
 
@@ -168,8 +154,7 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 
 				// APP 상품의 경우
 				if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getAppMetaInfo( basicInfo );
 					if (retMetaInfo != null) {
 						retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 						product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
@@ -205,10 +190,9 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 
 				} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
 					// 영화/방송 상품의 경우
-					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 					if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 							|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-						retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getVODMetaInfo( basicInfo );
 
 						if (retMetaInfo != null) {
 							retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
@@ -249,8 +233,7 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
 						// Ebook / Comic 상품의 경우
-						reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo( basicInfo );
 						if (retMetaInfo != null) {
 							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
 								retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
@@ -318,8 +301,7 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 						}
 
 					} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-						reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getMusicMetaInfo( basicInfo );
 						if (retMetaInfo != null) {
 							retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 							product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
@@ -354,8 +336,7 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 						}
 
 					} else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // WEBTOON 상품의 경우
-						reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getWebtoonMetaInfo( basicInfo );
 						if (retMetaInfo != null) {
 							retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 							product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
@@ -391,8 +372,7 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 
 					}
 				} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
-					reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getShoppingMetaInfo( basicInfo );
 					if (retMetaInfo != null) {
 						retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 						product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);

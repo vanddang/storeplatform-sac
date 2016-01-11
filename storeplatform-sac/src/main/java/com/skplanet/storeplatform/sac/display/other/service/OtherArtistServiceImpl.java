@@ -8,6 +8,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.common.header.extractor.HeaderExtractor;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
@@ -36,6 +37,9 @@ public class OtherArtistServiceImpl implements OtherArtistService {
 
 	@Autowired
 	private MusicInfoGenerator musicGenerator;
+
+	@Autowired
+	HeaderExtractor header;
 
 	/*
 	 * (non-Javadoc)

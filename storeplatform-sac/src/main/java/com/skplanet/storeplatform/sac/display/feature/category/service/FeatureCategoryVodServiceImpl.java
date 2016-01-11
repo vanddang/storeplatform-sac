@@ -149,27 +149,12 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 
 		List<Product> productList = new ArrayList<Product>();
 
-		// Meta DB 조회 파라미터 생성
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
-		reqMap.put("req", req);
-		reqMap.put("tenantHeader", tenantHeader);
-		reqMap.put("deviceHeader", deviceHeader);
-		reqMap.put("stdDt", stdDt);
-		reqMap.put("lang", tenantHeader.getLangCd());
-
-		reqMap.put("svcGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
-		// reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-		reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-
 		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
 
 				// Meta 정보 조회
-				MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+				MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 
 				if (retMetaInfo != null) {
 					// Response Generate

@@ -150,17 +150,11 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 			if (!productBasicInfoList.isEmpty()) {
 				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
 
-				Map<String, Object> paramMap = new HashMap<String, Object>();
-				paramMap.put("tenantHeader", tenantHeader);
-				paramMap.put("deviceHeader", deviceHeader);
-				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 판매중
-
 				// Meta 정보 조회
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+				for ( ProductBasicInfo productBasicInfo : productBasicInfoList ) {
 
 					String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
-					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
-					paramMap.put("productBasicInfo", productBasicInfo);
+					String svcGrpCd  = productBasicInfo.getSvcGrpCd();  // 서비스 그룹 코드
 
 					if (this.log.isDebugEnabled()) {
 						this.log.debug("##### Top Menu Id : {}", topMenuId);
@@ -174,11 +168,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 					// DP000201 : 애플리캐이션
 					// APP 상품의 경우
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						if (this.log.isDebugEnabled()) {
-							this.log.debug("##### Search for app  meta info product");
-						}
-						metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+						metaInfo = this.metaInfoService.getAppMetaInfo(productBasicInfo);
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
 							productList.add(product);
@@ -186,13 +176,9 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 
 					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
 						// 영화/방송 상품의 경우
-						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-							if (this.log.isDebugEnabled()) {
-								this.log.debug("##### Search for Vod  meta info product");
-							}
-							metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+							metaInfo = this.metaInfoService.getVODMetaInfo( productBasicInfo );
 							if (metaInfo != null) {
 								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
 									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
@@ -204,12 +190,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
 
-							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-
-							if (this.log.isDebugEnabled()) {
-								this.log.debug("##### Search for EbookComic product");
-							}
-							metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
+							metaInfo = this.metaInfoService.getEbookComicMetaInfo( productBasicInfo );
 							if (metaInfo != null) {
 								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
 									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
@@ -220,27 +201,14 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 							}
 
 						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-
-							paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-							paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-
-							if (this.log.isDebugEnabled()) {
-								this.log.debug("##### Search for music meta info product");
-							}
-							metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
+							metaInfo = this.metaInfoService.getMusicMetaInfo( productBasicInfo );
 							if (metaInfo != null) {
 								product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
 								productList.add(product);
 							}
 						}
 					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
-						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-						paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-
-						if (this.log.isDebugEnabled()) {
-							this.log.debug("##### Search for Shopping  meta info product");
-						}
-						metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
+						metaInfo = this.metaInfoService.getShoppingMetaInfo( productBasicInfo );
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
 							productList.add(product);

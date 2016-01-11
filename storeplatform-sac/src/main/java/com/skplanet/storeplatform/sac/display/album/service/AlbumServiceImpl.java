@@ -43,13 +43,8 @@ public class AlbumServiceImpl implements AlbumService{
 	
 	@Override
 	public AlbumDetailRes getAlbumDetail(String tenantId, String prodId, String langCd, String userKey) {	
-		AlbumMetaParam param = new AlbumMetaParam();
-		param.setProdId(prodId);
-		param.setLangCd(langCd);
-		param.setTenantId(tenantId);
-		param.setUserKey(userKey);
-		
-		AlbumMeta albumMeta = productInfoManager.getAlbumMeta(param, false);
+
+		AlbumMeta albumMeta = productInfoManager.getAlbumMeta( prodId );
 		if (albumMeta == null) {
 			return null;
 		}

@@ -208,7 +208,7 @@ public class AppServiceImpl implements AppService {
         List<Source> sourceList = getImageList(param.getChannelId(), param.getLangCd());
         product.setSourceList(sourceList);
 
-        ProductStats stats = productInfoManager.getProductStats(new ProductStatsParam(param.getChannelId()));
+        ProductStats stats = productInfoManager.getProductStats( param.getChannelId() );
         Accrual accrual = new Accrual();
         accrual.setVoterCount(stats.getParticipantCount());
         accrual.setDownloadCount(stats.getPurchaseCount());

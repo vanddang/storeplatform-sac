@@ -154,14 +154,8 @@ public class FreepassServiceImpl implements FreepassService {
 
 		// 정액제 상품 메타 조회
 		if ( productBasicInfoList.size() > 0) {
-			reqMap.put("tenantHeader", header.getTenantHeader());
-			reqMap.put("deviceHeader", header.getDeviceHeader());
-			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
-				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(productBasicInfo);
 				coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
 				couponList.add(coupon);
 				commonResponse.setTotalCount(productBasicInfo.getTotalCount());
@@ -283,13 +277,12 @@ public class FreepassServiceImpl implements FreepassService {
 			productBasicInfo.setProdId(prodMap.getPartProdId());
 			productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
 			productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-			reqMap.put("productBasicInfo", productBasicInfo);
 
 			commonResponse.setTotalCount(prodMap.getTotalCount());
 
 			if ("DP13".equals(prodMap.getTopMenuId())) {
 				reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-				retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 				if (retMetaInfo == null) {
 					minusCount += 1;
 					continue;
@@ -297,7 +290,7 @@ public class FreepassServiceImpl implements FreepassService {
 					product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
 			} else if ("DP14".equals(prodMap.getTopMenuId())) {
 				reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-				retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 				if (retMetaInfo == null) {
 					minusCount += 1;
 					continue;
@@ -305,7 +298,7 @@ public class FreepassServiceImpl implements FreepassService {
 					product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
 			} else if ("DP17".equals(prodMap.getTopMenuId())) {
 				reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 				if (retMetaInfo == null) {
 					minusCount += 1;
 					continue;
@@ -313,7 +306,7 @@ public class FreepassServiceImpl implements FreepassService {
 					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 			} else if ("DP18".equals(prodMap.getTopMenuId())) {
 				reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 				if (retMetaInfo == null) {
 					minusCount += 1;
 					continue;
@@ -352,8 +345,6 @@ public class FreepassServiceImpl implements FreepassService {
 		Product product = null;
 		List<Product> productList = new ArrayList<Product>();
 
-		Map<String, Object> reqMapC = new HashMap<String, Object>();
-		Map<String, Object> reqMapP = new HashMap<String, Object>();
 		List<ProductBasicInfo> couponBasicInfoList = null;
 		ProductBasicInfo productBasicInfo = null;
 		MetaInfo retMetaInfo = null;
@@ -385,47 +376,36 @@ public class FreepassServiceImpl implements FreepassService {
 
 		// 정액제 상품 메타 조회
 		if (couponBasicInfoList != null && couponBasicInfoList.size() > 0) {
-			reqMapC.put("tenantHeader", header.getTenantHeader());
-			reqMapC.put("deviceHeader", header.getDeviceHeader());
-			reqMapC.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			reqMapC.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			reqMapC.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
-			reqMapP.put("tenantHeader", header.getTenantHeader());
-			reqMapP.put("deviceHeader", header.getDeviceHeader());
-			reqMapP.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
 			for (ProductBasicInfo couponBasicInfo : couponBasicInfoList) {
-				reqMapC.put("productBasicInfo", couponBasicInfo);
-				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMapC);
-				coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
+
+				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(couponBasicInfo);
+				coupon      = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
 
 				productBasicInfo = new ProductBasicInfo();
 				productBasicInfo.setProdId(couponBasicInfo.getPartProdId());
 				productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
 				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-				reqMapP.put("productBasicInfo", productBasicInfo);
 
 				commonResponse.setTotalCount(couponBasicInfo.getTotalCount());
 				// 상품메타 정보 조회
 				if ("DP13".equals(couponBasicInfo.getTopMenuId())) {
-					reqMapP.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMapP);
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 					product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
 				} else if ("DP14".equals(couponBasicInfo.getTopMenuId())) {
-					reqMapP.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMapP);
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 					product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
 				} else if ("DP17".equals(couponBasicInfo.getTopMenuId())) {
-					reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 				} else if ("DP18".equals(couponBasicInfo.getTopMenuId())) {
-					reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 				}
+
 				product.setCoupon(coupon);
 				productList.add(product);
+
 			}
 		}
 		
@@ -452,7 +432,6 @@ public class FreepassServiceImpl implements FreepassService {
 		Coupon coupon = null;
 		List<Coupon> couponList = new ArrayList<Coupon>();
 
-		Map<String, Object> reqMap = new HashMap<String, Object>();
 		List<ProductBasicInfo> productBasicInfoList = null;
 		MetaInfo retMetaInfo = null;
 
@@ -497,14 +476,8 @@ public class FreepassServiceImpl implements FreepassService {
 
 		// 정액제 상품 메타 조회
 		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
-			reqMap.put("tenantHeader", header.getTenantHeader());
-			reqMap.put("deviceHeader", header.getDeviceHeader());
-			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
-				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(productBasicInfo);
 				coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
 				couponList.add(coupon);
 				commonResponse.setTotalCount(productBasicInfo.getTotalCount());
@@ -533,7 +506,6 @@ public class FreepassServiceImpl implements FreepassService {
 		Coupon coupon = null;
 		List<Coupon> couponList = new ArrayList<Coupon>();
 
-		Map<String, Object> reqMap = new HashMap<String, Object>();
 		List<ProductBasicInfo> productBasicInfoList = null;
 		MetaInfo retMetaInfo = null;
 		ExistenceListRes res = null;
@@ -587,11 +559,6 @@ public class FreepassServiceImpl implements FreepassService {
 		int totalCnt = 0;
 		// 정액제 상품 메타 조회
 		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
-			reqMap.put("tenantHeader", header.getTenantHeader());
-			reqMap.put("deviceHeader", header.getDeviceHeader());
-			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 				// 판매중지는 기구매 체크대상
 				if (productBasicInfo.getProdStatusCd().equals(DisplayConstants.DP_PASS_SALE_STAT_STOP)) {
@@ -616,8 +583,7 @@ public class FreepassServiceImpl implements FreepassService {
 				if (productBasicInfo.getProdStatusCd().equals(DisplayConstants.DP_PASS_SALE_STAT_ING)) { // 판매중이면
 																										 // 정상적으로
 					totalCnt++;
-					reqMap.put("productBasicInfo", productBasicInfo);
-					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(productBasicInfo);
 					coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
 					couponList.add(coupon);
 					commonResponse.setTotalCount(totalCnt);
@@ -633,8 +599,7 @@ public class FreepassServiceImpl implements FreepassService {
 					this.log.info("구매 여부:purchaseYn=>" + purchaseYn);
 					if (purchaseYn) {
 						totalCnt++;
-						reqMap.put("productBasicInfo", productBasicInfo);
-						retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getFreepassMetaInfo(productBasicInfo);
 						coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
 						couponList.add(coupon);
 						commonResponse.setTotalCount(totalCnt);
@@ -763,7 +728,6 @@ public class FreepassServiceImpl implements FreepassService {
 		Coupon coupon = null;
 		List<Coupon> couponList = new ArrayList<Coupon>();
 
-		Map<String, Object> reqMap = new HashMap<String, Object>();
 		List<ProductBasicInfo> productBasicInfoList = null;
 		MetaInfo retMetaInfo = null;
 
@@ -810,14 +774,8 @@ public class FreepassServiceImpl implements FreepassService {
 
 		// 정액제 상품 메타 조회
 		if (productBasicInfoList.size() > 0) {
-			reqMap.put("tenantHeader", header.getTenantHeader());
-			reqMap.put("deviceHeader", header.getDeviceHeader());
-			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
-				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(productBasicInfo);
 				coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
 				couponList.add(coupon);
 				commonResponse.setTotalCount(productBasicInfo.getTotalCount());
@@ -849,7 +807,6 @@ public class FreepassServiceImpl implements FreepassService {
 		List<FreepassProdMap> mapList = null;
 		List<Product> productList = new ArrayList<Product>();
 
-		Map<String, Object> reqMap = new HashMap<String, Object>();
 		ProductBasicInfo productBasicInfo = new ProductBasicInfo();
 		MetaInfo retMetaInfo = null;
 
@@ -951,9 +908,6 @@ public class FreepassServiceImpl implements FreepassService {
 
 		mapList = this.commonDAO.queryForList("Freepass.selectFreepassMapProductV2", req, FreepassProdMap.class);
 
-		reqMap.put("tenantHeader", header.getTenantHeader());
-		reqMap.put("deviceHeader", header.getDeviceHeader());
-		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		int minusCount = 0;
 
 		for (FreepassProdMap prodMap : mapList) {
@@ -961,37 +915,32 @@ public class FreepassServiceImpl implements FreepassService {
 			productBasicInfo.setProdId(prodMap.getPartProdId());
 			productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
 			productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-			reqMap.put("productBasicInfo", productBasicInfo);
 
 			commonResponse.setTotalCount(prodMap.getTotalCount());
 
 			if ("DP13".equals(prodMap.getTopMenuId())) {
-				reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-				retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 				if (retMetaInfo == null) {
 					minusCount += 1;
 					continue;
 				} else
 					product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
 			} else if ("DP14".equals(prodMap.getTopMenuId())) {
-				reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-				retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 				if (retMetaInfo == null) {
 					minusCount += 1;
 					continue;
 				} else
 					product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
 			} else if ("DP17".equals(prodMap.getTopMenuId())) {
-				reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 				if (retMetaInfo == null) {
 					minusCount += 1;
 					continue;
 				} else 
 					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 			} else if ("DP18".equals(prodMap.getTopMenuId())) {
-				reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+				retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 				if (retMetaInfo == null) {
 					minusCount += 1;
 					continue;
@@ -1029,8 +978,6 @@ public class FreepassServiceImpl implements FreepassService {
 		Product product = null;
 		List<Product> productList = new ArrayList<Product>();
 
-		Map<String, Object> reqMapC = new HashMap<String, Object>();
-		Map<String, Object> reqMapP = new HashMap<String, Object>();
 		List<ProductBasicInfo> couponBasicInfoList = null;
 		ProductBasicInfo productBasicInfo = null;
 		MetaInfo retMetaInfo = null;
@@ -1086,43 +1033,29 @@ public class FreepassServiceImpl implements FreepassService {
 
 		// 정액제 상품 메타 조회
 		if (couponBasicInfoList != null && couponBasicInfoList.size() > 0) {
-			reqMapC.put("tenantHeader", header.getTenantHeader());
-			reqMapC.put("deviceHeader", header.getDeviceHeader());
-			reqMapC.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			reqMapC.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			reqMapC.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
-			reqMapP.put("tenantHeader", header.getTenantHeader());
-			reqMapP.put("deviceHeader", header.getDeviceHeader());
-			reqMapP.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
 			for (ProductBasicInfo couponBasicInfo : couponBasicInfoList) {
-				reqMapC.put("productBasicInfo", couponBasicInfo);
-				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMapC);
+				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(couponBasicInfo);
 				coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
 
 				productBasicInfo = new ProductBasicInfo();
 				productBasicInfo.setProdId(couponBasicInfo.getPartProdId());
 				productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
 				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-				reqMapP.put("productBasicInfo", productBasicInfo);
 
 				commonResponse.setTotalCount(couponBasicInfo.getTotalCount());
 				// 상품메타 정보 조회
 				if ("DP13".equals(couponBasicInfo.getTopMenuId())) {
-					reqMapP.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMapP);
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 					product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
 				} else if ("DP14".equals(couponBasicInfo.getTopMenuId())) {
-					reqMapP.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMapP);
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 					product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
 				} else if ("DP17".equals(couponBasicInfo.getTopMenuId())) {
-					reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 				} else if ("DP18".equals(couponBasicInfo.getTopMenuId())) {
-					reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 				}
 				product.setCoupon(coupon);
@@ -1153,7 +1086,6 @@ public class FreepassServiceImpl implements FreepassService {
 		Coupon coupon = null;
 		List<Coupon> couponList = new ArrayList<Coupon>();
 
-		Map<String, Object> reqMap = new HashMap<String, Object>();
 		List<ProductBasicInfo> productBasicInfoList = null;
 		MetaInfo retMetaInfo = null;
 		ExistenceListRes res = null;
@@ -1230,11 +1162,6 @@ public class FreepassServiceImpl implements FreepassService {
 		int totalCnt = 0;
 		// 정액제 상품 메타 조회
 		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
-			reqMap.put("tenantHeader", header.getTenantHeader());
-			reqMap.put("deviceHeader", header.getDeviceHeader());
-			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 				// 판매중지는 기구매 체크대상
 				if (productBasicInfo.getProdStatusCd().equals(DisplayConstants.DP_PASS_SALE_STAT_STOP)) {
@@ -1259,8 +1186,7 @@ public class FreepassServiceImpl implements FreepassService {
 				if (productBasicInfo.getProdStatusCd().equals(DisplayConstants.DP_PASS_SALE_STAT_ING)) { // 판매중이면
 																										 // 정상적으로
 					totalCnt++;
-					reqMap.put("productBasicInfo", productBasicInfo);
-					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
+					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(productBasicInfo);
 					coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
 					couponList.add(coupon);
 					commonResponse.setTotalCount(totalCnt);
@@ -1276,8 +1202,7 @@ public class FreepassServiceImpl implements FreepassService {
 					this.log.info("구매 여부:purchaseYn=>" + purchaseYn);
 					if (purchaseYn) {
 						totalCnt++;
-						reqMap.put("productBasicInfo", productBasicInfo);
-						retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getFreepassMetaInfo(productBasicInfo);
 						coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
 						couponList.add(coupon);
 						commonResponse.setTotalCount(totalCnt);

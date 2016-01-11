@@ -9,13 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
-import java.io.Serializable;
-import java.util.List;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.display.PromotionEventAccessor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -23,6 +16,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import java.util.List;
 
 /**
  * Interface Message Coupon Value Object.
@@ -30,12 +26,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Coupon extends CommonInfo implements Serializable, PromotionEventAccessor {
+public class Coupon extends Product {
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 쿠폰 ID.
-	 */
-	private Identifier identifier;
 	/**
 	 * 상태 > use: 사용 > notUse: 미사용 > cancel: 취소/환불 > expired: 기간만료.
 	 */
@@ -59,20 +51,6 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	 * 배송지 입력 URL.
 	 */
 	private Url url;
-	/**
-	 * 가격.
-	 */
-	private Price price;
-	/**
-	 * 유효기간(시작/만료일자).
-	 */
-	private Date date;
-	private List<Date> dateList;
-
-	/**
-	 * 쿠폰명/정액권명.
-	 */
-	private Title title;
 
 	/**
 	 * 자동결제 지원 여부 > status.
@@ -80,30 +58,12 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	private AutoPay autopay;
 
 	/**
-	 * 썸네일 또는 배너 이미지.
-	 */
-	private List<Source> sourceList;
-
-	/**
-	 * selectOption > T스토어 쇼핑상품(type:shoppingStore)인 경우 사용.
-	 */
-	private SelectOption selectOption;
-	/**
 	 * 쿠폰 사용처 > type.
 	 */
 	private Coverage coverage;
 
 	private List<EpisodeCoupon> episodeCouponList;
 
-	/**
-	 * Identifier 배열.
-	 */
-	private List<Identifier> identifierList;
-
-	/**
-	 * > Code : 대분류 카테고리시 topClass.
-	 */
-	private List<Menu> menuList;
 
 	/**
 	 * > Code : 판매상태.
@@ -114,11 +74,6 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	 * > Cash : 캐쉬정보.
 	 */
 	private List<Cash> cashList;
-
-	/**
-	 * 할인율 정보 (tmembership).
-	 */
-	private List<Point> pointList;
 
 	/**
 	 * 정액권 이용안내 (freepassGuide).
@@ -140,56 +95,12 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	/**
 	 * 이용권 속성정보
 	 */
-	private Rights rights;
-	
-	/**
-	 * 이용권 지원 정보
-	 */
-	private List<Support> supportList  ;
-
-	/**
-	 * 이용권 속성정보
-	 */
 	private String requestProduct;
 	
 	/**
 	 * 상품리스트 응답정보
 	 */
 	private Lists lists;
-
-	/**
-	 * 단말기 지원 여부
-	 */
-	private String isDeviceSupported;
-	
-	/**
-	 * @return rights
-	 */
-	public Rights getRights() {
-		return this.rights;
-	}
-
-	/**
-	 * @param rights
-	 *            rights
-	 */
-	public void setRights(Rights rights) {
-		this.rights = rights;
-	}
-
-	/**
-	 * @return the supportList
-	 */
-	public List<Support> getSupportList() {
-		return supportList;
-	}
-
-	/**
-	 * @param supportList the supportList to set
-	 */
-	public void setSupportList(List<Support> supportList) {
-		this.supportList = supportList;
-	}
 
 	/**
 	 * @return FreepassAttr
@@ -204,21 +115,6 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	 */
 	public void setFreepassAttr(FreepassAttr freepassAttr) {
 		this.freepassAttr = freepassAttr;
-	}
-
-	/**
-	 * @return Identifier
-	 */
-	public Identifier getIdentifier() {
-		return this.identifier;
-	}
-
-	/**
-	 * @param identifier
-	 *            identifier
-	 */
-	public void setIdentifier(Identifier identifier) {
-		this.identifier = identifier;
 	}
 
 	/**
@@ -297,51 +193,6 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	}
 
 	/**
-	 * @return Price
-	 */
-	public Price getPrice() {
-		return this.price;
-	}
-
-	/**
-	 * @param price
-	 *            price
-	 */
-	public void setPrice(Price price) {
-		this.price = price;
-	}
-
-	/**
-	 * @return Date
-	 */
-	public Date getDate() {
-		return this.date;
-	}
-
-	/**
-	 * @param date
-	 *            date
-	 */
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	/**
-	 * @return Title
-	 */
-	public Title getTitle() {
-		return this.title;
-	}
-
-	/**
-	 * @param title
-	 *            title
-	 */
-	public void setTitle(Title title) {
-		this.title = title;
-	}
-
-	/**
 	 * @return AutoPay
 	 */
 	public AutoPay getAutopay() {
@@ -354,36 +205,6 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	 */
 	public void setAutopay(AutoPay autopay) {
 		this.autopay = autopay;
-	}
-
-	/**
-	 * @return List<Source>
-	 */
-	public List<Source> getSourceList() {
-		return this.sourceList;
-	}
-
-	/**
-	 * @param sourceList
-	 *            sourceList
-	 */
-	public void setSourceList(List<Source> sourceList) {
-		this.sourceList = sourceList;
-	}
-
-	/**
-	 * @return SelectOption
-	 */
-	public SelectOption getSelectOption() {
-		return this.selectOption;
-	}
-
-	/**
-	 * @param selectOption
-	 *            selectOption
-	 */
-	public void setSelectOption(SelectOption selectOption) {
-		this.selectOption = selectOption;
 	}
 
 	/**
@@ -417,21 +238,6 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	}
 
 	/**
-	 * @return the menuList
-	 */
-	public List<Menu> getMenuList() {
-		return this.menuList;
-	}
-
-	/**
-	 * @param menuList
-	 *            the menuList to set
-	 */
-	public void setMenuList(List<Menu> menuList) {
-		this.menuList = menuList;
-	}
-
-	/**
 	 * @return the saleStatus
 	 */
 	public String getSaleStatus() {
@@ -447,36 +253,6 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	}
 
 	/**
-	 * @return the identifierList
-	 */
-	public List<Identifier> getIdentifierList() {
-		return this.identifierList;
-	}
-
-	/**
-	 * @param identifierList
-	 *            the identifierList to set
-	 */
-	public void setIdentifierList(List<Identifier> identifierList) {
-		this.identifierList = identifierList;
-	}
-
-	/**
-	 * @return the dateList
-	 */
-	public List<Date> getDateList() {
-		return this.dateList;
-	}
-
-	/**
-	 * @param dateList
-	 *            the dateList to set
-	 */
-	public void setDateList(List<Date> dateList) {
-		this.dateList = dateList;
-	}
-
-	/**
 	 * @return the cashList
 	 */
 	public List<Cash> getCashList() {
@@ -489,21 +265,6 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	 */
 	public void setCashList(List<Cash> cashList) {
 		this.cashList = cashList;
-	}
-
-	/**
-	 * @return the pointList
-	 */
-	public List<Point> getPointList() {
-		return this.pointList;
-	}
-
-	/**
-	 * @param pointList
-	 *            the pointList to set
-	 */
-	public void setPointList(List<Point> pointList) {
-		this.pointList = pointList;
 	}
 
 	/**
@@ -566,12 +327,4 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 		this.lists = lists;
 	}
 
-
-	public String getIsDeviceSupported() {
-		return isDeviceSupported;
-	}
-
-	public void setIsDeviceSupported(String isDeviceSupported) {
-		this.isDeviceSupported = isDeviceSupported;
-	}
 }
