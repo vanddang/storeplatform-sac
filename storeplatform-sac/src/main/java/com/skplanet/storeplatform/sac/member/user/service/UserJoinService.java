@@ -112,4 +112,18 @@ public interface UserJoinService {
 	 *
 	 */
 	public CreateByIdSacRes createById(SacRequestHeader sacHeader, CreateByIdSacReq req);
+
+	/**
+	 * <pre>
+	 * 모바일 전용 회원 가입 (MDN 회원 가입) V2.
+	 * </pre>
+	 *
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateByMdnV2SacReq
+	 * @return CreateByMdnV2SacRes
+	 *
+	 */
+	public CreateByMdnV2SacRes regByMdnV2(SacRequestHeader sacHeader, CreateByMdnV2SacReq req);
 }

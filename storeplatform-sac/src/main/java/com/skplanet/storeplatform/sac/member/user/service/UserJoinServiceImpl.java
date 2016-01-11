@@ -694,6 +694,135 @@ public class UserJoinServiceImpl implements UserJoinService {
 		return response;
 	}
 
+	@Override
+	public CreateByMdnV2SacRes regByMdnV2(SacRequestHeader sacHeader, CreateByMdnV2SacReq req) {
+
+		/**
+		 * MDN 회원 기가입 체크
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MDN);
+		keySchUserKey.setKeyString(req.getMdn());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		searchExtentUserRequest.setCommonRequest(commonRequest);
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+		try{
+			SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+			throw new StorePlatformException("SAC_MEM_1104");
+		} catch (StorePlatformException ex) {
+			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				throw ex;
+			}
+		}
+
+		/**
+		 * 법정대리인 나이 유효성 체크.
+		 */
+		MbrLglAgent mbrLglAgent = null;
+		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+
+			if (StringUtils.isBlank(req.getOwnBirth())) {
+				throw new StorePlatformException("SAC_MEM_0002", "ownBirth");
+			}
+
+			if (StringUtils.isBlank(req.getParentBirthDay())) {
+				throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
+			}
+
+			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
+		}
+
+		// 모번호 조회
+		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+				&& StringUtils.isNotBlank(req.getMdn())){
+			req.setMdn(this.mcc.getOpmdMdnInfo(req.getMdn()));
+		}
+
+		/**
+		 * 약관 맵핑정보 세팅.
+		 */
+		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
+
+		/**
+		 * 법정대리인 setting.
+		 */
+		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+			mbrLglAgent = new MbrLglAgent();
+			mbrLglAgent.setIsParent(req.getIsParent()); // 법정대리인 동의 여부
+			mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod()); // 법정대리인 인증방법코드
+			mbrLglAgent.setParentName(req.getParentName()); // 법정대리인 이름
+			mbrLglAgent.setParentType(req.getParentType()); // 법정대리인 관계
+			mbrLglAgent.setParentDate(req.getParentDate()); // 법정대리인 동의일시
+			mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 Email
+			mbrLglAgent.setParentBirthDay(req.getParentBirthDay()); // 법정대리인 생년월일
+			mbrLglAgent.setParentTelecom(req.getParentTelecom()); // 법정대리인 통신사 코드
+			mbrLglAgent.setParentMDN(req.getParentPhone()); // 법정대리인 전화번호
+			mbrLglAgent.setParentCI(req.getParentCi()); // 법정대리인 CI
+			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
+			mbrLglAgent.setParentRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 법정대리인 실명인증사이트 코드
+			if (StringUtils.equals(req.getParentIsDomestic(), "")) {
+				mbrLglAgent.setIsDomestic(MemberConstants.USE_Y); // 내외국인 여부
+			} else {
+				mbrLglAgent.setIsDomestic(req.getParentIsDomestic()); // 내외국인 여부
+			}
+		}
+
+		/**
+		 * SC 사용자 기본정보 setting
+		 */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
+		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
+		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+		createUserRequest.setUserMbr(userMbr);
+		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
+
+		/**
+		 * SC 사용자 가입요청
+		 */
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
+		}
+
+		/**
+		 * 휴대기기 등록.
+		 */
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setUserKey(createUserResponse.getUserKey());
+		deviceInfo.setDeviceId(req.getDeviceId());
+		deviceInfo.setMdn(req.getMdn());
+		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
+		deviceInfo.setNativeId(req.getNativeId());
+		deviceInfo.setIsRecvSms(req.getIsRecvSms());
+		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
+
+		String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+
+		/**
+		 * 결과 세팅
+		 */
+		CreateByMdnV2SacRes response = new CreateByMdnV2SacRes();
+		response.setUserKey(createUserResponse.getUserKey());
+		response.setDeviceKey(deviceKey);
+		return response;
+
+	}
+
 	/**
 	 * <pre>
 	 * SC 이용약관 정보 setting.
