@@ -464,8 +464,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 			/** 2-2. req deviceId keyType 결정 */
 			String keyType = MemberConstants.KEY_TYPE_MDN;
-			if (ValidationCheckUtils.isMdn(opmdMdn)) {
-				keyType = MemberConstants.KEY_TYPE_MDN;
+			if (ValidationCheckUtils.isDeviceId(opmdMdn)) {
+				keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
 			}
 
 			/** 2-3. SC 회원 정보 조회 */
