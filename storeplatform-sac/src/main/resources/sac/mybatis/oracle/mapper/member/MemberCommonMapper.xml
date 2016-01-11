@@ -7,7 +7,7 @@
         SELECT    /* MemberCommonMapper.getTenantClauseCode, 테넌트약관조회, incross_cmlee80, 2015-10-27 */
             clause_id           AS clauseId
 
-        FROM TB_CM_TENANT_CLAUSE 
+        FROM TB_CM_OCLAUSE_DTL
         WHERE 1=1
         AND clause_id = #{clauseId}
         AND use_yn = 'Y'  
@@ -33,7 +33,7 @@
             mw_file_path AS mwFilePath,
             mw_file_nm AS mwFileNm,
             reagree_yn AS reAgreeYn             
-         FROM TB_CM_CLAUSE 
+         FROM TB_CM_OCLAUSE
         WHERE dp_yn='Y'
         AND clause_id = #{clauseId}
         ORDER BY start_day DESC
@@ -58,7 +58,7 @@
             A.mw_file_path AS mwFilePath,
             A.mw_file_nm AS mwFileNm,
             reagree_yn AS reAgreeYn             
-         FROM TB_CM_CLAUSE A, TB_CM_TENANT_CLAUSE B
+         FROM TB_CM_OCLAUSE A, TB_CM_OCLAUSE_DTL B
         WHERE A.dp_yn='Y'
         AND A.clause_id = B.clause_id
         AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[>=]]> a.start_day
@@ -165,7 +165,7 @@
              , a.clause_ver AS clauseVer
              , b.mand_agree_yn AS mandAgreeYn
          FROM TB_CM_CLAUSE a
-        INNER JOIN TB_CM_TENANT_CLAUSE b 
+        INNER JOIN TB_CM_OCLAUSE_DTL b
             ON a.clause_id = b.clause_id
         WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[>=]]> a.start_day
           AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
