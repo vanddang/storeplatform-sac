@@ -48,17 +48,15 @@ public class UserLockServiceImpl implements UserLockService {
     @Override
     public LockAccountSacRes lockAccount(SacRequestHeader sacHeader, LockAccountSacReq req) {
 
-        /**
-         * 미동의 회원 체크및 회원 정보 조회.
-         */
+        /** 1. 미동의 회원 체크및 회원 정보 조회. */
         CheckDuplicationResponse checkDuplicationResponse = this.checkDisAgree(sacHeader, req);
 
         LockAccountSacRes response = new LockAccountSacRes();
 
-        // 이미 잠겨 있으면 리턴 셋팅
+        /** 2. 이미 잠겨 있으면 리턴 셋팅 */
         if(checkDuplicationResponse.getUserMbr().getLoginStatusCode().equals(MemberConstants.USER_LOGIN_STATUS_PAUSE)){
             response.setUserId(req.getUserId());
-            // 잠겨 있지 않으면 회원 계정 잠금
+            /** 3. 잠겨 있지 않으면 회원 계정 잠금 */
         }else {
             this.modLoginStatus(sacHeader, req.getUserId());
             response.setUserId(req.getUserId());
@@ -80,42 +78,20 @@ public class UserLockServiceImpl implements UserLockService {
      */
     private CheckDuplicationResponse checkDisAgree(SacRequestHeader sacHeader, LockAccountSacReq req) {
 
-        /**
-         * 검색조건 정보 setting.
-         */
         List<KeySearch> keySearchList = new ArrayList<KeySearch>();
         KeySearch keySchUserKey = new KeySearch();
         keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
         keySchUserKey.setKeyString(req.getUserId());
         keySearchList.add(keySchUserKey);
 
-        /**
-         * 회원 조회 연동.
-         */
+        /** SC 회원 조회. */
         CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
         chkDupReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
         chkDupReq.setKeySearchList(keySearchList);
         CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
 
         if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
-
-			/* 원아이디 서비스 이용동의 간편 가입 대상 확인 */
-            if (chkDupRes.getUserMbr() == null && chkDupRes.getMbrOneID() != null) {
-
-                /**
-                 * 미동의 회원은 계정 잠금 할수 없음.
-                 */
-                throw new StorePlatformException("SAC_MEM_1800", req.getUserId());
-
-            } else {
-
-                /**
-                 * 회원 정보 없음.
-                 */
-                throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
-
-            }
-
+            throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
         }
 
         return chkDupRes;
