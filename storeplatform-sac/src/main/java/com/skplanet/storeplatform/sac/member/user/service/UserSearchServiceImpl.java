@@ -147,17 +147,16 @@ public class UserSearchServiceImpl implements UserSearchService {
 		ExistRes result = new ExistRes();
 		DetailReq detailReq = new DetailReq();
 
-		/* 헤더 정보 셋팅 */
+		/** 1. 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 
-		/**
-		 * 모번호 조회 (989 일 경우만)
-		 */
+		/** 2. 모번호 조회 (989 일 경우만) */
 		if (req.getDeviceId() != null) {
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 		}
 
+		/** 3. SC 회원 정보 조회 */
 		String userKey = StringUtil.setTrim(req.getUserKey());
 		String userId = StringUtil.setTrim(req.getUserId());
 		String deviceKey = StringUtil.setTrim(req.getDeviceKey());
