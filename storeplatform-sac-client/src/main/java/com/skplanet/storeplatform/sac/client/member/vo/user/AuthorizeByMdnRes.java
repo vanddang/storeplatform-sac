@@ -46,133 +46,63 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	private String loginStatusCode = "";
 
 	/**
-	 * 직권중지 상태코드.
-	 */
-	private String stopStatusCode = "";
-
-	/**
 	 * 로그인 성공여부(Y/N).
 	 */
 	private String isLoginSuccess = "";
 
-	/**
-	 * @return userKey
-	 */
-	public String getUserKey() {
-		return this.userKey;
-	}
+    public String getUserKey() {
+        return userKey;
+    }
 
-	/**
-	 * @param userKey
-	 *            String
-	 */
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
-	}
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
+    }
 
-	/**
-	 * @return userType
-	 */
-	public String getUserType() {
-		return this.userType;
-	}
+    public String getUserType() {
+        return userType;
+    }
 
-	/**
-	 * @param userType
-	 *            String
-	 */
-	public void setUserType(String userType) {
-		this.userType = userType;
-	}
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 
-	/**
-	 * @return userMainStatus
-	 */
-	public String getUserMainStatus() {
-		return this.userMainStatus;
-	}
+    public String getDeviceKey() {
+        return deviceKey;
+    }
 
-	/**
-	 * @param userMainStatus
-	 *            String
-	 */
-	public void setUserMainStatus(String userMainStatus) {
-		this.userMainStatus = userMainStatus;
-	}
+    public void setDeviceKey(String deviceKey) {
+        this.deviceKey = deviceKey;
+    }
 
-	/**
-	 * @return userSubStatus
-	 */
-	public String getUserSubStatus() {
-		return this.userSubStatus;
-	}
+    public String getUserMainStatus() {
+        return userMainStatus;
+    }
 
-	/**
-	 * @param userSubStatus
-	 *            String
-	 */
-	public void setUserSubStatus(String userSubStatus) {
-		this.userSubStatus = userSubStatus;
-	}
+    public void setUserMainStatus(String userMainStatus) {
+        this.userMainStatus = userMainStatus;
+    }
 
-	/**
-	 * @return loginStatusCode
-	 */
-	public String getLoginStatusCode() {
-		return this.loginStatusCode;
-	}
+    public String getUserSubStatus() {
+        return userSubStatus;
+    }
 
-	/**
-	 * @param loginStatusCode
-	 *            String
-	 */
-	public void setLoginStatusCode(String loginStatusCode) {
-		this.loginStatusCode = loginStatusCode;
-	}
+    public void setUserSubStatus(String userSubStatus) {
+        this.userSubStatus = userSubStatus;
+    }
 
-	/**
-	 * @return stopStatusCode
-	 */
-	public String getStopStatusCode() {
-		return this.stopStatusCode;
-	}
+    public String getLoginStatusCode() {
+        return loginStatusCode;
+    }
 
-	/**
-	 * @param stopStatusCode
-	 *            String
-	 */
-	public void setStopStatusCode(String stopStatusCode) {
-		this.stopStatusCode = stopStatusCode;
-	}
+    public void setLoginStatusCode(String loginStatusCode) {
+        this.loginStatusCode = loginStatusCode;
+    }
 
-	/**
-	 * @return deviceKey
-	 */
-	public String getDeviceKey() {
-		return this.deviceKey;
-	}
+    public String getIsLoginSuccess() {
+        return isLoginSuccess;
+    }
 
-	/**
-	 * @param deviceKey
-	 *            String
-	 */
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
-	}
-
-	/**
-	 * @return isLoginSuccess
-	 */
-	public String getIsLoginSuccess() {
-		return this.isLoginSuccess;
-	}
-
-	/**
-	 * @param isLoginSuccess
-	 *            String
-	 */
-	public void setIsLoginSuccess(String isLoginSuccess) {
-		this.isLoginSuccess = isLoginSuccess;
-	}
-
+    public void setIsLoginSuccess(String isLoginSuccess) {
+        this.isLoginSuccess = isLoginSuccess;
+    }
 }
