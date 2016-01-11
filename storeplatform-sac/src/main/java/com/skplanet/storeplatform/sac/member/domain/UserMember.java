@@ -38,9 +38,7 @@ public class UserMember {
 
     private String mbrStatusSubCd;
 
-    private Integer deviceRegCnt;
-
-    private String enterDay;
+    private String entryDay;
 
     private String bolterDay;
 
@@ -65,7 +63,7 @@ public class UserMember {
     private String emailRecvYn;
 
     @Column(columnDefinition = "char(1)")
-    private String smsRecvYn;
+    private String realnmAuthYn;
 
     @Column(columnDefinition = "char(1)")
     private String lglAgentAgreeYn;
@@ -190,20 +188,12 @@ public class UserMember {
         this.mbrStatusSubCd = mbrStatusSubCd;
     }
 
-    public Integer getDeviceRegCnt() {
-        return deviceRegCnt;
+    public String getEntryDay() {
+        return entryDay;
     }
 
-    public void setDeviceRegCnt(Integer deviceRegCnt) {
-        this.deviceRegCnt = deviceRegCnt;
-    }
-
-    public String getEnterDay() {
-        return enterDay;
-    }
-
-    public void setEnterDay(String enterDay) {
-        this.enterDay = enterDay;
+    public void setEntryDay(String enterDay) {
+        this.entryDay = enterDay;
     }
 
     public String getBolterDay() {
@@ -246,12 +236,12 @@ public class UserMember {
         this.emailRecvYn = emailRecvYn;
     }
 
-    public String getSmsRecvYn() {
-        return smsRecvYn;
+    public String getRealnmAuthYn() {
+        return realnmAuthYn;
     }
 
-    public void setSmsRecvYn(String smsRecvYn) {
-        this.smsRecvYn = smsRecvYn;
+    public void setRealnmAuthYn(String smsRecvYn) {
+        this.realnmAuthYn = smsRecvYn;
     }
 
     public String getLglAgentAgreeYn() {
