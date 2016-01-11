@@ -27,7 +27,6 @@ import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
 import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
 import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
 import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1834,7 +1833,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 
 			/*
 			 * if (limitTarget.getLimitTargetNo() == null) { int seq =
@@ -1885,7 +1884,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTargetNo = limitTargetList.get(i);
-			limitTargetNo.setTenantID(removePolicyRequest.getCommonRequest().getTenantID());
+			//limitTargetNo.setTenantID(removePolicyRequest.getCommonRequest().getTenantID());
 
 			LOGGER.debug(">>>> >>> UserServiceImpl before removePolicy : {}", limitTargetNo);
 			row = this.commonDAO.delete("User.removePolicy", limitTargetNo);
@@ -3617,7 +3616,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 			row = this.commonDAO.update("User.updatePolicyHistory", limitTarget);
 			if (row <= 0) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
@@ -3649,7 +3648,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 			row = this.commonDAO.update("User.insertPolicy", limitTarget);
 			if (row <= 0) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));

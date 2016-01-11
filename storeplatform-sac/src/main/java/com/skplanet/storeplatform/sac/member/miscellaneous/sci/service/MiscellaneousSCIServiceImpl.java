@@ -12,11 +12,11 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.sci.service;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
-import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.user.service.LimitTargetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class MiscellaneousSCIServiceImpl implements MiscellaneousSCIService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MiscellaneousSCIServiceImpl.class);
 
 	@Autowired
-	private UserSCI userSCI;
+	private LimitTargetService limitTargetService;
 
 	/**
 	 * <pre>
@@ -54,7 +54,7 @@ public class MiscellaneousSCIServiceImpl implements MiscellaneousSCIService {
 
 		LOGGER.debug("###### createIndividualPolicy [START] ######");
 
-		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
+		/** 1. SC 회원[UserSCI] Req 생성 및 주입 시작. */
 		SearchPolicyRequest policyRequest = new SearchPolicyRequest();
 		List<String> codeList = new ArrayList<String>();
 		for (int i = 0; i < req.getPolicyCodeList().size(); i++) {
@@ -74,13 +74,13 @@ public class MiscellaneousSCIServiceImpl implements MiscellaneousSCIService {
 
 		LOGGER.debug("==>>[SC] SearchPolicyRequest.toString() : {}", policyRequest.toString());
 
-		/** 3. SC회원[searchPolicyList] Call. */
-		SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+		/** 3. SC 회원[searchPolicyList] Call. */
+		SearchPolicyResponse policyResponse = this.limitTargetService.searchPolicyList(policyRequest);
 
-		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
+		/** 4. SC 회원 Call 결과 값으로 Response 생성 및 주입. */
 		GetIndividualPolicyRes res = new GetIndividualPolicyRes();
 		List<IndividualPolicyInfo> policyInfos = null;
-		IndividualPolicyInfo policyInfo = null;
+		IndividualPolicyInfo policyInfo;
 		if (policyResponse.getLimitTargetList().size() > 0) {
 			policyInfos = new ArrayList<IndividualPolicyInfo>();
 			for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {

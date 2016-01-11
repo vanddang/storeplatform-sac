@@ -134,6 +134,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 	private UserSCI userSCI;
 
 	@Autowired
+	private LimitTargetService limitTargetService;
+
+	@Autowired
 	private IdpSCI idpSCI;
 
 	@Autowired
@@ -1153,7 +1156,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			/**
 			 * SC 사용자 정책 리스트 조회 연동.
 			 */
-			SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+			SearchPolicyResponse policyResponse = this.limitTargetService.searchPolicyList(policyRequest);
 
 			/**
 			 * 처리 결과 setting.
