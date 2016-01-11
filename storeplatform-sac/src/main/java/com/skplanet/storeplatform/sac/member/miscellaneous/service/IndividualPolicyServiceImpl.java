@@ -144,14 +144,14 @@ public class IndividualPolicyServiceImpl implements IndividualPolicyService {
 		CreateIndividualPolicyRes res = new CreateIndividualPolicyRes();
 
 		if (updatePolicyResponse.getLimitTargetList().size() > 0) {
-			LimitTarget limitTarget1 = updatePolicyResponse.getLimitTargetList().get(0);
-			res.setKey(limitTarget1.getLimitPolicyKey());
-			res.setPolicyCode(limitTarget1.getLimitPolicyCode());
-			res.setValue(limitTarget1.getPolicyApplyValue());
-			res.setIsUsed(limitTarget1.getIsUsed());
-			res.setLimitAmount(limitTarget1.getLimitAmount());
-			res.setPermissionType(limitTarget1.getPermissionType());
-			res.setPreLimitAmount(limitTarget1.getPreLimitAmount());
+			LimitTarget updateLimitTarget = updatePolicyResponse.getLimitTargetList().get(0);
+			res.setKey(updateLimitTarget.getLimitPolicyKey());
+			res.setPolicyCode(updateLimitTarget.getLimitPolicyCode());
+			res.setValue(updateLimitTarget.getPolicyApplyValue());
+			res.setIsUsed(updateLimitTarget.getIsUsed());
+			res.setLimitAmount(updateLimitTarget.getLimitAmount());
+			res.setPermissionType(updateLimitTarget.getPermissionType());
+			res.setPreLimitAmount(updateLimitTarget.getPreLimitAmount());
 		}
 
 		LOGGER.debug("==>>[SAC] CreateIndividualPolicyRes.toString() : {}", res.toString());
