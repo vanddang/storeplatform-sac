@@ -1,12 +1,10 @@
 package com.skplanet.storeplatform.sac.api.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.skplanet.storeplatform.external.client.shopping.vo.*;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
+import com.skplanet.storeplatform.sac.api.except.CouponException;
+import com.skplanet.storeplatform.sac.api.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,24 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.EventInfo;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
-import com.skplanet.storeplatform.sac.api.except.CouponException;
-import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
-import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
-import com.skplanet.storeplatform.sac.api.vo.SpRegistProd;
-import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt;
-import com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * <pre>
@@ -188,6 +170,24 @@ public class CouponItemServiceImpl implements CouponItemService {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * One Store 에피소드id를 이용해 특가 여부 조회.
+	 * </pre>
+	 *
+	 * @param reqMap
+	 *            reqMap
+	 * @return String
+	 */
+	@Override
+	public int getOneBrandSpecialProdCnt(Map<String, Object> reqMap) {
+		try {
+			return (Integer) this.commonDAO.queryForObject("Coupon.getOneBrandSpecialProdCnt", reqMap);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
+		}
+	}
+
 
 	
 	/**
@@ -303,7 +303,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList , String prodId) {
+	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList , DpCouponInfo couponInfo) {
 		try {
 			for (TbDpTenantProdInfo vo : tbDpTenantProdList) {
 
@@ -323,11 +323,19 @@ public class CouponItemServiceImpl implements CouponItemService {
 			this.log.info("■■■■■ updateDPCouponCNT Start ■■■■■");
 			
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("prodId", prodId);
+			map.put("catalogId", couponInfo.getStoreCatalogCode());
+			map.put("prodId", couponInfo.getProdId());
 			map.put("tenentId", CouponConstants.TENANT_ID);
+			map.put("regId", couponInfo.getBpId());
+			map.put("updId", couponInfo.getBpId());
 
-			this.commonDAO.update("Coupon.updateDPCouponCNT", map);			
+			this.commonDAO.update("Coupon.updateDPCouponCNT", map);
 			this.log.info("■■■■■ updateDPCouponCNT End ■■■■■");
+
+			this.commonDAO.update("Coupon.updateCatalogTenantStatus", map);
+			this.log.info("■■■■■ updateCatalogTenantStatus End ■■■■■");
+
+
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
@@ -544,6 +552,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 			map.put("upType", upType);
 			map.put("itemCode", itemCode);
 			map.put("tenentId", CouponConstants.TENANT_ID);
+			String catalogId = (String) this.commonDAO.queryForObject("Coupon.getShoppingCatalogIdByChannelId", couponCode);
+			map.put("catalogId", catalogId);
+			map.put("regId", "admin");
+			map.put("updId", "admin");
 
 			if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
@@ -555,6 +567,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 			}
 			if (this.commonDAO.update("Coupon.updateDPCouponCNT", map) <= 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateDPcouponCNT 실패",
+						null);
+			}
+			if (this.commonDAO.update("Coupon.updateCatalogTenantStatus", map) <= 0) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateCatalogTenantStatus 실패",
 						null);
 			}
 			if (!StringUtils.equalsIgnoreCase(upType, "0")) {
@@ -617,6 +633,63 @@ public class CouponItemServiceImpl implements CouponItemService {
 		return list;
 	}
 
+	/**
+	 * <pre>
+	 * One Store 특가 상품 목록 조회 한다.
+	 * </pre>
+	 *
+	 * @param itemCodes
+	 *            itemCodes
+	 * @return List<CouponRes>
+	 */
+	@Override
+	public List<CouponRes> getOneBrandSpecialProductList(String[] itemCodes) {
+		List<CouponRes> list = new ArrayList<CouponRes>();
+
+		try {
+
+			for (String itemCode : itemCodes) {
+				itemCode = itemCode.trim();
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("itemCode", itemCode);
+				for(int kk =0 ; kk <3 ; kk++) {
+					CouponRes crinfo = new CouponRes();
+					crinfo.setCouponCode(itemCode);
+					if(kk ==0) {
+						map.put("tenantId", CouponConstants.TENANT_ID);
+						crinfo.setTenantId(CouponConstants.TENANT_ID);
+					}else if(kk ==1){
+						map.put("tenantId", CouponConstants.TENANT_ID_S02);
+						crinfo.setTenantId(CouponConstants.TENANT_ID_S02);
+					}else if(kk ==2){
+						map.put("tenantId", CouponConstants.TENANT_ID_S03);
+						crinfo.setTenantId(CouponConstants.TENANT_ID_S03);
+					}
+					int cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_ONE_BRAND_SPECIAL_PRODUCT_INFO", map);
+
+					if (cnt > 0) {
+						crinfo.setSpecialYN("Y");
+					} else {
+						int tingCnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_ONE_BRAND_TING_PRODUCT_INFO", map);
+						if (tingCnt > 0) {
+							crinfo.setSpecialYN("T");
+						} else {
+							crinfo.setSpecialYN("N");
+						}
+					}
+					list.add(crinfo);
+				}
+			}
+
+		} catch (CouponException e) {
+			throw e;
+		} catch (Exception e) {
+			this.log.error("Coupon.GET_SPECIAL_PRODUCT_INFO", e);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
+		}
+
+		return list;
+	}
 	/**
 	 * <pre>
 	 * 특가 상품 상세 조회 한다.
@@ -689,6 +762,84 @@ public class CouponItemServiceImpl implements CouponItemService {
 		return info;
 	}
 
+
+	/**
+	 * <pre>
+	 * One Store 특가 상품 상세 조회 한다.
+	 * </pre>
+	 *
+	 * @param couponCode
+	 *            couponCode
+	 * @param itemsCodes
+	 *            itemsCodes
+	 * @return CouponRes
+	 */
+
+	@Override
+	public CouponRes getOneBrandSpecialProductDetail(String couponCode, String[] itemsCodes) {
+
+		CouponRes info = new CouponRes();
+
+		List<ItemCodeInfo> itemCodeInfoList =  new ArrayList<ItemCodeInfo>();
+
+		boolean specialFlag = false;		// 특가 상품인지 확인 flag
+		boolean itemFlag = false; 			// 정상적인 아이템인지 확인 flag
+
+		if (StringUtils.isBlank(couponCode)) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (couponCode)", null);
+		}
+		for (String strItem : itemsCodes) {
+			if (StringUtils.isBlank(strItem)) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemsCodes)", null);
+			}
+		}
+
+		int cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_COUPON_INFO", couponCode);
+		if (cnt <=0) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쇼핑 상품에 대한 쿠폰ID가 아닙니다.", null);
+		}
+
+		for (String strItem : itemsCodes) {
+			try {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("couponCode", couponCode);
+				map.put("itemCode", strItem);
+				ItemCodeInfo itemCodeInfo = null;
+				List<String> tenantIdList =  null;
+				TenantIdList tenantIdVoList = new TenantIdList();
+				cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_COUPON_INFO", strItem);
+				if (cnt > 0) {
+					itemCodeInfo = (ItemCodeInfo) this.commonDAO.queryForObject("Coupon.GET_ONE_BRAND_SPECIAL_PRODUCT_DETAIL", map);
+					if (itemCodeInfo != null) {
+						tenantIdList  = (List<String>) this.commonDAO.queryForList("Coupon.GET_ONE_BRAND_TENANT_ID_SPECIAL_PRODUCT_DETAIL", map);
+						tenantIdVoList.setTenantId(tenantIdList);
+						itemCodeInfo.setTenantIdList(tenantIdVoList);
+						itemCodeInfoList.add(itemCodeInfo);
+						specialFlag = true;
+					}
+					itemFlag =true;
+				}
+
+			} catch (CouponException e) {
+				throw e;
+			} catch (Exception e) {
+				this.log.error("Coupon.GET_COUPON_INFO", e);
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
+			}
+		}
+
+		if(!itemFlag){
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쇼핑 상품에 대한 아이템ID가 아닙니다.", null);
+		}
+
+		if(!specialFlag){
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_SPECIAL, "특가상품 없음", null);
+		}
+
+		info.setItemCodeInfo(itemCodeInfoList);
+		return info;
+	}
+
 	/**
 	 * <pre>
 	 * 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
@@ -725,54 +876,43 @@ public class CouponItemServiceImpl implements CouponItemService {
 	}
 
 	/**
-	 * 쿠폰(아이템) 판매상태 변경.
-	 * 
-	 * @param couponList
-	 *            couponList
-	 * @return ArrayList<String>
+	 * <pre>
+	 * One Store 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+	 * </pre>
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return CouponRes
 	 */
 	@Override
-	public ArrayList<String> updateBatchForCouponStatus(ArrayList<CouponReq> couponList) {
-		ArrayList<String> result = new ArrayList<String>();
-		Calendar now = Calendar.getInstance();
-		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
-		String resultStatus = "";
+	public CouponRes getOneBrandSpecialProductDetailForDate(CouponReq couponReq) {
 
-		for (CouponReq couponCd : couponList) {
+		CouponRes info = new CouponRes();
+		List<ItemCodeInfo> itemCodeInfoList =  null;
+		List<TenantSprcInfo> tenantSprcInfoList =  null;
 
-			resultStatus = (String) this.commonDAO.queryForObject("Coupon.SELECT_COUPON_VALID_STATUS", couponCd);
-			if (!resultStatus.equals(couponCd.getCoupnStatus())) { // 있으면 기존 상태랑 비교한후 다르면 업데이트 한다.
-				// 쿠폰 판매상태 변경
-				if (couponCd.getUpType().equals("0")) {
-					result.add("C::" + sf.format(now.getTime()) + ">>>>쿠폰코드::::" + couponCd.getCouponCode()
-							+ ">>>변경 상태:::" + couponCd.getCoupnStatus());
-				} else if (couponCd.getUpType().equals("1")) {
-					result.add("I::" + sf.format(now.getTime()) + ">>>>아이템 코드::::" + couponCd.getItemCode()
-							+ ">>>변경 상태:::" + couponCd.getCoupnStatus());
-				}
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("prodId", couponCd.getNewCouponId());
-				map.put("dpStatusCode", couponCd.getCoupnStatus());
-				map.put("upType", couponCd.getUpType());
-				map.put("itemCode", couponCd.getNewItemId());
-				map.put("tenentId", CouponConstants.TENANT_ID);
-				// if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
-				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-				// "Coupon.updateDPCouponStatus 실패", null);
-				// }
-				// if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", map) <= 0) {
-				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-				// "Coupon.updateDPcouponItemCNT 실패", null);
-				// }
-				// if (this.commonDAO.update("Coupon.updateDPCouponCNT", map) <= 0) {
-				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-				// "Coupon.updateDPcouponCNT 실패", null);
-				// }
-				// this.commonDAO.update("Coupon.updateDPYNStatus", map);
+		try {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("startDate", couponReq.getStartDate());
+			map.put("endDate", couponReq.getEndDate());
 
+			itemCodeInfoList = (List<ItemCodeInfo>) this.commonDAO.queryForList("Coupon.GET_ONE_BRAND_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE", map);
+
+			for(ItemCodeInfo vo : itemCodeInfoList){
+				map.put("itemCode", vo.getItemCode());
+				tenantSprcInfoList = (List<TenantSprcInfo>) this.commonDAO.queryForList("Coupon.GET_ONE_BRAND_TENANT_ID_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE", map);
+				vo.setTenantSprcInfo(tenantSprcInfoList);
 			}
+
+		} catch (CouponException e) {
+			throw e;
+		} catch (Exception e) {
+			this.log.error("Coupon.GET_ONE_BRAND_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE", e);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
 		}
-		return result;
+
+		info.setItemCodeInfo(itemCodeInfoList);
+		return info;
 	}
 
 	/**
@@ -794,8 +934,8 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * 실제로 판매하는 상품을 조회 한다.
 	 * </pre>
 	 * 
-	 * @param tbDpProdCatalogMapgInfo
-	 *            tbDpProdCatalogMapgInfo
+	 * @param reqMap
+	 *            reqMap
 	 * @return String
 	 */
 	@Override
@@ -809,8 +949,8 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * 채널ID를 이용 카탈로그ID 조회 한다.
 	 * </pre>
 	 * 
-	 * @param catalogId
-	 *            catalogId
+	 * @param channelId
+	 *            channelId
 	 * @return String
 	 */
 	@Override
@@ -824,16 +964,14 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * 특가(팅) 상품에 상태값을 변경 한다(판매중지 전용).
 	 * </pre>
 	 * 
-	 * @param couponCode
-	 *            couponCode
+	 * @param newCouponCode
+	 *            newCouponCode
 	 * @param dpStatusCode
 	 *            dpStatusCode
 	 * @param upType
 	 *            upType
-	 * @param itemCode
-	 *            itemCode
-	 * @param episodeId
-	 *            episodeId            
+	 * @param itemCodes
+	 *            itemCodes
 	 */
 	@Override
 	public void updateCouponStatusForSpecialProd(String newCouponCode, String dpStatusCode, String upType,
@@ -844,7 +982,11 @@ public class CouponItemServiceImpl implements CouponItemService {
 			map.put("prodId", newCouponCode);
 			map.put("dpStatusCode", dpStatusCode);
 			map.put("upType", upType);
-		
+			String catalogId = (String) this.commonDAO.queryForObject("Coupon.getShoppingCatalogIdByChannelId", newCouponCode);
+			map.put("catalogId", catalogId);
+			map.put("regId", "admin");
+			map.put("updId", "admin");
+
 			map.put("tenentId", CouponConstants.TENANT_ID);
 			if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
@@ -856,6 +998,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 			}
 			if (this.commonDAO.update("Coupon.updateDPCouponCNT", map) <= 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateDPcouponCNT 실패",
+						null);
+			}
+			if (this.commonDAO.update("Coupon.updateCatalogTenantStatus", map) <= 0) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateCatalogTenantStatus 실패",
 						null);
 			}
 			if (!StringUtils.equalsIgnoreCase(upType, "0")) {
@@ -883,11 +1029,83 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
+	 * 특가(팅) 상품에 상태값을 변경 한다(판매중지 전용).
+	 * </pre>
+	 *
+	 * @param newCouponCode
+	 *            newCouponCode
+	 * @param dpStatusCode
+	 *            dpStatusCode
+	 * @param upType
+	 *            upType
+	 * @param itemCodes
+	 *            itemCodes
+	 */
+	@Override
+	public void updateCouponStatusForOneBrandSpecialProd(String newCouponCode, String dpStatusCode, String upType,String itemCodes,String[] tenantIds) {
+		try {
+
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("prodId", newCouponCode);
+			map.put("dpStatusCode", dpStatusCode);
+			map.put("upType", upType);
+
+			String catalogId = (String) this.commonDAO.queryForObject("Coupon.getShoppingCatalogIdByChannelId", newCouponCode);
+			map.put("catalogId", catalogId);
+			map.put("regId", "admin");
+			map.put("updId", "admin");
+
+			for (String tenantId : tenantIds) {
+				map.put("tenentId", tenantId );
+
+				if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+							"Coupon.updateDPCouponStatus 실패", null);
+				}
+				if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", map) <= 0) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+							"Coupon.updateDPcouponItemCNT 실패", null);
+				}
+				if (this.commonDAO.update("Coupon.updateDPCouponCNT", map) <= 0) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateDPcouponCNT 실패",
+							null);
+				}
+
+				if (this.commonDAO.update("Coupon.updateCatalogTenantStatus", map) <= 0) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateCatalogTenantStatus 실패",
+							null);
+				}
+
+				if (!StringUtils.equalsIgnoreCase(upType, "0")) {
+					this.commonDAO.update("Coupon.updateDPYNStatus", map);
+
+				}
+
+
+				String[] episodeIds = itemCodes.split(",");
+				for (String episodeId : episodeIds) {
+					map.put("itemCode", episodeId);
+
+					if (this.commonDAO.update("Coupon.updateSpecialProdStop", map) <= 0) {
+						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+								"Coupon.updateSpecialProdStop 실패", null);
+					}
+				}
+			}
+		} catch (CouponException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
+		}
+	}
+
+	/**
+	 * <pre>
 	 * 팅/특가 쿠폰 ID 조회 한다.
 	 * </pre>
 	 * 
-	 * @param couponCode
-	 *            couponCode
+	 * @param episodeId
+	 *            episodeId
 	 * @return CouponRes
 	 */
 
@@ -896,6 +1114,23 @@ public class CouponItemServiceImpl implements CouponItemService {
 		String couponId = (String) this.commonDAO.queryForObject("Coupon.getSpecialProductCouponId", episodeId);
 		return couponId;
 	}
+
+	/**
+	 * <pre>
+	 * One Store 팅/특가 쿠폰 ID 조회 한다.
+	 * </pre>
+	 *
+	 * @param reqMap
+	 *            reqMap
+	 * @return List<String>
+	 */
+
+	@Override
+	public List<String> getOneBrandSpecialProductCouponId(Map<String, Object> reqMap) {
+		List<String> couponIdList = (List<String>) this.commonDAO.queryForList("Coupon.getOneBrandSpecialProductCouponId", reqMap);
+		return couponIdList;
+	}
+
 
 	/**
 	 * <pre>
