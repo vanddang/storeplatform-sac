@@ -26,12 +26,12 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "TB_US_OLIMT_TARGET")
+@SequenceGenerator(name = "LIMIT_TARGET_SEQ",
+        sequenceName="SQ_US_LIMT_TARGET",
+        allocationSize=1)
 public class UserLimitTarget {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "LIMIT_TARGET_SEQ")
-    @SequenceGenerator(name = "LIMIT_TARGET_SEQ",
-            sequenceName="SQ_US_LIMT_TARGET",
-            allocationSize=20)
     private Integer seq;
 
     private String limtPolicyCd;
