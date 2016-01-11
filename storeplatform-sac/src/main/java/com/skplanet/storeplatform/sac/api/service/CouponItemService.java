@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.SpRegistProd;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
@@ -109,10 +110,20 @@ public interface CouponItemService {
 	 *            episodeId
 	 * @return int
 	 */	
-	public int getSpecialProdCnt(String episodeId);	
-	
-	
-	
+	public int getSpecialProdCnt(String episodeId);
+
+
+	/**
+	 * <pre>
+	 * One Store 에피소드id를 이용해 특가 여부 조회 한다.
+	 * </pre>
+	 *
+	 * @param reqMap
+	 *            reqMap
+	 * @return int
+	 */
+	public int getOneBrandSpecialProdCnt(Map<String, Object> reqMap);
+
 	/**
 	 * <pre>
 	 * TB_DP_PROD 테이블 입력및 수정한다.
@@ -163,7 +174,7 @@ public interface CouponItemService {
 	 * @param tbDpTenantProdList
 	 *            tbDpTenantProdList
 	 */
-	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList , String prodId);
+	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList , DpCouponInfo couponInfo);
 
 	/**
 	 * <pre>
@@ -254,7 +265,17 @@ public interface CouponItemService {
 	 * @return String
 	 */
 	public String getSpecialProductCouponId(String episodeId);
-	
+
+	/**
+	 * <pre>
+	 * One Store 팅/특가 쿠폰 ID 조회 한다.
+	 * </pre>
+	 *
+	 * @param reqMap
+	 *            reqMap
+	 * @return List<String>
+	 */
+	public List<String> getOneBrandSpecialProductCouponId(Map<String, Object> reqMap);
 	/**
 	 * <pre>
 	 * 상태값을 변경 한다.
@@ -266,12 +287,28 @@ public interface CouponItemService {
 	 *            dpStatusCode
 	 * @param upType
 	 *            upType
-	 * @param itemCode
-	 *            itemCode
+	 * @param itemCodes
+	 *            itemCodes
 	 */
 	public void updateCouponStatusForSpecialProd(String newCouponCode, String dpStatusCode, String upType, String itemCodes );
 
-	
+	/**
+	 * <pre>
+	 * One Store 상태값을 변경 한다.
+	 * </pre>
+	 *
+	 * @param newCouponCode
+	 *            newCouponCode
+	 * @param dpStatusCode
+	 *            dpStatusCode
+	 * @param upType
+	 *            upType
+	 * @param itemCodes
+	 *            itemCodes
+	 */
+	public void updateCouponStatusForOneBrandSpecialProd(String newCouponCode, String dpStatusCode, String upType, String itemCodes,String[] tenantIds );
+
+
 	
 	/**
 	 * <pre>
@@ -283,6 +320,17 @@ public interface CouponItemService {
 	 * @return List<CouponRes>
 	 */
 	public List<CouponRes> getSpecialProductList(String[] couponCodes);
+
+	/**
+	 * <pre>
+	 * One Store 특가 상품 목록 조회 한다.
+	 * </pre>
+	 *
+	 * @param itemCodes
+	 *            itemCodes
+	 * @return List<CouponRes>
+	 */
+	public List<CouponRes> getOneBrandSpecialProductList(String[] itemCodes);
 
 	/**
 	 * <pre>
@@ -298,13 +346,19 @@ public interface CouponItemService {
 	public CouponRes getSpecialProductDetail(String couponCode ,String[] itemsCodes);
 
 	/**
-	 * 쿠폰(아이템) 판매상태 변경.
-	 * 
-	 * @param couponList
-	 *            couponList
-	 * @return ArrayList<String>
+	 * <pre>
+	 * One Store 특가 상품 상세 조회 한다.
+	 * </pre>
+	 *
+	 * @param couponCode
+	 *            couponCode
+	 * @param itemsCodes
+	 *            itemsCodes
+	 * @return CouponRes
 	 */
-	public ArrayList<String> updateBatchForCouponStatus(ArrayList<CouponReq> couponList);
+	public CouponRes getOneBrandSpecialProductDetail(String couponCode, String[] itemsCodes);
+
+
 
 	/**
 	 * <pre>
@@ -322,8 +376,8 @@ public interface CouponItemService {
 	 * 실제로 판매하는 상품을 조회 한다.
 	 * </pre>
 	 * 
-	 * @param tbDpProdCatalogMapgInfo
-	 *            tbDpProdCatalogMapgInfo
+	 * @param reqMap
+	 *            reqMap
 	 * @return String
 	 */
 	
@@ -334,7 +388,7 @@ public interface CouponItemService {
 	 * 채널ID를 이용 카탈로그ID 조회 한다.
 	 * </pre>
 	 * 
-	 * @param catalogId
+	 * @param channelId
 	 *            catalogId
 	 * @return String
 	 */
@@ -349,6 +403,17 @@ public interface CouponItemService {
 	 * @return CouponRes
 	 */
 	public CouponRes getSpecialProductDetailForDate(CouponReq couponReq);
+
+	/**
+	 * <pre>
+	 * One Store 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+	 * </pre>
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return CouponRes
+	 */
+	public CouponRes getOneBrandSpecialProductDetailForDate(CouponReq couponReq);
 	
 	/**
 	 * <pre>
@@ -360,6 +425,8 @@ public interface CouponItemService {
 	 * @return ArrayList<String>
 	 */
 	public ArrayList<String> getCouponCompareItemCode(String channelId);
+
+
 
 
 }
