@@ -928,7 +928,14 @@
                   AND TPROD.TENANT_ID = #{tenantId}
                   AND TPROD.PROD_STATUS_CD = 'PD000403'
                   AND NVL(SPROD.B2B_PROD_YN, 'N') != 'Y'
-                  AND NVL(SC.CHNL_CNT, 0) > 0
+				  AND EXISTS(
+							SELECT 'X'
+							  FROM TB_DP_TENANT_PROD
+							 WHERE TENANT_ID =#{tenantId}
+							   AND PROD_ID =SC.CATALOG_ID
+							   AND PROD_STATUS_CD ='PD000403'
+							   AND EXPO_YN = 'Y'
+						)
                   AND PCM.BASE_YN = 'Y'
                   AND PCM.USE_YN = 'Y'
                   AND SCD.LANG_CD = #{langCd}

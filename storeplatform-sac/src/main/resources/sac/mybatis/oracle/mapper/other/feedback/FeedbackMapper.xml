@@ -31,7 +31,15 @@
 		                       SELECT  'X'
 		                         FROM  tb_dp_shpg_catalog sa     /* 쇼핑 카탈로그 */
 		                        WHERE  sa.catalog_id = #{prodId} /* 카탈로그 ID */
-		                          AND  sa.chnl_cnt > 0           /* 채널 수 */
+ 								  AND EXISTS(
+											SELECT 'X'
+											  FROM TB_DP_TENANT_PROD
+											 WHERE TENANT_ID = #{tenantId}
+											   AND PROD_ID =SA.CATALOG_ID
+											   AND PROD_STATUS_CD ='PD000403'
+											   AND EXPO_YN = 'Y'
+									  )								  
+
 		                       </if>
 		                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
 		                       SELECT  'X'

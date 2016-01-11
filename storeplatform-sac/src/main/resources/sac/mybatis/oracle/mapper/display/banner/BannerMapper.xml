@@ -226,7 +226,14 @@
 		           AND  C.PROD_ID = E.PROD_ID
 		           AND  A.TENANT_ID = F.TENANT_ID
 		           AND  C.PROD_ID = F.PROD_ID
-		           AND  NVL(B.CHNL_CNT, 0) > 0
+				   AND  EXISTS(
+							SELECT 'X'
+							  FROM TB_DP_TENANT_PROD
+							 WHERE TENANT_ID =#{tenantId}
+							   AND PROD_ID =B.CATALOG_ID
+							   AND PROD_STATUS_CD ='PD000403'
+							   AND EXPO_YN = 'Y'
+						)
 		           AND  C.BASE_YN = 'Y'
 		           AND  C.USE_YN = 'Y'
 		           AND  D.PROD_RSHP_CD = 'DP010802'
