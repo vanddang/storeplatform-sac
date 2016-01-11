@@ -9,353 +9,306 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.skplanet.storeplatform.sac.display.meta.service.ProductSubInfoManager;
-import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-
-import com.google.common.base.Strings;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
-import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
-import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMeta;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.EbookComicMeta;
-import com.skplanet.storeplatform.sac.display.cache.vo.EbookComicMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.FreepassMeta;
-import com.skplanet.storeplatform.sac.display.cache.vo.FreepassMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.MenuInfo;
-import com.skplanet.storeplatform.sac.display.cache.vo.MenuInfoParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.MusicMeta;
-import com.skplanet.storeplatform.sac.display.cache.vo.MusicMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.ProductStats;
-import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.ShoppingMeta;
-import com.skplanet.storeplatform.sac.display.cache.vo.ShoppingMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.SubContent;
-import com.skplanet.storeplatform.sac.display.cache.vo.SubContentParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.VodMeta;
-import com.skplanet.storeplatform.sac.display.cache.vo.VodMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.VoucherMeta;
-import com.skplanet.storeplatform.sac.display.cache.vo.VoucherMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.WebtoonMeta;
-import com.skplanet.storeplatform.sac.display.cache.vo.WebtoonMetaParam;
+import com.skplanet.storeplatform.sac.common.header.extractor.HeaderExtractor;
+import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.ContentType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+
+import java.util.List;
 
 /**
- * <p>
- * ProductInfoManagerImpl
- * </p>
- * Updated on : 2014. 03. 05 Updated by : 정희원, SK 플래닛.
+ * 상품 메타정보 조회 서비스 구현체
+ *
+ * Updated on : 2016. 01. 08 Updated by : 정화수, SK 플래닛.
+ *
  */
 @Service
 public class ProductInfoManagerImpl implements ProductInfoManager {
 
 	@Autowired
-	@Qualifier("sac")
-	private CommonDAO commonDAO;
+	ProductInfoCachedManager cachedManager;
 
-    @Autowired
-    private ProductSubInfoManager subInfoManager;
-
-	private static final String APP_SVC_GRP_CD = "DP000201";
-	private static final String APP_IMG_CD = "DP000101";
-	private static final String MUSIC_SVC_GRP_CD = "DP000203";
-	private static final String MUSIC_IMG_CD = "DP000162";
-	private static final String MUSIC_SVC_TP_CD = "DP001111";
-	private static final String SHOPPING_SVC_GRP_CD = "DP000206";
-	private static final String FREEPASS_SVC_GRP_CD = "DP000207";
-
+	@Autowired
+	private CachedExtraInfoManager extraInfoManager;
+	
+	@Autowired
+	HeaderExtractor header;
+	
 	@Override
-	@Cacheable(value = "sac:display:product:app:v2", key = "#param.getCacheKey()", unless = "#result == null")
-	public AppMeta getAppMeta(AppMetaParam param) {
+	public ProductBaseInfo getBaseInformation( String prodId ) {
+		return extraInfoManager.getProductBaseInfo( new GetProductBaseInfoParam( prodId ) );
+	}
 
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("channelId", param.getChannelId());
-		reqMap.put("langCd", param.getLangCd());
-		reqMap.put("tenantId", param.getTenantId());
-		reqMap.put("imageCd", APP_IMG_CD);
-		reqMap.put("svcGrpCd", APP_SVC_GRP_CD);
-
-		return commonDAO.queryForObject("ProductInfo.getAppMeta", reqMap, AppMeta.class);
+	/**
+	 * Plandas Cache 사용가능 여부를 확인한다.
+	 *
+	 * @return Plandas Cache 사용 가능여부
+	 */
+	private boolean isCacheable() {
+		return (Boolean) RequestContextHolder.currentRequestAttributes().getAttribute( "useCache", RequestAttributes.SCOPE_REQUEST );
 	}
 
 	@Override
-	public List<AppMeta> getAppMetaList(String langCd, String tenantId, List<String> prodIdList, String deviceModelCd) {
+	public AppMeta getAppMeta( String channelProdId ) {
 
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("prodIdList", prodIdList); // MyBatis에서는 foreach에서 목록이 역순으로 생성됨.
-		reqMap.put("langCd", langCd);
-		reqMap.put("tenantId", tenantId);
-		reqMap.put("deviceModelCd", deviceModelCd);
-		reqMap.put("imageCd", APP_IMG_CD);
-		reqMap.put("svcGrpCd", APP_SVC_GRP_CD);
+		AppMetaParam param = new AppMetaParam();
 
-		return commonDAO.queryForList("ProductInfo.getAppMetaList", reqMap, AppMeta.class);
-	}
+		param.setChannelId( channelProdId );
+		param.setTenantId( header.getTenantId() );
+		param.setLangCd( header.getLangCd() );
 
-	@Override
-	@Cacheable(value = "sac:display:product:music:v2", key = "#param.getCacheKey()", unless = "#result == null")
-	public MusicMeta getMusicMeta(MusicMetaParam param) {
-
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-
-		if (param.getContentType() == ContentType.Channel)
-			reqMap.put("channelId", param.getProdId());
-		else if (param.getContentType() == ContentType.Episode)
-			reqMap.put("episodeId", param.getProdId());
-		else
-			throw new IllegalArgumentException("contentType cannot be null.");
-
-		reqMap.put("episodeSvcGrpCd", param.getEpisodeSvcGrpCd());
-		reqMap.put("langCd", param.getLangCd());
-		reqMap.put("tenantId", param.getTenantId());
-		reqMap.put("imageCd", MUSIC_IMG_CD);
-		reqMap.put("svcGrpCd", MUSIC_SVC_GRP_CD);
-		reqMap.put("svcTypeCd", MUSIC_SVC_TP_CD);
-
-		if (StringUtils.isNotEmpty(param.getChartClsfCd()) && StringUtils.isNotEmpty(param.getRankStartDay())) {
-			reqMap.put("chartClsfCd", param.getChartClsfCd());
-			reqMap.put("rankStartDay", param.getRankStartDay());
+		if( isCacheable() ) {
+			return cachedManager.getAppMetaCached( param );
 		} else {
-			reqMap.put("chartClsfCd", "");
-			reqMap.put("rankStartDay", "");
+			return cachedManager.getAppMeta( param );
 		}
 
-		return commonDAO.queryForObject("ProductInfo.getMusicMeta", reqMap, MusicMeta.class);
+	}
+
+	public List<AppMeta> getAppMetaList( List<String> prodIdList ) {
+
+		String tenantId    = header.getTenantId();
+		String deviceModel = header.getDeviceModel();
+		String langCd      = header.getLangCd();
+
+		return cachedManager.getAppMetaList( prodIdList, langCd, tenantId, deviceModel );
+
 	}
 
 	@Override
-	public List<MusicMeta> getMusicMetaList(String langCd, String tenantId, String chartClsfCd, String stdDt, List<String> prodIdList) {
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("prodIdList", prodIdList);
-		reqMap.put("langCd", langCd);
-		reqMap.put("tenantId", tenantId);
-		reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-		reqMap.put("svcGrpCd", MUSIC_SVC_GRP_CD);
-		reqMap.put("svcTypeCd", MUSIC_SVC_TP_CD);
+	public MusicMeta getMusicMeta( String prodId ) {
 
-		if (StringUtils.isNotEmpty(chartClsfCd) && StringUtils.isNotEmpty(stdDt)) {
-			reqMap.put("chartClsfCd", chartClsfCd);
-			reqMap.put("rankStartDay", stdDt);
+		ProductBaseInfo baseInfo = getBaseInformation( prodId );
+		if( baseInfo == null ) return null;
+
+		MusicMetaParam param = new MusicMetaParam();
+
+		param.setProdId( prodId );
+		param.setLangCd( header.getLangCd() );
+		param.setTenantId( header.getTenantId() );
+
+		// BELL, COLORING
+		if ( baseInfo.getSvcGrpCd() != null && baseInfo.getContentsTypeCd().equals(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD)) {
+			param.setEpisodeSvcGrpCd( baseInfo.getSvcGrpCd() );
+
+		// DEFAULT
 		} else {
-			reqMap.put("chartClsfCd", "");
-			reqMap.put("rankStartDay", "");
+			param.setEpisodeSvcGrpCd( DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD );
 		}
 
-		return commonDAO.queryForList("ProductInfo.getMusicMetaList", reqMap, MusicMeta.class);
+		// 멀티미디어(뮤직) || 폰꾸미기(링,벨)
+		if( "DP000203".equals(param.getEpisodeSvcGrpCd()) || "DP000204".equals( param.getEpisodeSvcGrpCd() )) {
+			param.setContentType( ContentType.forCode(baseInfo.getContentsTypeCd()) );
+		} else {
+			param.setContentType( ContentType.Channel );
+		}
+
+		if( isCacheable() ) {
+			return cachedManager.getMusicMetaCached( param );
+		} else {
+			return cachedManager.getMusicMeta( param );
+		}
+
+	}
+
+	public List<MusicMeta> getMusicMetaList( List<String> prodIdList ) {
+
+		String langCd   = header.getLangCd();
+		String tenantId = header.getTenantId();
+
+		return cachedManager.getMusicMetaList( prodIdList, langCd, tenantId );
+
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:product:vod:v6", key = "#param.getCacheKey()", unless = "#result == null")
-	public VodMeta getVodMeta(VodMetaParam param) {
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("prodId", param.getProdId());
-		reqMap.put("langCd", param.getLangCd());
-		reqMap.put("tenantId", param.getTenantId());
-		reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-		if (param.getContentType() == ContentType.Channel)
-			reqMap.put("prodIdType", "CHANNEL");
-		else if (param.getContentType() == ContentType.Episode)
-			reqMap.put("prodIdType", "EPISODE");
-		else
-			throw new RuntimeException("prodIdType cannot be null.");
+	public VodMeta getVodMeta( String prodId ) {
 
-		return commonDAO.queryForObject("ProductInfo.getVodMeta", reqMap, VodMeta.class);
+		ProductBaseInfo baseInfo = getBaseInformation( prodId );
+		if( baseInfo == null ) return null;
+
+		VodMetaParam param = new VodMetaParam();
+
+		param.setProdId( prodId );
+		param.setLangCd( header.getLangCd() );
+		param.setTenantId( header.getTenantId() );
+		param.setContentType( ContentType.forCode( baseInfo.getContentsTypeCd() ) );
+
+		if( isCacheable() ) {
+			return cachedManager.getVodMetaCached( param );
+		} else {
+			return cachedManager.getVodMeta( param );
+		}
+
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:product:ebookcomic:v5", key = "#param.getCacheKey()", unless = "#result == null")
-	public EbookComicMeta getEbookComicMeta(EbookComicMetaParam param) {
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("prodId", param.getProdId());
-		reqMap.put("langCd", param.getLangCd());
-		reqMap.put("tenantId", param.getTenantId());
-		reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-		if (param.getContentType() == ContentType.Channel)
-			reqMap.put("prodIdType", "CHANNEL");
-		else if (param.getContentType() == ContentType.Episode)
-			reqMap.put("prodIdType", "EPISODE");
-		else
-			throw new RuntimeException("prodIdType cannot be null.");
-        EbookComicMeta ebookComicMeta = commonDAO.queryForObject("ProductInfo.getEbookComicMeta", reqMap, EbookComicMeta.class);
+	public EbookComicMeta getEbookComicMeta( String prodId ) {
 
-        if(ebookComicMeta != null && param.getContentType() == ContentType.Episode) {
-            CidPrice cidPrice = subInfoManager.getCidPriceByEpsdId(param.getLangCd(), param.getTenantId(), param.getProdId());
-            if (cidPrice != null) {
-                ebookComicMeta.setUsePeriodUnitCd(cidPrice.getRentPeriodUnitCd());
-                ebookComicMeta.setUsePeriod(cidPrice.getRentPeriod());
-                ebookComicMeta.setUsePeriodNm(cidPrice.getRentPeriodUnitNm());
-                ebookComicMeta.setEpsdUnlmtAmt(cidPrice.getProdAmt());
-                ebookComicMeta.setEpsdPeriodAmt(cidPrice.getRentProdAmt());
-            }
-        }
-        return ebookComicMeta;
+		ProductBaseInfo baseInfo = getBaseInformation( prodId );
+		if( baseInfo == null ) return null;
+
+		EbookComicMetaParam param = new EbookComicMetaParam();
+
+		param.setProdId( prodId );
+		param.setLangCd( header.getLangCd() );
+		param.setTenantId( header.getTenantId() );
+		param.setContentType( ContentType.forCode( baseInfo.getContentsTypeCd() ) );
+
+		if( isCacheable() ) {
+			return cachedManager.getEbookComicMetaCached( param );
+		} else {
+			return cachedManager.getEbookComicMeta( param );
+		}
+
     }
 
 	@Override
-	public AlbumMeta getAlbumMeta(AlbumMetaParam param, boolean useCache) {
-		if (useCache) {
-			return getAlbumMetaWithCache(param);
-		} 
-		else {
-			return getAlbumMetaWithoutCache(param);
+	public AlbumMeta getAlbumMeta( String prodId ) {
+
+		AlbumMetaParam param = new AlbumMetaParam();
+
+		param.setProdId( prodId );
+		param.setLangCd( header.getLangCd() );
+		param.setTenantId( header.getTenantId() );
+
+		if( isCacheable() ) {
+			return cachedManager.getAlbumMetaCached( param );
+		} else {
+			return cachedManager.getAlbumMeta( param );
 		}
-	}
 
-	@Cacheable(value = "sac:display:product:album", key = "#param.getCacheKey()", unless = "#result == null")
-	private AlbumMeta getAlbumMetaWithCache(AlbumMetaParam param) {
-		return getAlbumMetaWithoutCache(param);
-	}
-
-	private AlbumMeta getAlbumMetaWithoutCache(AlbumMetaParam param) {
-		return this.commonDAO.queryForObject("AlbumDetail.albumDetail", param, AlbumMeta.class);
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:product:webtoon", key = "#param.getCacheKey()", unless = "#result == null")
-	public WebtoonMeta getWebtoonMeta(WebtoonMetaParam param) {
-		// NOTICE EbookComic, Webtoon은 조회방법은 동일하지만 요구되는 응답값이 다르다.
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("prodId", param.getProdId());
-		reqMap.put("langCd", param.getLangCd());
-		reqMap.put("tenantId", param.getTenantId());
-		reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-		if (param.getContentType() == ContentType.Channel)
-			reqMap.put("prodIdType", "CHANNEL");
-		else if (param.getContentType() == ContentType.Episode)
-			reqMap.put("prodIdType", "EPISODE");
-		else
-			throw new RuntimeException("prodIdType cannot be null.");
+	public WebtoonMeta getWebtoonMeta( String prodId ) {
 
-		return commonDAO.queryForObject("ProductInfo.getWebtoonMeta", reqMap, WebtoonMeta.class);
+		ProductBaseInfo baseInfo = getBaseInformation( prodId );
+		if( baseInfo == null ) return null;
+
+		WebtoonMetaParam param = new WebtoonMetaParam();
+
+		param.setProdId( prodId );
+		param.setLangCd( header.getLangCd() );
+		param.setTenantId( header.getTenantId() );
+		param.setContentType( ContentType.forCode( baseInfo.getContentsTypeCd() ) );
+
+		if( isCacheable() ) {
+			return cachedManager.getWebtoonMetaCached( param );
+		} else {
+			return cachedManager.getWebtoonMeta( param );
+		}
+
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:product:shopping", key = "#param.getCacheKey()", unless = "#result == null")
-	public ShoppingMeta getShoppingMeta(ShoppingMetaParam param) {
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("catalogId", param.getCatalogId());
-		reqMap.put("langCd", param.getLangCd());
-		reqMap.put("tenantId", param.getTenantId());
-		reqMap.put("svcGrpCd", SHOPPING_SVC_GRP_CD);
-		reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+	public ShoppingMeta getShoppingMeta( String catalogId ) {
 
-		return commonDAO.queryForObject("ProductInfo.getShoppingMeta", reqMap, ShoppingMeta.class);
+		ShoppingMetaParam param = new ShoppingMetaParam();
+
+		param.setCatalogId( catalogId );
+		param.setLangCd( header.getLangCd() );
+		param.setTenantId( header.getTenantId() );
+
+		if( isCacheable() ) {
+			return cachedManager.getShoppingMetaCached( param );
+		} else {
+			return cachedManager.getShoppingMeta( param );
+		}
+
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:product:freepass", key = "#param.getCacheKey()", unless = "#result == null")
-	public FreepassMeta getFreepassMeta(FreepassMetaParam param) {
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("prodId", param.getChannelId());
-		reqMap.put("langCd", param.getLangCd());
-		reqMap.put("tenantId", param.getTenantId());
-		reqMap.put("svcGrpCd", FREEPASS_SVC_GRP_CD);
-		reqMap.put("thmbImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-		reqMap.put("bannImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-		reqMap.put("ebookImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
+	public FreepassMeta getFreepassMeta( String channelProdId ) {
 
-		return commonDAO.queryForObject("ProductInfo.getFreepassMeta", reqMap, FreepassMeta.class);
+		FreepassMetaParam param = new FreepassMetaParam();
+
+		param.setChannelId( channelProdId );
+		param.setLangCd( header.getLangCd() );
+		param.setTenantId( header.getTenantId() );
+
+		if( isCacheable() ) {
+			return cachedManager.getFreepassMetaCached( param );
+		} else {
+			return cachedManager.getFreepassMeta( param );
+		}
+
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:subcontent", key = "#param.getCacheKey()", unless = "#result == null")
-	public SubContent getSubContent(SubContentParam param) {
-		Map<String, String> reqMap = new HashMap<String, String>();
-		reqMap.put("prodId", param.getChannelId());
-		reqMap.put("deviceModelCd", param.getDeviceModel());
+	public SubContent getSubContent( String channelProdId ) {
 
-		return commonDAO.queryForObject("ProductInfo.getSubContent", reqMap, SubContent.class);
+		SubContentParam param = new SubContentParam();
+
+		param.setChannelId( channelProdId );
+		param.setDeviceModel( header.getDeviceModel() );
+
+		if( isCacheable() ) {
+			return cachedManager.getSubContentCached( param );
+		} else {
+			return cachedManager.getSubContent( param );
+		}
+
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:menuinfo", key = "#param.getCacheKey()", unless = "#result == null")
-	public MenuInfo getMenuInfo(MenuInfoParam param) {
-		Map<String, String> reqMap = new HashMap<String, String>();
-		reqMap.put("prodId", param.getChannelId());
-		if (param.getMenuId() != null)
-			reqMap.put("menuId", param.getMenuId());
-		reqMap.put("langCd", param.getLangCd());
-		// TODO 몇Depth메뉴인지 판단을 해야 함
-		return commonDAO.queryForObject("ProductInfo.getMenuInfo", reqMap, MenuInfo.class);
+	public MenuInfo getMenuInfo( String prodId ) {
+		return getMenuInfo( prodId, null );
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:productStats", key = "#param.getCacheKey()", unless = "#result == null")
-	public ProductStats getProductStats(ProductStatsParam param) {
-		if (param == null || Strings.isNullOrEmpty(param.getProdId()))
-			throw new IllegalArgumentException();
+	public MenuInfo getMenuInfo( String prodId, String menuId ) {
 
-		Map<String, Object> req = new HashMap<String, Object>();
-		req.put("prodId", param.getProdId());
-		req.put("tenantList", ServicePropertyManager.getSupportTenantList());
+		ProductBaseInfo baseInfo = getBaseInformation( prodId );
+		if( baseInfo == null ) return null;
 
-		RawProductStats rawProductStats = commonDAO.queryForObject("ProductInfo.getProductStats", req, RawProductStats.class);
-		if (rawProductStats == null)
-			return new ProductStats();
+		MenuInfoParam param = new MenuInfoParam();
 
-		ProductStats stats = new ProductStats();
-		stats.setPurchaseCount(rawProductStats.getPrchsCnt());
-		if (rawProductStats.getPaticpersCnt() > 0) {
-			stats.setParticipantCount(rawProductStats.getPaticpersCnt());
-			stats.setAverageScore((double) Math.round((double) rawProductStats.getTotEvluScore() / rawProductStats.getPaticpersCnt() * 10) / 10);
+		param.setChannelId( prodId );
+		param.setLangCd( header.getLangCd() );
+		param.setMenuId( menuId );
+
+		if( isCacheable() ) {
+			return cachedManager.getMenuInfoCached( param );
+		} else {
+			return cachedManager.getMenuInfo( param );
 		}
 
-		return stats;
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:product:voucher:v1", key = "#param.getCacheKey()", unless = "#result == null")
-	public VoucherMeta getVoucherMeta(VoucherMetaParam param) {
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("prodId", param.getChannelId());
-		reqMap.put("langCd", param.getLangCd());
-		reqMap.put("tenantId", param.getTenantId());
-		reqMap.put("svcGrpCd", FREEPASS_SVC_GRP_CD);
-		reqMap.put("thmbImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-		reqMap.put("bannImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-		reqMap.put("ebookImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
+	public ProductStats getProductStats( String prodId ) {
 
-		return this.commonDAO.queryForObject("ProductInfo.getVoucherMeta", reqMap, VoucherMeta.class);
+		ProductStatsParam param = new ProductStatsParam();
+
+		param.setProdId( prodId );
+
+		if( isCacheable() ) {
+			return cachedManager.getProductStatsCached( param );
+		} else {
+			return cachedManager.getProductStats( param );
+		}
+
 	}
 
-	public static class RawProductStats {
-		private Integer prchsCnt;
-		private Integer totEvluScore;
-		private Integer paticpersCnt;
+	@Override
+	public VoucherMeta getVoucherMeta( String channelProdId ) {
 
-		public Integer getPrchsCnt() {
-			return prchsCnt;
+		VoucherMetaParam param = new VoucherMetaParam();
+
+		param.setChannelId( channelProdId );
+		param.setLangCd( header.getLangCd() );
+		param.setTenantId( header.getTenantId() );
+
+		if( isCacheable() ) {
+			return cachedManager.getVoucherMetaCached( param );
+		} else {
+			return cachedManager.getVoucherMeta( param );
 		}
 
-		public void setPrchsCnt(Integer prchsCnt) {
-			this.prchsCnt = prchsCnt;
-		}
-
-		public Integer getTotEvluScore() {
-			return totEvluScore;
-		}
-
-		public void setTotEvluScore(Integer totEvluScore) {
-			this.totEvluScore = totEvluScore;
-		}
-
-		public Integer getPaticpersCnt() {
-			return paticpersCnt;
-		}
-
-		public void setPaticpersCnt(Integer paticpersCnt) {
-			this.paticpersCnt = paticpersCnt;
-		}
 	}
+
 }

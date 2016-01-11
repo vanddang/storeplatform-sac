@@ -33,9 +33,9 @@
 
     <bean id="plandasjConnectionFactory"
           class="com.skplanet.spring.data.plandasj.PlandasjConnectionFactory"
-          p:domainName="#{propertiesForSac['plandasj.domainName']}"
-          p:serviceCode="#{propertiesForSac['plandasj.serviceCode']}"
-          p:authCode="#{propertiesForSac['plandasj.authCode']}" />
+          p:domainName  ="#{propertiesForSac['plandasj.domainName']}"
+          p:serviceCode ="#{propertiesForSac['plandasj.serviceCode']}"
+          p:authCode    ="#{propertiesForSac['plandasj.authCode']}" />
 
     <bean id="plandasjTemplate"
           class="com.skplanet.spring.data.plandasj.PlandasjTemplate"
@@ -48,39 +48,40 @@
         <!--<property name="defaultExpiration" value="1800"/>-->
         <property name="expires">
             <map>
-                <entry key="sac:display:product:app:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:album" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:music" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:music:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:freepass" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:ebookcomic:v4" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:ebookcomic:v5" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:vod:v5" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:vod:v6" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:shopping" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:webtoon" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:subcontent" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:menuinfo" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:tmembershipdcrate:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:updateProductInfo:v3" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:updateProductInfo:v4" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:voucher:v1" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:productStats" value="600" value-type="java.lang.Long"/>  <!-- 10분 -->
 
-                <entry key="sac:display:getCardListInPanel:v1" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:getCardSegmentInfo:v1" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <!-- 상품메타 -->
+                <entry key="sac:display:product:app:v2"        value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:album"         value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:music:v2"      value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:freepass"      value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:ebookcomic:v5" value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:vod:v6"        value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:shopping"      value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:webtoon"       value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:subcontent"            value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:menuinfo"              value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:voucher:v1"    value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:productStats"          value=  "600" value-type="java.lang.Long"/>  <!-- 10분 -->
 
+                <!-- 멤버쉽 -->
+                <entry key="sac:display:tmembershipdcrate:v2"  value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:updateProductInfo:v4"  value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
 
-                <entry key="sac:display:device:profile:v1" value="21600" value-type="java.lang.Long"/>  <!-- 360분-->
+                <!-- 카드 -->
+                <entry key="sac:display:getCardListInPanel:v1" value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:getCardSegmentInfo:v1" value= "1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+
+                <!-- 단말 프로파일 -->
+                <entry key="sac:display:device:profile:v1"     value="21600" value-type="java.lang.Long"/>  <!-- 360분-->
 
             </map>
         </property>
     </bean>
 
     <bean name="plandasjpool" class="com.skplanet.plandasj.PlandasjPool" destroy-method="release">
-        <constructor-arg type="java.lang.String" name="domainName" value="#{propertiesForSac['plandasj.domainName']}" />
+        <constructor-arg type="java.lang.String" name="domainName"  value="#{propertiesForSac['plandasj.domainName']}" />
         <constructor-arg type="java.lang.String" name="serviceCode" value="#{propertiesForSac['plandasj.serviceCode']}" />
-        <constructor-arg type="java.lang.String" name="authCode" value="#{propertiesForSac['plandasj.authCode']}" />
+        <constructor-arg type="java.lang.String" name="authCode"    value="#{propertiesForSac['plandasj.authCode']}" />
     </bean>
     <!-- pool client 방식 -->
     <!-- PlanDas : Global Cache -->

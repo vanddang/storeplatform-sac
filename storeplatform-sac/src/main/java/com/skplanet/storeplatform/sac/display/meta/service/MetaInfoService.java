@@ -1,115 +1,227 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+
+import java.util.Map;
 
 /**
  * Meta 정보 조회 Service.
  * 
- * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스.
+ * Updated on : 2016.01.08 Updated by : 정화수, SK Planet
  */
 public interface MetaInfoService {
 
 	/**
+	 * 컨텐츠타입(채널/에피소드)에 대응되는 상품ID를 구한다.
+	 *
 	 * <pre>
-	 * App Meta 정보 조회.
+	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
-	 * 
-	 * @param paramMap
-	 *            paramMap
-	 * @return MetaInfo
+	 *
+	 * (임시로직)
+	 *
+	 * @param productBasicInfo 상품기본정보
+	 * @return 상품ID
 	 */
-	public MetaInfo getAppMetaInfo(Map<String, Object> paramMap);
-
-    /**
-	 * <pre>
-	 * 음원 Meta 정보 조회.
-	 * </pre>
-	 * 
-	 * @param paramMap
-	 *            paramMap
-	 * @return MetaInfo
-	 */
-	public MetaInfo getMusicMetaInfo(Map<String, Object> paramMap);
-
-	// TODO osm1021 review cache 문제가 없다면 VO를 파라미터로 추가 (일단 추가)
-	/**
-	 * <pre>
-	 * VOD Meta 정보 조회.
-	 * </pre>
-	 * 
-	 * @param paramMap
-	 *            paramMap
-	 * @return MetaInfo
-	 */
-	public MetaInfo getVODMetaInfo(Map<String, Object> paramMap);
+	@Deprecated
+	String getProdIdByContentsType( ProductBasicInfo productBasicInfo );
 
 	/**
-	 * <pre>
-	 * Ebook Meta 정보 조회.
-	 * </pre>
-	 * 
-	 * @param paramMap
-	 *            paramMap
-	 * @return MetaInfo
+	 * App 메타정보를 조회한다.
+	 *
+	 * @param channelProdId 채널상품ID
+	 * @return 상품메타정보
 	 */
-	public MetaInfo getEbookComicMetaInfo(Map<String, Object> paramMap);
+	MetaInfo getAppMetaInfo( String channelProdId );
 
 	/**
+	 * App 메타정보를 조회한다.
+	 *
 	 * <pre>
-	 * Webtoon Meta 정보 조회.
+	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
-	 * 
-	 * @param paramMap
-	 *            paramMap
-	 * @return MetaInfo
+	 *
+	 * @param productBasicInfo 상품기본정보
+	 * @return 상품메타정보
 	 */
-	public MetaInfo getWebtoonMetaInfo(Map<String, Object> paramMap);
+	@Deprecated
+	MetaInfo getAppMetaInfo( ProductBasicInfo productBasicInfo );
 
 	/**
-	 * <pre>
-	 * 쇼핑 Meta 정보 조회.
-	 * </pre>
-	 * 
-	 * @param paramMap
-	 *            paramMap
-	 * @return MetaInfo
+	 * 음악 메타정보를 조회한다.
+	 *
+	 * @param prodId 상품ID
+	 * @return 상품메타정보
 	 */
-	public MetaInfo getShoppingMetaInfo(Map<String, Object> paramMap);
+	MetaInfo getMusicMetaInfo( String prodId );
 
 	/**
+	 * 음악 메타정보를 조회한다.
+	 *
 	 * <pre>
-	 * 정액제 Meta 정보 조회.
+	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
-	 * 
-	 * @param paramMap
-	 *            paramMap
-	 * @return MetaInfo
+	 *
+	 * @param productBasicInfo 상품기본정보
+	 * @return 상품메타정보
 	 */
-	public MetaInfo getFreepassMetaInfo(Map<String, Object> paramMap);
+	@Deprecated
+	MetaInfo getMusicMetaInfo( ProductBasicInfo productBasicInfo );
 
 	/**
-	 * <pre>
-	 * 앨범 Meta 정보 조회.
-	 * </pre>
-	 * 
-	 * @param paramMap
-	 *            paramMap
-	 * @return AlbumMeta
+	 * VOD (VideoOnDemand) 메타정보를 조회한다.
+	 *
+	 * @param prodId 상품ID
+	 * @return 상품메타정보
 	 */
-	public AlbumMeta getAlbumMetaInfo(Map<String, Object> paramMap);
+	MetaInfo getVODMetaInfo( String prodId );
 
 	/**
+	 * VOD (VideoOnDemand) 메타정보를 조회한다.
+	 *
 	 * <pre>
-	 * 정액제 Meta 정보 조회.
+	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
 	 * </pre>
-	 * 
-	 * @param paramMap
-	 *            paramMap
-	 * @return MetaInfo
+	 *
+	 * @param productBasicInfo 상품기본정보
+	 * @return 상품메타정보
 	 */
-	public MetaInfo getVoucherMetaInfo(Map<String, Object> paramMap);
+	@Deprecated
+	MetaInfo getVODMetaInfo( ProductBasicInfo productBasicInfo );
+
+	/**
+	 * EBook(이북) / Comic(코믹) 메타정보를 조회한다.
+	 *
+	 * @param prodId 상품ID
+	 * @return 상품메타정보
+	 */
+	MetaInfo getEbookComicMetaInfo( String prodId );
+
+	/**
+	 * EBook(이북) / Comic(코믹) 메타정보를 조회한다.
+	 *
+	 * <pre>
+	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
+	 * </pre>
+	 *
+	 * (임시로직)
+	 *
+	 * @param productBasicInfo 상품기본정보
+	 * @return 상품메타정보
+	 */
+	@Deprecated
+	MetaInfo getEbookComicMetaInfo( ProductBasicInfo productBasicInfo );
+
+	/**
+	 * 웹툰 메타정보를 조회한다.
+	 *
+	 * @param prodId 상품ID
+	 * @return 상품메타정보
+	 */
+	MetaInfo getWebtoonMetaInfo( String prodId );
+
+	/**
+	 * 웹툰 메타정보를 조회한다.
+	 *
+	 * <pre>
+	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
+	 * </pre>
+	 *
+	 * @param productBasicInfo 상품기본정보
+	 * @return 상품메타정보
+	 */
+	@Deprecated
+	MetaInfo getWebtoonMetaInfo( ProductBasicInfo productBasicInfo );
+
+	/**
+	 * 쇼핑 카탈로그 메타정보를 조회한다.
+	 *
+	 * <pre>
+	 *     쇼핑은 카탈로그를 상품 단위로 전시한다.
+	 * </pre>
+	 *
+	 * @param catalogId 쇼핑 카탈로그ID
+	 * @return 상품메타정보
+	 */
+	MetaInfo getShoppingMetaInfo( String catalogId );
+
+	/**
+	 * 쇼핑 카탈로그 메타정보를 조회한다.
+	 *
+	 * <pre>
+	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
+	 * </pre>
+	 *
+	 * @param productBasicInfo 상품기본정보
+	 * @return 상품메타정보
+	 */
+	@Deprecated
+	MetaInfo getShoppingMetaInfo( ProductBasicInfo productBasicInfo );
+
+	/**
+	 * 정액권 메타정보를 조회한다.
+	 *
+	 * <pre>
+	 *     정액권은 이용권으로 변경되었다. (언제인지는 불확실... )
+	 * </pre>
+	 *
+	 * @param channelProdId 채널상품ID
+	 * @return 상품메타정보
+	 */
+	@Deprecated
+	MetaInfo getFreepassMetaInfo( String channelProdId );
+
+	/**
+	 * 정액권 메타정보를 조회한다.
+	 *
+	 * <pre>
+	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
+	 * </pre>
+	 *
+	 * @param productBasicInfo 상품기본정보
+	 * @return 상품메타정보
+	 */
+	@Deprecated
+	MetaInfo getFreepassMetaInfo( ProductBasicInfo productBasicInfo );
+
+	/**
+	 * 앨범 메타정보를 조회한다.
+	 *
+	 * @param prodId 상품ID
+	 * @return 상품메타정보
+	 */
+	AlbumMeta getAlbumMetaInfo( String prodId );
+
+	/**
+	 * 앨범 메타정보를 조회한다.
+	 *
+	 * @param productBasicInfo 상품기본정보
+	 * @return 상품메타정보
+	 */
+	@Deprecated
+	AlbumMeta getAlbumMetaInfo( ProductBasicInfo productBasicInfo );
+
+	/**
+	 * 이용권 메타정보를 조회한다.
+	 *
+	 * @param channelProdId 채널상품ID
+	 * @return 상품메타정보
+	 */
+	MetaInfo getVoucherMetaInfo( String channelProdId );
+
+	/**
+	 * 이용권 메타정보를 조회한다.
+	 *
+	 * <pre>
+	 *    상품메타 refactoring 작업에 사용되는 임시성 로직
+	 * </pre>
+	 *
+	 * @param productBasicInfo 상품기본정보
+	 * @return 상품메타정보
+	 */
+	@Deprecated
+	MetaInfo getVoucherMetaInfo( ProductBasicInfo productBasicInfo );
+
 }
