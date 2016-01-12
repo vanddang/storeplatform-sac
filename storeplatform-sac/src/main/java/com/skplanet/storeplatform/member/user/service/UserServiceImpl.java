@@ -428,6 +428,23 @@ public class UserServiceImpl implements UserService {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
 			}
 
+            userMbrRetrieveUserMbrPwd.setUserID(tempDevice.getUserID());
+            userMbrRetrieveUserMbrPwd = this.commonDAO.queryForObject("User.getUserMbrRetrievePWD",
+                    userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
+
+            if (userMbrRetrieveUserMbrPwd == null) {
+                // 휴면DB조회
+                userMbrRetrieveUserMbrPwd = new UserMbrRetrieveUserMbrPwd();
+                userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
+                userMbrRetrieveUserMbrPwd = this.idleDAO.queryForObject("User.getUserMbrRetrievePWD",
+                        userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
+                if (userMbrRetrieveUserMbrPwd == null) {
+                    throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+                } else {
+                    isDormant = Constant.TYPE_YN_Y;
+                }
+            }
+
 			// TLog
 			final String tlogUserKey = tempDevice.getUserKey();
 			final String tlogDeviceID = tempDevice.getDeviceID();

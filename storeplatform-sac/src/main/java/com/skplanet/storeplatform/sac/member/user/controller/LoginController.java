@@ -70,6 +70,13 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+        /** MSIDN 일 경우 SKT 만 허용 */
+        if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+            if (!StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+                throw new StorePlatformException("SAC_MEM_1203", "deviceTelecom");
+            }
+        }
+
 		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));

@@ -242,14 +242,14 @@
     <!-- DeviceKey 로 MBR_ID 조회(로그인) -->
     <select id="getUserIDByDeviceKey" parameterType="loginUserRequest" resultType="userMbrDevice">
         SELECT  /* UserMapper.xml, getUserIDByDeviceKey, SAC(SC), 윤보영, 2016-01-06 */
-                u.deviceNickName AS deviceNickName,
+                u.userID AS userID,
                 u.nativeID AS nativeID,
                 u.deviceTelecom AS deviceTelecom,
                 u.svcMangNum AS svcMangNum,
                 u.deviceModelNo AS deviceModelNo,
                 u.deviceId AS deviceId,
                 u.mdn AS mdn
-        FROM ( SELECT a.mbr_id AS deviceNickName,
+        FROM ( SELECT a.mbr_id AS userID,
                 b.device_natv_id AS nativeID,
                 b.mno_cd AS deviceTelecom,
                 b.svc_mang_no AS svcMangNum,
