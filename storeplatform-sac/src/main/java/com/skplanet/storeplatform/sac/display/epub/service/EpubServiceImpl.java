@@ -480,6 +480,9 @@ public class EpubServiceImpl implements EpubService {
 		
 		//웹툰 원고 타입 여부 (Y : 웹툰 원고 타입)
 		product.setVerticalYn(mapperVO.getVerticalYn());
+
+		// 디바이스 지원 여부
+		product.setIsDeviceSupported(mapperVO.getDeviceSprtYn());
 		
 		// productExplain(상품설명) 
 		// 저자 설명(PROD_BASE_DESC)값이 아닌 상품 상세설명(PROD_DTL_DESC) 값으로 변경 (14.02.24)
