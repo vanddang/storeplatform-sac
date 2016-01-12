@@ -136,32 +136,25 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
 			}
 
-			CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
-			chkUserAuthTkReqeust.setCommonRequest(mcc.getSCCommonRequest(requestHeader));
-			chkUserAuthTkReqeust.setUserKey(detailRes.getUserInfo().getUserKey());
-			chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
-			CheckUserAuthTokenResponse chkUserAuthTkResponse = userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
-			if (chkUserAuthTkResponse.getUserKey() == null || chkUserAuthTkResponse.getUserKey().length() <= 0) {
+			CheckUserAuthTokenRequest chkUserAuthTkReq = new CheckUserAuthTokenRequest();
+			chkUserAuthTkReq.setCommonRequest(mcc.getSCCommonRequest(requestHeader));
+			chkUserAuthTkReq.setUserKey(detailRes.getUserInfo().getUserKey());
+			chkUserAuthTkReq.setUserAuthToken(req.getUserAuthToken());
+			chkUserAuthTkReq.setIsDormant(detailRes.getUserInfo().getIsDormant());
+			CheckUserAuthTokenResponse chkUserAuthTkRes = this.userSCI.checkUserAuthToken(chkUserAuthTkReq);
+			if (chkUserAuthTkRes.getUserKey() == null || chkUserAuthTkRes.getUserKey().length() <= 0) {
 				throw new StorePlatformException("SAC_MEM_1204");
 			}
-
 		}
 
 		/**
 		 *  4-1. 요청 파라미터에 따라서 분기 처리한다.
-		 *  userId 탈퇴요청
-		 *   - 아이디, 휴대기기 삭제
-		 *   - MQ연동 : memberRetireAmqpTemplate
-		 *
-		 *  deviceId 탈퇴요청
-		 *   - 모바일회원, 소셜아이디 회원일 경우 >> 아이디, 휴대기기삭제
-		 *   	- MQ연동 : memberRetireAmqpTemplate
+		 *  아이디, 휴대기기 삭제처리, MQ연동 : memberRetireAmqpTemplate
+		 *   - userId 탈퇴요청
+		 *   - 모바일회원
 		 */
 		if( StringUtils.isNotBlank(detailReq.getUserId())
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER) ) {
+				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE) ) {
 
 			/** 4-1-1. 회원 탈퇴 */
 			this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes.getUserInfo().getIsDormant());
@@ -202,9 +195,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				LOGGER.error("MQ process fail {}", mqInfo);
 			}
 		/**
-		 * 4-2 deviceId 요청이면서 모바일, 소셜아이디 타입이 아닌경우
-		 * 	 - 휴대기기삭제
-		 *   - MQ연동 : memberDelDeviceAmqpTemplate
+		 * 4-2. 휴대기기만 삭제 처리
+		 * 	 - 휴대기기삭제, MQ연동 : memberDelDeviceAmqpTemplate
+		 * 	 - deviceId 탈퇴요청
+		 * 	 - T store 회원, 소셜아이디회원 ( 모바일회원이 아닌경우 )
 		 */
 		} else {
 

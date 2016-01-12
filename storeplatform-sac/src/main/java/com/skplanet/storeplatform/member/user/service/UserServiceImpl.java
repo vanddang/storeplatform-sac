@@ -4040,15 +4040,21 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public CheckUserPwdResponse checkUserPwd(CheckUserPwdRequest chkUserPwdRequest){
 
-		CheckUserPwdResponse checkUserPwdResponse = new CheckUserPwdResponse();
+		CheckUserPwdResponse checkUserPwdResponse;
 
 		// 신규비밀번호 암호화
 		chkUserPwdRequest.setUserPw(createUserPwdEncyp(chkUserPwdRequest.getUserPw()));
 
 		if(StringUtils.equals(chkUserPwdRequest.getIsDormant(), "N")) {
-			checkUserPwdResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
+			checkUserPwdResponse = (CheckUserPwdResponse)this.commonDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest);
 		}else{
-			checkUserPwdResponse.setUserKey((String)this.idleDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
+			checkUserPwdResponse = (CheckUserPwdResponse)this.idleDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest);
+		}
+
+		if( checkUserPwdResponse == null ){
+			checkUserPwdResponse = new CheckUserPwdResponse();
+			checkUserPwdResponse.setUserKey("");
+			checkUserPwdResponse.setUserAuthToken("");
 		}
 
 		checkUserPwdResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
@@ -4083,9 +4089,21 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust){
 
-		CheckUserAuthTokenResponse checkUserAuthTkResponse = new CheckUserAuthTokenResponse();
+		CheckUserAuthTokenResponse checkUserAuthTkResponse;
 
-		checkUserAuthTkResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserAuthToken", chkUserAuthTkReqeust));
+		if(StringUtils.equals(chkUserAuthTkReqeust.getIsDormant(), "N")) {
+			checkUserAuthTkResponse = (CheckUserAuthTokenResponse)this.commonDAO.queryForObject(
+					"User.checkUserAuthToken", chkUserAuthTkReqeust);
+		}else{
+			checkUserAuthTkResponse = (CheckUserAuthTokenResponse)this.idleDAO.queryForObject(
+					"User.checkUserAuthToken", chkUserAuthTkReqeust);
+		}
+
+		if( checkUserAuthTkResponse == null ){
+			checkUserAuthTkResponse = new CheckUserAuthTokenResponse();
+			checkUserAuthTkResponse.setUserKey("");
+			checkUserAuthTkResponse.setUserAuthToken("");
+		}
 
 		checkUserAuthTkResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 					"response.ResultMessage.success"));
