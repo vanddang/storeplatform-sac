@@ -77,13 +77,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Autowired
 	private SyrupSCI syrupSCI;
 
-	private static CommonRequest commonRequest;
-
-	static {
-        // FIXME is it correct?
-		commonRequest = new CommonRequest();
-	}
-
 	@Autowired
 	private UserSCI userSCI;
 
@@ -106,9 +99,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public ExistRes exist(SacRequestHeader sacHeader, ExistReq req) {
 		ExistRes result = new ExistRes();
 		DetailReq detailReq = new DetailReq();
-
-		/** 1. 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 
 		/** 2. 모번호 조회 (989 일 경우만) */
 		if (req.getDeviceId() != null) {
@@ -155,9 +145,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 */
 	@Override
 	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req) {
-
-		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -294,8 +281,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public MbrOneidSacRes srhUserOneId(SacRequestHeader sacHeader, MbrOneidSacReq req) {
 		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+        CommonRequest commonRequest = CommonRequest.convert(sacHeader);
 
 		/* 회원 기본 정보 */
 		UserInfo info = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
@@ -384,7 +370,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public SearchIdSacRes srhId(SacRequestHeader sacHeader, SearchIdSacReq req) {
 
 		/** 1. 헤더 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+        // Removed
 
 		List<SearchIdSac> sacList = new ArrayList<SearchIdSac>();
 
@@ -409,7 +395,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			keySearchList.add(keySchUserKey);
 
 			SearchExtentUserRequest srhExtUserRequest = new SearchExtentUserRequest();
-			srhExtUserRequest.setCommonRequest(commonRequest);
+			srhExtUserRequest.setCommonRequest(CommonRequest.convert(sacHeader));
 			srhExtUserRequest.setKeySearchList(keySearchList);
 			srhExtUserRequest.setUserInfoYn(MemberConstants.USE_Y);
 
@@ -453,7 +439,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public SearchPasswordSacRes srhPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req) {
 
 		/** 1. 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+        CommonRequest commonRequest = CommonRequest.convert(sacHeader);
 
 		/** 2. 회원 정보 조회 */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -463,7 +449,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		keySearchList.add(keySchUserKey);
 
 		SearchExtentUserRequest srhExtUserRequest = new SearchExtentUserRequest();
-		srhExtUserRequest.setCommonRequest(commonRequest);
+
+        srhExtUserRequest.setCommonRequest(commonRequest);
 		srhExtUserRequest.setKeySearchList(keySearchList);
 		srhExtUserRequest.setUserInfoYn(MemberConstants.USE_Y);
 
@@ -552,7 +539,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public List<SearchIdSac> srhUserEmail(SearchIdSacReq req, SacRequestHeader sacHeader) {
 
 		SearchUserEmailRequest scReq = new SearchUserEmailRequest();
-		scReq.setCommonRequest(commonRequest);
+		scReq.setCommonRequest(CommonRequest.convert(sacHeader));
 		scReq.setUserEmail(req.getUserEmail());
 
 		SearchUserEmailResponse scRes = this.userSCI.searchUserEmail(scReq);
@@ -582,12 +569,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/* 각 단말의 OS별 누적 가입자 수 조회 */
 	@Override
 	public ListDailyPhoneOsSacRes listDailyPhoneOs(SacRequestHeader sacHeader) {
-		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		SearchDeviceOSNumberRequest scReq = new SearchDeviceOSNumberRequest();
-		scReq.setCommonRequest(commonRequest);
+		scReq.setCommonRequest(CommonRequest.convert(sacHeader));
 		SearchDeviceOSNumberResponse scRes = this.userSCI.searchDeviceOSNumber(scReq);
 
 		Iterator<List<DeviceSystemStats>> it = scRes.getDeviceSystemStatsMap().values().iterator();
@@ -667,7 +651,7 @@ public class UserSearchServiceImpl implements UserSearchService {
          * SearchUserRequest setting
          */
         SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
-        searchExtentUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+        searchExtentUserRequest.setCommonRequest(CommonRequest.convert(sacHeader));
         searchExtentUserRequest.setKeySearchList(keySearchList);
 
         // 검색 테이블 조건
