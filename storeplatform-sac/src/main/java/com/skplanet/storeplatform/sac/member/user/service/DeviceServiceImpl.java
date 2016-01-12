@@ -444,6 +444,7 @@ public class DeviceServiceImpl implements DeviceService {
                 mdnMap.put("01065261234", "4486071534");
                 mdnMap.put("01065261241", "4486071541");
 				mdnMap.put("01066786220", "7243371580");
+				mdnMap.put("01066786221", "7243371581");
 				if(mdnMap.get(deviceInfo.getMdn()) != null){
 					deviceInfo.setSvcMangNum(mdnMap.get(deviceInfo.getMdn()));
 				}else{
@@ -1853,7 +1854,7 @@ public class DeviceServiceImpl implements DeviceService {
 
             resDeviceKeyList.add(removeListRes);
         }
-        removeDeviceRes.setDeviceKeyList(resDeviceKeyList);
+		removeDeviceRes.setDeviceKeyList(resDeviceKeyList);
         removeDeviceRes.setRemoveDeviceCount(String.valueOf(removeDeviceResponse.getDelDeviceCount()));
 
         return removeDeviceRes;
