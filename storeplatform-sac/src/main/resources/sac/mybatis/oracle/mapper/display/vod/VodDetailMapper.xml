@@ -832,7 +832,6 @@
 								                              AND (SD.DEVICE_MODEL_CD = #{deviceModel} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 								                              AND DV.DEVICE_MODEL_CD = #{deviceModel} AND DV.USE_YN = 'Y'
 								                              AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
-								                              AND (CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' AND NVL(PD.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT' ELSE 'SUPPORT' END) = 'SUPPORT'
 								                              AND DECODE( DV.SD_VIDEO_SPRT_YN , 'Y' , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( DV.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1
 								                              AND PD.SVC_GRP_CD = 'DP000203' AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD IN ('DP001112', 'DP001115')
                                                           ) T1
@@ -1059,7 +1058,6 @@
                             AND (SD.DEVICE_MODEL_CD = #{deviceModel} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
                             AND DV.DEVICE_MODEL_CD = #{deviceModel} AND DV.USE_YN = 'Y'
                             AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
-                            AND (CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' AND NVL(PD.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT' ELSE 'SUPPORT' END) = 'SUPPORT'
                             AND DECODE( DV.SD_VIDEO_SPRT_YN , 'Y' , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( DV.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1
                             AND PD.SVC_GRP_CD = 'DP000203' AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD IN ('DP001112', 'DP001115')
                             <if test="cid !=null">
@@ -1182,9 +1180,6 @@
                            AND DV.USE_YN = 'Y'
                            AND SC.PROD_ID = PD.PROD_ID
                            AND SC.SALE_YN ='Y'
-                           AND ( CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' AND NVL(PD.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
-                                                                                                    ELSE 'SUPPORT'
-                                  END) = 'SUPPORT'
                            AND DECODE( DV.SD_VIDEO_SPRT_YN , 'Y' , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( DV.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1
                            AND PD.SVC_GRP_CD = 'DP000203'
                            AND PD.CONTENTS_TYPE_CD = 'PD002502'
@@ -1214,6 +1209,20 @@
 		   AND SC.SALE_YN = 'Y'
 		 ORDER BY SC.SUB_CONTENTS_ID  , PD.LAST_DEPLOY_DT DESC
     </select>    
-    
+
+	<!-- 조회하는 단말에 대해서 VOD 지원 여부, DRM 지원 여부를 확인. -->
+	<select id="getIsDeviceSupported" parameterType="map" resultType="string">
+		SELECT /* VodDetailMapper.getIsDeviceSupported, VOD 단말 지원정보(VOD 지원정보, DRM 지원정보) 조회, 심대진/다모아솔루션, 2016-01-11 */
+		       (CASE WHEN SD_VIDEO_SPRT_YN = 'Y' THEN (
+		                                                CASE WHEN VIDEO_DRM_SPRT_YN = 'N' AND NVL((SELECT DRM_YN FROM TB_DP_PROD WHERE PROD_ID = #{channelId}), 'N') = 'Y' THEN 'N'
+		                                                     ELSE 'Y'
+		                                                 END
+		                                              )
+		             ELSE 'N'
+		         END) AS isDeviceSupported
+		  FROM TB_CM_DEVICE
+		 WHERE DEVICE_MODEL_CD = #{deviceModel}
+		   AND USE_YN = 'Y'
+	</select>
 </mapper>
 
