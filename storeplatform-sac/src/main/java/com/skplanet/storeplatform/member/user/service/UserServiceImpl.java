@@ -685,7 +685,6 @@ public class UserServiceImpl implements UserService {
 		RemoveUserResponse removeUserResponse = new RemoveUserResponse();
 
 		UserMbr usermbr = new UserMbr();
-		usermbr.setTenantID(removeUserRequest.getCommonRequest().getTenantID());
 		usermbr.setUserKey(removeUserRequest.getUserKey());
 
 		String isRegistered = null;
@@ -708,7 +707,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		usermbr = new UserMbr();
-		usermbr.setTenantID(removeUserRequest.getCommonRequest().getTenantID());
 		usermbr.setUserKey(removeUserRequest.getUserKey());
 		usermbr.setSecedeReasonCode(removeUserRequest.getSecedeReasonCode());
 		usermbr.setSecedeReasonMessage(removeUserRequest.getSecedeReasonMessage());
