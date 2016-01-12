@@ -290,6 +290,9 @@ public class VodServiceImpl implements VodService {
 				param.put("paymentContentIdList", paymentContentIdList);
 			}
 
+			// 단말 VOD 지원여부, DRM 지원여부.
+			product.setIsDeviceSupported(this.getDeviceSupported(req));
+
 			// ###################################################################################
 			// 2. subProjectList
 			// ###################################################################################
@@ -1833,5 +1836,33 @@ public class VodServiceImpl implements VodService {
 	private List<VodDetail> getSubContentsIdList(Map<String, Object> param) {
 		List<VodDetail> subContentsIdListList = this.commonDAO.queryForList("VodDetail.getSubContentsIdList", param, VodDetail.class);
 		return subContentsIdListList;
-	}		
+	}
+
+	/**
+	 * 조회하는 단말에 대해서 VOD 지원 여부, DRM 지원 여부를 확인.
+	 * @param req
+	 * @return
+	 */
+	private String getDeviceSupported(VodDetailReq req) {
+
+		/**
+		 * 단말 모델정보가 존재 하지 않을 경우.
+		 */
+		if(com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(req.getDeviceModel())){
+			throw new StorePlatformException("SAC_DSP_0029");
+		}
+
+		// 단말 지원정보 조회. (VOD 지원여부, 채널에 DRM 지원여부)
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("channelId", req.getChannelId());
+		param.put("deviceModel", req.getDeviceModel());
+		String isDeviceSupported = this.commonDAO.queryForObject("VodDetail.getIsDeviceSupported", param, String.class);
+
+		if(isDeviceSupported == null || "".equals(isDeviceSupported)) {
+			return "N";
+		}
+
+		return isDeviceSupported;
+	}
+
 }
