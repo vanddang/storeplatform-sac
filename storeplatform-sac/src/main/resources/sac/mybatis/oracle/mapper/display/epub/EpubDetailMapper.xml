@@ -113,6 +113,12 @@
 			  	, (CASE WHEN ML.STATS_KEY IS NOT NULL THEN 'Y' ELSE 'N' END) AS LIKE_YN
               	</if>
               	, NVL(MP.VERTICAL_YN, 'N') AS VERTICAL_YN
+				, (CASE WHEN EXISTS ( SELECT 'Y'
+									  FROM TB_DP_SPRT_DEVICE SD, TB_CM_DEVICE CD
+									  WHERE SD.PROD_ID = P2.PROD_ID AND (SD.DEVICE_MODEL_CD = #{deviceModel} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+									  AND CD.DEVICE_MODEL_CD = #{deviceModel} AND CD.USE_YN = 'Y')	THEN 'Y'
+						ELSE 'N'
+				  END) AS DEVICE_SPRT_YN
 		      FROM
 		         (
 	              SELECT  TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
@@ -138,8 +144,6 @@
 	                      , TB_DP_PROD D
 	                      , TB_DP_TENANT_PROD G
 	                      , TB_DP_TENANT_PROD_PRICE O
-	                      , TB_DP_SPRT_DEVICE K
-	                      , TB_CM_DEVICE CD
 						  , TB_DP_PROD_RSHP RSHP
                           , TB_DP_PROD CPD
                           , TB_DP_EBOOK_PROD EP
@@ -160,8 +164,6 @@
 	                    AND G.EXPO_YN = 'Y'
 						AND RSHP.PROD_ID = D.PROD_ID
                       	AND RSHP.PART_PROD_ID = CPD.PROD_ID
-						AND CPD.PROD_ID = K.PROD_ID AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
-						AND CD.DEVICE_MODEL_CD = #{deviceModel} AND CD.USE_YN = 'Y'
                       	AND CPD.SVC_GRP_CD = 'DP000203' AND CPD.CONTENTS_TYPE_CD = 'PD002502' AND CPD.SVC_TYPE_CD = 'DP001116'
                       	AND CPD.PROD_ID = CTP.PROD_ID AND CTP.TENANT_ID = G.TENANT_ID AND CTP.EXPO_YN = 'Y'
                       	AND CPD.PROD_ID = CTPR.PROD_ID AND CTPR.TENANT_ID = CTP.TENANT_ID
