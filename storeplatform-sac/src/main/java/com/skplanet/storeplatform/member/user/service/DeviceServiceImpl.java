@@ -1088,15 +1088,11 @@ public class DeviceServiceImpl implements DeviceService {
 			row = 1;
 		}
 
-		// 휴대기기 설정정보 초기화
+		// 휴대기기 설정정보 삭제
 		UserMbrDeviceSet userMbrDeviceSet = new UserMbrDeviceSet();
 		userMbrDeviceSet.setUserKey(userMbrDevice.getUserKey());
 		userMbrDeviceSet.setDeviceKey(userMbrDevice.getDeviceKey());
-		userMbrDeviceSet.setPinNo("");
-		userMbrDeviceSet.setAuthCnt("");
-		userMbrDeviceSet.setAuthLockYn("N");
-		// TODO. 테스트를 위해 주석처리
-		//this.commonDAO.delete("DeviceSet.modifyDeviceSet", userMbrDeviceSet);
+		this.commonDAO.delete("DeviceSet.removeDeviceSetInfo", userMbrDeviceSet);
 
 		// 대표기기가 invalid된 경우 최신 등록 기기를 대표기기로 등록한다.
 		if (StringUtils.equals(userMbrDevice.getIsPrimary(), Constant.TYPE_YN_Y)) {
