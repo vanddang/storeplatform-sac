@@ -149,19 +149,12 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 		/**
 		 *  4-1. 요청 파라미터에 따라서 분기 처리한다.
-		 *  userId 탈퇴요청
-		 *   - 아이디, 휴대기기 삭제
-		 *   - MQ연동 : memberRetireAmqpTemplate
-		 *
-		 *  deviceId 탈퇴요청
-		 *   - 모바일회원, 소셜아이디 회원일 경우 >> 아이디, 휴대기기삭제
-		 *   	- MQ연동 : memberRetireAmqpTemplate
+		 *  아이디, 휴대기기 삭제처리, MQ연동 : memberRetireAmqpTemplate
+		 *   - userId 탈퇴요청
+		 *   - 모바일회원
 		 */
 		if( StringUtils.isNotBlank(detailReq.getUserId())
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER) ) {
+				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE) ) {
 
 			/** 4-1-1. 회원 탈퇴 */
 			this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes.getUserInfo().getIsDormant());
@@ -202,9 +195,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				LOGGER.error("MQ process fail {}", mqInfo);
 			}
 		/**
-		 * 4-2 deviceId 요청이면서 모바일, 소셜아이디 타입이 아닌경우
-		 * 	 - 휴대기기삭제
-		 *   - MQ연동 : memberDelDeviceAmqpTemplate
+		 * 4-2. 휴대기기만 삭제 처리
+		 * 	 - 휴대기기삭제, MQ연동 : memberDelDeviceAmqpTemplate
+		 * 	 - deviceId 탈퇴요청
+		 * 	 - T store 회원, 소셜아이디회원 ( 모바일회원이 아닌경우 )
 		 */
 		} else {
 

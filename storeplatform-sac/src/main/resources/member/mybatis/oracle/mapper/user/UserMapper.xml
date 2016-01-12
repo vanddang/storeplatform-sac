@@ -37,9 +37,10 @@
     </update>
 
     <!-- 회원 비밀번호 존재여부 체크 -->
-    <select id="checkUserPassword" parameterType="chkUserPwdRequest" resultType="String">
+    <select id="checkUserPassword" parameterType="chkUserPwdRequest" resultType="chkUserPwdResponse">
         SELECT /* UserMapper.xml, checkPasswordUser, SAC(SC), 최진호, 2015-12-23 */
-            INSD_USERMBR_NO
+            INSD_USERMBR_NO AS userKey
+            ,ACT_TK AS userAuthToken
         FROM
             TB_US_OUSERMBR_PWD
         WHERE

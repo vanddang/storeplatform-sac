@@ -22,6 +22,9 @@ public class CheckUserPwdResponse extends CommonInfo implements Serializable {
     /** 사용자 Key. */
     private String userKey;
 
+    /** 사용자 인증 토큰 */
+    private String userAuthToken;
+
     /**
      * 공통 응답 Value Object를 리턴한다.
      *
@@ -58,6 +61,25 @@ public class CheckUserPwdResponse extends CommonInfo implements Serializable {
      */
     public void setUserKey(String userKey) {
         this.userKey = userKey;
+    }
+
+    /**
+     * 사용자 인증 토큰을 리턴한다.
+     *
+     * @return userAuthToken - 사용자 인증 토큰
+     */
+    public String getUserAuthToken() {
+        return userAuthToken;
+    }
+
+    /**
+     * 사용자 인증 토큰을 설정한다.
+     *
+     * @param userAuthToken
+     *            사용자 인증 토큰
+     */
+    public void setUserAuthToken(String userAuthToken) {
+        this.userAuthToken = userAuthToken;
     }
 
     /**

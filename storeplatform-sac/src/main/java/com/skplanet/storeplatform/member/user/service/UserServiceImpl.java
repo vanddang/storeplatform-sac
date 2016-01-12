@@ -4046,9 +4046,13 @@ public class UserServiceImpl implements UserService {
 		chkUserPwdRequest.setUserPw(createUserPwdEncyp(chkUserPwdRequest.getUserPw()));
 
 		if(StringUtils.equals(chkUserPwdRequest.getIsDormant(), "N")) {
-			checkUserPwdResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
+			checkUserPwdResponse = (CheckUserPwdResponse)this.commonDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest);
 		}else{
-			checkUserPwdResponse.setUserKey((String)this.idleDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
+			checkUserPwdResponse = (CheckUserPwdResponse)this.idleDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest);
+		}
+
+		if( checkUserPwdResponse == null ){
+			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
 		}
 
 		checkUserPwdResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
