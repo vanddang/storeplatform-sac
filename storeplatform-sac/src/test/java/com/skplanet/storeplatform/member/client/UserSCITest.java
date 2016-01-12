@@ -4903,7 +4903,7 @@ public class UserSCITest {
 			for (LimitTarget policyCode : searchPolicyResponse.getLimitTargetList()) {
 				LOGGER.debug("응답 , policyCode : {}", policyCode.getLimitPolicyCode());
 				LOGGER.debug("응답 , policyCode : {}", policyCode.getLimitPolicyKey());
-				LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
+				//LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
 			}
 		}
 
@@ -5068,7 +5068,7 @@ public class UserSCITest {
 			for (LimitTarget policyCode : updatePolicyResponse.getLimitTargetList()) {
 				LOGGER.debug("응답 , policyCode : {}", policyCode.getLimitPolicyCode());
 				LOGGER.debug("응답 , policyKey : {}", policyCode.getLimitPolicyKey());
-				LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
+				//LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
 			}
 		}
 	}
@@ -5155,7 +5155,7 @@ public class UserSCITest {
 			for (LimitTarget policyCode : updatePolicyResponse.getLimitTargetList()) {
 				LOGGER.debug("응답 , policyCode : {}", policyCode.getLimitPolicyCode());
 				LOGGER.debug("응답 , policyKey : {}", policyCode.getLimitPolicyKey());
-				LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
+				//LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
 			}
 		}
 	}

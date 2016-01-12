@@ -343,11 +343,6 @@ public class UserSCIController implements UserSCI {
 			}
 		}
 
-        // isMobile 일 경우 deviceInfo 정보 체크
-        if(loginUserRequest.getIsMobile().equals(Constant.TYPE_YN_Y) && loginUserRequest.getDeviceInfo() == null){
-            throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-        }
-
 		// TLog
 		final String tlogIP = loginUserRequest.getIpAddress();
 		final String tlogSystemID = loginUserRequest.getCommonRequest().getSystemID();

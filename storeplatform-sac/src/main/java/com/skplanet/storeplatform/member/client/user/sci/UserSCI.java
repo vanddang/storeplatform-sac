@@ -196,7 +196,9 @@ public interface UserSCI {
 	 * @param searchPolicyRequest
 	 *            제한 정책 목록 조회 요청 Value Object
 	 * @return searchPolicyResponse - 제한 정책 목록 조회 응답 Value Object
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#searchPolicyList(SearchPolicyRequest)} instead.
 	 */
+	@Deprecated
 	public SearchPolicyResponse searchPolicyList(SearchPolicyRequest searchPolicyRequest);
 
 	/**
@@ -207,7 +209,9 @@ public interface UserSCI {
 	 * @param updatePolicyRequest
 	 *            제한 정책정보 등록/수정 요청 Value Object
 	 * @return updatePolicyResponse - 제한 정책정보 등록/수정 응답 Value Object
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#updatePolicy(UpdatePolicyRequest)} instead.
 	 */
+	@Deprecated
 	public UpdatePolicyResponse updatePolicy(UpdatePolicyRequest updatePolicyRequest);
 
 	/**
@@ -218,7 +222,9 @@ public interface UserSCI {
 	 * @param updatePolicyRequest
 	 *            UpdatePolicyRequest
 	 * @return updatePolicyResponse - UpdatePolicyResponse
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#updatePolicyHistory(UpdatePolicyRequest)} instead.
 	 */
+	@Deprecated
 	public UpdatePolicyResponse updatePolicyHistory(UpdatePolicyRequest updatePolicyRequest);
 
 	/**
@@ -229,7 +235,9 @@ public interface UserSCI {
 	 * @param updatePolicyRequest
 	 *            UpdatePolicyRequest
 	 * @return updatePolicyResponse - UpdatePolicyResponse
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#insertPolicy(UpdatePolicyRequest)} instead.
 	 */
+	@Deprecated
 	public UpdatePolicyResponse insertPolicy(UpdatePolicyRequest updatePolicyRequest);
 
 	/**
@@ -240,7 +248,9 @@ public interface UserSCI {
 	 * @param removePolicyRequest
 	 *            제한 정책정보 삭제 요청 Value Object
 	 * @return removePolicyResponse - 제한 정책정보 삭제 응답 Value Object
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#removePolicy(RemovePolicyRequest)} instead.
 	 */
+	@Deprecated
 	public RemovePolicyResponse removePolicy(RemovePolicyRequest removePolicyRequest);
 
 	/**

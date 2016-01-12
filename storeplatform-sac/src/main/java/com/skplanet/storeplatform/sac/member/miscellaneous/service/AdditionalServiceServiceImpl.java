@@ -23,8 +23,10 @@ import org.springframework.stereotype.Service;
  * 
  * Updated on : 2014. 1. 7. Updated by : 김다슬, 인크로스.
  * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Micellaneos 클래스에서 부가 서비스 관련 기능 클래스 분리
+ * @deprecated Onestore 부가서비스 기능 미 제공
  */
 @Service
+@Deprecated
 public class AdditionalServiceServiceImpl implements AdditionalServiceService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdditionalServiceServiceImpl.class);
 
@@ -39,8 +41,10 @@ public class AdditionalServiceServiceImpl implements AdditionalServiceService {
 	 * @param request
 	 *            CreateAdditionalServiceReq
 	 * @return CreateAdditionalServiceRes
+	 * @deprecated Onestore 부가서비스 기능 미 제공
 	 */
 	@Override
+	@Deprecated
 	public CreateAdditionalServiceRes regAdditionalService(CreateAdditionalServiceReq request) {
 
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
@@ -79,8 +83,10 @@ public class AdditionalServiceServiceImpl implements AdditionalServiceService {
 	 * @param request
 	 *            GetAdditionalServiceReq
 	 * @return GetAdditionalServiceRes
+	 * @deprecated Onestore 부가서비스 기능 미 제공
 	 */
 	@Override
+	@Deprecated
 	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) {
 
 		ServiceSubscriptionCheckEcReq serviceSubscriptionCheckEcReq = new ServiceSubscriptionCheckEcReq();

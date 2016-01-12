@@ -428,6 +428,23 @@ public class UserServiceImpl implements UserService {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
 			}
 
+            userMbrRetrieveUserMbrPwd.setUserID(tempDevice.getUserID());
+            userMbrRetrieveUserMbrPwd = this.commonDAO.queryForObject("User.getUserMbrRetrievePWD",
+                    userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
+
+            if (userMbrRetrieveUserMbrPwd == null) {
+                // 휴면DB조회
+                userMbrRetrieveUserMbrPwd = new UserMbrRetrieveUserMbrPwd();
+                userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
+                userMbrRetrieveUserMbrPwd = this.idleDAO.queryForObject("User.getUserMbrRetrievePWD",
+                        userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
+                if (userMbrRetrieveUserMbrPwd == null) {
+                    throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+                } else {
+                    isDormant = Constant.TYPE_YN_Y;
+                }
+            }
+
 			// TLog
 			final String tlogUserKey = tempDevice.getUserKey();
 			final String tlogDeviceID = tempDevice.getDeviceID();
@@ -1831,7 +1848,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 
 			/*
 			 * if (limitTarget.getLimitTargetNo() == null) { int seq =
@@ -1882,7 +1899,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTargetNo = limitTargetList.get(i);
-			limitTargetNo.setTenantID(removePolicyRequest.getCommonRequest().getTenantID());
+			//limitTargetNo.setTenantID(removePolicyRequest.getCommonRequest().getTenantID());
 
 			LOGGER.debug(">>>> >>> UserServiceImpl before removePolicy : {}", limitTargetNo);
 			row = this.commonDAO.delete("User.removePolicy", limitTargetNo);
@@ -3614,7 +3631,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 			row = this.commonDAO.update("User.updatePolicyHistory", limitTarget);
 			if (row <= 0) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
@@ -3646,7 +3663,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 			row = this.commonDAO.update("User.insertPolicy", limitTarget);
 			if (row <= 0) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));

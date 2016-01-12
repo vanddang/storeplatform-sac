@@ -242,14 +242,14 @@
     <!-- DeviceKey 로 MBR_ID 조회(로그인) -->
     <select id="getUserIDByDeviceKey" parameterType="loginUserRequest" resultType="userMbrDevice">
         SELECT  /* UserMapper.xml, getUserIDByDeviceKey, SAC(SC), 윤보영, 2016-01-06 */
-                u.deviceNickName AS deviceNickName,
+                u.userID AS userID,
                 u.nativeID AS nativeID,
                 u.deviceTelecom AS deviceTelecom,
                 u.svcMangNum AS svcMangNum,
                 u.deviceModelNo AS deviceModelNo,
                 u.deviceId AS deviceId,
                 u.mdn AS mdn
-        FROM ( SELECT a.mbr_id AS deviceNickName,
+        FROM ( SELECT a.mbr_id AS userID,
                 b.device_natv_id AS nativeID,
                 b.mno_cd AS deviceTelecom,
                 b.svc_mang_no AS svcMangNum,
@@ -1102,7 +1102,7 @@
     
     <!-- policy 업데이트 History -->
     <update id="updatePolicyHistory">
-       UPDATE tb_us_ousermbr_limt_target   /* updatePolicyHistory.updatePolicyHistory, policy 업데이트 History, wisestone_mikepark, 2014-06-27 */
+       UPDATE tb_us_olimt_target   /* updatePolicyHistory.updatePolicyHistory, policy 업데이트 History, wisestone_mikepark, 2014-06-27 */
           SET 
               end_dt = SYSDATE,
               upd_id = #{updateID},
@@ -1115,7 +1115,7 @@
     <!-- policy 등록 -->
     <insert id="insertPolicy">
        INSERT /* updatePolicyHistory.insertPolicy, policy 업데이트 History, wisestone_mikepark, 2014-06-27 */
-              INTO tb_us_ousermbr_limt_target (
+              INTO tb_us_olimt_target (
                    seq,
                    limt_policy_cd,
                    start_dt,
@@ -1156,7 +1156,7 @@
     <!-- policy 등록/수정 -->
     <update id="updatePolicy">
         MERGE  /* UserMapper.updatePolicy, policy 등록/수정, wisestone_dinga, 2013-12-30 */
-               INTO tb_us_ousermbr_limt_target u 
+               INTO tb_us_olimt_target u
         USING  DUAL ON
                (
                        u.limt_policy_cd  = #{limitPolicyCode} 
@@ -1175,7 +1175,7 @@
 
                <if test="limitAmount != null">
                ,u.pre_limt_amt = (SELECT  limt_amt 
-                                   FROM  tb_us_ousermbr_limt_target
+                                   FROM  tb_us_olimt_target
                                   WHERE  limt_policy_cd = #{limitPolicyCode}
                                     AND  limt_policy_key = #{limitPolicyKey}
                                   )
@@ -1218,7 +1218,7 @@
     <!-- policy Key 수정 -->
     <update id="updatePolicyKey">
        UPDATE  /* UserMapper.updatePolicyKey, policy Key 수정, wisestone_dinga, 2014-02-25 */
-               tb_us_ousermbr_limt_target
+               tb_us_olimt_target
           SET  limt_policy_key = #{newLimitPolicyKey}
         WHERE  limt_policy_key = #{oldLimitPolicyKey}
     </update>
@@ -1226,7 +1226,7 @@
     <!-- policy Value 수정 -->
     <update id="updatePolicyValue">
        UPDATE  /* UserMapper.updatePolicyValue, apply value 수정, wisestone_dinga, 2014-02-25 */
-               tb_us_ousermbr_limt_target
+               tb_us_olimt_target
           SET  policy_apply_value = #{newApplyValue}
         WHERE  policy_apply_value = #{oldApplyValue}
     </update>
@@ -1281,7 +1281,7 @@
     <!-- Policy 삭제 -->
     <update id="removePolicy" parameterType="limitTarget">
         UPDATE  /* UserMapper.removePolicy, Policy 삭제, wisestone_dinga, 2013-12-30 */
-                tb_us_ousermbr_limt_target
+                tb_us_olimt_target
            SET  end_dt = SYSDATE
          WHERE  limt_policy_cd = #{limitPolicyCode}
            AND  limt_policy_key = #{limitPolicyKey}
@@ -1437,7 +1437,7 @@
                 , pre_limt_amt preLimitAmount
                 , ins_dt insDate
                 , line_mang_status lineMangStatus
-          FROM  tb_us_ousermbr_limt_target
+          FROM  tb_us_olimt_target
          WHERE  end_dt > SYSDATE
                 <if test="limitPolicyKey != null">AND limt_policy_key = #{limitPolicyKey} AND </if>
                 <foreach collection="limitPolicyCodeList" item="keySearch"   open="(" close=")" separator="OR">

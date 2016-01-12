@@ -204,55 +204,65 @@ public interface UserService {
 	 * <pre>
 	 * 제한 정책 목록을 조회하는 기능을 제공한다.
 	 * </pre>
-	 * 
+	 *
 	 * @param searchPolicyRequest
 	 *            제한 정책 목록 조회 요청 Value Object
 	 * @return searchPolicyResponse - 제한 정책 목록 조회 응답 Value Object
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#searchPolicyList} instead.
 	 */
-	public SearchPolicyResponse searchPolicyList(SearchPolicyRequest searchPolicyRequest);
+	@Deprecated
+	SearchPolicyResponse searchPolicyList(SearchPolicyRequest searchPolicyRequest);
 
 	/**
 	 * <pre>
 	 * 제한 정책정보를 등록/수정하는 기능을 제공한다.
 	 * </pre>
-	 * 
+	 *
 	 * @param updatePolicyRequest
 	 *            제한 정책정보 등록/수정 요청 Value Object
 	 * @return updatePolicyResponse - 제한 정책정보 등록/수정 응답 Value Object
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#updatePolicy(UpdatePolicyRequest)} instead.
 	 */
+	@Deprecated
 	public UpdatePolicyResponse updatePolicy(UpdatePolicyRequest updatePolicyRequest);
 
 	/**
 	 * <pre>
 	 * 제한 정책정보 히스토리를 업데이트하는 기능을 제공한다.
 	 * </pre>
-	 * 
+	 *
 	 * @param updatePolicyRequest
 	 *            UpdatePolicyRequest
 	 * @return UpdatePolicyResponse
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#updatePolicyHistory(UpdatePolicyRequest)} instead.
 	 */
+	@Deprecated
 	public UpdatePolicyResponse updatePolicyHistory(UpdatePolicyRequest updatePolicyRequest);
 
 	/**
 	 * <pre>
 	 * 제한 정책정보를 등록하는 기능을 제공한다.
 	 * </pre>
-	 * 
+	 *
 	 * @param updatePolicyRequest
 	 *            UpdatePolicyRequest
 	 * @return UpdatePolicyResponse
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#insertPolicy(UpdatePolicyRequest)} instead.
 	 */
+	@Deprecated
 	public UpdatePolicyResponse insertPolicy(UpdatePolicyRequest updatePolicyRequest);
 
 	/**
 	 * <pre>
 	 * 제한 정책정보 삭제하는 기능을 제공한다.
 	 * </pre>
-	 * 
+	 *
 	 * @param removePolicyRequest
 	 *            제한 정책정보 삭제 요청 Value Object
 	 * @return removePolicyResponse - 제한 정책정보 삭제 응답 Value Object
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#removePolicy(RemovePolicyRequest)} instead.
 	 */
+	@Deprecated
 	public RemovePolicyResponse removePolicy(RemovePolicyRequest removePolicyRequest);
 
 	/**
@@ -428,7 +438,9 @@ public interface UserService {
 	 * @param updatePolicyKeyRequest
 	 *            제한 정책정보 key 수정 요청 Value Object
 	 * @return updatePolicyKeyResponse - 제한 정책정보 key 수정 응답 Value Object
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#updatePolicyKey(UpdatePolicyKeyRequest)} instead.
 	 */
+	@Deprecated
 	public UpdatePolicyKeyResponse updatePolicyKey(UpdatePolicyKeyRequest updatePolicyKeyRequest);
 
 	/**
@@ -439,7 +451,9 @@ public interface UserService {
 	 * @param updatePolicyValueRequest
 	 *            제한 정책정보 Value 수정 요청 Value Object
 	 * @return updatePolicyValueResponse - 제한 정책정보 Value 수정 응답 Value Object
+	 * @deprecated use {@link com.skplanet.storeplatform.sac.member.user.service.LimitTargetService#updatePolicyValue(UpdatePolicyValueRequest)} instead.
 	 */
+	@Deprecated
 	public UpdatePolicyValueResponse updatePolicyValue(UpdatePolicyValueRequest updatePolicyValueRequest);
 
 	/**

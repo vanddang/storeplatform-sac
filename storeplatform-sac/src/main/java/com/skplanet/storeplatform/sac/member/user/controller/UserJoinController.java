@@ -257,4 +257,32 @@ public class UserJoinController {
 		return res;
 
 	}
+
+	/**
+	 * <pre>
+	 * 모바일 전용 회원 가입 (MDN 회원 가입) v2.
+	 * </pre>
+	 *
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	@RequestMapping(value = "/member/user/createByMdn/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateByMdnV2SacRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnV2SacReq req) {
+
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 2.1.70. 모바일 전용 회원 가입 (MDN 회원 가입) v2 #####");
+		LOGGER.debug("####################################################");
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		CreateByMdnV2SacRes res = this.svc.regByMdnV2(sacHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
+	}
 }
