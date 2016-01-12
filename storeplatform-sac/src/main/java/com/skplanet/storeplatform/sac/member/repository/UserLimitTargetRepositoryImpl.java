@@ -12,8 +12,8 @@ package com.skplanet.storeplatform.sac.member.repository;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.jpa.impl.JPAUpdateClause;
+import com.skplanet.storeplatform.sac.member.domain.QUserLimitTarget;
 import com.skplanet.storeplatform.sac.member.domain.UserLimitTarget;
-import com.skplanet.storeplatform.sac.member.domain.QLimitTarget;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +35,7 @@ import java.util.List;
 @Repository
 public class UserLimitTargetRepositoryImpl implements UserLimitTargetRepository {
 
-    public static final QLimitTarget $ = QLimitTarget.limitTarget;
+    public static final QUserLimitTarget $ = QUserLimitTarget.userLimitTarget;
 
     @PersistenceContext(unitName = "puMbr")
     private EntityManager em;
