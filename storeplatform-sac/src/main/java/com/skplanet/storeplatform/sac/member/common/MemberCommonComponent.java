@@ -41,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
@@ -1218,6 +1219,7 @@ public class MemberCommonComponent {
 	 * SKT, KT, U+ 각 통신사의 서비스관리번호를 구한다.
 	 * SKT는 mdn, deviceTelecom 파라메터만 필수.
 	 * KT/U+는 모든 파라메터 필수.
+	 * KT/U+ 응답결과에 따라 Exception을 발생시킨다. 단, 시스템 오류 응답, E/C 연동 에러시에는 svcMangNo null로 리턴한다.
 	 * </pre>
 	 *
 	 * @param mdn
@@ -1231,8 +1233,8 @@ public class MemberCommonComponent {
 	 * @return svcMangNo
 	 */
 	public String getSvcMangNo(String mdn, String deviceTelecom, String nativeId, String simSerialNo){
-
 		String svcMangNo = null;
+
 		if(StringUtils.isBlank(mdn)){
 			throw new StorePlatformException("SAC_MEM_0001", "mdn");
 		}
@@ -1260,8 +1262,9 @@ public class MemberCommonComponent {
 		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 			UserEcRes userRes = this.getMappingInfo(mdn, "mdn");
 			svcMangNo = userRes.getSvcMngNum();
-		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
+		} else {
 			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+			MarketAuthorizeEcRes marketRes = null;
 			marketReq.setTrxNo(new StringBuffer("trx").append("-")
 					.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
 					.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString());
@@ -1269,22 +1272,30 @@ public class MemberCommonComponent {
 			marketReq.setDeviceTelecom(deviceTelecom);
 			marketReq.setNativeId(nativeId);
 			marketReq.setSimSerialNo(simSerialNo);
-			MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
-			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-				svcMangNo = marketRes.getDeviceInfo().getDeviceKey();
+			try{
+				if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
+					marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
+				} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
+					marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+				}
+			}catch(StorePlatformException e){
+				// 타사 연동 오류인 경우 svcMangNo null로 리턴
+				return svcMangNo;
 			}
-		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
-			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
-			marketReq.setTrxNo(new StringBuffer("trx").append("-")
-					.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
-					.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString());
-			marketReq.setDeviceId(mdn);
-			marketReq.setDeviceTelecom(deviceTelecom);
-			marketReq.setNativeId(nativeId);
-			marketReq.setSimSerialNo(simSerialNo);
-			MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
-			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+
+			if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
 				svcMangNo = marketRes.getDeviceInfo().getDeviceKey();
+			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) {
+				throw new StorePlatformException("SAC_MEM_0003", "mdn", mdn);
+			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_IMEI_MISMATCH)) {
+				throw new StorePlatformException("SAC_MEM_1507");
+			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_USIM_MISMATCH)) {
+				throw new StorePlatformException("SAC_MEM_1508");
+			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_PARAM_ERROR)) {
+				throw new StorePlatformException("SAC_MEM_0001", "필수");
+			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_SYSTEM_ERROR)) {
+				// 타사 시스템 오류인 경우 svcMangNo null로 리턴
+				return svcMangNo;
 			}
 		}
 
