@@ -2286,9 +2286,10 @@
     </insert>
 
     <!-- 사용자 인증 토큰 체크 -->
-    <select id="checkUserAuthToken" parameterType="chkUserAuthTkRequest" resultType="String">
+    <select id="checkUserAuthToken" parameterType="chkUserAuthTkRequest" resultType="chkUserAuthTkResponse">
         SELECT /* UserMapper.xml, checkUserAuthToken, SAC(SC), 최진호, 2016-01-04 */
             INSD_USERMBR_NO AS userKey
+            ,ACT_TK AS userAuthToken
         FROM
             TB_US_OUSERMBR_PWD
         WHERE

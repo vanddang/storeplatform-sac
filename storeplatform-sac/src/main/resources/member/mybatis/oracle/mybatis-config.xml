@@ -122,6 +122,7 @@
         <typeAlias alias="chkUserPwdResponse"             type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserPwdResponse"/>
         <!-- 사용자 인증 토큰 체크 2016.01.04 -->
         <typeAlias alias="chkUserAuthTkRequest"           type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenRequest"/>
+        <typeAlias alias="chkUserAuthTkResponse"          type="com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenResponse"/>
         <!-- 사용자 인증 토큰 생성 2016.01.06 -->
         <typeAlias alias="createUserAuthTokenRequest"     type="com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserAuthTokenRequest"/>
         <!-- ID 변경 2016.01.06 -->

@@ -4040,7 +4040,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public CheckUserPwdResponse checkUserPwd(CheckUserPwdRequest chkUserPwdRequest){
 
-		CheckUserPwdResponse checkUserPwdResponse = new CheckUserPwdResponse();
+		CheckUserPwdResponse checkUserPwdResponse;
 
 		// 신규비밀번호 암호화
 		chkUserPwdRequest.setUserPw(createUserPwdEncyp(chkUserPwdRequest.getUserPw()));
@@ -4052,7 +4052,9 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if( checkUserPwdResponse == null ){
-			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
+			checkUserPwdResponse = new CheckUserPwdResponse();
+			checkUserPwdResponse.setUserKey("");
+			checkUserPwdResponse.setUserAuthToken("");
 		}
 
 		checkUserPwdResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
@@ -4087,9 +4089,21 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust){
 
-		CheckUserAuthTokenResponse checkUserAuthTkResponse = new CheckUserAuthTokenResponse();
+		CheckUserAuthTokenResponse checkUserAuthTkResponse;
 
-		checkUserAuthTkResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserAuthToken", chkUserAuthTkReqeust));
+		if(StringUtils.equals(chkUserAuthTkReqeust.getIsDormant(), "N")) {
+			checkUserAuthTkResponse = (CheckUserAuthTokenResponse)this.commonDAO.queryForObject(
+					"User.checkUserAuthToken", chkUserAuthTkReqeust);
+		}else{
+			checkUserAuthTkResponse = (CheckUserAuthTokenResponse)this.idleDAO.queryForObject(
+					"User.checkUserAuthToken", chkUserAuthTkReqeust);
+		}
+
+		if( checkUserAuthTkResponse == null ){
+			checkUserAuthTkResponse = new CheckUserAuthTokenResponse();
+			checkUserAuthTkResponse.setUserKey("");
+			checkUserAuthTkResponse.setUserAuthToken("");
+		}
 
 		checkUserAuthTkResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 					"response.ResultMessage.success"));

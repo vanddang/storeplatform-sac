@@ -1166,13 +1166,13 @@ public class UserModifyServiceImpl implements UserModifyService {
                 throw new StorePlatformException("SAC_MEM_2001", searchUserRes.getUserMbr().getUserMainStatus(),
                         searchUserRes.getUserMbr().getUserSubStatus());
             }
-        } catch (StorePlatformException ex) {
+        } catch (StorePlatformException spe) {
             /** 2-2. 아이디가 없거나 회원 정보 조회시 exception 오류. */
-            if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
-                    || StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+            if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+                    || StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
                 throw new StorePlatformException("SAC_MEM_0003", "userKey", req.getUserKey());
             }else{
-                throw ex;
+                throw spe;
             }
         }
 
@@ -1181,9 +1181,9 @@ public class UserModifyServiceImpl implements UserModifyService {
         chkUserAuthTkReq.setCommonRequest(commonRequest);
         chkUserAuthTkReq.setUserKey(req.getUserKey());
         chkUserAuthTkReq.setUserAuthToken(req.getUserAuthToken());
-        CheckUserAuthTokenResponse chkUserAuthTkRes =  this.userSCI.checkUserAuthToken(chkUserAuthTkReq);
-
-        if( chkUserAuthTkRes.getUserKey() == null || chkUserAuthTkRes.getUserKey().length() <= 0 ){
+        chkUserAuthTkReq.setIsDormant("N");
+        CheckUserAuthTokenResponse chkUserAuthTkRes = this.userSCI.checkUserAuthToken(chkUserAuthTkReq);
+        if (chkUserAuthTkRes.getUserKey()==null || chkUserAuthTkRes.getUserKey().length() <= 0) {
             throw new StorePlatformException("SAC_MEM_1204");
         }
 

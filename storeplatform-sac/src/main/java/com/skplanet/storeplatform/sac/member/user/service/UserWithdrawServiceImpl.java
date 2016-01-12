@@ -136,15 +136,15 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
 			}
 
-			CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
-			chkUserAuthTkReqeust.setCommonRequest(mcc.getSCCommonRequest(requestHeader));
-			chkUserAuthTkReqeust.setUserKey(detailRes.getUserInfo().getUserKey());
-			chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
-			CheckUserAuthTokenResponse chkUserAuthTkResponse = userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
-			if (chkUserAuthTkResponse.getUserKey() == null || chkUserAuthTkResponse.getUserKey().length() <= 0) {
+			CheckUserAuthTokenRequest chkUserAuthTkReq = new CheckUserAuthTokenRequest();
+			chkUserAuthTkReq.setCommonRequest(mcc.getSCCommonRequest(requestHeader));
+			chkUserAuthTkReq.setUserKey(detailRes.getUserInfo().getUserKey());
+			chkUserAuthTkReq.setUserAuthToken(req.getUserAuthToken());
+			chkUserAuthTkReq.setIsDormant(detailRes.getUserInfo().getIsDormant());
+			CheckUserAuthTokenResponse chkUserAuthTkRes = this.userSCI.checkUserAuthToken(chkUserAuthTkReq);
+			if (chkUserAuthTkRes.getUserKey() == null || chkUserAuthTkRes.getUserKey().length() <= 0) {
 				throw new StorePlatformException("SAC_MEM_1204");
 			}
-
 		}
 
 		/**
