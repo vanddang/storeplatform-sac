@@ -9,20 +9,6 @@
  */
 package com.skplanet.storeplatform.member.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.skplanet.storeplatform.member.client.user.sci.vo.*;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -34,12 +20,23 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.CommonResponse;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
-import com.skplanet.storeplatform.member.common.code.DeviceChangeCode;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.member.common.code.DeviceManagementCode;
 import com.skplanet.storeplatform.member.common.code.MainStateCode;
 import com.skplanet.storeplatform.member.common.code.SubStateCode;
-import com.skplanet.storeplatform.member.common.code.UserTypeCode;
 import com.skplanet.storeplatform.member.common.code.WithdrawClassCode;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 회원 휴대기기 서비스 Implementation
@@ -573,12 +570,12 @@ public class DeviceServiceImpl implements DeviceService {
 	public RemoveDeviceResponse removeDevice(RemoveDeviceRequest removeDeviceRequest) {
 
 		// TO DO.
-		// ACTION 1. 단말 존재여부 확인 : tenantID, deviceKey, userKey로 단말 조회
+		// ACTION 1. 단말 존재여부 확인 : deviceKey, userKey로 단말 조회
 		// ACTION 2. 휴대기기 이력 테이블 insert.
 		// ACTION 3. 휴대기기 속성의 USE_YN, AUTH_YN 을 N 으로 update.
-		// ACTION 4. 휴대기기 부가정보 삭제
+		// ACTION 4. 휴대기기 부가정보(TB_US_OUSERMBR_DEVICE_DTL) 삭제
 		// ACTION 5. 휴대기기 삭제 카운트 증가
-		// ACTION 6. 휴대기기 설정정보 초기화
+		// ACTION 6. 휴대기기 설정정보(TB_US_OUSERMBR_DEVICE_SET) 삭제
 
 		LOGGER.debug(">>>> >>> DeviceServiceImpl removeDevice : {}", removeDeviceRequest);
 		String isDormant = StringUtils.isBlank(removeDeviceRequest.getIsDormant()) ? Constant.TYPE_YN_N : removeDeviceRequest
@@ -636,12 +633,12 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 			LOGGER.debug("### removeDevice row : {}", row);
 
-			// ACTION 4. 휴대기기 부가속성정보 삭제
+			// ACTION 4. 휴대기기 부가정보(TB_US_OUSERMBR_DEVICE_DTL) 삭제
 			UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setUserKey(userKey);
 			userMbrDeviceDetail.setDeviceKey(deviceKeyList.get(i));
 
-			dao.delete("Device.removeDeviceExtraProfile", userMbrDeviceDetail);
+			row = dao.delete("Device.removeDeviceExtraProfile", userMbrDeviceDetail);
 			LOGGER.debug("### Device.removeDeviceExtraProfile row : {}", row);
 
 			// ACTION 5. 휴대기기 삭제 카운트 증가
@@ -649,14 +646,12 @@ public class DeviceServiceImpl implements DeviceService {
 			delDeviceCount = delDeviceCount + 1;
 			removeDeviceResponse.setDelDeviceCount(delDeviceCount);
 
-			// ACTION 6. 휴대기기 설정정보 초기화
+			// ACTION 6. 휴대기기 설정정보(TB_US_OUSERMBR_DEVICE_SET) 삭제
 			UserMbrDeviceSet userMbrDeviceSet = new UserMbrDeviceSet();
 			userMbrDeviceSet.setUserKey(userKey);
 			userMbrDeviceSet.setDeviceKey(deviceKeyList.get(i));
-			userMbrDeviceSet.setPinNo("");
-			userMbrDeviceSet.setAuthCnt("0");
-			userMbrDeviceSet.setAuthLockYn("N");
-//			this.commonDAO.delete("DeviceSet.modifyDeviceSet", userMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+			row = dao.delete("DeviceSet.removeDeviceSetInfo", userMbrDeviceSet);
+			LOGGER.debug("### Device.removeDeviceSetInfo row : {}", row);
 		}
 
 		// TLog

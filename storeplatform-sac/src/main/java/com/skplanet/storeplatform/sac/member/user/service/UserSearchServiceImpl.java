@@ -1156,7 +1156,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			/**
 			 * SC 사용자 정책 리스트 조회 연동.
 			 */
-			SearchPolicyResponse policyResponse = this.limitTargetService.searchPolicyList(policyRequest);
+			SearchPolicyResponse policyResponse = null; //this.limitTargetService.searchPolicyList(policyRequest);
 
 			/**
 			 * 처리 결과 setting.

@@ -717,6 +717,7 @@ public class LoginServiceImpl implements LoginService {
 		boolean isOpmd = this.commService.isOpmd(oDeviceId);
 		String isVariability = "Y"; // 변동성 체크 성공 유무
 		String userKey = null;
+		String deviceKey = null;
 		DeviceInfo deviceInfo = null;
 
 		/** 1. 모번호 조회 및 셋팅 */
@@ -741,6 +742,7 @@ public class LoginServiceImpl implements LoginService {
 				/** 3-1-1-1. 휴대기기 정보 조회후 변동성 체크 */
 				deviceInfo = this.deviceService.srhDevice(requestHeader, keyType, req.getDeviceId(), null);
 				userKey = deviceInfo.getUserKey();
+				deviceKey = deviceInfo.getDeviceKey();
 
 				/** req, DB의 통신사가 일치한 경우 */
 				if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(),
@@ -777,7 +779,7 @@ public class LoginServiceImpl implements LoginService {
 				final String tLogEmailReq = req.getDeviceAccount();
 				final String tLogImeiReq = req.getNativeId();
 				final String tLogUserKey = deviceInfo.getUserKey();
-				final String tLogDeviceKey = deviceInfo.getDeviceKey();
+				final String tLogDeviceKey = deviceKey;
 				final String tLogMnoTypeDB = deviceInfo.getDeviceTelecom();
 				final String tLogEmailDB = deviceInfo.getDeviceAccount();
 				final String tLogImeiDB = deviceInfo.getNativeId();
@@ -822,7 +824,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setDeviceKey(modifyDeviceResponse.getDeviceKey());
 
 			}else{
-				res.setDeviceKey(null);
+				res.setDeviceKey(deviceKey);
 				LOGGER.info("{} {} OPMD 단말 변동성 휴대기기 업데이트 안함", req.getDeviceId(), oDeviceId);
 			}
 
