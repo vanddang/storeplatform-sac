@@ -242,25 +242,22 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 	/**
 	 * <pre>
-	 * deviceId 삭제처리
-	 * - 모바일 전용회원 인증 시에 SC는 회원이고, IDP는 미회원인 경우 deviceId를 삭제처리 하기 위해 호출한다.
+	 * 휴대기기 invalid 처리
 	 * </pre>
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @param deviceId
-	 *            String
-	 * @param userAuthKey
+	 * @param mdn
 	 *            String
 	 */
 	@Override
-	public void removeDevice(SacRequestHeader requestHeader, String deviceId, String userAuthKey) {
+	public void removeDevice(SacRequestHeader requestHeader, String mdn) {
 
 		/**
 		 * deviceId로 회원 정보 조회.
 		 */
 		DetailReq detailReq = new DetailReq();
-		detailReq.setDeviceId(deviceId);
+		detailReq.setDeviceId(mdn);
 		SearchExtentReq searchExtent = new SearchExtentReq();
 		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
@@ -284,7 +281,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					mqInfo.setUserId(detailRes.getUserInfo().getUserId());
 					mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
 					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-					mqInfo.setDeviceId(deviceId);
+					mqInfo.setDeviceId(mdn);
 					List<UserExtraInfo> list = detailRes.getUserInfo().getUserExtraInfoList();
 					if (list != null) {
 						for (int i = 0; i < list.size(); i++) {
@@ -301,9 +298,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					LOGGER.error("MQ process fail {}", mqInfo);
 				}
 
-				LOGGER.info("{} 모바일회원 탈퇴처리", deviceId);
+				LOGGER.info("{} 모바일회원 탈퇴처리", mdn);
 
-			} else if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_IDPID)) {
+			} else {
 
 				this.deviceIdInvalidByDeviceKey(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes
 						.getDeviceInfoList().get(0).getDeviceKey(), detailRes.getUserInfo().getIsDormant());
@@ -323,7 +320,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					LOGGER.info("MQ process fail {}", mqInfo);
 				}
 
-				LOGGER.info("{} IDP ID 휴대기기 삭제처리", deviceId);
+				LOGGER.info("{} IDP ID 휴대기기 삭제처리", mdn);
 			}
 
 		} catch (StorePlatformException e) {

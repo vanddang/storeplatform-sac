@@ -1280,7 +1280,7 @@ public class MemberCommonComponent {
 				}
 			}catch(StorePlatformException e){
 				// 타사 연동 오류인 경우 svcMangNo null로 리턴
-				return svcMangNo;
+				return null;
 			}
 
 			if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
@@ -1295,7 +1295,7 @@ public class MemberCommonComponent {
 				throw new StorePlatformException("SAC_MEM_0001", "필수");
 			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_SYSTEM_ERROR)) {
 				// 타사 시스템 오류인 경우 svcMangNo null로 리턴
-				return svcMangNo;
+				return null;
 			}
 		}
 
