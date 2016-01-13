@@ -133,8 +133,6 @@ public class UserServiceImpl implements UserService {
 		usermbr.setSystemID(createUserRequest.getCommonRequest().getSystemID());
 		usermbr.setUserKey(generatedUserKey);
 		usermbr.setRegDate(Utils.getLocalDateTimeinYYYYMMDD());
-		usermbr.setLoginStatusCode(createUserRequest.getUserMbr().getLoginStatusCode());
-		usermbr.setStopStatusCode(createUserRequest.getUserMbr().getStopStatusCode());
 
 		// ACTION 2-2. 무선사용자 회원가입의 경우 MBR_ID 생성
 		if (createUserRequest.getUserMbr().getUserType().equals(UserTypeCode.MOBILE_USER.getCode())) {
@@ -145,14 +143,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		LOGGER.debug(">>>> >>> UserServiceImpl before create : {}", usermbr);
-
-		// 로그인, 직권중지 상태값이 없는 경우 일괄 정상코드 설정
-		if (usermbr.getLoginStatusCode() == null || usermbr.getLoginStatusCode().length() <= 0) {
-			usermbr.setLoginStatusCode(Constant.LOGIN_STATUS_CODE);
-		}
-//		if (usermbr.getStopStatusCode() == null || usermbr.getStopStatusCode().length() <= 0) {
-//			usermbr.setStopStatusCode(Constant.STOP_STATUS_CODE);
-//		}
 
 		// ACTION 3. 사용자 회원 추가
 		row = (Integer) this.commonDAO.insert("User.createUser", usermbr);
@@ -1421,8 +1411,6 @@ public class UserServiceImpl implements UserService {
 		usermbr.setUserKey(userKey);
 		usermbr.setUserMainStatus(updateStatusUserRequest.getUserMainStatus());
 		usermbr.setUserSubStatus(updateStatusUserRequest.getUserSubStatus());
-		usermbr.setLoginStatusCode(updateStatusUserRequest.getLoginStatusCode());
-		usermbr.setStopStatusCode(updateStatusUserRequest.getStopStatusCode());
 		if (StringUtils.equals(MainStateCode.SECEDE.getCode(), updateStatusUserRequest.getUserMainStatus())) {
 			usermbr.setSecedeDate(Utils.getLocalDateTimeinYYYYMMDD());
 		}

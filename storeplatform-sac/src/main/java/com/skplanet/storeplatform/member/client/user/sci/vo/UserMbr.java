@@ -58,12 +58,6 @@ public class UserMbr extends CommonInfo implements Serializable {
 	 */
 	private String userSubStatus;
 
-	/** 로그인 상태 코드. */
-	private String loginStatusCode; // LOGIN_STATUS_CD
-
-	/** 직권중지 상태 코드. */
-	private String stopStatusCode; // OFAUTH_STOP_STATUS_CD
-
 	/** 사용자 휴대기기 등록 대수. */
 	private String deviceCount;
 
@@ -295,44 +289,6 @@ public class UserMbr extends CommonInfo implements Serializable {
 	 */
 	public void setUserSubStatus(String userSubStatus) {
 		this.userSubStatus = userSubStatus;
-	}
-
-	/**
-	 * 로그인 상태 코드를 리턴한다.
-	 * 
-	 * @return loginStatusCode - 로그인 상태 코드
-	 */
-	public String getLoginStatusCode() {
-		return this.loginStatusCode;
-	}
-
-	/**
-	 * 로그인 상태 코드를 설정한다.
-	 * 
-	 * @param loginStatusCode
-	 *            로그인 상태 코드
-	 */
-	public void setLoginStatusCode(String loginStatusCode) {
-		this.loginStatusCode = loginStatusCode;
-	}
-
-	/**
-	 * 직권중지 상태 코드를 리턴한다.
-	 * 
-	 * @return stopStatusCode - 직권중지 상태 코드
-	 */
-	public String getStopStatusCode() {
-		return this.stopStatusCode;
-	}
-
-	/**
-	 * 직권중지 상태 코드를 설정한다.
-	 * 
-	 * @param stopStatusCode
-	 *            직권중지 상태 코드
-	 */
-	public void setStopStatusCode(String stopStatusCode) {
-		this.stopStatusCode = stopStatusCode;
 	}
 
 	/**

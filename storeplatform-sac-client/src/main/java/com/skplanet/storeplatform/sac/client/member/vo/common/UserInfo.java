@@ -43,11 +43,6 @@ public class UserInfo extends CommonInfo {
 	private String isMemberPoint;
 
 	/*
-	 * 로그인 상태 코드.
-	 */
-	private String loginStatusCode;
-
-	/*
 	 * 등록일시.
 	 */
 	private String regDate;
@@ -304,21 +299,6 @@ public class UserInfo extends CommonInfo {
 	 */
 	public void setIsMemberPoint(String isMemberPoint) {
 		this.isMemberPoint = isMemberPoint;
-	}
-
-	/**
-	 * @return the loginStatusCode
-	 */
-	public String getLoginStatusCode() {
-		return this.loginStatusCode;
-	}
-
-	/**
-	 * @param loginStatusCode
-	 *            the loginStatusCode to set
-	 */
-	public void setLoginStatusCode(String loginStatusCode) {
-		this.loginStatusCode = loginStatusCode;
 	}
 
 	/**

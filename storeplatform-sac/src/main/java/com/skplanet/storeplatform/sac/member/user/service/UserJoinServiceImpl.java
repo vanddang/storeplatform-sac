@@ -688,6 +688,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
 		String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
 
+
+		//TODO. 휴대기기 등록 실패시 userSCI.create 저장 정보 삭제
+
+
 		CreateByIdSacRes response = new CreateByIdSacRes();
 		response.setUserKey(createUserResponse.getUserKey());
 		response.setDeviceKey(deviceKey);

@@ -145,7 +145,6 @@ public class SearchUserSCIController implements SearchUserSCI {
 		response.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 		response.setUserMainStatus(detailRes.getUserInfo().getUserMainStatus());
 		response.setUserSubStatus(detailRes.getUserInfo().getUserSubStatus());
-		response.setLoginStatus(detailRes.getUserInfo().getLoginStatusCode());
 
 		LOGGER.info("Response : {}", response.getUserKey());
 		return response;

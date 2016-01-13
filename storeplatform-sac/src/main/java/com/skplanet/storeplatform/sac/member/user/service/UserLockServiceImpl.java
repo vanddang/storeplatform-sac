@@ -54,14 +54,15 @@ public class UserLockServiceImpl implements UserLockService {
         LockAccountSacRes response = new LockAccountSacRes();
 
         /** 2. 이미 잠겨 있으면 리턴 셋팅 */
-        if(checkDuplicationResponse.getUserMbr().getLoginStatusCode().equals(MemberConstants.USER_LOGIN_STATUS_PAUSE)){
+        /*if(checkDuplicationResponse.getUserMbr().getLoginStatusCode().equals(MemberConstants.USER_LOGIN_STATUS_PAUSE)){
             response.setUserId(req.getUserId());
-            /** 3. 잠겨 있지 않으면 회원 계정 잠금 */
+            *//** 3. 잠겨 있지 않으면 회원 계정 잠금 *//*
         }else {
             this.modLoginStatus(sacHeader, req.getUserId());
             response.setUserId(req.getUserId());
-        }
-
+        }*/
+        // TODO. 회원 잠금상태 관리 하지 않게 되어서 해당 API는 사용하지 않음
+        response.setUserId(req.getUserId());
         return response;
     }
 

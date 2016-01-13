@@ -248,7 +248,6 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserType(chkDupRes.getUserMbr().getUserType());
 			res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
 			res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
-			res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
 			res.setIsLoginSuccess("Y");
 			return res;
 		}
@@ -382,7 +381,6 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserType(chkDupRes.getUserMbr().getUserType());
 		res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
 		res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
-		res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
 		res.setDeviceKey(deviceKey);
 		res.setIsLoginSuccess("Y");
 
@@ -565,7 +563,6 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserType(chkDupRes.getUserMbr().getUserType());
 			res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
 			res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
-			res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
 			res.setIsLoginSuccess("Y");
 			return res;
 		}
@@ -698,7 +695,6 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserType(chkDupRes.getUserMbr().getUserType());
 		res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
 		res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
-		res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
 		res.setDeviceKey(deviceKey);
 		res.setIsLoginSuccess("Y");
 
@@ -1053,7 +1049,6 @@ public class LoginServiceImpl implements LoginService {
 		userType = chkDupRes.getUserMbr().getUserType();
 		userMainStatus = chkDupRes.getUserMbr().getUserMainStatus();
 		userSubStatus = chkDupRes.getUserMbr().getUserSubStatus();
-		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
 
 		/** 2-1. 가가입 상태면 오류 - 가가입자는 Save&Sync 인증을 통해서만 인증이 처리된다.  */
@@ -4439,7 +4434,6 @@ public class LoginServiceImpl implements LoginService {
 		/**  2. 조회된 회원정보 셋팅 */
 		userKey = chkDupRes.getUserMbr().getUserKey();
 		userType = chkDupRes.getUserMbr().getUserType();
-		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
 		userMainStatus = chkDupRes.getUserMbr().getUserMainStatus();
 		userSubStatus = chkDupRes.getUserMbr().getUserSubStatus();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
