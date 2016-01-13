@@ -1,25 +1,5 @@
 package com.skplanet.storeplatform.sac.api.service;
 
-import static com.skplanet.storeplatform.sac.display.common.ProductType.Shopping;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.AmqpException;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
@@ -32,17 +12,7 @@ import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
-import com.skplanet.storeplatform.sac.api.vo.SpRegistProd;
-import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt;
-import com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
-import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
+import com.skplanet.storeplatform.sac.api.vo.*;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
@@ -53,6 +23,19 @@ import com.skplanet.storeplatform.sac.mq.client.rater.vo.RaterMessage;
 import com.skplanet.storeplatform.sac.mq.client.search.constant.SearchConstant;
 import com.skplanet.storeplatform.sac.mq.client.search.util.SearchQueueUtils;
 import com.skplanet.storeplatform.sac.mq.client.search.vo.SearchInterfaceQueue;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static com.skplanet.storeplatform.sac.display.common.ProductType.Shopping;
 /**
  * <pre>
  * 쿠폰아이템 서비스 인터페이스 imple.
@@ -552,11 +535,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// 저장
 			this.couponItemService.insertTbDpProdDescInfo(tbDpProdDescList);
-			
-			this.getConnectMqForSkReceipt(couponInfo, itemInfoList); // 김희민 매니저 요청으로 SKT로 전송하여 휴대폰 영수증에 티스토어 구매 내역을 보여 주기위한 시스템 
-			
-			
-			
+
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus())) {	// S01 일 경우만 전송
+				this.getConnectMqForSkReceipt(couponInfo, itemInfoList); // 김희민 매니저 요청으로 SKT로 전송하여 휴대폰 영수증에 티스토어 구매 내역을 보여 주기위한 시스템
+			}
+
 			this.log.info("■■■■■ setTbDpProdDescListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_DESC VO 셋팅 실패", null);
@@ -627,34 +610,86 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		TbDpTenantProdInfo dtpd = new TbDpTenantProdInfo();
 		try {
 
-			// ////////////////// Coupon 정보 S////////////////////////////
-			dtpd.setProdId(couponInfo.getProdId());
-			dtpd.setTenantId(CouponConstants.TENANT_ID);
-			dtpd.setProdStatusCd(this.getDPStatusCode(couponInfo.getCoupnStatus()));
-			dtpd.setExpoYn("Y");
-			dtpd.setExpoOrd(1);
-			dtpd.setRegId(couponInfo.getBpId());
-			dtpd.setUpdId(couponInfo.getBpId());
-			dtpd.setCudType(cudType);
-			tbDpTenantProdList.add(dtpd);
-			IcmsJobPrint.printTbTenantDpProd(dtpd, "TB_DP_TENANT_PROD - COUPON");
-			// ////////////////// Coupon 정보 E////////////////////////////
 
-			// ////////////////// Item 정보 S////////////////////////////
-			for (int i = 0; i < itemInfoList.size(); i++) {
-				DpItemInfo itemInfo = itemInfoList.get(i);
+			List<Map<String, Object>> couponList = new ArrayList<Map<String, Object>>();
+			Map<String, Object> coupon = new HashMap<String, Object>();
+
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus())) {
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID);
+				coupon.put("tempCouponStatus", this.getDPStatusCode(couponInfo.getCoupnStatus()));
+				couponList.add(coupon);
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_kt())) {
+				coupon = new HashMap<String, Object>();
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID_S02);
+				coupon.put("tempCouponStatus", this.getDPStatusCode(couponInfo.getCoupnStatus_kt()));
+				couponList.add(coupon);
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_lgt())) {
+				coupon = new HashMap<String, Object>();
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID_S03);
+				coupon.put("tempCouponStatus", this.getDPStatusCode(couponInfo.getCoupnStatus_lgt()));
+				couponList.add(coupon);
+			}
+			
+			for(int kk =0 ; kk< couponList.size() ; kk++) {
+				// ////////////////// Coupon 정보 S////////////////////////////
 				dtpd = new TbDpTenantProdInfo();
-				dtpd.setProdId(itemInfo.getProdId());
-				dtpd.setTenantId(CouponConstants.TENANT_ID);
-				dtpd.setProdStatusCd(this.getDPStatusCode(itemInfo.getItemStatus()));
+				dtpd.setProdId(couponInfo.getProdId());
+				dtpd.setTenantId((String) couponList.get(kk).get("tempTenantId"));
+				dtpd.setProdStatusCd((String) couponList.get(kk).get("tempCouponStatus"));
 				dtpd.setExpoYn("Y");
-				dtpd.setExpoOrd(i + 1);
+				dtpd.setExpoOrd(1);
 				dtpd.setRegId(couponInfo.getBpId());
 				dtpd.setUpdId(couponInfo.getBpId());
-				dtpd.setCudType(itemInfo.getCudType());
+				dtpd.setCudType(cudType);
 				tbDpTenantProdList.add(dtpd);
-				IcmsJobPrint.printTbTenantDpProd(dtpd, "TB_DP_TENANT_PROD - ITEM:::" + i);
+
+				IcmsJobPrint.printTbTenantDpProd(dtpd, "TB_DP_TENANT_PROD - COUPON");
 			}
+				// ////////////////// Coupon 정보 E////////////////////////////
+
+				// ////////////////// Item 정보 S////////////////////////////
+				for (int i = 0; i < itemInfoList.size(); i++) {
+
+					DpItemInfo itemInfo = itemInfoList.get(i);
+
+					List<Map<String, Object>> itemList = new ArrayList<Map<String, Object>>();
+					Map<String, Object> item = new HashMap<String, Object>();
+
+					if(StringUtils.isNotBlank(itemInfo.getItemStatus())){
+						item.put("tempTenantId", CouponConstants.TENANT_ID);
+						item.put("tempItemStatus", this.getDPStatusCode(itemInfo.getItemStatus()));
+						itemList.add(item);
+					}
+					if(StringUtils.isNotBlank(itemInfo.getItemStatus_kt())){
+						item = new HashMap<String, Object>();
+						item.put("tempTenantId", CouponConstants.TENANT_ID_S02);
+						item.put("tempItemStatus", this.getDPStatusCode(itemInfo.getItemStatus_kt()));
+						itemList.add(item);
+					}
+					if(StringUtils.isNotBlank(itemInfo.getItemStatus_lgt())){
+						item = new HashMap<String, Object>();
+						item.put("tempTenantId", CouponConstants.TENANT_ID_S03);
+						item.put("tempItemStatus", this.getDPStatusCode(itemInfo.getItemStatus_lgt()));
+						itemList.add(item);
+					}
+
+					for(int kk =0 ; kk< itemList.size() ; kk++) {
+						dtpd = new TbDpTenantProdInfo();
+						dtpd.setProdId(itemInfo.getProdId());
+						dtpd.setTenantId((String) itemList.get(kk).get("tempTenantId"));
+						dtpd.setProdStatusCd((String) itemList.get(kk).get("tempItemStatus"));
+						dtpd.setExpoYn("Y");
+						dtpd.setExpoOrd(i + 1);
+						dtpd.setRegId(couponInfo.getBpId());
+						dtpd.setUpdId(couponInfo.getBpId());
+						dtpd.setCudType(itemInfo.getCudType());
+						tbDpTenantProdList.add(dtpd);
+						IcmsJobPrint.printTbTenantDpProd(dtpd, "TB_DP_TENANT_PROD - ITEM:::" + i);
+					}
+				}
+
 			// 저장
 			this.couponItemService.insertTbDpTenantProdInfo(tbDpTenantProdList, couponInfo);
 			this.log.info("■■■■■ setTbDpTenantProdListValue End ■■■■■");
@@ -685,53 +720,95 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		TbDpTenantProdPriceInfo dtpp = new TbDpTenantProdPriceInfo();
 		try {
 
-			// ////////////////// Coupon 정보 S////////////////////////////
-			dtpp.setTenantId(CouponConstants.TENANT_ID);
-			dtpp.setProdId(couponInfo.getProdId());
-			dtpp.setApplyStartDt(couponInfo.getIssueSDate()); // 적용_시작_일시
-			dtpp.setSeq(1);
-			dtpp.setApplyEndDt(couponInfo.getIssueEDate()); // 적용_종료_일시
-			dtpp.setProdAmt(0); // 상품_금액
-			dtpp.setChnlUnlmtAmt(0); // 채널_무제한_금액
-			dtpp.setChnlPeriodAmt(0); // 채널_기간_금액
-			dtpp.setProdNetAmt(0); // 상품_정찰_금액
-			dtpp.setDcRate(0); // 할인_율
-			dtpp.setDcAmt(0); // 할인_금액
-			dtpp.setDcAftProdAmt(0); // 할인_후_상품_금액
-			dtpp.setTaxClsf(couponInfo.getTaxType()); // 세금_구분
-			dtpp.setRegId(couponInfo.getBpId());
-			dtpp.setUpdId(couponInfo.getBpId());
-			dtpp.setCudType(cudType);
-			tbDpTenantProdPriceList.add(dtpp);
-			IcmsJobPrint.printTbTenantDpProdPrice(dtpp, "TB_DP_TENANT_PROD_PRICE - COUPON");
-			// ////////////////// Coupon 정보 E////////////////////////////
+			List<Map<String, Object>> couponList = new ArrayList<Map<String, Object>>();
+			Map<String, Object> coupon = new HashMap<String, Object>();
+
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus())) {
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID);
+				couponList.add(coupon);
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_kt())) {
+				coupon = new HashMap<String, Object>();
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID_S02);
+				couponList.add(coupon);
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_lgt())) {
+				coupon = new HashMap<String, Object>();
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID_S03);
+				couponList.add(coupon);
+			}
+			for(int kk =0 ; kk< couponList.size() ; kk++) {
+				// ////////////////// Coupon 정보 S////////////////////////////
+				dtpp = new TbDpTenantProdPriceInfo();
+				dtpp.setTenantId((String) couponList.get(kk).get("tempTenantId"));
+				dtpp.setProdId(couponInfo.getProdId());
+				dtpp.setApplyStartDt(couponInfo.getIssueSDate()); // 적용_시작_일시
+				dtpp.setSeq(1);
+				dtpp.setApplyEndDt(couponInfo.getIssueEDate()); // 적용_종료_일시
+				dtpp.setProdAmt(0); // 상품_금액
+				dtpp.setChnlUnlmtAmt(0); // 채널_무제한_금액
+				dtpp.setChnlPeriodAmt(0); // 채널_기간_금액
+				dtpp.setProdNetAmt(0); // 상품_정찰_금액
+				dtpp.setDcRate(0); // 할인_율
+				dtpp.setDcAmt(0); // 할인_금액
+				dtpp.setDcAftProdAmt(0); // 할인_후_상품_금액
+				dtpp.setTaxClsf(couponInfo.getTaxType()); // 세금_구분
+				dtpp.setRegId(couponInfo.getBpId());
+				dtpp.setUpdId(couponInfo.getBpId());
+				dtpp.setCudType(cudType);
+				tbDpTenantProdPriceList.add(dtpp);
+				IcmsJobPrint.printTbTenantDpProdPrice(dtpp, "TB_DP_TENANT_PROD_PRICE - COUPON");
+				// ////////////////// Coupon 정보 E////////////////////////////
+			}
 
 			// ////////////////// Item 정보 S////////////////////////////
 			for (int i = 0; i < itemInfoList.size(); i++) {
 				DpItemInfo itemInfo = itemInfoList.get(i);
-				dtpp = new TbDpTenantProdPriceInfo();
-				dtpp.setProdId(itemInfo.getProdId());
-				dtpp.setTenantId(CouponConstants.TENANT_ID);
-				dtpp.setApplyStartDt(couponInfo.getIssueSDate());
-				dtpp.setSeq(1);
-				dtpp.setApplyEndDt(couponInfo.getIssueEDate());
-				dtpp.setProdAmt(Long.parseLong(itemInfo.getItemPrice()));
-				dtpp.setChnlUnlmtAmt(0); // ??
-				dtpp.setChnlPeriodAmt(0); // ??
-				dtpp.setProdNetAmt(Long.parseLong(itemInfo.getOrgPrice()));
-				dtpp.setDcRate(Long.parseLong(itemInfo.getDcRate()));
-				if (Long.parseLong(itemInfo.getOrgPrice()) - Long.parseLong(itemInfo.getSalePrice()) > 0) { // 금액이 >0 보다
-					dtpp.setDcAmt(Long.parseLong(itemInfo.getOrgPrice()) - Long.parseLong(itemInfo.getSalePrice()));
-				} else {
-					dtpp.setDcAmt(0);
+
+				List<Map<String, Object>> itemList = new ArrayList<Map<String, Object>>();
+				Map<String, Object> item = new HashMap<String, Object>();
+
+
+				if(StringUtils.isNotBlank(itemInfo.getItemStatus())){
+					item.put("tempTenantId", CouponConstants.TENANT_ID);
+					itemList.add(item);
 				}
-				dtpp.setDcAftProdAmt(Long.parseLong(itemInfo.getSalePrice()));
-				dtpp.setTaxClsf(couponInfo.getTaxType()); // 세금_구분
-				dtpp.setRegId(couponInfo.getBpId());
-				dtpp.setUpdId(couponInfo.getBpId());
-				dtpp.setCudType(itemInfo.getCudType());
-				tbDpTenantProdPriceList.add(dtpp);
-				IcmsJobPrint.printTbTenantDpProdPrice(dtpp, "TB_DP_TENANT_PROD_PRICE- ITEM:::" + i);
+				if(StringUtils.isNotBlank(itemInfo.getItemStatus_kt())){
+					item = new HashMap<String, Object>();
+					item.put("tempTenantId", CouponConstants.TENANT_ID_S02);
+					itemList.add(item);
+				}
+				if(StringUtils.isNotBlank(itemInfo.getItemStatus_lgt())){
+					item = new HashMap<String, Object>();
+					item.put("tempTenantId", CouponConstants.TENANT_ID_S03);
+					itemList.add(item);
+				}
+
+				for(int kk =0 ; kk< itemList.size() ; kk++) {
+					dtpp = new TbDpTenantProdPriceInfo();
+					dtpp.setProdId(itemInfo.getProdId());
+					dtpp.setTenantId((String) itemList.get(kk).get("tempTenantId"));
+					dtpp.setApplyStartDt(couponInfo.getIssueSDate());
+					dtpp.setSeq(1);
+					dtpp.setApplyEndDt(couponInfo.getIssueEDate());
+					dtpp.setProdAmt(Long.parseLong(itemInfo.getItemPrice()));
+					dtpp.setChnlUnlmtAmt(0); // ??
+					dtpp.setChnlPeriodAmt(0); // ??
+					dtpp.setProdNetAmt(Long.parseLong(itemInfo.getOrgPrice()));
+					dtpp.setDcRate(Long.parseLong(itemInfo.getDcRate()));
+					if (Long.parseLong(itemInfo.getOrgPrice()) - Long.parseLong(itemInfo.getSalePrice()) > 0) { // 금액이 >0 보다
+						dtpp.setDcAmt(Long.parseLong(itemInfo.getOrgPrice()) - Long.parseLong(itemInfo.getSalePrice()));
+					} else {
+						dtpp.setDcAmt(0);
+					}
+					dtpp.setDcAftProdAmt(Long.parseLong(itemInfo.getSalePrice()));
+					dtpp.setTaxClsf(couponInfo.getTaxType()); // 세금_구분
+					dtpp.setRegId(couponInfo.getBpId());
+					dtpp.setUpdId(couponInfo.getBpId());
+					dtpp.setCudType(itemInfo.getCudType());
+					tbDpTenantProdPriceList.add(dtpp);
+					IcmsJobPrint.printTbTenantDpProdPrice(dtpp, "TB_DP_TENANT_PROD_PRICE- ITEM:::" + i);
+				}
 			}
 			// 저장
 			this.couponItemService.insertTbDpTenantProdPriceInfo(tbDpTenantProdPriceList);
@@ -1164,6 +1241,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			String couponCode = couponReq.getCouponCode();
 			String coupnStatus = couponReq.getCoupnStatus();
+			String coupnStatus_kt = couponReq.getCoupnStatus_kt();
+			String coupnStatus_lgt = couponReq.getCoupnStatus_lgt();
 			String itemCode = couponReq.getItemCode();
 			String upType = couponReq.getUpType(); // 0=상품상태변경, 1=단품상태변경, 2=상품+단품상태 모두 변경
 
@@ -1171,13 +1250,23 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 					+ itemCode + "/n" + "upType : " + upType + "/n" + "coupnStatus : " + coupnStatus + "/n"
 					+ "===========================");
 
-			String dpStatusCode = "";
-
 			// 1. Validation Check
 			// 쿠폰상태 값 유효성 검증
 
-			if(StringUtils.isBlank(coupnStatus)){
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (coupnStatus)",
+			int couponDetailCnt = 0;
+
+			if(StringUtils.isNotBlank(coupnStatus)){
+				couponDetailCnt++;
+			}
+			if(StringUtils.isNotBlank(coupnStatus_kt)){
+				couponDetailCnt++;
+			}
+			if(StringUtils.isNotBlank(coupnStatus_lgt)){
+				couponDetailCnt++;
+			}
+
+			if(couponDetailCnt==0){
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "값이 있어야 합니다. (coupnStatus,coupnStatus_kt,coupnStatus_lgt)",
 						coupnStatus);			
 			}			
 			
@@ -1205,12 +1294,32 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				}
 			}
 			// 쿠폰상태 코드 -> 전시 코드로 변환
-			dpStatusCode = this.getDPStatusCode(coupnStatus);
+			List<Map<String, Object>> couponList = new ArrayList<Map<String, Object>>();
+			Map<String, Object> coupon = new HashMap<String, Object>();
+
+			if (StringUtils.isNotBlank(coupnStatus)) {
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID);
+				coupon.put("tempCouponStatus", this.getDPStatusCode(coupnStatus));
+				couponList.add(coupon);
+			}
+			if (StringUtils.isNotBlank(coupnStatus_kt)) {
+				coupon = new HashMap<String, Object>();
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID_S02);
+				coupon.put("tempCouponStatus", this.getDPStatusCode(coupnStatus_kt));
+				couponList.add(coupon);
+			}
+			if (StringUtils.isNotBlank(coupnStatus_lgt)) {
+				coupon = new HashMap<String, Object>();
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID_S03);
+				coupon.put("tempCouponStatus", this.getDPStatusCode(coupnStatus_lgt));
+				couponList.add(coupon);
+			}
+
 
 			// 2. DB Update
 			try {
 				// TB_DP_TENANT_PROD 상태 처리
-				this.couponItemService.updateCouponStatus(newCouponCode, dpStatusCode, upType, itemCode);
+				this.couponItemService.updateCouponStatus(newCouponCode, couponList, upType, itemCode);
 
 			} catch (CouponException e) {
 				throw new CouponException(e.getErrCode(), e.getErrorData().getErrorMsg(), null);
@@ -1777,220 +1886,241 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		NotificationIprm noti = new NotificationIprm();
 		List<ProductTenantPrice> productTenantPriceList = null;
 		List<ProductTenantRate> productTenantRateList = null;
+		int seqCnt = 1;
 		try {
+
+			List<Map<String, Object>> couponList = new ArrayList<Map<String, Object>>();
+			Map<String, Object> coupon = new HashMap<String, Object>();
+
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus())) {
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID);
+				couponList.add(coupon);
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_kt())) {
+				coupon = new HashMap<String, Object>();
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID_S02);
+				couponList.add(coupon);
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_lgt())) {
+				coupon = new HashMap<String, Object>();
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID_S03);
+				couponList.add(coupon);
+			}
+
 			CouponRes couponRes = this.getCatalogNmMenuId(couponInfo.getStoreCatalogCode());
 
-			// //////////////////////////////////채널 MQ 연동 //////////////////////////////////////////////////////
-			noti.setTransactionKey(couponReq.getTxId() + "0000");
-			/**
-			 * 상품정보 세팅.
-			 */
-			Product product = new Product();
+			for(int kk =0 ; kk< couponList.size() ; kk++) {
 
-			product.setSyncDataControlType(cudType); // 구분
-			product.setProdId(couponInfo.getProdId());// 상품ID
-			product.setProdNm(couponInfo.getCouponName()); // 상품명
-
-			product.setProdFdTypCd("PD000502");// 무료
-			product.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);// 서비스그룹코드DP000206
-
-			product.setMbrNo(couponInfo.getMbrNo());// 판매자mbrNO
-			product.setCid(couponInfo.getCouponCode()); // cid
-			product.setCateNo(CouponConstants.TOP_MENU_ID_CUPON_CONTENT); // 탑카테고리 DP28
-			product.setSubCateNo(couponRes.getMenuId());// 서브카테고리
-			product.setCoContentsId(couponInfo.getCouponCode());// 업체컨텐츠ID == CID랑 같음
-
-			if (Integer.parseInt(couponInfo.getValidUntil()) > 0) { // 유효일수 값 비교
-				product.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_DAY); // PD00312 기간제(일)
-				product.setUserTerm(couponInfo.getValidUntil()); // 유효일수로 셋팅
-			} else {
-				product.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_SELECT); // PD00319 기간선택
-				// USE_TERM_UNIT
-				product.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
-			}
-			product.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
-			product.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
-			product.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
-			product.setChnlTypCd(CouponConstants.COUPON_CONTENT_TP_CHA);
-			Date date = new Date();
-			String modifiedDate = new SimpleDateFormat("yyyyMMddHHmmss").format(date);
-			if ("C".equalsIgnoreCase(cudType)) {
-				product.setRegId(couponInfo.getBpId()); // 등록ID
-				product.setRegDt(modifiedDate); // 등록일시
-				product.setUpdId(couponInfo.getBpId()); // 수정ID
-				product.setUpdDt(modifiedDate); // 수정일시
-
-			} else {
-				product.setRegId(couponRes.getRegId()); // 등록ID
-				product.setRegDt(couponRes.getRegDt()); // 등록일시
-				product.setUpdId(couponInfo.getBpId()); // 수정ID
-				product.setUpdDt(modifiedDate); // 수정일시
-			}
-			noti.setProduct(product);
-			/**
-			 * 상품가격정보 세팅.
-			 */
-			productTenantPriceList = new ArrayList<ProductTenantPrice>();
-			ProductTenantPrice productTenantPrice = new ProductTenantPrice();
-			productTenantPrice.setProdId(couponInfo.getProdId());
-			productTenantPrice.setSyncDataControlType(cudType);
-			productTenantPrice.setTenantId(CouponConstants.TENANT_ID); // tenentId
-			productTenantPrice.setApplyStartDt(couponInfo.getIssueSDate());// 적용_시작_일시
-			productTenantPrice.setProdAmt("0");// 상품가격
-
-			if ("C".equalsIgnoreCase(cudType)) {
-				productTenantPrice.setRegId(couponInfo.getBpId()); // 등록ID
-				productTenantPrice.setRegDt(modifiedDate); // 등록일시
-				productTenantPrice.setUpdId(couponInfo.getBpId()); // 수정ID
-				productTenantPrice.setUpdDt(modifiedDate); // 수정일시
-
-			} else {
-				productTenantPrice.setRegId(couponRes.getRegId()); // 등록ID
-				productTenantPrice.setRegDt(couponRes.getRegDt()); // 등록일시
-				productTenantPrice.setUpdId(couponInfo.getBpId()); // 수정ID
-				productTenantPrice.setUpdDt(modifiedDate); // 수정일시
-			}
-			
-			productTenantPriceList.add(productTenantPrice);
-			noti.setProductTenantPriceList(productTenantPriceList);
-			
-			
-			/**
-			 * 상품의 테넌트별 정산율.
-			 */
-			productTenantRateList = new ArrayList<ProductTenantRate>();
-			ProductTenantRate productTenantRate = new ProductTenantRate();
-			productTenantRate.setProdId(couponInfo.getProdId());
-			productTenantRate.setSyncDataControlType(cudType);
-			productTenantRate.setTenantId(CouponConstants.TENANT_ID); // tenentId
-			productTenantRate.setApplyStartDt(couponInfo.getIssueSDate());// 적용_시작_일시
-			productTenantRate.setProdRate(couponInfo.getAccountingRate());// 상품정산율
-			productTenantRate.setSttlTyp("01");// 정산_유형
-			productTenantRate.setSttlMthd("01");// 정산_방법
-			productTenantRate.setSttlApplStdCd("02");// 정산_적용_기준_코드
-			productTenantRate.setUnitAmt("0"); //단위_금액
-			productTenantRate.setRegId("SAC_SHOPPING"); // 등록ID
-			productTenantRate.setRegDt(modifiedDate); // 등록일시
-			productTenantRate.setUpdId("SAC_SHOPPING"); // 수정ID
-			productTenantRate.setUpdDt(modifiedDate); // 수정일시
-			
-			productTenantRateList.add(productTenantRate);
-			noti.setProductTenantRateList(productTenantRateList);
-			
-			
-			
-			this.log.info("channel_prod_id S:::" + couponInfo.getProdId());
-			this.shoppingIprmAmqpTemplate.convertAndSend(noti); // async
-			this.log.info("channel_prod_id E:::" + couponInfo.getProdId());
-
-			// //////////////////////////////////에피소드 MQ 연동 //////////////////////////////////////////////////////
-			for (int i = 0; i < itemInfoList.size(); i++) {
-				DpItemInfo itemInfo = itemInfoList.get(i);
-				noti.setTransactionKey(couponReq.getTxId() + "000" + (i + 1));
+				// //////////////////////////////////채널 MQ 연동 //////////////////////////////////////////////////////
+				noti.setTransactionKey(couponReq.getTxId() + "000"+ (kk + 1));
 				/**
 				 * 상품정보 세팅.
 				 */
-				Product productVO = new Product();
+				Product product = new Product();
 
-				productVO.setSyncDataControlType(itemInfo.getCudType()); // 구분
-				productVO.setProdId(itemInfo.getProdId());// 상품ID
-				productVO.setProdNm(itemInfo.getItemName()); // 상품명
+				product.setSyncDataControlType(cudType); // 구분
+				product.setProdId(couponInfo.getProdId());// 상품ID
+				product.setProdNm(couponInfo.getCouponName()); // 상품명
 
-				if (!String.valueOf(itemInfo.getItemPrice()).equals("0")) { // 유료
-					productVO.setProdFdTypCd("PD000501");// 유료
-				} else {
-					productVO.setProdFdTypCd("PD000502");// 무료
-				}
-				productVO.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);// 서비스그룹코드DP000206
+				product.setProdFdTypCd("PD000502");// 무료
+				product.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);// 서비스그룹코드DP000206
 
-				productVO.setMbrNo(couponInfo.getMbrNo());// 판매자mbrNO
-				productVO.setCid(itemInfo.getItemCode()); // cid
-				productVO.setCateNo(CouponConstants.TOP_MENU_ID_CUPON_CONTENT); // 탑카테고리 DP28
-				productVO.setSubCateNo(couponRes.getMenuId());// 서브카테고리
-				productVO.setCoContentsId(itemInfo.getItemCode());// 업체컨텐츠ID == CID랑 같음
+				product.setMbrNo(couponInfo.getMbrNo());// 판매자mbrNO
+				product.setCid(couponInfo.getCouponCode()); // cid
+				product.setCateNo(CouponConstants.TOP_MENU_ID_CUPON_CONTENT); // 탑카테고리 DP28
+				product.setSubCateNo(couponRes.getMenuId());// 서브카테고리
+				product.setCoContentsId(couponInfo.getCouponCode());// 업체컨텐츠ID == CID랑 같음
 
 				if (Integer.parseInt(couponInfo.getValidUntil()) > 0) { // 유효일수 값 비교
-					productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_DAY); // PD00312 기간제(일)
-					productVO.setUserTerm(couponInfo.getValidUntil()); // 유효일수로 셋팅
+					product.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_DAY); // PD00312 기간제(일)
+					product.setUserTerm(couponInfo.getValidUntil()); // 유효일수로 셋팅
 				} else {
-					productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_SELECT); // PD00319 기간선택
+					product.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_SELECT); // PD00319 기간선택
 					// USE_TERM_UNIT
-					productVO.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
+					product.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
 				}
-				productVO.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
-				productVO.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
-				productVO.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
-				productVO.setChnlTypCd(CouponConstants.COUPON_CONTENT_TP_EPI);
-				if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
-					productVO.setRegId(couponInfo.getBpId()); // 등록ID
-					productVO.setRegDt(modifiedDate); // 등록일시
-					productVO.setUpdId(couponInfo.getBpId()); // 수정ID
-					productVO.setUpdDt(modifiedDate); // 수정일시
+				product.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
+				product.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
+				product.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
+				product.setChnlTypCd(CouponConstants.COUPON_CONTENT_TP_CHA);
+				Date date = new Date();
+				String modifiedDate = new SimpleDateFormat("yyyyMMddHHmmss").format(date);
+				if ("C".equalsIgnoreCase(cudType)) {
+					product.setRegId(couponInfo.getBpId()); // 등록ID
+					product.setRegDt(modifiedDate); // 등록일시
+					product.setUpdId(couponInfo.getBpId()); // 수정ID
+					product.setUpdDt(modifiedDate); // 수정일시
 
 				} else {
-					productVO.setRegId(couponRes.getRegId()); // 등록ID
-					productVO.setRegDt(couponRes.getRegDt()); // 등록일시
-					productVO.setUpdId(couponInfo.getBpId()); // 수정ID
-					productVO.setUpdDt(modifiedDate); // 수정일시
+					product.setRegId(couponRes.getRegId()); // 등록ID
+					product.setRegDt(couponRes.getRegDt()); // 등록일시
+					product.setUpdId(couponInfo.getBpId()); // 수정ID
+					product.setUpdDt(modifiedDate); // 수정일시
 				}
-				noti.setProduct(productVO);
+				noti.setProduct(product);
 				/**
 				 * 상품가격정보 세팅.
 				 */
 				productTenantPriceList = new ArrayList<ProductTenantPrice>();
-				ProductTenantPrice productTenantPriceVO = new ProductTenantPrice();
-				productTenantPriceVO.setProdId(itemInfo.getProdId());
-				productTenantPriceVO.setSyncDataControlType(itemInfo.getCudType());
-				productTenantPriceVO.setTenantId(CouponConstants.TENANT_ID); // tenentId
-				productTenantPriceVO.setApplyStartDt(couponInfo.getIssueSDate());// 적용_시작_일시
-				productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());// 상품가격
+				ProductTenantPrice productTenantPrice = new ProductTenantPrice();
+				productTenantPrice.setProdId(couponInfo.getProdId());
+				productTenantPrice.setSyncDataControlType(cudType);
+				productTenantPrice.setTenantId((String) couponList.get(kk).get("tempTenantId")); // tenentId
+				productTenantPrice.setApplyStartDt(couponInfo.getIssueSDate());// 적용_시작_일시
+				productTenantPrice.setProdAmt("0");// 상품가격
 
-				if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
-					productTenantPriceVO.setRegId(couponInfo.getBpId()); // 등록ID
-					productTenantPriceVO.setRegDt(modifiedDate); // 등록일시
-					productTenantPriceVO.setUpdId(couponInfo.getBpId()); // 수정ID
-					productTenantPriceVO.setUpdDt(modifiedDate); // 수정일시
+				if ("C".equalsIgnoreCase(cudType)) {
+					productTenantPrice.setRegId(couponInfo.getBpId()); // 등록ID
+					productTenantPrice.setRegDt(modifiedDate); // 등록일시
+					productTenantPrice.setUpdId(couponInfo.getBpId()); // 수정ID
+					productTenantPrice.setUpdDt(modifiedDate); // 수정일시
 
 				} else {
-					productTenantPriceVO.setRegId(couponRes.getRegId()); // 등록ID
-					productTenantPriceVO.setRegDt(couponRes.getRegDt()); // 등록일시
-					productTenantPriceVO.setUpdId(couponInfo.getBpId()); // 수정ID
-					productTenantPriceVO.setUpdDt(modifiedDate); // 수정일시
+					productTenantPrice.setRegId(couponRes.getRegId()); // 등록ID
+					productTenantPrice.setRegDt(couponRes.getRegDt()); // 등록일시
+					productTenantPrice.setUpdId(couponInfo.getBpId()); // 수정ID
+					productTenantPrice.setUpdDt(modifiedDate); // 수정일시
 				}
 
-				productTenantPriceList.add(productTenantPriceVO);
+				productTenantPriceList.add(productTenantPrice);
 				noti.setProductTenantPriceList(productTenantPriceList);
-				
-				
-				
+
+
 				/**
 				 * 상품의 테넌트별 정산율.
 				 */
 				productTenantRateList = new ArrayList<ProductTenantRate>();
-				ProductTenantRate productTenantRateVo = new ProductTenantRate();
-				productTenantRateVo.setProdId(itemInfo.getProdId());
-				productTenantRateVo.setSyncDataControlType(itemInfo.getCudType());
-				productTenantRateVo.setTenantId(CouponConstants.TENANT_ID); // tenentId
-				productTenantRateVo.setApplyStartDt(couponInfo.getIssueSDate());// 적용_시작_일시
-				productTenantRateVo.setProdRate(couponInfo.getAccountingRate());// 상품정산율
-				productTenantRateVo.setSttlTyp("01");// 정산_유형
-				productTenantRateVo.setSttlMthd("01");// 정산_방법
-				productTenantRateVo.setSttlApplStdCd("02");// 정산_적용_기준_코드
-				productTenantRateVo.setUnitAmt(itemInfo.getItemPrice()); //단위_금액
-				productTenantRateVo.setRegId("SAC_SHOPPING"); // 등록ID
-				productTenantRateVo.setRegDt(modifiedDate); // 등록일시
-				productTenantRateVo.setUpdId("SAC_SHOPPING"); // 수정ID
-				productTenantRateVo.setUpdDt(modifiedDate); // 수정일시
-				
-				productTenantRateList.add(productTenantRateVo);
-				noti.setProductTenantRateList(productTenantRateList);				
-				
-				
-				this.log.info("episode_prod_id S:::" + itemInfo.getProdId());
+				ProductTenantRate productTenantRate = new ProductTenantRate();
+				productTenantRate.setProdId(couponInfo.getProdId());
+				productTenantRate.setSyncDataControlType(cudType);
+				productTenantRate.setTenantId((String) couponList.get(kk).get("tempTenantId")); // tenentId
+				productTenantRate.setApplyStartDt(couponInfo.getIssueSDate());// 적용_시작_일시
+				productTenantRate.setProdRate(couponInfo.getAccountingRate());// 상품정산율
+				productTenantRate.setSttlTyp("01");// 정산_유형
+				productTenantRate.setSttlMthd("01");// 정산_방법
+				productTenantRate.setSttlApplStdCd("02");// 정산_적용_기준_코드
+				productTenantRate.setUnitAmt("0"); //단위_금액
+				productTenantRate.setRegId("SAC_SHOPPING"); // 등록ID
+				productTenantRate.setRegDt(modifiedDate); // 등록일시
+				productTenantRate.setUpdId("SAC_SHOPPING"); // 수정ID
+				productTenantRate.setUpdDt(modifiedDate); // 수정일시
+
+				productTenantRateList.add(productTenantRate);
+				noti.setProductTenantRateList(productTenantRateList);
+
+
+				this.log.info("channel_prod_id S:::" + couponInfo.getProdId());
 				this.shoppingIprmAmqpTemplate.convertAndSend(noti); // async
-				this.log.info("episode_prod_id E:::" + itemInfo.getProdId());
+				this.log.info("channel_prod_id E:::" + couponInfo.getProdId());
+
+				// //////////////////////////////////에피소드 MQ 연동 //////////////////////////////////////////////////////
+
+				for (int i = 0; i < itemInfoList.size(); i++) {
+					DpItemInfo itemInfo = itemInfoList.get(i);
+					noti.setTransactionKey(couponReq.getTxId() + "001" + (seqCnt++));
+					/**
+					 * 상품정보 세팅.
+					 */
+					Product productVO = new Product();
+
+					productVO.setSyncDataControlType(itemInfo.getCudType()); // 구분
+					productVO.setProdId(itemInfo.getProdId());// 상품ID
+					productVO.setProdNm(itemInfo.getItemName()); // 상품명
+
+					if (!String.valueOf(itemInfo.getItemPrice()).equals("0")) { // 유료
+						productVO.setProdFdTypCd("PD000501");// 유료
+					} else {
+						productVO.setProdFdTypCd("PD000502");// 무료
+					}
+					productVO.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);// 서비스그룹코드DP000206
+
+					productVO.setMbrNo(couponInfo.getMbrNo());// 판매자mbrNO
+					productVO.setCid(itemInfo.getItemCode()); // cid
+					productVO.setCateNo(CouponConstants.TOP_MENU_ID_CUPON_CONTENT); // 탑카테고리 DP28
+					productVO.setSubCateNo(couponRes.getMenuId());// 서브카테고리
+					productVO.setCoContentsId(itemInfo.getItemCode());// 업체컨텐츠ID == CID랑 같음
+
+					if (Integer.parseInt(couponInfo.getValidUntil()) > 0) { // 유효일수 값 비교
+						productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_DAY); // PD00312 기간제(일)
+						productVO.setUserTerm(couponInfo.getValidUntil()); // 유효일수로 셋팅
+					} else {
+						productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_SELECT); // PD00319 기간선택
+						// USE_TERM_UNIT
+						productVO.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
+					}
+					productVO.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
+					productVO.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
+					productVO.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
+					productVO.setChnlTypCd(CouponConstants.COUPON_CONTENT_TP_EPI);
+					if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
+						productVO.setRegId(couponInfo.getBpId()); // 등록ID
+						productVO.setRegDt(modifiedDate); // 등록일시
+						productVO.setUpdId(couponInfo.getBpId()); // 수정ID
+						productVO.setUpdDt(modifiedDate); // 수정일시
+
+					} else {
+						productVO.setRegId(couponRes.getRegId()); // 등록ID
+						productVO.setRegDt(couponRes.getRegDt()); // 등록일시
+						productVO.setUpdId(couponInfo.getBpId()); // 수정ID
+						productVO.setUpdDt(modifiedDate); // 수정일시
+					}
+					noti.setProduct(productVO);
+					/**
+					 * 상품가격정보 세팅.
+					 */
+					productTenantPriceList = new ArrayList<ProductTenantPrice>();
+					ProductTenantPrice productTenantPriceVO = new ProductTenantPrice();
+					productTenantPriceVO.setProdId(itemInfo.getProdId());
+					productTenantPriceVO.setSyncDataControlType(itemInfo.getCudType());
+					productTenantPriceVO.setTenantId((String) couponList.get(kk).get("tempTenantId")); // tenentId
+					productTenantPriceVO.setApplyStartDt(couponInfo.getIssueSDate());// 적용_시작_일시
+					productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());// 상품가격
+
+					if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
+						productTenantPriceVO.setRegId(couponInfo.getBpId()); // 등록ID
+						productTenantPriceVO.setRegDt(modifiedDate); // 등록일시
+						productTenantPriceVO.setUpdId(couponInfo.getBpId()); // 수정ID
+						productTenantPriceVO.setUpdDt(modifiedDate); // 수정일시
+
+					} else {
+						productTenantPriceVO.setRegId(couponRes.getRegId()); // 등록ID
+						productTenantPriceVO.setRegDt(couponRes.getRegDt()); // 등록일시
+						productTenantPriceVO.setUpdId(couponInfo.getBpId()); // 수정ID
+						productTenantPriceVO.setUpdDt(modifiedDate); // 수정일시
+					}
+
+					productTenantPriceList.add(productTenantPriceVO);
+					noti.setProductTenantPriceList(productTenantPriceList);
+
+
+					/**
+					 * 상품의 테넌트별 정산율.
+					 */
+					productTenantRateList = new ArrayList<ProductTenantRate>();
+					ProductTenantRate productTenantRateVo = new ProductTenantRate();
+					productTenantRateVo.setProdId(itemInfo.getProdId());
+					productTenantRateVo.setSyncDataControlType(itemInfo.getCudType());
+					productTenantRateVo.setTenantId((String) couponList.get(kk).get("tempTenantId")); // tenentId
+					productTenantRateVo.setApplyStartDt(couponInfo.getIssueSDate());// 적용_시작_일시
+					productTenantRateVo.setProdRate(couponInfo.getAccountingRate());// 상품정산율
+					productTenantRateVo.setSttlTyp("01");// 정산_유형
+					productTenantRateVo.setSttlMthd("01");// 정산_방법
+					productTenantRateVo.setSttlApplStdCd("02");// 정산_적용_기준_코드
+					productTenantRateVo.setUnitAmt(itemInfo.getItemPrice()); //단위_금액
+					productTenantRateVo.setRegId("SAC_SHOPPING"); // 등록ID
+					productTenantRateVo.setRegDt(modifiedDate); // 등록일시
+					productTenantRateVo.setUpdId("SAC_SHOPPING"); // 수정ID
+					productTenantRateVo.setUpdDt(modifiedDate); // 수정일시
+
+					productTenantRateList.add(productTenantRateVo);
+					noti.setProductTenantRateList(productTenantRateList);
+
+
+					this.log.info("episode_prod_id S:::" + itemInfo.getProdId());
+					this.shoppingIprmAmqpTemplate.convertAndSend(noti); // async
+					this.log.info("episode_prod_id E:::" + itemInfo.getProdId());
+				}
 			}
-			
 			this.log.info("■■■■■ MQ 연동 End ■■■■■");
 		} catch (AmqpException ae) {
 			result = false;
