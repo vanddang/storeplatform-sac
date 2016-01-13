@@ -143,9 +143,7 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
-				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)
-				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_OMD)) {
+		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_OMD)) {
 			throw new StorePlatformException("SAC_MEM_1203");
 		}
 

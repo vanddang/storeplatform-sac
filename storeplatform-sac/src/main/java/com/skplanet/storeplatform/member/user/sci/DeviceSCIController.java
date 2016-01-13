@@ -219,12 +219,6 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-//		if (removeDeviceRequest.getCommonRequest().getTenantID() == null
-//				|| removeDeviceRequest.getCommonRequest().getTenantID().length() <= 0) {
-//			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-//		}
-
 		// 사용자키 없음
 		if (removeDeviceRequest.getUserKey() == null || removeDeviceRequest.getUserKey().length() <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));

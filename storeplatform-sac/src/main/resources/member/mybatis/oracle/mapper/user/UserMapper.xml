@@ -17,7 +17,6 @@
                     m.pwd = #{memberPW}
                     ,m.act_tk = null
                     ,m.upd_dt = SYSDATE
-                    ,m.fail_cnt = 0
         /* 비밀번호가 없는 경우 비밀번호 추가 */
         WHEN  NOT MATCHED THEN
             INSERT
@@ -25,14 +24,12 @@
                     m.insd_usermbr_no
                     ,m.pwd
                     ,m.upd_dt
-                    ,m.fail_cnt
                 )
             VALUES
                 (
                     #{memberKey}
                     ,#{memberPW}
                     ,SYSDATE
-                    ,0
                 )
     </update>
 
@@ -63,7 +60,6 @@
                     u.pwd = #{memberPW}
                     ,u.act_tk = null
                     ,u.upd_dt = TO_DATE(#{pwRegDate},'YYYYMMDDHH24MISS')
-                    ,u.fail_cnt = 0
         /* 비밀번호가 없는 경우 비밀번호 추가 */
         WHEN NOT MATCHED THEN
             INSERT
@@ -71,14 +67,12 @@
                     u.insd_usermbr_no
                     ,u.pwd
                     ,u.upd_dt
-                    ,u.fail_cnt
                 )
             VALUES
                 (
                     #{memberKey}
                     ,#{memberPW}
                     ,SYSDATE
-                    ,0
                 )
     </update>
 
@@ -203,8 +197,7 @@
                  a.nation_cd                 userCountry,
                  a.lang_cd                   userLanguage,
                  a.entry_day regDate,
-                 TO_CHAR( b.upd_dt ,'YYYYMMDDHH24MISS')            updateDate,
-                 b.fail_cnt                  failCnt
+                 TO_CHAR( b.upd_dt ,'YYYYMMDDHH24MISS')            updateDate
            FROM  tb_us_ousermbr a
       LEFT JOIN  tb_us_ousermbr_pwd b ON a.insd_usermbr_no = b.insd_usermbr_no 
           WHERE  a.mbr_id = #{userID}
@@ -777,60 +770,53 @@
     
     <!--  회원 비밀번호 로그인 success. -->
     <update id="updateLoginSuccess" parameterType="mbrPwd">
-       MERGE  /* UserMapper.xml, updateLoginSuccess, SAC(SC), 최진호, 2015-12-21 */
-              INTO tb_us_ousermbr_pwd m
-       USING  DUAL ON 
-              (
-                   m.insd_usermbr_no = #{memberKey}
-              )
+        MERGE  /* UserMapper.xml, updateLoginSuccess, SAC(SC), 최진호, 2015-12-21 */
+        INTO tb_us_ousermbr_pwd m
+        USING DUAL ON
+            (
+                m.insd_usermbr_no = #{memberKey}
+            )
 
          /* 비밀번호가 존재하는 경우 */
-         WHEN MATCHED THEN
-      UPDATE  SET
-              m.fail_cnt = 0
-              , upd_dt = SYSDATE
-
-       /* 비밀번호가 없는 경우 비밀번호 추가 */
-       WHEN NOT MATCHED THEN
-      INSERT
-              (
-                  insd_usermbr_no
-                , upd_dt
-                , fail_cnt
-              )
-      VALUES  (
+        WHEN MATCHED THEN
+            UPDATE  SET
+                , upd_dt = SYSDATE
+        /* 비밀번호가 없는 경우 비밀번호 추가 */
+        WHEN NOT MATCHED THEN
+            INSERT
+                (
+                    insd_usermbr_no
+                    ,upd_dt
+                )
+            VALUES
+                (
                     #{memberKey}
-                  , SYSDATE
-                  , 0
-              )
+                    ,SYSDATE
+                )
     </update>
 
     <!--  회원 비밀번호 로그인 fail. -->
     <update id="updateLoginFail" parameterType="mbrPwd">
-       MERGE  /* UserMapper.xml, updateLoginFail,  SAC(SC), 최진호, 2015-12-21 */
-              INTO tb_us_ousermbr_pwd m
-       USING  DUAL ON 
-              ( 
-                  m.insd_usermbr_no = #{memberKey}
-              )
-
-         /* 비밀번호가 존재하는 경우 */
-         WHEN MATCHED THEN
-       UPDATE SET 
-              m.fail_cnt = m.fail_cnt + 1
-
-       /* 비밀번호가 없는 경우 비밀번호 추가 */
-       WHEN NOT MATCHED THEN
-       INSERT (
+        MERGE  /* UserMapper.xml, updateLoginFail,  SAC(SC), 최진호, 2015-12-21 */
+        INTO tb_us_ousermbr_pwd m
+        USING  DUAL ON
+            (
+                m.insd_usermbr_no = #{memberKey}
+            )
+        /* 비밀번호가 존재하는 경우 */
+        WHEN MATCHED THEN
+        /* 비밀번호가 없는 경우 비밀번호 추가 */
+        WHEN NOT MATCHED THEN
+            INSERT
+                (
                     insd_usermbr_no
-                  , upd_dt
-                  , fail_cnt
-              )
-       VALUES (
+                    ,upd_dt
+                )
+            VALUES
+                (
                     #{memberKey}
-                  , SYSDATE
-                  , 1
-              )
+                    ,SYSDATE
+                )
     </update>
     
     <!-- 사용자 탈퇴 -->
@@ -1445,14 +1431,12 @@
                 INTO tb_us_ousermbr_pwd 
                 (
                       insd_usermbr_no
-                    , fail_cnt
                     , upd_dt
                     <if test="userAuthToken != userAuthToken">, act_tk</if>
                 ) 
         VALUES  
                 (
                       #{memberKey}
-                    , 0
                     , SYSDATE
                     <if test="userAuthToken != userAuthToken">, #{userAuthToken}</if>
                 )

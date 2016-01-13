@@ -29,16 +29,6 @@ public class AuthorizeByPwdSacRes extends CommonInfo {
     private String userType = "";
 
     /**
-     * 로그인 상태코드.
-     */
-    private String loginStatusCode = "";
-
-    /**
-     * 로그인 실패 카운트.
-     */
-    private String loginFailCount = "";
-
-    /**
      * 로그인 성공유무(Y/N).
      */
     private String isLoginSuccess = "";
@@ -83,34 +73,6 @@ public class AuthorizeByPwdSacRes extends CommonInfo {
      */
     public void setUserType(String userType) {
         this.userType = userType;
-    }
-
-    /**
-     * @return loginStatusCode
-     */
-    public String getLoginStatusCode() {
-        return this.loginStatusCode;
-    }
-
-    /**
-     * @param loginStatusCode String
-     */
-    public void setLoginStatusCode(String loginStatusCode) {
-        this.loginStatusCode = loginStatusCode;
-    }
-
-    /**
-     * @return loginFailCount
-     */
-    public String getLoginFailCount() {
-        return this.loginFailCount;
-    }
-
-    /**
-     * @param loginFailCount String
-     */
-    public void setLoginFailCount(String loginFailCount) {
-        this.loginFailCount = loginFailCount;
     }
 
     /**

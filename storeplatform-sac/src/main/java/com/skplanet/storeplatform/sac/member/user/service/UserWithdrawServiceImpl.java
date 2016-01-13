@@ -88,7 +88,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) {
 
-		/** 1. 요청 파라미터에 따라서 회원 조회 key값 설정 */
+		/** 1. 요청 파라미터에 따라서 회원 조회 key값 설정. */
 		DetailReq detailReq = new DetailReq();
 
 		if (StringUtils.isNotBlank(req.getUserId())) {
@@ -131,7 +131,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 			LOGGER.info("소셜 아이디(Facebook, google, naver) > userAuthToken 인증");
 
-			/** 소셜 아이디인 경우 사용자 인증토큰이 필수 값 */
+			/** 소셜 아이디인 경우 사용자 인증토큰이 필수 값. */
 			if (req.getUserAuthToken() == null || req.getUserAuthToken().length() <= 0) {
 				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
 			}
@@ -153,13 +153,15 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		 *   - userId 탈퇴요청
 		 *   - 모바일회원
 		 */
-		if( StringUtils.isNotBlank(detailReq.getUserId())
+		if( StringUtils.isNotBlank(req.getUserId())
 				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE) ) {
 
-			/** 4-1-1. 회원 탈퇴 */
+			LOGGER.info("userId요청 혹은 모바일 회원 > 회원 탈퇴");
+
+			/** 4-1-1. 회원 탈퇴. */
 			this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes.getUserInfo().getIsDormant());
 
-			/** 4-1-2. MQ 연동 (회원 탈퇴) */
+			/** 4-1-2. MQ 연동 (회원 탈퇴). */
 			StringBuffer buf = new StringBuffer();
 			String mqDeviceStr = "";
 			if (detailRes.getDeviceInfoList() != null && detailRes.getDeviceInfoList().size() > 0) {
@@ -195,18 +197,16 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				LOGGER.error("MQ process fail {}", mqInfo);
 			}
 		/**
-		 * 4-2. 휴대기기만 삭제 처리
-		 * 	 - 휴대기기삭제, MQ연동 : memberDelDeviceAmqpTemplate
+		 * 4-2. 휴대기기만 invalid 처리
+		 * 	 - 휴대기기 invalid, MQ연동 : memberDelDeviceAmqpTemplate
 		 * 	 - deviceId 탈퇴요청
 		 * 	 - T store 회원, 소셜아이디회원 ( 모바일회원이 아닌경우 )
 		 */
 		} else {
 
-			/** 4-2-1. 휴대기기 삭제 */
-			this.deviceIdInvalid(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(),
-					detailRes.getUserInfo().getIsDormant());
+			LOGGER.info("deviceId 요청 중 모바일회원이 아닌 경우 > 휴대기기 invalid 처리");
 
-			/** 4-2-2. MQ 연동 (휴대기기 삭제) */
+			/** 4-2-1. 휴대기기 정보 조회. */
 			String keyType = MemberConstants.KEY_TYPE_MDN;
 			if ( ValidationCheckUtils.isDeviceId(req.getDeviceId()) ) {
 				keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
@@ -215,6 +215,11 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, keyType,
 					req.getDeviceId(), detailRes.getUserInfo().getUserKey());
 
+			/** 4-2-2. 휴대기기 invalid 처리. */
+			this.deviceIdInvalid(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(),
+					detailRes.getUserInfo().getIsDormant());
+
+			/** 4-2-3. MQ 연동 (휴대기기 삭제). */
 			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
 			try {
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));

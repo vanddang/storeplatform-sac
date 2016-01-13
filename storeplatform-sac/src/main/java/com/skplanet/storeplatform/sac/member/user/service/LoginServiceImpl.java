@@ -829,6 +829,7 @@ public class LoginServiceImpl implements LoginService {
 		boolean isOpmd = this.commService.isOpmd(oDeviceId);
 		String isVariability = "Y"; // 변동성 체크 성공 유무
 		String userKey = null;
+		String deviceKey = null;
 		DeviceInfo deviceInfo = null;
 
 		/** 1. 모번호 조회 및 셋팅 */
@@ -853,6 +854,7 @@ public class LoginServiceImpl implements LoginService {
 				/** 3-1-1-1. 휴대기기 정보 조회후 변동성 체크 */
 				deviceInfo = this.deviceService.srhDevice(requestHeader, keyType, req.getDeviceId(), null);
 				userKey = deviceInfo.getUserKey();
+				deviceKey = deviceInfo.getDeviceKey();
 
 				/** req, DB의 통신사가 일치한 경우 */
 				if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(),
@@ -889,7 +891,7 @@ public class LoginServiceImpl implements LoginService {
 				final String tLogEmailReq = req.getDeviceAccount();
 				final String tLogImeiReq = req.getNativeId();
 				final String tLogUserKey = deviceInfo.getUserKey();
-				final String tLogDeviceKey = deviceInfo.getDeviceKey();
+				final String tLogDeviceKey = deviceKey;
 				final String tLogMnoTypeDB = deviceInfo.getDeviceTelecom();
 				final String tLogEmailDB = deviceInfo.getDeviceAccount();
 				final String tLogImeiDB = deviceInfo.getNativeId();
@@ -934,7 +936,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setDeviceKey(modifyDeviceResponse.getDeviceKey());
 
 			}else{
-				res.setDeviceKey(null);
+				res.setDeviceKey(deviceKey);
 				LOGGER.info("{} {} OPMD 단말 변동성 휴대기기 업데이트 안함", req.getDeviceId(), oDeviceId);
 			}
 
@@ -1030,7 +1032,6 @@ public class LoginServiceImpl implements LoginService {
 		String userType = null;
 		String userMainStatus = null;
 		String userSubStatus = null;
-		String loginStatusCode = null;
 		String isDormant = null;
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
@@ -1038,8 +1039,9 @@ public class LoginServiceImpl implements LoginService {
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID,
 				userId);
 
-		/** 1-1. 회원정보 없으면 오류 - 회원 정보가 존재 하지 않습니다. */
-		if (chkDupRes.getUserMbr() == null) {
+		/** 1-1. 회원정보 없거나 회원상태가 정상이 아니면 오류 - 회원 정보가 존재 하지 않습니다. */
+		if (chkDupRes.getUserMbr() == null
+				|| !StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(),MemberConstants.MAIN_STATUS_NORMAL)) {
 			/* 회원 정보가 존재 하지 않습니다. */
 			throw new StorePlatformException("SAC_MEM_0003", "userId", userId);
 		}
@@ -1051,6 +1053,10 @@ public class LoginServiceImpl implements LoginService {
 		userSubStatus = chkDupRes.getUserMbr().getUserSubStatus();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
 
+<<<<<<< HEAD
+		/** 2-2. 일시정지 상태면 응답처리. */
+		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)) {
+=======
 		/** 2-1. 가가입 상태면 오류 - 가가입자는 Save&Sync 인증을 통해서만 인증이 처리된다.  */
 		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_WATING)){
 			throw new StorePlatformException("SAC_MEM_2001", userMainStatus, userSubStatus);
@@ -1059,18 +1065,21 @@ public class LoginServiceImpl implements LoginService {
 		/** 2-2. 일시정지,로그인제한 상태면 응답처리. */
 		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
 				/*|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)*/) {
+>>>>>>> e53a3dc1e365e1a501f03b25fd7b7f796e1c382b
 			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
 			res.setUserSubStatus(userSubStatus);
-			res.setLoginStatusCode(loginStatusCode);
 			res.setIsLoginSuccess("Y");
 			return res;
 		}
 
 		try{
 			/** 3-1. 그외의 회원은 req의 pwd 일치 체크 */
-			this.checkUserPwd(requestHeader, userKey, userPw, isDormant);
+			CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(requestHeader, userKey, userPw, isDormant);
+			if (chkUserPwdRes.getUserKey()==null || chkUserPwdRes.getUserKey().length() <= 0) {
+				throw new StorePlatformException("SAC_MEM_1406", userKey);
+			}
 
 			/**  3-1-1. 해당계정이 휴면아이디라면 정상 복구 */
 			if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
@@ -1081,6 +1090,8 @@ public class LoginServiceImpl implements LoginService {
 				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 			}
 
+<<<<<<< HEAD
+=======
 			/**  3-1-2. 계정잠금해제 요청이라면 로그인상태 코드 정상처리 */
 			// TODO. 로그인 상태 일괄 제거
 			/*if (StringUtils.equals(req.getReleaseLock(), "Y")
@@ -1090,6 +1101,7 @@ public class LoginServiceImpl implements LoginService {
 				loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 			}*/
 
+>>>>>>> e53a3dc1e365e1a501f03b25fd7b7f796e1c382b
 			/**  3-1-3. 로그인 성공이력 저장후 리턴 */
 			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "Y", null);
 
@@ -1098,7 +1110,6 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
 			res.setUserSubStatus(userSubStatus);
-			res.setLoginStatusCode(loginStatusCode);
 			res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey,
 					userKey));
 			res.setIsLoginSuccess("Y");
@@ -1107,11 +1118,9 @@ public class LoginServiceImpl implements LoginService {
 		} catch ( StorePlatformException e ) {
 			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 				/** 3-2-1. 로그인 실패이력 저장후 리턴 */
-				LoginUserResponse loginUserRes = this.regLoginHistory(requestHeader, userId, userPw, "N", "N",
-						req.getIpAddress(), "N", null, "N", null);
+				this.regLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N", null, "N", null);
 
 				/* 로그인 결과 */
-				res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
 				res.setIsLoginSuccess("N");
 			} else {
 				throw e;
@@ -4416,9 +4425,6 @@ public class LoginServiceImpl implements LoginService {
 
 		String userKey = null;
 		String userType = null;
-		String loginStatusCode = null;
-		String userMainStatus = null;
-		String userSubStatus= null;
 		String isDormant = null;
 		AuthorizeByPwdSacRes res = new AuthorizeByPwdSacRes();
 
@@ -4426,8 +4432,9 @@ public class LoginServiceImpl implements LoginService {
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID,
 				userId);
 
-		/**  1-1. 회원정보 없으면 Exception (ID자체가 없음) */
-		if (chkDupRes.getUserMbr() == null) {
+		/**  1-1. 회원정보가 없거나 정상이 아니면 오류 (ID자체가 없음) */
+		if (chkDupRes.getUserMbr() == null
+				|| !StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(),MemberConstants.MAIN_STATUS_NORMAL)) {
 			/* 회원 정보가 존재 하지 않습니다. */
 			throw new StorePlatformException("SAC_MEM_0003", "userId", userId);
 		}
@@ -4435,6 +4442,10 @@ public class LoginServiceImpl implements LoginService {
 		/**  2. 조회된 회원정보 셋팅 */
 		userKey = chkDupRes.getUserMbr().getUserKey();
 		userType = chkDupRes.getUserMbr().getUserType();
+<<<<<<< HEAD
+		isDormant = chkDupRes.getUserMbr().getIsDormant();
+
+=======
 		userMainStatus = chkDupRes.getUserMbr().getUserMainStatus();
 		userSubStatus = chkDupRes.getUserMbr().getUserSubStatus();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
@@ -4454,9 +4465,13 @@ public class LoginServiceImpl implements LoginService {
 			return res;
 		}*/
 
+>>>>>>> e53a3dc1e365e1a501f03b25fd7b7f796e1c382b
 		try{
 			/** 3-1. 그외의 회원은 req의 pwd 일치 체크 */
 			CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(requestHeader, userKey, userPw, isDormant);
+			if (chkUserPwdRes.getUserKey()==null || chkUserPwdRes.getUserKey().length() <= 0) {
+				throw new StorePlatformException("SAC_MEM_1406", userKey);
+			}
 
 			/** 3-1-1. 해당계정이 휴면아이디라면 정상 복구 */
 			if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
@@ -4467,6 +4482,8 @@ public class LoginServiceImpl implements LoginService {
 				this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 			}
 
+<<<<<<< HEAD
+=======
 			/** 3-1-2. 계정잠금해제 요청이라면 로그인상태 코드 정상처리 */
 			// TODO. 로그인 상태 일괄 제거
 			/*if (StringUtils.equals(req.getReleaseLock(), "Y")
@@ -4477,6 +4494,7 @@ public class LoginServiceImpl implements LoginService {
 				loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 			}*/
 
+>>>>>>> e53a3dc1e365e1a501f03b25fd7b7f796e1c382b
 			/** 3-1-3. 로그인 성공이력 저장후 리턴 */
 			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", null, "N", null, "Y", null);
 
@@ -4492,17 +4510,14 @@ public class LoginServiceImpl implements LoginService {
 			/* 정상 로그인 결과 */
 			res.setUserKey(userKey);
 			res.setUserType(userType);
-			res.setLoginStatusCode(loginStatusCode);
 			res.setIsLoginSuccess("Y");
 
 		/** 3-2. pwd불일치 - 로그인 실패 */
 		} catch( StorePlatformException e ) {
 			if ( StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA) ) {
 				/** 3-2-1. 로그인 실패이력 저장후 리턴 */
-				LoginUserResponse loginUserRes = this.regLoginHistory(requestHeader, userId, userPw, "N", "N",
-						null, "N", null, "N", null);
+				this.regLoginHistory(requestHeader, userId, userPw, "N", "N", null, "N", null, "N", null);
 				/* 실패 로그인 결과 */
-				res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
 				res.setIsLoginSuccess("N");
 			} else {
 				throw e;

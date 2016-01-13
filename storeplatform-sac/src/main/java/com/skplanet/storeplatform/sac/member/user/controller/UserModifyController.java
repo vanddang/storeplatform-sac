@@ -415,12 +415,16 @@ public class UserModifyController {
 	 */
 	@RequestMapping(value = "/member/user/modifyId/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyIdSacRes modifyId(SacRequestHeader header,
-													   @RequestBody @Validated ModifyIdSacReq req) {
+	public ModifyIdSacRes modifyId(SacRequestHeader header, @RequestBody @Validated ModifyIdSacReq req) {
+
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
 		ModifyIdSacRes res = this.svc.modifyId(header, req);
+
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
 		return res;
+
 	}
 
 }
