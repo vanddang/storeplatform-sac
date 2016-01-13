@@ -76,7 +76,6 @@
               AND PD.PROD_ID = #{channelId}
               AND PDESC.LANG_CD = #{langCd}
               AND TP.TENANT_ID = #{tenantId}
-              AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
               AND MCM.USE_YN = 'Y'
               AND MCM.BASE_YN = 'Y'
               AND MD.LANG_CD = PDESC.LANG_CD

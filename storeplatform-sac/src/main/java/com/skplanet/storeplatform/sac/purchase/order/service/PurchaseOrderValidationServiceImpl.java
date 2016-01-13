@@ -486,7 +486,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// S2S 상품 가격 조회
-			if (StringUtils.isNotBlank(purchaseProduct.getSearchPriceUrl())) {
+			if (!StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseCDConstants.PRCHS_REQ_PATH_S2S)
+					&& StringUtils.isNotBlank(purchaseProduct.getSearchPriceUrl())) {
 
 				final List<String> tLogProdIdList = new ArrayList<String>();
 				tLogProdIdList.add(purchaseProduct.getProdId());

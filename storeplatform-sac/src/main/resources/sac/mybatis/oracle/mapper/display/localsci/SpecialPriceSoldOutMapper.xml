@@ -11,6 +11,7 @@
 		   AND EXPO_YN='Y'
 		   AND CPN_ID IS NOT NULL
 		   AND PROD_ID =#{productId}
+		   AND TENANT_ID =#{tenantId}
 		   AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT 
     </select>    
    
@@ -25,6 +26,7 @@
 		   AND EXPO_YN='Y'
 		   AND CPN_ID IS NOT NULL
 		   AND PROD_ID =#{productId}
+		   AND TENANT_ID =#{tenantId}
 		   AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT 
     </update>
    

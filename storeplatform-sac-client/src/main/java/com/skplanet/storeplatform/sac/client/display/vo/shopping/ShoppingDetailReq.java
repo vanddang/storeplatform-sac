@@ -46,6 +46,7 @@ public class ShoppingDetailReq extends CommonInfo {
 	private String virtualDeviceModelNo; // android_standard2
 	private String prodRshpCd; // 채널 에피소드 관계
 	private String specialTypeCd; // 쇼핑 특가 타입 코드
+	private String tenantId; // 테넌트ID
 	private Integer offset; // offset
 	private Integer count; // count
 
@@ -257,6 +258,14 @@ public class ShoppingDetailReq extends CommonInfo {
 	 */
 	public void setSpecialTypeCd(String specialTypeCd) {
 		this.specialTypeCd = specialTypeCd;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	/**

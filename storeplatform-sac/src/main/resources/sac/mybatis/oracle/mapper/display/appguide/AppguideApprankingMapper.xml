@@ -232,7 +232,14 @@
                        AND H.PROD_ID = J.PROD_ID
                        AND G.EXPO_YN = 'Y'
                        AND G.PROD_STATUS_CD = 'PD000403'
-                       AND NVL(D.CHNL_CNT, 0) > 0 
+                       AND EXISTS(
+                            SELECT 'X'
+                              FROM TB_DP_TENANT_PROD
+                             WHERE TENANT_ID =#{tenantId}
+                               AND PROD_ID =D.CATALOG_ID
+                               AND PROD_STATUS_CD ='PD000403'
+                               AND EXPO_YN = 'Y'
+                        )
                        AND EXISTS (
                               SELECT 1 
                               FROM  TB_DP_SPRT_DEVICE DV  

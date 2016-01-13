@@ -402,6 +402,12 @@ public class Product extends CommonInfo implements Serializable, PromotionEventA
 
 	private List<TenantProduct> tenantProductList;
 
+    /**
+     * 단말기 지원 여부
+     */
+    private String isDeviceSupported;
+
+
 	public List<TenantProduct> getTenantProductList() {
 		return this.tenantProductList;
 	}
@@ -1531,6 +1537,12 @@ public class Product extends CommonInfo implements Serializable, PromotionEventA
 	public void setAuthority(Authority authority) {
 		this.authority = authority;
 	}
-	
-	
+
+    public String getIsDeviceSupported() {
+        return isDeviceSupported;
+    }
+
+    public void setIsDeviceSupported(String isDeviceSupported) {
+        this.isDeviceSupported = isDeviceSupported;
+    }
 }

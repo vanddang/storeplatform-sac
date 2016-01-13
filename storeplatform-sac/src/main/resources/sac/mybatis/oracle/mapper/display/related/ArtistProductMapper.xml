@@ -31,7 +31,7 @@
 					, ROW_NUMBER() OVER(ORDER BY I.ISSUE_DAY DESC, D.PROD_NM) RNK
 				</if>
 				<if test="orderedBy == 'popular'">
-					, ROW_NUMBER() OVER(ORDER BY NVL(H.PRCHS_CNT, 0) DESC, I.ISSUE_DAY DESC, D.PROD_NM) RNK
+					, ROW_NUMBER() OVER(ORDER BY NVL(SUM(H.PRCHS_CNT), 0) DESC, MAX(I.ISSUE_DAY) DESC, MAX(D.PROD_NM)) RNK
 				</if>
 				, C.TOP_MENU_ID
 				, C.MENU_ID
@@ -39,22 +39,26 @@
 				, A.CONTENTS_TYPE_CD
 				FROM
 				    TB_DP_PROD A /* 에피소드 */
-				    , TB_DP_MENU_CATEGORY_PROD_MAPG B
-				    , TB_DP_MENU_CATEGORY C
-				    , TB_DP_PROD_DESC D
-				    , TB_DP_TENANT_PROD E
-				    , TB_DP_SPRT_DEVICE F
-				    , TB_CM_DEVICE G
-				    , TB_DP_TENANT_PROD_STATS H
-				    , TB_DP_MUSIC_PROD I
-				WHERE A.PROD_ID = B.PROD_ID
-					AND B.MENU_ID = C.MENU_ID
-					AND A.PROD_ID = D.PROD_ID
-					AND A.PROD_ID = E.PROD_ID
-					AND A.PROD_ID = F.PROD_ID
-					AND E.PROD_ID = H.PROD_ID(+)
-					AND E.TENANT_ID = H.TENANT_ID(+)
-					AND A.PROD_ID = I.PROD_ID
+				JOIN TB_DP_MENU_CATEGORY_PROD_MAPG B
+                    ON B.PROD_ID = A.PROD_ID AND B.USE_YN = 'Y'
+				JOIN TB_DP_MENU_CATEGORY C
+                    ON C.MENU_ID = B.MENU_ID AND C.USE_YN = 'Y' AND C.TOP_MENU_ID = 'DP16'
+				JOIN TB_DP_PROD_DESC D
+                    ON D.PROD_ID = A.PROD_ID AND D.ARTIST1_ID = #{artistId} AND D.LANG_CD = #{langCd}
+                JOIN TB_DP_TENANT_PROD E
+                    ON E.PROD_ID = A.PROD_ID AND E.TENANT_ID = #{tenantId} AND E.PROD_STATUS_CD = 'PD000403' AND E.EXPO_YN = 'Y'
+                JOIN TB_DP_SPRT_DEVICE F
+                    ON F.PROD_ID = A.PROD_ID AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{mmDeviceModelCd})
+                JOIN TB_DP_MUSIC_PROD I
+                    ON I.PROD_ID = A.PROD_ID
+                JOIN TB_CM_DEVICE G
+                    ON G.USE_YN = 'Y' AND G.MUSIC_SPRT_YN = 'Y' AND G.DEVICE_MODEL_CD = #{deviceModelCd}
+                <if test="orderedBy == 'popular'">
+				LEFT JOIN TB_DP_TENANT_PROD_STATS H
+                    ON H.TENANT_ID IN <foreach collection="tenantList" open="(" close=")" separator="," item="v">#{v}</foreach>
+                    AND H.PROD_ID = A.PROD_ID
+                </if>
+				WHERE 1=1
 					AND A.CONTENTS_TYPE_CD = 'PD002502'
 					AND A.META_CLSF_CD = 'CT25'
 					<if test="prodGradeCds != null">
@@ -63,21 +67,12 @@
 							#{prodGradeCd}
 						</foreach>
 					</if>
-					AND B.USE_YN = 'Y'
-					AND C.USE_YN = 'Y'
-					AND G.USE_YN = 'Y'
-					AND C.TOP_MENU_ID = 'DP16'
-					AND E.PROD_STATUS_CD = 'PD000403'
-					AND E.EXPO_YN = 'Y'
-					AND G.MUSIC_SPRT_YN = 'Y'
-					AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{mmDeviceModelCd})
-					AND G.DEVICE_MODEL_CD = #{deviceModelCd}
-					AND D.ARTIST1_ID = #{artistId}
-					AND E.TENANT_ID = #{tenantId}
-					AND D.LANG_CD = #{langCd}
+                <if test="orderedBy == 'popular'">
+                GROUP BY
+                    A.PROD_ID, C.TOP_MENU_ID, C.MENU_ID, A.CONTENTS_TYPE_CD
+                </if>
 				) A
 			WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
 			ORDER BY A.RNK
     </select>
-            
 </mapper>
