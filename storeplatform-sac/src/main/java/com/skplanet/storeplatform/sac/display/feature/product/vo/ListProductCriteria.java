@@ -19,33 +19,53 @@ public class ListProductCriteria {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private static final int DEFAULT_LIST_COUNT = 20;
-	private static final int MIN_EXPO_ORD = -99999999;
+	private static final int MIN_EXPO_ORD       = -99999999;
 
-    private String tenantId;
-	private String listId;
+    private String                        tenantId;
+	private String                        listId;
+	private String                        stdDt; //YYYYMM DDHH24MISS
 	private List<HashMap<String, String>> menuIdCondList;
-	private List<String> prodGradeCdList;
-	private Integer lastExpoOrd;
-	private Integer lastExpoOrdSub;
-	private boolean prodCharge;
-	private Integer count;
-	private String  stdDt; //YYYYMM DDHH24MISS
+	private List<String>                  prodGradeCdList;
+	private Integer                       lastExpoOrd;
+	private Integer                       lastExpoOrdSub;
+	private boolean                       prodCharge;
+	private Integer                       count;
 
-	public ListProductCriteria(ProductListSacReq req, String tenantId, String stdDt){
-		listId = req.getListId();
+	private String                        cacheKey;
+
+	public ListProductCriteria( ProductListSacReq req, String tenantId, String stdDt ) {
+
         this.tenantId = tenantId;
+		this.listId   = req.getListId();
+		this.stdDt    = stdDt;
 
         setupMenuIdCondList(req);
 		setupProdGradeCdList(req);
 		setupOrders(req);
 		setProdChage(req);
 		setCount(req);
-		this.stdDt = stdDt;
+
+		// set cache key
+		cacheKey = String.format( "key:[%s-%s-%s],menu:[%s],grade:[%s],charge:[%s],start:[%s/%s],count:[%s]",
+			tenantId, listId, stdDt,
+			req.getMenuId(), req.getProdGradeCd(), prodCharge,
+			lastExpoOrd, lastExpoOrdSub,
+			count
+		);
+
+		// To set "hasNext"
+		count++;
+
+	}
+
+	public String getCacheKey() {
+		return cacheKey;
 	}
 
 	private void setupMenuIdCondList(ProductListSacReq req) {
-		if(req.getMenuId()==null)
-			return;
+
+		if( req.getMenuId() == null ) return;
+
 		menuIdCondList = new ArrayList<HashMap<String, String>>();
 		StringTokenizer st = new StringTokenizer(req.getMenuId(), "+|^", true);
 		HashMap<String, String> hm = new HashMap<String, String>();
@@ -90,9 +110,8 @@ public class ListProductCriteria {
 		}
 	}
 
-	private void setCount(ProductListSacReq req) {
+	private void setCount( ProductListSacReq req ) {
 		count = req.getCount() == null ? DEFAULT_LIST_COUNT : req.getCount();
-		count++; // To set "hasNext"
 	}
 
 	private void setProdChage(ProductListSacReq req) {

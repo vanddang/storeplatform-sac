@@ -16,6 +16,6 @@ import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProduct;
  * Updated by : 문동선
  */
 public interface ProductListService {
-	ProductListSacRes searchProductList(ProductListSacReq requestVO, SacRequestHeader header);
-	Product getProduct(SacRequestHeader header, ListProduct listProd);
+	ProductListSacRes searchProductList( ProductListSacReq requestVO );
+	Product getProduct( ListProduct listProd );
 }

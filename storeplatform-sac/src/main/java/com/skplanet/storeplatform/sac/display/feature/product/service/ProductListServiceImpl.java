@@ -8,10 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.common.header.extractor.HeaderExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -22,7 +24,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.product.ProductL
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -48,6 +49,9 @@ public class ProductListServiceImpl implements ProductListService{
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
+	HeaderExtractor header;
+
+	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
@@ -67,25 +71,25 @@ public class ProductListServiceImpl implements ProductListService{
 	 * <pre>
 	 * TB_DP_LISTPROD 테이블에서 listId를 기준으로 상품목록을 만들어주는 함수
 	 * </pre>
-	 * @param requestVO 상품 목록 조회 조건
-	 * @param header
+	 * @param request 상품 목록 조회 조건
 	 * @return 상품 목록
 	 */
 	@Override
-	public ProductListSacRes searchProductList(ProductListSacReq requestVO, SacRequestHeader header) {
+	public ProductListSacRes searchProductList( ProductListSacReq request ) {
 
 		ProductListSacRes response = new ProductListSacRes();
 
-		String stdDt = getBatchStdDateStringFromDB(requestVO, header);
+		String listId = request.getListId();
+		String stdDt  = getStandardDate( listId );
 
 		// 1건을 더 조회하도록 파라미터가 세팅된다.
-		ListProductCriteria param = new ListProductCriteria( requestVO, header.getTenantHeader().getTenantId(), stdDt );
+		ListProductCriteria param = new ListProductCriteria( request, header.getTenantId(), stdDt );
 
 		while( true ) {
 
-			List<ListProduct> prodListFromDB = commonDAO.queryForList( "ProductList.selectListProdList", param, ListProduct.class );
+			List<ListProduct> prodListFromDB = getListProducts( param );
 
-			addListProductIntoResponse( header, response, prodListFromDB, param.getCount() );
+			addListProductIntoResponse( response, prodListFromDB, param.getCount() );
 
 			if( hasResponseEnoughProdList(response, param.getCount()) || noMoreProdToGet(prodListFromDB, param.getCount()) ) break;
 
@@ -94,30 +98,33 @@ public class ProductListServiceImpl implements ProductListService{
 		}
 
 		// 1건을 더 조회하여, 다음페이지 존재여부를 체크하고
-		setHasNext( response, requestVO );
+		setHasNext( response, request );
 
 		// 최종결과에서는 1건을 제외시킨다.
-		removeRedundantLastItem( response, requestVO );
+		removeRedundantLastItem( response, request );
 
 		setStartKey( response );
 		setCount( response );
 		setStdDt( response, stdDt );
-		setListIdAndEtcProp( response, requestVO, header );
+		setListIdAndEtcProp( response, listId );
 
 		return response;
+
 	}
 
-	private void setListIdAndEtcProp(ProductListSacRes response, ProductListSacReq requestVO, SacRequestHeader header) {
+	@Cacheable(value = "sac:display:listProduct:v1", key = "#param.getCacheKey()", unless = "#result == null")
+	public List<ListProduct> getListProducts( ListProductCriteria param ) {
+		logger.trace( ">> cacheKey : {}", param.getCacheKey() );
+		return commonDAO.queryForList( "ProductList.selectListProdList", param, ListProduct.class );
+	}
 
-		String tenantId = header.getTenantHeader().getTenantId();
-		String listId = requestVO.getListId();
-		int count = 1;
+	private void setListIdAndEtcProp( ProductListSacRes response, String listId ) {
 
-		DisplayListCriteria listCriteria = new DisplayListCriteria(tenantId, listId, "N", count);
+		DisplayListCriteria listCriteria = new DisplayListCriteria( header.getTenantId(), listId, "N", 1 );
 
 		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class);
 
-		if(!listsFromDB.isEmpty()){
+		if( ! listsFromDB.isEmpty() ){
     		response.setEtcProp(listsFromDB.get(0).getEtcProp());
     		response.setListId(listsFromDB.get(0).getListId());
     		response.setListNm(listsFromDB.get(0).getListNm());
@@ -133,9 +140,7 @@ public class ProductListServiceImpl implements ProductListService{
 	}
 
 	private void setHasNext( ProductListSacRes response, ProductListSacReq requestVO ) {
-
 		response.setHasNext( response.getProductList().size() > requestVO.getCount() ? "Y" : "N" );
-
 	}
 
 	private boolean noMoreProdToGet(List<ListProduct> prodListFromDB, int countExpected) {
@@ -164,20 +169,26 @@ public class ProductListServiceImpl implements ProductListService{
 		response.setDate(date);
 	}
 
-	private String getBatchStdDateStringFromDB(ProductListSacReq requestVO,
-			SacRequestHeader header) {
-		TenantHeader tenantHeader = header.getTenantHeader();
+	/**
+	 * 배치완료 기준일시를 조회한다.
+	 *
+	 * @param listId 리스트ID
+	 * @return 배치완료 기준일시
+	 */
+	private String getStandardDate( String listId ) {
 
 		// 배치완료 기준일시 조회
-		String stdDt = displayCommonService.getBatchStandardDateString(tenantHeader.getTenantId(), requestVO.getListId());
+		String stdDt = displayCommonService.getBatchStandardDateString( header.getTenantId(), listId );
 
 		// 기준일시 체크
-		if (StringUtils.isEmpty(stdDt))
+		if ( StringUtils.isEmpty(stdDt) )
 			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+
 		return stdDt;
+
 	}
 
-	private void addListProductIntoResponse( SacRequestHeader header, ProductListSacRes response, List<ListProduct> listProds, int limitCount ) {
+	private void addListProductIntoResponse( ProductListSacRes response, List<ListProduct> listProds, int limitCount ) {
 
 		List<Product> productList = response.getProductList();
 
@@ -185,7 +196,7 @@ public class ProductListServiceImpl implements ProductListService{
 
 			if( productList.size() >= limitCount ) break;
 
-			Product prodMeta = getProduct( header, prod );
+			Product prodMeta = getProduct( prod );
 
 			if( prodMeta != null ) productList.add( prodMeta );
 
@@ -206,16 +217,22 @@ public class ProductListServiceImpl implements ProductListService{
 		response.setCount( response.getProductList().size() );
 	}
 
+	/**
+	 * 상품 메타를 구한다.
+	 *
+	 * @param product 상품리스트에서 추출한 상품정보
+	 * @return 상품메타
+	 */
 	@Override
-	public Product getProduct( SacRequestHeader header, ListProduct productInList ) {
+	public Product getProduct( ListProduct product ) {
 
-        if ( productInList == null ) return null;
+        if ( product == null ) return null;
 
-		Product product   = null;
+		Product productMeta   = null;
 
-		String  prodId    = productInList.getProdId();
-		String  topMenuId = productInList.getTopMenuId();
-		String  svcGrpCd  = productInList.getSvcGrpCd();
+		String  prodId    = product.getProdId();
+		String  topMenuId = product.getTopMenuId();
+		String  svcGrpCd  = product.getSvcGrpCd();
 
 		MetaInfo            metaInfo;   // 메타정보 VO
 		AlbumMeta           albumMeta;  // 메타정보 VO
@@ -227,12 +244,12 @@ public class ProductListServiceImpl implements ProductListService{
 		productInfo.setPartProdId(prodId);
 		productInfo.setCatalogId(prodId);
 		productInfo.setTopMenuId(topMenuId);
-		productInfo.setContentsTypeCd(productInList.getContentsTypeCd());
-		productInfo.setSvcGrpCd(svcGrpCd);
-		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		paramMap.put("tenantHeader", header.getTenantHeader());
-		paramMap.put("deviceHeader", header.getDeviceHeader());
-		paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		productInfo.setContentsTypeCd( product.getContentsTypeCd() );
+		productInfo.setSvcGrpCd( svcGrpCd );
+		paramMap.put( "prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD );
+		paramMap.put( "tenantHeader", header.getTenantHeader() );
+		paramMap.put( "deviceHeader", header.getDeviceHeader() );
+		paramMap.put( "prodStatusCd", DisplayConstants.DP_SALE_STAT_ING );
 		paramMap.put("productBasicInfo", productInfo);
 
 		// APP
@@ -243,39 +260,39 @@ public class ProductListServiceImpl implements ProductListService{
 			paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 			metaInfo = metaInfoService.getAppMetaInfo(paramMap);
 			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateAppProduct(metaInfo);
+				productMeta = responseInfoGenerateFacade.generateAppProduct(metaInfo);
 		}// 이북
 		else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)){
 			paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 			metaInfo = metaInfoService.getEbookComicMetaInfo(paramMap);
 			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateEbookProduct(metaInfo);
+				productMeta = responseInfoGenerateFacade.generateEbookProduct(metaInfo);
 		}// 코믹
 		else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
 			paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 			metaInfo = metaInfoService.getEbookComicMetaInfo(paramMap);
 			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateComicProduct(metaInfo);
+				productMeta = responseInfoGenerateFacade.generateComicProduct(metaInfo);
 		}// 웹툰
 		else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) {
 			paramMap.put("imageCd", DisplayConstants.DP_WEBTOON_TOP_MENU_ID);
 			metaInfo = metaInfoService.getWebtoonMetaInfo(paramMap);
 			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateWebtoonProduct(metaInfo);
+				productMeta = responseInfoGenerateFacade.generateWebtoonProduct(metaInfo);
 		}
 		// 영화
 		else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)){
 			paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 			metaInfo = metaInfoService.getVODMetaInfo(paramMap);
 			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateMovieProduct(metaInfo);
+				productMeta = responseInfoGenerateFacade.generateMovieProduct(metaInfo);
 		}
 		// 방송
 		else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
 			paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 			metaInfo = metaInfoService.getVODMetaInfo(paramMap);
 			if(metaInfo!=null)
-				product = responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
+				productMeta = responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
 		}
 		// 통합뮤직||폰꾸미기
 		else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)||
@@ -286,12 +303,12 @@ public class ProductListServiceImpl implements ProductListService{
                 paramMap.put(DisplayConstants.META_MUSIC_USE_CONTENT_TP, "Y");
 				metaInfo = metaInfoService.getMusicMetaInfo(paramMap);
 				if(metaInfo!=null)
-					product = responseInfoGenerateFacade.generateMusicProduct(metaInfo);
+					productMeta = responseInfoGenerateFacade.generateMusicProduct(metaInfo);
 	        } //앨범
 			else if(svcGrpCd.equals("DP000208")) {
 	        	albumMeta = metaInfoService.getAlbumMetaInfo(paramMap);
 				if(albumMeta!=null)
-					product = responseInfoGenerateFacade.generateAlbumProduct(albumMeta);
+					productMeta = responseInfoGenerateFacade.generateAlbumProduct(albumMeta);
 	        }
 		}
 		// 쇼핑
@@ -299,20 +316,20 @@ public class ProductListServiceImpl implements ProductListService{
 			paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 			metaInfo = metaInfoService.getShoppingMetaInfo(paramMap);
 			if(metaInfo!=null) {
-				product = responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
+				productMeta = responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
 				// 쇼핑 4.0 일 경우 특가 상품 여부 추가
-				product.setSpecialProdYn(metaInfo.getSpecialSaleYn());
+				productMeta.setSpecialProdYn( metaInfo.getSpecialSaleYn() );
 			}
 		}
 
-		if( product == null ) return null;
+		if( productMeta == null ) return null;
 
-		product.setRecommendedReason( productInList.getRecomReason() );
-		product.setEtcProp( productInList.getEtcProp() );
-		product.setExpoOrd( productInList.getExpoOrd() );
-		product.setExpoOrdSub( productInList.getExpoOrdSub() );
+		productMeta.setRecommendedReason( product.getRecomReason() );
+		productMeta.setEtcProp( product.getEtcProp() );
+		productMeta.setExpoOrd( product.getExpoOrd() );
+		productMeta.setExpoOrdSub( product.getExpoOrdSub() );
 
-		return product;
+		return productMeta;
 
 	}
 

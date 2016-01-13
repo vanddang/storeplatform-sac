@@ -118,7 +118,7 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 		} else {
 			listProd = dataServcie.selectProdcut(prodId);
 		}
-		Product product = productListService.getProduct(header, listProd);
+		Product product = productListService.getProduct( listProd );
 		return product;
 	}
 	
