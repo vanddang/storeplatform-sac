@@ -894,11 +894,11 @@ public class ShoppingCouponSacController {
 
 					StringBuffer tenantIdBuff = new StringBuffer();
 					int tenantIdCount =0;
-					if(!couponReq.getDpCouponInfo().getCoupnStatus().equals("")){
+					if(StringUtils.isNotBlank(couponReq.getDpCouponInfo().getCoupnStatus())){
 						tenantIdBuff.append(CouponConstants.TENANT_ID);
 						tenantIdCount++;
 					}
-					if(!couponReq.getDpCouponInfo().getCoupnStatus_kt().equals("")){
+					if(StringUtils.isNotBlank(couponReq.getDpCouponInfo().getCoupnStatus_kt())){
 						if(tenantIdCount==0) {
 							tenantIdBuff.append(CouponConstants.TENANT_ID_S02);
 						}else{
@@ -907,7 +907,7 @@ public class ShoppingCouponSacController {
 						}
 						tenantIdCount++;
 					}
-					if(!couponReq.getDpCouponInfo().getCoupnStatus_lgt().equals("")){
+					if(StringUtils.isNotBlank(couponReq.getDpCouponInfo().getCoupnStatus_lgt())){
 						if(tenantIdCount==0) {
 							tenantIdBuff.append(CouponConstants.TENANT_ID_S03);
 						}else{
@@ -1357,6 +1357,25 @@ public class ShoppingCouponSacController {
 			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_lgt())) {
 				if(StringUtils.isBlank(itemInfo.getItemStatus_lgt())){
 					message = "유효성 검사 실패 [coupnStatus_lgt 에 있지만 itemStatus_lgt] 에는 존재 하지 않습니다.";
+					result = false;
+				}
+			}
+
+			if (StringUtils.isNotBlank(itemInfo.getItemStatus())) {
+				if(StringUtils.isBlank(couponInfo.getCoupnStatus())){
+					message = "유효성 검사 실패 [itemStatus 에 있지만 coupnStatus] 에는 존재 하지 않습니다.";
+					result = false;
+				}
+			}
+			if (StringUtils.isNotBlank(itemInfo.getItemStatus_kt())) {
+				if(StringUtils.isBlank(couponInfo.getCoupnStatus_kt())){
+					message = "유효성 검사 실패 [itemStatus_kt 에 있지만 coupnStatus_kt] 에는 존재 하지 않습니다.";
+					result = false;
+				}
+			}
+			if (StringUtils.isNotBlank(itemInfo.getItemStatus_lgt())) {
+				if(StringUtils.isBlank(couponInfo.getCoupnStatus_lgt())){
+					message = "유효성 검사 실패 [itemStatus_lgt 에 있지만 coupnStatus_lgt] 에는 존재 하지 않습니다.";
 					result = false;
 				}
 			}
