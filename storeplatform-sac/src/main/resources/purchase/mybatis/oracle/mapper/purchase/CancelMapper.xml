@@ -278,7 +278,7 @@
     <update id="updatePayment" parameterType="PurchaseCancelPaymentDetailScReq">
         UPDATE  tb_pr_payment /* Cancel.updatePayment, 결제 내역 취소 업데이트, nTels_cswoo81/nTels, 2014-02-12 */
            SET  status_cd = #{paymentStatusCd} 
-              , payment_cancel_dt = TO_DATE(#{cancelDt}, 'YYYYMMDDHH24MISS')
+              , payment_cancel_dt = TO_DATE(#{cancelDt, jdbcType=VARCHAR}, 'YYYYMMDDHH24MISS')
               , resv_col_02 = #{tStorePaymentStatusCd, jdbcType=VARCHAR}
               , upd_id = #{systemId}
               , upd_dt = SYSDATE
@@ -340,7 +340,7 @@
     
      <!-- 2. UPDATE SQL -->         
     <update id="updatePaymentError" parameterType="PurchaseCancelScReq">
-        UPDATE  tb_pr_payment /* Cancel.updatePayment, 결제 내역 취소 업데이트, nTels_cswoo81/nTels, 2014-02-12 */
+        UPDATE  tb_pr_payment /* Cancel.updatePaymentError, 결제 내역 취소 오류 업데이트, nTels_cswoo81/nTels, 2014-02-12 */
            SET  resv_col_02 = #{paymentErrorCode, jdbcType=VARCHAR}
               , upd_id = #{systemId}
               , upd_dt = SYSDATE

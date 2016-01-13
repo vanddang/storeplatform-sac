@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -226,23 +227,25 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 
 				// 2014.06.13 판매자 정보 목록 조회 추가 (백승현K)
 				String sellerMbrNo = null;
-				List<String> sellerKeyList = null;
+				List<SellerMbrSac> sellerKeyList = null;
 				DetailInformationListForProductSacReq sellerReq = null;
 				DetailInformationListForProductSacRes sellerRes = null;
 
 				String sellerId = null;
 				try {
-					sellerKeyList = new ArrayList<String>();
+					sellerKeyList = new ArrayList<SellerMbrSac>();
+					SellerMbrSac sellerMbrSac = new SellerMbrSac();
 					sellerReq = new DetailInformationListForProductSacReq();
 
 					// 회원 판매자 정보를 위한 판매자키 파라미터 세팅
 					sellerMbrNo = metaInfo.getSellerMbrNo();
 
 					if (StringUtils.isNotEmpty(sellerMbrNo)) {
-						sellerKeyList.add(sellerMbrNo);
+						sellerMbrSac.setSellerKey(sellerMbrNo);
+						sellerKeyList.add(sellerMbrSac);
 					}
 
-					sellerReq.setSellerKeyList(sellerKeyList);
+					sellerReq.setSellerMbrSacList(sellerKeyList);
 
 					this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformationListForProduct");
 					long start = System.currentTimeMillis();

@@ -430,46 +430,38 @@
         AND seller_status_main_cd IN ('US010201' ,'US010203','US010204') 
         AND up_insd_sellermbr_no IS NULL 
     </select>
-    
-    
-    
-    
+
     <!-- 판매자회원 가입시  SellerID Wd 확인 -->
     <select id="checkSellerMbrWd" parameterType="sellerMbr" resultType="sellerMbr">
-        SELECT    /* SellerMapper.checkSellerMbrWd, 판매자회원 가입시  SellerID Wd 확인, wisestone_jloveonly, 2013-12-24 */
+        SELECT    /* SellerMapper.xml, checkSellerMbrWd, SAC(SC), 윤보영, 2016-01-13 */
             insd_sellermbr_no            insd_sellermbr_no,
             sellermbr_id                 sellerID,
             'Y'                          isRegistered
         FROM tb_us_sellermbr_wd
         WHERE
-        sellermbr_id =  #{sellerID}        
-        AND bolter_day > TO_CHAR (SYSDATE - 185, 'YYYYMMDD' ) 
-        AND seller_status_sub_cd != 'US010317' 
+        sellermbr_id =  #{sellerID}
+        AND bolter_day > TO_CHAR (SYSDATE - 30, 'YYYYMMDD' )
+        AND seller_status_sub_cd != 'US010317'
         AND ROWNUM =1
     </select>
-    
-    
-    
-    
+
     <!-- 판매자회원 ID/EMAIL 존재여부 Wd 확인 -->
     <select id="checkDuplicationSellerWd" parameterType="checkDuplicationSellerRequest" resultType="checkDuplicationSellerResponse">
-        SELECT /* SellerMapper.checkDuplicationSellerWd, 판매자회원 ID/EMAIL 존재여부 Wd 확인 , wisestone_jloveonly, 2013-12-24 */
-            insd_sellermbr_no            insd_sellermbr_no,
-            sellermbr_id                 sellerID,
-            'Y'                          isRegistered
+        SELECT /* SellerMapper.xml, checkDuplicationSellerWd, SAC(SC), 윤보영, 2016-01-13 */
+        insd_sellermbr_no            insd_sellermbr_no,
+        sellermbr_id                 sellerID,
+        'Y'                          isRegistered
         FROM tb_us_sellermbr_wd
         WHERE 1=1
-        <if test="keySearchList != null">  
+        <if test="keySearchList != null">
             <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                 <if test=" keySearch.keyType.equals('SELLERMBR_ID') "> sellermbr_id =  #{keySearch.keyString} </if>
             </foreach>
         </if>
-        AND bolter_day > TO_CHAR (SYSDATE - 185, 'YYYYMMDD' ) 
-        AND seller_status_sub_cd != 'US010317' 
+        AND bolter_day > TO_CHAR (SYSDATE - 30, 'YYYYMMDD' )
+        AND seller_status_sub_cd != 'US010317'
         AND ROWNUM =1
     </select>
-    
-    
     
     <!-- 판매자회원 ID/EMAIL 존재여부 확인 -->
     <select id="checkDuplicationSeller" parameterType="checkDuplicationSellerRequest" resultMap="checkDuplicationSellerResponseResultMap">

@@ -909,7 +909,6 @@
                <if test="userCountry != null">,nation_cd </if>
                <if test="userLanguage != null">,lang_cd </if>
                <if test="systemID != null">,system_id</if>
-               <if test="loginStatusCode != null">,login_status_cd </if>
         ) VALUES (
             #{userKey},
             #{userType},
@@ -2187,7 +2186,7 @@
         <if test="brandId != null">
             AND brand_id = #{brandId}
         </if>
-        ORDER BY brand_nm, charger_id
+        ORDER BY NVL(upd_dt, reg_dt) DESC
    </select>
    
    <!-- 상품권충전소 정보 조회 -->

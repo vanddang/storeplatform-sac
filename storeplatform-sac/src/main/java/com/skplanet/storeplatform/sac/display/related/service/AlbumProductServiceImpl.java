@@ -22,12 +22,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
-import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
@@ -45,20 +41,8 @@ public class AlbumProductServiceImpl implements AlbumProductService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	private MetaInfoService metaInfoService;
-
-	@Autowired
-	private MusicInfoGenerator musicGenerator;
-
-	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	@Autowired
-	private CommonMetaInfoGenerator commonGenerator;
-
-//	@Autowired
-//    private MemberBenefitService memberBenefitService;
-	
 	/**
 	 *
 	 * <pre>
@@ -89,10 +73,7 @@ public class AlbumProductServiceImpl implements AlbumProductService {
 			MetaInfo retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", param,
 					MetaInfo.class);
 			if (retMetaInfo != null) {
-//				retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
 				Product product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
-				product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
-				product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
 				productList.add(product);
 			}
 		}

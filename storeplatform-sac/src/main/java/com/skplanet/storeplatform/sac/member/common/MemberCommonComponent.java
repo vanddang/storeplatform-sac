@@ -505,7 +505,6 @@ public class MemberCommonComponent {
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
 		userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
-		userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
 		userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
 		userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
 		userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
@@ -806,7 +805,9 @@ public class MemberCommonComponent {
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_NON)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_IOS)
-				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKM)) {
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKM)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_KTM)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGM)) {
 
 			return deviceTelecomCode;
 		} else {
@@ -1280,7 +1281,7 @@ public class MemberCommonComponent {
 				}
 			}catch(StorePlatformException e){
 				// 타사 연동 오류인 경우 svcMangNo null로 리턴
-				return svcMangNo;
+				return null;
 			}
 
 			if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
@@ -1295,7 +1296,7 @@ public class MemberCommonComponent {
 				throw new StorePlatformException("SAC_MEM_0001", "필수");
 			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_SYSTEM_ERROR)) {
 				// 타사 시스템 오류인 경우 svcMangNo null로 리턴
-				return svcMangNo;
+				return null;
 			}
 		}
 

@@ -46,7 +46,7 @@ public interface PurchaseShoppingOrderRepository {
 	 * @return 발급 요청 결과 개체
 	 */
 	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String userKey, String couponCode, String itemCode,
-			String buyDeviceId, List<String> useDeviceIdList, boolean bGift);
+			String buyDeviceId, List<Object[]> useDeviceIdList, boolean bGift);
 
 	/**
 	 * 

@@ -19,6 +19,9 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStats;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -70,6 +73,9 @@ public class VodServiceImpl implements VodService {
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	private ProductInfoManager productInfoManager; // 3사 통합 평점.
 
 	/*
 	 * (non-Javadoc)
@@ -284,6 +290,9 @@ public class VodServiceImpl implements VodService {
 				param.put("paymentContentIdList", paymentContentIdList);
 			}
 
+			// 단말 VOD 지원여부, DRM 지원여부.
+			product.setIsDeviceSupported(this.getDeviceSupported(req));
+
 			// ###################################################################################
 			// 2. subProjectList
 			// ###################################################################################
@@ -490,7 +499,7 @@ public class VodServiceImpl implements VodService {
 		product.setRights(rights);
 		
 		// Accrual
-		Accrual accrual = this.mapAccrual(mapperVO);
+		Accrual accrual = this.mapAccrual(req.getChannelId());
 		product.setAccrual(accrual);
 
 		Vod vod = this.mapVod(mapperVO, supportFhdVideo);
@@ -573,7 +582,7 @@ public class VodServiceImpl implements VodService {
 		product.setDistributor(distributor);
 
 		// Accrual
-		Accrual accrual = this.mapAccrual(mapperVO);
+		Accrual accrual = this.mapAccrual(req.getChannelId());
 		product.setAccrual(accrual);
 
 		Vod vod = this.mapVod(mapperVO, supportFhdVideo);
@@ -625,16 +634,18 @@ public class VodServiceImpl implements VodService {
 	}
 
 	/**
-	 * Accural
-	 * 
-	 * @param mapperVO
+	 * Accural (평점 정보 3사 통합)
+	 * @param channelId
 	 * @return
 	 */
-	private Accrual mapAccrual(VodDetail mapperVO) {
+	private Accrual mapAccrual(String channelId) {
+		// 평점정보
 		Accrual accrual = new Accrual();
-		accrual.setVoterCount(mapperVO.getPaticpersCnt());
-		accrual.setDownloadCount(mapperVO.getPrchsCnt());
-		accrual.setScore(mapperVO.getAvgEvluScore());
+		// 3사 통함 평점, 구매수, 참여수 조회 (캐쉬적용)
+		ProductStats productStats = this.productInfoManager.getProductStats(new ProductStatsParam(channelId));
+		accrual.setVoterCount(productStats.getParticipantCount());
+		accrual.setDownloadCount(productStats.getPurchaseCount());
+		accrual.setScore(productStats.getAverageScore());
 		return accrual;
 	}
 
@@ -746,9 +757,6 @@ public class VodServiceImpl implements VodService {
 			}
 		}
 
-		// Preview
-		authority.setPreview(this.mapPreview(mapperVO));
-
 		if (vodDetailList != null && vodDetailList.size() > 0) {
 			List<Play> playList = new ArrayList<Play>();
 			List<Store> storeList = new ArrayList<Store>();
@@ -760,12 +768,16 @@ public class VodServiceImpl implements VodService {
 					/** play 정보 */
 					playList.add(this.mapAuthorityPlay(vo, vodDetailList, req));
 				}
-				
+
 				if(StringUtils.isNotEmpty(vo.getStoreProdId())){
 					/** Store 정보 */
 					storeList.add(this.mapAuthorityStore(vo, vodDetailList, req));
 				}
+
+				// Preview
+				authority.setPreview(this.mapPreview(vo));
 			}
+
 			if(playList != null && playList.size() > 0) authority.setPlayList(playList);
 			if(storeList != null && storeList.size() > 0) authority.setStoreList(storeList); 
 		}
@@ -1327,7 +1339,7 @@ public class VodServiceImpl implements VodService {
 				}
 
 				// Accrual
-				Accrual accrual = this.mapAccrual(mapperVO);
+				Accrual accrual = this.mapAccrual(req.getChannelId());
 				subProduct.setAccrual(accrual);
 
 				// Badge
@@ -1416,7 +1428,7 @@ public class VodServiceImpl implements VodService {
 				subProduct.setVod(this.mapVodV3(cidVO, contentsIdList, supportFhdVideo));
 				
 				// Accrual
-				Accrual accrual = this.mapAccrual(cidVO);
+				Accrual accrual = this.mapAccrual(req.getChannelId());
 				subProduct.setAccrual(accrual);
 
 				// Badge
@@ -1824,5 +1836,33 @@ public class VodServiceImpl implements VodService {
 	private List<VodDetail> getSubContentsIdList(Map<String, Object> param) {
 		List<VodDetail> subContentsIdListList = this.commonDAO.queryForList("VodDetail.getSubContentsIdList", param, VodDetail.class);
 		return subContentsIdListList;
-	}		
+	}
+
+	/**
+	 * 조회하는 단말에 대해서 VOD 지원 여부, DRM 지원 여부를 확인.
+	 * @param req
+	 * @return
+	 */
+	private String getDeviceSupported(VodDetailReq req) {
+
+		/**
+		 * 단말 모델정보가 존재 하지 않을 경우.
+		 */
+		if(com.skplanet.storeplatform.framework.core.util.StringUtils.isEmpty(req.getDeviceModel())){
+			throw new StorePlatformException("SAC_DSP_0029");
+		}
+
+		// 단말 지원정보 조회. (VOD 지원여부, 채널에 DRM 지원여부)
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("channelId", req.getChannelId());
+		param.put("deviceModel", req.getDeviceModel());
+		String isDeviceSupported = this.commonDAO.queryForObject("VodDetail.getIsDeviceSupported", param, String.class);
+
+		if(isDeviceSupported == null || "".equals(isDeviceSupported)) {
+			return "N";
+		}
+
+		return isDeviceSupported;
+	}
+
 }

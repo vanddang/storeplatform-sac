@@ -80,6 +80,22 @@
 		WHERE PROD_ID =#{episodeId}
 		  AND EXPO_YN = 'Y' 
 		  AND CPN_ID IS NOT NULL
+		  AND TENANT_ID = 'S01'
+		  AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
+    </select>      
+
+    <!--One Store 에피소드id를 이용해 특가 여부 조회-->
+    <select id="getOneBrandSpecialProdCnt" resultType="int"  parameterType="HashMap">
+       /* CouponMapper.xml, getOneBrandSpecialProdCnt, One Store 에피소드id를 이용해 특가 여부 조회, 김형식/SK플래닛  , 2015-07-18 */
+		SELECT 
+		      COUNT(1) CNT
+		 FROM TB_DP_SPRC_PROD
+		WHERE PROD_ID =#{episodeId}
+		  AND EXPO_YN = 'Y' 
+		  AND CPN_ID IS NOT NULL
+        <foreach collection="tenantIds" item="item" index="index" separator="," open="AND TENANT_ID  IN (" close=")">
+            #{item}
+        </foreach>
 		  AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
     </select>      
     
@@ -646,6 +662,68 @@
         
     </update>
 
+    <!-- TB_DP_TENANT_PROD 테이블에 CATALOG_ID 저장 및 수정 -->
+    <update id="updateCatalogTenantStatus" parameterType="HashMap">
+        /* CouponMapper.xml, updateCatalogTenantStatus, TB_DP_TENANT_PROD 테이블에 CATALOG_ID 저장 및 수정, 김형식/SK플래닛  , 2016-01-11 */
+		MERGE INTO TB_DP_TENANT_PROD A USING  DUAL
+		ON  (A.TENANT_ID = #{tenentId}  AND A.PROD_ID = #{catalogId} AND A.EXPO_YN = 'Y')
+		WHEN MATCHED THEN         
+				 UPDATE  SET A.PROD_STATUS_CD =
+					  (CASE WHEN (
+								  SELECT 
+										COUNT(B.PROD_ID)
+								  FROM  TB_DP_PROD_CATALOG_MAPG A
+									   ,TB_DP_TENANT_PROD B
+								  WHERE A.PROD_ID = B.PROD_ID
+									AND A.BASE_YN ='Y'
+									AND A.USE_YN ='Y'
+									AND B.EXPO_YN ='Y' 
+									AND B.PROD_STATUS_CD = 'PD000403' 
+									AND B.TENANT_ID =#{tenentId}     
+									AND A.CATALOG_ID = #{catalogId}
+								) > 0 THEN 'PD000403' 
+							ELSE 'PD000404' 
+						END)
+					   , A.UPD_ID = #{updId}
+					   , A.UPD_DT = sysdate
+		WHEN NOT MATCHED THEN  
+				  INSERT ( A.TENANT_ID
+						 , A.PROD_ID
+						 , A.PROD_STATUS_CD
+						 , A.EXPO_YN
+						 , A.EXPO_ORD
+						 , A.REG_ID
+						 , A.REG_DT
+						 , A.UPD_ID
+						 , A.UPD_DT
+						 )
+				 VALUES (
+						   #{tenentId}
+						 , #{catalogId}
+						 , (CASE WHEN (
+								  SELECT 
+									   	  COUNT(B.PROD_ID)
+							  	    FROM  TB_DP_PROD_CATALOG_MAPG A
+									     ,TB_DP_TENANT_PROD B
+								   WHERE A.PROD_ID = B.PROD_ID
+									 AND A.BASE_YN ='Y'
+									 AND A.USE_YN ='Y'
+									 AND B.EXPO_YN ='Y' 
+									 AND B.PROD_STATUS_CD = 'PD000403' 
+									 AND B.TENANT_ID =#{tenentId}     
+									 AND A.CATALOG_ID = #{catalogId}
+								   ) > 0 THEN 'PD000403' 
+						      ELSE 'PD000404' 
+							END)
+						 , 'Y'
+						 , '1'
+					 	 ,#{regId}
+						 ,sysdate
+						 ,#{updId}
+						 ,sysdate
+						)
+    </update>
+
     <!-- 전시단 쿠폰 전시여부 변경 -->
     <update id="updateDPYNStatus" parameterType="String">
         /* CouponMapper.xml, updateDPYNStatus, 전시단 쿠폰 전시여부 변경, 김형식/SK플래닛  , 2014-01-08 */
@@ -685,6 +763,7 @@
           AND PROD_ID =#{itemCode}
           AND EXPO_YN = 'Y' 
           AND CPN_ID IS NOT NULL
+          AND TENANT_ID = #{tenentId}
           AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
     </update>            
         
@@ -696,7 +775,7 @@
         FROM   TB_DP_SPRC_PROD A
               ,TB_DP_SHPG_PROD B
         WHERE A.PROD_ID = B.PROD_ID
-          AND B.SRC_CONTENT_ID =  
+          AND B.SRC_CONTENT_ID =
                                  CASE WHEN PROD_CASE_CD = 'DP006303'
                                   THEN
                                         (  SELECT 
@@ -713,7 +792,8 @@
                                                      WHERE A.PROD_ID = B.PROD_ID 
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
                                                    ) 
-                                               AND SP1.EXPO_YN = 'Y'  
+                                               AND SP1.EXPO_YN = 'Y'
+                                               AND SP1.TENANT_ID = 'S01'
                                                AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT      
                                                AND SP1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가                                           
                                                AND ROWNUM =1     
@@ -722,6 +802,7 @@
                                   END
           AND A.EXPO_YN = 'Y' 
           AND A.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+          AND A.TENANT_ID = 'S01'
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
     </select>
     
@@ -750,7 +831,8 @@
                                                      WHERE A.PROD_ID = B.PROD_ID 
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
                                                    ) 
-                                               AND SP1.EXPO_YN = 'Y'   
+                                               AND SP1.EXPO_YN = 'Y'
+                                               AND SP1.TENANT_ID = 'S01'
                                                AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT
                                                AND SP1.SPRC_TYPE_CD IN ('DP007503','DP007504')                                                   
                                                AND ROWNUM =1     
@@ -759,8 +841,89 @@
                                   END
           AND A.EXPO_YN = 'Y' 
           AND A.SPRC_TYPE_CD IN ('DP007503','DP007504') --DP007503 : 팅요금제 일반 특가 , DP007504 팅요금제 배송 특가
+          AND A.TENANT_ID = 'S01'
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
     </select>    
+
+    <!--one Brand 특가 상품 목록 조회-->
+    <select id="GET_ONE_BRAND_SPECIAL_PRODUCT_INFO" resultType="int" parameterType="HashMap">
+       /* CouponMapper.xml, GET_ONE_BRAND_SPECIAL_PRODUCT_INFO, one Brand 특가 상품 목록 조회, 김형식/SK플래닛   , 2016-01-08 */
+        SELECT 
+               COUNT(A.PROD_ID) as CNT
+        FROM   TB_DP_SPRC_PROD A
+              ,TB_DP_SHPG_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND B.SRC_CONTENT_ID =
+                                 CASE WHEN PROD_CASE_CD = 'DP006303'
+                                  THEN
+                                        (  SELECT 
+                                                SRC_CONTENT_ID 
+                                             FROM TB_DP_SHPG_PROD SP
+                                                 ,TB_DP_SPRC_PROD SP1
+                                            WHERE 1=1
+                                              AND SP.PROD_ID = SP1.PROD_ID
+                                              AND SP.PROD_ID IN (
+                                                    SELECT 
+                                                           B.PART_PROD_ID 
+                                                      FROM TB_DP_SHPG_PROD A 
+                                                          ,TB_DP_PROD_RSHP B
+                                                     WHERE A.PROD_ID = B.PROD_ID 
+                                                      AND A.SRC_CONTENT_ID =#{itemCode}
+                                                   ) 
+                                               AND SP1.EXPO_YN = 'Y'
+                                               AND SP1.TENANT_ID =  #{tenantId}
+                                               AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT      
+                                               AND SP1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가                                           
+                                               AND ROWNUM =1     
+                                          )                                   
+                                  ELSE #{itemCode}
+                                  END
+          AND A.EXPO_YN = 'Y' 
+          AND A.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+          AND A.TENANT_ID = #{tenantId}
+          AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
+    </select>
+    
+    <!--one Brand 팅요금제 상품 목록 조회-->
+    <select id="GET_ONE_BRAND_TING_PRODUCT_INFO" resultType="int" parameterType="HashMap">
+       /* CouponMapper.xml, GET_ONE_BRAND_TING_PRODUCT_INFO, one Brand 팅요금제 상품 목록 조회, 김형식/SK플래닛   , 2016-01-08 */
+        SELECT 
+               COUNT(A.PROD_ID) as CNT
+        FROM   TB_DP_SPRC_PROD A
+              ,TB_DP_SHPG_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND B.SRC_CONTENT_ID =  
+                                 CASE WHEN PROD_CASE_CD = 'DP006303'
+                                  THEN
+                                        (  SELECT 
+                                                SRC_CONTENT_ID 
+                                             FROM TB_DP_SHPG_PROD SP
+                                                 ,TB_DP_SPRC_PROD SP1
+                                            WHERE 1=1
+                                              AND SP.PROD_ID = SP1.PROD_ID
+                                              AND SP.PROD_ID IN (
+                                                    SELECT 
+                                                           B.PART_PROD_ID 
+                                                      FROM TB_DP_SHPG_PROD A 
+                                                          ,TB_DP_PROD_RSHP B
+                                                     WHERE A.PROD_ID = B.PROD_ID 
+                                                      AND A.SRC_CONTENT_ID =#{itemCode}
+                                                   ) 
+                                               AND SP1.EXPO_YN = 'Y'
+                                               AND SP1.TENANT_ID =  #{tenantId}
+                                               AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT
+                                               AND SP1.SPRC_TYPE_CD IN ('DP007503','DP007504')                                                   
+                                               AND ROWNUM =1     
+                                          )                                   
+                                  ELSE #{itemCode}
+                                  END
+          AND A.EXPO_YN = 'Y' 
+          AND A.SPRC_TYPE_CD IN ('DP007503','DP007504') --DP007503 : 팅요금제 일반 특가 , DP007504 팅요금제 배송 특가
+          AND A.TENANT_ID = #{tenantId}
+          AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
+    </select>
+
+
     
     <!--특가 상품 상세 조회-->
     <select id="GET_COUPON_INFO"  resultType="int" parameterType="String">
@@ -793,11 +956,56 @@
         WHERE A.PROD_ID = B.PROD_ID
           AND A.PROD_ID = C.PROD_ID
           AND C.SRC_CONTENT_ID =  #{itemCode}
-          AND A.EXPO_YN = 'Y' 
+          AND A.EXPO_YN = 'Y'
+          AND A.TENANT_ID = 'S01'
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
           AND ROWNUM =1
-    </select>    
-    
+    </select>
+
+    <!--one Brand 특가 상품 상세 조회-->
+    <select id="GET_ONE_BRAND_SPECIAL_PRODUCT_DETAIL" resultType="com.skplanet.storeplatform.external.client.shopping.vo.ItemCodeInfo" parameterType="HashMap">
+       /* CouponMapper.xml, GET_ONE_BRAND_SPECIAL_PRODUCT_DETAIL,one Brand 특가 상품 상세 조회, 김형식/SK플래닛  , 2014-01-08 */
+        SELECT 
+		  	   #{couponCode} as couponCode
+              ,C.SRC_CONTENT_ID as itemCode
+              ,B.PROD_NM  as sprcName
+              ,(CASE WHEN A.SPRC_TYPE_CD='DP007501' OR A.SPRC_TYPE_CD='DP007502' THEN 'SL' 
+                     WHEN A.SPRC_TYPE_CD='DP007503' OR A.SPRC_TYPE_CD='DP007504' THEN 'TG' 
+                END) AS sprcType
+              ,TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  as sprcStartDate
+              ,TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')    as sprcEndDate
+              ,A.SPRC_DC_RATE as sprcDcRate
+              ,A.SPRC_PRICE as sprcPrice
+              ,A.SPRC_DC_PRICE as sprcDcPrice
+        FROM   TB_DP_SPRC_PROD A
+              ,TB_DP_PROD_DESC B
+              ,TB_DP_SHPG_PROD C
+        WHERE A.PROD_ID = B.PROD_ID
+          AND A.PROD_ID = C.PROD_ID
+          AND C.SRC_CONTENT_ID =  #{itemCode}
+          AND A.EXPO_YN = 'Y'
+          AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
+          AND ROWNUM =1
+    </select>
+
+    <!--one Brand 특가 상품 상세(TENANT_ID)조회-->
+    <select id="GET_ONE_BRAND_TENANT_ID_SPECIAL_PRODUCT_DETAIL" resultType="String" parameterType="HashMap">
+       /* CouponMapper.xml, GET_ONE_BRAND_TENANT_ID_SPECIAL_PRODUCT_DETAIL,one Brand 특가 상품 상세(TENANT_ID)조회, 김형식/SK플래닛  , 2014-01-08 */
+        SELECT 
+		  	   A.TENANT_ID
+        FROM   TB_DP_SPRC_PROD A
+              ,TB_DP_PROD_DESC B
+              ,TB_DP_SHPG_PROD C
+        WHERE A.PROD_ID = B.PROD_ID
+          AND A.PROD_ID = C.PROD_ID
+          AND C.SRC_CONTENT_ID =  #{itemCode}
+          AND A.EXPO_YN = 'Y'
+          AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
+     ORDER BY A.TENANT_ID
+    </select>
+
+
+
     <!--특정 기간에 대한 특가 상품 상세 조회-->
     <select id="GET_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE" resultType="com.skplanet.storeplatform.external.client.shopping.vo.EventInfo" parameterType="HashMap">
        /* CouponMapper.xml, GET_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE, 특정 기간에 대한 특가 상품 상세 조회, 김형식/SK플래닛  , 2015-07-24 */
@@ -824,7 +1032,8 @@
               ,TB_DP_SHPG_PROD C
         WHERE A.PROD_ID = B.PROD_ID
           AND A.PROD_ID = C.PROD_ID
-          AND A.EXPO_YN = 'Y' 
+          AND A.EXPO_YN = 'Y'
+          AND A.TENANT_ID = 'S01'
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
 		  AND (TO_CHAR(A.SPRC_APPLY_START_DT, 'YYYYMMDDHH24MISS') BETWEEN #{startDate} AND #{endDate} 
 		       OR TO_CHAR(A.SPRC_APPLY_END_DT, 'yyyyMMddHH24miss') BETWEEN #{startDate} AND #{endDate}
@@ -833,6 +1042,63 @@
 		      ) 
     </select>       
         
+    <!--one Brand 특정 기간에 대한 특가 상품 상세 조회-->
+    <select id="GET_ONE_BRAND_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE" resultType="com.skplanet.storeplatform.external.client.shopping.vo.ItemCodeInfo" parameterType="HashMap">
+       /* CouponMapper.xml, GET_ONE_BRAND_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE, one Brand 특정 기간에 대한 특가 상품 상세 조회, 김형식/SK플래닛  , 2015-07-24 */
+        SELECT DISTINCT
+               (
+                SELECT SRC_CONTENT_ID 
+                  FROM TB_DP_SHPG_PROD A1 
+                      ,TB_DP_PROD_RSHP B1
+                 WHERE A1.PROD_ID = B1.PROD_ID
+                   AND B1.PROD_RSHP_CD ='DP010802'
+                   AND B1.PART_PROD_ID = A.PROD_ID
+                   AND ROWNUM =1
+                ) as couponCode
+              ,C.SRC_CONTENT_ID as itemCode
+              ,B.PROD_NM  as sprcName
+              ,(CASE WHEN A.SPRC_TYPE_CD='DP007501' OR A.SPRC_TYPE_CD='DP007502' THEN 'SL' 
+                     WHEN A.SPRC_TYPE_CD='DP007503' OR A.SPRC_TYPE_CD='DP007504' THEN 'TG' 
+                END) AS sprcType             
+              ,TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  as sprcStartDate
+              ,TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')    as sprcEndDate
+        FROM   TB_DP_SPRC_PROD A
+              ,TB_DP_PROD_DESC B
+              ,TB_DP_SHPG_PROD C
+        WHERE A.PROD_ID = B.PROD_ID
+          AND A.PROD_ID = C.PROD_ID
+          AND A.EXPO_YN = 'Y'
+          AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
+		  AND (TO_CHAR(A.SPRC_APPLY_START_DT, 'YYYYMMDDHH24MISS') BETWEEN #{startDate} AND #{endDate} 
+		       OR TO_CHAR(A.SPRC_APPLY_END_DT, 'yyyyMMddHH24miss') BETWEEN #{startDate} AND #{endDate}
+               OR #{startDate} BETWEEN TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  AND TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')
+               OR #{endDate}   BETWEEN TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  AND TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')		        
+		      ) 
+    </select>
+
+    <!--one Brand 특정 기간에 대한 특가 상품 상세(TENANT_ID) 조회-->
+    <select id="GET_ONE_BRAND_TENANT_ID_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE" resultType="com.skplanet.storeplatform.external.client.shopping.vo.TenantSprcInfo" parameterType="HashMap">
+       /* CouponMapper.xml, GET_ONE_BRAND_TENANT_ID_SPECIAL_PRODUCT_DETAIL_LIST_FOR_DATE, one Brand 특정 기간에 대한 특가 상품 상세 조회, 김형식/SK플래닛  , 2015-07-24 */
+      SELECT   A.SEQ as sprcSeq
+              ,A.TENANT_ID
+        FROM   TB_DP_SPRC_PROD A
+              ,TB_DP_PROD_DESC B
+              ,TB_DP_SHPG_PROD C
+        WHERE A.PROD_ID = B.PROD_ID
+          AND A.PROD_ID = C.PROD_ID
+          AND A.EXPO_YN = 'Y'
+          AND C.SRC_CONTENT_ID =#{itemCode}
+          AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
+		  AND (TO_CHAR(A.SPRC_APPLY_START_DT, 'YYYYMMDDHH24MISS') BETWEEN #{startDate} AND #{endDate} 
+		       OR TO_CHAR(A.SPRC_APPLY_END_DT, 'yyyyMMddHH24miss') BETWEEN #{startDate} AND #{endDate}
+               OR #{startDate} BETWEEN TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  AND TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')
+               OR #{endDate}   BETWEEN TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  AND TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')		        
+		      )
+	 ORDER BY A.TENANT_ID
+    </select>
+
+
+
     <!--  쿠폰 판매상태 여부 상태값  -->
     <select id="SELECT_COUPON_VALID_STATUS" resultType="String" parameterType="com.skplanet.storeplatform.external.client.shopping.vo.CouponReq">
        /* CouponMapper.xml, SELECT_COUPON_VALID_STATUS,쿠폰 판매상태 여부 상태값, 김형식/SK플래닛  , 2014-01-08 */
@@ -912,7 +1178,14 @@
         AND K.TENANT_ID = L.TENANT_ID 
         AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
         AND H.PROD_RSHP_CD = 'DP010802'    /*채널-에피소드 상품 관계*/
-        AND NVL(B.CHNL_CNT, 0) > 0  
+        AND EXISTS(
+                SELECT 'X'
+                  FROM TB_DP_TENANT_PROD
+                 WHERE TENANT_ID =K.TENANT_ID
+                   AND PROD_ID =B.CATALOG_ID
+                   AND PROD_STATUS_CD ='PD000403'
+                   AND EXPO_YN = 'Y'
+        )
         AND G.BASE_YN ='Y'                 /* Y : 기본(기본여부) */
         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
         AND NVL(I.B2B_PROD_YN, 'N')  !=  'Y'
@@ -931,6 +1204,7 @@
 		WHERE BASE_YN ='Y'
 		  AND USE_YN ='Y'
 		  AND PROD_ID = #{prodId}
+		  AND ROWNUM = 1
     </select>         
     
     <!--  팅/특가 쿠폰 ID 조회-->
@@ -942,7 +1216,24 @@
         WHERE PROD_ID =#{episodeId}
           AND EXPO_YN = 'Y' 
           AND CPN_ID IS NOT NULL
+          AND TENANT_ID = 'S01'
           AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
+    </select>   
+	
+    <!-- One Store 팅/특가 쿠폰 ID 조회-->
+    <select id="getOneBrandSpecialProductCouponId" resultType="String" parameterType="HashMap">
+       /* CouponMapper.xml, getOneBrandSpecialProductCouponId, One Store 팅/특가 쿠폰 ID 조회, 김형식/SK플래닛  , 2015-07-18 */
+        SELECT 
+              CPN_ID
+         FROM TB_DP_SPRC_PROD
+        WHERE PROD_ID =#{episodeId}
+          AND EXPO_YN = 'Y' 
+          AND CPN_ID IS NOT NULL
+        <foreach collection="tenantIds" item="item" index="index" separator="," open="AND TENANT_ID  IN (" close=")">
+            #{item}
+        </foreach>
+          AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
+     ORDER BY CPN_ID
     </select>      
     
     <!--   쿠폰코드를 이용 아이템 코드값을 가져온다.-->

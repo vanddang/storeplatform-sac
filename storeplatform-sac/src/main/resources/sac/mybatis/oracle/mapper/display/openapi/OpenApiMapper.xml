@@ -62,8 +62,6 @@
 		                           AND C.LANG_CD  = #{langCd}
 		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
 		                           AND E.PROD_STATUS_CD ='PD000403'
-		                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
-
                                       <if test="arraySellerKey != null">
                                       AND B.SELLER_MBR_NO IN 
 	                                     <foreach collection="arraySellerKey" item="sellerKey" separator="," open="(" close=")">
@@ -73,8 +71,7 @@
                                      <if test="arraySellerKey == null or arraySellerKey == ''">
                                         AND B.SELLER_MBR_NO = ''
                                      </if> 
-	                           
-		                           AND B.PROD_CHRG_YN = #{prodCharge}    /* 유무료 구분 */       
+		                           AND B.PROD_CHRG_YN = #{prodCharge}    /* 유무료 구분 */
 		                         ORDER BY A.DWLD_QTY
 		                                , C.PROD_NM
 		                       ) IA
@@ -161,7 +158,6 @@
 				                           AND E.TENANT_ID = #{tenantId}
 				                           AND F.TENANT_ID(+) = #{tenantId}
 				                           AND G.TENANT_ID = #{tenantId}                                   
-				                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
 				                           AND I.USE_YN ='Y'
 				                           AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 7,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')
 				                       ) IA
@@ -271,7 +267,6 @@
 				                           AND E.TENANT_ID = #{tenantId}
 				                           AND F.TENANT_ID(+) = #{tenantId}
 				                           AND G.TENANT_ID = #{tenantId}                                   
-				                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
 				                           AND I.USE_YN ='Y'
 				                           AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 1,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')   
 				                       ) IA
@@ -484,8 +479,7 @@
 								           AND G.USE_YN = 'Y'
 								           AND H.TENANT_ID = #{tenantId}
 								           AND H.PROD_STATUS_CD   = 'PD000403'
-								           AND SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
-								           AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+								           AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})
 								           AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
 								           AND K.REP_DEVICE_YN ='Y'
 								           AND K.USE_YN ='Y'
@@ -654,8 +648,7 @@
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
-                                   AND SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
-                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
@@ -797,8 +790,7 @@
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
-                                   AND SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
-                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
@@ -937,8 +929,7 @@
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
-                                   AND SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
-                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
@@ -1078,8 +1069,7 @@
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
-                                   AND SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
-                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
@@ -1217,7 +1207,6 @@
 		                                   AND D.LANG_CD          = #{langCd}
 		                                   AND E.TENANT_ID        = #{tenantId}
 		                                   AND E.PROD_STATUS_CD   = 'PD000403'
-		                                   AND SYSDATE BETWEEN F.APPLY_START_DT AND F.APPLY_END_DT
 		                                   AND G.USE_YN = 'Y'
 		                                   AND H.USE_YN = 'Y'      
 		                                   AND I.TOP_MENU_ID      = #{topMenuId}
@@ -1378,7 +1367,6 @@
 		                             AND  EP_H.CONTENTS_TYPE_CD = 'PD002502'
 		                             AND  EP_H.TOP_MENU_ID = #{topMenuId}
 		                             AND  EP_I.TENANT_ID = #{tenantId}
-		                             AND  SYSDATE BETWEEN EP_I.APPLY_START_DT AND EP_I.APPLY_END_DT
 		                             AND  EP_J.SALE_YN = 'Y'
                                      AND (EP_K.DEVICE_MODEL_CD = #{deviceModelCd} OR EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
                                      AND  EP_L.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */  
@@ -1498,7 +1486,6 @@
 		                             AND  CH_C.LANG_CD = #{langCd}
 		                             AND  CH_D.EXPO_YN = 'Y'
 		                             AND  CH_D.PROD_STATUS_CD = 'PD000403'
-		                             AND  SYSDATE BETWEEN CH_E.APPLY_START_DT AND CH_E.APPLY_END_DT
 		                             AND  CH_F.SVC_GRP_CD = 'DP000203'
 		                             AND  CH_F.CONTENTS_TYPE_CD = 'PD002501'
 		                        <choose>
@@ -1683,7 +1670,6 @@
                            AND A.PROD_ID = D.PROD_ID   
                            AND C.TENANT_ID = #{tenantId}
                            AND C.TENANT_ID = D.TENANT_ID
-                           AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
                            AND A.PROD_ID = E.PROD_ID
                            AND E.PROD_RSHP_CD     = 'DP010802'
                            AND A.PROD_ID = F.PROD_ID
@@ -1694,7 +1680,6 @@
                            AND H.PROD_ID = K.PROD_ID
                            AND J.TENANT_ID = #{tenantId}
                            AND J.TENANT_ID = K.TENANT_ID
-                           AND SYSDATE BETWEEN K.APPLY_START_DT AND K.APPLY_END_DT
                            AND H.PROD_ID = L.PROD_ID
                            AND H.PROD_ID = M.PROD_ID
                            AND (M.DEVICE_MODEL_CD = #{deviceModelCd} OR M.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
@@ -1873,8 +1858,7 @@
 							AND P.TOP_MENU_ID    != 'DP02'    
 							AND MCP.TOP_MENU_ID  != 'DP02'  
 							AND TP.EXPO_YN        = 'Y'
-							AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
-							AND MCP.USE_YN = 'Y'                
+							AND MCP.USE_YN = 'Y'
 							AND MCPM.USE_YN = 'Y'
 							AND UPPER( PD.PROD_NM ) like '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
 							AND TP.TENANT_ID      = #{tenantId} 
