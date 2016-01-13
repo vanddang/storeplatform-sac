@@ -192,7 +192,6 @@
                  a.mbr_clas_cd               userType,
                  a.mbr_status_main_cd        userMainStatus,
                  a.mbr_status_sub_cd         userSubStatus,
-                 a.login_status_cd           loginStatusCode,
                  a.start_dt,
                  a.end_dt,
                  a.mbr_id                    userID,
@@ -220,7 +219,6 @@
                 mbr_clas_cd             userType,
                 mbr_status_main_cd      userMainStatus,
                 mbr_status_sub_cd       userSubStatus,
-                login_status_cd         loginStatusCode,
                 start_dt,
                 end_dt,
                 mbr_id                  userID,
@@ -677,9 +675,6 @@
           <if test="userSubStatus != null">
                ,mbr_status_sub_cd = #{userSubStatus}
           </if>
-          <if test="loginStatusCode != null">
-               ,login_status_cd = #{loginStatusCode}
-          </if>
           <if test="secedeDate != null">
                ,bolter_day = #{secedeDate}
           </if>
@@ -942,7 +937,6 @@
             <if test="userCountry != null">,#{userCountry} </if>
             <if test="userLanguage != null">,#{userLanguage} </if>
             <if test="systemID != null">,#{systemID} </if>
-            <if test="loginStatusCode != null">,#{loginStatusCode}</if>
         )
     </update>
     
@@ -1484,7 +1478,6 @@
                 mbr_clas_cd             userType,
                 mbr_status_main_cd      userMainStatus,
                 mbr_status_sub_cd       userSubStatus,
-                login_status_cd         loginStatusCode,
                 start_dt,
                 end_dt,
                 mbr_id                  userID,

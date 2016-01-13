@@ -733,7 +733,6 @@
                 mbr_clas_cd             userType,
                 mbr_status_main_cd      userMainStatus,
                 mbr_status_sub_cd       userSubStatus,
-                login_status_cd         loginStatusCode,
                 mbr_id                  userID
            FROM tb_us_ousermbr
           WHERE insd_usermbr_no = #{userKey}
