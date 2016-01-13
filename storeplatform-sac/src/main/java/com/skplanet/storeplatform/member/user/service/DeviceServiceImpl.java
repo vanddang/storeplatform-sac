@@ -387,6 +387,39 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 		}
+
+		// device_id가 없는 MDN 회원 체크
+		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getMdn())){
+			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_MDN, createDeviceRequest.getUserMbrDevice().getMdn(), userKey, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
+			if(ownerUserMbrDeviceList != null && ownerUserMbrDeviceList.size() > 0) {
+				for (UserMbrDevice userMbrDevice : ownerUserMbrDeviceList) {
+					if(StringUtils.isBlank(userMbrDevice.getDeviceID())){
+						LOGGER.info("{} : {} MDN으로 유효하지 않은 {} 서비스관리번호를 가진 회원이 존재", userKey, userMbrDevice.getMdn(), userMbrDevice.getSvcMangNum());
+						String isDormant = StringUtils.isBlank(userMbrDevice.getIsDormant()) ? Constant.TYPE_YN_N : userMbrDevice.getIsDormant(); // 휴면 회원 유무
+						// 회원 정보 조회
+						UserMbr preUserMbr = new UserMbr();
+						preUserMbr.setUserKey(userMbrDevice.getUserKey());
+						if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
+							preUserMbr = this.commonDAO.queryForObject("User.getUserDetail", preUserMbr, UserMbr.class);
+						}else{
+							preUserMbr = this.idleDAO.queryForObject("User.getUserDetail", preUserMbr, UserMbr.class);
+						}
+
+						if (StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) { // 모바일 회원
+							LOGGER.info("{} : {} {} {} 모바일 회원 탈퇴", userKey, preUserMbr.getUserKey(), userMbrDevice.getDeviceKey(), userMbrDevice.getMdn());
+							int row = this.doRemoveMobileUser(userMbrDevice, isDormant);
+							if (row < 1)
+								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
+						} else { // 아이디 회원
+							LOGGER.info("{} : {} {} {} 휴대기기 invalid 처리", userKey, preUserMbr.getUserKey(), userMbrDevice.getDeviceKey(), userMbrDevice.getMdn());
+							int row = this.doInvalidDevice(userMbrDevice, isDormant);
+							if (row < 1)
+								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
+						}
+					}
+				}
+			}
+		}
 		LOGGER.info("타인 정보 처리 end");
 		/** 타인 정보 처리 end */
 
