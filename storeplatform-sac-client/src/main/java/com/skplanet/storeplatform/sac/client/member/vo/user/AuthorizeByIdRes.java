@@ -41,16 +41,6 @@ public class AuthorizeByIdRes extends CommonInfo {
 	private String userSubStatus = "";
 
 	/**
-	 * 로그인 상태코드.
-	 */
-	private String loginStatusCode = "";
-
-	/**
-	 * 로그인 실패 카운트.
-	 */
-	private String loginFailCount = "";
-
-	/**
 	 * 로그인 성공유무(Y/N).
 	 */
 	private String isLoginSuccess = "";
@@ -116,21 +106,6 @@ public class AuthorizeByIdRes extends CommonInfo {
 	}
 
 	/**
-	 * @return loginStatusCode
-	 */
-	public String getLoginStatusCode() {
-		return this.loginStatusCode;
-	}
-
-	/**
-	 * @param loginStatusCode
-	 *            String
-	 */
-	public void setLoginStatusCode(String loginStatusCode) {
-		this.loginStatusCode = loginStatusCode;
-	}
-
-	/**
 	 * @return deviceKey
 	 */
 	public String getDeviceKey() {
@@ -143,21 +118,6 @@ public class AuthorizeByIdRes extends CommonInfo {
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
-	}
-
-	/**
-	 * @return loginFailCount
-	 */
-	public String getLoginFailCount() {
-		return this.loginFailCount;
-	}
-
-	/**
-	 * @param loginFailCount
-	 *            String
-	 */
-	public void setLoginFailCount(String loginFailCount) {
-		this.loginFailCount = loginFailCount;
 	}
 
 	/**

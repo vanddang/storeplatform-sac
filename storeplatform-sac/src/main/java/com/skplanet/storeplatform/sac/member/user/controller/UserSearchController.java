@@ -129,14 +129,12 @@ public class UserSearchController {
 			@Validated @RequestBody DetailByDeviceIdSacReq req) {
 
 		LOGGER.debug("##################################################");
-		LOGGER.debug("##### 2.1.34 DeviceId를 이용하여 회원 정보 조회 #####");
+		LOGGER.debug("##### 2.1.33 DeviceId를 이용하여 회원 정보 조회 #####");
 		LOGGER.debug("##################################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		/**
-		 * DeviceId를 이용하여 회원 정보 조회 Biz
-		 */
+		/** DeviceId를 이용하여 회원 정보 조회 Biz. */
 		DetailByDeviceIdSacRes res = this.svc.detailByDeviceId(sacHeader, req);
 
 		LOGGER.info("Response : deviceId={},userKey={},deviceKey={}", res.getDeviceId(), res.getUserKey(),

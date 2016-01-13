@@ -20,6 +20,7 @@ import java.util.Map;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.vo.*;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -59,42 +60,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DailyPhone;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DailyPhoneOs;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSac;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -177,6 +142,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 		} else if (!"".equals(mbrNo)) {
 			detailReq.setMbrNo(mbrNo);
 		}
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
 
 		// 회원정보 세팅
 		DetailRes detailRes = this.srhUser(detailReq, sacHeader);
@@ -521,10 +489,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public SearchPasswordSacRes srhPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req) {
 
-		/** 1. 헤더 정보 셋팅 */
+		/** 1. 헤더 정보 셋팅. */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 
-		/** 2. 회원 정보 조회 */
+		/** 2. 회원 정보 조회. */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySchUserKey = new KeySearch();
 		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
@@ -538,8 +506,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		SearchExtentUserResponse srhExtUserResponse = this.userSCI.searchExtentUser(srhExtUserRequest);
 
-		//UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
-
 		/** 3. 가가입 상태일 경우 오류. */
 		if (StringUtils.equals(srhExtUserResponse.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) {
 			throw new StorePlatformException("SAC_MEM_2001", srhExtUserResponse.getUserMbr().getUserMainStatus(),
@@ -548,14 +514,14 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		String checkId = "";
 
-		/** 4. Email값이 있다면 UserId와 Email이 일치하는지 체크 */
+		/** 4. Email값이 있다면 UserId와 Email이 일치하는지 체크. */
 		if (!req.getUserEmail().equals("")) {
 			if (srhExtUserResponse.getUserMbr().getUserEmail().equals(req.getUserEmail())) {
 				checkId = "Y";
 			} else {
 				checkId = "N";
 			}
-		/** 4-1. Phone이 있다면 UserId와 Phone이 일치하는지 체크 */
+		/** 4-1. Phone이 있다면 UserId와 Phone이 일치하는지 체크. */
 		} else if (!req.getUserPhone().equals("")) {
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getUserPhone());
 			req.setUserPhone(opmdMdn);
@@ -575,22 +541,22 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 		}
 
-		/** 5. 사용자 이메일 혹은 Phone 이 일치하지 않으면 오류처리 */
+		/** 5. 사용자 이메일 혹은 Phone 이 일치하지 않으면 오류처리. */
 		if (checkId.equals("N")) {
 			throw new StorePlatformException("SAC_MEM_0002", "Email or Phone");
 		}
 
 		SearchPasswordSacRes res = new SearchPasswordSacRes();
 
-		/** 6. 모바일, 네이버, 구글, 페이스북 아이디 사용자는 비밀번호 찾기 불가 */
+		/** 6. 모바일, 네이버, 구글, 페이스북 아이디 사용자는 비밀번호 찾기 불가. */
 		if(StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)
 				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)
 				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
 				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 			throw new StorePlatformException("SAC_MEM_1300", srhExtUserResponse.getUserMbr().getUserType());
-		/** 7. 그외의 사용자는 비밀번호를 리셋후 응답처리  */
+		/** 7. 그외의 사용자는 비밀번호를 리셋후 응답처리.  */
 		}else{
-			/** 7-1. 새로운 암호 생성 및 암호화하여 DB 저장 */
+			/** 7-1. 새로운 암호 생성 및 암호화하여 DB 저장. */
 			MbrPwd mbrPwd = new MbrPwd();
 			mbrPwd.setMemberKey(srhExtUserResponse.getUserMbr().getUserKey());
 
@@ -600,7 +566,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 			ResetPasswordUserResponse scRPURes = this.userSCI.updateResetPasswordUser(scRPUReq);
 
-			/** 7-2. DB에 저장이 잘 되었으면 req의 userEmail, userPhone에 따라 응답값 설정 */
+			/** 7-2. DB에 저장이 잘 되었으면 req의 userEmail, userPhone에 따라 응답값 설정. */
 			res.setUserPw(scRPURes.getUserPW());
 			if (!req.getUserEmail().equals("")) {
 				res.setSendInfo(StringUtil.setTrim(req.getUserEmail()));
@@ -1057,21 +1023,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req) {
 
-		/**
-		 * OPMD 단말 여부, OPMD 모번호 setting.
-		 */
+		/** OPMD 단말 여부, OPMD 모번호 setting. */
 		DetailByDeviceIdSacRes response = this.setOmpdInfo(req);
 
-		/**
-		 * 사용자별 정책 리스트 setting.
-		 */
+		/** 사용자별 정책 리스트 setting. */
 		if (!StringUtils.equals(req.getKey(), "") && req.getPolicyCodeList() != null) {
 			response.setPolicyCodeList(this.getIndividualPolicy(sacHeader, req));
 		}
 
-		/**
-		 * 사용자 정보/단말 정보 setting.
-		 */
+		/** 사용자 정보/단말 정보 setting. */
 		this.setDeviceInfo(sacHeader, req, response);
 
 		/**
@@ -1156,7 +1116,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			/**
 			 * SC 사용자 정책 리스트 조회 연동.
 			 */
-			SearchPolicyResponse policyResponse = null; //this.limitTargetService.searchPolicyList(policyRequest);
+			SearchPolicyResponse policyResponse = this.limitTargetService.searchPolicyList(policyRequest);
 
 			/**
 			 * 처리 결과 setting.

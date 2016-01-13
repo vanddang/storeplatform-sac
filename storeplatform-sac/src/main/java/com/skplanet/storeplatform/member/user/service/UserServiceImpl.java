@@ -1552,16 +1552,16 @@ public class UserServiceImpl implements UserService {
 
 		// 연속하지 않고 일치 하지 않은 문자 3개
 		while( (charPwd[2]-charPwd[1] == 1 && charPwd[1]-charPwd[0] == 1)
+				|| (charPwd[2]-charPwd[1] == -1 && charPwd[1]-charPwd[0] == -1)
 				|| (charPwd[2]-charPwd[1] == 0 || charPwd[1]-charPwd[0] == 0) ){
-			System.out.println("char while문 돌았음"+String.valueOf(charPwd));
 			charPwd[0] = (char)((Math.random()*26)+97);
 			charPwd[1] = (char)((Math.random()*26)+97);
 			charPwd[2] = (char)((Math.random()*26)+97);
 		}
 		// 연속하지 않고 일치 하지 않은 숫자 3개
 		while( (intPwd[2]-intPwd[1] == 1 && intPwd[1]-intPwd[0] == 1)
+				|| (intPwd[2]-intPwd[1] == -1 && intPwd[1]-intPwd[0] == -1)
 				|| (intPwd[2]-intPwd[1] == 0 || intPwd[1]-intPwd[0] == 0) ){
-			System.out.println("int while문 돌았음"+intPwd[0]+intPwd[1]+intPwd[2]);
 			intPwd[0] = (int)(Math.random()*10);
 			intPwd[1] = (int)(Math.random()*10);
 			intPwd[2] = (int)(Math.random()*10);

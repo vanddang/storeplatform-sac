@@ -1136,13 +1136,15 @@ public class UserModifyServiceImpl implements UserModifyService {
         CommonRequest commonRequest = this.mcc.getSCCommonRequest(sacHeader);
 
         /** 1. 사용자 타입에 따른 오류 */
-        if( StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_MOBILE)
-                || StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_ONEID)){
+        if( !(StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)
+                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_FACEBOOK)
+                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_GOOGLE)
+                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_NAVER)) ){
             throw new StorePlatformException("SAC_MEM_1403");
         }
-        if( StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_MOBILE)
-                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_IDPID)
-                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_ONEID)){
+        if( !(StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_FACEBOOK)
+                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_GOOGLE)
+                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_NAVER)) ){
             throw new StorePlatformException("SAC_MEM_1403");
         }
 
@@ -1167,7 +1169,7 @@ public class UserModifyServiceImpl implements UserModifyService {
                         searchUserRes.getUserMbr().getUserSubStatus());
             }
         } catch (StorePlatformException spe) {
-            /** 2-2. 아이디가 없거나 회원 정보 조회시 exception 오류. */
+            /** 2-2. 아이디가 없거나 회원 정보 조회시 오류. */
             if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
                     || StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
                 throw new StorePlatformException("SAC_MEM_0003", "userKey", req.getUserKey());
