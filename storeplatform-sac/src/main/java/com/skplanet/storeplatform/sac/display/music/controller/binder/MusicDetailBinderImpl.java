@@ -9,7 +9,6 @@ import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.MusicQualityCode;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetail;
 import com.skplanet.storeplatform.sac.display.music.vo.RelatedProduct;
 import com.skplanet.storeplatform.sac.display.music.vo.SubContent;
@@ -121,7 +120,13 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         product.setDateList(newDateList(musicDetail));
         product.setLikeYn(musicDetail.getLikeYn());
         product.setDistributor(newDistributor(musicDetail));
-        
+        if(musicDetail.getDeviceModelCd() == null || "N".equals(musicDetail.getMusicSprtYn())) {
+            product.setIsDeviceSupported("N");
+        }
+        else {
+            product.setIsDeviceSupported("Y");
+        }
+
         // tmembership 할인율
         if(pointList != null) {
         	product.setPointList(pointList);

@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.purchase.cancel.service;
 
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -84,7 +85,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				// 여기서 셋팅이 안되나?
 				purchaseCancelPaymentDetailScReq.setCurrPrchsStatusCd(purchaseCancelScReq.getCurrPrchsStatusCd());
 			}
-			purchaseCancelPaymentDetailScReq.setCancelDt(purchaseCancelScReq.getCancelDt());
+            // 해당 결제수단이 결제취소 상태인 경우에만 payment_cancel_dt에 값을 기록한다.
+            if(StringUtils.equals(purchaseCancelPaymentDetailScReq.getPaymentStatusCd(), PurchaseConstants.PRCHS_STATUS_CANCEL)){
+                purchaseCancelPaymentDetailScReq.setCancelDt(purchaseCancelScReq.getCancelDt());
+            }
 			purchaseCancelPaymentDetailScReq.setSystemId(purchaseCancelScReq.getReqUserId());
 			paymentCancelCnt = paymentCancelCnt
 					+ this.scPurchaseDAO.update("Cancel.updatePayment", purchaseCancelPaymentDetailScReq);

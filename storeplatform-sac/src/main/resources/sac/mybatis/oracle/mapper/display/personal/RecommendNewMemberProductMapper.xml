@@ -128,6 +128,7 @@
                                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                                      AND B1.EXPO_YN ='Y'
                                                      AND B1.CPN_ID IS NOT NULL
+                                                     AND B1.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                                   )N
                                         WHERE 1=1
@@ -149,7 +150,14 @@
                                           AND B.CATALOG_ID = M.PROD_ID   
                                           AND I.PROD_ID = N.PROD_ID(+)                                            
                                           AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/
-                                          AND NVL(B.CHNL_CNT, 0) > 0                  
+                                          AND EXISTS(
+                                                SELECT 'X'
+                                                  FROM TB_DP_TENANT_PROD
+                                                 WHERE TENANT_ID =#{tenantId}
+                                                   AND PROD_ID =B.CATALOG_ID
+                                                   AND PROD_STATUS_CD ='PD000403'
+                                                   AND EXPO_YN = 'Y'
+											   )
                                           AND C.LANG_CD= #{langCd}               /* ko : 한국어 */
                                           AND F.LANG_CD= #{langCd}               /* ko : 한국어 */
                                           AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */

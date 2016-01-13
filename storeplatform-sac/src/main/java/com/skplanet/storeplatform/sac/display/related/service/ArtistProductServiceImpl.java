@@ -11,19 +11,16 @@ package com.skplanet.storeplatform.sac.display.related.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.related.AlbumProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
@@ -62,12 +59,6 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	@Autowired
-	private CommonMetaInfoGenerator commonGenerator;
-
-//	@Autowired
-//    private MemberBenefitService memberBenefitService;
-	
 	/**
 	 * 
 	 * <pre>
@@ -110,31 +101,25 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 
 		// 특정 작가별 상품 조회
 		this.log.debug("특정 아티스트별 상품(곡) 조회");
-		Map<String, Object> reqMapForMusicList = getRequestMapForMusicList(requestVO, requestHeader);
-		List<ProductBasicInfo> artistProductList = this.commonDAO.queryForList(
+        Map<String, Object> reqMapForMusicList = getRequestMapForMusicList(requestVO, requestHeader);
+        List<ProductBasicInfo> artistProductList = this.commonDAO.queryForList(
 				"ArtistProduct.selectArtistProductList", reqMapForMusicList, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
+        List<Product> productList = new ArrayList<Product>();
 
-		if (!artistProductList.isEmpty()) {
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("tenantHeader", requestHeader.getTenantHeader());
-			reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+        if (!artistProductList.isEmpty()) {
+            Map<String, Object> reqMap = new HashMap<String, Object>();
+            reqMap.put("tenantHeader", requestHeader.getTenantHeader());
+            reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
+            reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-			for (ProductBasicInfo productBasicInfo : artistProductList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
-				reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+            for (ProductBasicInfo productBasicInfo : artistProductList) {
+                reqMap.put("productBasicInfo", productBasicInfo);
+                reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 				MetaInfo retMetaInfo = null;
 				retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,
 						MetaInfo.class); // 뮤직 메타
 				if (retMetaInfo != null) {
-					// Tstore멤버십 적립율 정보
-//					retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
-					
-					Product product = null;
-					product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
-					product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
-					product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
+					Product product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
 					productList.add(product);
 				}
 			}
@@ -162,6 +147,7 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 		reqMap.put("prodGradeCds", parseProdGradeCd(requestVO.getProdGradeCd()));
 		reqMap.put("offset", requestVO.getOffset() == null ? 1 : requestVO.getOffset());
 		reqMap.put("count", requestVO.getCount() == null ? 20 : requestVO.getCount());
+        reqMap.put("tenantList", ServicePropertyManager.getSupportTenantList());
 		return reqMap;
 	}
 	

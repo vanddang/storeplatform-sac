@@ -43,6 +43,7 @@ public class DownloadVodV3SacReq extends CommonInfo {
 	
 	private String baseYn; // EP상품의 기준화질 여부
 	private String player; // Chrome Cast 재생 허용 Player
+	private String prchsId; // 구매 요청 아이디.
 
 	/**
 	 *
@@ -355,4 +356,11 @@ public class DownloadVodV3SacReq extends CommonInfo {
 		this.player = player;
 	}
 
+	public String getPrchsId() {
+		return prchsId;
+	}
+
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
+	}
 }

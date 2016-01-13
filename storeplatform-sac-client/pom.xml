@@ -12,6 +12,7 @@
     <packaging>jar</packaging>
 	<name>Store Platform System - Store API Center Client</name>
 	<description>Store Platform System</description>
+
 	<repositories>
 		<repository>
 			<id>team-store-groups</id>
@@ -19,7 +20,7 @@
 			<url>http://mvn.skplanet.com/content/repositories/team-store-groups</url>
 		</repository>
 	</repositories>
-	
+
 	<dependencies>
 		<!-- StorePlatform Projects -->
 		<dependency>
@@ -50,5 +51,13 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- Web Libs -->
+
+		<!-- Spring4로 버전업 할 때 까지만 한시적으로 Jackson1, 2 동시에 사용 -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.6.3</version>
+		</dependency>
+
 	</dependencies>
 </project>

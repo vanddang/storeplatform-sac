@@ -73,9 +73,19 @@ public interface CouponProcessService {
 
 	/**
 	 * <pre>
+	 * One Store 특가 상품 목록 조회 한다.
+	 * </pre>
+	 *
+	 * @param itemCodes
+	 *            itemCodes
+	 * @return List<CouponRes>
+	 */
+	public List<CouponRes> getOneBrandSpecialProductList(String[] itemCodes);
+	/**
+	 * <pre>
 	 * 특가 상품 상세 조회 한다.
 	 * </pre>
-	 * 
+	 *
 	 * @param couponCode
 	 *            couponCode
 	 * @param itemsCodes
@@ -83,6 +93,18 @@ public interface CouponProcessService {
 	 * @return CouponRes
 	 */
 	public CouponRes getSpecialProductDetail(String couponCode, String[] itemsCodes);
+	/**
+	 * <pre>
+	 * One Store 특가 상품 상세 조회 한다.
+	 * </pre>
+	 *
+	 * @param couponCode
+	 *            couponCode
+	 * @param itemsCodes
+	 *            itemsCodes
+	 * @return CouponRes
+	 */
+	public CouponRes getOneBrandSpecialProductDetail(String couponCode, String[] itemsCodes);
 	/**
 	 * <pre>
 	 * 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
@@ -93,8 +115,40 @@ public interface CouponProcessService {
 	 * @return CouponRes
 	 */
 	public CouponRes getSpecialProductDetailForDate(CouponReq couponReq);
-	
-	
-	
+
+	/**
+	 * <pre>
+	 * One Store 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+	 * </pre>
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return CouponRes
+	 */
+	public CouponRes getOneBrandSpecialProductDetailForDate(CouponReq couponReq);
+
+
+	/**
+	 * <pre>
+	 * One Store 팅/특가 쿠폰 ID 조회 한다.
+	 * </pre>
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return String
+	 */
+	public String getOneBrandSpecialProductCouponId(CouponReq couponReq);
+
+
+	/**
+	 * <pre>
+	 * One Store 팅/특가 상품 상태 변경 한다.
+	 * </pre>
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return boolean
+	 */
+	public boolean updateForOneBrandSpecialCouponStatus(CouponReq couponReq);
 
 }

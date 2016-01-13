@@ -85,7 +85,7 @@ public class PurchaseCDConstants {
 	public static final String PRCHS_REQ_PATH_PC = "OR000403"; // PC Suite
 	public static final String PRCHS_REQ_PATH_MOBILE_WEB = "OR000404"; // Mobile WEB
 	public static final String PRCHS_REQ_PATH_MOBILE_CLIENT = "OR000405"; // Mobile Client
-	public static final String PRCHS_REQ_PATH_S2S = "OR000455"; // S2S(결제 취소 진행 안함)
+	public static final String PRCHS_REQ_PATH_S2S = "OR000455"; // S2S(구매-상품가격 정보 validation 체크 안함. 취소-결제 취소 진행 안함)
 	public static final String PRCHS_REQ_PATH_TWORLD = "OR000406"; // T-WORLD
 	public static final String PRCHS_REQ_PATH_IAP = "OR000407"; // 부분유료화
 	public static final String PRCHS_REQ_PATH_IAP_COMMERCIAL_CONVERTED = "OR000408"; // 부분유료화 정식판전환

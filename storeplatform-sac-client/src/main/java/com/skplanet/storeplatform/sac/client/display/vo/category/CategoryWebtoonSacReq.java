@@ -37,6 +37,8 @@ public class CategoryWebtoonSacReq extends CommonInfo {
 	private Integer offset = 1; // offset
 	@Valid
 	private Integer count = 20; // count
+	private String prodGradeCd; // 상품등급코드
+	private String[] arrayProdGradeCd; // 상품등급코드 Array
 
 	public String getTenantId() {
 		return this.tenantId;
@@ -124,6 +126,22 @@ public class CategoryWebtoonSacReq extends CommonInfo {
 
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	public String getProdGradeCd() {
+		return this.prodGradeCd;
+	}
+
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
+	}
+
+	public String[] getArrayProdGradeCd() {
+		return this.arrayProdGradeCd;
+	}
+
+	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
+		this.arrayProdGradeCd = arrayProdGradeCd;
 	}
 
 }

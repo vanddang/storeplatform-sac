@@ -11,6 +11,7 @@
 	       AND PROD_ID =#{productId}
 	       AND EXPO_YN ='Y'
 	       AND CPN_ID IS NOT NULL
+	       AND TENANT_ID =#{tenantId}
 	       AND TO_DATE(#{purchaseDate},'yyyymmddhh24miss') BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT    
     </select>  
     
@@ -48,6 +49,7 @@
           FROM TB_DP_SPRC_PROD_PRCHS_MANG
          WHERE 1=1
            AND PROD_ID = #{productId}
+           AND TENANT_ID =#{tenantId}
            AND TO_CHAR(PRCHS_DT,'YYYYMMDDHH24') = SUBSTR(#{purchaseDate},0,10) 
     </select>       
     
@@ -58,12 +60,14 @@
              PRCHS_DT
            , PROD_ID
            , PRCHS_CNT
+           , TENANT_ID
            , REG_DT
            , UPD_DT
         )VALUES(
             TO_DATE(SUBSTR(#{purchaseDate},0,10)||'0000','yyyymmddhh24miss')
            ,#{productId}
            ,#{purchaseCount,jdbcType=NUMERIC}
+           ,#{tenantId}
            , SYSDATE
            , SYSDATE
         )
@@ -76,6 +80,7 @@
           FROM TB_DP_SPRC_PROD_PRCHS_MANG
          WHERE 1=1
            AND PROD_ID = #{productId}
+           AND TENANT_ID =#{tenantId}
            AND TO_CHAR(PRCHS_DT,'yyyymmddhh24miss') =SUBSTR(#{purchaseDate},0,8) || '000000'     
     </select>    
         
@@ -87,6 +92,7 @@
           FROM TB_DP_SPRC_PROD_PRCHS_MANG
          WHERE 1=1
            AND PROD_ID = #{productId}
+           AND TENANT_ID =#{tenantId}
            AND TO_CHAR(PRCHS_DT,'yyyymmddhh24miss') =SUBSTR(#{purchaseDate},0,8) || '000000'     
     </select>    
 
@@ -98,11 +104,13 @@
                                   FROM TB_DP_SPRC_PROD_PRCHS_MANG
                                  WHERE 1=1
                                    AND PROD_ID = #{productId}
+                                   AND TENANT_ID = #{tenantId}
                                    AND TO_CHAR(PRCHS_DT,'yyyymmddhh24miss') =SUBSTR(#{purchaseDate},0,8) || '000000'
                               )
                 ,UPD_DT = SYSDATE            
          WHERE 1=1 
            AND PROD_ID= #{productId}
+           AND TENANT_ID =#{tenantId}
            AND TO_CHAR(PRCHS_DT,'yyyymmddhh24miss') =SUBSTR(#{purchaseDate},0,8) || '000000'
     </update>  
 
@@ -114,6 +122,7 @@
           FROM TB_DP_SPRC_PROD_PRCHS_MANG
          WHERE 1=1
            AND PROD_ID = #{productId}
+           AND TENANT_ID =#{tenantId}
            AND TO_CHAR(PRCHS_DT,'YYYYMMDDHH24') = SUBSTR(#{purchaseDate},0,10) 
     </select>   
 
@@ -126,11 +135,13 @@
                                   FROM TB_DP_SPRC_PROD_PRCHS_MANG
                                  WHERE 1=1
                                    AND PROD_ID = #{productId}
+                                   AND TENANT_ID =#{tenantId}
                                    AND TO_CHAR(PRCHS_DT,'YYYYMMDDHH24') = SUBSTR(#{purchaseDate},0,10) 
                               )
                 ,UPD_DT = SYSDATE            
          WHERE 1=1 
            AND PROD_ID= #{productId}
+           AND TENANT_ID =#{tenantId}
            AND TO_CHAR(PRCHS_DT,'YYYYMMDDHH24') = SUBSTR(#{purchaseDate},0,10) 
     </update>    
 

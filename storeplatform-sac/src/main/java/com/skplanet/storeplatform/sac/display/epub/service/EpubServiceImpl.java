@@ -60,6 +60,9 @@ import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStats;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 
 /**
  * EPUB Service
@@ -91,6 +94,9 @@ public class EpubServiceImpl implements EpubService {
 	
     @Autowired
     private CommonMetaInfoGenerator metaInfoGenerator;
+
+	@Autowired
+	private ProductInfoManager productInfoManager;
     
     /*
      * (non-Javadoc)
@@ -474,6 +480,9 @@ public class EpubServiceImpl implements EpubService {
 		
 		//웹툰 원고 타입 여부 (Y : 웹툰 원고 타입)
 		product.setVerticalYn(mapperVO.getVerticalYn());
+
+		// 디바이스 지원 여부
+		product.setIsDeviceSupported(mapperVO.getDeviceSprtYn());
 		
 		// productExplain(상품설명) 
 		// 저자 설명(PROD_BASE_DESC)값이 아닌 상품 상세설명(PROD_DTL_DESC) 값으로 변경 (14.02.24)
@@ -584,18 +593,18 @@ public class EpubServiceImpl implements EpubService {
         return sourceList;
     }
 
-    /**
-     * Mapping Accurual
+	/**
+	 * Mapping Accurual
      * @param mapperVO
-     * @return
-     */
-    private Accrual mapAccurual(EpubDetail mapperVO) {
-        Accrual accrual;
-        accrual = new Accrual();
-        accrual.setDownloadCount(mapperVO.getPrchsCnt());
-        accrual.setScore(mapperVO.getAvgEvluScore());
-        accrual.setVoterCount(mapperVO.getPaticpersCnt());
-        return accrual;
+	 * @return
+	 */
+	private Accrual mapAccurual(EpubDetail mapperVO) {
+		ProductStats stats = productInfoManager.getProductStats(new ProductStatsParam(mapperVO.getProdId()));
+		Accrual accrual = new Accrual();
+		accrual.setVoterCount(stats.getParticipantCount());
+		accrual.setDownloadCount(stats.getPurchaseCount());
+		accrual.setScore(stats.getAverageScore());
+		return accrual;
     }
 
     /**

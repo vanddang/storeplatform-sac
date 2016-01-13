@@ -13,6 +13,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
@@ -29,10 +30,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * 구매 내역 조회 시 필요한 상품 메타 정보 조회 서비스 구현체.
@@ -186,19 +184,26 @@ public class ProductInfoServiceImpl implements ProductInfoService {
      */
     private void mapSellerInfo(List<ProductInfo> productList) {
 
-        // 2014.06.12 판매자 정보 목록 조회 추가 (이태희D)
-        DetailInformationListForProductSacReq sellerReq = new DetailInformationListForProductSacReq();
-        Set<String> sellerKeySet = Sets.newHashSet();
-
         // 회원 판매자 정보를 위한 판매자키 파라미터 세팅
+        List<SellerMbrSac> sellerKeyList = new ArrayList<SellerMbrSac>();
         for (ProductInfo product : productList) {
             String sellerMbrNo = product.getSellerMbrNo();
 
-            if (StringUtils.isNotEmpty(sellerMbrNo))
-                sellerKeySet.add(sellerMbrNo);
+            if (StringUtils.isNotEmpty(sellerMbrNo)) {
+                SellerMbrSac sellerMbrSac = new SellerMbrSac();
+                sellerMbrSac.setSellerKey(sellerMbrNo);
+
+                sellerKeyList.add(sellerMbrSac);
+            }
         }
 
-        sellerReq.setSellerKeyList(Lists.newArrayList(sellerKeySet));
+        if (sellerKeyList.isEmpty())
+            return;
+
+        // 2014.06.12 판매자 정보 목록 조회 추가 (이태희D)
+        DetailInformationListForProductSacReq sellerReq = new DetailInformationListForProductSacReq();
+        sellerReq.setSellerMbrSacList(sellerKeyList);
+
         Map<String, SellerMbrInfoSac> sellerMbrMap = null;
 
         try {

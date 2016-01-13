@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.order.repository;
 
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.*;
+import com.skplanet.storeplatform.sac.purchase.common.util.AdjustValueUtil;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -57,8 +58,8 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 	 * @return 발급 요청 결과 개체
 	 */
 	@Override
-	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String userKey, String couponCode, String itemCode,
-			String buyDeviceId, List<String> useDeviceIdList, boolean bGift) {
+	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String userKey, String couponCode,
+			String itemCode, String buyDeviceId, List<Object[]> useDeviceIdList, boolean bGift) {
 		CouponPublishV2EcReq couponPublishV2EcReq = new CouponPublishV2EcReq();
 		couponPublishV2EcReq.setPrchsId(prchsId);
 		couponPublishV2EcReq.setUserKey(userKey);
@@ -66,16 +67,7 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		couponPublishV2EcReq.setItemCode(itemCode);
 		couponPublishV2EcReq.setBuyMdn(buyDeviceId);
 		couponPublishV2EcReq.setGiftFlag(bGift ? "Y" : "N");
-		StringBuffer sbMdns = new StringBuffer();
-		int cnt = 0;
-		for (String mdn : useDeviceIdList) {
-			if (cnt > 0) {
-				sbMdns.append(",");
-			}
-			cnt++;
-			sbMdns.append(mdn);
-		}
-		couponPublishV2EcReq.setUseMdns(sbMdns.toString());
+		couponPublishV2EcReq.setUseMdns(AdjustValueUtil.concatStr(useDeviceIdList, ",",":"));
 
 		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,PUBLISH,REQ,V2,{}",
 				ReflectionToStringBuilder.toString(couponPublishV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));
@@ -107,8 +99,8 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 	 * @return 발급 요청 결과 개체
 	 */
 	@Override
-	public CouponPublishEcRes createCouponPublish(String prchsId, String userKey, String useDeviceId, String buyDeviceId,
-			String couponCode, String itemCode, int qty) {
+	public CouponPublishEcRes createCouponPublish(String prchsId, String userKey, String useDeviceId,
+			String buyDeviceId, String couponCode, String itemCode, int qty) {
 		CouponPublishEcReq couponPublishEcReq = new CouponPublishEcReq();
 		couponPublishEcReq.setPrchsId(prchsId);
 		couponPublishEcReq.setUserKey(userKey);
