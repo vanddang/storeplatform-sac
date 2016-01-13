@@ -930,7 +930,11 @@ public class LoginServiceImpl implements LoginService {
 				if (StringUtils.isNotBlank(req.getDeviceAccount())) {
 					userMbrDevice.setDeviceAccount(req.getDeviceAccount());
 				}
+				if (StringUtils.isNotBlank(req.getDeviceTelecom())) {
+					userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
+				}
 				modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
+
 
 				ModifyDeviceResponse modifyDeviceResponse = this.deviceSCI.modifyDevice(modifyDeviceRequest);
 				res.setDeviceKey(modifyDeviceResponse.getDeviceKey());

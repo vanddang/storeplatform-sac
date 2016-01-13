@@ -117,9 +117,9 @@ public class DeviceServiceImpl implements DeviceService {
 		if (userMbr == null || userMbr.getUserID() == null)
 			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
 
-//		CommonRequest commonRequest = new CommonRequest();
-//		commonRequest.setSystemID(userMbr.getUserID());
-//		searchDeviceListRequest.setCommonRequest(commonRequest);
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(userMbr.getUserID());
+		searchDeviceListRequest.setCommonRequest(commonRequest);
 
 		SearchDeviceListResponse searchDeviceListResponse;
 
