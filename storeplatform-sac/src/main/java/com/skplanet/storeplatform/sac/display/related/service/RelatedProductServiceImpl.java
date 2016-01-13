@@ -57,7 +57,7 @@ public class RelatedProductServiceImpl implements RelatedProductService {
         for(String prodId : prodIds){
             log.debug("add prodId={}",prodId);
             ListProduct lp = newListProduct(prodId);
-            Product p = productListService.getProduct(requestHeader, lp);
+            Product p = productListService.getProduct( lp );
             if (!isValidToDisplay(p, requestVO.getProdGradeCd())) {
                 continue;
             }
