@@ -505,7 +505,6 @@ public class MemberCommonComponent {
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
 		userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
-		userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
 		userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
 		userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
 		userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
@@ -806,7 +805,9 @@ public class MemberCommonComponent {
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_NON)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_IOS)
-				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKM)) {
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKM)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_KTM)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGM)) {
 
 			return deviceTelecomCode;
 		} else {

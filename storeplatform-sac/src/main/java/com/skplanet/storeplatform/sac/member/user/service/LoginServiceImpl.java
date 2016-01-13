@@ -248,7 +248,6 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserType(chkDupRes.getUserMbr().getUserType());
 			res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
 			res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
-			res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
 			res.setIsLoginSuccess("Y");
 			return res;
 		}
@@ -382,7 +381,6 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserType(chkDupRes.getUserMbr().getUserType());
 		res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
 		res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
-		res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
 		res.setDeviceKey(deviceKey);
 		res.setIsLoginSuccess("Y");
 
@@ -565,7 +563,6 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserType(chkDupRes.getUserMbr().getUserType());
 			res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
 			res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
-			res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
 			res.setIsLoginSuccess("Y");
 			return res;
 		}
@@ -698,7 +695,6 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserType(chkDupRes.getUserMbr().getUserType());
 		res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
 		res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
-		res.setLoginStatusCode(chkDupRes.getUserMbr().getLoginStatusCode());
 		res.setDeviceKey(deviceKey);
 		res.setIsLoginSuccess("Y");
 
@@ -1053,7 +1049,6 @@ public class LoginServiceImpl implements LoginService {
 		userType = chkDupRes.getUserMbr().getUserType();
 		userMainStatus = chkDupRes.getUserMbr().getUserMainStatus();
 		userSubStatus = chkDupRes.getUserMbr().getUserSubStatus();
-		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
 
 		/** 2-1. 가가입 상태면 오류 - 가가입자는 Save&Sync 인증을 통해서만 인증이 처리된다.  */
@@ -1063,7 +1058,7 @@ public class LoginServiceImpl implements LoginService {
 
 		/** 2-2. 일시정지,로그인제한 상태면 응답처리. */
 		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
-				|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+				/*|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)*/) {
 			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
@@ -1087,12 +1082,13 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			/**  3-1-2. 계정잠금해제 요청이라면 로그인상태 코드 정상처리 */
-			if (StringUtils.equals(req.getReleaseLock(), "Y")
+			// TODO. 로그인 상태 일괄 제거
+			/*if (StringUtils.equals(req.getReleaseLock(), "Y")
 					&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 				this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant,
 						MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
 				loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
-			}
+			}*/
 
 			/**  3-1-3. 로그인 성공이력 저장후 리턴 */
 			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "Y", null);
@@ -4439,7 +4435,6 @@ public class LoginServiceImpl implements LoginService {
 		/**  2. 조회된 회원정보 셋팅 */
 		userKey = chkDupRes.getUserMbr().getUserKey();
 		userType = chkDupRes.getUserMbr().getUserType();
-		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
 		userMainStatus = chkDupRes.getUserMbr().getUserMainStatus();
 		userSubStatus = chkDupRes.getUserMbr().getUserSubStatus();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
@@ -4450,13 +4445,14 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/** 2-2. 로그인제한상태면 응답처리 */
-		if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+		// TODO. 로그인 상태 일괄 제거
+		/*if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setLoginStatusCode(loginStatusCode);
 			res.setIsLoginSuccess("Y");
 			return res;
-		}
+		}*/
 
 		try{
 			/** 3-1. 그외의 회원은 req의 pwd 일치 체크 */
@@ -4472,13 +4468,14 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			/** 3-1-2. 계정잠금해제 요청이라면 로그인상태 코드 정상처리 */
-			if (StringUtils.equals(req.getReleaseLock(), "Y")
+			// TODO. 로그인 상태 일괄 제거
+			/*if (StringUtils.equals(req.getReleaseLock(), "Y")
 					&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
-				/* 로그인 상태코드 정상처리 */
+				*//* 로그인 상태코드 정상처리 *//*
 				this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, isDormant,
 						MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
 				loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
-			}
+			}*/
 
 			/** 3-1-3. 로그인 성공이력 저장후 리턴 */
 			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", null, "N", null, "Y", null);
