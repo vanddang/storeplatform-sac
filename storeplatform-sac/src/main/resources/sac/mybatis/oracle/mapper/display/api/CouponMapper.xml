@@ -622,45 +622,6 @@
         )
         WHERE PROD_ID = #{prodId}
     </update>    
-    
-    <!-- 전시단 판매중인 채널의 갯수 변경 -->
-    <update id="updateDPCouponCNT" parameterType="HashMap">
-        /* CouponMapper.xml, updateDPCouponCNT, 전시단 판매중인 채널의 갯수 변경, 김형식/SK플래닛  , 2014-01-08 */
-        UPDATE 
-            TB_DP_SHPG_CATALOG
-        SET CHNL_CNT =  (
-                  SELECT 
-                        COUNT(B.PROD_ID)
-                  FROM  TB_DP_PROD_CATALOG_MAPG A
-                       ,TB_DP_TENANT_PROD B
-                  WHERE A.PROD_ID = B.PROD_ID
-                    AND A.BASE_YN ='Y'
-                    AND A.USE_YN ='Y'
-                    AND B.EXPO_YN ='Y' 
-                    AND B.PROD_STATUS_CD = 'PD000403' 
-                    AND B.TENANT_ID =#{tenentId}     
-                    AND A.CATALOG_ID = (
-                         SELECT 
-                             CATALOG_ID 
-                         FROM TB_DP_PROD_CATALOG_MAPG
-                         WHERE PROD_ID =#{prodId}
-                           AND BASE_YN ='Y'
-                           AND USE_YN ='Y'      
-                           AND ROWNUM =1                     
-                   )                 
-        )
-        WHERE CATALOG_ID =
-        (
-          SELECT 
-                 CATALOG_ID 
-            FROM TB_DP_PROD_CATALOG_MAPG
-           WHERE PROD_ID =#{prodId}
-             AND BASE_YN ='Y'
-             AND USE_YN ='Y'
-             AND ROWNUM =1    
-        )
-        
-    </update>
 
     <!-- TB_DP_TENANT_PROD 테이블에 CATALOG_ID 저장 및 수정 -->
     <update id="updateCatalogTenantStatus" parameterType="HashMap">

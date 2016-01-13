@@ -320,21 +320,35 @@ public class CouponItemServiceImpl implements CouponItemService {
 					this.commonDAO.update("Coupon.updateTbDpProdLastDeployDt", map);
 				}
 			}
-			this.log.info("■■■■■ updateDPCouponCNT Start ■■■■■");
-			
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("catalogId", couponInfo.getStoreCatalogCode());
-			map.put("prodId", couponInfo.getProdId());
-			map.put("tenentId", CouponConstants.TENANT_ID);
-			map.put("regId", couponInfo.getBpId());
-			map.put("updId", couponInfo.getBpId());
+			this.log.info("■■■■■ updateCatalogTenantStatus Start ■■■■■");
 
-			this.commonDAO.update("Coupon.updateDPCouponCNT", map);
-			this.log.info("■■■■■ updateDPCouponCNT End ■■■■■");
+			List<Map<String, Object>> couponList = new ArrayList<Map<String, Object>>();
+			Map<String, Object> coupon = new HashMap<String, Object>();
 
-			this.commonDAO.update("Coupon.updateCatalogTenantStatus", map);
-			this.log.info("■■■■■ updateCatalogTenantStatus End ■■■■■");
-
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus())) {
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID);
+				couponList.add(coupon);
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_kt())) {
+				coupon = new HashMap<String, Object>();
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID_S02);
+				couponList.add(coupon);
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_lgt())) {
+				coupon = new HashMap<String, Object>();
+				coupon.put("tempTenantId", CouponConstants.TENANT_ID_S03);
+				couponList.add(coupon);
+			}
+			for(int kk =0 ; kk< couponList.size() ; kk++) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("catalogId", couponInfo.getStoreCatalogCode());
+				map.put("prodId", couponInfo.getProdId());
+				map.put("tenentId", (String) couponList.get(kk).get("tempTenantId"));
+				map.put("regId", couponInfo.getBpId());
+				map.put("updId", couponInfo.getBpId());
+				this.commonDAO.update("Coupon.updateCatalogTenantStatus", map);
+				this.log.info("■■■■■ updateCatalogTenantStatus End ■■■■■");
+			}
 
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
@@ -536,50 +550,52 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * 
 	 * @param couponCode
 	 *            couponCode
-	 * @param dpStatusCode
-	 *            dpStatusCode
+	 * @param couponList
+	 *            couponList
 	 * @param upType
 	 *            upType
 	 * @param itemCode
 	 *            itemCode
 	 */
 	@Override
-	public void updateCouponStatus(String couponCode, String dpStatusCode, String upType, String itemCode) {
+	public void updateCouponStatus(String couponCode, List<Map<String, Object>> couponList, String upType, String itemCode) {
 		try {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("prodId", couponCode);
-			map.put("dpStatusCode", dpStatusCode);
-			map.put("upType", upType);
-			map.put("itemCode", itemCode);
-			map.put("tenentId", CouponConstants.TENANT_ID);
+
 			String catalogId = (String) this.commonDAO.queryForObject("Coupon.getShoppingCatalogIdByChannelId", couponCode);
-			map.put("catalogId", catalogId);
-			map.put("regId", "admin");
-			map.put("updId", "admin");
 
-			if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-						"Coupon.updateDPCouponStatus 실패", null);
-			}
-			if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", map) <= 0) {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-						"Coupon.updateDPcouponItemCNT 실패", null);
-			}
-			if (this.commonDAO.update("Coupon.updateDPCouponCNT", map) <= 0) {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateDPcouponCNT 실패",
-						null);
-			}
-			if (this.commonDAO.update("Coupon.updateCatalogTenantStatus", map) <= 0) {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateCatalogTenantStatus 실패",
-						null);
-			}
-			if (!StringUtils.equalsIgnoreCase(upType, "0")) {
-				this.commonDAO.update("Coupon.updateDPYNStatus", map);
-			}
+			for(int kk =0 ; kk< couponList.size() ;kk++){
 
-			// tb_dp_prod 최초 판매시간 2014.05.22 일 수정
-			if (CouponConstants.DP_STATUS_IN_SERVICE.equals(dpStatusCode)) {
-				this.commonDAO.update("Coupon.updateTbDpProdLastDeployDt", map);
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("prodId", couponCode);
+				map.put("dpStatusCode", (String) couponList.get(kk).get("tempCouponStatus"));
+				map.put("upType", upType);
+				map.put("itemCode", itemCode);
+				map.put("tenentId", (String) couponList.get(kk).get("tempTenantId"));
+				map.put("catalogId", catalogId);
+				map.put("regId", "SAC");
+				map.put("updId", "SAC");
+
+				if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+							"Coupon.updateDPCouponStatus 실패", null);
+				}
+				if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", map) <= 0) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+							"Coupon.updateDPcouponItemCNT 실패", null);
+				}
+				if (this.commonDAO.update("Coupon.updateCatalogTenantStatus", map) <= 0) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateCatalogTenantStatus 실패",
+							null);
+				}
+				if (!StringUtils.equalsIgnoreCase(upType, "0")) {
+					this.commonDAO.update("Coupon.updateDPYNStatus", map);
+				}
+
+				// tb_dp_prod 최초 판매시간 2014.05.22 일 수정
+				if (CouponConstants.DP_STATUS_IN_SERVICE.equals((String) couponList.get(kk).get("tempCouponStatus"))) {
+					this.commonDAO.update("Coupon.updateTbDpProdLastDeployDt", map);
+				}
+
 			}
 
 		} catch (CouponException e) {
@@ -984,8 +1000,8 @@ public class CouponItemServiceImpl implements CouponItemService {
 			map.put("upType", upType);
 			String catalogId = (String) this.commonDAO.queryForObject("Coupon.getShoppingCatalogIdByChannelId", newCouponCode);
 			map.put("catalogId", catalogId);
-			map.put("regId", "admin");
-			map.put("updId", "admin");
+			map.put("regId", "SAC");
+			map.put("updId", "SAC");
 
 			map.put("tenentId", CouponConstants.TENANT_ID);
 			if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
@@ -996,10 +1012,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 						"Coupon.updateDPcouponItemCNT 실패", null);
 			}
-			if (this.commonDAO.update("Coupon.updateDPCouponCNT", map) <= 0) {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateDPcouponCNT 실패",
-						null);
-			}
+
 			if (this.commonDAO.update("Coupon.updateCatalogTenantStatus", map) <= 0) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateCatalogTenantStatus 실패",
 						null);
@@ -1029,7 +1042,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
-	 * 특가(팅) 상품에 상태값을 변경 한다(판매중지 전용).
+	 * One Store 특가(팅) 상품에 상태값을 변경 한다(판매중지 전용).
 	 * </pre>
 	 *
 	 * @param newCouponCode
@@ -1052,8 +1065,8 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 			String catalogId = (String) this.commonDAO.queryForObject("Coupon.getShoppingCatalogIdByChannelId", newCouponCode);
 			map.put("catalogId", catalogId);
-			map.put("regId", "admin");
-			map.put("updId", "admin");
+			map.put("regId", "SAC");
+			map.put("updId", "SAC");
 
 			for (String tenantId : tenantIds) {
 				map.put("tenentId", tenantId );
@@ -1065,10 +1078,6 @@ public class CouponItemServiceImpl implements CouponItemService {
 				if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", map) <= 0) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 							"Coupon.updateDPcouponItemCNT 실패", null);
-				}
-				if (this.commonDAO.update("Coupon.updateDPCouponCNT", map) <= 0) {
-					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateDPcouponCNT 실패",
-							null);
 				}
 
 				if (this.commonDAO.update("Coupon.updateCatalogTenantStatus", map) <= 0) {
