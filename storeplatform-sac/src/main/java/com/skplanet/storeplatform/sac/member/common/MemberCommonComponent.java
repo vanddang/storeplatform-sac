@@ -1251,7 +1251,7 @@ public class MemberCommonComponent {
 		}
 
 		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)
-				|| !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)){
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)){
 			if(StringUtils.isBlank(nativeId)){
 				throw new StorePlatformException("SAC_MEM_0001", "nativeId");
 			}
