@@ -154,8 +154,20 @@ public interface UserService {
 	 * @param updatePasswordUserRequest
 	 *            사용자회원 비밀번호 변경 요청 Value Object
 	 * @return UpdatePasswordUserResponse - 사용자회원 비밀번호 변경 응답 Value Object
+	 * @deprecated updatePasswordUser > modifyUserPwd
 	 */
 	public UpdatePasswordUserResponse updatePasswordUser(UpdatePasswordUserRequest updatePasswordUserRequest);
+
+	/**
+	 * <pre>
+	 * 사용자 회원 비밀번호 변경하는 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param modifyUserPwdRequest
+	 *            사용자회원 비밀번호 변경 요청 Value Object
+	 * @return ModifyUserPwdResponse - 사용자회원 비밀번호 변경 응답 Value Object
+	 */
+	public ModifyUserPwdResponse modifyUserPwd(ModifyUserPwdRequest modifyUserPwdRequest);
 
 	/**
 	 * <pre>

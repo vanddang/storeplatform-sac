@@ -23,10 +23,13 @@ import com.skplanet.storeplatform.member.common.code.DeviceManagementCode;
 import com.skplanet.storeplatform.member.common.code.MainStateCode;
 import com.skplanet.storeplatform.member.common.code.SubStateCode;
 import com.skplanet.storeplatform.member.common.code.UserTypeCode;
+import com.skplanet.storeplatform.member.common.crypto.CryptoCode;
+import com.skplanet.storeplatform.member.common.crypto.CryptoCodeIm;
 import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
 import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
 import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
 import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -595,28 +598,12 @@ public class UserServiceImpl implements UserService {
 			loginUserResponse.setUserMainStatus(userMbrRetrieveUserMbrPwd.getUserMainStatus());
 			loginUserResponse.setUserSubStatus(userMbrRetrieveUserMbrPwd.getUserSubStatus());
 			loginUserResponse.setIsLoginSuccess(Constant.TYPE_YN_Y);
-			loginUserResponse.setLoginFailCount(0);
-			loginUserResponse.setLoginStatusCode(userMbrRetrieveUserMbrPwd.getLoginStatusCode());
-			loginUserResponse.setStopStatusCode(userMbrRetrieveUserMbrPwd.getStopStatusCode());
 
 		} else { // 로그인 실패
-
-			// 2.1.5.ID 기반 회원 인증API에서 비밀번호 불일치인 경우만 해당.
-			MbrPwd mbrPwd = new MbrPwd();
-			//mbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
-			mbrPwd.setMemberKey(userMbrRetrieveUserMbrPwd.getUserKey());
-			if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
-				this.commonDAO.update("User.updateLoginFail", mbrPwd);
-			} else { // 휴면계정이 비밀번호 불일치시 복구처리가 되지 않는 경우
-				this.idleDAO.update("User.updateLoginFail", mbrPwd);
-			}
 
 			loginUserResponse.setUserMainStatus(userMbrRetrieveUserMbrPwd.getUserMainStatus());
 			loginUserResponse.setUserSubStatus(userMbrRetrieveUserMbrPwd.getUserSubStatus());
 			loginUserResponse.setIsLoginSuccess(Constant.TYPE_YN_N);
-			loginUserResponse.setLoginFailCount(userMbrRetrieveUserMbrPwd.getFailCnt() + 1);
-			loginUserResponse.setLoginStatusCode(userMbrRetrieveUserMbrPwd.getLoginStatusCode());
-			loginUserResponse.setStopStatusCode(userMbrRetrieveUserMbrPwd.getStopStatusCode());
 
 		}
 
@@ -1552,6 +1539,7 @@ public class UserServiceImpl implements UserService {
 	 * @param updatePasswordUserRequest
 	 *            사용자회원 비밀번호 변경 요청 Value Object
 	 * @return UpdatePasswordUserResponse - 사용자회원 비밀번호 변경 응답 Value Object
+	 * @deprecated updatePasswordUser > modifyUserPwd
 	 */
 	@Override
 	public UpdatePasswordUserResponse updatePasswordUser(UpdatePasswordUserRequest updatePasswordUserRequest) {
@@ -1564,14 +1552,23 @@ public class UserServiceImpl implements UserService {
 		} else {
 			dao = this.idleDAO;
 		}
+		// userID가 존재하는지 여부 확인
+		String isRegistered = null;
+		UserMbr usermbr = new UserMbr();
+		//usermbr.setTenantID(updatePasswordUserRequest.getCommonRequest().getTenantID());
+		usermbr.setUserID(updatePasswordUserRequest.getMbrPwd().getMemberID());
+		isRegistered = dao.queryForObject("User.isRegisteredUserID", usermbr, String.class);
+		if (isRegistered == null || isRegistered.length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+		}
 
-		updatePasswordUserRequest.getMbrPwd().setMemberPW(
-				createUserPwdEncyp(updatePasswordUserRequest.getMbrPwd().getMemberPW()));
-		updatePasswordUserRequest.getMbrPwd().setOldPW(
-				createUserPwdEncyp(updatePasswordUserRequest.getMbrPwd().getOldPW()));
+		updatePasswordUserRequest.getMbrPwd().setTenantID(updatePasswordUserRequest.getCommonRequest().getTenantID());
+
+		//LOGGER.debug("### tenantID : {}", updatePasswordUserRequest.getMbrPwd().getTenantID());
+		LOGGER.debug("### memberID : {}", updatePasswordUserRequest.getMbrPwd().getMemberID());
 
 		Integer row = dao.update("User.updatePasswordUser", updatePasswordUserRequest.getMbrPwd());
-
+		LOGGER.debug("### updateStatus row : {}", row);
 		if (row == 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
@@ -1579,8 +1576,73 @@ public class UserServiceImpl implements UserService {
 		UpdatePasswordUserResponse updatePasswordUserResponse = new UpdatePasswordUserResponse();
 		updatePasswordUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
-		updatePasswordUserResponse.setUserKey(updatePasswordUserRequest.getMbrPwd().getMemberKey());
+		updatePasswordUserResponse.setUserKey(isRegistered);
 		return updatePasswordUserResponse;
+
+	}
+
+	/**
+	 * <pre>
+	 * 사용자 회원 비밀번호 변경하는 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param modifyUserPwdRequest
+	 *            사용자회원 비밀번호 변경 요청 Value Object
+	 * @return ModifyUserPwdResponse - 사용자회원 비밀번호 변경 응답 Value Object
+	 */
+	public ModifyUserPwdResponse modifyUserPwd(ModifyUserPwdRequest modifyUserPwdRequest){
+
+		ModifyUserPwdResponse modifyUserPwdResponse = new ModifyUserPwdResponse();
+
+		String isDormant = StringUtils.isBlank(modifyUserPwdRequest.getIsDormant())
+				? Constant.TYPE_YN_N : modifyUserPwdRequest.getIsDormant();
+		CommonDAO dao = null;
+		if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
+			dao = this.commonDAO;
+		} else {
+			dao = this.idleDAO;
+		}
+
+		/** 1. 비밀번호 타입에 따른 암호화 */
+		String encReqOldPw = "";
+		String encReqNewPw = "";
+		/** 2-1. 패스워드가 OneID 타입 암호화 */
+		if ( StringUtils.equals(modifyUserPwdRequest.getUserPwType(), "US011503") ) {
+			CryptoCodeIm cryptoCode = new CryptoCodeIm();
+			try {
+				encReqOldPw = cryptoCode.generateImIdpUserPW(modifyUserPwdRequest.getOldPassword(),
+						modifyUserPwdRequest.getUserSalt());
+				encReqNewPw = cryptoCode.generateImIdpUserPW(modifyUserPwdRequest.getNewPassword(),
+						modifyUserPwdRequest.getUserSalt());
+			} catch (Exception e) {
+				// 패스워드 암호화 실패
+				throw new StorePlatformException("SAC_MEM_1413", modifyUserPwdRequest.getUserKey());
+			}
+		/** 2-2. 패스워드가 IDP 타입 암호화 */
+		} else {
+			CryptoCode cryptoCode = new CryptoCode();
+			try {
+				encReqOldPw = cryptoCode.generateIdpUserPW(modifyUserPwdRequest.getOldPassword());
+				encReqNewPw = cryptoCode.generateIdpUserPW(modifyUserPwdRequest.getNewPassword());
+			} catch (Exception e) {
+				// 패스워드 암호화 실패
+				throw new StorePlatformException("SAC_MEM_1413", modifyUserPwdRequest.getUserKey());
+			}
+		}
+		modifyUserPwdRequest.setOldPassword(encReqOldPw);
+		modifyUserPwdRequest.setNewPassword(encReqNewPw);
+
+		Integer row = dao.update("User.modifyUserPassword", modifyUserPwdRequest);
+		LOGGER.debug("### updatePassword row : {}", row);
+		if (row == 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+		}
+
+		modifyUserPwdResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+		modifyUserPwdResponse.setUserKey(modifyUserPwdRequest.getUserKey());
+
+		return modifyUserPwdResponse;
 
 	}
 
@@ -1596,17 +1658,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResetPasswordUserResponse updateResetPasswordUser(ResetPasswordUserRequest resetPasswordUserRequest) {
 
-		// userKey가 존재하는지 여부 확인
-		String isRegistered = null;
-		UserMbr usermbr = new UserMbr();
-		usermbr.setUserKey(resetPasswordUserRequest.getMbrPwd().getMemberKey());
-		isRegistered = this.commonDAO.queryForObject("User.isRegisteredUserKey", usermbr, String.class);
-		if (isRegistered == null || isRegistered.length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
-		}
-
-		// userKey가 존재한다면 pw 생성 및 암호화
-		// 1. 비밀번호 생성
+		/** 1. 비밀번호 생성 ( 연속하지 않는 문자3개, 숫자 3개) */
 		char[] charPwd = {(char)((Math.random()*26)+97), (char)((Math.random()*26)+97), (char)((Math.random()*26)+97)};
 		int[] intPwd = {(int)(Math.random()*10), (int)(Math.random()*10), (int)(Math.random()*10)};
 
@@ -1626,10 +1678,35 @@ public class UserServiceImpl implements UserService {
 			intPwd[1] = (int)(Math.random()*10);
 			intPwd[2] = (int)(Math.random()*10);
 		}
-
-		// 2. 생성된 비밀번호 암호화 (MD5)
 		String newPw = String.valueOf(charPwd)+intPwd[0]+intPwd[1]+intPwd[2];
-		String encNewPw = createUserPwdEncyp(newPw);
+
+		/** 2. userKey로 해당 회원의 패스워드 타입 확인 */
+		CheckUserPwdRequest chkUserPwdReq = new CheckUserPwdRequest();
+		chkUserPwdReq.setCommonRequest(resetPasswordUserRequest.getCommonRequest());
+		chkUserPwdReq.setUserKey(resetPasswordUserRequest.getMbrPwd().getMemberKey());
+		chkUserPwdReq.setIsDormant(MemberConstants.USE_N);
+		CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(chkUserPwdReq);
+
+		/** 3. 패스워드가 OneID 타입 암호화 */
+		String encNewPw = "";
+		if ( StringUtils.equals(chkUserPwdRes.getUserPwType(), "US011503") ) {
+			CryptoCodeIm cryptoCode = new CryptoCodeIm();
+			try {
+				encNewPw = cryptoCode.generateImIdpUserPW(newPw, chkUserPwdRes.getUserSalt());
+			} catch (Exception e) {
+				// 패스워드 암호화 실패
+				throw new StorePlatformException("response.ResultCode.fail", "");
+			}
+		/** 3-2. 패스워드가 IDP 타입 암호화 */
+		} else {
+			CryptoCode cryptoCode = new CryptoCode();
+			try {
+				encNewPw = cryptoCode.generateIdpUserPW(newPw);
+			} catch (Exception e) {
+				// 패스워드 암호화 실패
+				throw new StorePlatformException("response.ResultCode.fail", "");
+			}
+		}
 
 		resetPasswordUserRequest.getMbrPwd().setMemberPW(encNewPw);
 
@@ -4100,18 +4177,56 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public CheckUserPwdResponse checkUserPwd(CheckUserPwdRequest chkUserPwdRequest){
 
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 서비스 - PW 확인");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
 		CheckUserPwdResponse checkUserPwdResponse;
 
-		// 신규비밀번호 암호화
-		chkUserPwdRequest.setUserPw(createUserPwdEncyp(chkUserPwdRequest.getUserPw()));
-
-		if(StringUtils.equals(chkUserPwdRequest.getIsDormant(), "N")) {
-			checkUserPwdResponse = (CheckUserPwdResponse)this.commonDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest);
-		}else{
-			checkUserPwdResponse = (CheckUserPwdResponse)this.idleDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest);
+		/** 1. userKey 해당 pw 정보 조회. */
+		if (StringUtils.equals(chkUserPwdRequest.getIsDormant(), "N")) {
+			checkUserPwdResponse = (CheckUserPwdResponse)this.commonDAO.queryForObject("User.searchUserPassword", chkUserPwdRequest);
+		} else {
+			checkUserPwdResponse = (CheckUserPwdResponse)this.idleDAO.queryForObject("User.searchUserPassword", chkUserPwdRequest);
 		}
 
-		if( checkUserPwdResponse == null ){
+		/** 2. 정보가 있으면 확인후 응답. */
+		if ( checkUserPwdResponse != null ) {
+
+			LOGGER.debug("패스워드 타입 {}", checkUserPwdResponse.getUserPwType());
+
+			String encReqUserPw = "";
+
+			/** 2-1. 패스워드가 OneID 타입 암호화 */
+			if ( StringUtils.equals(checkUserPwdResponse.getUserPwType(), "US011503") ) {
+				CryptoCodeIm cryptoCode = new CryptoCodeIm();
+				try {
+					encReqUserPw = cryptoCode.generateImIdpUserPW(chkUserPwdRequest.getUserPw(),
+							checkUserPwdResponse.getUserSalt());
+				} catch (Exception e) {
+					// 패스워드 암호화 실패 skip
+				}
+			/** 2-2. 패스워드가 IDP 타입 암호화 */
+			} else {
+				CryptoCode cryptoCode = new CryptoCode();
+				try {
+					encReqUserPw = cryptoCode.generateIdpUserPW(chkUserPwdRequest.getUserPw());
+				} catch (Exception e) {
+					// 패스워드 암호화 실패 skip
+				}
+			}
+
+			LOGGER.debug("조회된 패스워드 {}", checkUserPwdResponse.getUserPw());
+			LOGGER.debug("암호화 패스워드 {}", encReqUserPw);
+
+			/** 2-3. 불일치시 응답 셋팅 */
+			if ( !StringUtils.equals(checkUserPwdResponse.getUserPw(), encReqUserPw) ) {
+				checkUserPwdResponse.setUserKey("");
+				checkUserPwdResponse.setUserAuthToken("");
+			}
+		/** 3. 정보가 없으면 공란셋팅후 응답 */
+		} else {
 			checkUserPwdResponse = new CheckUserPwdResponse();
 			checkUserPwdResponse.setUserKey("");
 			checkUserPwdResponse.setUserAuthToken("");
@@ -4121,29 +4236,6 @@ public class UserServiceImpl implements UserService {
 				"response.ResultMessage.success"));
 
 		return checkUserPwdResponse;
-	}
-
-	public String createUserPwdEncyp(String pwd){
-
-		String encNewPw;
-		try{
-			StringBuffer sb = new StringBuffer();
-
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(pwd.toString().getBytes());
-
-			byte[] msgStr = md.digest() ;
-
-			for(int i = 0 ; i < msgStr.length ; i++){
-				sb.append(Integer.toHexString((int)msgStr[i] & 0x00FF));
-			}
-			encNewPw = sb.toString();
-		}catch(NoSuchAlgorithmException e){
-			throw new StorePlatformException(this.getMessage("response.ResultMessage.fail", ""));
-		}
-
-		return encNewPw;
-
 	}
 
 	@Override

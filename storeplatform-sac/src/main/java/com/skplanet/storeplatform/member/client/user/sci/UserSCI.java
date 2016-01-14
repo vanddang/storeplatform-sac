@@ -142,8 +142,20 @@ public interface UserSCI {
 	 * @param updatePasswordUserRequest
 	 *            비밀번호 변경 Value Object
 	 * @return updatePasswordUserResponse - 비밀번호 변경 응답 Value Object
+	 * @deprecated updatePasswordUser > modifyUserPwd
 	 */
 	public UpdatePasswordUserResponse updatePasswordUser(UpdatePasswordUserRequest updatePasswordUserRequest);
+
+	/**
+	 * <pre>
+	 * 회원 비밀번호를 변경하는 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param modifyUserPwdRequest
+	 *            비밀번호 변경 Value Object
+	 * @return ModifyUserPwdResponse - 비밀번호 변경 응답 Value Object
+	 */
+	public ModifyUserPwdResponse modifyUserPwd(ModifyUserPwdRequest modifyUserPwdRequest);
 
 	/**
 	 * <pre>
