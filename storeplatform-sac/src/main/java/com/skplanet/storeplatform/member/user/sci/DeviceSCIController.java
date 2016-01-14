@@ -308,20 +308,20 @@ public class DeviceSCIController implements DeviceSCI {
 		}
 
 		// 검색 조건에 서비스 관리번호가 포함되었는지 여부
-		boolean isSvcMangNoExist = false;
-		for (KeySearch keySearch : keySearchList) {
-			if (keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
-				isSvcMangNoExist = true;
-			}
-		}
+//		boolean isSvcMangNoExist = false;
+//		for (KeySearch keySearch : keySearchList) {
+//			if (keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
+//				isSvcMangNoExist = true;
+//			}
+//		}
 
 		// 검색 조건에 서비스 관리번호가 존재하는 경우 userKey가 필수아님, 서비스 관리번호로만 조회
-		if (isSvcMangNoExist) {
-			// 사용자키 없음
-			if (searchDeviceRequest.getUserKey() == null || searchDeviceRequest.getUserKey().length() <= 0) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
-			}
-		}
+//		if (isSvcMangNoExist) {
+//			// 사용자키 없음
+//			if (searchDeviceRequest.getUserKey() == null || searchDeviceRequest.getUserKey().length() <= 0) {
+//				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+//			}
+//		}
 
 		try {
 

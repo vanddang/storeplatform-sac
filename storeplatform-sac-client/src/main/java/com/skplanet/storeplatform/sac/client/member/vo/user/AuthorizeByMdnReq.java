@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 
+import javax.validation.constraints.Pattern;
+
 /**
  * [REQUEST] 모바일 전용 회원 인증(MDN 인증).
  * 
@@ -26,6 +28,7 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	 * 기기 ID 타입 (msisdn, uuid, macaddress).
 	 */
 	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
+    @Pattern(regexp = "^msisdn|^uuid|^macaddress")
 	private String deviceIdType;
 
 	/**

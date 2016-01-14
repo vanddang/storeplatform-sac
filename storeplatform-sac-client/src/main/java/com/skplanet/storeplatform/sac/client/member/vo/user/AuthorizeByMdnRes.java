@@ -41,11 +41,6 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	private String userSubStatus = "";
 
 	/**
-	 * 로그인 상태코드.
-	 */
-	private String loginStatusCode = "";
-
-	/**
 	 * 로그인 성공여부(Y/N).
 	 */
 	private String isLoginSuccess = "";
@@ -88,14 +83,6 @@ public class AuthorizeByMdnRes extends CommonInfo {
 
     public void setUserSubStatus(String userSubStatus) {
         this.userSubStatus = userSubStatus;
-    }
-
-    public String getLoginStatusCode() {
-        return loginStatusCode;
-    }
-
-    public void setLoginStatusCode(String loginStatusCode) {
-        this.loginStatusCode = loginStatusCode;
     }
 
     public String getIsLoginSuccess() {

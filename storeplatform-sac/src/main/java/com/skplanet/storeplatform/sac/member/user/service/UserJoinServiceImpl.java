@@ -98,7 +98,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
             UserInfo userInfo = this.mcc.getUserBaseInfo(keyType, req.getDeviceId(), sacHeader);
             if (userInfo != null) {
-                throw new StorePlatformException("SAC_MEM_1101");
+                throw new StorePlatformException("SAC_MEM_1101", req.getDeviceIdType());
             }
         } catch (StorePlatformException ex) {
             if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
@@ -170,28 +170,41 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
 
-		/**
-		 * 휴대기기 등록.
-		 */
-        DeviceInfo deviceInfo = new DeviceInfo();
-        deviceInfo.setUserKey(createUserResponse.getUserKey());
-        deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 
-        if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
-            deviceInfo.setDeviceId("");
-            deviceInfo.setMdn(req.getDeviceId()); // MDN 번호
-        }else {
-            deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+        String deviceKey = null;
+
+        try{
+            /**
+             * 휴대기기 등록.
+             */
+            DeviceInfo deviceInfo = new DeviceInfo();
+            deviceInfo.setUserKey(createUserResponse.getUserKey());
+            deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
+
+            if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+                deviceInfo.setDeviceId("");
+                deviceInfo.setMdn(req.getDeviceId()); // MDN 번호
+            }else {
+                deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+            }
+            deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
+            deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+            deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
+            deviceInfo.setNativeId(req.getNativeId()); // 기기 IMEI
+            deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
+            deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
+            deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 단말부가정보
+
+            deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+
+        }catch(StorePlatformException e){
+            // 휴대기기 등록 실패 시 모바일 회원 탈퇴 처리
+            RemoveUserRequest removeUserRequest = new RemoveUserRequest();
+            removeUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+            removeUserRequest.setUserKey(createUserResponse.getUserKey());
+            this.userSCI.remove(removeUserRequest);
+            throw e;
         }
-        deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
-        deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
-        deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
-        deviceInfo.setNativeId(req.getNativeId()); // 기기 IMEI
-        deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
-        deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
-        deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 단말부가정보
-
-        String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
 
 		/**
 		 * 결과 세팅
