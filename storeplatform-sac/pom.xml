@@ -307,7 +307,11 @@
             <artifactId>querydsl-jpa</artifactId>
             <version>3.7.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>kr.co.skplanet.crypto</groupId>
+            <artifactId>JCryptoSKP-20120607</artifactId>
+            <version>1.0</version>
+        </dependency>
 	</dependencies>
     
 </project>
