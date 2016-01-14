@@ -886,52 +886,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		return userInfo;
 	}
 
-	/* SC API 회원부가정보 조회 Request : userKey */
-	@Override
-	public UserExtraInfoRes listUserExtra(DetailReq req, SacRequestHeader sacHeader) {
-
-		/**
-		 * SearchManagementListRequest setting
-		 */
-		SearchManagementListRequest searchUserExtraRequest = new SearchManagementListRequest();
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-		searchUserExtraRequest.setCommonRequest(commonRequest);
-		searchUserExtraRequest.setUserKey(req.getUserKey());
-
-		/**
-		 * SC 사용자 회원 부가정보를 조회
-		 */
-		UserExtraInfoRes extraRes = new UserExtraInfoRes();
-		List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
-
-		SearchManagementListResponse schUserExtraRes = this.userSCI.searchManagementList(searchUserExtraRequest);
-
-		LOGGER.debug("############ 부가정보 리스트 Size : {}", schUserExtraRes.getMbrMangItemPtcrList().size());
-
-		/* 유저키 세팅 */
-		extraRes.setUserKey(schUserExtraRes.getUserKey());
-		/* 부가정보 값 세팅 */
-		for (MbrMangItemPtcr ptcr : schUserExtraRes.getMbrMangItemPtcrList()) {
-
-			LOGGER.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
-			LOGGER.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
-
-			UserExtraInfo extra = new UserExtraInfo();
-			extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
-			extra.setExtraProfileValue(StringUtil.setTrim(ptcr.getExtraProfileValue()));
-
-			listExtraInfo.add(extra);
-
-			extraRes.setUserExtraInfoList(listExtraInfo);
-
-		}
-		return extraRes;
-
-	}
-
-	/* SC API 디바이스 리스트 조회 */
+    /* SC API 디바이스 리스트 조회 */
 	@Override
 	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader) {
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
@@ -2020,7 +1975,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		searchManagementListRequest.setUserKey(req.getUserKey());
 		SearchManagementListResponse searchManagementListResponse = null;
 		try {
-			searchManagementListResponse = this.userSCI.searchManagementList(searchManagementListRequest);
+			searchManagementListResponse = new SearchManagementListResponse(); // this.userSCI.searchManagementList(searchManagementListRequest);
 		} catch (StorePlatformException e) {
 			if (e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				throw new StorePlatformException("SAC_MEM_0002", "social 계정");
@@ -2210,6 +2165,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 				if (StringUtils.isNotBlank(ssoCredential)) {
 					// ssoCredential 저장
 					LOGGER.info("{}, ssoCredential 저장 : {}", req.getUserKey(), ssoCredential);
+                    // TODO-JOY userSCI.updateManagement()
 					UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
 					List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 					MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
