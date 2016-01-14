@@ -522,20 +522,12 @@ public class UserServiceImpl implements UserService {
 			userMbrLoginLog.setSystemID(loginUserRequest.getCommonRequest().getSystemID());
 			userMbrLoginLog.setUserKey(userMbrRetrieveUserMbrPwd.getUserKey());
 
-			// TLOG - TL_SC_MEM_0001 (deviceIp) 항목에는 Ip를 남기고
-			// tb_us_usermbr_login_log의 connIp 에는 deviceId를 남기 도록 처리.
-			// 현재 호출하는 모든 부분의 userId에 deviceId가 넘어오고 있음.
-			if (StringUtils.equals(loginUserRequest.getIsMobile(), Constant.TYPE_YN_Y)) { // 모바일 회원
-				if (StringUtils.isNotBlank(loginUserRequest.getUserID())) {
-					userMbrLoginLog.setConnIp(loginUserRequest.getUserID());
-				}
-			} else {
-				if (StringUtils.isNotBlank(loginUserRequest.getIpAddress())) {
-					userMbrLoginLog.setConnIp(loginUserRequest.getIpAddress());
-				}else{ //TODO. 아이디 회원 인증시 IP정보를 넘기지 않으면 요청한 mdn/deviceId 정보를 남긴다
-					if(tempDevice != null){
-						userMbrLoginLog.setConnIp(tempDevice.getMdn()==null?tempDevice.getDeviceID():tempDevice.getMdn());
-					}
+			if (StringUtils.isNotBlank(loginUserRequest.getIpAddress())) {
+				userMbrLoginLog.setConnIp(loginUserRequest.getIpAddress());
+			}else{
+				if(tempDevice != null){
+					//IP정보가 없으면 요청한 mdn으로, mdn값이 없으면 deviceId 정보를 남긴다
+					userMbrLoginLog.setConnIp(tempDevice.getMdn()==null?tempDevice.getDeviceID():tempDevice.getMdn());
 				}
 			}
 
