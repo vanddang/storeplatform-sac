@@ -1000,6 +1000,7 @@ public class UserModifyServiceImpl implements UserModifyService {
      * @return RemoveSocialAccountSacRes
      */
     @Override
+    @Deprecated
     public RemoveSocialAccountSacRes removeSocialAccount(SacRequestHeader header, RemoveSocialAccountSacReq req) {
 
         CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
@@ -1066,7 +1067,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 
         removeManagementRequest.setUserKey(req.getUserKey());
         removeManagementRequest.setMbrMangItemPtcr(ptcrList);
-        RemoveManagementResponse removeManagementResponse = this.userSCI.removeManagement(removeManagementRequest);
+        RemoveManagementResponse removeManagementResponse = new RemoveManagementResponse(); // this.userSCI.removeManagement(removeManagementRequest);
 
         // 3. 응답 셋팅
         RemoveSocialAccountSacRes res = new RemoveSocialAccountSacRes();
