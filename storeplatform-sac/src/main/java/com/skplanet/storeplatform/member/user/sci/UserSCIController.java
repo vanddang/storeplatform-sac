@@ -988,6 +988,7 @@ public class UserSCIController implements UserSCI {
 	 * @param updatePasswordUserRequest
 	 *            사용자회원 비밀번호 변경 요청 Value Object
 	 * @return UpdatePasswordUserResponse - 사용자회원 비밀번호 변경 응답 Value Object
+	 * @deprecated
 	 */
 	@Override
 	public UpdatePasswordUserResponse updatePasswordUser(UpdatePasswordUserRequest updatePasswordUserRequest) {
@@ -1042,6 +1043,61 @@ public class UserSCIController implements UserSCI {
 		}
 
 		return updatePasswordUserResponse;
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 비밀번호를 변경하는 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param modifyUserPwdRequest
+	 *            비밀번호 변경 Value Object
+	 * @return ModifyUserPwdResponse - 비밀번호 변경 응답 Value Object
+	 */
+	public ModifyUserPwdResponse modifyUserPwd(ModifyUserPwdRequest modifyUserPwdRequest){
+
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - 사용자 회원 비밀번호 변경");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		ModifyUserPwdResponse modifyUserPwdResponse = null;
+
+		// 입력 파라미터가 없음
+		if (modifyUserPwdRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (modifyUserPwdRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 필수 파라미터, userKey
+		if (modifyUserPwdRequest.getUserKey() == null || modifyUserPwdRequest.getUserKey().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		// 필수 파라미터, oldPassWord
+		if (modifyUserPwdRequest.getOldPassword() == null || modifyUserPwdRequest.getOldPassword().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		// 필수 파라미터, newPassWord
+		if (modifyUserPwdRequest.getNewPassword() == null || modifyUserPwdRequest.getNewPassword().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+
+			modifyUserPwdResponse = this.service.modifyUserPwd(modifyUserPwdRequest);
+
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return modifyUserPwdResponse;
 
 	}
 

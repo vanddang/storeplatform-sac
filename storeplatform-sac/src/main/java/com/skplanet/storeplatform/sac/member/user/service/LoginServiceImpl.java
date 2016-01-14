@@ -1174,12 +1174,9 @@ public class LoginServiceImpl implements LoginService {
 			return res;
 		}
 
-		try{
-			/** 3-1. 그외의 회원은 req의 pwd 일치 체크 */
-			CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(requestHeader, userKey, userPw, isDormant);
-			if (chkUserPwdRes.getUserKey()==null || chkUserPwdRes.getUserKey().length() <= 0) {
-				throw new StorePlatformException("SAC_MEM_1406", userKey);
-			}
+		/** 3-1. 그외의 회원은 req의 pwd 일치 체크 */
+		CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(requestHeader, userKey, userPw, isDormant);
+		if (StringUtils.equals(chkUserPwdRes.getUserKey(), userKey)) {
 
 			/**  3-1-1. 해당계정이 휴면아이디라면 정상 복구 */
 			if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
@@ -1203,16 +1200,14 @@ public class LoginServiceImpl implements LoginService {
 			res.setIsLoginSuccess("Y");
 
 		/** 3-2. pwd 불일치 - 로그인 실패 */
-		} catch ( StorePlatformException e ) {
-			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-				/** 3-2-1. 로그인 실패이력 저장후 리턴 */
-				this.regLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N", null, "N", null);
+		} else {
 
-				/* 로그인 결과 */
-				res.setIsLoginSuccess("N");
-			} else {
-				throw e;
-			}
+			/** 3-2-1. 로그인 실패이력 저장후 리턴 */
+			this.regLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N", null, "N", null);
+
+			/* 로그인 결과 */
+			res.setIsLoginSuccess("N");
+
 		}
 
 		return res;
@@ -4503,9 +4498,9 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeById
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeByPassword
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq)
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByPwdSacReq)
 	 */
 	@Override
 	public AuthorizeByPwdSacRes authorizeByPassword(SacRequestHeader requestHeader, AuthorizeByPwdSacReq req){
@@ -4534,12 +4529,9 @@ public class LoginServiceImpl implements LoginService {
 		userType = chkDupRes.getUserMbr().getUserType();
 		isDormant = chkDupRes.getUserMbr().getIsDormant();
 
-		try{
-			/** 3-1. 그외의 회원은 req의 pwd 일치 체크 */
-			CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(requestHeader, userKey, userPw, isDormant);
-			if (chkUserPwdRes.getUserKey()==null || chkUserPwdRes.getUserKey().length() <= 0) {
-				throw new StorePlatformException("SAC_MEM_1406", userKey);
-			}
+		/** 3-1. 그외의 회원은 req의 pwd 일치 체크 */
+		CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(requestHeader, userKey, userPw, isDormant);
+		if (StringUtils.equals(chkUserPwdRes.getUserKey(), userKey)) {
 
 			/** 3-1-1. 해당계정이 휴면아이디라면 정상 복구 */
 			if (StringUtils.equals(isDormant, MemberConstants.USE_Y)) {
@@ -4554,7 +4546,7 @@ public class LoginServiceImpl implements LoginService {
 			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", null, "N", null, "Y", null);
 
 			/** 3-1-4-1. 로그인 성공시 userAuthToken이 있으면 해당 토큰을 넘겨줌 */
-			if ( chkUserPwdRes.getUserAuthToken() != null ){
+			if (chkUserPwdRes.getUserAuthToken() != null) {
 				res.setUserAuthToken(chkUserPwdRes.getUserAuthToken());
 			/** 3-1-4-2. 로그인 성공시 userAuthToken이 없으면 토큰 생성후 넘겨줌 */
 			} else {
@@ -4568,15 +4560,14 @@ public class LoginServiceImpl implements LoginService {
 			res.setIsLoginSuccess("Y");
 
 		/** 3-2. pwd불일치 - 로그인 실패 */
-		} catch( StorePlatformException e ) {
-			if ( StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA) ) {
-				/** 3-2-1. 로그인 실패이력 저장후 리턴 */
-				this.regLoginHistory(requestHeader, userId, userPw, "N", "N", null, "N", null, "N", null);
-				/* 실패 로그인 결과 */
-				res.setIsLoginSuccess("N");
-			} else {
-				throw e;
-			}
+		} else {
+
+			/** 3-2-1. 로그인 실패이력 저장후 리턴 */
+			this.regLoginHistory(requestHeader, userId, userPw, "N", "N", null, "N", null, "N", null);
+
+			/* 실패 로그인 결과 */
+			res.setIsLoginSuccess("N");
+
 		}
 
 		return res;

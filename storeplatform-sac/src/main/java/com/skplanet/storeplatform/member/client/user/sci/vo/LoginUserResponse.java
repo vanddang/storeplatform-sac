@@ -9,11 +9,11 @@
  */
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonResponse;
+
+import java.io.Serializable;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -76,53 +76,6 @@ public class LoginUserResponse extends CommonInfo implements Serializable {
 
 	/** 로그인 성공 여부. */
 	private String isLoginSuccess;
-
-	/** 로그인 실패 횟수. */
-	private int loginFailCount;
-
-	/** 로그인 상태 코드. */
-	private String loginStatusCode; // LOGIN_STATUS_CD
-
-	/** 직권중지 상태 코드. */
-	private String stopStatusCode; // OFAUTH_STOP_STATUS_CD
-
-	/**
-	 * 로그인 상태 코드를 리턴한다.
-	 * 
-	 * @return loginStatusCode - 로그인 상태 코드
-	 */
-	public String getLoginStatusCode() {
-		return this.loginStatusCode;
-	}
-
-	/**
-	 * 로그인 상태 코드를 설정한다.
-	 * 
-	 * @param loginStatusCode
-	 *            로그인 상태 코드
-	 */
-	public void setLoginStatusCode(String loginStatusCode) {
-		this.loginStatusCode = loginStatusCode;
-	}
-
-	/**
-	 * 직권중지 상태 코드를 리턴한다.
-	 * 
-	 * @return stopStatusCode - 직권중지 상태 코드
-	 */
-	public String getStopStatusCode() {
-		return this.stopStatusCode;
-	}
-
-	/**
-	 * 직권중지 상태 코드를 설정한다.
-	 * 
-	 * @param stopStatusCode
-	 *            직권중지 상태 코드
-	 */
-	public void setStopStatusCode(String stopStatusCode) {
-		this.stopStatusCode = stopStatusCode;
-	}
 
 	/**
 	 * 사용자 Key를 리턴한다.
@@ -200,25 +153,6 @@ public class LoginUserResponse extends CommonInfo implements Serializable {
 		this.isLoginSuccess = isLoginSuccess;
 	}
 
-	/**
-	 * 로그인 실패 횟수를 리턴한다.
-	 * 
-	 * @return loginFailCount - 로그인 실패 횟수
-	 */
-	public int getLoginFailCount() {
-		return this.loginFailCount;
-	}
-
-	/**
-	 * 로그인 실패 횟수를 설정한다.
-	 * 
-	 * @param loginFailCount
-	 *            로그인 실패 횟수
-	 */
-	public void setLoginFailCount(int loginFailCount) {
-		this.loginFailCount = loginFailCount;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -228,4 +162,5 @@ public class LoginUserResponse extends CommonInfo implements Serializable {
 	public String toString() {
 		return Utils.printKeyValues(this);
 	}
+
 }

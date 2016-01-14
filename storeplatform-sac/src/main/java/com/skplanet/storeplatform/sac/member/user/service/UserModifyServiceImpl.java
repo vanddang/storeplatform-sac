@@ -123,9 +123,7 @@ public class UserModifyServiceImpl implements UserModifyService {
     @Override
     public ModifyPasswordRes modPassword(SacRequestHeader sacHeader, ModifyPasswordReq req) {
 
-        /**
-         * 회원 정보 조회.
-         */
+        /** 회원 정보 조회. */
         UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
         /**
@@ -149,71 +147,74 @@ public class UserModifyServiceImpl implements UserModifyService {
          */
         String newPassword = req.getNewPassword();
         // 1. 길이 체크
-        if(newPassword.length() < 6 || newPassword.length() > 20){
+        if (newPassword.length() < 6 || newPassword.length() > 20) {
             throw new StorePlatformException("SAC_MEM_1407", userInfo.getUserKey());
         }
         // 2. 공백 체크 > 기타 비밀번호 제약사항
-        if (newPassword.indexOf(' ') > 0){
+        if (newPassword.indexOf(' ') > 0) {
             throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
         }
         // 3. 사용할수 없는 특수문자( `, ~, \ ) 체크
-        if(!Pattern.matches("^[0-9A-Za-z!@#$%^&*()-_+=|\\[\\]\\{\\}'\";:/?.>,<]+$", newPassword)){
+        if (!Pattern.matches("^[0-9A-Za-z!@#$%^&*()-_+=|\\[\\]\\{\\}'\";:/?.>,<]+$", newPassword)) {
             throw new StorePlatformException("SAC_MEM_1411", userInfo.getUserKey());
         }
         // 4. 숫자만 구성 체크
-        if(Pattern.matches("^[0-9]*$", newPassword)) {
+        if (Pattern.matches("^[0-9]*$", newPassword)) {
             throw new StorePlatformException("SAC_MEM_1409", userInfo.getUserKey());
             // 5. 문자만 구성 체크
-        }else if(Pattern.matches("^[A-Za-z]*$", newPassword)) {
+        } else if (Pattern.matches("^[A-Za-z]*$", newPassword)) {
             throw new StorePlatformException("SAC_MEM_1410", userInfo.getUserKey());
             // 6. 특수문자만 구성 체크 (숫자와 문자가 아닌 경우)
-        }else if(Pattern.matches("^[^0-9A-Za-z]*$", newPassword)){
+        } else if (Pattern.matches("^[^0-9A-Za-z]*$", newPassword)) {
             throw new StorePlatformException("SAC_MEM_1415", userInfo.getUserKey());
             // 조합 패스워드
-        }else{
+        } else {
             // 7. 숫자없이 구성 (특수문자+문자) 체크 > 기타 비밀번호 제약 사항
-            if(Pattern.matches("^[^0-9]*$", newPassword)) {
+            if (Pattern.matches("^[^0-9]*$", newPassword)) {
                 throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
             }
             // 8. 문자없이 구성 (특수문자+숫자) 체크 > 기타 비밀번호 제약 사항
-            if(Pattern.matches("^[^A-Za-z]*$", newPassword)) {
+            if (Pattern.matches("^[^A-Za-z]*$", newPassword)) {
                 throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
             }
         }
         // 다른 제약 사항 체크
-        for(int i=0; i<newPassword.length()-2 ; i++){
+        for (int i=0; i<newPassword.length()-2 ; i++) {
             // 9. 숫자/문자 연속 3자 이상 체크 > 기타 비밀번호 제약사항 체크
-            if( (newPassword.charAt(i+1)-newPassword.charAt(i)==1 && newPassword.charAt(i+2)-newPassword.charAt(i+1)==1)
-                    || (newPassword.charAt(i)-newPassword.charAt(i+1)==1 && newPassword.charAt(i+1)-newPassword.charAt(i+2)==1)){
+            if ( (newPassword.charAt(i+1)-newPassword.charAt(i)==1 && newPassword.charAt(i+2)-newPassword.charAt(i+1)==1)
+                    || (newPassword.charAt(i)-newPassword.charAt(i+1)==1 && newPassword.charAt(i+1)-newPassword.charAt(i+2)==1)) {
                 throw new StorePlatformException("SAC_MEM_1412", userInfo.getUserKey());
             }
             // 10. 비밀번호에 ID일부 문자 포함
-            if(userInfo.getUserId().indexOf(newPassword.substring(i, i + 3)) > -1){
+            if (userInfo.getUserId().indexOf(newPassword.substring(i, i + 3)) > -1) {
                 throw new StorePlatformException("SAC_MEM_1408", userInfo.getUserKey());
             }
         }
 
-        /**
-         * SC 회원 사용자키, 비밀번호 일치 여부 확인
-         */
-        CheckUserPwdRequest chkUserPwdRequest = new CheckUserPwdRequest();
-        chkUserPwdRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-        chkUserPwdRequest.setUserKey(userInfo.getUserKey());
-        chkUserPwdRequest.setUserPw(req.getOldPassword());
-        chkUserPwdRequest.setIsDormant(userInfo.getIsDormant());
-        CheckUserPwdResponse chkUserPwdResponse = this.userSCI.checkUserPwd(chkUserPwdRequest);
-        if( chkUserPwdResponse.getUserKey() == null || chkUserPwdResponse.getUserKey().length() <=0 ){
+        /** SC 회원 사용자키, 비밀번호 일치 여부 확인. */
+        CheckUserPwdRequest chkUserPwdReq = new CheckUserPwdRequest();
+        chkUserPwdReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+        chkUserPwdReq.setUserKey(userInfo.getUserKey());
+        chkUserPwdReq.setUserPw(req.getOldPassword());
+        chkUserPwdReq.setIsDormant(userInfo.getIsDormant());
+        CheckUserPwdResponse chkUserPwdResponse = this.userSCI.checkUserPwd(chkUserPwdReq);
+        if (!StringUtils.equals(chkUserPwdResponse.getUserKey(), userInfo.getUserKey())) {
             throw new StorePlatformException("SAC_MEM_1406", userInfo.getUserKey());
         }
 
-        /**
-         * SC 회원 비밀번호 변경 요청.
-         */
-        this.modPasswordUser(sacHeader, req, userInfo.getIsDormant());
+        /** SC 회원 비밀번호 변경 요청. */
+        ModifyUserPwdRequest modUserPwdReq = new ModifyUserPwdRequest();
+        modUserPwdReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+        modUserPwdReq.setUserKey(chkUserPwdResponse.getUserKey());
+        modUserPwdReq.setOldPassword(req.getOldPassword());
+        modUserPwdReq.setNewPassword(req.getNewPassword());
+        modUserPwdReq.setUserPwType(chkUserPwdResponse.getUserPwType());
+        modUserPwdReq.setUserSalt(chkUserPwdResponse.getUserSalt());
+        modUserPwdReq.setIsDormant(userInfo.getIsDormant());
 
-        /**
-         * 결과 setting.
-         */
+        this.userSCI.modifyUserPwd(modUserPwdReq);
+
+        /** 결과 setting. */
         ModifyPasswordRes response = new ModifyPasswordRes();
         response.setUserKey(req.getUserKey());
 
@@ -706,36 +707,6 @@ public class UserModifyServiceImpl implements UserModifyService {
         } else {
             return "";
         }
-    }
-
-    /**
-     * <pre>
-     * SC 회원 비밀번호 관련 필드 변경 요청.
-     * </pre>
-     *
-     * @param sacHeader
-     *            공통 헤더
-     * @param req
-     *            Request Value Object
-     */
-    private void modPasswordUser(SacRequestHeader sacHeader, ModifyPasswordReq req, String isDormant) {
-
-        UpdatePasswordUserRequest updatePasswordUserRequest = new UpdatePasswordUserRequest();
-        updatePasswordUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-
-        MbrPwd mbrPwd = new MbrPwd();
-        mbrPwd.setMemberKey(req.getUserKey()); // 사용자 Key
-        mbrPwd.setOldPW(req.getOldPassword()); // 기존 패스워드
-        mbrPwd.setMemberPW(req.getNewPassword()); // 신규 패스워드
-        mbrPwd.setPwRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 비밀번호 변경 일시
-        updatePasswordUserRequest.setMbrPwd(mbrPwd);
-        updatePasswordUserRequest.setIsDormant(isDormant);
-
-        /**
-         * SC 회원 비밀번호 변경 요청.
-         */
-        this.userSCI.updatePasswordUser(updatePasswordUserRequest);
-
     }
 
     /**

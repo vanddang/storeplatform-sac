@@ -33,16 +33,18 @@
                 )
     </update>
 
-    <!-- 회원 비밀번호 존재여부 체크 -->
-    <select id="checkUserPassword" parameterType="chkUserPwdRequest" resultType="chkUserPwdResponse">
-        SELECT /* UserMapper.xml, checkPasswordUser, SAC(SC), 최진호, 2015-12-23 */
+    <!-- 회원 비밀번호 정보 조회 -->
+    <select id="searchUserPassword" parameterType="chkUserPwdRequest" resultType="chkUserPwdResponse">
+        SELECT /* UserMapper.xml, searchUserPassword, SAC(SC), 최진호, 2015-12-23 */
             INSD_USERMBR_NO AS userKey
+            ,PWD AS userPw
+            ,SALT AS userSalt
             ,ACT_TK AS userAuthToken
+            ,IDP_ONEID_CD AS userPwType
         FROM
             TB_US_OUSERMBR_PWD
         WHERE
             INSD_USERMBR_NO = #{userKey}
-            AND PWD = #{userPw}
     </select>
 
     <!--  회원 비밀번호 변경. -->
@@ -75,6 +77,22 @@
                     ,SYSDATE
                 )
     </update>
+
+    <!--  회원 비밀번호 변경. -->
+    <update id="modifyUserPassword" parameterType="modifyUserPwdRequest">
+        UPDATE /* UserMapper.xml, modifyUserPassword, SAC(SC), 최진호, 2016-01-14 */
+            TB_US_OUSERMBR_PWD
+        SET
+            PWD = #{newPassword}
+            ,ACT_TK = null
+            ,UPD_DT = SYSDATE
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
+            AND PWD = #{oldPassword}
+            AND IDP_ONEID_CD = #{userPwType}
+    </update>
+
+
 
     <!-- 사용자 정보 조회 -->
     <select id="searchUser" parameterType="searchUserRequest" resultMap="searchUserResultMap">
