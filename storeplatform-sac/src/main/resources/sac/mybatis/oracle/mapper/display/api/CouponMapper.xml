@@ -814,32 +814,8 @@
         FROM   TB_DP_SPRC_PROD A
               ,TB_DP_SHPG_PROD B
         WHERE A.PROD_ID = B.PROD_ID
-          AND B.SRC_CONTENT_ID =
-                                 CASE WHEN PROD_CASE_CD = 'DP006303'
-                                  THEN
-                                        (  SELECT 
-                                                SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD SP
-                                                 ,TB_DP_SPRC_PROD SP1
-                                            WHERE 1=1
-                                              AND SP.PROD_ID = SP1.PROD_ID
-                                              AND SP.PROD_ID IN (
-                                                    SELECT 
-                                                           B.PART_PROD_ID 
-                                                      FROM TB_DP_SHPG_PROD A 
-                                                          ,TB_DP_PROD_RSHP B
-                                                     WHERE A.PROD_ID = B.PROD_ID 
-                                                      AND A.SRC_CONTENT_ID =#{itemCode}
-                                                   ) 
-                                               AND SP1.EXPO_YN = 'Y'
-                                               AND SP1.TENANT_ID =  #{tenantId}
-                                               AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT      
-                                               AND SP1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가                                           
-                                               AND ROWNUM =1     
-                                          )                                   
-                                  ELSE #{itemCode}
-                                  END
-          AND A.EXPO_YN = 'Y' 
+          AND B.SRC_CONTENT_ID = #{itemCode}
+          AND A.EXPO_YN = 'Y'
           AND A.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
           AND A.TENANT_ID = #{tenantId}
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
@@ -853,32 +829,8 @@
         FROM   TB_DP_SPRC_PROD A
               ,TB_DP_SHPG_PROD B
         WHERE A.PROD_ID = B.PROD_ID
-          AND B.SRC_CONTENT_ID =  
-                                 CASE WHEN PROD_CASE_CD = 'DP006303'
-                                  THEN
-                                        (  SELECT 
-                                                SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD SP
-                                                 ,TB_DP_SPRC_PROD SP1
-                                            WHERE 1=1
-                                              AND SP.PROD_ID = SP1.PROD_ID
-                                              AND SP.PROD_ID IN (
-                                                    SELECT 
-                                                           B.PART_PROD_ID 
-                                                      FROM TB_DP_SHPG_PROD A 
-                                                          ,TB_DP_PROD_RSHP B
-                                                     WHERE A.PROD_ID = B.PROD_ID 
-                                                      AND A.SRC_CONTENT_ID =#{itemCode}
-                                                   ) 
-                                               AND SP1.EXPO_YN = 'Y'
-                                               AND SP1.TENANT_ID =  #{tenantId}
-                                               AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT
-                                               AND SP1.SPRC_TYPE_CD IN ('DP007503','DP007504')                                                   
-                                               AND ROWNUM =1     
-                                          )                                   
-                                  ELSE #{itemCode}
-                                  END
-          AND A.EXPO_YN = 'Y' 
+          AND B.SRC_CONTENT_ID = #{itemCode}
+          AND A.EXPO_YN = 'Y'
           AND A.SPRC_TYPE_CD IN ('DP007503','DP007504') --DP007503 : 팅요금제 일반 특가 , DP007504 팅요금제 배송 특가
           AND A.TENANT_ID = #{tenantId}
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
