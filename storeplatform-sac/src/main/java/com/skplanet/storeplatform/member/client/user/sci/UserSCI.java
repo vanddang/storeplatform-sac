@@ -68,6 +68,18 @@ public interface UserSCI {
 
 	/**
 	 * <pre>
+	 * 회원 정보를 delete하는 기능을 제공한다.
+	 * 정상회원가입후 휴대기기 등록 오류 발생시 롤백개념으로 사용한다.
+	 * </pre>
+	 *
+	 * @param deleteUserRequest
+	 *            회원 탈퇴 요청 Value Object
+	 * @return DeleteUserResponse - 회원 탈퇴 응답 Value Object
+	 */
+	public DeleteUserResponse delete(DeleteUserRequest deleteUserRequest);
+
+	/**
+	 * <pre>
 	 * 약관동의 정보를 등록 또는 수정하는 기능을 제공한다.
 	 * </pre>
 	 * 

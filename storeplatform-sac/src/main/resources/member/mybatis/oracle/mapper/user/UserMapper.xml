@@ -1871,11 +1871,46 @@
 
     <!-- 사용자 회원 인증 삭제 -->
     <delete id="removeUserMbrAuth" parameterType="userMbr">
-        DELETE   /* UserMapper.xml, removeUserMbrOneId, SAC(SC), 윤보영, 2015-12-22 */
+        DELETE   /* UserMapper.xml, removeUserMbrAuth, SAC(SC), 윤보영, 2015-12-22 */
         FROM  tb_us_ousermbr_auth
         WHERE insd_usermbr_no = #{userKey}
     </delete>
-    
+
+    <!-- 사용자 회원 삭제 -->
+    <delete id="removeUserMbr" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbr, SAC(SC), 반범진, 2016-01-14 */
+        FROM  tb_us_ousermbr
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
+
+    <!-- 패스워드정보 삭제 -->
+    <delete id="removeUserMbrPwd" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbrPwd, SAC(SC), 반범진, 2016-01-14 */
+        FROM  tb_us_ousermbr_pwd
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
+
+    <!-- 법정대리인인증 정보 삭제 -->
+    <delete id="removeUserMbrLglAgent" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbrLglAgent, SAC(SC), 반범진, 2016-01-14 */
+        FROM  tb_us_ousermbr_lgl_agent
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
+
+    <!-- 부가정보 삭제 -->
+    <delete id="removeUserMbrMangItemPtcr" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbrMangItemPtcr, SAC(SC), 반범진, 2016-01-14 */
+        FROM  tb_us_ousermbr_mang_item_ptcr
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
+
+    <!-- 약관정보 삭제 -->
+    <delete id="removeUserMbrClauseAgree" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbrClauseAgree, SAC(SC), 반범진, 2016-01-14 */
+        FROM  tb_us_ousermbr_clause_agree
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
+
     <!-- 마지막 로그인일자 컬럼 체크  -->
     <select id="selectAlreadyLastLoginDtUpdateYn" parameterType="userMbrLoginLog" resultType="String">
       SELECT  /* UserMapper.xml, selectAlreadyLastLoginDtUpdateYn, SAC(SC), 최진호, 2015-12-21 */
@@ -2309,5 +2344,6 @@
             INSD_USERMBR_NO = #{userKey}
             AND ACT_TK = #{userAuthToken}
     </update>
+
 
 </mapper>

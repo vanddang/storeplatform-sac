@@ -483,11 +483,11 @@
                reg_dt,
                auth_dt,
                auth_yn,
-               sms_recv_yn
+               sms_recv_yn,
+               rep_device_yn
                <if test="deviceID != null">,device_id </if>
                <if test="mdn != null">,mdn </if>
                <if test="deviceTelecom != null">,mno_cd </if>
-               <if test="isPrimary != null">,rep_device_yn </if>
                <if test="nativeID != null">,device_natv_id </if>
                <if test="svcMangNum != null">,svc_mang_no </if>
                <if test="joinId != null">,entry_chnl_cd </if>
@@ -506,10 +506,12 @@
             <choose>
               <when test="isRecvSMS != null">,#{isRecvSMS}</when><otherwise>,'N'</otherwise>
             </choose>
+            <choose>
+                <when test="isPrimary != null">,#{isPrimary}</when><otherwise>,'N'</otherwise>
+            </choose>
             <if test="deviceID != null">,#{deviceID} </if>
             <if test="mdn != null">,#{mdn} </if>
             <if test="deviceTelecom != null">,#{deviceTelecom} </if>
-            <if test="isPrimary != null">,#{isPrimary} </if>
             <if test="nativeID != null">,#{nativeID} </if>
             <if test="svcMangNum != null">,#{svcMangNum} </if>
             <if test="joinId != null">,#{joinId} </if>
