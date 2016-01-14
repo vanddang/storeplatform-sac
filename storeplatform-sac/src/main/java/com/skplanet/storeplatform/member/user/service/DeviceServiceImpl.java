@@ -187,54 +187,63 @@ public class DeviceServiceImpl implements DeviceService {
             searchDeviceRequest.setKeySearchList(keySearchList);
 
 			SearchDeviceResponse searchDeviceResponse = this.commonDAO.queryForObject("Device.searchDeviceOrderByLastLoginDt", searchDeviceRequest, SearchDeviceResponse.class);
-			if(searchDeviceResponse != null && searchDeviceResponse.getUserMbrDevice() != null){
-				mobileUserMbrDevice = searchDeviceResponse.getUserMbrDevice();
-			}
 			String previousIsDormant = Constant.TYPE_YN_N;
-			if(mobileUserMbrDevice == null){
+			if(searchDeviceResponse == null || searchDeviceResponse.getUserMbrDevice() == null){
 				searchDeviceResponse = this.idleDAO.queryForObject("Device.searchDeviceOrderByLastLoginDt", searchDeviceRequest, SearchDeviceResponse.class);
 				if(searchDeviceResponse != null && searchDeviceResponse.getUserMbrDevice() != null){
-					mobileUserMbrDevice = searchDeviceResponse.getUserMbrDevice();
 					previousIsDormant = Constant.TYPE_YN_Y;
 				}
 			}
-			if(mobileUserMbrDevice != null && !StringUtils.equals(Constant.USER_TYPE_MOBILE, createUserMbr.getUserType())){
-				// 모바일 회원 탈퇴전 구매내역 이관 및 MQ 연동에 필요한 정보 셋팅
-				createDeviceResponse.setPreviousUserKey(mobileUserMbrDevice.getUserKey());
-				createDeviceResponse.setPreviousDeviceKey(mobileUserMbrDevice.getDeviceKey());
-				createDeviceResponse.setPreviousIsDormant(previousIsDormant);
-				createDeviceResponse.setPreviousUserID(mobileUserMbrDevice.getUserID());
 
-				// 모바일 회원의 프로필 이미지 경로
-				List<MbrMangItemPtcr> mbrMangItemPtcrList = null;
-				if (StringUtils.equals(previousIsDormant, Constant.TYPE_YN_N)) {
-					mbrMangItemPtcrList = this.commonDAO.queryForList("User.getManagementItemList", mobileUserMbrDevice.getUserKey(), MbrMangItemPtcr.class);
-				} else {
-					mbrMangItemPtcrList = this.idleDAO.queryForList("User.getManagementItemList", mobileUserMbrDevice.getUserKey(), MbrMangItemPtcr.class);
+			if(searchDeviceResponse != null && searchDeviceResponse.getUserMbrDevice() != null){
+				// 회원정보 설정정보 조회
+				UserMbr preUserMbr = new UserMbr();
+				preUserMbr.setUserKey(searchDeviceResponse.getUserKey());
+				if(StringUtils.equals(previousIsDormant, Constant.TYPE_YN_N)){
+					preUserMbr = this.commonDAO.queryForObject("User.getUserDetail", preUserMbr, UserMbr.class);
+				}else{
+					preUserMbr = this.idleDAO.queryForObject("User.getUserDetail", preUserMbr, UserMbr.class);
 				}
-				if (mbrMangItemPtcrList != null && mbrMangItemPtcrList.size() > 0) {
-					for(MbrMangItemPtcr mbrMangItemPtcr : mbrMangItemPtcrList){
-						if(StringUtils.equals(mbrMangItemPtcr.getExtraProfile(), "US010912")){
-							createDeviceResponse.setPreviousProfileImgPath(mbrMangItemPtcr.getExtraProfileValue());
-							break;
+
+				if(preUserMbr != null && StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())){
+					mobileUserMbrDevice = searchDeviceResponse.getUserMbrDevice();
+					// 모바일 회원 탈퇴전 구매내역 이관 및 MQ 연동에 필요한 정보 셋팅
+					createDeviceResponse.setPreviousUserKey(mobileUserMbrDevice.getUserKey());
+					createDeviceResponse.setPreviousDeviceKey(mobileUserMbrDevice.getDeviceKey());
+					createDeviceResponse.setPreviousIsDormant(previousIsDormant);
+					createDeviceResponse.setPreviousUserID(mobileUserMbrDevice.getUserID());
+
+					// 모바일 회원의 프로필 이미지 경로
+					List<MbrMangItemPtcr> mbrMangItemPtcrList = null;
+					if (StringUtils.equals(previousIsDormant, Constant.TYPE_YN_N)) {
+						mbrMangItemPtcrList = this.commonDAO.queryForList("User.getManagementItemList", mobileUserMbrDevice.getUserKey(), MbrMangItemPtcr.class);
+					} else {
+						mbrMangItemPtcrList = this.idleDAO.queryForList("User.getManagementItemList", mobileUserMbrDevice.getUserKey(), MbrMangItemPtcr.class);
+					}
+					if (mbrMangItemPtcrList != null && mbrMangItemPtcrList.size() > 0) {
+						for(MbrMangItemPtcr mbrMangItemPtcr : mbrMangItemPtcrList){
+							if(StringUtils.equals(mbrMangItemPtcr.getExtraProfile(), "US010912")){
+								createDeviceResponse.setPreviousProfileImgPath(mbrMangItemPtcr.getExtraProfileValue());
+								break;
+							}
 						}
 					}
-				}
 
-				// 모바일 회원 전환이력 저장
-				UserkeyTrack userkeyTrack = new UserkeyTrack();
-				userkeyTrack.setPreUserKey(mobileUserMbrDevice.getUserKey());
-				userkeyTrack.setAfterUserKey(createUserMbr.getUserKey());
-				userkeyTrack.setRegID(createUserMbr.getUserID());
-				this.commonDAO.update("Device.insertUserkeyTrack", userkeyTrack);
+					// 모바일 회원 전환이력 저장
+					UserkeyTrack userkeyTrack = new UserkeyTrack();
+					userkeyTrack.setPreUserKey(mobileUserMbrDevice.getUserKey());
+					userkeyTrack.setAfterUserKey(createUserMbr.getUserKey());
+					userkeyTrack.setRegID(createUserMbr.getUserID());
+					this.commonDAO.update("Device.insertUserkeyTrack", userkeyTrack);
 
-				// sms수신여부, 가입채널, PUSH수신동의 이관
-				createDeviceRequest.getUserMbrDevice().setIsRecvSMS(mobileUserMbrDevice.getIsRecvSMS());
-				createDeviceRequest.getUserMbrDevice().setJoinId(mobileUserMbrDevice.getJoinId());
-				for(UserMbrDeviceDetail userMbrDeviceDetail : mobileUserMbrDevice.getUserMbrDeviceDetail()){
-					if(StringUtils.equals(userMbrDeviceDetail.getExtraProfile(), MemberConstants.DEVICE_EXTRA_PUSH_YN)){
-						createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail().add(userMbrDeviceDetail);
-						break;
+					// sms수신여부, 가입채널, PUSH수신동의 이관
+					createDeviceRequest.getUserMbrDevice().setIsRecvSMS(mobileUserMbrDevice.getIsRecvSMS());
+					createDeviceRequest.getUserMbrDevice().setJoinId(mobileUserMbrDevice.getJoinId());
+					for(UserMbrDeviceDetail userMbrDeviceDetail : mobileUserMbrDevice.getUserMbrDeviceDetail()){
+						if(StringUtils.equals(userMbrDeviceDetail.getExtraProfile(), MemberConstants.DEVICE_EXTRA_PUSH_YN)){
+							createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail().add(userMbrDeviceDetail);
+							break;
+						}
 					}
 				}
 			}
