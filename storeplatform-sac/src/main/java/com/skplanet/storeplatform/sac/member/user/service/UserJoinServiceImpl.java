@@ -172,6 +172,15 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
         DeviceInfo deviceInfo = new DeviceInfo();
+        deviceInfo.setUserKey(createUserResponse.getUserKey());
+        deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
+
+        if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
+            deviceInfo.setDeviceId("");
+            deviceInfo.setMdn(req.getDeviceId()); // MDN 번호
+        }else {
+            deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+        }
         deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
         deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
         deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
