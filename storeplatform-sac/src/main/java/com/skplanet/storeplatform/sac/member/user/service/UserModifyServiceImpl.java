@@ -842,6 +842,7 @@ public class UserModifyServiceImpl implements UserModifyService {
      * @return CreateSocialAccountSacRes
      */
     @Override
+    @Deprecated
     public CreateSocialAccountSacRes regSocialAccount(SacRequestHeader header, CreateSocialAccountSacReq req) {
 
         CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
@@ -921,7 +922,7 @@ public class UserModifyServiceImpl implements UserModifyService {
         removeManagementRequest.setCommonRequest(commonRequest);
         removeManagementRequest.setUserKey(req.getUserKey());
         removeManagementRequest.setMbrMangItemPtcr(remPtcrList);
-        this.userSCI.removeManagement(removeManagementRequest);
+//        this.userSCI.removeManagement(removeManagementRequest);
 
         // 3.부가속성 등록/수정
         UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
@@ -968,7 +969,7 @@ public class UserModifyServiceImpl implements UserModifyService {
         updateManagementRequest.setUserKey(req.getUserKey());
         updateManagementRequest.setMbrMangItemPtcr(ptcrList);
         updateManagementRequest.setCommonRequest(commonRequest);
-        this.userSCI.updateManagement(updateManagementRequest);
+//        this.userSCI.updateManagement(updateManagementRequest);
 
         // 4.소셜이력 등록
         CreateSocialAccountRequest createSocialAccountRequest = new CreateSocialAccountRequest();
