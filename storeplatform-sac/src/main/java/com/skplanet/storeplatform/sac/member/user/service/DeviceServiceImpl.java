@@ -445,9 +445,11 @@ public class DeviceServiceImpl implements DeviceService {
 				mdnMap.put("01011110003", "svc003");
 				mdnMap.put("01011110004", "svc004");
 				mdnMap.put("01011110005", "svc005");
-                mdnMap.put("01065261233", "4486071533");
-                mdnMap.put("01065261234", "4486071534");
-                mdnMap.put("01065261241", "4486071541");
+                mdnMap.put("01065260114", "SVC65260114");
+                mdnMap.put("01065260110", "65260110");
+                mdnMap.put("01065260114", "KT65260114");
+                mdnMap.put("01065260115", "LGT65260115");
+                mdnMap.put("01065261244", "KT4486071544");
 				mdnMap.put("01066786220", "7243371580");
 				mdnMap.put("01066786221", "7243371581");
 				if(mdnMap.get(deviceInfo.getMdn()) != null){

@@ -268,7 +268,6 @@
        <foreach collection="keySearchList" item="keySearch" open="AND" close="" separator="AND">
            <if test=" keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO') "> a.insd_usermbr_no =  #{keySearch.keyString} </if>
            <if test=" keySearch.keyType.equalsIgnoreCase('MBR_ID') "> a.mbr_id =  #{keySearch.keyString} </if>
-           <if test=" keySearch.keyType.equalsIgnoreCase('USERMBR_NO') "> a.usermbr_no =  #{keySearch.keyString} </if>
            <if test=" keySearch.keyType.equalsIgnoreCase('EMAIL_ADDR') "> a.email_addr =  #{keySearch.keyString} </if>
        </foreach>
     </select>
@@ -285,7 +284,7 @@
            <if test=" keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') "> b.insd_device_id =  #{keySearch.keyString} </if>
            <if test=" keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> b.device_id =  #{keySearch.keyString} </if>
            <if test=" keySearch.keyType.equalsIgnoreCase('MDN') "> b.mdn =  #{keySearch.keyString} </if>
-           <if test=" keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') "> b.svc_mang_no = #{keySearch.keyString} AND MDN IS NOT NULL</if>
+           <if test=" keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') "> b.svc_mang_no = #{keySearch.keyString}</if>
        </foreach>
          ORDER BY b.auth_dt DESC) u
          WHERE ROWNUM = 1

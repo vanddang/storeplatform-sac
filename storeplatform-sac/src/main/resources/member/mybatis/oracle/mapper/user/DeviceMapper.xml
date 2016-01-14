@@ -291,7 +291,7 @@
                       ,  b.svc_mang_no as svc_mang_no
                    FROM  tb_us_ousermbr_device b
                    		 JOIN tb_us_ousermbr a
-                         AND b.insd_usermbr_no = a.insd_usermbr_no
+                         ON b.insd_usermbr_no = a.insd_usermbr_no
                   WHERE  b.auth_yn = 'Y'
                <foreach collection="keySearchList" item="keySearch"   open="" close="" separator="">
                    <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') ">AND b.svc_mang_no =  #{keySearch.keyString} </if>

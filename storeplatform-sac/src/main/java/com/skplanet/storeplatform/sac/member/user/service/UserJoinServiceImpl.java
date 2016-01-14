@@ -99,7 +99,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
             UserInfo userInfo = this.mcc.getUserBaseInfo(keyType, req.getDeviceId(), sacHeader);
             if (userInfo != null) {
-                throw new StorePlatformException("SAC_MEM_1101");
+                throw new StorePlatformException("SAC_MEM_1101", req.getDeviceIdType());
             }
         } catch (StorePlatformException ex) {
             if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
@@ -171,19 +171,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
 
-		/**
-		 * 휴대기기 등록.
-		 */
         DeviceInfo deviceInfo = new DeviceInfo();
-        deviceInfo.setUserKey(createUserResponse.getUserKey());
-        deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
-
-        if(StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
-            deviceInfo.setDeviceId("");
-            deviceInfo.setMdn(req.getDeviceId()); // MDN 번호
-        }else {
-            deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
-        }
         deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
         deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
         deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
@@ -192,17 +180,17 @@ public class UserJoinServiceImpl implements UserJoinService {
         deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
         deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 단말부가정보
 
-		String deviceKey = null;
-		try{
-        	deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
-		}catch(StorePlatformException e){
-			// 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
-			DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
-			deleteUserRequest.setCommonRequest(mcc.getSCCommonRequest(sacHeader));
-			deleteUserRequest.setUserKey(createUserResponse.getUserKey());
-			userSCI.delete(deleteUserRequest);
-			throw e;
-		}
+        String deviceKey = null;
+        try{
+            deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+        }catch(StorePlatformException e){
+            // 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
+            DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+            deleteUserRequest.setCommonRequest(mcc.getSCCommonRequest(sacHeader));
+            deleteUserRequest.setUserKey(createUserResponse.getUserKey());
+            userSCI.delete(deleteUserRequest);
+            throw e;
+        }
 
 		/**
 		 * 결과 세팅

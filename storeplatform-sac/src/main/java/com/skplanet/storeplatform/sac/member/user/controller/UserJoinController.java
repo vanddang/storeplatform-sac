@@ -62,12 +62,6 @@ public class UserJoinController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		// TODO SKT만 가입 처리 되도록 validation 추가
-		if (!StringUtil.equalsIgnoreCase(sacHeader.getTenantHeader().getTenantId(), MemberConstants.TENANT_ID_TSTORE)
-				|| !StringUtil.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-			throw new StorePlatformException("SAC_MEM_1203", "deviceTelecom");
-		}
-
 		/**
 		 * 모바일 전용회원 Biz
 		 */
