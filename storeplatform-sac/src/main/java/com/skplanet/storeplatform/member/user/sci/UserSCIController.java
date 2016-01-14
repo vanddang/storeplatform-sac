@@ -441,6 +441,48 @@ public class UserSCIController implements UserSCI {
 
 	/**
 	 * <pre>
+	 * 회원 정보를 delete하는 기능을 제공한다.
+	 * 정상회원가입후 휴대기기 등록 오류 발생시 롤백개념으로 사용한다.
+	 * </pre>
+	 *
+	 * @param deleteUserRequest 회원 탈퇴 요청 Value Object
+	 * @return DeleteUserResponse - 회원 탈퇴 응답 Value Object
+	 */
+	@Override
+	public DeleteUserResponse delete(DeleteUserRequest deleteUserRequest) {
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - 회원정보 delete");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		LOGGER.debug("### 받은 데이터 deleteUserRequest : {}", deleteUserRequest);
+
+		// 입력 파라미터가 없음
+		if (deleteUserRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (deleteUserRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 사용자키 없음
+		if (StringUtils.isBlank(deleteUserRequest.getUserKey())) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+		}
+
+		DeleteUserResponse deleteUserResponse = null;
+		try {
+			deleteUserResponse = this.service.delete(deleteUserRequest);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return deleteUserResponse;
+	}
+	/**
+	 * <pre>
 	 * 사용자 약관동의 등록/수정.
 	 * </pre>
 	 * 

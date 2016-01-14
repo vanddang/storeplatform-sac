@@ -30,16 +30,6 @@ public class AuthorizeByIdV2SacRes extends CommonInfo {
 	private String userType = "";
 
 	/**
-	 * 사용자 main 상태코드.
-	 */
-	private String userMainStatus = "";
-
-	/**
-	 * 사용자 sub 상태코드.
-	 */
-	private String userSubStatus = "";
-
-	/**
 	 * 사용자 인증 토큰 유효성 여부(Y/N).
 	 */
 	private String isLoginSuccess = "";
@@ -72,36 +62,6 @@ public class AuthorizeByIdV2SacRes extends CommonInfo {
 	 */
 	public void setUserType(String userType) {
 		this.userType = userType;
-	}
-
-	/**
-	 * @return userMainStatus
-	 */
-	public String getUserMainStatus() {
-		return this.userMainStatus;
-	}
-
-	/**
-	 * @param userMainStatus
-	 *            String
-	 */
-	public void setUserMainStatus(String userMainStatus) {
-		this.userMainStatus = userMainStatus;
-	}
-
-	/**
-	 * @return userSubStatus
-	 */
-	public String getUserSubStatus() {
-		return this.userSubStatus;
-	}
-
-	/**
-	 * @param userSubStatus
-	 *            String
-	 */
-	public void setUserSubStatus(String userSubStatus) {
-		this.userSubStatus = userSubStatus;
 	}
 
 	/**

@@ -446,7 +446,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 				// 아이디 회원에 대표기기 등록요청인 경우 기존 등록된 대표기기 N처리
 				if (!StringUtils.equals(Constant.USER_TYPE_MOBILE, createUserMbr.getUserType())
-						&& createDeviceRequest.getUserMbrDevice().getIsPrimary().equals(Constant.TYPE_YN_Y)){
+						&& StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getIsPrimary())
+						&& StringUtils.equals(createDeviceRequest.getUserMbrDevice().getIsPrimary(), Constant.TYPE_YN_Y)){
 					this.doCancelMainDevice(createUserMbr);
 				}
 
@@ -496,7 +497,7 @@ public class DeviceServiceImpl implements DeviceService {
 					//LOGGER.info("{} req device_id 가 null이 아니고 db의 device_id와 다른 경우 update", userKey);
 					if(StringUtils.equals(userMbrDevice.getIsUsed(), Constant.TYPE_YN_Y)){
 						if(StringUtils.isBlank(userMbrDevice.getDeviceID())){
-							LOGGER.info("{}, {}, {} 정상 인증처리", userKey, userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
+							LOGGER.info("{}, {}, {} 기존단말 정상 인증처리", userKey, userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 						}else{
 							LOGGER.info("{} OneStore 재설치로 deviceId 변경 {} -> {} ", userKey, userMbrDevice.getDeviceID(), createDeviceRequest.getUserMbrDevice().getDeviceID());
 						}
@@ -513,7 +514,7 @@ public class DeviceServiceImpl implements DeviceService {
 							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
 						}
 					}else{
-						LOGGER.info("{} {} 예전에 가지고 있었던 휴대기기", userKey, userMbrDevice.getDeviceKey());
+						LOGGER.info("{} {} 기존단말에서 가지고 있었던 휴대기기를 auth_yn = Y 처리", userKey, userMbrDevice.getDeviceKey());
 						this.doActivateDevice(userMbrDevice, createDeviceRequest); // auth_yn = 'Y'처리
 					}
 					deviceKey = userMbrDevice.getDeviceKey();
@@ -538,7 +539,7 @@ public class DeviceServiceImpl implements DeviceService {
 						if(StringUtils.isBlank(userMbrDevice.getMdn()) && StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getMdn())){
 							LOGGER.info("{}, {}, {} usim 삽입 후 접속", userKey, userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 						}else{
-							LOGGER.info("{}, {}, {} 정상 인증처리", userKey, userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
+							LOGGER.info("{}, {}, {} OneStore 단말 정상 인증처리", userKey, userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 						}
 						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, createDeviceRequest.getUserMbrDevice(), Constant.TYPE_YN_N);
 						// mno_cd, svc_mang_no중 하나라도 변경되면 tb_us_ousermbr_device_set 테이블의 실명인증일자, mdn을 null 처리
@@ -554,7 +555,7 @@ public class DeviceServiceImpl implements DeviceService {
 						}
 					}
 				}else{
-					LOGGER.info("{} {} 예전에 가지고 있었던 휴대기기", userKey, userMbrDevice.getDeviceKey());
+					LOGGER.info("{} {} OneStore단말에서 가지고 있었던 휴대기기를 auth_yn = Y 처리", userKey, userMbrDevice.getDeviceKey());
 					this.doActivateDevice(userMbrDevice, createDeviceRequest);
 				}
 				deviceKey = userMbrDevice.getDeviceKey();
@@ -1635,6 +1636,9 @@ public class DeviceServiceImpl implements DeviceService {
 		if(userMbrDeviceForReq.getDeviceAccount() != null && !StringUtils.equals(userMbrDevice.getDeviceAccount(), userMbrDeviceForReq.getDeviceAccount())){
 			logBuf.append("[device_acct]").append(userMbrDevice.getDeviceAccount()).append("->").append(userMbrDeviceForReq.getDeviceAccount());
 		}
+		if(userMbrDeviceForReq.getIsPrimary() != null && !StringUtils.equals(userMbrDevice.getIsPrimary(), userMbrDeviceForReq.getIsPrimary())){
+			logBuf.append("[rep_device_yn]").append(userMbrDevice.getIsPrimary()).append("->").append(userMbrDeviceForReq.getIsPrimary());
+		}
 
 		// TODO. 휴대기기 이력 변경 코드 우선순위 처리함.
 		if(userMbrDeviceForReq.getDeviceID() != null && !StringUtils.equals(userMbrDevice.getDeviceID(), userMbrDeviceForReq.getDeviceID())){
@@ -1672,12 +1676,24 @@ public class DeviceServiceImpl implements DeviceService {
 		// 휴대기기 부가속성
 		if (userMbrDeviceForReq.getUserMbrDeviceDetail() != null) {
 			for (UserMbrDeviceDetail userMbrDeviceDetailForReq : userMbrDeviceForReq.getUserMbrDeviceDetail()) {
-				logBuf.append("[").append(userMbrDeviceDetailForReq.getExtraProfile()).append("]").append(userMbrDeviceDetailForReq.getExtraProfileValue());
+				boolean isExsitExtra = false;
+				for (UserMbrDeviceDetail userMbrDeviceDetailForDb : userMbrDevice.getUserMbrDeviceDetail()) {
+					if(StringUtils.equals(userMbrDeviceDetailForReq.getExtraProfile(), userMbrDeviceDetailForDb.getExtraProfile())){
+						isExsitExtra = true;
+						if(!StringUtils.equals(userMbrDeviceDetailForReq.getExtraProfileValue(), userMbrDeviceDetailForDb.getExtraProfileValue())){
+							logBuf.append("[").append(userMbrDeviceDetailForReq.getExtraProfile()).append("]").append(userMbrDeviceDetailForDb.getExtraProfileValue()).append("->").append(userMbrDeviceDetailForReq.getExtraProfileValue());
+						}
+						break;
+					}
+				}
+				if(!isExsitExtra){
+					logBuf.append("[").append(userMbrDeviceDetailForReq.getExtraProfile()).append("]").append(" ").append("->").append(userMbrDeviceDetailForReq.getExtraProfileValue());
+				}
 				userMbrDeviceDetailForReq.setRegID(userMbrDevice.getUserID());
 				userMbrDeviceDetailForReq.setUserKey(userMbrDevice.getUserKey());
 				userMbrDeviceDetailForReq.setDeviceKey(userMbrDevice.getDeviceKey());
 				userMbrDeviceDetailForReq.setSystemID(systemID);
-				if(StringUtils.equals(isDormant, Constant.TYPE_YN_Y)){
+				if(StringUtils.equals(isDormant, Constant.TYPE_YN_Y)) {
 					this.idleDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
 				}else{
 					this.commonDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
@@ -1776,12 +1792,24 @@ public class DeviceServiceImpl implements DeviceService {
 		// 휴대기기 부가속성
 		if (modifyDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail() != null) {
 			for (UserMbrDeviceDetail userMbrDeviceDetailForReq : modifyDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail()) {
-				logBuf.append("[").append(userMbrDeviceDetailForReq.getExtraProfile()).append("]").append(userMbrDeviceDetailForReq.getExtraProfileValue());
-				userMbrDeviceDetailForReq.setRegID(searchDeviceResponse.getUserID());
-				userMbrDeviceDetailForReq.setUserKey(searchDeviceResponse.getUserKey());
+				boolean isExsitExtra = false;
+				for (UserMbrDeviceDetail userMbrDeviceDetailForDb : searchDeviceResponse.getUserMbrDevice().getUserMbrDeviceDetail()) {
+					if(StringUtils.equals(userMbrDeviceDetailForReq.getExtraProfile(), userMbrDeviceDetailForDb.getExtraProfile())){
+						isExsitExtra = true;
+						if(!StringUtils.equals(userMbrDeviceDetailForReq.getExtraProfileValue(), userMbrDeviceDetailForDb.getExtraProfileValue())){
+							logBuf.append("[").append(userMbrDeviceDetailForReq.getExtraProfile()).append("]").append(userMbrDeviceDetailForDb.getExtraProfileValue()).append("->").append(userMbrDeviceDetailForReq.getExtraProfileValue());
+						}
+						break;
+					}
+				}
+				if(!isExsitExtra){
+					logBuf.append("[").append(userMbrDeviceDetailForReq.getExtraProfile()).append("]").append(" ").append("->").append(userMbrDeviceDetailForReq.getExtraProfileValue());
+				}
+				userMbrDeviceDetailForReq.setRegID(searchDeviceResponse.getUserMbrDevice().getUserID());
+				userMbrDeviceDetailForReq.setUserKey(searchDeviceResponse.getUserMbrDevice().getUserKey());
 				userMbrDeviceDetailForReq.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
 				userMbrDeviceDetailForReq.setSystemID(modifyDeviceRequest.getCommonRequest().getSystemID());
-				if(StringUtils.equals(searchDeviceResponse.getUserMbrDevice().getIsDormant(), Constant.TYPE_YN_Y)){
+				if(StringUtils.equals(searchDeviceResponse.getUserMbrDevice().getIsDormant(), Constant.TYPE_YN_Y)) {
 					this.idleDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
 				}else{
 					this.commonDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
@@ -1790,7 +1818,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if(logBuf.length() > 0){
-			LOGGER.info("} : 휴대기기 수정정보 : {}", modifyDeviceRequest.getUserKey(), logBuf.toString());
+			LOGGER.info("{} : 휴대기기 수정정보 : {}", modifyDeviceRequest.getUserKey(), logBuf.toString());
 		}else{
 			LOGGER.info("{} : 수정된 휴대기기 정보 없음", modifyDeviceRequest.getUserKey());
 		}

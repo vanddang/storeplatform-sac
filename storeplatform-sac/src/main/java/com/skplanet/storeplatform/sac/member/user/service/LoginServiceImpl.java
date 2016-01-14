@@ -1138,18 +1138,17 @@ public class LoginServiceImpl implements LoginService {
 		chkUserAuthTkReqeust.setCommonRequest(commService.getSCCommonRequest(requestHeader));
 		chkUserAuthTkReqeust.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
-		// TODO. 휴면계정 유무 전달
-		chkDupRes.getUserMbr().getIsDormant();
+		chkUserAuthTkReqeust.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
 		CheckUserAuthTokenResponse chkUserAuthTkResponse = this.userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
-		if (StringUtils.isBlank(chkUserAuthTkResponse.getUserKey())){ // 유효성 체크 실패
+		if (chkUserAuthTkResponse == null || StringUtils.isBlank(chkUserAuthTkResponse.getUserAuthToken())){ // 유효성 체크 실패
 			boolean isValid = false;
-			if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_TSTORE)){
+			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
 
-			}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 
-			}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
+			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
 
-			}else if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)){
+			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
 
 			}
 
@@ -1177,8 +1176,6 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 		deviceInfo.setNativeId(req.getNativeId());
 		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
-
-		// 대표기기 여부
 		SearchDeviceListRequest searchDeviceListRequest = new SearchDeviceListRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
@@ -1190,9 +1187,9 @@ public class LoginServiceImpl implements LoginService {
 		searchDeviceListRequest.setIsMainDevice(MemberConstants.USE_Y);
 		try{
 			SearchDeviceListResponse searchDeviceListResponse = this.deviceSCI.searchDeviceList(searchDeviceListRequest);
-			deviceInfo.setIsPrimary(MemberConstants.USE_N);
 		}catch(StorePlatformException e){
 			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+				// 대표기기가 없는 회원인경우 대표기기 Y로 업데이트
 				deviceInfo.setIsPrimary(MemberConstants.USE_Y);
 			}else{
 				throw e;
@@ -1206,9 +1203,7 @@ public class LoginServiceImpl implements LoginService {
 
 		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		res.setDeviceKey(deviceKey);
-		res.setUserType(chkDupRes.getUserMbr().getUserType());
-		res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
-		res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
+		res.setUserType(req.getUserType());
 		res.setIsLoginSuccess(MemberConstants.USE_Y);
 		return res;
 	}

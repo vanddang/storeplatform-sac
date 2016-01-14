@@ -1236,7 +1236,8 @@ public class MemberCommonComponent {
 	public String getSvcMangNo(String mdn, String deviceTelecom, String nativeId, String simSerialNo){
 		String svcMangNo = null;
 
-		if(StringUtils.isBlank(mdn)){
+		// MDN 형식만 조회 가능
+		if(StringUtils.isBlank(mdn) && ValidationCheckUtils.isDeviceId(mdn)){
 			throw new StorePlatformException("SAC_MEM_0001", "mdn");
 		}
 
