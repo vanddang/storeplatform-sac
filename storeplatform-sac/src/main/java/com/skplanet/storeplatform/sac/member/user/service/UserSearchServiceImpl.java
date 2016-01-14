@@ -511,8 +511,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		/** 3. 가가입 상태일 경우 오류. */
 		if (StringUtils.equals(srhExtUserResponse.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) {
-			throw new StorePlatformException("SAC_MEM_2001", srhExtUserResponse.getUserMbr().getUserMainStatus(),
-					srhExtUserResponse.getUserMbr().getUserSubStatus());
+			throw new StorePlatformException("SAC_MEM_0003", "userId", srhExtUserResponse.getUserMbr().getUserID());
 		}
 
 		String checkId = "";

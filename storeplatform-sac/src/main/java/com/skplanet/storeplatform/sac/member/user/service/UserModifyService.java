@@ -167,7 +167,7 @@ public interface UserModifyService {
 	 * 2.1.68. ID 변경 [신규 규격].
 	 * </pre>
 	 *
-	 * @param sacHeader
+	 * @param header
 	 *            SacRequestHeader
 	 * @param req
 	 *            ModifyIdSacReq

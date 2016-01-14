@@ -9,18 +9,18 @@
  */
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 
+import java.io.Serializable;
+
 // TODO: Auto-generated Javadoc
 /**
  * 사용자회원 비밀번호 변경 요청 Value Object
  * 
- * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2016. 1. 14. Updated by : 최진호, 보고지티.
  */
 public class UpdatePasswordUserRequest extends CommonInfo implements Serializable {
 
@@ -29,6 +29,9 @@ public class UpdatePasswordUserRequest extends CommonInfo implements Serializabl
 
 	/** 공통 요청 Value Object. */
 	private CommonRequest commonRequest;
+
+	/** 비밀번호 타입 (IDP:US011502, OneId:US011503) */
+	private String userPwType;
 
 	/**
 	 * 휴면계정유무.
@@ -84,6 +87,23 @@ public class UpdatePasswordUserRequest extends CommonInfo implements Serializabl
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	/**
+	 * 비밀번호 타입 (IDP:US011502, OneId:US011503) 를 리턴한다.
+	 *
+	 * @return userPwType - 사용자 salt값 (One Id 유저인경우)
+	 */
+	public String getUserPwType() {
+		return userPwType;
+	}
+
+	/**
+	 * 비밀번호 타입 (IDP:US011502, OneId:US011503)를 설정한다.
+	 *
+	 * @param userPwType
+	 *            사용자 salt값 (One Id 유저인경우)
+	 */
+	public void setUserPwType(String userPwType) { this.userPwType = userPwType; }
 
 	/**
 	 * @return isDormant
