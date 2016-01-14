@@ -290,6 +290,7 @@
 		           </if>
 		           AND E.EXPO_YN = 'Y'
                    AND CPP.PROD_ID(+) = B.PROD_ID
+                   AND CPP.TENANT_ID(+) = #{tenantHeader.tenantId}
 		           AND E.TENANT_ID = F.TENANT_ID
 		           AND E.PROD_ID = F.PROD_ID
 		           AND F.PROD_ID = G.PROD_ID(+)
@@ -662,6 +663,7 @@
                    AND I.PART_PROD_ID = P.PROD_ID
                    AND J.USE_POLICY_ID = Q.USE_POLICY_ID(+)
                    AND CPP.PROD_ID(+) = D.PROD_ID
+                   AND CPP.TENANT_ID(+) = #{tenantHeader.tenantId}
                    AND A.USE_YN = 'Y'        
                    AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                    AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
