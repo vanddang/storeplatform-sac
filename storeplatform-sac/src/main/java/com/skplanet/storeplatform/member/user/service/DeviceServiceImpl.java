@@ -176,13 +176,23 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// 모바일 회원 전환 케이스 확인
 		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
-			SearchDeviceResponse searchDeviceResponse = this.commonDAO.queryForObject("Device.searchDeviceOrderBySvcMangNo", createDeviceRequest.getUserMbrDevice().getSvcMangNum(), SearchDeviceResponse.class);
+            SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+            List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+            KeySearch key = new KeySearch();
+            key.setKeyType(Constant.SEARCH_TYPE_SVC_MANG_NO);
+            key.setKeyString(createDeviceRequest.getUserMbrDevice().getSvcMangNum());
+            keySearchList.add(key);
+
+            searchDeviceRequest.setUserKey(userKey);
+            searchDeviceRequest.setKeySearchList(keySearchList);
+
+			SearchDeviceResponse searchDeviceResponse = this.commonDAO.queryForObject("Device.searchDeviceOrderByLastLoginDt", searchDeviceRequest, SearchDeviceResponse.class);
 			if(searchDeviceResponse != null && searchDeviceResponse.getUserMbrDevice() != null){
 				mobileUserMbrDevice = searchDeviceResponse.getUserMbrDevice();
 			}
 			String previousIsDormant = Constant.TYPE_YN_N;
 			if(mobileUserMbrDevice == null){
-				searchDeviceResponse = this.idleDAO.queryForObject("Device.searchDeviceOrderBySvcMangNo", createDeviceRequest.getUserMbrDevice().getSvcMangNum(), SearchDeviceResponse.class);
+				searchDeviceResponse = this.idleDAO.queryForObject("Device.searchDeviceOrderByLastLoginDt", searchDeviceRequest, SearchDeviceResponse.class);
 				if(searchDeviceResponse != null && searchDeviceResponse.getUserMbrDevice() != null){
 					mobileUserMbrDevice = searchDeviceResponse.getUserMbrDevice();
 					previousIsDormant = Constant.TYPE_YN_Y;
@@ -745,14 +755,20 @@ public class DeviceServiceImpl implements DeviceService {
 			// 검색 조건에 서비스 관리번호가 포함되었는지 여부
 			List<KeySearch> keySearchList = searchDeviceRequest.getKeySearchList();
 			boolean isSvcMangNoExist = false;
+            // 검색 조건에 서비스 관리번호 - LAST_LOGIN_DT 정렬 조건 여부
+            boolean isAuthorizeSvcMangNo = false;
+
 			for (KeySearch keySearch : keySearchList) {
 				if (keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
 					isSvcMangNoExist = true;
-				}
+				}else if (keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_AUTHORIZE_SVC_MANG_NO)) {
+                    isAuthorizeSvcMangNo = true;
+                }
+
 			}
 
 			if (isSvcMangNoExist) {
-				// svc_mang_no로 조회한 경우
+				// svc_mang_no로 조회한 경우 (auth_dt desc 정렬)
 				searchDeviceResponse = dao.queryForObject("Device.searchDeviceSvcMangNo", searchDeviceRequest,
 						SearchDeviceResponse.class);
 
@@ -762,7 +778,19 @@ public class DeviceServiceImpl implements DeviceService {
 							SearchDeviceResponse.class);
 					isDormant = Constant.TYPE_YN_Y;
 				}
-			} else {
+
+			}else if(isAuthorizeSvcMangNo){
+                // svc_mang_no로 조회한 경우(last_login_dt desc 정렬)
+                searchDeviceResponse = dao.queryForObject("Device.searchDeviceOrderByLastLoginDt", searchDeviceRequest,
+                        SearchDeviceResponse.class);
+
+                if (searchDeviceResponse == null) { // 휴면DB 조회
+                    dao = this.idleDAO;
+                    searchDeviceResponse = dao.queryForObject("Device.searchDeviceOrderByLastLoginDt", searchDeviceRequest,
+                            SearchDeviceResponse.class);
+                    isDormant = Constant.TYPE_YN_Y;
+                }
+            }else {
 				// device id, no userkey로 조회한 경우
 				searchDeviceResponse = dao.queryForObject("Device.searchDeviceIDOnly", searchDeviceRequest,
 						SearchDeviceResponse.class);

@@ -1074,8 +1074,8 @@
     <!-- onebrand 추가 쿼리 -->
 
     <!-- 서비스관리번호(svcMangNo)로 최근 로그인된 모바일 회원 휴대기기 정보 조회 -->
-    <select id="searchDeviceOrderBySvcMangNo" parameterType="String" resultMap="searchDeviceResultMap">
-        SELECT /* DeviceMapper.xml, searchDeviceOrderBySvcMangNo, SAC(SC), 반범진, 2016-01-04 */
+    <select id="searchDeviceOrderByLastLoginDt" parameterType="searchDeviceRequest" resultMap="searchDeviceResultMap">
+        SELECT /* DeviceMapper.xml, searchDeviceOrderByLastLoginDt, SAC(SC), 윤보영, 2016-01-14 */
                 a.mbr_id AS userId,
                 a.insd_usermbr_no AS userKey,
                 'INSD_DEVICE_ID' AS keyType,
@@ -1086,14 +1086,26 @@
             (
                 SELECT insd_usermbr_no, insd_device_id
                 FROM tb_us_ousermbr_device
-                WHERE svc_mang_no =  #{svcMangNo}
-                      AND auth_yn = 'Y'
+                WHERE auth_yn = 'Y'
+                    <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+                        <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID')">
+                            device_id = #{keySearch.keyString}
+                        </if>
+                        <if test="keySearch.keyType.equalsIgnoreCase('MDN')">
+                            mdn = #{keySearch.keyString}
+                        </if>
+                        <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO')">
+                            svc_mang_no = #{keySearch.keyString}
+                        </if>
+                        <if test="keySearch.keyType.equalsIgnoreCase('AUTHORIZE_SVC_MANG_NO')">
+                            svc_mang_no = #{keySearch.keyString} AND mdn IS NOT NULL
+                        </if>
+                    </foreach>
                 ORDER BY last_login_dt DESC
             )
             WHERE ROWNUM = 1
         ) b ON a.insd_usermbr_no = b.insd_usermbr_no
         WHERE a.mbr_status_main_cd != 'US010202'
-              AND a.mbr_clas_cd = 'US011501'
     </select>
 
     <!-- 휴대기기 목록 조회 -->

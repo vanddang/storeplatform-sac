@@ -186,7 +186,7 @@ public class LoginServiceImpl implements LoginService {
 
                 if(StringUtils.isNotBlank(svcMangNo)){
                     // 서비스관리번호로 휴대기기 정보 조회
-                    deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_SVC_MANG_NO, svcMangNo, null);
+                    deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_SVC_MANG_NO, svcMangNo, null);
                     if(deviceInfo != null){
                         DeviceInfo updateDeviceInfo = new DeviceInfo();
                         updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
@@ -534,7 +534,7 @@ public class LoginServiceImpl implements LoginService {
 
                     if (StringUtils.isNotBlank(svcMangNo)) {
                         // 서비스관리번호로 휴대기기 정보 조회
-                        deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_SVC_MANG_NO, svcMangNo, null);
+                        deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_SVC_MANG_NO, svcMangNo, null);
                         if (deviceInfo != null) {
                             DeviceInfo updateDeviceInfo = new DeviceInfo();
                             updateDeviceInfo.setUserKey(deviceInfo.getUserKey());

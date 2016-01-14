@@ -95,6 +95,7 @@ public final class MemberConstants {
 	public static final String KEY_TYPE_WILS_TEL_NO = "WILS_TEL_NO"; // 판매자 연락처
 	public static final String KEY_TYPE_SELLERMBR_BIZ_NO = "BIZ_REG_NO"; // 사업자 등록번호
 	public static final String KEY_TYPE_MDN = "MDN"; // 전화번호
+    public static final String KEY_TYPE_AUTHORIZE_SVC_MANG_NO = "AUTHORIZE_SVC_MANG_NO"; // SKT 서비스 관리번호 (모바일 인증 시 LAST_LOGIN_DT DESC 정렬)
 
 	/** 통신사 코드. */
 	public static final String DEVICE_TELECOM_SKT = "US001201"; // SKT
