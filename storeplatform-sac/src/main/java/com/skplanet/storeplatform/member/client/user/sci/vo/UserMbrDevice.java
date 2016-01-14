@@ -86,7 +86,7 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	private String isDormant;
 
 	/** 휴대기기 usim 번호. */
-	private String deviceSimNm;
+	private String simSerialNo;
 
 	/** 마지막 로그인 일자. */
 	private String lastloginDt;
@@ -505,10 +505,10 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	 * 휴대기기 usim번호를 리턴한다.
 	 * </pre>
 	 *
-	 * @return deviceSimNm
+	 * @return simSerialNo
 	 */
-	public String getDeviceSimNm() {
-		return deviceSimNm;
+	public String getSimSerialNo() {
+		return simSerialNo;
 	}
 
 	/**
@@ -516,10 +516,10 @@ public class UserMbrDevice extends CommonInfo implements Serializable {
 	 * 휴대기기 usim번호를 설정한다.
 	 * </pre>
 	 *
-	 * @param deviceSimNm
+	 * @param simSerialNo
 	 */
-	public void setDeviceSimNm(String deviceSimNm) {
-		this.deviceSimNm = deviceSimNm;
+	public void setSimSerialNo(String simSerialNo) {
+		this.simSerialNo = simSerialNo;
 	}
 
 	/**

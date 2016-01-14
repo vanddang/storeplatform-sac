@@ -846,7 +846,7 @@ public class LoginServiceImpl implements LoginService {
 					updateDeviceInfo.setMdn(req.getMdn());
 					updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 					updateDeviceInfo.setNativeId(req.getNativeId());
-					updateDeviceInfo.setDeviceSimNm(req.getSimSerialNo());
+					updateDeviceInfo.setSimSerialNo(req.getSimSerialNo());
 					updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 					deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
 				}else{
@@ -870,7 +870,7 @@ public class LoginServiceImpl implements LoginService {
 							updateDeviceInfo.setMdn(req.getMdn());
 							updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 							updateDeviceInfo.setNativeId(req.getNativeId());
-							updateDeviceInfo.setDeviceSimNm(req.getSimSerialNo());
+							updateDeviceInfo.setSimSerialNo(req.getSimSerialNo());
 							updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 							deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
 						}else{
@@ -886,7 +886,7 @@ public class LoginServiceImpl implements LoginService {
 				if(deviceInfo != null){
 					if (StringUtils.equals(req.getDeviceId(), deviceInfo.getDeviceId())
 							&& StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
-							&& StringUtils.equals(req.getSimSerialNo(), deviceInfo.getDeviceSimNm())) {
+							&& StringUtils.equals(req.getSimSerialNo(), deviceInfo.getSimSerialNo())) {
 						// 서비스관리번호 조회 실패 했지만 mdn으로 조회한 결과와 deviceId, imei, sim정보가 같으면 인증 성공처리
 					}else{
 						this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
@@ -1282,7 +1282,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setMdn(req.getMdn());
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 		deviceInfo.setNativeId(req.getNativeId());
-		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
+		deviceInfo.setSimSerialNo(req.getSimSerialNo());
 		SearchDeviceListRequest searchDeviceListRequest = new SearchDeviceListRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();

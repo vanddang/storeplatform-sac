@@ -417,6 +417,10 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String regDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
+		if(StringUtils.isBlank(deviceInfo.getUserKey())){
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
+		}
+
 		String userKey = deviceInfo.getUserKey();
 
 		/* 등록 가능한 휴대기기 개수 초과 채크 */
@@ -452,13 +456,14 @@ public class DeviceServiceImpl implements DeviceService {
                 mdnMap.put("01065261244", "KT4486071544");
 				mdnMap.put("01066786220", "7243371580");
 				mdnMap.put("01066786221", "7243371581");
+				mdnMap.put("01066786230", "7243371582");
 				if(mdnMap.get(deviceInfo.getMdn()) != null){
 					deviceInfo.setSvcMangNum(mdnMap.get(deviceInfo.getMdn()));
 				}else{
 					throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
 				}
 			}else{
-				String svcMangNo = this.commService.getSvcMangNo(deviceInfo.getMdn(), deviceInfo.getDeviceTelecom(), deviceInfo.getNativeId(), deviceInfo.getDeviceSimNm());
+				String svcMangNo = this.commService.getSvcMangNo(deviceInfo.getMdn(), deviceInfo.getDeviceTelecom(), deviceInfo.getNativeId(), deviceInfo.getSimSerialNo());
 				deviceInfo.setSvcMangNum(svcMangNo);
 			}
 		}

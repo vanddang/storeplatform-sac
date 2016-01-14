@@ -138,7 +138,7 @@ public class DeviceUtil {
 		deviceInfo.setNativeId(userMbrDevice.getNativeID());
 		deviceInfo.setJoinId(userMbrDevice.getJoinId());
 		deviceInfo.setMdn(userMbrDevice.getMdn());
-		deviceInfo.setDeviceSimNm(userMbrDevice.getDeviceSimNm());
+		deviceInfo.setSimSerialNo(userMbrDevice.getSimSerialNo());
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
         deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount()); // 기기 계정
@@ -201,7 +201,7 @@ public class DeviceUtil {
 		userMbrDevice.setJoinId(deviceInfo.getJoinId());
 		userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 		userMbrDevice.setMdn(deviceInfo.getMdn());
-		userMbrDevice.setDeviceSimNm(deviceInfo.getDeviceSimNm());
+		userMbrDevice.setSimSerialNo(deviceInfo.getSimSerialNo());
 		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
 		userMbrDevice.setUserMbrDeviceDetail(getConverterUserMbrDeviceDetailList(deviceInfo));
 

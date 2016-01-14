@@ -206,6 +206,7 @@ public class DeviceServiceImpl implements DeviceService {
 					for(MbrMangItemPtcr mbrMangItemPtcr : mbrMangItemPtcrList){
 						if(StringUtils.equals(mbrMangItemPtcr.getExtraProfile(), "US010912")){
 							createDeviceResponse.setPreviousProfileImgPath(mbrMangItemPtcr.getExtraProfileValue());
+							break;
 						}
 					}
 				}
@@ -285,11 +286,11 @@ public class DeviceServiceImpl implements DeviceService {
 					// device_id가 존재하는 mdn으로 다른회원이 존재하면 mdn, imei, sim null 처리
 					if (StringUtils.isNotBlank(userMbrDevice.getDeviceID())) {
 						LOGGER.info("{} : {} 회원이 {} MDN으로 등록된 회원이 존재", userKey, userMbrDevice.getUserKey(), createDeviceRequest.getUserMbrDevice().getMdn());
-						LOGGER.info("{} : {} 회원 mdn, nativeId, deviceSimNm 초기화 처리", userKey, userMbrDevice.getUserKey());
+						LOGGER.info("{} : {} 회원 mdn, nativeId, simSerialNo 초기화 처리", userKey, userMbrDevice.getUserKey());
 						String isDormant = StringUtils.isBlank(userMbrDevice.getIsDormant()) ? Constant.TYPE_YN_N : userMbrDevice.getIsDormant(); // 휴면 회원 유무
 						UserMbrDevice updateMbrDevice = new UserMbrDevice();
 						updateMbrDevice.setMdn("");
-						updateMbrDevice.setDeviceSimNm("");
+						updateMbrDevice.setSimSerialNo("");
 						updateMbrDevice.setNativeID("");
 						updateMbrDevice.setUserMbrDeviceDetail(createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail());
 						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, updateMbrDevice, isDormant);
@@ -533,7 +534,7 @@ public class DeviceServiceImpl implements DeviceService {
 						UserMbrDevice updateMbrDevice = new UserMbrDevice();
 						updateMbrDevice.setNativeID("");
 						updateMbrDevice.setMdn("");
-						updateMbrDevice.setDeviceSimNm("");
+						updateMbrDevice.setSimSerialNo("");
 						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, updateMbrDevice, Constant.TYPE_YN_N);
 					}else{
 						if(StringUtils.isBlank(userMbrDevice.getMdn()) && StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getMdn())){
@@ -1627,8 +1628,8 @@ public class DeviceServiceImpl implements DeviceService {
 		if(userMbrDeviceForReq.getIsRecvSMS() != null && !StringUtils.equals(userMbrDevice.getIsRecvSMS(), userMbrDeviceForReq.getIsRecvSMS())){
 			logBuf.append("[sms_recv_yn]").append(userMbrDevice.getIsRecvSMS()).append("->").append(userMbrDeviceForReq.getIsRecvSMS());
 		}
-		if(userMbrDeviceForReq.getDeviceSimNm() != null && !StringUtils.equals(userMbrDevice.getDeviceSimNm(), userMbrDeviceForReq.getDeviceSimNm())){
-			logBuf.append("[device_sim_nm]").append(userMbrDevice.getDeviceSimNm()).append("->").append(userMbrDeviceForReq.getDeviceSimNm());
+		if(userMbrDeviceForReq.getSimSerialNo() != null && !StringUtils.equals(userMbrDevice.getSimSerialNo(), userMbrDeviceForReq.getSimSerialNo())){
+			logBuf.append("[device_sim_nm]").append(userMbrDevice.getSimSerialNo()).append("->").append(userMbrDeviceForReq.getSimSerialNo());
 		}
 		if(userMbrDeviceForReq.getSvcMangNum() != null && !StringUtils.equals(userMbrDevice.getSvcMangNum(), userMbrDeviceForReq.getSvcMangNum())){
 			logBuf.append("[svc_mang_no]").append(userMbrDevice.getSvcMangNum()).append("->").append(userMbrDeviceForReq.getSvcMangNum());

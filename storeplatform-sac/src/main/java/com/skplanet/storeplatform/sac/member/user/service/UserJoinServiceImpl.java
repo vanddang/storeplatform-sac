@@ -682,7 +682,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		deviceInfo.setMdn(req.getMdn());
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 		deviceInfo.setNativeId(req.getNativeId());
-		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
+		deviceInfo.setSimSerialNo(req.getSimSerialNo());
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
 		String deviceKey = null;
@@ -814,7 +814,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		deviceInfo.setDeviceId(req.getDeviceId());
 		deviceInfo.setMdn(req.getMdn());
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
+		deviceInfo.setSimSerialNo(req.getSimSerialNo());
 		deviceInfo.setNativeId(req.getNativeId());
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);

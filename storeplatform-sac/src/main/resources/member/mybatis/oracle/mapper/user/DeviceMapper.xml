@@ -492,7 +492,7 @@
                <if test="svcMangNum != null">,svc_mang_no </if>
                <if test="joinId != null">,entry_chnl_cd </if>
                <if test="changeCaseCode != null">,chg_case_cd </if>
-               <if test="deviceSimNm != null">,device_sim_nm </if>
+               <if test="simSerialNo != null">,device_sim_nm </if>
                <if test="deviceAccount != null">,device_acct </if>
         ) VALUES (
             #{userKey},
@@ -516,7 +516,7 @@
             <if test="svcMangNum != null">,#{svcMangNum} </if>
             <if test="joinId != null">,#{joinId} </if>
             <if test="changeCaseCode != null">,#{changeCaseCode} </if>
-            <if test="deviceSimNm != null">,#{deviceSimNm} </if>
+            <if test="simSerialNo != null">,#{simSerialNo} </if>
             <if test="deviceAccount != null">,#{deviceAccount} </if>
         )
     </update>
@@ -583,7 +583,7 @@
                <if test="deviceID != null">,device_id = #{deviceID} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
-               <if test="deviceSimNm != null">,device_sim_nm = #{deviceSimNm}</if>
+               <if test="simSerialNo != null">,device_sim_nm = #{simSerialNo}</if>
                <choose>
                <when test="changeCaseCode != null">,chg_case_cd = #{changeCaseCode} </when>
                <otherwise>,chg_case_cd = 'US012001' </otherwise>
@@ -611,7 +611,7 @@
                <if test="deviceID != null">,device_id = #{deviceID} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
-               <if test="deviceSimNm != null">,device_sim_nm = #{deviceSimNm} </if>
+               <if test="simSerialNo != null">,device_sim_nm = #{simSerialNo} </if>
         WHERE insd_usermbr_no = #{userKey}
           AND insd_device_id = #{deviceKey}
           AND auth_yn = 'Y'
@@ -826,7 +826,7 @@
                <if test="joinId != null">,entry_chnl_cd = #{joinId} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
-               <if test="deviceSimNm != null">,device_sim_nm = #{deviceSimNm} </if>
+               <if test="simSerialNo != null">,device_sim_nm = #{simSerialNo} </if>
                <if test="deviceID != null">,device_id = #{deviceID} </if>
         WHERE insd_usermbr_no = #{userKey}
           AND insd_device_id = #{deviceKey}
@@ -1110,7 +1110,7 @@
             b.auth_yn as isUsed,
             b.sms_recv_yn as isRecvSMS,
             b.device_natv_id as nativeID,
-            b.device_sim_nm as deviceSimNm,
+            b.device_sim_nm as simSerialNo,
             b.device_acct as deviceAccount,
             b.rep_device_yn as isPrimary
         FROM TB_US_OUSERMBR a
