@@ -1138,10 +1138,9 @@ public class LoginServiceImpl implements LoginService {
 		chkUserAuthTkReqeust.setCommonRequest(commService.getSCCommonRequest(requestHeader));
 		chkUserAuthTkReqeust.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
-		// TODO. 휴면계정 유무 전달
-		chkDupRes.getUserMbr().getIsDormant();
+		chkUserAuthTkReqeust.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
 		CheckUserAuthTokenResponse chkUserAuthTkResponse = this.userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
-		if (StringUtils.isBlank(chkUserAuthTkResponse.getUserKey())){ // 유효성 체크 실패
+		if (chkUserAuthTkResponse == null || StringUtils.isBlank(chkUserAuthTkResponse.getUserAuthToken())){ // 유효성 체크 실패
 			boolean isValid = false;
 			if (StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_TSTORE)){
 
@@ -1190,7 +1189,6 @@ public class LoginServiceImpl implements LoginService {
 		searchDeviceListRequest.setIsMainDevice(MemberConstants.USE_Y);
 		try{
 			SearchDeviceListResponse searchDeviceListResponse = this.deviceSCI.searchDeviceList(searchDeviceListRequest);
-			deviceInfo.setIsPrimary(MemberConstants.USE_N);
 		}catch(StorePlatformException e){
 			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 				deviceInfo.setIsPrimary(MemberConstants.USE_Y);

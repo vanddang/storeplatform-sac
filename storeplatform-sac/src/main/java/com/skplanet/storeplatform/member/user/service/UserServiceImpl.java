@@ -532,6 +532,10 @@ public class UserServiceImpl implements UserService {
 			} else {
 				if (StringUtils.isNotBlank(loginUserRequest.getIpAddress())) {
 					userMbrLoginLog.setConnIp(loginUserRequest.getIpAddress());
+				}else{ //TODO. 아이디 회원 인증시 IP정보를 넘기지 않으면 요청한 mdn/deviceId 정보를 남긴다
+					if(tempDevice != null){
+						userMbrLoginLog.setConnIp(tempDevice.getMdn()==null?tempDevice.getDeviceID():tempDevice.getMdn());
+					}
 				}
 			}
 
@@ -852,6 +856,82 @@ public class UserServiceImpl implements UserService {
 		removeUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
 		return removeUserResponse;
+	}
+
+	/**
+	 * <pre>
+	 * 회원 정보를 delete하는 기능을 제공한다.
+	 * 정상회원가입후 휴대기기 등록 오류 발생시 롤백개념으로 사용한다.
+	 * </pre>
+	 *
+	 * @param deleteUserRequest 회원 탈퇴 요청 Value Object
+	 * @return DeleteUserResponse - 회원 탈퇴 응답 Value Object
+	 */
+	@Override
+	public DeleteUserResponse delete(DeleteUserRequest deleteUserRequest) {
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(Constant.SEARCH_TYPE_USER_KEY);
+		keySchUserKey.setKeyString(deleteUserRequest.getUserKey());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest srhExtUserRequest = new SearchExtentUserRequest();
+		srhExtUserRequest.setCommonRequest(deleteUserRequest.getCommonRequest());
+		srhExtUserRequest.setKeySearchList(keySearchList);
+		srhExtUserRequest.setUserInfoYn(Constant.TYPE_YN_Y);
+		srhExtUserRequest.setAgreementInfoYn(Constant.TYPE_YN_Y);
+		srhExtUserRequest.setMbrAuthInfoYn(Constant.TYPE_YN_Y);
+		srhExtUserRequest.setMbrLglAgentInfoYn(Constant.TYPE_YN_Y);
+		SearchExtentUserResponse srhExtUserResponse = this.searchExtentUser(srhExtUserRequest);
+
+		if(srhExtUserResponse != null){
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserKey(deleteUserRequest.getUserKey());
+			Integer row = 0;
+
+			if(srhExtUserResponse.getUserMbr() != null){
+				row = this.commonDAO.delete("User.removeUserMbr", userMbr); // tb_us_ousermbr
+				if (row <= 0) {
+					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+				}
+
+				row = this.commonDAO.delete("User.removeUserMbrPwd", userMbr); // tb_us_ousermbr_pwd
+				if (row <= 0) {
+					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+				}
+			}
+
+			if(srhExtUserResponse.getMbrClauseAgreeList() != null && srhExtUserResponse.getMbrClauseAgreeList().size() > 0){
+				row = this.commonDAO.delete("User.removeUserMbrClauseAgree", userMbr); // tb_us_ousermbr_clause_agree
+
+			}
+
+			if(srhExtUserResponse.getMbrMangItemPtcrList() != null && srhExtUserResponse.getMbrMangItemPtcrList().size() > 0){
+				row = this.commonDAO.delete("User.removeUserMbrMangItemPtcr", userMbr); // tb_us_ousermbr_mang_item_ptcr
+				if (row <= 0) {
+					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+				}
+			}
+
+			if(srhExtUserResponse.getMbrLglAgent() != null && StringUtils.equals(srhExtUserResponse.getMbrLglAgent().getIsParent(), Constant.TYPE_YN_Y)){
+				row = this.commonDAO.delete("User.removeUserMbrLglAgent", userMbr); // tb_us_ousermbr_lgl_agent
+				if (row <= 0) {
+					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+				}
+			}
+
+			if(srhExtUserResponse.getMbrAuth() != null && StringUtils.equals(srhExtUserResponse.getMbrAuth().getIsRealName(), Constant.TYPE_YN_Y)){
+				row = this.commonDAO.delete("User.removeUserMbrAuth", userMbr); // tb_us_ousermbr_auth
+				if (row <= 0) {
+					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+				}
+			}
+		}
+
+		DeleteUserResponse deleteUserResponse = new DeleteUserResponse();
+		deleteUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+		return deleteUserResponse;
 	}
 
 	/**

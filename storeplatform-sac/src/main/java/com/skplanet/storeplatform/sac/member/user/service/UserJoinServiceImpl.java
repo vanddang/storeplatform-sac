@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -191,7 +192,17 @@ public class UserJoinServiceImpl implements UserJoinService {
         deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
         deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 단말부가정보
 
-        String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+		String deviceKey = null;
+		try{
+        	deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+		}catch(StorePlatformException e){
+			// 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
+			DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+			deleteUserRequest.setCommonRequest(mcc.getSCCommonRequest(sacHeader));
+			deleteUserRequest.setUserKey(createUserResponse.getUserKey());
+			userSCI.delete(deleteUserRequest);
+			throw e;
+		}
 
 		/**
 		 * 결과 세팅
@@ -607,12 +618,15 @@ public class UserJoinServiceImpl implements UserJoinService {
 		// 법정대리인 나이 유효성 체크.
 		MbrLglAgent mbrLglAgent = null;
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+
 			if (StringUtils.isBlank(req.getOwnBirth())) {
 				throw new StorePlatformException("SAC_MEM_0002", "ownBirth");
 			}
+
 			if (StringUtils.isBlank(req.getParentBirthDay())) {
 				throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
 			}
+
 			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
 		}
 
@@ -653,7 +667,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrLglAgent.setParentCI(req.getParentCi()); // 법정대리인 CI
 			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
 			mbrLglAgent.setParentRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 법정대리인 실명인증사이트 코드
-			if (StringUtils.equals(req.getParentIsDomestic(), "")) {
+			if (StringUtils.isBlank(req.getParentIsDomestic())) {
 				mbrLglAgent.setIsDomestic(MemberConstants.USE_Y); // 내외국인 여부
 			} else {
 				mbrLglAgent.setIsDomestic(req.getParentIsDomestic()); // 내외국인 여부
@@ -672,9 +686,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrPwd(mbrPwd);
 		// 사용자 가입요청
 		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
-			throw new StorePlatformException("SAC_MEM_0002", "userKey");
-		}
 
 		// 휴대기기 등록 요청
 		DeviceInfo deviceInfo = new DeviceInfo();
@@ -686,11 +697,17 @@ public class UserJoinServiceImpl implements UserJoinService {
 		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
-		String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
-
-
-		//TODO. 휴대기기 등록 실패시 userSCI.create 저장 정보 삭제
-
+		String deviceKey = null;
+		try{
+			deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+		}catch(StorePlatformException e){
+			// 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
+			DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+			deleteUserRequest.setCommonRequest(mcc.getSCCommonRequest(sacHeader));
+			deleteUserRequest.setUserKey(createUserResponse.getUserKey());
+			userSCI.delete(deleteUserRequest);
+			throw e;
+		}
 
 		CreateByIdSacRes response = new CreateByIdSacRes();
 		response.setUserKey(createUserResponse.getUserKey());
@@ -814,8 +831,17 @@ public class UserJoinServiceImpl implements UserJoinService {
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
 		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-
-		String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+		String deviceKey = null;
+		try{
+			deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+		}catch(StorePlatformException e){
+			// // 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
+			DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+			deleteUserRequest.setCommonRequest(mcc.getSCCommonRequest(sacHeader));
+			deleteUserRequest.setUserKey(createUserResponse.getUserKey());
+			userSCI.delete(deleteUserRequest);
+			throw e;
+		}
 
 		/**
 		 * 결과 세팅
