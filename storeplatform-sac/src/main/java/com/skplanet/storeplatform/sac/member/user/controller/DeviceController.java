@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 import com.skplanet.storeplatform.sac.member.user.service.UserService;
 import org.slf4j.Logger;
@@ -172,10 +173,16 @@ public class DeviceController {
 		}
 
 		// deviceIdType = msisdn인경우 mdn필드에 셋팅
-		if(StringUtils.isNotBlank(req.getDeviceInfo().getDeviceIdType())
-				&& StringUtils.equals(req.getDeviceInfo().getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)){
-			req.getDeviceInfo().setMdn(req.getDeviceInfo().getDeviceId());
-			req.getDeviceInfo().setDeviceId("");
+		if(StringUtils.isNotBlank(req.getDeviceInfo().getDeviceIdType())) {
+			if(StringUtils.equals(req.getDeviceInfo().getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+				req.getDeviceInfo().setMdn(req.getDeviceInfo().getDeviceId());
+				req.getDeviceInfo().setDeviceId("");
+			}
+		}else{
+			if(!ValidationCheckUtils.isDeviceId(req.getDeviceInfo().getDeviceId())){
+				req.getDeviceInfo().setMdn(req.getDeviceInfo().getDeviceId());
+				req.getDeviceInfo().setDeviceId("");
+			}
 		}
 
 		ModifyDeviceRes res = this.deviceService.modDevice(requestHeader, req);
