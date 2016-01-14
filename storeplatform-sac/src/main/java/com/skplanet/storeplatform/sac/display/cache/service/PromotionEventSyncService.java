@@ -9,7 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
+import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
+
+import java.util.Set;
 
 /**
  * <p>
@@ -29,4 +32,10 @@ public interface PromotionEventSyncService {
     SyncPromotionEventResult syncPromotionEvent(String tenantId, String key, boolean forceUpdate);
 
     SyncPromotionEventResult syncPromotionEvent(String tenantId, String key);
+
+    // 새로 작성한 프로모션 코드
+    Thread syncPromotionInBackground(final String tenantId, final String promTypeValue);
+    PromotionEvent syncPromotion(String tenantId, String promTypeValue);
+    // tenantId 기준 전체 프로모션 데이터를 동기화 하므로 자주 사용되지 않도록 주의
+    Set<PromotionEvent> syncPromotion(String tenantId);
 }

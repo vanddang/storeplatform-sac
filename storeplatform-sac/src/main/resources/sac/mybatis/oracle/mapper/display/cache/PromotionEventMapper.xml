@@ -7,11 +7,10 @@
             TENANT_ID,
             PROM_TYPE_CD,
             PROM_TYPE_VALUE,
-            to_char(START_DT,'yyyyMMddHH24miss')||'_'||to_char(END_DT,'yyyyMMddHH24miss') as DATETIME_KEY,
             PROM_ID,
             ACML_METHOD_CD,
             ACML_LIMT,
-            TO_CHAR(ACML_DATE, 'yyyyMMddHH24miss') as ACML_DT,
+            ACML_DATE,
             RATE_GRD_1,
             RATE_GRD_2,
             RATE_GRD_3,
@@ -36,16 +35,13 @@
     <select id="getLivePromotionEventForUser" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent">
         SELECT * FROM (
             SELECT /* CachedExtraInfoManager.getLivePromotionEventForUser, 정희원/SKP, 2015-10-22 */
-                ROW_NUMBER() OVER (ORDER BY
-                  CASE WHEN TARGET_USER_KIND = #{targetUserAll} THEN '1' ELSE  NVL2(PU.USER_KEY, '1', '2') END,
-                  CASE WHEN AP.PART_PARENT_CLSF_CD = 'PD012302' THEN 'DP01160100' ELSE PROM_TYPE_CD END ) RN,
+                ROW_NUMBER() OVER (ORDER BY CASE WHEN AP.PART_PARENT_CLSF_CD = 'PD012302' THEN 'DP01160100' ELSE PROM_TYPE_CD END ) RN,
                 PP.TENANT_ID,
                 PP.PROM_TYPE_VALUE,
-                to_char(START_DT,'yyyyMMddHH24miss')||'_'||to_char(END_DT,'yyyyMMddHH24miss') as DATETIME_KEY,
                 PP.PROM_ID,
                 ACML_METHOD_CD,
                 ACML_LIMT,
-                TO_CHAR(ACML_DATE, 'yyyyMMddHH24miss') as ACML_DT,
+                ACML_DATE,
                 RATE_GRD_1,
                 RATE_GRD_2,
                 RATE_GRD_3,
@@ -81,5 +77,213 @@
         AND PROM_ID = #{promId}
         <if test="userKey != null">AND USER_KEY = #{userKey}</if>
     </select>
-    
+
+
+    <select id="selectForemostEvent" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent">
+        SELECT /* PromotionEventMapper.selectForemostEvent, 김희민/SKP, 2015-07-17 */
+            *
+        FROM (
+            SELECT
+                TENANT_ID,
+                PROM_TYPE_CD,
+                PROM_TYPE_VALUE,
+                PROM_ID,
+                ACML_METHOD_CD,
+                ACML_LIMT,
+                ACML_DATE,
+                RATE_GRD_1,
+                RATE_GRD_2,
+                RATE_GRD_3,
+                START_DT,
+                END_DT,
+                PROM_FORCE_CLOSE_CD,
+                PROM_FORCE_CLOSE_DT,
+                TARGET_USER_KIND,
+                PAY_METHOD_VDTY_DT,
+                UPD_DT,
+                ROW_NUMBER() OVER (ORDER BY START_DT) RANK
+            FROM TB_DP_PROM_POLICY
+            WHERE 1=1
+            AND TENANT_ID = #{tenantId}
+            AND PROM_TYPE_VALUE = #{promTypeValue}
+            AND SYSDATE &lt; END_DT
+            AND PROM_FORCE_CLOSE_CD IS NULL
+        )
+        WHERE RANK = 1
+    </select>
+
+    <select id="selectForemostEvents" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent">
+        SELECT /* PromotionEventMapper.selectForemostEvents, 김희민/SKP, 2015-07-17 */
+            *
+        FROM (
+            SELECT
+            TENANT_ID,
+            PROM_TYPE_CD,
+            PROM_TYPE_VALUE,
+            PROM_ID,
+            ACML_METHOD_CD,
+            ACML_LIMT,
+            ACML_DATE,
+            RATE_GRD_1,
+            RATE_GRD_2,
+            RATE_GRD_3,
+            START_DT,
+            END_DT,
+            PROM_FORCE_CLOSE_CD,
+            PROM_FORCE_CLOSE_DT,
+            TARGET_USER_KIND,
+            PAY_METHOD_VDTY_DT,
+            UPD_DT,
+            ROW_NUMBER() OVER (PARTITION BY PROM_TYPE_VALUE ORDER BY START_DT) RANK
+            FROM TB_DP_PROM_POLICY
+            WHERE 1=1
+            AND TENANT_ID = #{tenantId}
+            AND SYSDATE &lt; END_DT
+            AND PROM_FORCE_CLOSE_CD IS NULL
+            ORDER BY START_DT
+        )
+        WHERE RANK = 1
+    </select>
+
+    <insert id="insertEvent" parameterType="com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent">
+        INSERT INTO /* PromotionEventMapper.insertEvent, 김희민/SKP, 2015-07-17 */
+            TB_DP_PROM_POLICY
+        (
+            TENANT_ID
+            , START_DT
+            , END_DT
+            , PROM_TYPE_CD
+            , PROM_TYPE_VALUE
+            , PROM_ID
+            , PROM_TITLE
+            , ACML_METHOD_CD
+            , ACML_LIMT
+            , ACML_DATE
+            , RATE_GRD_1
+            , RATE_GRD_2
+            , RATE_GRD_3
+            , AMT_GRD_1
+            , AMT_GRD_2
+            , AMT_GRD_3
+            , REG_ID
+            , REG_DT
+            , UPD_ID
+            , UPD_DT
+            , PROM_ACML_LIMT
+            , PROM_FORCE_CLOSE_CD
+            , PROM_FORCE_CLOSE_DT
+            , EVENT_ISSU_CHRGPERS
+            , EVENT_ISSU_DEPT
+            , SETT_TARGET_YN
+            , DEVELOPER_TARGET_SETT_YN
+            , STORE_SALE_COGN_YN
+            , PROM_ACML_LIMT_LAST_CHECK_DATE
+            , PROM_ACML_NOW_AMT
+            , TARGET_USER_KIND
+            , PAY_METHOD_VDTY_DT
+            , TARGET_USER_FILE_NAME
+            , LINK_KEY_GAME_INFO_SEQ
+        )
+        VALUES
+        (
+            #{tenantId, jdbcType=VARCHAR}
+            , #{startDt, jdbcType=TIMESTAMP}
+            , #{endDt, jdbcType=TIMESTAMP}
+            , #{promTypeCd, jdbcType=VARCHAR}
+            , #{promTypeValue, jdbcType=VARCHAR}
+            , #{promId, jdbcType=NUMERIC}
+            , #{promTitle, jdbcType=VARCHAR}
+            , #{acmlMethodCd, jdbcType=VARCHAR}
+            , #{acmlLimt, jdbcType=NUMERIC}
+            , #{acmlDate, jdbcType=TIMESTAMP}
+            , #{rateGrd1, jdbcType=NUMERIC}
+            , #{rateGrd2, jdbcType=NUMERIC}
+            , #{rateGrd3, jdbcType=NUMERIC}
+            , #{amtGrd1, jdbcType=NUMERIC}
+            , #{amtGrd2, jdbcType=NUMERIC}
+            , #{amtGrd3, jdbcType=NUMERIC}
+            , #{regId, jdbcType=VARCHAR}
+            , #{regDt, jdbcType=TIMESTAMP}
+            , #{updId, jdbcType=VARCHAR}
+            , #{updDt, jdbcType=TIMESTAMP}
+            , #{promAcmlLimt, jdbcType=NUMERIC}
+            , #{promForceCloseCd, jdbcType=VARCHAR}
+            , #{promForceCloseDt, jdbcType=TIMESTAMP}
+            , #{eventIssuChrgpers, jdbcType=VARCHAR}
+            , #{eventIssuDept, jdbcType=VARCHAR}
+            , #{settTargetYn, jdbcType=VARCHAR}
+            , #{developerTargetSett, jdbcType=VARCHAR}
+            , #{storeSaleCognYn, jdbcType=VARCHAR}
+            , #{promAcmlLimtLastCheckDate, jdbcType=TIMESTAMP}
+            , #{promAcmlNowAmt, jdbcType=NUMERIC}
+            , #{targetUserKind, jdbcType=VARCHAR}
+            , #{payMethodVdtyDt, jdbcType=NUMERIC}
+            , #{targetUserFileName, jdbcType=VARCHAR}
+            , #{linkKeyGameInfoSeq, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <insert id="insertTargetUser" parameterType="com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionUser">
+        INSERT INTO /* PromotionEventMapper.insertTargetUser, 김희민/SKP, 2015-07-17 */
+            TB_DP_PROM_USER
+        (
+            PROM_ID
+            , USER_KEY
+            , DEVICE_KEY_LIST
+            , REG_ID
+            , REG_DT
+            , UPD_ID
+            , UPD_DT
+        )
+        VALUES
+        (
+            #{promId, jdbcType=VARCHAR}
+            , #{userKey, jdbcType=VARCHAR}
+            , #{deviceKeyList, jdbcType=VARCHAR}
+            , #{regId, jdbcType=VARCHAR}
+            , #{regDt, jdbcType=TIMESTAMP}
+            , #{updId, jdbcType=VARCHAR}
+            , #{updDt, jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <select id="selectPromotionTargetUserKeysPaginated" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT /* CachedExtraInfoManager.selectPromotionTargetUserKeysPaginated, 정희원/SKP, 2015-10-22 */
+            USER_KEY
+        FROM
+        (
+            SELECT
+                USER_KEY
+                , ROW_NUMBER() OVER (ORDER BY USER_KEY) AS RANK
+            FROM TB_DP_PROM_USER
+            WHERE 1=1
+            AND PROM_ID = #{promId}
+            <if test="userKey != null">AND USER_KEY &gt; #{startKey}</if>
+        )
+        WHERE 1=1
+        AND RANK &lt;= #{count}
+    </select>
+
+    <!-- 테스트에서 사용하기 위한 코드 실제 promId는 SQ_DP_PROM_ID 시퀀스 값을 이용해야 함 -->
+    <select id="maxPromId" resultType="java.lang.Integer">
+        SELECT /* PromotionEventMapper.maxPromId, 김희민/SKP, 2015-07-17 */
+            COALESCE(MAX(PROM_ID), 0)
+        FROM
+            TB_DP_PROM_POLICY
+    </select>
+
+    <delete id="deleteEvents" parameterType="java.util.Map">
+        DELETE /* PromotionEventMapper.deleteEvents, 김희민/SKP, 2015-07-17 */
+        FROM TB_DP_PROM_POLICY
+        WHERE 1=1
+        AND TENANT_ID = #{tenantId}
+        AND PROM_ID = #{promId}
+    </delete>
+
+    <delete id="deleteTargetUsers" parameterType="java.util.Map">
+        DELETE /* PromotionEventMapper.deleteTargetUsers, 김희민/SKP, 2015-07-17 */
+        FROM TB_DP_PROM_USER
+        WHERE 1=1
+        AND PROM_ID = #{promId}
+    </delete>
 </mapper>
