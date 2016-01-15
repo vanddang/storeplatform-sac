@@ -3794,7 +3794,7 @@ public class UserSCIController implements UserSCI {
 		if (modifyIdRequest.getUserKey() == null || modifyIdRequest.getUserId() == null
 				|| modifyIdRequest.getUserType() == null || modifyIdRequest.getUserAuthToken() == null
 				|| modifyIdRequest.getNewUserId() == null || modifyIdRequest.getNewUserType() == null
-				|| modifyIdRequest.getNewUserAuthToken() == null ) {
+				|| modifyIdRequest.getNewUserAuthToken() == null || modifyIdRequest.getNewUserEmail() ==  null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 		}
 
