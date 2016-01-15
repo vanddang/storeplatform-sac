@@ -157,9 +157,6 @@ public class UserServiceImpl implements UserService {
 		// ACTION 3-1. 사용자 회원 비밀번호 추가
 		MbrPwd mbrPwd = new MbrPwd();
 		mbrPwd.setMemberKey(generatedUserKey);
-		if(createUserRequest.getMbrPwd() != null && createUserRequest.getMbrPwd().getUserAuthToken() != null){
-			mbrPwd.setUserAuthToken(createUserRequest.getMbrPwd().getUserAuthToken());
-		}
 
 		// 사용자 패스워드 추가
 		row = (Integer) this.commonDAO.insert("User.insertPassword", mbrPwd);
