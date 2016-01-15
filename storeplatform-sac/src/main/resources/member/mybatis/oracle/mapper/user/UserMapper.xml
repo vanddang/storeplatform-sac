@@ -1820,19 +1820,23 @@
                 )                
          </if>
     </select>
-    
+
+    <!-- 심플 인증 -->
     <select id="simpleLogin" parameterType="simpleLoginRequest" resultType="simpleLoginResponse">
-        SELECT /* UserMapper.simpleLogin, 심플 인증, burkhan_rejoice, 2014-11-04 */
-               B.INSD_USERMBR_NO AS userKey,
-               B.INSD_DEVICE_ID AS deviceKey
-          FROM    tb_us_ousermbr a
-               LEFT JOIN
-                  tb_us_ousermbr_DEVICE b
-               ON  a.INSD_USERMBR_NO = b.INSD_USERMBR_NO
-         WHERE a.MBR_STATUS_MAIN_CD = 'US010201'
-           AND a.MBR_STATUS_SUB_CD = 'US010301'
-           AND b.AUTH_YN = 'Y'
-           AND b.DEVICE_ID = #{deviceID}
+        SELECT /* UserMapper.xml, simpleLogin, SAC(SC), 최진호, 2016-01-15 */
+            B.INSD_USERMBR_NO AS userKey,
+            B.INSD_DEVICE_ID AS deviceKey
+        FROM
+            TB_US_OUSERMBR a
+            LEFT JOIN
+                TB_US_OUSERMBR_DEVICE b
+                ON a.INSD_USERMBR_NO = b.INSD_USERMBR_NO
+        WHERE
+            a.MBR_STATUS_MAIN_CD = 'US010201'
+            AND a.MBR_STATUS_SUB_CD = 'US010301'
+            AND b.AUTH_YN = 'Y'
+            <if test="mdn != null">AND b.MDN = #{mdn}</if>
+            <if test="deviceID != null">AND b.DEVICE_ID = #{deviceID}</if>
     </select> 
     
     <!-- 회원가입여부 리스트 조회 -->
@@ -2362,6 +2366,5 @@
             INSD_USERMBR_NO = #{userKey}
             AND ACT_TK = #{userAuthToken}
     </update>
-
 
 </mapper>

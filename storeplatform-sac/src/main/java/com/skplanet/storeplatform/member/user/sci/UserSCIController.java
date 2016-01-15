@@ -2870,19 +2870,14 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (simpleLoginRequest.getCommonRequest().getTenantID() == null
-				|| simpleLoginRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
-		// 필수 파라미터 없음
-		if (simpleLoginRequest.getDeviceID() == null || simpleLoginRequest.getDeviceID().length() <= 0) {
+		// 필수 파라미터 없음 mdn과 deviceId 모두 유효하지 않으면
+		if ( (simpleLoginRequest.getDeviceID() == null || simpleLoginRequest.getDeviceID().length() <= 0)
+				&& (simpleLoginRequest.getMdn() == null || simpleLoginRequest.getMdn().length() <= 0)){
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 		}
 
 		try {
-			//
+
 			simpleLoginResponse = this.service.simpleLogin(simpleLoginRequest);
 
 		} catch (StorePlatformException ex) {

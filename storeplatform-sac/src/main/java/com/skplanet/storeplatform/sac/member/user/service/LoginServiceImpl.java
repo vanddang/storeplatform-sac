@@ -1329,7 +1329,11 @@ public class LoginServiceImpl implements LoginService {
 
 		simpleLoginRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 
-		simpleLoginRequest.setDeviceID(deviceId);
+		if (ValidationCheckUtils.isDeviceId(deviceId)) {
+			simpleLoginRequest.setDeviceID(deviceId);
+		} else {
+			simpleLoginRequest.setMdn(deviceId);
+		}
 		simpleLoginRequest.setConnIp(deviceId);
 
 		String svcVersion = requestHeader.getDeviceHeader().getSvc();
@@ -1351,9 +1355,8 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeSimpleByMdnRes res = new AuthorizeSimpleByMdnRes();
 		if (StringUtils.equals(MemberConstants.USE_Y, simpleLoginResponse.getIsLoginSuccess())) {
-			res.setDeviceKey(simpleLoginResponse.getDeviceKey());
 			res.setUserKey(simpleLoginResponse.getUserKey());
-			res.setUserAuthKey(this.tempUserAuthKey);
+			res.setDeviceKey(simpleLoginResponse.getDeviceKey());
 		}
 		res.setIsLoginSuccess(simpleLoginResponse.getIsLoginSuccess());
 

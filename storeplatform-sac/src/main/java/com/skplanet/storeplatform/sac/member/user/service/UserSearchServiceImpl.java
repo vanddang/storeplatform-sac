@@ -1191,18 +1191,18 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req,
 			DetailByDeviceIdSacRes response) {
 
-		/**
-		 * 검색조건 정보 setting.
-		 */
+		/** 검색조건 정보 setting. */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySchUserKey = new KeySearch();
-		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MDN);
+		} else {
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+		}
 		keySchUserKey.setKeyString(this.mcc.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회.
 		keySearchList.add(keySchUserKey);
 
-		/**
-		 * 회원 조회 연동.
-		 */
+		/** 회원 조회 연동. */
 		CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
 		chkDupReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		chkDupReq.setKeySearchList(keySearchList);
@@ -1214,31 +1214,23 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		}
 
-		/**
-		 * 사용자 기본 정보 조회.
-		 */
+		/** 사용자 기본 정보 조회. */
 		SearchUserResponse userInfo = this.getUserInfo(sacHeader, chkDupRes.getUserMbr().getUserKey());
 
-		/**
-		 * SC 회원의 등록된 휴대기기 상세정보를 조회 연동.
-		 */
+		/** SC 회원의 등록된 휴대기기 상세정보를 조회 연동. */
 		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 		searchDeviceRequest.setUserKey(userInfo.getUserKey()); // 회원 조회시 내려온 UserKey setting.
 		searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		searchDeviceRequest.setKeySearchList(keySearchList);
 		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
 
-		/**
-		 * 사용자 정보 setting.
-		 */
+		/** 사용자 정보 setting. */
 		response.setUserKey(userInfo.getUserKey());
 		response.setUserType(userInfo.getUserMbr().getUserType());
 		response.setUserId(userInfo.getUserMbr().getUserID());
 		response.setIsRealNameYn(userInfo.getUserMbr().getIsRealName());
 
-		/**
-		 * 실명인증정보 (이름, 생년월일) - 우선순위 (본인 실명인증 생년월일 > DB생년월일 > null)
-		 */
+		/** 실명인증정보 (이름, 생년월일) - 우선순위 (본인 실명인증 생년월일 > DB생년월일 > null). */
 		if (StringUtils.equals(userInfo.getUserMbr().getIsRealName(), MemberConstants.USE_Y)) {
 
 			response.setUserName(ObjectUtils.toString(userInfo.getMbrAuth().getName()));
@@ -1251,14 +1243,16 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		}
 
-		/**
-		 * 단말 정보 setting.
-		 */
+		/** 단말 정보 setting. */
 		response.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
-		response.setDeviceId(searchDeviceResponse.getUserMbrDevice().getDeviceID());
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+			response.setDeviceId(searchDeviceResponse.getUserMbrDevice().getMdn());
+		} else {
+			response.setDeviceId(searchDeviceResponse.getUserMbrDevice().getDeviceID());
+		}
 		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
-		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
+		/** 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN). */
 		Device cmDevice = this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		if (cmDevice != null) {
 			response.setGiftYn(cmDevice.getGiftSprtYn());
