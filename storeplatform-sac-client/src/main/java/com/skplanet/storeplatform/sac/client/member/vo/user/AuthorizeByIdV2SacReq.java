@@ -37,6 +37,11 @@ public class AuthorizeByIdV2SacReq extends CommonInfo implements Serializable {
 	private String userAuthToken;
 
 	/**
+	 * social아이디 회원 번호.
+	 */
+	private String socialUserNo;
+
+	/**
 	 * 기기 ID.
 	 */
 	@NotEmpty
@@ -66,6 +71,11 @@ public class AuthorizeByIdV2SacReq extends CommonInfo implements Serializable {
 	 * 접속 아이피.
 	 */
 	private String deviceIp;
+
+	/**
+	 * 사용자 이메일.
+	 */
+	private String userEmail = "";
 
 	/**
 	 * @return deviceId
@@ -200,5 +210,33 @@ public class AuthorizeByIdV2SacReq extends CommonInfo implements Serializable {
 	 */
 	public void setDeviceIp(String deviceIp) {
 		this.deviceIp = deviceIp;
+	}
+
+	/**
+	 * @return socialUserNo
+	 */
+	public String getSocialUserNo() {
+		return socialUserNo;
+	}
+
+	/**
+	 * @param socialUserNo String
+	 */
+	public void setSocialUserNo(String socialUserNo) {
+		this.socialUserNo = socialUserNo;
+	}
+
+	/**
+	 * @return userEmail
+	 */
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	/**
+	 * @param userEmail String
+	 */
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 }

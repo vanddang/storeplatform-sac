@@ -25,6 +25,11 @@ public class AuthorizeByMdnV3SacRes extends CommonInfo {
 	private String deviceKey = "";
 
     /**
+     * 사용자 상태코드.
+     */
+    private String userStatus = "";
+
+    /**
      * @return userKey
      */
     public String getUserKey() {
@@ -54,4 +59,18 @@ public class AuthorizeByMdnV3SacRes extends CommonInfo {
         this.deviceKey = deviceKey;
     }
 
+    /**
+     * @return userStatus
+     */
+    public String getUserStatus() {
+        return userStatus;
+    }
+
+    /**
+     * @param userStatus
+     *            String
+     */
+    public void setUserStatus(String userStatus) {
+        this.userStatus = userStatus;
+    }
 }

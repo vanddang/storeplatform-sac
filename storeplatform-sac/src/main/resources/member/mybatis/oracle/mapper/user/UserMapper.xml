@@ -1449,13 +1449,11 @@
                 (
                       insd_usermbr_no
                     , upd_dt
-                    <if test="userAuthToken != null">, act_tk</if>
-                ) 
+                )
         VALUES  
                 (
                       #{memberKey}
                     , SYSDATE
-                    <if test="userAuthToken != null">, #{userAuthToken}</if>
                 )
     </insert>
     

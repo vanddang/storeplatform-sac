@@ -612,6 +612,21 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
+		/*	TODO. userAuthToken/socialUserNo 유효성 체크 필요*/
+		boolean isValid = true; //TODO. 무조건 성공처리
+		if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
+
+		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+
+		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
+
+		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
+
+		}
+		if(!isValid){
+
+		}
+
 		// 법정대리인 나이 유효성 체크.
 		MbrLglAgent mbrLglAgent = null;
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
@@ -671,16 +686,23 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
-		// 사용자 인증 토큰 setting
-		MbrPwd mbrPwd = new MbrPwd();
-		mbrPwd.setUserAuthToken(req.getUserAuthToken());
-
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setUserMbr(userMbr);
 		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
 		createUserRequest.setMbrLglAgent(mbrLglAgent);
-		createUserRequest.setMbrPwd(mbrPwd);
+
+		// 부가속성 setting
+		if(StringUtils.isNotBlank(req.getSocialUserNo())){
+			List<MbrMangItemPtcr> mbrMangItemPtcrList = new ArrayList<MbrMangItemPtcr>();
+			MbrMangItemPtcr mbrMangItemPtcr = new MbrMangItemPtcr();
+			mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO);
+			mbrMangItemPtcr.setExtraProfileValue(req.getSocialUserNo());
+			mbrMangItemPtcrList.add(mbrMangItemPtcr);
+			createUserRequest.setMbrMangItemPtcrList(mbrMangItemPtcrList);
+		}
+
+
 		// 사용자 가입요청
 		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 

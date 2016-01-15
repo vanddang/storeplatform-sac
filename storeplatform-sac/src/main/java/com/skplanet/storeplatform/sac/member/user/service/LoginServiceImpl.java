@@ -838,8 +838,23 @@ public class LoginServiceImpl implements LoginService {
 
 			if(StringUtils.isNotBlank(svcMangNo)){
 				// 서비스관리번호로 휴대기기 정보 조회
-				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_SVC_MANG_NO, svcMangNo, null);
+				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_SVC_MANG_NO, svcMangNo, null);
 				if(deviceInfo != null){
+					List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+					KeySearch keySchUserKey = new KeySearch();
+					keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+					keySchUserKey.setKeyString(deviceInfo.getUserKey());
+					keySearchList.add(keySchUserKey);
+					SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+					CommonRequest commonRequest = new CommonRequest();
+					searchExtentUserRequest.setCommonRequest(commonRequest);
+					searchExtentUserRequest.setKeySearchList(keySearchList);
+					searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+					SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+					if(!StringUtils.equals(res.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)){
+						throw new StorePlatformException("SAC_MEM_1205");
+					}
+
 					DeviceInfo updateDeviceInfo = new DeviceInfo();
 					updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
 					updateDeviceInfo.setDeviceId(req.getDeviceId());
@@ -910,14 +925,13 @@ public class LoginServiceImpl implements LoginService {
 			}
 		}
 
-
-
 		/* 로그인 성공이력 저장 */
 		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceIp(), null, null, "Y", deviceInfo.getDeviceKey());
 
 		AuthorizeByMdnV3SacRes res = new AuthorizeByMdnV3SacRes();
 		res.setUserKey(deviceInfo.getUserKey());
 		res.setDeviceKey(deviceInfo.getDeviceKey());
+		res.setUserStatus(MemberConstants.MAIN_STATUS_NORMAL);
 		return res;
 	}
 
@@ -1235,31 +1249,23 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
 		}
 
-		/*	userAuthToken 유효성 체크 */
-		CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
-		chkUserAuthTkReqeust.setCommonRequest(commService.getSCCommonRequest(requestHeader));
-		chkUserAuthTkReqeust.setUserKey(chkDupRes.getUserMbr().getUserKey());
-		chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
-		chkUserAuthTkReqeust.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
-		CheckUserAuthTokenResponse chkUserAuthTkResponse = this.userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
-		if (chkUserAuthTkResponse == null || StringUtils.isBlank(chkUserAuthTkResponse.getUserAuthToken())){ // 유효성 체크 실패
-			boolean isValid = false;
-			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
+		/*	TODO. userAuthToken/socialUserNo 유효성 체크 필요*/
+		boolean isValid = true; //TODO. 무조건 성공처리
+		if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
 
-			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 
-			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
+		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
 
-			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
+		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
 
-			}
+		}
 
-			if(!isValid){
-				// 로그인 실패이력 저장
-				this.regLoginHistory(requestHeader, req.getUserId(), null, "N", "N", req.getDeviceIp(), "N", null, "N", null);
-				res.setIsLoginSuccess(MemberConstants.USE_N);
-				return res;
-			}
+		if(!isValid){
+			// 로그인 실패이력 저장
+			this.regLoginHistory(requestHeader, req.getUserId(), null, "N", "N", req.getDeviceIp(), "N", null, "N", null);
+			res.setIsLoginSuccess(MemberConstants.USE_N);
+			return res;
 		}
 
 		/* 휴유회원 복구 */
@@ -1268,6 +1274,18 @@ public class LoginServiceImpl implements LoginService {
 			moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 			moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
 			this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+		}
+
+		/* 이메일 정보 업데이트 */
+		if(StringUtils.isNotBlank(req.getUserEmail()) && !StringUtils.equals(req.getUserEmail(), chkDupRes.getUserMbr().getUserEmail())){
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserKey(chkDupRes.getUserMbr().getUserKey());
+			userMbr.setUserEmail(req.getUserEmail());
+			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+			updateUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+			updateUserRequest.setUserMbr(userMbr);
+			UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
+			LOGGER.info("이메일 정보 변경 {} -> {}", chkDupRes.getUserMbr().getUserEmail(), req.getUserEmail());
 		}
 
 		/*	휴대기기 처리 */
@@ -1306,6 +1324,7 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		res.setDeviceKey(deviceKey);
 		res.setUserType(req.getUserType());
+		res.setUserStatus(MemberConstants.MAIN_STATUS_NORMAL);
 		res.setIsLoginSuccess(MemberConstants.USE_Y);
 		return res;
 	}
