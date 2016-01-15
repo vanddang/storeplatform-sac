@@ -37,6 +37,7 @@ public final class MemberConstants {
 
 	/** SAC회원 결과 코드. */
 	public static final String SAC_ERROR_NO_ONEID = "SAC_MEM_1302"; // OneID 회원이 아님
+    public static final String SAC_ERROR_NO_USERKEY = "SAC_MEM_0003"; // 회원키 없음
 
 	/** EC IDP 에러 코드 문자열. */
 	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";
@@ -401,10 +402,6 @@ public final class MemberConstants {
     /** 회원 사용자 성별 코드 */
     public static final String SEX_TYPE_MALE = "M"; // 남자
     public static final String SEX_TYPE_FEMALE = "F"; // 여자
-
-    /** 회원 사용자 생일 코드 */
-    public static final String BIRTHDAY_TYPE_SOCAL = "1"; // 양력
-    public static final String BIRTHDAY_TYPE_LUCAL = "2"; // 음력
 
 	/**
 	 * 판매자 회원 상수들.

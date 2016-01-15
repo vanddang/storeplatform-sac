@@ -454,6 +454,7 @@ public class DeviceServiceImpl implements DeviceService {
                 mdnMap.put("01065260114", "KT65260114");
                 mdnMap.put("01065260115", "LGT65260115");
                 mdnMap.put("01065261244", "KT4486071544");
+                mdnMap.put("01032165294", "79330577777990179913");
 				mdnMap.put("01066786220", "7243371580");
 				mdnMap.put("01066786221", "7243371581");
 				mdnMap.put("01066786230", "7243371582");
