@@ -47,6 +47,7 @@ public class PurchaseConstants extends com.skplanet.storeplatform.purchase.const
 	public static final String ENV_SERVER_LEVEL_DEV = "dev"; // System 설정 서버 단계 property: 개발기
 	public static final String ENV_SERVER_LEVEL_LOCAL = "local"; // System 설정 서버 단계 property: 로컬
 
+	public static final int PURCHASE_PAGING_MAX_COUNT = 100; // 페이징 처리 기본 값(max:100)
 	/** TLOG ID */
 	public static final String TLOG_ID_PURCHASE_ORDER_REQUEST = "TL_SAC_PUR_0001"; // 구매인입
 	public static final String TLOG_ID_PURCHASE_ORDER_PRECHECK = "TL_SAC_PUR_0003"; // 구매 선결조건 체크
