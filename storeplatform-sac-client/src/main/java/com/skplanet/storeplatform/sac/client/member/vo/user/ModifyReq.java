@@ -34,11 +34,6 @@ public class ModifyReq extends CommonInfo {
 	 */
 	private String userBirthDay = "";
 
-	/**
-	 * 사용자 생일.
-	 */
-	private String userCalendar = "";
-
 	/** 사용자 업데이트 이메일. */
 	private String userUpdEmail;
 
@@ -100,21 +95,6 @@ public class ModifyReq extends CommonInfo {
 	 */
 	public void setUserBirthDay(String userBirthDay) {
 		this.userBirthDay = userBirthDay;
-	}
-
-	/**
-	 * @return String : userCalendar
-	 */
-	public String getUserCalendar() {
-		return this.userCalendar;
-	}
-
-	/**
-	 * @param userCalendar
-	 *            String : the userCalendar to set
-	 */
-	public void setUserCalendar(String userCalendar) {
-		this.userCalendar = userCalendar;
 	}
 
 	/**

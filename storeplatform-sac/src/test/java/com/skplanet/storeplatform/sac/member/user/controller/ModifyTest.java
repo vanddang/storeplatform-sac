@@ -87,7 +87,7 @@ public class ModifyTest {
 						reqJson.setIsRecvEmail("Y"); // 이메일 수신여부
 						reqJson.setUserSex("F"); // 성별 (Sync 대상 - IDP)
 						reqJson.setUserBirthDay("19000327"); // 사용자 생년월일 (Sync 대상 - IDP)
-						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
+//						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
 
 						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
@@ -125,7 +125,7 @@ public class ModifyTest {
 						reqJson.setIsRecvEmail("Y"); // 이메일 수신여부
 						reqJson.setUserSex("F"); // 성별 (Sync 대상 - IDP)
 						reqJson.setUserBirthDay("19000327"); // 사용자 생년월일 (Sync 대상 - IDP)
-						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
+//						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
 
 						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;

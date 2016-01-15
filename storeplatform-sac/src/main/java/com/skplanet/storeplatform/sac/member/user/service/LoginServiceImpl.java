@@ -1940,6 +1940,7 @@ public class LoginServiceImpl implements LoginService {
                                 updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
                                 updateDeviceInfo.setNativeId(req.getNativeId());
                                 updateDeviceInfo.setDeviceExtraInfoList(deviceInfo.getDeviceExtraInfoList());
+                                updateDeviceInfo.setSvcMangNum(deviceInfo.getSvcMangNum());
                                 deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
 
                                 // 기존 번호 탈퇴 처리
@@ -1958,7 +1959,7 @@ public class LoginServiceImpl implements LoginService {
                         /** 01-01-02. [device_Id] 로 존재하나 [svc_no]로 미 존재 시 탈퇴 후 재가입(사용자 변경) */
 						} catch (StorePlatformException e) {
 
-							if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+							if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SAC_ERROR_NO_USERKEY)) {
 								LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(),
                                         detailRes.getDeviceInfoList().get(0).getSvcMangNum(), marketRes.getDeviceInfo().getDeviceKey());
 
@@ -1988,7 +1989,7 @@ public class LoginServiceImpl implements LoginService {
 
 				} catch (StorePlatformException e) {
                     /** 01-02. [device_id] Tstore 회원 미 존재 시 Tstore 가입 */
-					if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+					if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SAC_ERROR_NO_USERKEY)) {
 
                         /** 01-02-01. [svc_no] 타사 회원키로 가입된 회원정보 조회 */
                         // svc_no 중복 device 조회
@@ -2007,6 +2008,7 @@ public class LoginServiceImpl implements LoginService {
                             updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
                             updateDeviceInfo.setNativeId(req.getNativeId());
                             updateDeviceInfo.setDeviceExtraInfoList(deviceInfo.getDeviceExtraInfoList());
+                            updateDeviceInfo.setSvcMangNum(deviceInfo.getSvcMangNum());
                             deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
 
                             // deviceId 변경 Tlog
@@ -2069,13 +2071,13 @@ public class LoginServiceImpl implements LoginService {
 				// 휴대기기 정보
 				DeviceInfo deviceInfo = new DeviceInfo();
 				deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-				deviceInfo.setMarketDeviceKey(detailRes.getUserInfo().getImMbrNo()); // 타사 회선의 고유 Key
-				deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+				deviceInfo.setMarketDeviceKey(detailRes.getDeviceInfoList().get(0).getSvcMangNum()); // 타사 회선의 고유 Key
+				deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getMdn());
 				deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
 
 				res.setTrxNo(req.getTrxNo());
 				res.setDeviceId(marketRes.getDeviceId());
-				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S02
+				res.setTenantId(MemberConstants.TENANT_ID_OLLEH_MARKET); // S02
 				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(userInfo);
@@ -2089,7 +2091,7 @@ public class LoginServiceImpl implements LoginService {
 
 				// 로그인 이력 저장
 				this.regLoginHistory(requestHeader, marketRes.getDeviceId(), null, "Y", "Y", marketRes.getDeviceId(),
-						"N", "", "N", null);
+						"N", "", "Y", detailRes.getDeviceInfoList().get(0).getDeviceKey());
 
             /** 02. 비회원 */
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) {
@@ -2109,14 +2111,14 @@ public class LoginServiceImpl implements LoginService {
 
 				} catch (StorePlatformException e) {
 
-					if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+					if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SAC_ERROR_NO_USERKEY)) {
 						throw e;
 					}
 				}
 
 				res.setTrxNo(req.getTrxNo());
 				res.setDeviceId(req.getDeviceId());
-				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S02
+				res.setTenantId(MemberConstants.TENANT_ID_OLLEH_MARKET); // S02
 				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
@@ -2129,7 +2131,7 @@ public class LoginServiceImpl implements LoginService {
 
 				res.setTrxNo(req.getTrxNo());
 				res.setDeviceId(req.getDeviceId());
-				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S02
+				res.setTenantId(MemberConstants.TENANT_ID_OLLEH_MARKET); // S02
 				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
