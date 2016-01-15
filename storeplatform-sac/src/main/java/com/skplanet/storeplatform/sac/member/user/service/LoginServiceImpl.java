@@ -1350,7 +1350,9 @@ public class LoginServiceImpl implements LoginService {
 
 		if (ValidationCheckUtils.isDeviceId(deviceId)) {
 			simpleLoginRequest.setDeviceID(deviceId);
-		} else
+		} else {
+			simpleLoginRequest.setMdn(deviceId);
+		}
 		simpleLoginRequest.setConnIp(deviceId);
 
 		String svcVersion = requestHeader.getDeviceHeader().getSvc();
