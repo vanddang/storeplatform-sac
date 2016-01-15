@@ -882,8 +882,6 @@ public class UserSearchServiceImpl implements UserSearchService {
         userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
-		userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
-		userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
 		userInfo.setIsDormant(schUserRes.getUserMbr().getIsDormant());
 
 		// 실명인증이 되어 있으면 실명인증 데이터가 내려간다.
@@ -1655,10 +1653,6 @@ public class UserSearchServiceImpl implements UserSearchService {
         userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
         userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
         userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
-        userInfo.setEntryStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getEntryStatusCode()));
-
-		userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
-		userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
 		userInfo.setIsDormant(schUserRes.getUserMbr().getIsDormant());
 
 		// 실명인증이 되어 있으면 실명인증 데이터가 내려간다.

@@ -1096,13 +1096,13 @@ public class UserSCITest {
 		// 응답 필수 > userSubStatus
 		assertNotNull(loginUserResponse.getUserSubStatus());
 		// 응답 필수 > loginFailCount
-		assertTrue(loginUserResponse.getLoginFailCount() >= 0);
+//		assertTrue(loginUserResponse.getLoginFailCount() >= 0);
 		// 응답 필수 > isLoginSuccess
 		assertNotNull(loginUserResponse.getIsLoginSuccess());
-		// 응답 필수 > loginStatusCode
-		assertNotNull(loginUserResponse.getLoginStatusCode());
-		// 응답 필수 > stopStatusCode
-		assertNotNull(loginUserResponse.getStopStatusCode());
+//		// 응답 필수 > loginStatusCode
+//		assertNotNull(loginUserResponse.getLoginStatusCode());
+//		// 응답 필수 > stopStatusCode
+//		assertNotNull(loginUserResponse.getStopStatusCode());
 
 		LOGGER.debug("### 받은 데이터 1: {}", loginUserResponse.toString());
 		LOGGER.debug("### 받은 데이터 2: {}", commonResponse.toString());
@@ -1169,13 +1169,13 @@ public class UserSCITest {
 		// 응답 필수 > userSubStatus
 		assertNotNull(loginUserResponse.getUserSubStatus());
 		// 응답 필수 > loginFailCount
-		assertTrue(loginUserResponse.getLoginFailCount() >= 0);
+//		assertTrue(loginUserResponse.getLoginFailCount() >= 0);
 		// 응답 필수 > isLoginSuccess
 		assertNotNull(loginUserResponse.getIsLoginSuccess());
 		// 응답 필수 > loginStatusCode
-		assertNotNull(loginUserResponse.getLoginStatusCode());
+//		assertNotNull(loginUserResponse.getLoginStatusCode());
 		// 응답 필수 > stopStatusCode
-		assertNotNull(loginUserResponse.getStopStatusCode());
+//		assertNotNull(loginUserResponse.getStopStatusCode());
 
 		LOGGER.debug("### 받은 데이터 1: {}", loginUserResponse.toString());
 		LOGGER.debug("### 받은 데이터 2: {}", commonResponse.toString());
@@ -1292,9 +1292,9 @@ public class UserSCITest {
 		// 응답 필수 > isLoginSuccess : N
 		assertNotNull(loginUserResponse.getIsLoginSuccess());
 		// 응답 필수 > loginStatusCode
-		assertNotNull(loginUserResponse.getLoginStatusCode());
+//		assertNotNull(loginUserResponse.getLoginStatusCode());
 		// 응답 필수 > stopStatusCode
-		assertNotNull(loginUserResponse.getStopStatusCode());
+//		assertNotNull(loginUserResponse.getStopStatusCode());
 
 		LOGGER.debug("### 받은 데이터 1: {}", loginUserResponse.toString());
 		LOGGER.debug("### 받은 데이터 2: {}", commonResponse.toString());
@@ -1356,9 +1356,9 @@ public class UserSCITest {
 		// 응답 필수 > isLoginSuccess : N
 		assertNotNull(loginUserResponse.getIsLoginSuccess());
 		// 응답 필수 > loginStatusCode
-		assertNotNull(loginUserResponse.getLoginStatusCode());
+//		assertNotNull(loginUserResponse.getLoginStatusCode());
 		// 응답 필수 > stopStatusCode
-		assertNotNull(loginUserResponse.getStopStatusCode());
+//		assertNotNull(loginUserResponse.getStopStatusCode());
 
 		LOGGER.debug("### 받은 데이터 1: {}", loginUserResponse.toString());
 		LOGGER.debug("### 받은 데이터 2: {}", commonResponse.toString());
@@ -1476,13 +1476,13 @@ public class UserSCITest {
 		// 응답 필수 > isLoginSuccess : N
 		assertNotNull(loginUserResponse.getIsLoginSuccess());
 		// 응답 필수 > loginStatusCode
-		assertNotNull(loginUserResponse.getLoginStatusCode());
+//		assertNotNull(loginUserResponse.getLoginStatusCode());
 		// 응답 필수 > stopStatusCode
-		assertNotNull(loginUserResponse.getStopStatusCode());
+//		assertNotNull(loginUserResponse.getStopStatusCode());
 
 		LOGGER.debug("### 받은 데이터 1: {}", loginUserResponse.toString());
 		LOGGER.debug("### 받은 데이터 2: {}", commonResponse.toString());
-		LOGGER.debug("### 받은 데이터 3: {}", loginUserResponse.getLoginFailCount());
+//		LOGGER.debug("### 받은 데이터 3: {}", loginUserResponse.getLoginFailCount());
 	}
 
 	/**

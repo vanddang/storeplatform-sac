@@ -105,10 +105,10 @@ public class UserMbr extends CommonInfo implements Serializable {
 	private String userBirthDay;
 
 	/** 사용자 국가 코드. */
-	private String userCountry;
+//	private String userCountry;
 
 	/** 사용자 언어 코드. */
-	private String userLanguage;
+//	private String userLanguage;
 
 	/** 등록일시. */
 	private String regDate; // ENTRY_DAY
@@ -138,7 +138,7 @@ public class UserMbr extends CommonInfo implements Serializable {
 	private String isMemberPoint; // INTG_PONT_YN
 
 	/** 원아이디 가입상태코드. */
-	private String entryStatusCode;
+//	private String entryStatusCode;
 
 	/** 사용자 업데이트 이메일. */
 	private String userUpdEmail;
@@ -543,44 +543,6 @@ public class UserMbr extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 사용자 국가 코드를 리턴한다.
-	 * 
-	 * @return userCountry - 사용자 국가 코드
-	 */
-	public String getUserCountry() {
-		return this.userCountry;
-	}
-
-	/**
-	 * 사용자 국가 코드를 설정한다.
-	 * 
-	 * @param userCountry
-	 *            사용자 국가 코드
-	 */
-	public void setUserCountry(String userCountry) {
-		this.userCountry = userCountry;
-	}
-
-	/**
-	 * 사용자 언어 코드를 리턴한다.
-	 * 
-	 * @return userLanguage - 사용자 언어 코드
-	 */
-	public String getUserLanguage() {
-		return this.userLanguage;
-	}
-
-	/**
-	 * 사용자 언어 코드를 설정한다.
-	 * 
-	 * @param userLanguage
-	 *            사용자 언어 코드
-	 */
-	public void setUserLanguage(String userLanguage) {
-		this.userLanguage = userLanguage;
-	}
-
-	/**
 	 * OneID 이용동의 사이트 정보를 리턴한다.
 	 * 
 	 * @return imSiteCode - OneID 이용동의 사이트 정보
@@ -777,21 +739,6 @@ public class UserMbr extends CommonInfo implements Serializable {
 	 */
 	public void setDeviceCount(String deviceCount) {
 		this.deviceCount = deviceCount;
-	}
-
-	/**
-	 * @return entryStatusCode
-	 */
-	public String getEntryStatusCode() {
-		return this.entryStatusCode;
-	}
-
-	/**
-	 * @param entryStatusCode
-	 *            String
-	 */
-	public void setEntryStatusCode(String entryStatusCode) {
-		this.entryStatusCode = entryStatusCode;
 	}
 
 	/**
