@@ -212,8 +212,6 @@
                  a.mbr_nm                    userName,
                  a.sex                       userSex,
                  a.birth                     userBirthDay,
-                 a.nation_cd                 userCountry,
-                 a.lang_cd                   userLanguage,
                  a.entry_day regDate,
                  TO_CHAR( b.upd_dt ,'YYYYMMDDHH24MISS')            updateDate
            FROM  tb_us_ousermbr a
@@ -240,8 +238,6 @@
                 mbr_nm                  userName,
                 sex                     userSex,
                 birth                   userBirthDay,
-                nation_cd               userCountry,
-                lang_cd                 userLanguage,
                 entry_day               regDate,
                 upd_email_addr          userUpdEmail
            FROM tb_us_ousermbr
@@ -630,8 +626,6 @@
                     ,email_recv_yn
                     ,realnm_auth_yn
                     ,lgl_agent_agree_yn
-                    ,nation_cd
-                    ,lang_cd
                     ,system_id
                     ,mbr_clas_cd
                     ,upd_email_addr
@@ -658,8 +652,6 @@
                 ,email_recv_yn
                 ,realnm_auth_yn
                 ,lgl_agent_agree_yn
-                ,nation_cd
-                ,lang_cd
                 ,system_id
                 ,mbr_clas_cd
                 ,upd_email_addr
@@ -918,8 +910,6 @@
                <if test="isRecvEmail != null">,email_recv_yn </if>
                <if test="isRealName != null">,realnm_auth_yn </if>
                <if test="isParent != null">,lgl_agent_agree_yn </if>
-               <if test="userCountry != null">,nation_cd </if>
-               <if test="userLanguage != null">,lang_cd </if>
                <if test="systemID != null">,system_id</if>
         ) VALUES (
             #{userKey},
@@ -937,8 +927,6 @@
             <if test="isRecvEmail != null">,#{isRecvEmail} </if>
             <if test="isRealName != null">,#{isRealName} </if>
             <if test="isParent != null">,#{isParent} </if>
-            <if test="userCountry != null">,#{userCountry} </if>
-            <if test="userLanguage != null">,#{userLanguage} </if>
             <if test="systemID != null">,#{systemID} </if>
         )
     </update>
@@ -958,8 +946,6 @@
                 <if test="isRecvEmail != null">,email_recv_yn = #{isRecvEmail}</if>
                 <if test="isRealName != null">,realnm_auth_yn = #{isRealName}</if>
                 <if test="isParent != null">,lgl_agent_agree_yn = #{isParent}</if>
-                <if test="userCountry != null">,nation_cd = #{userCountry}</if>
-                <if test="userLanguage != null">,lang_cd = #{userLanguage}</if>
                 <if test="systemID != null">,system_id = #{systemID}</if>
                 <if test="userType != null">,mbr_clas_cd = #{userType}</if>
                 <if test="userMainStatus != null">,mbr_status_main_cd = #{userMainStatus}</if>
@@ -1487,8 +1473,6 @@
                 mbr_nm                  userName,
                 sex                     userSex,
                 birth                   userBirthDay,
-                nation_cd               userCountry,
-                lang_cd                 userLanguage,
                 entry_day               regDate
           FROM  tb_us_ousermbr
          WHERE  email_addr = #{userEmail}
@@ -1972,9 +1956,7 @@
             ,email_recv_yn            as emailRecvYn         
             ,realnm_auth_yn           as realNmAuthYn        
             ,lgl_agent_agree_yn       as lglAgentAgreeYn     
-            ,nation_cd                as nationCd            
-            ,lang_cd                  as langCd              
-            ,system_id                as systemId            
+            ,system_id                as systemId
             ,bolter_case_cd           as bolterCaseCd        
             ,login_status_cd          as loginStatusCd       
             ,upd_email_addr           as updEmailAddr        
@@ -2008,8 +1990,6 @@
                     <if test="emailRecvYn != null"> ,email_recv_yn</if>
                     <if test="realNmAuthYn != null">,realnm_auth_yn</if>
                     <if test="lglAgentAgreeYn != null"> ,lgl_agent_agree_yn</if>
-                    <if test="nationCd != null">,nation_cd</if>
-                    <if test="langCd != null"> ,lang_cd</if>
                     <if test="systemId != null">,system_id</if>
                     <if test="bolterCaseCd != null">,bolter_case_cd</if>
                     <if test="loginStatusCd != null">,login_status_cd</if>
@@ -2038,8 +2018,6 @@
                     <if test="emailRecvYn != null">,#{emailRecvYn}</if>
                     <if test="realNmAuthYn != null">,#{realNmAuthYn}</if>
                     <if test="lglAgentAgreeYn != null">,#{lglAgentAgreeYn}</if>
-                    <if test="nationCd != null">,#{nationCd}</if>
-                    <if test="langCd != null">,#{langCd}</if>
                     <if test="systemId != null">,#{systemId}</if>
                     <if test="bolterCaseCd != null">,#{bolterCaseCd}</if>
                     <if test="loginStatusCd != null">,#{loginStatusCd}</if>
