@@ -17,5 +17,16 @@ import com.skplanet.storeplatform.sac.member.domain.UserMarketPin;
  */
 public interface UserMarketPinRepository {
 
+    /**
+     * 회원 Market PIN 등록
+     * @param userMarketPin 회원 Market PIN
+     */
+    void save(UserMarketPin userMarketPin);
+
+    /**
+     * 회원 Market PIN 조회
+     * @param insdUsermbrNo 회원 번호
+     * @return Market PIN 정보
+     */
     UserMarketPin findOne(String insdUsermbrNo);
 }

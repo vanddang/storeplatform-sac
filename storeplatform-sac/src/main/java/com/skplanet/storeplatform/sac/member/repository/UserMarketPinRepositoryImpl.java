@@ -28,6 +28,12 @@ public class UserMarketPinRepositoryImpl implements UserMarketPinRepository {
     @PersistenceContext(unitName = "puMbr")
     private EntityManager em;
 
+    public void save(UserMarketPin userMarketPin) {
+        UserMarketPin findUserMarketPin = em.find(UserMarketPin.class, userMarketPin.getInsdUsermbrNo());
+        if(findUserMarketPin != null) findUserMarketPin.setPinNo(userMarketPin.getPinNo());
+        else em.persist(userMarketPin);
+    }
+
     public UserMarketPin findOne(String insdUsermbrNo) {
         return em.find(UserMarketPin.class, insdUsermbrNo);
     }
