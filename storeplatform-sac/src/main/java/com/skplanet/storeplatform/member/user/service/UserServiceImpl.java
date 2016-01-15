@@ -584,14 +584,6 @@ public class UserServiceImpl implements UserService {
 				}
 			}
 
-			// 로그인 실패카운트 초기화
-			if (userMbrRetrieveUserMbrPwd.getFailCnt() > 0) {
-				MbrPwd mbrPwd = new MbrPwd();
-				//mbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
-				mbrPwd.setMemberKey(userMbrRetrieveUserMbrPwd.getUserKey());
-				this.commonDAO.update("User.updateLoginSuccess", mbrPwd);
-			}
-
 			loginUserResponse.setUserMainStatus(userMbrRetrieveUserMbrPwd.getUserMainStatus());
 			loginUserResponse.setUserSubStatus(userMbrRetrieveUserMbrPwd.getUserSubStatus());
 			loginUserResponse.setIsLoginSuccess(Constant.TYPE_YN_Y);
@@ -4315,15 +4307,20 @@ public class UserServiceImpl implements UserService {
 
 		ModifyIdResponse modifyIdResponse = new ModifyIdResponse();
 
-		Integer idRow = 0;
-		idRow = this.commonDAO.update("User.updateUserIdNType", modifyIdRequest);
-		if (idRow <= 0) {
+		int row = 0;
+
+		/** 회원 변경 이력 저장. */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserKey(modifyIdRequest.getUserKey());
+
+		row = commonDAO.update("User.insertUpdateStatusHistory", userMbr);
+		if (row <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
 
-		Integer tokenRow = 0;
-		tokenRow = this.commonDAO.update("User.updateUserAuthToken", modifyIdRequest);
-		if (tokenRow <= 0) {
+		/** 회원 정보 변경. */
+		row = this.commonDAO.update("User.updateUserIdNType", modifyIdRequest);
+		if (row <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
 

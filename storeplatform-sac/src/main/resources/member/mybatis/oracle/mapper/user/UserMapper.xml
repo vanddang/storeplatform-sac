@@ -2323,24 +2323,13 @@
         SET
             MBR_ID = #{newUserId}
             ,MBR_CLAS_CD = #{newUserType}
+            ,EMAIL_ADDR = #{newUserEmail}
             ,START_DT = SYSDATE
             ,UPD_DT = SYSDATE
         WHERE
             INSD_USERMBR_NO = #{userKey}
             AND MBR_ID = #{userId}
             AND MBR_CLAS_CD = #{userType}
-    </update>
-
-    <!-- 사용자 인증 토큰 변경 -->
-    <update id="updateUserAuthToken" parameterType="modifyIdRequest">
-        UPDATE  /* UserMapper.xml, updateUserAuthToken,  SAC(SC), 최진호, 2016-01-06 */
-            TB_US_OUSERMBR_PWD
-        SET
-            ACT_TK = #{newUserAuthToken}
-            ,UPD_DT = SYSDATE
-        WHERE
-            INSD_USERMBR_NO = #{userKey}
-            AND ACT_TK = #{userAuthToken}
     </update>
 
 </mapper>

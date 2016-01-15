@@ -1106,16 +1106,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 
         CommonRequest commonRequest = this.mcc.getSCCommonRequest(sacHeader);
 
-        /** 1. 사용자 타입에 따른 오류 */
-        if( !(StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)
-                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_FACEBOOK)
-                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_GOOGLE)
-                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_NAVER)) ){
+        /** 1. 요청 사용자 타입에 따른 오류. */
+        if ((StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_MOBILE))) {
             throw new StorePlatformException("SAC_MEM_1403");
         }
-        if( !(StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_FACEBOOK)
+        if( !(StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_NAVER)
                 || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_GOOGLE)
-                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_NAVER)) ){
+                || StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_FACEBOOK)) ){
             throw new StorePlatformException("SAC_MEM_1403");
         }
 
@@ -1134,10 +1131,14 @@ public class UserModifyServiceImpl implements UserModifyService {
             SearchExtentUserResponse searchUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
 
             /** 2-1. 변경 가능 상테(매인, 서브상태 정상인 회원)가 아니면 오류. */
-            if(!StringUtils.equalsIgnoreCase(searchUserRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_NORMAL)
-                    || !StringUtils.equalsIgnoreCase(searchUserRes.getUserMbr().getUserSubStatus(), MemberConstants.SUB_STATUS_NORMAL)){
+            if (!StringUtils.equalsIgnoreCase(searchUserRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_NORMAL)
+                    || !StringUtils.equalsIgnoreCase(searchUserRes.getUserMbr().getUserSubStatus(), MemberConstants.SUB_STATUS_NORMAL)) {
                 throw new StorePlatformException("SAC_MEM_2001", searchUserRes.getUserMbr().getUserMainStatus(),
                         searchUserRes.getUserMbr().getUserSubStatus());
+            }
+            /** 2-2. 조회된 아이디와 req의 아이디가 다르면 오류. */
+            if (!StringUtils.equals(searchUserRes.getUserMbr().getUserID(), req.getUserId())) {
+                throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
             }
         } catch (StorePlatformException spe) {
             /** 2-2. 아이디가 없거나 회원 정보 조회시 오류. */
@@ -1150,33 +1151,50 @@ public class UserModifyServiceImpl implements UserModifyService {
         }
 
         /** 3. userId, userAuthToken 로 인증시도 실패시 오류.  */
-        CheckUserAuthTokenRequest chkUserAuthTkReq = new CheckUserAuthTokenRequest();
-        chkUserAuthTkReq.setCommonRequest(commonRequest);
-        chkUserAuthTkReq.setUserKey(req.getUserKey());
-        chkUserAuthTkReq.setUserAuthToken(req.getUserAuthToken());
-        chkUserAuthTkReq.setIsDormant("N");
-        CheckUserAuthTokenResponse chkUserAuthTkRes = this.userSCI.checkUserAuthToken(chkUserAuthTkReq);
-        if (chkUserAuthTkRes.getUserKey()==null || chkUserAuthTkRes.getUserKey().length() <= 0) {
-            throw new StorePlatformException("SAC_MEM_1204");
+        /** 3-1. tstore Id 인증 시도 */
+        if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)) {
+            CheckUserAuthTokenRequest chkUserAuthTkReq = new CheckUserAuthTokenRequest();
+            chkUserAuthTkReq.setCommonRequest(commonRequest);
+            chkUserAuthTkReq.setUserKey(req.getUserKey());
+            chkUserAuthTkReq.setUserAuthToken(req.getUserAuthToken());
+            chkUserAuthTkReq.setIsDormant("N");
+            CheckUserAuthTokenResponse chkUserAuthTkRes = this.userSCI.checkUserAuthToken(chkUserAuthTkReq);
+            if (chkUserAuthTkRes.getUserKey() == null || chkUserAuthTkRes.getUserKey().length() <= 0) {
+                throw new StorePlatformException("SAC_MEM_1204");
+            }
+        // TODO. 소셜계정 아이디 userAuthToken/socialUserNo 유효성 체크 필요
+        /** 3-2. 네이버 Id 인증 시도 */
+        } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
+            // 네이버 연동 성공처리
+        /** 3-3. 구글 Id 인증 시도 */
+        } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
+            // 구글 연동 성공처리
+            throw new StorePlatformException("SAC_MEM_1302", req.getUserType());
+        /** 3-4. 페이스북 Id 인증 시도 */
+        } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
+            // 페이스북 연동 성공처리
+            throw new StorePlatformException("SAC_MEM_1302", req.getUserType());
         }
 
         /** 4. userAuthToken 인증이 되었으면 ID변경 */
         ModifyIdSacRes res = new ModifyIdSacRes();
 
         try {
-            // ID 변경 셋팅
-            ModifyIdRequest scReq = new ModifyIdRequest();
-            scReq.setCommonRequest(commonRequest);
-            scReq.setUserKey(req.getUserKey());
-            scReq.setUserId(req.getUserId());
-            scReq.setUserType(req.getUserType());
-            scReq.setUserAuthToken(req.getUserAuthToken());
-            scReq.setNewUserId(req.getNewUserId());
-            scReq.setNewUserType(req.getNewUserType());
-            scReq.setNewUserAuthToken(req.getNewUserAuthToken());
+            // SC req 셋팅
+            ModifyIdRequest modIdReq = new ModifyIdRequest();
+            modIdReq.setCommonRequest(commonRequest);
+            modIdReq.setUserKey(req.getUserKey());
+            modIdReq.setUserId(req.getUserId());
+            modIdReq.setUserType(req.getUserType());
+            modIdReq.setUserAuthToken(req.getUserAuthToken());
+            modIdReq.setNewUserId(req.getNewUserId());
+            modIdReq.setNewUserType(req.getNewUserType());
+            modIdReq.setNewUserAuthToken(req.getNewUserAuthToken());
+            modIdReq.setNewUserEmail(req.getNewUserEmail());
+            modIdReq.setNewSocialUserNo(req.getNewSocialUserNo());
 
-            // ID 변경 진행
-            ModifyIdResponse scRes = this.userSCI.modifyId(scReq);
+            // SC ID 변경
+            ModifyIdResponse scRes = this.userSCI.modifyId(modIdReq);
             res.setUserKey(scRes.getUserKey());
         } catch (StorePlatformException spe) {
             LOGGER.info("ID 변경 실패 [{}]", req.getUserKey());
