@@ -155,9 +155,9 @@ public class DeviceServiceImpl implements DeviceService {
 	@Resource(name = "memberRetireAmqpTemplate")
 	private AmqpTemplate memberRetireAmqpTemplate;
 
-	@Autowired
+	/*@Autowired
 	@Resource(name = "memberShoppingChangeKeyAmqpTemplate")
-	private AmqpTemplate memberShoppingChangeKeyAmqpTemplate;
+	private AmqpTemplate memberShoppingChangeKeyAmqpTemplate;*/
 
 	@Autowired
 	private MemberCommonInternalComponent mcic;
@@ -653,7 +653,8 @@ public class DeviceServiceImpl implements DeviceService {
 			/**
 			 * MQ 연동(shopping 사용자키 변경)
 			 */
-			ChangeMemberKeyAmqpSacReq changeMemberKeyAmqpSacReq = new ChangeMemberKeyAmqpSacReq();
+			// TODO. shopping 파트 구현될때까지 주석처리
+			/*ChangeMemberKeyAmqpSacReq changeMemberKeyAmqpSacReq = new ChangeMemberKeyAmqpSacReq();
 			try {
 				changeMemberKeyAmqpSacReq.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 				changeMemberKeyAmqpSacReq.setUserKey(userKey);
@@ -661,7 +662,7 @@ public class DeviceServiceImpl implements DeviceService {
 				this.memberShoppingChangeKeyAmqpTemplate.convertAndSend(changeMemberKeyAmqpSacReq);
 			} catch (AmqpException ex) {
 				LOGGER.error("MQ process fail {}", changeMemberKeyAmqpSacReq);
-			}
+			}*/
 		}
 
 		// 휴대기기 PIN 정보 이관 로직 추가 (2014-11-20)
