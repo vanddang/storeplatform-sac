@@ -537,4 +537,28 @@ public class LoginController {
 
 	}
 
+	/**
+	 * 심플 인증(간편 인증) v2. [신규규격].
+	 *
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeSimpleByMdnReq
+	 * @return AuthorizeByIdRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeSimpleByMdn/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeSimpleByMdnV2Res authorizeSimpleByMdnV2(SacRequestHeader requestHeader,
+														@Valid @RequestBody AuthorizeSimpleByMdnV2Req req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		AuthorizeSimpleByMdnV2Res res = this.loginService.authorizeSimpleByMdnV2(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
+
+	}
+
 }

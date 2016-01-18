@@ -5,9 +5,9 @@ import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonResponse;
 
 /**
- * Class 설명
+ * 심플 인증(간편 인증) v1, v2 요청 VO
  * 
- * Updated on : 2014. 11. 4. Updated by : Rejoice, Burkhan
+ * Updated on : 2016. 1. 18. Updated by : 최진호, 보고지티.
  */
 public class SimpleLoginResponse extends CommonInfo {
 
