@@ -9,23 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import com.skplanet.storeplatform.member.client.user.sci.vo.*;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceKeyListSacReq;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.AmqpException;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
@@ -36,6 +19,32 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
@@ -60,6 +69,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceKeyListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
@@ -77,6 +87,19 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 휴대기기 관련 인터페이스 구현체.
@@ -1391,6 +1414,7 @@ public class DeviceServiceImpl implements DeviceService {
                  * 모번호 조회 (989 일 경우만)
                  */
                 id.setDeviceId(this.commService.getOpmdMdnInfo(id.getDeviceId()));
+                isDeviceId = false;
             }
 
             // 회원정보조회
