@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="ExtraInfo">
+    
+    <!-- 트랜잭션처리등록 -->
+    <insert id="createExtraInfo" parameterType="ExtraInfo">
+        INSERT /* ExtraInfo.createExtraInfo, 구매 추가 정보 저장, 염동환/SK planet, 2016-01-15 */
+          INTO  tb_pr_prchs_extra_info
+        (
+           tenant_id
+         , prchs_id
+         , info_type_cd
+         , info_seq
+         , col_01
+         , col_02
+         , col_03
+         , col_04
+         , col_05
+         , text_01
+         , text_02
+         , reg_id
+         , reg_dt
+         , upd_id
+         , upd_dt
+        )
+        VALUES
+        (
+          #{tenantId}
+        , #{prchsId}
+        , #{infoTypeCd}
+        , #{infoSeq}
+        , #{col01 , jdbcType=VARCHAR}
+        , #{col02 , jdbcType=VARCHAR}
+        , #{col03 , jdbcType=VARCHAR}
+        , #{col04 , jdbcType=VARCHAR}
+        , #{col05 , jdbcType=VARCHAR}
+        , #{text01 , jdbcType=VARCHAR}
+        , #{text02 , jdbcType=VARCHAR}
+        , #{regId}
+        , SYSDATE
+        , #{regId}
+        , SYSDATE
+        )
+    </insert>
+    
+</mapper>

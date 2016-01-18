@@ -21,8 +21,13 @@ public class ImmediatelyUseStopScReq extends PurchaseCommonScReq {
 	private String paymentMtdCd; // 결제수단코드
 
 	private String statusCd;
-
 	private String userKey;
+
+    private String dwldStartDt; // 다운로드 시작 일시
+    private String dwldExprDt; // 다운로드 만료 일시
+
+    private String reasonCd; // 환불 사유 코드
+    private String reasonMsg; // 환불 사유 메세지
 
 	/**
 	 * @return the prchsId
@@ -146,4 +151,67 @@ public class ImmediatelyUseStopScReq extends PurchaseCommonScReq {
 		this.userKey = userKey;
 	}
 
+    /**
+     * 환불 사유 코드
+     * @return
+     */
+    public String getReasonCd() {
+        return reasonCd;
+    }
+
+    /**
+     * 환불 사유 코드 설정
+     * @param reasonCd
+     */
+    public void setReasonCd(String reasonCd) {
+        this.reasonCd = reasonCd;
+    }
+
+    /**
+     * 환불 사유 메세지
+     * @return
+     */
+    public String getReasonMsg() {
+        return reasonMsg;
+    }
+
+    /**
+     * 환불 사유 메세지 설정
+     * @param reasonMsg
+     */
+    public void setReasonMsg(String reasonMsg) {
+        this.reasonMsg = reasonMsg;
+    }
+
+    /**
+     * 다운로드 시작일시
+     * @return
+     */
+    public String getDwldStartDt() {
+        return dwldStartDt;
+    }
+
+    /**
+     * 다운로드 시작일시 설정
+     * @param dwldStartDt
+     */
+    public void setDwldStartDt(String dwldStartDt) {
+        this.dwldStartDt = dwldStartDt;
+    }
+
+    /**
+     * 다운로드 만료일시
+     * @return
+     */
+    public String getDwldExprDt() {
+        return dwldExprDt;
+    }
+
+    /**
+     * 다운로드 만료일시 설정
+     * @param dwldExprDt
+     */
+    public void setDwldExprDt(String dwldExprDt) {
+        this.dwldExprDt = dwldExprDt;
+    }
 }
