@@ -4615,22 +4615,41 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeSimpleByMdnV2Res authorizeSimpleByMdnV2(SacRequestHeader requestHeader, AuthorizeSimpleByMdnV2Req req) {
 
+		boolean isValid = false;
+
 		String deviceId = req.getDeviceId();
 
 		/** 1. 모번호 조회. */
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
 
-		/** 2. 소셜아이디 계정인 경우 연동을 통해서 인증 진행 */
-		//TODO. MDN으로 소셜아이디 유효성 체크
-		if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
-			// 네이버 mdn인증
-		} else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
-			// 구글 mdn인증
-		} else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
-			// 페이스북 mdn인증
+		String keyType = MemberConstants.KEY_TYPE_MDN;
+		if (ValidationCheckUtils.isDeviceId(req.getDeviceId())) {
+			keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
 		}
 
-		/** 3. 심플인증 위한 SC셋팅. */
+		/** 2. 회원 정보 조회. */
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, keyType, req.getDeviceId());
+		if (chkDupRes.getUserMbr() != null) {
+			isValid = true;
+			if (StringUtils.isNotBlank(req.getUserId())
+					&& !StringUtils.equals(req.getUserId(), chkDupRes.getUserMbr().getUserID())){
+				isValid = false;
+			}
+		}
+
+		/** 3. 소셜아이디 계정인 경우 연동을 통해서 인증 진행 */
+		//TODO. MDN으로 소셜아이디 유효성 체크
+		if (isValid) {
+			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
+				// 네이버 mdn인증
+			} else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
+				// 구글 mdn인증
+			} else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
+				// 페이스북 mdn인증
+			}
+		}
+
+		/** 4. 심플인증 위한 SC셋팅. */
 		SimpleLoginRequest simpleLoginRequest = new SimpleLoginRequest();
 
 		simpleLoginRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
@@ -4659,7 +4678,7 @@ public class LoginServiceImpl implements LoginService {
 			simpleLoginRequest.setDeviceOsVersion(os.substring(os.lastIndexOf("/") + 1, os.length()));
 		}
 
-		/** 4. SC 심플인증 처리 (인증후 로그인 이력 저장). */
+		/** 5. SC 심플인증 처리 (인증후 로그인 이력 저장). */
 		SimpleLoginResponse simpleLoginResponse = this.userSCI.simpleLogin(simpleLoginRequest);
 
 		AuthorizeSimpleByMdnV2Res res = new AuthorizeSimpleByMdnV2Res();
