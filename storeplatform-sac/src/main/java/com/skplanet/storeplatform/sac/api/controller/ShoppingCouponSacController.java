@@ -871,26 +871,6 @@ public class ShoppingCouponSacController {
 				case CT:
 					break;
 				case CP:
-					StringBuffer couponBuff = new StringBuffer();
-					couponBuff.append(couponReq.getDpCouponInfo().getProdId());
-					couponBuff.append(":");
-					couponBuff.append(couponReq.getDpCouponInfo().getCouponCode());
-					couponRes.setCouponId(couponBuff.toString());
-
-					StringBuffer itemBuff = new StringBuffer();
-					for (int i = 0; i < couponReq.getDpItemInfo().size(); i++) {
-						if (i == 0) {
-							itemBuff.append(couponReq.getDpItemInfo().get(i).getProdId());
-							itemBuff.append(":");
-							itemBuff.append(couponReq.getDpItemInfo().get(i).getItemCode());
-						} else {
-							itemBuff.append(",");
-							itemBuff.append(couponReq.getDpItemInfo().get(i).getProdId());
-							itemBuff.append(":");
-							itemBuff.append(couponReq.getDpItemInfo().get(i).getItemCode());
-						}
-					}
-					couponRes.setItemId(itemBuff.toString());
 
 					StringBuffer tenantIdBuff = new StringBuffer();
 					int tenantIdCount =0;
