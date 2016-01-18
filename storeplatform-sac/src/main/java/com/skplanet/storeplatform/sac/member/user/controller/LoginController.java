@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
@@ -47,6 +48,9 @@ public class LoginController {
 
 	@Autowired
 	private LoginService loginService;
+
+	@Autowired
+	private MemberCommonComponent commService;
 
 	/**
 	 * 모바일 전용 회원 인증 (MDN 인증).
@@ -106,6 +110,44 @@ public class LoginController {
         }
 
         AuthorizeByMdnRes res = this.loginService.authorizeByMdnV2(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
+	}
+
+	/**
+	 * 모바일 전용 회원 인증 v3.
+	 *
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeByMdnV3SacReq
+	 * @return AuthorizeByMdnV3SacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeByMdn/v3", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeByMdnV3SacRes authorizeByMdnV3(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnV3SacReq req) {
+
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SAC_MEM_0006");
+			}
+		});
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
+			throw new StorePlatformException("SAC_MEM_1509");
+		}
+
+		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+				&& StringUtils.isNotBlank(req.getMdn())){
+			throw new StorePlatformException("SAC_MEM_1514");
+		}
+
+		AuthorizeByMdnV3SacRes res = this.loginService.authorizeByMdnV3(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -175,6 +217,24 @@ public class LoginController {
 	public AuthorizeByIdV2SacRes authorizeByIdV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdV2SacReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
+			throw new StorePlatformException("SAC_MEM_1509");
+		}
+
+		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+				&& StringUtils.isNotBlank(req.getMdn())){
+			throw new StorePlatformException("SAC_MEM_1514");
+		}
+
+		if(StringUtils.isNotBlank(req.getMdn())){
+			if(StringUtils.isBlank(req.getNativeId())){
+				throw new StorePlatformException("SAC_MEM_0001", "nativeId");
+			}
+			if(StringUtils.isBlank(req.getSimSerialNo())){
+				throw new StorePlatformException("SAC_MEM_0001", "simSerialNo");
+			}
+		}
 
 		AuthorizeByIdV2SacRes res = this.loginService.authorizeByIdV2(requestHeader, req);
 

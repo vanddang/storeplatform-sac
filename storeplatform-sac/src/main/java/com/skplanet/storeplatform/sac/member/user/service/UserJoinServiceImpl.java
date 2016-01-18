@@ -612,8 +612,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
-		/*	TODO. userAuthToken/socialUserNo 유효성 체크 필요*/
+		/*	TODO. userAuthToken 유효성 체크 필요*/
 		boolean isValid = true; //TODO. 무조건 성공처리
+		String socialUserNo = null; // TODO. Server to Server 연동후 저장 필요!
 		if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
 
 		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
@@ -693,11 +694,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrLglAgent(mbrLglAgent);
 
 		// 부가속성 setting
-		if(StringUtils.isNotBlank(req.getSocialUserNo())){
+		if(StringUtils.isNotBlank(socialUserNo)){
 			List<MbrMangItemPtcr> mbrMangItemPtcrList = new ArrayList<MbrMangItemPtcr>();
 			MbrMangItemPtcr mbrMangItemPtcr = new MbrMangItemPtcr();
 			mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO);
-			mbrMangItemPtcr.setExtraProfileValue(req.getSocialUserNo());
+			mbrMangItemPtcr.setExtraProfileValue(socialUserNo);
 			mbrMangItemPtcrList.add(mbrMangItemPtcr);
 			createUserRequest.setMbrMangItemPtcrList(mbrMangItemPtcrList);
 		}
