@@ -8,14 +8,14 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class AppApk {
     private String packageName;
-    private String apkSignedHash;
+    private String apkSignedKeyHash;
 
     public AppApk() {
     }
 
-    public AppApk(String packageName, String apkSignedHash) {
+    public AppApk(String packageName, String apkSignedKeyHash) {
         this.packageName = packageName;
-        this.apkSignedHash = apkSignedHash;
+        this.apkSignedKeyHash = apkSignedKeyHash;
     }
 
 
@@ -27,11 +27,11 @@ public class AppApk {
         this.packageName = packageName;
     }
 
-    public String getApkSignedHash() {
-        return apkSignedHash;
+    public String getApkSignedKeyHash() {
+        return apkSignedKeyHash;
     }
 
-    public void setApkSignedHash(String apkSignedHash) {
-        this.apkSignedHash = apkSignedHash;
+    public void setApkSignedKeyHash(String apkSignedKeyHash) {
+        this.apkSignedKeyHash = apkSignedKeyHash;
     }
 }
