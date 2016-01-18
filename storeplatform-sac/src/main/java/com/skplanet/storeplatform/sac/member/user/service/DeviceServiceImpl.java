@@ -1382,90 +1382,71 @@ public class DeviceServiceImpl implements DeviceService {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 
-		/**
-		 * 모번호 조회 (989 일 경우만)
-		 */
-		if (req.getDeviceIdList() != null) {
-			List<RemoveDeviceListSacReq> deviceIdList = new ArrayList<RemoveDeviceListSacReq>();
-			for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
-				String opmdMdn = this.commService.getOpmdMdnInfo(id.getDeviceId());
-
-				RemoveDeviceListSacReq deviceId = new RemoveDeviceListSacReq();
-				deviceId.setDeviceId(opmdMdn);
-
-				deviceIdList.add(deviceId);
-
-			}
-			req.setDeviceIdList(deviceIdList);
-		}
-
-		/* SC 회원 정보 여부 */
 		List<String> removeKeyList = new ArrayList<String>();
 		for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
+            boolean isDeviceId = true;
 
-			UserInfo userInfo = this.commService.getUserBaseInfo("mdn", id.getDeviceId(), requestHeader);
-			if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
+            if(!ValidationCheckUtils.isDeviceId(id.getDeviceId())){
+                /**
+                 * 모번호 조회 (989 일 경우만)
+                 */
+                id.setDeviceId(this.commService.getOpmdMdnInfo(id.getDeviceId()));
+            }
+
+            // 회원정보조회
+            DetailReq detailReq = new DetailReq();
+            detailReq.setDeviceId(id.getDeviceId());
+            SearchExtentReq searchExtent = new SearchExtentReq();
+            searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+            searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+            detailReq.setSearchExtent(searchExtent);
+
+            DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+			if (StringUtils.equals(detailRes.getUserInfo().getIsDormant(), MemberConstants.USE_Y)) {
 				throw new StorePlatformException("SAC_MEM_0006");
 			}
 
-			/* 휴대기기 조회 */
-			DeviceInfo deviceInfo = null;
-			String isPrimary = "";
-			String deviceKey = "";
-
-			deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN, id.getDeviceId(),
-					req.getUserKey());
-			if (deviceInfo == null) {
+			if (detailRes.getDeviceInfoList() == null &&
+                    detailRes.getDeviceInfoList().size() <= 0) {
 				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 			}
-
-			isPrimary = deviceInfo.getIsPrimary();
-			deviceKey = deviceInfo.getDeviceKey();
 
 			/* 삭제 가능여부 판단 */
-            Integer deviceCount = Integer.parseInt(StringUtils.isNotEmpty(userInfo.getDeviceCount()) ? userInfo.getDeviceCount() : "0");
+            Integer deviceCount = Integer.parseInt(StringUtils.isNotEmpty(detailRes.getUserInfo().getDeviceCount()) ? detailRes.getUserInfo().getDeviceCount() : "0");
 
-            if ((StringUtil.isNotEmpty(deviceInfo.getSvcMangNum())
-					|| userInfo.getUserType().equals(MemberConstants.USER_TYPE_IDPID))) { // 통합/IDP 회원
-
-				/* 단말 1개이상 보유이고, 삭제할 단말이 대표기기인 경우 에러 */
-				if (deviceCount > 1 && isPrimary.equals(MemberConstants.USE_Y)) {
-					throw new StorePlatformException("SAC_MEM_1510");
-				}
-
-			} else if (userInfo.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+			if (detailRes.getUserInfo().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
 				/* 모바일회원 단말삭제 불가 */
 				throw new StorePlatformException("SAC_MEM_1511");
-			}
+			}else {
+                /* 단말 1개이상 보유이고, 삭제할 단말이 대표기기인 경우 에러 */
+                String isPrimary = detailRes.getDeviceInfoList().get(0).getIsPrimary();
+                if (deviceCount > 1 && isPrimary.equals(MemberConstants.USE_Y)) {
+                    throw new StorePlatformException("SAC_MEM_1510");
+                }
+            }
 
-			removeKeyList.add(deviceKey);
-		}
+            /* MQ 연동 : SC휴대기기 삭제를 하면 정보조회 할수 없어서 미리 처리함. */
+            RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
 
-		/* MQ 연동 : SC휴대기기 삭제를 하면 정보조회 할수 없어서 미리 처리함. */
-		for (String key : removeKeyList) {
+            try {
+                mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+                mqInfo.setUserKey(detailRes.getUserKey());
+                mqInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+                if(isDeviceId){
+                    mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+                }else {
+                    mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getMdn());
+                }
+                mqInfo.setSvcMangNo(detailRes.getDeviceInfoList().get(0).getSvcMangNum());
+                mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
 
-			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, key,
-					req.getUserKey());
-			if (deviceInfo == null) {
-				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
-			}
+                this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
+            } catch (AmqpException ex) {
+                LOGGER.info("MQ process fail {}", mqInfo);
+            }
 
-			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
-
-			try {
-				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-				mqInfo.setUserKey(deviceInfo.getUserKey());
-				mqInfo.setDeviceKey(deviceInfo.getDeviceKey());
-				mqInfo.setDeviceId(deviceInfo.getDeviceId());
-				mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
-				mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
-
-				this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
-			} catch (AmqpException ex) {
-				LOGGER.info("MQ process fail {}", mqInfo);
-
-			}
-
+			removeKeyList.add(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 		}
 
 		/* SC 휴대기기 삭제요청 */
@@ -1795,79 +1776,69 @@ public class DeviceServiceImpl implements DeviceService {
         CommonRequest commonRequest = new CommonRequest();
         commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 
-		/* SC 회원 정보 여부 */
         List<String> removeKeyList = new ArrayList<String>();
+        String isDeletePrimary = MemberConstants.USE_N;
         for (RemoveDeviceKeyListSacReq deviceKeyList : req.getDeviceKeyList()) {
 
-            UserInfo userInfo = this.commService.getUserBaseInfo("deviceKey", deviceKeyList.getDeviceKey(), requestHeader);
-            if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
+            // 회원정보조회
+            DetailReq detailReq = new DetailReq();
+            detailReq.setDeviceKey(deviceKeyList.getDeviceKey());
+            SearchExtentReq searchExtent = new SearchExtentReq();
+            searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+            searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+            detailReq.setSearchExtent(searchExtent);
+
+            DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+            if (StringUtils.equals(detailRes.getUserInfo().getIsDormant(), MemberConstants.USE_Y)) {
                 throw new StorePlatformException("SAC_MEM_0006");
             }
 
-			/* 휴대기기 조회 */
-            DeviceInfo deviceInfo = null;
-            String isPrimary = "";
-            String deviceKey = "";
-
-            deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, deviceKeyList.getDeviceKey(),
-                    req.getUserKey());
-            if (deviceInfo == null) {
+            if (detailRes.getDeviceInfoList() == null &&
+                    detailRes.getDeviceInfoList().size() <= 0) {
                 throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
             }
 
-            isPrimary = deviceInfo.getIsPrimary();
-            deviceKey = deviceInfo.getDeviceKey();
-
-			/* 삭제 가능여부 판단 */
-            Integer deviceCount = Integer.parseInt(StringUtils.isNotEmpty(userInfo.getDeviceCount()) ? userInfo.getDeviceCount() : "0");
-
-            if ((StringUtil.isNotEmpty(deviceInfo.getSvcMangNum())
-                    || userInfo.getUserType().equals(MemberConstants.USER_TYPE_IDPID))) { // 통합/IDP 회원
-
-				/* 단말 1개이상 보유이고, 삭제할 단말이 대표기기인 경우 에러 */
-                if (deviceCount > 1 && isPrimary.equals(MemberConstants.USE_Y)) {
-                    throw new StorePlatformException("SAC_MEM_1510");
-                }
-
-            } else if (userInfo.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+            if (detailRes.getUserInfo().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
 				/* 모바일회원 단말삭제 불가 */
                 throw new StorePlatformException("SAC_MEM_1511");
+            }else {
+                /* 삭제할 단말이 대표기기 여부 - 대표단말 삭제 처리 시 last_login_dt 최신인 단말로 대표기기 설정 함 */
+                String isPrimary = detailRes.getDeviceInfoList().get(0).getIsPrimary();
+                if (isPrimary.equals(MemberConstants.USE_Y)) {
+                    LOGGER.info("{} 대표단말 삭제 처리 : {}", detailRes.getUserKey(), detailRes.getDeviceInfoList().get(0).getDeviceKey());
+                    isDeletePrimary = MemberConstants.USE_Y;
+                }
             }
 
-            removeKeyList.add(deviceKey);
-        }
-
-		/* MQ 연동 : SC휴대기기 삭제를 하면 정보조회 할수 없어서 미리 처리함. */
-        for (String key : removeKeyList) {
-
-            DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, key,
-                    req.getUserKey());
-            if (deviceInfo == null) {
-                throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
-            }
-
+            /* MQ 연동 : SC휴대기기 삭제를 하면 정보조회 할수 없어서 미리 처리함. */
             RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
 
             try {
                 mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-                mqInfo.setUserKey(deviceInfo.getUserKey());
-                mqInfo.setDeviceKey(deviceInfo.getDeviceKey());
-                mqInfo.setDeviceId(deviceInfo.getDeviceId());
-                mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
+                mqInfo.setUserKey(detailRes.getUserKey());
+                mqInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+                if(StringUtils.isNotEmpty(detailRes.getDeviceInfoList().get(0).getMdn())){
+                    mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getMdn());
+                }else {
+                    mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+                }
+                mqInfo.setSvcMangNo(detailRes.getDeviceInfoList().get(0).getSvcMangNum());
                 mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
 
                 this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
             } catch (AmqpException ex) {
                 LOGGER.info("MQ process fail {}", mqInfo);
-
             }
 
+            removeKeyList.add(detailRes.getDeviceInfoList().get(0).getDeviceKey());
         }
 
 		/* SC 휴대기기 삭제요청 */
         RemoveDeviceRequest removeDeviceRequest = new RemoveDeviceRequest();
         removeDeviceRequest.setCommonRequest(commonRequest);
         removeDeviceRequest.setUserKey(req.getUserKey());
+        removeDeviceRequest.setIsDeletePrimary(isDeletePrimary);
         removeDeviceRequest.setDeviceKey(removeKeyList);
 
         RemoveDeviceResponse removeDeviceResponse = this.deviceSCI.removeDevice(removeDeviceRequest);
