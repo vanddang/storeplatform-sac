@@ -2842,7 +2842,8 @@ public class UserSCIController implements UserSCI {
 
 	/**
 	 * <pre>
-	 * 심플 인증(간편인증).
+	 * 심플 인증(간편 인증)v1
+	 *  - deviceId를 이용하여 DB조회 인증후 로그인이력 저장.
 	 * </pre>
 	 * 
 	 * @param simpleLoginRequest
@@ -2851,9 +2852,9 @@ public class UserSCIController implements UserSCI {
 	 */
 	@Override
 	public SimpleLoginResponse simpleLogin(SimpleLoginRequest simpleLoginRequest) {
-		LOGGER.debug("\n\n\n\n\n");
-		LOGGER.debug("==================================================================================");
-		LOGGER.debug("사용자 컨트롤러 - 회원 부가속성 정보 조회");
+
+		LOGGER.debug("\n\n\n\n\n==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - 심플 인증(간편 인증) v1");
 		LOGGER.debug("==================================================================================\n\n\n\n\n");
 
 		LOGGER.debug("### 받은 데이터 simpleLoginRequest : {}", simpleLoginRequest);

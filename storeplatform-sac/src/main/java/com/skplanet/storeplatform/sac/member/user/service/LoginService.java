@@ -210,4 +210,13 @@ public interface LoginService {
 	 */
 	public AuthorizeByPwdSacRes authorizeByPassword(SacRequestHeader requestHeader, AuthorizeByPwdSacReq req);
 
+	/**
+	 * 심플인즌 (간편인증) v2 [OneStore 단말을 위한 신규규격].
+	 *
+	 * @param requestHeader SacRequestHeader
+	 * @param req           AuthorizeSimpleByMdnV2Req
+	 * @return AuthorizeSimpleByMdnV2Res
+	 */
+	public AuthorizeSimpleByMdnV2Res authorizeSimpleByMdnV2(SacRequestHeader requestHeader, AuthorizeSimpleByMdnV2Req req);
+
 }

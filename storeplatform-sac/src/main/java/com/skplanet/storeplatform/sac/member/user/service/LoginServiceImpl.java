@@ -1331,18 +1331,19 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# executeAuthorizeForAutoUpdate
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# authorizeSimpleByMdn
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, com.skplanet
-	 * .storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq)
+	 * .storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq)
 	 */
 	@Override
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req) {
 
 		String deviceId = req.getDeviceId();
 
-		/* 모번호 조회 */
+		/** 1. 모번호 조회. */
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
 
+		/** 2. 심플인증 위한 SC셋팅. */
 		SimpleLoginRequest simpleLoginRequest = new SimpleLoginRequest();
 
 		simpleLoginRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
@@ -1369,6 +1370,7 @@ public class LoginServiceImpl implements LoginService {
 			simpleLoginRequest.setDeviceOsVersion(os.substring(os.lastIndexOf("/") + 1, os.length()));
 		}
 
+		/** 3. SC 심플인증 처리 (인증후 로그인 이력 저장). */
 		SimpleLoginResponse simpleLoginResponse = this.userSCI.simpleLogin(simpleLoginRequest);
 
 		AuthorizeSimpleByMdnRes res = new AuthorizeSimpleByMdnRes();
@@ -4604,6 +4606,74 @@ public class LoginServiceImpl implements LoginService {
 			res.setIsLoginSuccess("N");
 
 		}
+
+		return res;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeSimpleByMdnV2
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, com.skplanet
+	 * .storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnV2Req)
+	 */
+	@Override
+	public AuthorizeSimpleByMdnV2Res authorizeSimpleByMdnV2(SacRequestHeader requestHeader, AuthorizeSimpleByMdnV2Req req) {
+
+		String deviceId = req.getDeviceId();
+
+		/** 1. 모번호 조회. */
+		deviceId = this.commService.getOpmdMdnInfo(deviceId);
+
+		/** 2. 소셜아이디 계정인 경우 연동을 통해서 인증 진행 */
+		//TODO. MDN으로 소셜아이디 유효성 체크
+		if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
+			// 네이버 mdn인증
+		} else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
+			// 구글 mdn인증
+		} else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
+			// 페이스북 mdn인증
+		}
+
+		/** 3. 심플인증 위한 SC셋팅. */
+		SimpleLoginRequest simpleLoginRequest = new SimpleLoginRequest();
+
+		simpleLoginRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+
+		if (ValidationCheckUtils.isDeviceId(deviceId)) {
+			simpleLoginRequest.setDeviceID(deviceId);
+		} else {
+			simpleLoginRequest.setMdn(deviceId);
+		}
+		simpleLoginRequest.setUserType(req.getUserType());
+		simpleLoginRequest.setUserId(req.getUserId());
+		simpleLoginRequest.setConnIp(deviceId);
+
+		String svcVersion = requestHeader.getDeviceHeader().getSvc();
+		if (StringUtils.isNotBlank(svcVersion)) {
+			simpleLoginRequest.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
+		}
+
+		String model = requestHeader.getDeviceHeader().getModel();
+		simpleLoginRequest.setDeviceModelNm(model);
+
+		String os = requestHeader.getDeviceHeader().getOs();
+
+		if (StringUtils.isNotBlank(os) && os.contains("/")) {
+			simpleLoginRequest.setDeviceOsNm(os.substring(0, os.lastIndexOf("/")));
+			simpleLoginRequest.setDeviceOsVersion(os.substring(os.lastIndexOf("/") + 1, os.length()));
+		}
+
+		/** 4. SC 심플인증 처리 (인증후 로그인 이력 저장). */
+		SimpleLoginResponse simpleLoginResponse = this.userSCI.simpleLogin(simpleLoginRequest);
+
+		AuthorizeSimpleByMdnV2Res res = new AuthorizeSimpleByMdnV2Res();
+		if (StringUtils.equals(MemberConstants.USE_Y, simpleLoginResponse.getIsLoginSuccess())) {
+			res.setUserKey(simpleLoginResponse.getUserKey());
+			res.setDeviceKey(simpleLoginResponse.getDeviceKey());
+		}
+		res.setIsLoginSuccess(simpleLoginResponse.getIsLoginSuccess());
 
 		return res;
 

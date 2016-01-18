@@ -3196,7 +3196,11 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * <pre>
-	 * 심플 인증(간편인증).
+	 * 심플 인증(간편 인증) v1.
+	 *  - DB조회 인증후 로그인 이력 저장
+	 * 심플 인증(간편 인증)v2
+	 *  - 모바일, Tstore 회원 : deviceId를 이용하여 DB조회 인증후 로그인이력 저장.
+	 *  - 소셜아이디 회원 : 인증절차 없이 로그인이력 저장.
 	 * </pre>
 	 * 
 	 * @param simpleLoginRequest
@@ -3206,18 +3210,28 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public SimpleLoginResponse simpleLogin(SimpleLoginRequest simpleLoginRequest) {
 
-		SimpleLoginResponse simpleLoginResponse = (SimpleLoginResponse) this.commonDAO.queryForObject(
-				"User.simpleLogin", simpleLoginRequest);
+		SimpleLoginResponse simpleLoginResponse;
 
-		if (simpleLoginResponse == null) { // 로그인 실패
+		/**
+		 *  1. 심플 인증(간편 인증) v1
+		 *   - DB조회 인증.
+		 *  2. 심플 인증(간편 인증) v2
+		 *   - DB조회 인증.
+		 */
+		simpleLoginResponse = (SimpleLoginResponse) this.commonDAO.queryForObject("User.simpleLogin",
+				simpleLoginRequest);
+
+		if (simpleLoginResponse == null) {
 			// 휴면DB 조회
 			simpleLoginResponse = (SimpleLoginResponse) this.idleDAO.queryForObject("User.simpleLogin",
 					simpleLoginRequest);
 		}
 
+		/** 2-1. 인증결과가 없을 경우 실패 응답 처리. */
 		if (simpleLoginResponse == null) {
 			simpleLoginResponse = new SimpleLoginResponse();
 			simpleLoginResponse.setIsLoginSuccess(Constant.TYPE_YN_N);
+		/** 2-2. 인증결과가 있을 경우 로그인 이력 저장후 성공 응답 처리. */
 		} else { // 로그인 성공
 			UserMbrLoginLog userMbrLoginLog = new UserMbrLoginLog();
 			userMbrLoginLog.setSystemID(simpleLoginRequest.getCommonRequest().getSystemID());
@@ -3227,6 +3241,7 @@ public class UserServiceImpl implements UserService {
 			if (simpleLoginRequest.getConnIp() != null) {
 				userMbrLoginLog.setConnIp(simpleLoginRequest.getConnIp());
 			}
+
 			if (simpleLoginRequest.getScVersion() != null) {
 				userMbrLoginLog.setScVersion(simpleLoginRequest.getScVersion());
 			}
