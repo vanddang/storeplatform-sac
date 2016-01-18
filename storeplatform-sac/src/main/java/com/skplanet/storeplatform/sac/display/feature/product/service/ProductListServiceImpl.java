@@ -1,15 +1,16 @@
-/**
- *
- */
 package com.skplanet.storeplatform.sac.display.feature.product.service;
+
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
+import com.skplanet.storeplatform.sac.common.header.extractor.HeaderExtractor;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductListCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.product.ProductL
 import com.skplanet.storeplatform.sac.client.display.vo.feature.product.ProductListSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -33,16 +32,21 @@ import com.skplanet.storeplatform.sac.display.feature.list.vo.DisplayListFromDB;
 import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProduct;
 import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProductCriteria;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ProductListServiceImpl
  *
  * Updated on : 2014. 10. 6.
- * Updated by : 문동선
+ * Updated by : 정화수
  */
 @Service
 public class ProductListServiceImpl implements ProductListService{
@@ -50,8 +54,14 @@ public class ProductListServiceImpl implements ProductListService{
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
+	HeaderExtractor header;
+
+	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	ProductListCacheManager cacheManager;
 
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
@@ -66,23 +76,23 @@ public class ProductListServiceImpl implements ProductListService{
 	 * <pre>
 	 * TB_DP_LISTPROD 테이블에서 listId를 기준으로 상품목록을 만들어주는 함수
 	 * </pre>
-	 * @param requestVO 상품 목록 조회 조건
+	 * @param request 상품 목록 조회 조건
 	 * @param header
 	 * @return 상품 목록
 	 */
 	@Override
-	public ProductListSacRes searchProductList(ProductListSacReq requestVO, SacRequestHeader header) {
+	public ProductListSacRes searchProductList( ProductListSacReq request, SacRequestHeader header ) {
 
 		ProductListSacRes response = new ProductListSacRes();
 
-		String stdDt = getBatchStdDateStringFromDB(requestVO, header);
+		String stdDt = getBatchStdDateStringFromDB(request, header);
 
 		// 1건을 더 조회하도록 파라미터가 세팅된다.
-		ListProductCriteria param = new ListProductCriteria( requestVO, header.getTenantHeader().getTenantId(), stdDt );
+		ListProductCriteria param = new ListProductCriteria( request, header.getTenantHeader().getTenantId(), stdDt );
 
 		while( true ) {
 
-			List<ListProduct> prodListFromDB = commonDAO.queryForList( "ProductList.selectListProdList", param, ListProduct.class );
+			List<ListProduct> prodListFromDB = cacheManager.getListProducts( param );
 
 			addListProductIntoResponse( header, response, prodListFromDB, param.getCount() );
 
@@ -93,28 +103,27 @@ public class ProductListServiceImpl implements ProductListService{
 		}
 
 		// 1건을 더 조회하여, 다음페이지 존재여부를 체크하고
-		setHasNext( response, requestVO );
+		setHasNext( response, request );
 
 		// 최종결과에서는 1건을 제외시킨다.
-		removeRedundantLastItem( response, requestVO );
+		removeRedundantLastItem( response, request );
 
 		setStartKey( response );
 		setCount( response );
 		setStdDt( response, stdDt );
-		setListIdAndEtcProp( response, requestVO, header );
+		setListIdAndEtcProp( response, request.getListId() );
 
 		return response;
+
 	}
 
-	private void setListIdAndEtcProp(ProductListSacRes response, ProductListSacReq requestVO, SacRequestHeader header) {
+	private void setListIdAndEtcProp( ProductListSacRes response, String listId ) {
 
 		String tenantId = header.getTenantHeader().getTenantId();
-		String listId = requestVO.getListId();
-		int count = 1;
 
-		DisplayListCriteria listCriteria = new DisplayListCriteria(tenantId, listId, "N", count);
+		DisplayListCriteria listCriteria = new DisplayListCriteria( tenantId, listId, "N", 1 );
 
-		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class);
+		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class );
 
 		if(!listsFromDB.isEmpty()){
     		response.setEtcProp(listsFromDB.get(0).getEtcProp());
