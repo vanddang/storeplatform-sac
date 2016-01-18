@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +37,7 @@ import java.util.Map;
  *
  * Updated on : 2016. 01. 08 Updated by : 정화수, SK 플래닛.
  */
-@Component
+@Component( "productInfoCachedManagerBean" )
 public class ProductInfoCachedManager {
 
 	private final Logger logger = LoggerFactory.getLogger( this.getClass() );
@@ -55,11 +57,7 @@ public class ProductInfoCachedManager {
 	private static final String SHOPPING_SVC_GRP_CD = "DP000206";
 	private static final String FREEPASS_SVC_GRP_CD = "DP000207";
 
-	@Cacheable(value = "sac:display:product:app:v2", key = "#param.getCacheKey()", unless = "#result == null")
-	public AppMeta getAppMetaCached( AppMetaParam param ) {
-		return getAppMeta( param );
-	}
-
+	@Cacheable(value = "sac:display:product:app:v2", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
 	public AppMeta getAppMeta( AppMetaParam param ) {
 
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -94,11 +92,7 @@ public class ProductInfoCachedManager {
 		return commonDAO.queryForList("ProductInfo.getAppMetaList", reqMap, AppMeta.class);
 	}
 
-	@Cacheable(value = "sac:display:product:music:v2", key = "#param.getCacheKey()", unless = "#result == null")
-	public MusicMeta getMusicMetaCached( MusicMetaParam param ) {
-		return getMusicMeta( param );
-	}
-
+	@Cacheable(value = "sac:display:product:music:v2", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
 	public MusicMeta getMusicMeta( MusicMetaParam param ) {
 
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -148,11 +142,7 @@ public class ProductInfoCachedManager {
 		return commonDAO.queryForList("ProductInfo.getMusicMetaList", reqMap, MusicMeta.class);
 	}
 
-	@Cacheable(value = "sac:display:product:vod:v6", key = "#param.getCacheKey()", unless = "#result == null")
-	public VodMeta getVodMetaCached( VodMetaParam param ) {
-		return getVodMeta( param );
-	}
-
+	@Cacheable( value = "sac:display:product:vod:v6", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
 	public VodMeta getVodMeta( VodMetaParam param ) {
 
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -175,14 +165,11 @@ public class ProductInfoCachedManager {
 		}
 
 		return meta;
+
 	}
 
-	@Cacheable(value = "sac:display:product:ebookcomic:v5", key = "#param.getCacheKey()", unless = "#result == null")
-	public EbookComicMeta getEbookComicMetaCached( EbookComicMetaParam param ) {
-		return getEbookComicMeta( param );
-	}
-
-	public EbookComicMeta getEbookComicMeta(EbookComicMetaParam param) {
+	@Cacheable( value = "sac:display:product:ebookcomic:v5", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
+	public EbookComicMeta getEbookComicMeta( EbookComicMetaParam param ) {
 
 		Map<String, Object> reqMap = new HashMap<String, Object>();
 		reqMap.put( "prodId",   param.getProdId()                                  );
@@ -203,36 +190,28 @@ public class ProductInfoCachedManager {
 			this.logger.warn( "메타데이터를 읽을 수 없습니다 - Ebook/Comic#{}", param.getProdId() );
 		}
 
-        if( meta != null && param.getContentType() == ContentType.Episode ) {
-            CidPrice cidPrice = subInfoManager.getCidPriceByEpsdId(param.getLangCd(), param.getTenantId(), param.getProdId());
-            if (cidPrice != null) {
+		if( meta != null && param.getContentType() == ContentType.Episode ) {
+			CidPrice cidPrice = subInfoManager.getCidPriceByEpsdId(param.getLangCd(), param.getTenantId(), param.getProdId());
+			if (cidPrice != null) {
 				meta.setUsePeriodUnitCd(cidPrice.getRentPeriodUnitCd());
 				meta.setUsePeriod(cidPrice.getRentPeriod());
 				meta.setUsePeriodNm(cidPrice.getRentPeriodUnitNm());
 				meta.setEpsdUnlmtAmt(cidPrice.getProdAmt());
 				meta.setEpsdPeriodAmt(cidPrice.getRentProdAmt());
-            }
-        }
+			}
+		}
 
-        return meta;
+		return meta;
 
-    }
-
-	@Cacheable(value = "sac:display:product:album", key = "#param.getCacheKey()", unless = "#result == null")
-	public AlbumMeta getAlbumMetaCached( AlbumMetaParam param ) {
-		return getAlbumMeta(param);
 	}
 
+	@Cacheable( value = "sac:display:product:album", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
 	public AlbumMeta getAlbumMeta( AlbumMetaParam param ) {
-		return this.commonDAO.queryForObject("AlbumDetail.albumDetail", param, AlbumMeta.class);
+		return this.commonDAO.queryForObject( "AlbumDetail.albumDetail", param, AlbumMeta.class );
 	}
 
-	@Cacheable(value = "sac:display:product:webtoon", key = "#param.getCacheKey()", unless = "#result == null")
-	public WebtoonMeta getWebtoonMetaCached( WebtoonMetaParam param ) {
-		return getWebtoonMeta( param );
-	}
-
-	public WebtoonMeta getWebtoonMeta(WebtoonMetaParam param) {
+	@Cacheable( value = "sac:display:product:webtoon", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
+	public WebtoonMeta getWebtoonMeta( WebtoonMetaParam param ) {
 
 		// NOTICE EbookComic, Webtoon은 조회방법은 동일하지만 요구되는 응답값이 다르다.
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -258,11 +237,7 @@ public class ProductInfoCachedManager {
 
 	}
 
-	@Cacheable(value = "sac:display:product:shopping", key = "#param.getCacheKey()", unless = "#result == null")
-	public ShoppingMeta getShoppingMetaCached( ShoppingMetaParam param ) {
-		return getShoppingMeta( param );
-	}
-
+	@Cacheable( value = "sac:display:product:shopping", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
 	public ShoppingMeta getShoppingMeta( ShoppingMetaParam param ) {
 
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -279,14 +254,12 @@ public class ProductInfoCachedManager {
 		}
 
 		return meta;
+
 	}
 
-	@Cacheable(value = "sac:display:product:freepass", key = "#param.getCacheKey()", unless = "#result == null")
-	public FreepassMeta getFreepassMetaCached( FreepassMetaParam param ) {
-		return getFreepassMeta( param );
-	}
+	@Cacheable( value = "sac:display:product:freepass", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
+	public FreepassMeta getFreepassMeta( FreepassMetaParam param ) {
 
-	public FreepassMeta getFreepassMeta(FreepassMetaParam param) {
 		Map<String, Object> reqMap = new HashMap<String, Object>();
 		reqMap.put( "prodId",       param.getChannelId()                                  );
 		reqMap.put( "langCd",       param.getLangCd()                                     );
@@ -303,13 +276,10 @@ public class ProductInfoCachedManager {
 		}
 
 		return meta;
+
 	}
 
-	@Cacheable(value = "sac:display:subcontent", key = "#param.getCacheKey()", unless = "#result == null")
-	public SubContent getSubContentCached( SubContentParam param ) {
-		return getSubContent( param );
-	}
-
+	@Cacheable( value = "sac:display:subcontent", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
 	public SubContent getSubContent( SubContentParam param ) {
 
 		Map<String, String> reqMap = new HashMap<String, String>();
@@ -323,13 +293,10 @@ public class ProductInfoCachedManager {
 		}
 
 		return subContent;
+
 	}
 
-	@Cacheable(value = "sac:display:menuinfo", key = "#param.getCacheKey()", unless = "#result == null")
-	public MenuInfo getMenuInfoCached( MenuInfoParam param ) {
-		return getMenuInfo( param );
-	}
-
+	@Cacheable( value = "sac:display:menuinfo", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
 	public MenuInfo getMenuInfo( MenuInfoParam param ) {
 
 		Map<String, String> reqMap = new HashMap<String, String>();
@@ -340,16 +307,12 @@ public class ProductInfoCachedManager {
 		}
 
 		// TODO 몇Depth메뉴인지 판단을 해야 함
-		return commonDAO.queryForObject("ProductInfo.getMenuInfo", reqMap, MenuInfo.class);
+		return commonDAO.queryForObject( "ProductInfo.getMenuInfo", reqMap, MenuInfo.class );
 
 	}
 
-	@Cacheable(value = "sac:display:productStats", key = "#param.getCacheKey()", unless = "#result == null")
-	public ProductStats getProductStatsCached( ProductStatsParam param ) {
-		return getProductStats( param );
-	}
-
-	public ProductStats getProductStats(ProductStatsParam param) {
+	@Cacheable( value = "sac:display:productStats", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
+	public ProductStats getProductStats( ProductStatsParam param ) {
 
 		if ( param == null || Strings.isNullOrEmpty(param.getProdId()) ) throw new IllegalArgumentException();
 
@@ -373,11 +336,7 @@ public class ProductInfoCachedManager {
 
 	}
 
-	@Cacheable(value = "sac:display:product:voucher:v1", key = "#param.getCacheKey()", unless = "#result == null")
-	public VoucherMeta getVoucherMetaCached( VoucherMetaParam param ) {
-		return getVoucherMeta( param );
-	}
-
+	@Cacheable( value = "sac:display:product:voucher:v1", key = "#param.getCacheKey()", unless = "#result == null", condition="#productInfoCachedManagerBean.isCacheable() == true" )
 	public VoucherMeta getVoucherMeta( VoucherMetaParam param ) {
 
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -397,6 +356,7 @@ public class ProductInfoCachedManager {
 		}
 
 		return meta;
+
 	}
 
 	public static class RawProductStats {
@@ -428,6 +388,15 @@ public class ProductInfoCachedManager {
 		public void setPaticpersCnt(Integer paticpersCnt) {
 			this.paticpersCnt = paticpersCnt;
 		}
+	}
+
+	/**
+	 * Plandas Cache 사용가능 여부를 확인한다.
+	 *
+	 * @return Plandas Cache 사용 가능여부
+	 */
+	private boolean isCacheable() {
+		return (Boolean) RequestContextHolder.currentRequestAttributes().getAttribute( "useCache", RequestAttributes.SCOPE_REQUEST );
 	}
 
 }

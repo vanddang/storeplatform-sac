@@ -15,8 +15,6 @@ import com.skplanet.storeplatform.sac.display.common.ContentType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.List;
 
@@ -43,15 +41,6 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		return extraInfoManager.getProductBaseInfo( new GetProductBaseInfoParam( prodId ) );
 	}
 
-	/**
-	 * Plandas Cache 사용가능 여부를 확인한다.
-	 *
-	 * @return Plandas Cache 사용 가능여부
-	 */
-	private boolean isCacheable() {
-		return (Boolean) RequestContextHolder.currentRequestAttributes().getAttribute( "useCache", RequestAttributes.SCOPE_REQUEST );
-	}
-
 	@Override
 	public AppMeta getAppMeta( String channelProdId ) {
 
@@ -61,11 +50,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		param.setTenantId( header.getTenantId() );
 		param.setLangCd( header.getLangCd() );
 
-		if( isCacheable() ) {
-			return cachedManager.getAppMetaCached( param );
-		} else {
-			return cachedManager.getAppMeta( param );
-		}
+		return cachedManager.getAppMeta( param );
 
 	}
 
@@ -107,11 +92,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 			param.setContentType( ContentType.Channel );
 		}
 
-		if( isCacheable() ) {
-			return cachedManager.getMusicMetaCached( param );
-		} else {
-			return cachedManager.getMusicMeta( param );
-		}
+		return cachedManager.getMusicMeta( param );
 
 	}
 
@@ -137,11 +118,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		param.setTenantId( header.getTenantId() );
 		param.setContentType( ContentType.forCode( baseInfo.getContentsTypeCd() ) );
 
-		if( isCacheable() ) {
-			return cachedManager.getVodMetaCached( param );
-		} else {
-			return cachedManager.getVodMeta( param );
-		}
+		return cachedManager.getVodMeta( param );
 
 	}
 
@@ -158,11 +135,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		param.setTenantId( header.getTenantId() );
 		param.setContentType( ContentType.forCode( baseInfo.getContentsTypeCd() ) );
 
-		if( isCacheable() ) {
-			return cachedManager.getEbookComicMetaCached( param );
-		} else {
-			return cachedManager.getEbookComicMeta( param );
-		}
+		return cachedManager.getEbookComicMeta( param );
 
     }
 
@@ -175,11 +148,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		param.setLangCd( header.getLangCd() );
 		param.setTenantId( header.getTenantId() );
 
-		if( isCacheable() ) {
-			return cachedManager.getAlbumMetaCached( param );
-		} else {
-			return cachedManager.getAlbumMeta( param );
-		}
+		return cachedManager.getAlbumMeta( param );
 
 	}
 
@@ -196,11 +165,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		param.setTenantId( header.getTenantId() );
 		param.setContentType( ContentType.forCode( baseInfo.getContentsTypeCd() ) );
 
-		if( isCacheable() ) {
-			return cachedManager.getWebtoonMetaCached( param );
-		} else {
-			return cachedManager.getWebtoonMeta( param );
-		}
+		return cachedManager.getWebtoonMeta( param );
 
 	}
 
@@ -213,11 +178,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		param.setLangCd( header.getLangCd() );
 		param.setTenantId( header.getTenantId() );
 
-		if( isCacheable() ) {
-			return cachedManager.getShoppingMetaCached( param );
-		} else {
-			return cachedManager.getShoppingMeta( param );
-		}
+		return cachedManager.getShoppingMeta( param );
 
 	}
 
@@ -230,11 +191,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		param.setLangCd( header.getLangCd() );
 		param.setTenantId( header.getTenantId() );
 
-		if( isCacheable() ) {
-			return cachedManager.getFreepassMetaCached( param );
-		} else {
-			return cachedManager.getFreepassMeta( param );
-		}
+		return cachedManager.getFreepassMeta( param );
 
 	}
 
@@ -246,11 +203,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		param.setChannelId( channelProdId );
 		param.setDeviceModel( header.getDeviceModel() );
 
-		if( isCacheable() ) {
-			return cachedManager.getSubContentCached( param );
-		} else {
-			return cachedManager.getSubContent( param );
-		}
+		return cachedManager.getSubContent( param );
 
 	}
 
@@ -271,11 +224,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		param.setLangCd( header.getLangCd() );
 		param.setMenuId( menuId );
 
-		if( isCacheable() ) {
-			return cachedManager.getMenuInfoCached( param );
-		} else {
-			return cachedManager.getMenuInfo( param );
-		}
+		return cachedManager.getMenuInfo( param );
 
 	}
 
@@ -286,11 +235,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 
 		param.setProdId( prodId );
 
-		if( isCacheable() ) {
-			return cachedManager.getProductStatsCached( param );
-		} else {
-			return cachedManager.getProductStats( param );
-		}
+		return cachedManager.getProductStats( param );
 
 	}
 
@@ -303,11 +248,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		param.setLangCd( header.getLangCd() );
 		param.setTenantId( header.getTenantId() );
 
-		if( isCacheable() ) {
-			return cachedManager.getVoucherMetaCached( param );
-		} else {
-			return cachedManager.getVoucherMeta( param );
-		}
+		return cachedManager.getVoucherMeta( param );
 
 	}
 

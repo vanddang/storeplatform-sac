@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/display/feature/product")
 public class ProductController {
+
 	private transient Logger logger = LoggerFactory.getLogger( ProductController.class );
 
 	@Autowired
