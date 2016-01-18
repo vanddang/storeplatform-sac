@@ -8,9 +8,9 @@ import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 
 /**
- * 심플 인증(간편 인증) 요청 VO
+ * 심플 인증(간편 인증) v1 요청 VO
  * 
- * Updated on : 2016. 1. 15. Updated by : 최진호, 보고지티.
+ * Updated on : 2016. 1. 18. Updated by : 최진호, 보고지티.
  */
 public class SimpleLoginRequest extends CommonInfo {
 
@@ -25,6 +25,12 @@ public class SimpleLoginRequest extends CommonInfo {
 
 	/** 휴대기기 ID(UUID/MAC). */
 	private String deviceID; // DEVICE_ID
+
+	/** 사용자 타입. */
+	private String userType;
+
+	/** 사용자 ID. */
+	private String userId;
 
 	/** 접속_IP. */
 	private String connIp;
@@ -99,6 +105,44 @@ public class SimpleLoginRequest extends CommonInfo {
 	 */
 	public void setDeviceID(String deviceID) {
 		this.deviceID = deviceID;
+	}
+
+	/**
+	 * 사용자 타입을 리턴한다.
+	 *
+	 * @return userType - 사용자 타입
+	 */
+	public String getUserType() {
+		return this.userType;
+	}
+
+	/**
+	 * 사용자 타입을 설정한다.
+	 *
+	 * @param userType
+	 *            사용자 타입
+	 */
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	/**
+	 * 사용자 ID를 리턴한다.
+	 *
+	 * @return userId - 사용자 ID
+	 */
+	public String getUserId() {
+		return this.userId;
+	}
+
+	/**
+	 * 사용자 ID를 설정한다.
+	 *
+	 * @param userId
+	 *            사용자 ID
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	/**

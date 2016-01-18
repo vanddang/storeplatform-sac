@@ -1805,7 +1805,7 @@
 
     <!-- 심플 인증 -->
     <select id="simpleLogin" parameterType="simpleLoginRequest" resultType="simpleLoginResponse">
-        SELECT /* UserMapper.xml, simpleLogin, SAC(SC), 최진호, 2016-01-15 */
+        SELECT /* UserMapper.xml, simpleLogin, SAC(SC), 최진호, 2016-01-18 */
             B.INSD_USERMBR_NO AS userKey,
             B.INSD_DEVICE_ID AS deviceKey
         FROM
@@ -1819,6 +1819,8 @@
             AND b.AUTH_YN = 'Y'
             <if test="mdn != null">AND b.MDN = #{mdn}</if>
             <if test="deviceID != null">AND b.DEVICE_ID = #{deviceID}</if>
+            <if test="userId != null">AND a.MBR_ID = #{userId}</if>
+            <if test="userType != null">AND a.MBR_CLAS_CD = #{userType}</if>
     </select> 
     
     <!-- 회원가입여부 리스트 조회 -->
