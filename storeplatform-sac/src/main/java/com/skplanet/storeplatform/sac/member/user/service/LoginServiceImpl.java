@@ -1252,16 +1252,18 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
 		}
 
-		/*	TODO. userAuthToken/socialUserNo 유효성 체크 필요*/
-		boolean isValid = true; //TODO. 무조건 성공처리
-		if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
+		boolean isValid = true;
+		if(StringUtils.isNotBlank(req.getUserAuthToken())){ // userAuthToken이 넘어온 경우만 유효성 체크
+			/*	TODO. userAuthToken/socialUserNo 유효성 체크 필요*/
+			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
 
-		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 
-		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
+			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
 
-		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
+			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
 
+			}
 		}
 
 		if(!isValid){
