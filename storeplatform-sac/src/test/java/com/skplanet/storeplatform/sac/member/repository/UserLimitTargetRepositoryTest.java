@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.member.repository;
 
 import com.google.common.base.Objects;
-import com.skplanet.storeplatform.sac.member.domain.shared.UserLimitTarget;
+import com.skplanet.storeplatform.sac.member.domain.mbr.UserLimitTarget;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.member.repository;
 
 import com.mysema.query.jpa.impl.JPAQuery;
+import com.skplanet.storeplatform.sac.member.common.MemberRepositoryContext;
 import com.skplanet.storeplatform.sac.member.domain.shared.QUserClauseAgree;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserClauseAgree;
 import org.springframework.stereotype.Repository;
@@ -30,16 +31,23 @@ public class UserClauseAgreeRepositoryImpl implements UserClauseAgreeRepository 
     public static final QUserClauseAgree $ = QUserClauseAgree.userClauseAgree;
 
     @PersistenceContext(unitName = "puMbr")
-    private EntityManager em;
+    private EntityManager emMbr;
+    
+    @PersistenceContext(unitName = "puIdleMbr")
+    private EntityManager emIdleMbr;
+
+    private EntityManager getCurrentEntityManager() {
+        return MemberRepositoryContext.isNormal() ? emMbr : emIdleMbr;
+    }
 
     @Override
     public void save(UserClauseAgree v) {
-        em.persist(v);
+        emMbr.persist(v);
     }
 
     @Override
     public List<UserClauseAgree> findByInsdUsermbrNo(String userKey) {
-        JPAQuery q = new JPAQuery(em)
+        JPAQuery q = new JPAQuery(getCurrentEntityManager())
                 .from($)
                 .where($.member.insdUsermbrNo.eq(userKey));
 

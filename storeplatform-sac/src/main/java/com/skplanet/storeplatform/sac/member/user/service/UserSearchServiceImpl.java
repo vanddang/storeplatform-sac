@@ -42,15 +42,14 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserClauseAgree;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 import com.skplanet.storeplatform.sac.member.repository.UserClauseAgreeRepository;
-import com.skplanet.storeplatform.sac.member.repository.UserMemberRepository;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -93,7 +92,7 @@ public class UserSearchServiceImpl implements UserSearchService {
     private UserClauseAgreeRepository clauseAgreeRepository;
 
     @Autowired
-    private UserMemberRepository userMemberRepository;
+    private UserMemberService memberService;
 
 	/**
 	 * 회원 가입 조회
@@ -346,12 +345,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @return
 	 */
 	@Override
-    @Transactional("transactionManagerForScMember")
 	public ListTermsAgreementSacRes listTermsAgreement(SacRequestHeader sacHeader, ListTermsAgreementSacReq req) {
 
         String userKey = req.getUserKey();
 
-        if(!userMemberRepository.isExist(userKey))
+        UserMember member = memberService.findByUserKeyAndTransitRepo(userKey);
+
+        if(member == null)
             throw new StorePlatformException("SC_MEM_9995");
 
         List<UserClauseAgree> agreeList = clauseAgreeRepository.findByInsdUsermbrNo(userKey);

@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.member.domain.shared;
+package com.skplanet.storeplatform.sac.member.domain.mbr;
 
 import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
 import org.apache.commons.lang3.StringUtils;

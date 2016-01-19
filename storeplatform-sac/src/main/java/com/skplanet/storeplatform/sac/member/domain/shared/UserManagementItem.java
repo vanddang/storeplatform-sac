@@ -22,7 +22,7 @@ import java.util.Date;
  * Updated on : 2016. 01. 11 Updated by : 정희원, SK 플래닛.
  */
 @Entity
-@Table(name = "TB_US_OUSERMBR_MANG_ITEM_PTCR", schema = "SPMBR")
+@Table(name = "TB_US_OUSERMBR_MANG_ITEM_PTCR")
 @IdClass(UserManagementItem.PK.class)
 public class UserManagementItem {
 
@@ -31,13 +31,6 @@ public class UserManagementItem {
         private UserMember member;
 
         private String mangItemCd;
-
-        public PK() {}
-
-        public PK(UserMember member, String mangItemCd) {
-            this.member = member;
-            this.mangItemCd = mangItemCd;
-        }
 
         public UserMember getMember() {
             return member;

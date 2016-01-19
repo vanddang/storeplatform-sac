@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.member.repository;
 
 import com.mysema.query.jpa.impl.JPAQuery;
+import com.skplanet.storeplatform.sac.member.common.MemberRepositoryContext;
 import com.skplanet.storeplatform.sac.member.domain.shared.QUserManagementItem;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserManagementItem;
 import org.springframework.stereotype.Repository;
@@ -29,22 +30,29 @@ public class UserManagementItemRepositoryImpl implements UserManagementItemRepos
     public static final QUserManagementItem $ = QUserManagementItem.userManagementItem;
 
     @PersistenceContext(unitName = "puMbr")
-    private EntityManager em;
+    private EntityManager emMbr;
+
+    @PersistenceContext(unitName = "puIdleMbr")
+    private EntityManager emIdleMbr;
+
+    private EntityManager getCurrentEntityManager() {
+        return MemberRepositoryContext.isNormal() ? emMbr : emIdleMbr;
+    }
 
     @Override
     public UserManagementItem findOne(UserManagementItem.PK id) {
-        return em.find(UserManagementItem.class, id);
+        return getCurrentEntityManager().find(UserManagementItem.class, id);
     }
 
     @Override
     public UserManagementItem findByUserKeyAndItemCd(String userKey, String itemCd) {
-        return new JPAQuery(em).from($)
+        return new JPAQuery(getCurrentEntityManager()).from($)
                 .where($.member.insdUsermbrNo.eq(userKey).and($.mangItemCd.eq(itemCd)))
                 .uniqueResult($);
     }
 
     @Override
     public void save(UserManagementItem item) {
-        em.persist(item);
+        emMbr.persist(item);
     }
 }

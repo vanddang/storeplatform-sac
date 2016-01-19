@@ -26,7 +26,7 @@ import java.util.Date;
  * Updated on : 2015. 12. 16 Updated by : 정희원, SK 플래닛.
  */
 @Entity
-@Table(name = "TB_US_OUSERMBR_CLAUSE_AGREE", schema = "SPMBR")
+@Table(name = "TB_US_OUSERMBR_CLAUSE_AGREE")
 @IdClass(UserClauseAgree.PK.class)
 public class UserClauseAgree {
 
@@ -84,6 +84,17 @@ public class UserClauseAgree {
     private String mandAgreeYn;
 
     private String clauseVer;
+
+    @PrePersist
+    public void prePersist() {
+        this.regDt = new Date();
+        this.updDt = this.regDt;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updDt = new Date();
+    }
 
     public UserMember getMember() {
         return member;
@@ -147,17 +158,6 @@ public class UserClauseAgree {
 
     public String getUpdDtStr() {
         return DateUtils.format(updDt);
-    }
-
-    @PrePersist
-    public void prePersist() {
-        this.regDt = new Date();
-        this.updDt = this.regDt;
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        this.updDt = new Date();
     }
 
     ////////// Business //////////

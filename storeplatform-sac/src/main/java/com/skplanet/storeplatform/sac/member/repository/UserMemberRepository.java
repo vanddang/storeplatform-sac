@@ -23,5 +23,7 @@ public interface UserMemberRepository {
 
     UserMember findByEmail(String email);
 
+    UserMember findDetachedActiveByUserKey(String userKey);
+
     boolean isExist(String userKey);
 }

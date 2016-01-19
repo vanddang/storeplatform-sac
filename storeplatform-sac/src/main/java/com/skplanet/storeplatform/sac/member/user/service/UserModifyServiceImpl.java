@@ -33,7 +33,6 @@ import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserClauseAgree;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 import com.skplanet.storeplatform.sac.member.repository.UserClauseAgreeRepository;
-import com.skplanet.storeplatform.sac.member.repository.UserMemberRepository;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +68,7 @@ public class UserModifyServiceImpl implements UserModifyService {
     private UserSearchService userSearchService;
 
     @Autowired
-    private UserMemberRepository memberRepository;
+    private UserMemberService memberService;
 
     @Autowired
     private UserClauseAgreeRepository clauseAgreeRepository;
@@ -323,10 +322,13 @@ public class UserModifyServiceImpl implements UserModifyService {
     @Transactional("transactionManagerForScMember")
     public void _mergeTermsAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreeList) {
 
-        UserMember member = memberRepository.findOne(userKey);
+        UserMember member = memberService.findByUserKeyAndTransitRepo(userKey);
 
-        if(member == null || !member.isAvailable())
+        if (member == null)
             throw new StorePlatformException("SAC_MEM_0003", "userKey", userKey);
+
+        if(member.isFromIdle())
+            return; // 휴면DB에 있는 경우 무시
 
         List<UserClauseAgree> userClauseAgrees = clauseAgreeRepository.findByInsdUsermbrNo(userKey);
         ImmutableMap<String, UserClauseAgree> userAgreeMap = Maps.uniqueIndex(userClauseAgrees, new Function<UserClauseAgree, String>() {
@@ -341,13 +343,13 @@ public class UserModifyServiceImpl implements UserModifyService {
             UserClauseAgree userClauseAgree = userAgreeMap.get(agreementInfo.getExtraAgreementId());
 
             Clause clause = mcr.getClauseItemInfo(agreementInfo.getExtraAgreementId());
-            if(clause == null)
+            if (clause == null)
                 throw new StorePlatformException("SAC_MEM_1105", agreementInfo.getExtraAgreementId());
 
             String lastVer = clause.getClauseVer(),
                     mandAgreeYn = clause.getMandAgreeYn();
 
-            if(userClauseAgree == null) {
+            if (userClauseAgree == null) {
                 // NEW
                 UserClauseAgree newAgree = new UserClauseAgree();
                 newAgree.setMember(member);
@@ -355,14 +357,14 @@ public class UserModifyServiceImpl implements UserModifyService {
                 newAgree.setAgreeYn(agreementInfo.getIsExtraAgreement());
                 newAgree.setMandAgreeYn(mandAgreeYn);
                 newAgree.setClauseVer(!Strings.isNullOrEmpty(agreementInfo.getExtraAgreementVersion()) ?
-                                                            agreementInfo.getExtraAgreementVersion() : lastVer);
+                        agreementInfo.getExtraAgreementVersion() : lastVer);
                 clauseAgreeRepository.save(newAgree);
-            }
-            else {
+            } else {
                 // UPDATE
+                userClauseAgree.setAgreeYn(agreementInfo.getIsExtraAgreement());
                 userClauseAgree.setMandAgreeYn(mandAgreeYn);
                 userClauseAgree.setMaxClauseVer(agreementInfo.getExtraAgreementVersion());
-                if(Strings.isNullOrEmpty(userClauseAgree.getClauseVer()))
+                if (Strings.isNullOrEmpty(userClauseAgree.getClauseVer()))
                     userClauseAgree.setClauseVer(lastVer);
             }
         }
@@ -616,6 +618,7 @@ public class UserModifyServiceImpl implements UserModifyService {
      * @param agreementList
      *            약관 동의 정보 리스트
      */
+    @Deprecated
     private void modAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreementList,
                               String methodType) {
 

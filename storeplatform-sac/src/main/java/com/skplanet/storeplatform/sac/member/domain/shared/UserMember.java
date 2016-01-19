@@ -22,7 +22,7 @@ import java.util.List;
  * Updated on : 2015. 12. 24 Updated by : 정희원, SK 플래닛.
  */
 @Entity
-@Table(name = "TB_US_OUSERMBR", schema = "SPMBR")
+@Table(name = "TB_US_OUSERMBR")
 public class UserMember {
 
     @Id
@@ -84,10 +84,17 @@ public class UserMember {
 
     private Date lastPrchsDt;
 
-    private String idpOneidCd;
+    @Transient
+    private boolean fromNormal;
 
     @OneToMany(mappedBy = "member")
     private List<UserDevice> devices;
+
+    @OneToMany(mappedBy = "member")
+    private List<UserClauseAgree> clauseAgrees;
+
+    @OneToMany(mappedBy = "member")
+    private List<UserManagementItem> managementItems;
 
     @PrePersist
     public void prePersist() {
@@ -316,12 +323,12 @@ public class UserMember {
         this.lastPrchsDt = lastPrchsDt;
     }
 
-    public String getIdpOneidCd() {
-        return idpOneidCd;
+    public void setFromNormal(boolean fromNormal) {
+        this.fromNormal = fromNormal;
     }
 
-    public void setIdpOneidCd(String idpOneidCd) {
-        this.idpOneidCd = idpOneidCd;
+    public boolean isFromIdle() {
+        return !fromNormal;
     }
 
     public List<UserDevice> getDevices() {
@@ -330,6 +337,22 @@ public class UserMember {
 
     public void setDevices(List<UserDevice> devices) {
         this.devices = devices;
+    }
+
+    public List<UserClauseAgree> getClauseAgrees() {
+        return clauseAgrees;
+    }
+
+    public void setClauseAgrees(List<UserClauseAgree> clauseAgrees) {
+        this.clauseAgrees = clauseAgrees;
+    }
+
+    public List<UserManagementItem> getManagementItems() {
+        return managementItems;
+    }
+
+    public void setManagementItems(List<UserManagementItem> managementItems) {
+        this.managementItems = managementItems;
     }
 
     public boolean isAvailable() {

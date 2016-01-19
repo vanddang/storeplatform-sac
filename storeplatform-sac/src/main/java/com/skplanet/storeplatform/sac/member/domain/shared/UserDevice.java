@@ -21,7 +21,7 @@ import java.util.Date;
  * Updated on : 2015. 12. 24 Updated by : 정희원, SK 플래닛.
  */
 @Entity
-@Table(name = "TB_US_OUSERMBR_DEVICE", schema = "SPMBR")
+@Table(name = "TB_US_OUSERMBR_DEVICE")
 @IdClass(UserDevice.PK.class)
 public class UserDevice {
 
@@ -145,6 +145,8 @@ public class UserDevice {
     private String chgCaseCd;
 
     private Date lastLoginDt;
+
+    private String deviceAcct;
 
     ////////// GETTER & SETTER //////////
     public UserMember getMember() {
@@ -305,6 +307,14 @@ public class UserDevice {
 
     public void setLastLoginDt(Date lastLoginDt) {
         this.lastLoginDt = lastLoginDt;
+    }
+
+    public String getDeviceAcct() {
+        return deviceAcct;
+    }
+
+    public void setDeviceAcct(String deviceAcct) {
+        this.deviceAcct = deviceAcct;
     }
 
     @PrePersist

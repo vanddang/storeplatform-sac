@@ -215,30 +215,6 @@ public class UserSearchController {
 		return res;
 	}
 
-    @Deprecated
-//	@RequestMapping(value = "/member/user/listTermsAgreement/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public ListTermsAgreementSacRes listTermsAgreement(@RequestBody ListTermsAgreementSacReq req,
-			SacRequestHeader sacHeader) {
-		LOGGER.debug("####################################################");
-		LOGGER.debug("##### 2.1.10. Store 약관 동의 목록 조회 #####");
-		LOGGER.debug("####################################################");
-
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
-
-		if (userKey.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "userKey");
-		}
-
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		ListTermsAgreementSacRes res = this.svc.listTermsAgreement(sacHeader, req);
-
-		LOGGER.info("Response : {}, size : {}", res.getUserKey(), res.getAgreementList().size());
-
-		return res;
-	}
-
 	@RequestMapping(value = "/member/user/listDailyPhoneOs/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListDailyPhoneOsSacRes listDailyPhoneOs(SacRequestHeader sacHeader) {
