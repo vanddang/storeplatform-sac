@@ -120,21 +120,17 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
 		/**
-		 * 3. 소셜 아이디인 경우만 userAuthToken 인증후 회원 탈퇴
+		 * 3. userAuthToken 이 있으면서 소셜 아이디인 경우만 userAuthToken 인증후 회원 탈퇴
 		 *   - mdn 회원은 인증 단계 없이 탈퇴
 		 *   - 기존 Tstore 아이디는 단말에서 id/pwd 인증 단계 후에 탈퇴 진행되므로 인증 불필요
-		 *   - 신규 소셜 계정 아이디는 인증단계가 없으므로 id/token인증 필요
+		 *   - 신규 소셜 계정 아이디는 인증단계가 없으므로 id/token인증 필요하지만 token값은 optional
 		 */
-		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
+		if (StringUtils.isNotBlank(req.getUserAuthToken()) &&
+				(StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
 				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER)) {
+				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER))) {
 
 			LOGGER.info("소셜 아이디(Facebook, google, naver) > userAuthToken 인증");
-
-			/** 소셜 아이디인 경우 사용자 인증토큰이 필수 값. */
-			if (req.getUserAuthToken() == null || req.getUserAuthToken().length() <= 0) {
-				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
-			}
 
 			CheckUserAuthTokenRequest chkUserAuthTkReq = new CheckUserAuthTokenRequest();
 			chkUserAuthTkReq.setCommonRequest(mcc.getSCCommonRequest(requestHeader));

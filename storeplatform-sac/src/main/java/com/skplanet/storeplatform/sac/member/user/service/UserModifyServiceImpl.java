@@ -191,18 +191,23 @@ public class UserModifyServiceImpl implements UserModifyService {
             }
         }
 
-        /** SC 회원 사용자키, 비밀번호 일치 여부 확인. */
+        /** 휴면계정 회인인 경우 오류 처리 */
+        if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
+            throw new StorePlatformException("SAC_MEM_0006");
+        }
+
+        /** SC 회원 사용자키, 비밀번호 일치 여부 확인 (휴면상태가 아닌 회원만). */
         CheckUserPwdRequest chkUserPwdReq = new CheckUserPwdRequest();
         chkUserPwdReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
         chkUserPwdReq.setUserKey(userInfo.getUserKey());
         chkUserPwdReq.setUserPw(req.getOldPassword());
-        chkUserPwdReq.setIsDormant(userInfo.getIsDormant());
+        chkUserPwdReq.setIsDormant(MemberConstants.USE_N);
         CheckUserPwdResponse chkUserPwdResponse = this.userSCI.checkUserPwd(chkUserPwdReq);
         if (!StringUtils.equals(chkUserPwdResponse.getUserKey(), userInfo.getUserKey())) {
             throw new StorePlatformException("SAC_MEM_1406", userInfo.getUserKey());
         }
 
-        /** SC 회원 비밀번호 변경 요청. */
+        /** SC 회원 비밀번호 변경 요청 (휴면상태가 아닌 회원만). */
         ModifyUserPwdRequest modUserPwdReq = new ModifyUserPwdRequest();
         modUserPwdReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
         modUserPwdReq.setUserKey(chkUserPwdResponse.getUserKey());
@@ -210,7 +215,7 @@ public class UserModifyServiceImpl implements UserModifyService {
         modUserPwdReq.setNewPassword(req.getNewPassword());
         modUserPwdReq.setUserPwType(chkUserPwdResponse.getUserPwType());
         modUserPwdReq.setUserSalt(chkUserPwdResponse.getUserSalt());
-        modUserPwdReq.setIsDormant(userInfo.getIsDormant());
+        modUserPwdReq.setIsDormant(MemberConstants.USE_N);
 
         this.userSCI.modifyUserPwd(modUserPwdReq);
 
@@ -1156,18 +1161,16 @@ public class UserModifyServiceImpl implements UserModifyService {
             if (chkUserAuthTkRes.getUserKey() == null || chkUserAuthTkRes.getUserKey().length() <= 0) {
                 throw new StorePlatformException("SAC_MEM_1204");
             }
-        // TODO. 소셜계정 아이디 userAuthToken/socialUserNo 유효성 체크 필요
+        // TODO. 소셜계정 아이디 userAuthToken 값이 있으면 체크 없으면 회원여부로 인증 처리
         /** 3-2. 네이버 Id 인증 시도 */
         } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
             // 네이버 연동 성공처리
         /** 3-3. 구글 Id 인증 시도 */
         } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
             // 구글 연동 성공처리
-            throw new StorePlatformException("SAC_MEM_1302", req.getUserType());
         /** 3-4. 페이스북 Id 인증 시도 */
         } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
             // 페이스북 연동 성공처리
-            throw new StorePlatformException("SAC_MEM_1302", req.getUserType());
         }
 
         /** 4. userAuthToken 인증이 되었으면 ID변경 */
