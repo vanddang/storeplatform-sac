@@ -344,4 +344,9 @@ public class PurchaseCDConstants {
 	public static final String DISPLAY_SVCGRPCD_SOCIAL_SHOPPING = "DP000205"; // 소셜 쇼핑
 	public static final String DISPLAY_SVCGRPCD_TSTORE_SHOPPING = "DP000206"; // Tstore 쇼핑
 	public static final String DISPLAY_SVCGRPCD_TSTORE_FREEPASS = "DP000207"; // 복합상품(정액권)
+
+    /** 구매내역 부가 정보 타입 코드 (EXTRA_INFO_TYPE) */
+    public static final String EXTRA_INFO_TYPE_CANCEL_REASON = "OR006401"; // 구매취소 부가 정보
+    public static final String EXTRA_INFO_TYPE_REFUND_REASON = "OR006402"; // 환불 부가 정보
+
 }
