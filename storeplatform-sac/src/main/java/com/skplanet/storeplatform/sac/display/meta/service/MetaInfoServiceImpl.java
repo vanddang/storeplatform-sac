@@ -69,16 +69,6 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	@Autowired
 	private ProductSubInfoManager subInfoManager;
 
-	private void commonHandler(MetaInfo me, String tenantId, String prodKey) {
-		// 집계는 쇼핑의 경우 catalogId, 그 외에는 항상 채널 기준으로 노출하고 있음
-		ProductStats productStats = this.productInfoManager.getProductStats(new ProductStatsParam(prodKey));
-		me.setPaticpersCnt(productStats.getParticipantCount());
-		me.setAvgEvluScore(productStats.getAverageScore());
-		me.setPrchsCnt(productStats.getPurchaseCount());
-
-//		me.setMileageInfo(this.memberBenefitService.getMileageInfo(tenantId, me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -127,9 +117,6 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 			me.setSubContentsId(null);
 		} else
 			me = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
-
-		if (me != null)
-			this.commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
 		return me;
 	}
@@ -180,9 +167,6 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 			MetaBeanUtils.setProperties(music, me);
 		} else
 			me = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
-
-		if (me != null)
-			this.commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
 		return me;
 	}
@@ -243,9 +227,6 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 			// TODO 에피소드의 drmYn 세팅
 		}
-
-		if (me != null)
-			this.commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
 		return me;
 	}
@@ -313,9 +294,6 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 				}
 			}
 		}
-
-		if (me != null)
-			this.commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
 		return me;
 	}
@@ -393,9 +371,6 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 		} else
 			me = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
-
-		if (me != null)
-			this.commonHandler(me, tenantHeader.getTenantId(), me.getCatalogId());
 
 		return me;
 	}

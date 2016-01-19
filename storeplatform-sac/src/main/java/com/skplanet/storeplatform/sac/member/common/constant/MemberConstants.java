@@ -37,6 +37,7 @@ public final class MemberConstants {
 
 	/** SAC회원 결과 코드. */
 	public static final String SAC_ERROR_NO_ONEID = "SAC_MEM_1302"; // OneID 회원이 아님
+    public static final String SAC_ERROR_NO_USERKEY = "SAC_MEM_0003"; // 회원키 없음
 
 	/** EC IDP 에러 코드 문자열. */
 	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";
@@ -95,6 +96,7 @@ public final class MemberConstants {
 	public static final String KEY_TYPE_WILS_TEL_NO = "WILS_TEL_NO"; // 판매자 연락처
 	public static final String KEY_TYPE_SELLERMBR_BIZ_NO = "BIZ_REG_NO"; // 사업자 등록번호
 	public static final String KEY_TYPE_MDN = "MDN"; // 전화번호
+    public static final String KEY_TYPE_AUTHORIZE_SVC_MANG_NO = "AUTHORIZE_SVC_MANG_NO"; // SKT 서비스 관리번호 (모바일 인증 시 LAST_LOGIN_DT DESC 정렬)
 
 	/** 통신사 코드. */
 	public static final String DEVICE_TELECOM_SKT = "US001201"; // SKT
@@ -142,6 +144,7 @@ public final class MemberConstants {
 	public static final String USER_EXTRA_SOCIAL_EXPIRED_TIME = "US010919";
 
 	public static final String USER_EXTRA_SYRUP_SSO_CREDENTIAL = "US010920"; // syrup Pay에서 발행하는 자격증명 값
+	public static final String USER_EXTRA_SOCIL_MEMBER_NO = "US010922"; // social 아이디 회원번호
 
 	public static final String USER_EXTRA_FACEBOOK = "facebook";
 	public static final String USER_EXTRA_KAKAO = "kakao";
@@ -399,10 +402,6 @@ public final class MemberConstants {
     /** 회원 사용자 성별 코드 */
     public static final String SEX_TYPE_MALE = "M"; // 남자
     public static final String SEX_TYPE_FEMALE = "F"; // 여자
-
-    /** 회원 사용자 생일 코드 */
-    public static final String BIRTHDAY_TYPE_SOCAL = "1"; // 양력
-    public static final String BIRTHDAY_TYPE_LUCAL = "2"; // 음력
 
 	/**
 	 * 판매자 회원 상수들.

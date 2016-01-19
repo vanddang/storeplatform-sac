@@ -144,8 +144,8 @@ public class UserSCITest {
 		userMbr.setUserType("123");
 		userMbr.setUserMainStatus("111");
 		userMbr.setUserSubStatus("222");
-		userMbr.setLoginStatusCode("10"); // LOGIN_STATUS_CD(로그인 상태 코드)
-		userMbr.setStopStatusCode("80"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
+//		userMbr.setLoginStatusCode("10"); // LOGIN_STATUS_CD(로그인 상태 코드)
+//		userMbr.setStopStatusCode("80"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
 
 		// 약관동의 정보
 		List<MbrClauseAgree> mbrClauseAgreeList;
@@ -294,8 +294,8 @@ public class UserSCITest {
 		userMbr.setUserType("123");
 		userMbr.setUserMainStatus("111");
 		userMbr.setUserSubStatus("222");
-		userMbr.setLoginStatusCode("10"); // LOGIN_STATUS_CD(로그인 상태 코드)
-		userMbr.setStopStatusCode("80"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
+//		userMbr.setLoginStatusCode("10"); // LOGIN_STATUS_CD(로그인 상태 코드)
+//		userMbr.setStopStatusCode("80"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
 
 		// 약관동의 정보
 		List<MbrClauseAgree> mbrClauseAgreeList;
@@ -410,8 +410,8 @@ public class UserSCITest {
 		userMbr.setUserType("US011502");
 		userMbr.setUserMainStatus("US010201");
 		userMbr.setUserSubStatus("US010301");
-		userMbr.setLoginStatusCode("10"); // LOGIN_STATUS_CD(로그인 상태 코드)
-		userMbr.setStopStatusCode("80"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
+//		userMbr.setLoginStatusCode("10"); // LOGIN_STATUS_CD(로그인 상태 코드)
+//		userMbr.setStopStatusCode("80"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
 
 		// 약관동의 정보
 		List<MbrClauseAgree> mbrClauseAgreeList;
@@ -628,8 +628,8 @@ public class UserSCITest {
 		userMbr.setUserType(UserTypeCode.MOBILE_USER.getCode()); // 모바일 회원
 		userMbr.setUserMainStatus(MainStateCode.NORMAL.getCode());
 		userMbr.setUserSubStatus(SubStateCode.NORMAL.getCode());
-		userMbr.setLoginStatusCode("10"); // LOGIN_STATUS_CD(로그인 상태 코드)
-		userMbr.setStopStatusCode("80"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
+//		userMbr.setLoginStatusCode("10"); // LOGIN_STATUS_CD(로그인 상태 코드)
+//		userMbr.setStopStatusCode("80"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
 
 		// 약관동의 정보
 		List<MbrClauseAgree> mbrClauseAgreeList;
@@ -746,8 +746,8 @@ public class UserSCITest {
 		userMbr.setUserType("123");
 		userMbr.setUserMainStatus("111");
 		userMbr.setUserSubStatus("222");
-		userMbr.setLoginStatusCode("1"); // LOGIN_STATUS_CD(로그인 상태 코드)
-		userMbr.setStopStatusCode("8"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
+//		userMbr.setLoginStatusCode("1"); // LOGIN_STATUS_CD(로그인 상태 코드)
+//		userMbr.setStopStatusCode("8"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
 
 		// 약관동의 정보
 		List<MbrClauseAgree> mbrClauseAgreeList;
@@ -849,8 +849,8 @@ public class UserSCITest {
 		userMbr.setUserType("123");
 		userMbr.setUserMainStatus("111");
 		userMbr.setUserSubStatus("222");
-		userMbr.setLoginStatusCode("1"); // LOGIN_STATUS_CD(로그인 상태 코드)
-		userMbr.setStopStatusCode("8"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
+//		userMbr.setLoginStatusCode("1"); // LOGIN_STATUS_CD(로그인 상태 코드)
+//		userMbr.setStopStatusCode("8"); // OFAUTH_STOP_STATUS_CD(직권중지 상태 코드)
 
 		// 약관동의 정보
 		List<MbrClauseAgree> mbrClauseAgreeList;
@@ -1096,13 +1096,13 @@ public class UserSCITest {
 		// 응답 필수 > userSubStatus
 		assertNotNull(loginUserResponse.getUserSubStatus());
 		// 응답 필수 > loginFailCount
-		assertTrue(loginUserResponse.getLoginFailCount() >= 0);
+//		assertTrue(loginUserResponse.getLoginFailCount() >= 0);
 		// 응답 필수 > isLoginSuccess
 		assertNotNull(loginUserResponse.getIsLoginSuccess());
-		// 응답 필수 > loginStatusCode
-		assertNotNull(loginUserResponse.getLoginStatusCode());
-		// 응답 필수 > stopStatusCode
-		assertNotNull(loginUserResponse.getStopStatusCode());
+//		// 응답 필수 > loginStatusCode
+//		assertNotNull(loginUserResponse.getLoginStatusCode());
+//		// 응답 필수 > stopStatusCode
+//		assertNotNull(loginUserResponse.getStopStatusCode());
 
 		LOGGER.debug("### 받은 데이터 1: {}", loginUserResponse.toString());
 		LOGGER.debug("### 받은 데이터 2: {}", commonResponse.toString());
@@ -1169,13 +1169,13 @@ public class UserSCITest {
 		// 응답 필수 > userSubStatus
 		assertNotNull(loginUserResponse.getUserSubStatus());
 		// 응답 필수 > loginFailCount
-		assertTrue(loginUserResponse.getLoginFailCount() >= 0);
+//		assertTrue(loginUserResponse.getLoginFailCount() >= 0);
 		// 응답 필수 > isLoginSuccess
 		assertNotNull(loginUserResponse.getIsLoginSuccess());
 		// 응답 필수 > loginStatusCode
-		assertNotNull(loginUserResponse.getLoginStatusCode());
+//		assertNotNull(loginUserResponse.getLoginStatusCode());
 		// 응답 필수 > stopStatusCode
-		assertNotNull(loginUserResponse.getStopStatusCode());
+//		assertNotNull(loginUserResponse.getStopStatusCode());
 
 		LOGGER.debug("### 받은 데이터 1: {}", loginUserResponse.toString());
 		LOGGER.debug("### 받은 데이터 2: {}", commonResponse.toString());
@@ -1292,9 +1292,9 @@ public class UserSCITest {
 		// 응답 필수 > isLoginSuccess : N
 		assertNotNull(loginUserResponse.getIsLoginSuccess());
 		// 응답 필수 > loginStatusCode
-		assertNotNull(loginUserResponse.getLoginStatusCode());
+//		assertNotNull(loginUserResponse.getLoginStatusCode());
 		// 응답 필수 > stopStatusCode
-		assertNotNull(loginUserResponse.getStopStatusCode());
+//		assertNotNull(loginUserResponse.getStopStatusCode());
 
 		LOGGER.debug("### 받은 데이터 1: {}", loginUserResponse.toString());
 		LOGGER.debug("### 받은 데이터 2: {}", commonResponse.toString());
@@ -1356,9 +1356,9 @@ public class UserSCITest {
 		// 응답 필수 > isLoginSuccess : N
 		assertNotNull(loginUserResponse.getIsLoginSuccess());
 		// 응답 필수 > loginStatusCode
-		assertNotNull(loginUserResponse.getLoginStatusCode());
+//		assertNotNull(loginUserResponse.getLoginStatusCode());
 		// 응답 필수 > stopStatusCode
-		assertNotNull(loginUserResponse.getStopStatusCode());
+//		assertNotNull(loginUserResponse.getStopStatusCode());
 
 		LOGGER.debug("### 받은 데이터 1: {}", loginUserResponse.toString());
 		LOGGER.debug("### 받은 데이터 2: {}", commonResponse.toString());
@@ -1476,13 +1476,13 @@ public class UserSCITest {
 		// 응답 필수 > isLoginSuccess : N
 		assertNotNull(loginUserResponse.getIsLoginSuccess());
 		// 응답 필수 > loginStatusCode
-		assertNotNull(loginUserResponse.getLoginStatusCode());
+//		assertNotNull(loginUserResponse.getLoginStatusCode());
 		// 응답 필수 > stopStatusCode
-		assertNotNull(loginUserResponse.getStopStatusCode());
+//		assertNotNull(loginUserResponse.getStopStatusCode());
 
 		LOGGER.debug("### 받은 데이터 1: {}", loginUserResponse.toString());
 		LOGGER.debug("### 받은 데이터 2: {}", commonResponse.toString());
-		LOGGER.debug("### 받은 데이터 3: {}", loginUserResponse.getLoginFailCount());
+//		LOGGER.debug("### 받은 데이터 3: {}", loginUserResponse.getLoginFailCount());
 	}
 
 	/**
@@ -4903,7 +4903,7 @@ public class UserSCITest {
 			for (LimitTarget policyCode : searchPolicyResponse.getLimitTargetList()) {
 				LOGGER.debug("응답 , policyCode : {}", policyCode.getLimitPolicyCode());
 				LOGGER.debug("응답 , policyCode : {}", policyCode.getLimitPolicyKey());
-				LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
+				//LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
 			}
 		}
 
@@ -5068,7 +5068,7 @@ public class UserSCITest {
 			for (LimitTarget policyCode : updatePolicyResponse.getLimitTargetList()) {
 				LOGGER.debug("응답 , policyCode : {}", policyCode.getLimitPolicyCode());
 				LOGGER.debug("응답 , policyKey : {}", policyCode.getLimitPolicyKey());
-				LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
+				//LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
 			}
 		}
 	}
@@ -5155,7 +5155,7 @@ public class UserSCITest {
 			for (LimitTarget policyCode : updatePolicyResponse.getLimitTargetList()) {
 				LOGGER.debug("응답 , policyCode : {}", policyCode.getLimitPolicyCode());
 				LOGGER.debug("응답 , policyKey : {}", policyCode.getLimitPolicyKey());
-				LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
+				//LOGGER.debug("응답 , tenantID : {}", policyCode.getTenantID());
 			}
 		}
 	}

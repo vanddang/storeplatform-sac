@@ -130,7 +130,7 @@ public class DeviceInfo extends CommonInfo {
 	/**
 	 * usim 번호.
 	 */
-	private String deviceSimNm;
+	private String simSerialNo;
 
 	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회.
@@ -563,18 +563,18 @@ public class DeviceInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return deviceSimNm
+	 * @return simSerialNo
 	 */
-	public String getDeviceSimNm() {
-		return deviceSimNm;
+	public String getSimSerialNo() {
+		return simSerialNo;
 	}
 
 	/**
-	 * @param deviceSimNm
+	 * @param simSerialNo
 	 *            String
 	 */
-	public void setDeviceSimNm(String deviceSimNm) {
-		this.deviceSimNm = deviceSimNm;
+	public void setSimSerialNo(String simSerialNo) {
+		this.simSerialNo = simSerialNo;
 	}
 
 	/**

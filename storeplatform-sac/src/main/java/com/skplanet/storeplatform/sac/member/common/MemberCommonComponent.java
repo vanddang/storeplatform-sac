@@ -41,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
@@ -504,16 +505,13 @@ public class MemberCommonComponent {
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
 		userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
-		userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
 		userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
 		userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
 		userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
 		userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
-		userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
 		userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
 		userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
 		userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
-		userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
 		userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
 		userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
 		userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
@@ -761,9 +759,6 @@ public class MemberCommonComponent {
 
 		}
 
-		/** 통신사 정보 확인 */
-		majorDeviceInfo.setDeviceTelecom(this.validDeviceTelecomCode(deviceTelecom));
-
 		/**
 		 * SKT 가입자일 경우 처리
 		 */
@@ -790,26 +785,27 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * 정상 통신사가 아니면 NSH 통신사 코드로 셋팅.
+	 * 유효 통신사코드 체크.
 	 * </pre>
 	 * 
 	 * @param deviceTelecomCode
 	 *            String
-	 * @return String 통신사코드
+	 * @return 유효한 통신사 코드 여부
 	 */
-	public String validDeviceTelecomCode(String deviceTelecomCode) {
-		if (StringUtils.isBlank(deviceTelecomCode)) {
-			return "";
-		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKT)
+	public boolean isValidDeviceTelecomCode(String deviceTelecomCode) {
+		if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_KT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_NON)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_IOS)
-				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKM)) {
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_NSH)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKM)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_KTM)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGM)) {
 
-			return deviceTelecomCode;
+			return true;
 		} else {
-			return MemberConstants.DEVICE_TELECOM_NSH;
+			return false;
 		}
 	}
 
@@ -1218,6 +1214,7 @@ public class MemberCommonComponent {
 	 * SKT, KT, U+ 각 통신사의 서비스관리번호를 구한다.
 	 * SKT는 mdn, deviceTelecom 파라메터만 필수.
 	 * KT/U+는 모든 파라메터 필수.
+	 * KT/U+ 응답결과에 따라 Exception을 발생시킨다. 단, 시스템 오류 응답, E/C 연동 에러시에는 svcMangNo null로 리턴한다.
 	 * </pre>
 	 *
 	 * @param mdn
@@ -1231,9 +1228,10 @@ public class MemberCommonComponent {
 	 * @return svcMangNo
 	 */
 	public String getSvcMangNo(String mdn, String deviceTelecom, String nativeId, String simSerialNo){
-
 		String svcMangNo = null;
-		if(StringUtils.isBlank(mdn)){
+
+		// MDN 형식만 조회 가능
+		if(StringUtils.isBlank(mdn) && ValidationCheckUtils.isDeviceId(mdn)){
 			throw new StorePlatformException("SAC_MEM_0001", "mdn");
 		}
 
@@ -1248,7 +1246,7 @@ public class MemberCommonComponent {
 		}
 
 		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)
-				|| !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)){
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)){
 			if(StringUtils.isBlank(nativeId)){
 				throw new StorePlatformException("SAC_MEM_0001", "nativeId");
 			}
@@ -1260,8 +1258,9 @@ public class MemberCommonComponent {
 		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 			UserEcRes userRes = this.getMappingInfo(mdn, "mdn");
 			svcMangNo = userRes.getSvcMngNum();
-		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
+		} else {
 			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+			MarketAuthorizeEcRes marketRes = null;
 			marketReq.setTrxNo(new StringBuffer("trx").append("-")
 					.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
 					.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString());
@@ -1269,22 +1268,30 @@ public class MemberCommonComponent {
 			marketReq.setDeviceTelecom(deviceTelecom);
 			marketReq.setNativeId(nativeId);
 			marketReq.setSimSerialNo(simSerialNo);
-			MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
-			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-				svcMangNo = marketRes.getDeviceInfo().getDeviceKey();
+			try{
+				if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
+					marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
+				} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
+					marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+				}
+			}catch(StorePlatformException e){
+				// 타사 연동 오류인 경우 svcMangNo null로 리턴
+				return null;
 			}
-		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
-			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
-			marketReq.setTrxNo(new StringBuffer("trx").append("-")
-					.append(RandomString.getString(20, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA))
-					.append("-").append(DateUtil.getToday("yyyyMMddHHmmssSSS")).toString());
-			marketReq.setDeviceId(mdn);
-			marketReq.setDeviceTelecom(deviceTelecom);
-			marketReq.setNativeId(nativeId);
-			marketReq.setSimSerialNo(simSerialNo);
-			MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
-			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+
+			if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
 				svcMangNo = marketRes.getDeviceInfo().getDeviceKey();
+			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) {
+				throw new StorePlatformException("SAC_MEM_0003", "mdn", mdn);
+			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_IMEI_MISMATCH)) {
+				throw new StorePlatformException("SAC_MEM_1507");
+			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_USIM_MISMATCH)) {
+				throw new StorePlatformException("SAC_MEM_1508");
+			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_PARAM_ERROR)) {
+				throw new StorePlatformException("SAC_MEM_0001", "필수");
+			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_SYSTEM_ERROR)) {
+				// 타사 시스템 오류인 경우 svcMangNo null로 리턴
+				return null;
 			}
 		}
 

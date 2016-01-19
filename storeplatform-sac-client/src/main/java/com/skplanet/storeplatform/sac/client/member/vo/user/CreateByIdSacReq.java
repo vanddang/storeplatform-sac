@@ -51,6 +51,7 @@ public class CreateByIdSacReq extends CommonInfo {
 	/**
 	 * 사용자 이메일.
 	 */
+	@NotEmpty
 	private String userEmail = "";
 
 	/**
@@ -506,6 +507,9 @@ public class CreateByIdSacReq extends CommonInfo {
 		this.mdn = mdn;
 	}
 
+	/**
+	 * @return simSerialNo
+	 */
 	public String getSimSerialNo() {
 		return simSerialNo;
 	}
@@ -516,4 +520,5 @@ public class CreateByIdSacReq extends CommonInfo {
 	public void setSimSerialNo(String simSerialNo) {
 		this.simSerialNo = simSerialNo;
 	}
+
 }

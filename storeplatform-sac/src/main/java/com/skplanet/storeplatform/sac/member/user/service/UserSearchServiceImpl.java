@@ -81,6 +81,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 	private UserSCI userSCI;
 
 	@Autowired
+	private LimitTargetService limitTargetService;
+
+	@Autowired
 	private IdpSCI idpSCI;
 
 	@Autowired
@@ -124,6 +127,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 		} else if (!"".equals(mbrNo)) {
 			detailReq.setMbrNo(mbrNo);
 		}
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
 
 		// 회원정보 세팅
 		DetailRes detailRes = this.srhUser(detailReq, sacHeader);
@@ -209,6 +215,7 @@ public class UserSearchServiceImpl implements UserSearchService {
                             deviceInfo = listDeviceRes.getDeviceInfoList().get(0);
                             deviceInfo.setDeviceId(req.getDeviceId());
                             deviceInfo.setMdn(null);
+                            deviceInfo.setSimSerialNo(null);
                             getDeviceInfoList.add(deviceInfo);
 
                         }else {
@@ -223,6 +230,8 @@ public class UserSearchServiceImpl implements UserSearchService {
                                     deviceInfo.setDeviceId(deviceInfo.getMdn());
                                     deviceInfo.setMdn(null);
                                 }
+
+                                deviceInfo.setSimSerialNo(null);
                                 getDeviceInfoList.add(deviceInfo);
                             }
                         }
@@ -441,7 +450,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		/** 1. 헤더 정보 셋팅 */
         CommonRequest commonRequest = CommonRequest.convert(sacHeader);
 
-		/** 2. 회원 정보 조회 */
+		/** 2. 회원 정보 조회. */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySchUserKey = new KeySearch();
 		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
@@ -456,24 +465,21 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		SearchExtentUserResponse srhExtUserResponse = this.userSCI.searchExtentUser(srhExtUserRequest);
 
-		//UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
-
 		/** 3. 가가입 상태일 경우 오류. */
 		if (StringUtils.equals(srhExtUserResponse.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) {
-			throw new StorePlatformException("SAC_MEM_2001", srhExtUserResponse.getUserMbr().getUserMainStatus(),
-					srhExtUserResponse.getUserMbr().getUserSubStatus());
+			throw new StorePlatformException("SAC_MEM_0003", "userId", srhExtUserResponse.getUserMbr().getUserID());
 		}
 
 		String checkId = "";
 
-		/** 4. Email값이 있다면 UserId와 Email이 일치하는지 체크 */
+		/** 4. Email값이 있다면 UserId와 Email이 일치하는지 체크. */
 		if (!req.getUserEmail().equals("")) {
 			if (srhExtUserResponse.getUserMbr().getUserEmail().equals(req.getUserEmail())) {
 				checkId = "Y";
 			} else {
 				checkId = "N";
 			}
-		/** 4-1. Phone이 있다면 UserId와 Phone이 일치하는지 체크 */
+		/** 4-1. Phone이 있다면 UserId와 Phone이 일치하는지 체크. */
 		} else if (!req.getUserPhone().equals("")) {
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getUserPhone());
 			req.setUserPhone(opmdMdn);
@@ -493,22 +499,22 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 		}
 
-		/** 5. 사용자 이메일 혹은 Phone 이 일치하지 않으면 오류처리 */
+		/** 5. 사용자 이메일 혹은 Phone 이 일치하지 않으면 오류처리. */
 		if (checkId.equals("N")) {
 			throw new StorePlatformException("SAC_MEM_0002", "Email or Phone");
 		}
 
 		SearchPasswordSacRes res = new SearchPasswordSacRes();
 
-		/** 6. 모바일, 네이버, 구글, 페이스북 아이디 사용자는 비밀번호 찾기 불가 */
+		/** 6. 모바일, 네이버, 구글, 페이스북 아이디 사용자는 비밀번호 찾기 불가. */
 		if(StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)
 				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)
 				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
 				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 			throw new StorePlatformException("SAC_MEM_1300", srhExtUserResponse.getUserMbr().getUserType());
-		/** 7. 그외의 사용자는 비밀번호를 리셋후 응답처리  */
+		/** 7. 그외의 사용자는 비밀번호를 리셋후 응답처리.  */
 		}else{
-			/** 7-1. 새로운 암호 생성 및 암호화하여 DB 저장 */
+			/** 7-1. 새로운 암호 생성 및 암호화하여 DB 저장. */
 			MbrPwd mbrPwd = new MbrPwd();
 			mbrPwd.setMemberKey(srhExtUserResponse.getUserMbr().getUserKey());
 
@@ -518,7 +524,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 			ResetPasswordUserResponse scRPURes = this.userSCI.updateResetPasswordUser(scRPUReq);
 
-			/** 7-2. DB에 저장이 잘 되었으면 req의 userEmail, userPhone에 따라 응답값 설정 */
+			/** 7-2. DB에 저장이 잘 되었으면 req의 userEmail, userPhone에 따라 응답값 설정. */
 			res.setUserPw(scRPURes.getUserPW());
 			if (!req.getUserEmail().equals("")) {
 				res.setSendInfo(StringUtil.setTrim(req.getUserEmail()));
@@ -829,9 +835,6 @@ public class UserSearchServiceImpl implements UserSearchService {
         userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
-		userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
-		userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
-		userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
 		userInfo.setIsDormant(schUserRes.getUserMbr().getIsDormant());
 
 		// 실명인증이 되어 있으면 실명인증 데이터가 내려간다.
@@ -927,21 +930,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req) {
 
-		/**
-		 * OPMD 단말 여부, OPMD 모번호 setting.
-		 */
+		/** OPMD 단말 여부, OPMD 모번호 setting. */
 		DetailByDeviceIdSacRes response = this.setOmpdInfo(req);
 
-		/**
-		 * 사용자별 정책 리스트 setting.
-		 */
+		/** 사용자별 정책 리스트 setting. */
 		if (!StringUtils.equals(req.getKey(), "") && req.getPolicyCodeList() != null) {
 			response.setPolicyCodeList(this.getIndividualPolicy(sacHeader, req));
 		}
 
-		/**
-		 * 사용자 정보/단말 정보 setting.
-		 */
+		/** 사용자 정보/단말 정보 setting. */
 		this.setDeviceInfo(sacHeader, req, response);
 
 		/**
@@ -1026,7 +1023,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			/**
 			 * SC 사용자 정책 리스트 조회 연동.
 			 */
-			SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+			SearchPolicyResponse policyResponse = this.limitTargetService.searchPolicyList(policyRequest);
 
 			/**
 			 * 처리 결과 setting.
@@ -1100,18 +1097,18 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req,
 			DetailByDeviceIdSacRes response) {
 
-		/**
-		 * 검색조건 정보 setting.
-		 */
+		/** 검색조건 정보 setting. */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySchUserKey = new KeySearch();
-		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MDN);
+		} else {
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+		}
 		keySchUserKey.setKeyString(this.mcc.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회.
 		keySearchList.add(keySchUserKey);
 
-		/**
-		 * 회원 조회 연동.
-		 */
+		/** 회원 조회 연동. */
 		CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
 		chkDupReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		chkDupReq.setKeySearchList(keySearchList);
@@ -1123,31 +1120,23 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		}
 
-		/**
-		 * 사용자 기본 정보 조회.
-		 */
+		/** 사용자 기본 정보 조회. */
 		SearchUserResponse userInfo = this.getUserInfo(sacHeader, chkDupRes.getUserMbr().getUserKey());
 
-		/**
-		 * SC 회원의 등록된 휴대기기 상세정보를 조회 연동.
-		 */
+		/** SC 회원의 등록된 휴대기기 상세정보를 조회 연동. */
 		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 		searchDeviceRequest.setUserKey(userInfo.getUserKey()); // 회원 조회시 내려온 UserKey setting.
 		searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		searchDeviceRequest.setKeySearchList(keySearchList);
 		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
 
-		/**
-		 * 사용자 정보 setting.
-		 */
+		/** 사용자 정보 setting. */
 		response.setUserKey(userInfo.getUserKey());
 		response.setUserType(userInfo.getUserMbr().getUserType());
 		response.setUserId(userInfo.getUserMbr().getUserID());
 		response.setIsRealNameYn(userInfo.getUserMbr().getIsRealName());
 
-		/**
-		 * 실명인증정보 (이름, 생년월일) - 우선순위 (본인 실명인증 생년월일 > DB생년월일 > null)
-		 */
+		/** 실명인증정보 (이름, 생년월일) - 우선순위 (본인 실명인증 생년월일 > DB생년월일 > null). */
 		if (StringUtils.equals(userInfo.getUserMbr().getIsRealName(), MemberConstants.USE_Y)) {
 
 			response.setUserName(ObjectUtils.toString(userInfo.getMbrAuth().getName()));
@@ -1160,14 +1149,16 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		}
 
-		/**
-		 * 단말 정보 setting.
-		 */
+		/** 단말 정보 setting. */
 		response.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
-		response.setDeviceId(searchDeviceResponse.getUserMbrDevice().getDeviceID());
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+			response.setDeviceId(searchDeviceResponse.getUserMbrDevice().getMdn());
+		} else {
+			response.setDeviceId(searchDeviceResponse.getUserMbrDevice().getDeviceID());
+		}
 		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
-		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
+		/** 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN). */
 		Device cmDevice = this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		if (cmDevice != null) {
 			response.setGiftYn(cmDevice.getGiftSprtYn());
@@ -1570,11 +1561,6 @@ public class UserSearchServiceImpl implements UserSearchService {
         userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
         userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
         userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
-        userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
-        userInfo.setEntryStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getEntryStatusCode()));
-
-		userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
-		userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
 		userInfo.setIsDormant(schUserRes.getUserMbr().getIsDormant());
 
 		// 실명인증이 되어 있으면 실명인증 데이터가 내려간다.

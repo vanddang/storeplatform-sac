@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.UserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.*;
+import com.skplanet.storeplatform.sac.purchase.common.util.PrchsUtil;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SellerMbrAppSacParam;
@@ -275,9 +276,11 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	 * @return 판매자 정보
 	 */
 	@Override
-	public SellerMbrSac searchSellerInfo(String sellerKey) {
+	public SellerMbrSac detailInformation(String sellerKey, String tenantProdGrpCd) {
 		SellerMbrSac sellerMbrSac = new SellerMbrSac();
 		sellerMbrSac.setSellerKey(sellerKey);
+		sellerMbrSac.setCategoryCd(PrchsUtil.getTopMenuID(tenantProdGrpCd));
+
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 		sellerMbrSacList.add(sellerMbrSac);
 
@@ -322,8 +325,15 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	 */
 	@Override
 	public SellerMbrAppSacParam detailInformationListForProduct(String sellerKey, String tenantProdGrpCd) {
+		SellerMbrSac sellerMbrSac = new SellerMbrSac();
+		sellerMbrSac.setSellerKey(sellerKey);
+		sellerMbrSac.setCategoryCd(PrchsUtil.getTopMenuID(tenantProdGrpCd));
+
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		sellerMbrSacList.add(sellerMbrSac);
+
 		DetailInformationListForProductSacReq detailInformationListForProductSacReq = new DetailInformationListForProductSacReq();
-		detailInformationListForProductSacReq.setSellerKeyList(Arrays.asList(sellerKey));
+		detailInformationListForProductSacReq.setSellerMbrSacList(sellerMbrSacList);
 
 		DetailInformationListForProductSacRes detailInformationListForProductSacRes = null;
 

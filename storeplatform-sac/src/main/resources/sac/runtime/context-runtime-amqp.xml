@@ -107,14 +107,21 @@
 	        <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
 	        <property name="routingKey" value="sac.tenant.member-retire.async" />
 	    </bean>
-	
+
+       <!-- Member - shopping key change Rabbit Template -->
+        <bean id="memberShoppingChangeKeyAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+            <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
+            <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
+            <property name="routingKey" value="sac.shopping.member-key-change.async" />
+        </bean>
+        	
 	   <!-- Member - Seller Withdraw Rabbit Template -->
 	    <bean id="sellerWithdrawAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
 	        <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
 	        <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
 	        <property name="routingKey" value="tstore.icms-app-admin.rmc.sync" />
 	    </bean>
-	
+      	
 	   <!-- shopping - Iprm Rabbit Template -->
 	    <bean id="shoppingIprmAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
 	        <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
@@ -147,6 +154,8 @@
 	    <bean id="memberDelDeviceAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	    <!-- Member - Retire Rabbit Template -->
 	    <bean id="memberRetireAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
+	    <!-- Member - shopping key change Rabbit Template -->
+        <bean id="memberShoppingChangeKeyAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	   	<!-- Member - Seller Withdraw Rabbit Template -->
 	    <bean id="sellerWithdrawAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	   	<!-- shopping - Iprm Rabbit Template -->

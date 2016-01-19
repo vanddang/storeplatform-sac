@@ -131,10 +131,10 @@
         <level value="ERROR" />
         <appender-ref ref="CONSOLE" />
     </logger>
-    
-    <!-- JDBC LOGGER --> 
+
+    <!-- JDBC LOGGER -->
     <logger name="jdbc.connection" additivity="false">
-        <level value="OFF" /> 
+        <level value="OFF" />
     </logger>
     <logger name="jdbc.resultset" additivity="false">
         <level value="OFF" /> 

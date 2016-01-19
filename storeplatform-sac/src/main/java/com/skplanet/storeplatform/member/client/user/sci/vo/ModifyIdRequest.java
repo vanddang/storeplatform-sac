@@ -38,6 +38,12 @@ public class ModifyIdRequest  extends CommonInfo {
     /** 변경할 사용자 인증 토큰. */
     private String newUserAuthToken = "";
 
+    /** 변경할 사용자 이메일 */
+    private String newUserEmail = "";
+
+    /** 변경할 social아이디 회원 번호. */
+    private String newSocialUserNo = "";
+
     /**
      * 공통 요청 Value Object를 리턴한다.
      *
@@ -133,6 +139,28 @@ public class ModifyIdRequest  extends CommonInfo {
      *            String : the newUserAuthToken to set
      */
     public void setNewUserAuthToken(String newUserAuthToken) { this.newUserAuthToken = newUserAuthToken; }
+
+    /**
+     * @return String : newUserEmail
+     */
+    public String getNewUserEmail() { return newUserEmail; }
+
+    /**
+     * @param newUserEmail
+     *            String : the newUserEmail to set
+     */
+    public void setNewUserEmail(String newUserEmail) { this.newUserEmail = newUserEmail; }
+
+    /**
+     * @return String : newSocialUserNo
+     */
+    public String getNewSocialUserNo() { return newSocialUserNo; }
+
+    /**
+     * @param newSocialUserNo
+     *            String : the newSocialUserNo to set
+     */
+    public void setNewSocialUserNo(String newSocialUserNo) { this.newSocialUserNo = newSocialUserNo; }
 
     /**
      * Returns the serial version UID.

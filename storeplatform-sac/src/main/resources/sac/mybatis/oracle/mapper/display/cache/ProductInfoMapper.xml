@@ -355,7 +355,6 @@
                    AND SB.PROD_ID = SC.PROD_ID
                    AND SB.CONTENTS_TYPE_CD = 'PD002502'
                    AND SC.TENANT_ID = #{tenantId}
-                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
                    AND SC.PROD_ID = SD.PROD_ID
                    AND SD.TENANT_ID = SC.TENANT_ID
                    AND SD.PROD_STATUS_CD = 'PD000403'
@@ -375,7 +374,6 @@
                    AND SB.PROD_ID = SC.PROD_ID
                    AND SB.CONTENTS_TYPE_CD = 'PD002502'
                    AND SC.TENANT_ID = #{tenantId}
-                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
                    AND SC.PROD_ID = SD.PROD_ID
                    AND SD.TENANT_ID = SC.TENANT_ID
                    AND SD.PROD_STATUS_CD = 'PD000403'
@@ -921,6 +919,7 @@
                     ON SPP.PROD_ID = EPROD.PROD_ID
                        AND SPP.EXPO_YN = 'Y'
                        AND SPP.CPN_ID IS NOT NULL
+                       AND SPP.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                        AND SYSDATE BETWEEN SPP.SPRC_APPLY_START_DT AND SPP.SPRC_APPLY_END_DT
             WHERE 1 = 1
                   AND SC.CATALOG_ID = #{catalogId}
@@ -929,7 +928,14 @@
                   AND TPROD.TENANT_ID = #{tenantId}
                   AND TPROD.PROD_STATUS_CD = 'PD000403'
                   AND NVL(SPROD.B2B_PROD_YN, 'N') != 'Y'
-                  AND NVL(SC.CHNL_CNT, 0) > 0
+				  AND EXISTS(
+							SELECT 'X'
+							  FROM TB_DP_TENANT_PROD
+							 WHERE TENANT_ID =#{tenantId}
+							   AND PROD_ID =SC.CATALOG_ID
+							   AND PROD_STATUS_CD ='PD000403'
+							   AND EXPO_YN = 'Y'
+						)
                   AND PCM.BASE_YN = 'Y'
                   AND PCM.USE_YN = 'Y'
                   AND SCD.LANG_CD = #{langCd}

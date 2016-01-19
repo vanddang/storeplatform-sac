@@ -1,12 +1,11 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.product;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.codehaus.jackson.annotate.JsonRawValue;
-
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductListSacRes {
 	private String listId;
@@ -15,8 +14,9 @@ public class ProductListSacRes {
 	private String hasNext; // Y/N
 	private Integer count;
 	private Date  date;
+
 	@JsonRawValue
-	private String etcProp;
+	private Object etcProp;
 	private List<Product> productList;
 
 	public ProductListSacRes() {
@@ -65,11 +65,11 @@ public class ProductListSacRes {
 		this.date = date;
 	}
 
-	public String getEtcProp() {
+	public Object getEtcProp() {
 		return etcProp;
 	}
 
-	public void setEtcProp(String etcProp) {
+	public void setEtcProp(Object etcProp) {
 		this.etcProp = etcProp;
 	}
 }

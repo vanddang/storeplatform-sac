@@ -56,13 +56,6 @@ public class UserWithdrawController {
 			throw new StorePlatformException("SAC_MEM_0002", "userId or deviceId");
 		}
 
-		/**
-		 * 파라미터 체크 (userId 존재, userAuthToken 미존재)
-		 */
-		if (StringUtils.isNotBlank(req.getUserId()) && StringUtils.isBlank(req.getUserAuthToken())) {
-			throw new StorePlatformException("SAC_MEM_0002", "userAuthToken");
-		}
-
 		WithdrawRes res = this.svc.withdraw(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));

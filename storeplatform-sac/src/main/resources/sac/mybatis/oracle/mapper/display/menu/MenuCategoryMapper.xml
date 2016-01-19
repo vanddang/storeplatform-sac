@@ -936,15 +936,21 @@
                             AND E.PART_PROD_ID = G.PROD_ID
                             AND E.PART_PROD_ID = H.PROD_ID
                             AND E.PART_PROD_ID = I.PROD_ID
-                            AND G.TENANT_ID = H.TENANT_ID 
-                            AND NVL(B.CHNL_CNT, 0) > 0
+                            AND G.TENANT_ID = H.TENANT_ID
+                            AND EXISTS(
+                                    SELECT 'X'
+                                    FROM TB_DP_TENANT_PROD
+                                    WHERE TENANT_ID =#{tenantId}
+                                    AND PROD_ID =B.CATALOG_ID
+                                    AND PROD_STATUS_CD ='PD000403'
+                                    AND EXPO_YN = 'Y'
+								 )
                             AND A.USE_YN ='Y'
                             AND C.USE_YN ='Y'
                             AND D.USE_YN ='Y'
                             AND G.EXPO_YN = 'Y'
                             AND NVL(F.B2B_PROD_YN, 'N') != 'Y'
                             AND G.PROD_STATUS_CD = 'PD000403'
-                            AND SYSDATE BETWEEN  H.APPLY_START_DT AND H.APPLY_END_DT 
                             AND J.SCL_SHPG_SPRT_YN = 'Y'
                             AND (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
                             AND J.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
@@ -967,5 +973,5 @@
         ) A   
         ORDER BY A.RNK1, A.RNK2 
     </select>
-         
+
 </mapper>

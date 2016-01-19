@@ -18,6 +18,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStats;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -45,6 +48,8 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Autowired
 	private DisplayCommonService commonService;
 
+    @Autowired
+    private ProductInfoManager productInfoManager;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -514,9 +519,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	public Accrual generateAccrual(MetaInfo metaInfo) {
 
 		Accrual accrual = new Accrual();
-		accrual.setVoterCount(metaInfo.getPaticpersCnt() != null ? metaInfo.getPaticpersCnt() : 0);
-		accrual.setDownloadCount(metaInfo.getPrchsCnt() != null ? metaInfo.getPrchsCnt() : 0);
-		accrual.setScore(metaInfo.getAvgEvluScore() != null ? metaInfo.getAvgEvluScore() : 0);
+        // 3사 통함 평점, 구매수, 참여수 조회 (10분 캐쉬적용)
+        ProductStats productStats = this.productInfoManager.getProductStats(new ProductStatsParam(metaInfo.getProdId()));
+        accrual.setVoterCount(productStats.getParticipantCount());
+        accrual.setDownloadCount(productStats.getPurchaseCount());
+        accrual.setScore(productStats.getAverageScore());
 
 		return accrual;
 	}

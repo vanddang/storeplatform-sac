@@ -23,6 +23,8 @@ import com.skplanet.storeplatform.member.common.code.DeviceManagementCode;
 import com.skplanet.storeplatform.member.common.code.MainStateCode;
 import com.skplanet.storeplatform.member.common.code.SubStateCode;
 import com.skplanet.storeplatform.member.common.code.UserTypeCode;
+import com.skplanet.storeplatform.member.common.crypto.CryptoCode;
+import com.skplanet.storeplatform.member.common.crypto.CryptoCodeIm;
 import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
 import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
 import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
@@ -134,8 +136,6 @@ public class UserServiceImpl implements UserService {
 		usermbr.setSystemID(createUserRequest.getCommonRequest().getSystemID());
 		usermbr.setUserKey(generatedUserKey);
 		usermbr.setRegDate(Utils.getLocalDateTimeinYYYYMMDD());
-		usermbr.setLoginStatusCode(createUserRequest.getUserMbr().getLoginStatusCode());
-		usermbr.setStopStatusCode(createUserRequest.getUserMbr().getStopStatusCode());
 
 		// ACTION 2-2. 무선사용자 회원가입의 경우 MBR_ID 생성
 		if (createUserRequest.getUserMbr().getUserType().equals(UserTypeCode.MOBILE_USER.getCode())) {
@@ -147,14 +147,6 @@ public class UserServiceImpl implements UserService {
 
 		LOGGER.debug(">>>> >>> UserServiceImpl before create : {}", usermbr);
 
-		// 로그인, 직권중지 상태값이 없는 경우 일괄 정상코드 설정
-		if (usermbr.getLoginStatusCode() == null || usermbr.getLoginStatusCode().length() <= 0) {
-			usermbr.setLoginStatusCode(Constant.LOGIN_STATUS_CODE);
-		}
-//		if (usermbr.getStopStatusCode() == null || usermbr.getStopStatusCode().length() <= 0) {
-//			usermbr.setStopStatusCode(Constant.STOP_STATUS_CODE);
-//		}
-
 		// ACTION 3. 사용자 회원 추가
 		row = (Integer) this.commonDAO.insert("User.createUser", usermbr);
 		LOGGER.debug("### 0 row : {}", row);
@@ -165,9 +157,6 @@ public class UserServiceImpl implements UserService {
 		// ACTION 3-1. 사용자 회원 비밀번호 추가
 		MbrPwd mbrPwd = new MbrPwd();
 		mbrPwd.setMemberKey(generatedUserKey);
-		if(createUserRequest.getMbrPwd() != null && createUserRequest.getMbrPwd().getUserAuthToken() != null){
-			mbrPwd.setUserAuthToken(createUserRequest.getMbrPwd().getUserAuthToken());
-		}
 
 		// 사용자 패스워드 추가
 		row = (Integer) this.commonDAO.insert("User.insertPassword", mbrPwd);
@@ -429,6 +418,23 @@ public class UserServiceImpl implements UserService {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
 			}
 
+            userMbrRetrieveUserMbrPwd.setUserID(tempDevice.getUserID());
+            userMbrRetrieveUserMbrPwd = this.commonDAO.queryForObject("User.getUserMbrRetrievePWD",
+                    userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
+
+            if (userMbrRetrieveUserMbrPwd == null) {
+                // 휴면DB조회
+                userMbrRetrieveUserMbrPwd = new UserMbrRetrieveUserMbrPwd();
+                userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
+                userMbrRetrieveUserMbrPwd = this.idleDAO.queryForObject("User.getUserMbrRetrievePWD",
+                        userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
+                if (userMbrRetrieveUserMbrPwd == null) {
+                    throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+                } else {
+                    isDormant = Constant.TYPE_YN_Y;
+                }
+            }
+
 			// TLog
 			final String tlogUserKey = tempDevice.getUserKey();
 			final String tlogDeviceID = tempDevice.getDeviceID();
@@ -516,16 +522,12 @@ public class UserServiceImpl implements UserService {
 			userMbrLoginLog.setSystemID(loginUserRequest.getCommonRequest().getSystemID());
 			userMbrLoginLog.setUserKey(userMbrRetrieveUserMbrPwd.getUserKey());
 
-			// TLOG - TL_SC_MEM_0001 (deviceIp) 항목에는 Ip를 남기고
-			// tb_us_usermbr_login_log의 connIp 에는 deviceId를 남기 도록 처리.
-			// 현재 호출하는 모든 부분의 userId에 deviceId가 넘어오고 있음.
-			if (StringUtils.equals(loginUserRequest.getIsMobile(), Constant.TYPE_YN_Y)) { // 모바일 회원
-				if (StringUtils.isNotBlank(loginUserRequest.getUserID())) {
-					userMbrLoginLog.setConnIp(loginUserRequest.getUserID());
-				}
-			} else {
-				if (StringUtils.isNotBlank(loginUserRequest.getIpAddress())) {
-					userMbrLoginLog.setConnIp(loginUserRequest.getIpAddress());
+			if (StringUtils.isNotBlank(loginUserRequest.getIpAddress())) {
+				userMbrLoginLog.setConnIp(loginUserRequest.getIpAddress());
+			}else{
+				if(tempDevice != null){
+					//IP정보가 없으면 요청한 mdn으로, mdn값이 없으면 deviceId 정보를 남긴다
+					userMbrLoginLog.setConnIp(tempDevice.getMdn()==null?tempDevice.getDeviceID():tempDevice.getMdn());
 				}
 			}
 
@@ -582,39 +584,15 @@ public class UserServiceImpl implements UserService {
 				}
 			}
 
-			// 로그인 실패카운트 초기화
-			if (userMbrRetrieveUserMbrPwd.getFailCnt() > 0) {
-				MbrPwd mbrPwd = new MbrPwd();
-				//mbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
-				mbrPwd.setMemberKey(userMbrRetrieveUserMbrPwd.getUserKey());
-				this.commonDAO.update("User.updateLoginSuccess", mbrPwd);
-			}
-
 			loginUserResponse.setUserMainStatus(userMbrRetrieveUserMbrPwd.getUserMainStatus());
 			loginUserResponse.setUserSubStatus(userMbrRetrieveUserMbrPwd.getUserSubStatus());
 			loginUserResponse.setIsLoginSuccess(Constant.TYPE_YN_Y);
-			loginUserResponse.setLoginFailCount(0);
-			loginUserResponse.setLoginStatusCode(userMbrRetrieveUserMbrPwd.getLoginStatusCode());
-			loginUserResponse.setStopStatusCode(userMbrRetrieveUserMbrPwd.getStopStatusCode());
 
 		} else { // 로그인 실패
-
-			// 2.1.5.ID 기반 회원 인증API에서 비밀번호 불일치인 경우만 해당.
-			MbrPwd mbrPwd = new MbrPwd();
-			//mbrPwd.setTenantID(loginUserRequest.getCommonRequest().getTenantID());
-			mbrPwd.setMemberKey(userMbrRetrieveUserMbrPwd.getUserKey());
-			if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
-				this.commonDAO.update("User.updateLoginFail", mbrPwd);
-			} else { // 휴면계정이 비밀번호 불일치시 복구처리가 되지 않는 경우
-				this.idleDAO.update("User.updateLoginFail", mbrPwd);
-			}
 
 			loginUserResponse.setUserMainStatus(userMbrRetrieveUserMbrPwd.getUserMainStatus());
 			loginUserResponse.setUserSubStatus(userMbrRetrieveUserMbrPwd.getUserSubStatus());
 			loginUserResponse.setIsLoginSuccess(Constant.TYPE_YN_N);
-			loginUserResponse.setLoginFailCount(userMbrRetrieveUserMbrPwd.getFailCnt() + 1);
-			loginUserResponse.setLoginStatusCode(userMbrRetrieveUserMbrPwd.getLoginStatusCode());
-			loginUserResponse.setStopStatusCode(userMbrRetrieveUserMbrPwd.getStopStatusCode());
 
 		}
 
@@ -669,7 +647,6 @@ public class UserServiceImpl implements UserService {
 		RemoveUserResponse removeUserResponse = new RemoveUserResponse();
 
 		UserMbr usermbr = new UserMbr();
-		usermbr.setTenantID(removeUserRequest.getCommonRequest().getTenantID());
 		usermbr.setUserKey(removeUserRequest.getUserKey());
 
 		String isRegistered = null;
@@ -692,7 +669,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		usermbr = new UserMbr();
-		usermbr.setTenantID(removeUserRequest.getCommonRequest().getTenantID());
 		usermbr.setUserKey(removeUserRequest.getUserKey());
 		usermbr.setSecedeReasonCode(removeUserRequest.getSecedeReasonCode());
 		usermbr.setSecedeReasonMessage(removeUserRequest.getSecedeReasonMessage());
@@ -848,6 +824,82 @@ public class UserServiceImpl implements UserService {
 		removeUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
 		return removeUserResponse;
+	}
+
+	/**
+	 * <pre>
+	 * 회원 정보를 delete하는 기능을 제공한다.
+	 * 정상회원가입후 휴대기기 등록 오류 발생시 롤백개념으로 사용한다.
+	 * </pre>
+	 *
+	 * @param deleteUserRequest 회원 탈퇴 요청 Value Object
+	 * @return DeleteUserResponse - 회원 탈퇴 응답 Value Object
+	 */
+	@Override
+	public DeleteUserResponse delete(DeleteUserRequest deleteUserRequest) {
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(Constant.SEARCH_TYPE_USER_KEY);
+		keySchUserKey.setKeyString(deleteUserRequest.getUserKey());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest srhExtUserRequest = new SearchExtentUserRequest();
+		srhExtUserRequest.setCommonRequest(deleteUserRequest.getCommonRequest());
+		srhExtUserRequest.setKeySearchList(keySearchList);
+		srhExtUserRequest.setUserInfoYn(Constant.TYPE_YN_Y);
+		srhExtUserRequest.setAgreementInfoYn(Constant.TYPE_YN_Y);
+		srhExtUserRequest.setMbrAuthInfoYn(Constant.TYPE_YN_Y);
+		srhExtUserRequest.setMbrLglAgentInfoYn(Constant.TYPE_YN_Y);
+		SearchExtentUserResponse srhExtUserResponse = this.searchExtentUser(srhExtUserRequest);
+
+		if(srhExtUserResponse != null){
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserKey(deleteUserRequest.getUserKey());
+			Integer row = 0;
+
+			if(srhExtUserResponse.getUserMbr() != null){
+				row = this.commonDAO.delete("User.removeUserMbr", userMbr); // tb_us_ousermbr
+				if (row <= 0) {
+					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+				}
+
+				row = this.commonDAO.delete("User.removeUserMbrPwd", userMbr); // tb_us_ousermbr_pwd
+				if (row <= 0) {
+					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+				}
+			}
+
+			if(srhExtUserResponse.getMbrClauseAgreeList() != null && srhExtUserResponse.getMbrClauseAgreeList().size() > 0){
+				row = this.commonDAO.delete("User.removeUserMbrClauseAgree", userMbr); // tb_us_ousermbr_clause_agree
+
+			}
+
+			if(srhExtUserResponse.getMbrMangItemPtcrList() != null && srhExtUserResponse.getMbrMangItemPtcrList().size() > 0){
+				row = this.commonDAO.delete("User.removeUserMbrMangItemPtcr", userMbr); // tb_us_ousermbr_mang_item_ptcr
+				if (row <= 0) {
+					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+				}
+			}
+
+			if(srhExtUserResponse.getMbrLglAgent() != null && StringUtils.equals(srhExtUserResponse.getMbrLglAgent().getIsParent(), Constant.TYPE_YN_Y)){
+				row = this.commonDAO.delete("User.removeUserMbrLglAgent", userMbr); // tb_us_ousermbr_lgl_agent
+				if (row <= 0) {
+					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+				}
+			}
+
+			if(srhExtUserResponse.getMbrAuth() != null && StringUtils.equals(srhExtUserResponse.getMbrAuth().getIsRealName(), Constant.TYPE_YN_Y)){
+				row = this.commonDAO.delete("User.removeUserMbrAuth", userMbr); // tb_us_ousermbr_auth
+				if (row <= 0) {
+					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+				}
+			}
+		}
+
+		DeleteUserResponse deleteUserResponse = new DeleteUserResponse();
+		deleteUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+		return deleteUserResponse;
 	}
 
 	/**
@@ -1407,8 +1459,6 @@ public class UserServiceImpl implements UserService {
 		usermbr.setUserKey(userKey);
 		usermbr.setUserMainStatus(updateStatusUserRequest.getUserMainStatus());
 		usermbr.setUserSubStatus(updateStatusUserRequest.getUserSubStatus());
-		usermbr.setLoginStatusCode(updateStatusUserRequest.getLoginStatusCode());
-		usermbr.setStopStatusCode(updateStatusUserRequest.getStopStatusCode());
 		if (StringUtils.equals(MainStateCode.SECEDE.getCode(), updateStatusUserRequest.getUserMainStatus())) {
 			usermbr.setSecedeDate(Utils.getLocalDateTimeinYYYYMMDD());
 		}
@@ -1478,6 +1528,7 @@ public class UserServiceImpl implements UserService {
 	 * @param updatePasswordUserRequest
 	 *            사용자회원 비밀번호 변경 요청 Value Object
 	 * @return UpdatePasswordUserResponse - 사용자회원 비밀번호 변경 응답 Value Object
+	 * @deprecated updatePasswordUser > modifyUserPwd
 	 */
 	@Override
 	public UpdatePasswordUserResponse updatePasswordUser(UpdatePasswordUserRequest updatePasswordUserRequest) {
@@ -1490,14 +1541,23 @@ public class UserServiceImpl implements UserService {
 		} else {
 			dao = this.idleDAO;
 		}
+		// userID가 존재하는지 여부 확인
+		String isRegistered = null;
+		UserMbr usermbr = new UserMbr();
+		//usermbr.setTenantID(updatePasswordUserRequest.getCommonRequest().getTenantID());
+		usermbr.setUserID(updatePasswordUserRequest.getMbrPwd().getMemberID());
+		isRegistered = dao.queryForObject("User.isRegisteredUserID", usermbr, String.class);
+		if (isRegistered == null || isRegistered.length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+		}
 
-		updatePasswordUserRequest.getMbrPwd().setMemberPW(
-				createUserPwdEncyp(updatePasswordUserRequest.getMbrPwd().getMemberPW()));
-		updatePasswordUserRequest.getMbrPwd().setOldPW(
-				createUserPwdEncyp(updatePasswordUserRequest.getMbrPwd().getOldPW()));
+		updatePasswordUserRequest.getMbrPwd().setTenantID(updatePasswordUserRequest.getCommonRequest().getTenantID());
+
+		//LOGGER.debug("### tenantID : {}", updatePasswordUserRequest.getMbrPwd().getTenantID());
+		LOGGER.debug("### memberID : {}", updatePasswordUserRequest.getMbrPwd().getMemberID());
 
 		Integer row = dao.update("User.updatePasswordUser", updatePasswordUserRequest.getMbrPwd());
-
+		LOGGER.debug("### updateStatus row : {}", row);
 		if (row == 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
@@ -1505,8 +1565,73 @@ public class UserServiceImpl implements UserService {
 		UpdatePasswordUserResponse updatePasswordUserResponse = new UpdatePasswordUserResponse();
 		updatePasswordUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
-		updatePasswordUserResponse.setUserKey(updatePasswordUserRequest.getMbrPwd().getMemberKey());
+		updatePasswordUserResponse.setUserKey(isRegistered);
 		return updatePasswordUserResponse;
+
+	}
+
+	/**
+	 * <pre>
+	 * 사용자 회원 비밀번호 변경하는 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param modifyUserPwdRequest
+	 *            사용자회원 비밀번호 변경 요청 Value Object
+	 * @return ModifyUserPwdResponse - 사용자회원 비밀번호 변경 응답 Value Object
+	 */
+	public ModifyUserPwdResponse modifyUserPwd(ModifyUserPwdRequest modifyUserPwdRequest){
+
+		ModifyUserPwdResponse modifyUserPwdResponse = new ModifyUserPwdResponse();
+
+		String isDormant = StringUtils.isBlank(modifyUserPwdRequest.getIsDormant())
+				? Constant.TYPE_YN_N : modifyUserPwdRequest.getIsDormant();
+		CommonDAO dao = null;
+		if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
+			dao = this.commonDAO;
+		} else {
+			dao = this.idleDAO;
+		}
+
+		/** 1. 비밀번호 타입에 따른 암호화 */
+		String encReqOldPw = "";
+		String encReqNewPw = "";
+		/** 2-1. 패스워드가 OneID 타입 암호화 */
+		if ( StringUtils.equals(modifyUserPwdRequest.getUserPwType(), "US011503") ) {
+			CryptoCodeIm cryptoCode = new CryptoCodeIm();
+			try {
+				encReqOldPw = cryptoCode.generateImIdpUserPW(modifyUserPwdRequest.getOldPassword(),
+						modifyUserPwdRequest.getUserSalt());
+				encReqNewPw = cryptoCode.generateImIdpUserPW(modifyUserPwdRequest.getNewPassword(),
+						modifyUserPwdRequest.getUserSalt());
+			} catch (Exception e) {
+				// 패스워드 암호화 실패
+				throw new StorePlatformException("SAC_MEM_1413", modifyUserPwdRequest.getUserKey());
+			}
+		/** 2-2. 패스워드가 IDP 타입 암호화 */
+		} else {
+			CryptoCode cryptoCode = new CryptoCode();
+			try {
+				encReqOldPw = cryptoCode.generateIdpUserPW(modifyUserPwdRequest.getOldPassword());
+				encReqNewPw = cryptoCode.generateIdpUserPW(modifyUserPwdRequest.getNewPassword());
+			} catch (Exception e) {
+				// 패스워드 암호화 실패
+				throw new StorePlatformException("SAC_MEM_1413", modifyUserPwdRequest.getUserKey());
+			}
+		}
+		modifyUserPwdRequest.setOldPassword(encReqOldPw);
+		modifyUserPwdRequest.setNewPassword(encReqNewPw);
+
+		Integer row = dao.update("User.modifyUserPassword", modifyUserPwdRequest);
+		LOGGER.debug("### updatePassword row : {}", row);
+		if (row == 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+		}
+
+		modifyUserPwdResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+		modifyUserPwdResponse.setUserKey(modifyUserPwdRequest.getUserKey());
+
+		return modifyUserPwdResponse;
 
 	}
 
@@ -1522,40 +1647,55 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResetPasswordUserResponse updateResetPasswordUser(ResetPasswordUserRequest resetPasswordUserRequest) {
 
-		// userKey가 존재하는지 여부 확인
-		String isRegistered = null;
-		UserMbr usermbr = new UserMbr();
-		usermbr.setUserKey(resetPasswordUserRequest.getMbrPwd().getMemberKey());
-		isRegistered = this.commonDAO.queryForObject("User.isRegisteredUserKey", usermbr, String.class);
-		if (isRegistered == null || isRegistered.length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
-		}
-
-		// userKey가 존재한다면 pw 생성 및 암호화
-		// 1. 비밀번호 생성
+		/** 1. 비밀번호 생성 ( 연속하지 않는 문자3개, 숫자 3개) */
 		char[] charPwd = {(char)((Math.random()*26)+97), (char)((Math.random()*26)+97), (char)((Math.random()*26)+97)};
 		int[] intPwd = {(int)(Math.random()*10), (int)(Math.random()*10), (int)(Math.random()*10)};
 
 		// 연속하지 않고 일치 하지 않은 문자 3개
 		while( (charPwd[2]-charPwd[1] == 1 && charPwd[1]-charPwd[0] == 1)
+				|| (charPwd[2]-charPwd[1] == -1 && charPwd[1]-charPwd[0] == -1)
 				|| (charPwd[2]-charPwd[1] == 0 || charPwd[1]-charPwd[0] == 0) ){
-			System.out.println("char while문 돌았음"+String.valueOf(charPwd));
 			charPwd[0] = (char)((Math.random()*26)+97);
 			charPwd[1] = (char)((Math.random()*26)+97);
 			charPwd[2] = (char)((Math.random()*26)+97);
 		}
 		// 연속하지 않고 일치 하지 않은 숫자 3개
 		while( (intPwd[2]-intPwd[1] == 1 && intPwd[1]-intPwd[0] == 1)
+				|| (intPwd[2]-intPwd[1] == -1 && intPwd[1]-intPwd[0] == -1)
 				|| (intPwd[2]-intPwd[1] == 0 || intPwd[1]-intPwd[0] == 0) ){
-			System.out.println("int while문 돌았음"+intPwd[0]+intPwd[1]+intPwd[2]);
 			intPwd[0] = (int)(Math.random()*10);
 			intPwd[1] = (int)(Math.random()*10);
 			intPwd[2] = (int)(Math.random()*10);
 		}
-
-		// 2. 생성된 비밀번호 암호화 (MD5)
 		String newPw = String.valueOf(charPwd)+intPwd[0]+intPwd[1]+intPwd[2];
-		String encNewPw = createUserPwdEncyp(newPw);
+
+		/** 2. userKey로 해당 회원의 패스워드 타입 확인 */
+		CheckUserPwdRequest chkUserPwdReq = new CheckUserPwdRequest();
+		chkUserPwdReq.setCommonRequest(resetPasswordUserRequest.getCommonRequest());
+		chkUserPwdReq.setUserKey(resetPasswordUserRequest.getMbrPwd().getMemberKey());
+		chkUserPwdReq.setIsDormant(MemberConstants.USE_N);
+		CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(chkUserPwdReq);
+
+		/** 3. 패스워드가 OneID 타입 암호화 */
+		String encNewPw = "";
+		if ( StringUtils.equals(chkUserPwdRes.getUserPwType(), "US011503") ) {
+			CryptoCodeIm cryptoCode = new CryptoCodeIm();
+			try {
+				encNewPw = cryptoCode.generateImIdpUserPW(newPw, chkUserPwdRes.getUserSalt());
+			} catch (Exception e) {
+				// 패스워드 암호화 실패
+				throw new StorePlatformException("response.ResultCode.fail", "");
+			}
+		/** 3-2. 패스워드가 IDP 타입 암호화 */
+		} else {
+			CryptoCode cryptoCode = new CryptoCode();
+			try {
+				encNewPw = cryptoCode.generateIdpUserPW(newPw);
+			} catch (Exception e) {
+				// 패스워드 암호화 실패
+				throw new StorePlatformException("response.ResultCode.fail", "");
+			}
+		}
 
 		resetPasswordUserRequest.getMbrPwd().setMemberPW(encNewPw);
 
@@ -1833,7 +1973,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 
 			/*
 			 * if (limitTarget.getLimitTargetNo() == null) { int seq =
@@ -1884,7 +2024,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTargetNo = limitTargetList.get(i);
-			limitTargetNo.setTenantID(removePolicyRequest.getCommonRequest().getTenantID());
+			//limitTargetNo.setTenantID(removePolicyRequest.getCommonRequest().getTenantID());
 
 			LOGGER.debug(">>>> >>> UserServiceImpl before removePolicy : {}", limitTargetNo);
 			row = this.commonDAO.delete("User.removePolicy", limitTargetNo);
@@ -3055,7 +3195,11 @@ public class UserServiceImpl implements UserService {
 
 	/**
 	 * <pre>
-	 * 심플 인증(간편인증).
+	 * 심플 인증(간편 인증) v1.
+	 *  - DB조회 인증후 로그인 이력 저장
+	 * 심플 인증(간편 인증)v2
+	 *  - 모바일, Tstore 회원 : deviceId를 이용하여 DB조회 인증후 로그인이력 저장.
+	 *  - 소셜아이디 회원 : 인증절차 없이 로그인이력 저장.
 	 * </pre>
 	 * 
 	 * @param simpleLoginRequest
@@ -3065,18 +3209,28 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public SimpleLoginResponse simpleLogin(SimpleLoginRequest simpleLoginRequest) {
 
-		SimpleLoginResponse simpleLoginResponse = (SimpleLoginResponse) this.commonDAO.queryForObject(
-				"User.simpleLogin", simpleLoginRequest);
+		SimpleLoginResponse simpleLoginResponse;
 
-		if (simpleLoginResponse == null) { // 로그인 실패
+		/**
+		 *  1. 심플 인증(간편 인증) v1
+		 *   - DB조회 인증.
+		 *  2. 심플 인증(간편 인증) v2
+		 *   - DB조회 인증.
+		 */
+		simpleLoginResponse = (SimpleLoginResponse) this.commonDAO.queryForObject("User.simpleLogin",
+				simpleLoginRequest);
+
+		if (simpleLoginResponse == null) {
 			// 휴면DB 조회
 			simpleLoginResponse = (SimpleLoginResponse) this.idleDAO.queryForObject("User.simpleLogin",
 					simpleLoginRequest);
 		}
 
+		/** 2-1. 인증결과가 없을 경우 실패 응답 처리. */
 		if (simpleLoginResponse == null) {
 			simpleLoginResponse = new SimpleLoginResponse();
 			simpleLoginResponse.setIsLoginSuccess(Constant.TYPE_YN_N);
+		/** 2-2. 인증결과가 있을 경우 로그인 이력 저장후 성공 응답 처리. */
 		} else { // 로그인 성공
 			UserMbrLoginLog userMbrLoginLog = new UserMbrLoginLog();
 			userMbrLoginLog.setSystemID(simpleLoginRequest.getCommonRequest().getSystemID());
@@ -3086,6 +3240,7 @@ public class UserServiceImpl implements UserService {
 			if (simpleLoginRequest.getConnIp() != null) {
 				userMbrLoginLog.setConnIp(simpleLoginRequest.getConnIp());
 			}
+
 			if (simpleLoginRequest.getScVersion() != null) {
 				userMbrLoginLog.setScVersion(simpleLoginRequest.getScVersion());
 			}
@@ -3616,7 +3771,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 			row = this.commonDAO.update("User.updatePolicyHistory", limitTarget);
 			if (row <= 0) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
@@ -3648,7 +3803,7 @@ public class UserServiceImpl implements UserService {
 
 		for (int i = 0; i < limitTargetList.size(); i++) {
 			LimitTarget limitTarget = limitTargetList.get(i);
-			limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
+			//limitTarget.setTenantID(updatePolicyRequest.getCommonRequest().getTenantID());
 			row = this.commonDAO.update("User.insertPolicy", limitTarget);
 			if (row <= 0) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
@@ -4025,15 +4180,59 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public CheckUserPwdResponse checkUserPwd(CheckUserPwdRequest chkUserPwdRequest){
 
-		CheckUserPwdResponse checkUserPwdResponse = new CheckUserPwdResponse();
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 서비스 - PW 확인");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
 
-		// 신규비밀번호 암호화
-		chkUserPwdRequest.setUserPw(createUserPwdEncyp(chkUserPwdRequest.getUserPw()));
+		CheckUserPwdResponse checkUserPwdResponse;
 
-		if(StringUtils.equals(chkUserPwdRequest.getIsDormant(), "N")) {
-			checkUserPwdResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
-		}else{
-			checkUserPwdResponse.setUserKey((String)this.idleDAO.queryForObject("User.checkUserPassword", chkUserPwdRequest));
+		/** 1. userKey 해당 pw 정보 조회. */
+		if (StringUtils.equals(chkUserPwdRequest.getIsDormant(), "N")) {
+			checkUserPwdResponse = (CheckUserPwdResponse)this.commonDAO.queryForObject("User.searchUserPassword", chkUserPwdRequest);
+		} else {
+			checkUserPwdResponse = (CheckUserPwdResponse)this.idleDAO.queryForObject("User.searchUserPassword", chkUserPwdRequest);
+		}
+
+		/** 2. 정보가 있으면 확인후 응답. */
+		if ( checkUserPwdResponse != null ) {
+
+			LOGGER.debug("패스워드 타입 {}", checkUserPwdResponse.getUserPwType());
+
+			String encReqUserPw = "";
+
+			/** 2-1. 패스워드가 OneID 타입 암호화 */
+			if ( StringUtils.equals(checkUserPwdResponse.getUserPwType(), "US011503") ) {
+				CryptoCodeIm cryptoCode = new CryptoCodeIm();
+				try {
+					encReqUserPw = cryptoCode.generateImIdpUserPW(chkUserPwdRequest.getUserPw(),
+							checkUserPwdResponse.getUserSalt());
+				} catch (Exception e) {
+					// 패스워드 암호화 실패 skip
+				}
+			/** 2-2. 패스워드가 IDP 타입 암호화 */
+			} else {
+				CryptoCode cryptoCode = new CryptoCode();
+				try {
+					encReqUserPw = cryptoCode.generateIdpUserPW(chkUserPwdRequest.getUserPw());
+				} catch (Exception e) {
+					// 패스워드 암호화 실패 skip
+				}
+			}
+
+			LOGGER.debug("조회된 패스워드 {}", checkUserPwdResponse.getUserPw());
+			LOGGER.debug("암호화 패스워드 {}", encReqUserPw);
+
+			/** 2-3. 불일치시 응답 셋팅 */
+			if ( !StringUtils.equals(checkUserPwdResponse.getUserPw(), encReqUserPw) ) {
+				checkUserPwdResponse.setUserKey("");
+				checkUserPwdResponse.setUserAuthToken("");
+			}
+		/** 3. 정보가 없으면 공란셋팅후 응답 */
+		} else {
+			checkUserPwdResponse = new CheckUserPwdResponse();
+			checkUserPwdResponse.setUserKey("");
+			checkUserPwdResponse.setUserAuthToken("");
 		}
 
 		checkUserPwdResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
@@ -4042,35 +4241,24 @@ public class UserServiceImpl implements UserService {
 		return checkUserPwdResponse;
 	}
 
-	public String createUserPwdEncyp(String pwd){
-
-		String encNewPw;
-		try{
-			StringBuffer sb = new StringBuffer();
-
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(pwd.toString().getBytes());
-
-			byte[] msgStr = md.digest() ;
-
-			for(int i = 0 ; i < msgStr.length ; i++){
-				sb.append(Integer.toHexString((int)msgStr[i] & 0x00FF));
-			}
-			encNewPw = sb.toString();
-		}catch(NoSuchAlgorithmException e){
-			throw new StorePlatformException(this.getMessage("response.ResultMessage.fail", ""));
-		}
-
-		return encNewPw;
-
-	}
-
 	@Override
 	public CheckUserAuthTokenResponse checkUserAuthToken(CheckUserAuthTokenRequest chkUserAuthTkReqeust){
 
-		CheckUserAuthTokenResponse checkUserAuthTkResponse = new CheckUserAuthTokenResponse();
+		CheckUserAuthTokenResponse checkUserAuthTkResponse;
 
-		checkUserAuthTkResponse.setUserKey((String)this.commonDAO.queryForObject("User.checkUserAuthToken", chkUserAuthTkReqeust));
+		if(StringUtils.equals(chkUserAuthTkReqeust.getIsDormant(), "N")) {
+			checkUserAuthTkResponse = (CheckUserAuthTokenResponse)this.commonDAO.queryForObject(
+					"User.checkUserAuthToken", chkUserAuthTkReqeust);
+		}else{
+			checkUserAuthTkResponse = (CheckUserAuthTokenResponse)this.idleDAO.queryForObject(
+					"User.checkUserAuthToken", chkUserAuthTkReqeust);
+		}
+
+		if( checkUserAuthTkResponse == null ){
+			checkUserAuthTkResponse = new CheckUserAuthTokenResponse();
+			checkUserAuthTkResponse.setUserKey("");
+			checkUserAuthTkResponse.setUserAuthToken("");
+		}
 
 		checkUserAuthTkResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 					"response.ResultMessage.success"));
@@ -4133,15 +4321,20 @@ public class UserServiceImpl implements UserService {
 
 		ModifyIdResponse modifyIdResponse = new ModifyIdResponse();
 
-		Integer idRow = 0;
-		idRow = this.commonDAO.update("User.updateUserIdNType", modifyIdRequest);
-		if (idRow <= 0) {
+		int row = 0;
+
+		/** 회원 변경 이력 저장. */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserKey(modifyIdRequest.getUserKey());
+
+		row = commonDAO.update("User.insertUpdateStatusHistory", userMbr);
+		if (row <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
 
-		Integer tokenRow = 0;
-		tokenRow = this.commonDAO.update("User.updateUserAuthToken", modifyIdRequest);
-		if (tokenRow <= 0) {
+		/** 회원 정보 변경. */
+		row = this.commonDAO.update("User.updateUserIdNType", modifyIdRequest);
+		if (row <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
 

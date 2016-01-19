@@ -22,7 +22,6 @@
                     ON EDP.USE_POLICY_ID = UP.USE_POLICY_ID
             WHERE 1=1
                   AND ETPP.TENANT_ID = #{tenantId, jdbcType=VARCHAR}
-                  AND sysdate between ETPRC.APPLY_START_DT AND ETPRC.APPLY_END_DT
                   <if test="cid != null">AND EDP.CID = #{cid, jdbcType=VARCHAR}</if>
                   <if test="epsdId != null">AND EDP.CID IN (SELECT CID FROM TB_DP_PROD WHERE PROD_ID=#{epsdId, jdbcType=VARCHAR})</if>
                   AND EDP.CONTENTS_TYPE_CD = 'PD002502'

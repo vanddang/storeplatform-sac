@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -98,7 +99,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
             UserInfo userInfo = this.mcc.getUserBaseInfo(keyType, req.getDeviceId(), sacHeader);
             if (userInfo != null) {
-                throw new StorePlatformException("SAC_MEM_1101");
+                throw new StorePlatformException("SAC_MEM_1101", req.getDeviceIdType());
             }
         } catch (StorePlatformException ex) {
             if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
@@ -170,9 +171,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
 
-		/**
-		 * 휴대기기 등록.
-		 */
         DeviceInfo deviceInfo = new DeviceInfo();
         deviceInfo.setUserKey(createUserResponse.getUserKey());
         deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
@@ -191,7 +189,17 @@ public class UserJoinServiceImpl implements UserJoinService {
         deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
         deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 단말부가정보
 
-        String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+        String deviceKey = null;
+        try{
+            deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+        }catch(StorePlatformException e){
+            // 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
+            DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+            deleteUserRequest.setCommonRequest(mcc.getSCCommonRequest(sacHeader));
+            deleteUserRequest.setUserKey(createUserResponse.getUserKey());
+            userSCI.delete(deleteUserRequest);
+            throw e;
+        }
 
 		/**
 		 * 결과 세팅
@@ -604,17 +612,39 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
+		/*	TODO. userAuthToken 유효성 체크 필요*/
+		boolean isValid = true; //TODO. 무조건 성공처리
+		String socialUserNo = null; // TODO. Server to Server 연동후 저장 필요!
+		if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
+
+		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+
+		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
+
+		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
+
+		}
+		if(!isValid){
+
+		}
+
 		// 법정대리인 나이 유효성 체크.
 		MbrLglAgent mbrLglAgent = null;
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+
 			if (StringUtils.isBlank(req.getOwnBirth())) {
 				throw new StorePlatformException("SAC_MEM_0002", "ownBirth");
 			}
+
 			if (StringUtils.isBlank(req.getParentBirthDay())) {
 				throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
 			}
+
 			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
 		}
+
+		// 약관 유효성 체크
+		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
 
 		// 모번호 조회
 		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
@@ -635,10 +665,129 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
 
-		// 약관 맵핑정보 setting
+		// 법정 대리인 정보 setting
+		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+			mbrLglAgent = new MbrLglAgent();
+			mbrLglAgent.setIsParent(req.getIsParent()); // 법정대리인 동의 여부
+			mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod()); // 법정대리인 인증방법코드
+			mbrLglAgent.setParentName(req.getParentName()); // 법정대리인 이름
+			mbrLglAgent.setParentType(req.getParentType()); // 법정대리인 관계
+			mbrLglAgent.setParentDate(req.getParentDate()); // 법정대리인 동의일시
+			mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 Email
+			mbrLglAgent.setParentBirthDay(req.getParentBirthDay()); // 법정대리인 생년월일
+			mbrLglAgent.setParentTelecom(req.getParentTelecom()); // 법정대리인 통신사 코드
+			mbrLglAgent.setParentMDN(req.getParentPhone()); // 법정대리인 전화번호
+			mbrLglAgent.setParentCI(req.getParentCi()); // 법정대리인 CI
+			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
+			mbrLglAgent.setParentRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 법정대리인 실명인증사이트 코드
+			if (StringUtils.isBlank(req.getParentIsDomestic())) {
+				mbrLglAgent.setIsDomestic(MemberConstants.USE_Y); // 내외국인 여부
+			} else {
+				mbrLglAgent.setIsDomestic(req.getParentIsDomestic()); // 내외국인 여부
+			}
+		}
+
+		// 사용자 가입요청
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+		createUserRequest.setUserMbr(userMbr);
+		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
+		createUserRequest.setMbrLglAgent(mbrLglAgent);
+		if(StringUtils.isNotBlank(socialUserNo)){
+			// social 회원번호 부가속성으로 저장
+			List<MbrMangItemPtcr> mbrMangItemPtcrList = new ArrayList<MbrMangItemPtcr>();
+			MbrMangItemPtcr mbrMangItemPtcr = new MbrMangItemPtcr();
+			mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO);
+			mbrMangItemPtcr.setExtraProfileValue(socialUserNo);
+			mbrMangItemPtcrList.add(mbrMangItemPtcr);
+			createUserRequest.setMbrMangItemPtcrList(mbrMangItemPtcrList);
+		}
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+
+		// 휴대기기 등록 요청
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setUserKey(createUserResponse.getUserKey());
+		deviceInfo.setDeviceId(req.getDeviceId());
+		deviceInfo.setMdn(req.getMdn());
+		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+		deviceInfo.setNativeId(req.getNativeId());
+		deviceInfo.setSimSerialNo(req.getSimSerialNo());
+		deviceInfo.setIsRecvSms(req.getIsRecvSms());
+		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+		String deviceKey = null;
+		try{
+			deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+		}catch(StorePlatformException e){
+			// 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
+			DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+			deleteUserRequest.setCommonRequest(mcc.getSCCommonRequest(sacHeader));
+			deleteUserRequest.setUserKey(createUserResponse.getUserKey());
+			userSCI.delete(deleteUserRequest);
+			throw e;
+		}
+
+		CreateByIdSacRes response = new CreateByIdSacRes();
+		response.setUserKey(createUserResponse.getUserKey());
+		response.setDeviceKey(deviceKey);
+		return response;
+	}
+
+	@Override
+	public CreateByMdnV2SacRes regByMdnV2(SacRequestHeader sacHeader, CreateByMdnV2SacReq req) {
+
+		/**
+		 * MDN 회원 기가입 체크
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MDN);
+		keySchUserKey.setKeyString(req.getMdn());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		searchExtentUserRequest.setCommonRequest(commonRequest);
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+		try{
+			SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+			throw new StorePlatformException("SAC_MEM_1104");
+		} catch (StorePlatformException ex) {
+			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				throw ex;
+			}
+		}
+
+		/**
+		 * 법정대리인 나이 유효성 체크.
+		 */
+		MbrLglAgent mbrLglAgent = null;
+		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+
+			if (StringUtils.isBlank(req.getOwnBirth())) {
+				throw new StorePlatformException("SAC_MEM_0002", "ownBirth");
+			}
+
+			if (StringUtils.isBlank(req.getParentBirthDay())) {
+				throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
+			}
+
+			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
+		}
+
+		// 모번호 조회
+		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+				&& StringUtils.isNotBlank(req.getMdn())){
+			req.setMdn(this.mcc.getOpmdMdnInfo(req.getMdn()));
+		}
+
+		/**
+		 * 약관 맵핑정보 세팅.
+		 */
 		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
 
-		// 법정 대리인 정보 setting
+		/**
+		 * 법정대리인 setting.
+		 */
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
 			mbrLglAgent = new MbrLglAgent();
 			mbrLglAgent.setIsParent(req.getIsParent()); // 법정대리인 동의 여부
@@ -660,38 +809,65 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
-		// 사용자 인증 토큰 setting
-		MbrPwd mbrPwd = new MbrPwd();
-		mbrPwd.setUserAuthToken(req.getUserAuthToken());
-
+		/**
+		 * SC 사용자 기본정보 setting
+		 */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
+		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
+		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setUserMbr(userMbr);
 		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
-		createUserRequest.setMbrLglAgent(mbrLglAgent);
-		createUserRequest.setMbrPwd(mbrPwd);
-		// 사용자 가입요청
+
+		/**
+		 * SC 사용자 가입요청
+		 */
 		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
 			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
 
-		// 휴대기기 등록 요청
+		/**
+		 * 휴대기기 등록.
+		 */
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(createUserResponse.getUserKey());
 		deviceInfo.setDeviceId(req.getDeviceId());
 		deviceInfo.setMdn(req.getMdn());
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+		deviceInfo.setSimSerialNo(req.getSimSerialNo());
 		deviceInfo.setNativeId(req.getNativeId());
-		deviceInfo.setDeviceSimNm(req.getSimSerialNo());
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
-		String deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
+		String deviceKey = null;
+		try{
+			deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+		}catch(StorePlatformException e){
+			// // 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
+			DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+			deleteUserRequest.setCommonRequest(mcc.getSCCommonRequest(sacHeader));
+			deleteUserRequest.setUserKey(createUserResponse.getUserKey());
+			userSCI.delete(deleteUserRequest);
+			throw e;
+		}
 
-		CreateByIdSacRes response = new CreateByIdSacRes();
+		/**
+		 * 결과 세팅
+		 */
+		CreateByMdnV2SacRes response = new CreateByMdnV2SacRes();
 		response.setUserKey(createUserResponse.getUserKey());
 		response.setDeviceKey(deviceKey);
 		return response;
+
 	}
 
 	/**

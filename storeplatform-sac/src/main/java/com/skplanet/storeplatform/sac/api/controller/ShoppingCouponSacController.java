@@ -9,26 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.api.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.skplanet.storeplatform.external.client.shopping.inf.ItxTypeCode.TX_TYPE_CODE;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
-import com.skplanet.storeplatform.external.client.shopping.vo.DpItemInfo;
+import com.skplanet.storeplatform.external.client.shopping.vo.*;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
@@ -39,6 +21,20 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.ErrorData;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 쇼핑 컨트롤러
@@ -261,14 +257,72 @@ public class ShoppingCouponSacController {
 						map.put("ERROR_CODE", couponRes.getRCode());
 					}
 
-					break;					
-				default:
-					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_MISS);
+					break;
+				case OSLS:
+					// One Store 특가 상품 목록 조회 작업을 호출한다.
+					if (StringUtils.isEmpty(couponReq.getItemCodeList())) {
+						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemCodeList)", null);
+					}
+					String[] itemCodes = couponReq.getItemCodeList().split(",");
+					couponList = this.getOneBrandSpecialProductList(itemCodes);
+					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 					map.put("ERROR_MSG", errorData.getErrorMsg());
+
+					break;
+				case OSDT:
+					// One Store 특가 상품 상세 조회 작업을 호출한다.
+					if (StringUtils.isEmpty(couponReq.getItemCodeList())) {
+						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemCodeList)", null);
+					}
+
+					itemsCodes = couponReq.getItemCodeList().split(",");
+					couponRes = this.getOneBrandSpecialProductDetail(couponReq.getCouponCode(),itemsCodes);
+					if (couponRes.getRCode().equals("")) {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+					} else {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+						map.put("ERROR_CODE", couponRes.getRCode());
+					}
+					break;
+				case OSSS:
+					// One Store 특가 쿠폰 상태 변경 호출한다 ( // 1:쿠폰ID 가져오기, 3 : 특가상품 및 상품 중지 처리 )
+					if(couponReq.getSpecialCouponStep().equals("1")){
+						String couponId = this.getOneBrandSpecialProductCouponId(couponReq);
+						if(StringUtils.isNotBlank(couponId)){
+							success = true;
+							couponRes.setCouponId(couponId);
+						}
+					}else{
+						success = this.updateForOneBrandSpecialCouponStatus(couponReq);
+					}
+
+					if (success) {
+						couponRes.setFlag(true);
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+						map.put("ERROR_MSG", errorData.getErrorMsg());
+					} else {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
+						map.put("ERROR_MSG", errorData.getErrorMsg());
+					}
+
+					break;
+					case OSAS:
+					// One Store 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+					couponRes = this.getOneBrandSpecialProductDetailForDate(couponReq);
+					if (couponRes.getRCode().equals("")) {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+					} else {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+						map.put("ERROR_CODE", couponRes.getRCode());
+					}
+
 					break;
 				}
-
 				this.sendResponseData(couponReq, map, couponRes, couponList);
 
 			} else {
@@ -369,8 +423,10 @@ public class ShoppingCouponSacController {
 		String result = this.couponProcessService.getSpecialProductCouponId(couponReq);
 		return result;
 
-	}	
-	
+	}
+
+
+
 	/**
 	 * 팅/특가 상품 상태 변경 한다.
 	 * 
@@ -383,7 +439,32 @@ public class ShoppingCouponSacController {
 		return result;
 
 	}
-		
+
+	/**
+	 * One Store 팅/특가 쿠폰 ID 조회 한다.
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return String
+	 */
+	private String getOneBrandSpecialProductCouponId(CouponReq couponReq) {
+		String result = this.couponProcessService.getOneBrandSpecialProductCouponId(couponReq);
+		return result;
+
+	}
+
+	/**
+	 * One Store 팅/특가 상품 상태 변경 한다.
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return boolean
+	 */
+	private boolean updateForOneBrandSpecialCouponStatus(CouponReq couponReq) {
+		boolean result = this.couponProcessService.updateForOneBrandSpecialCouponStatus(couponReq);
+		return result;
+
+	}
 
 	/**
 	 * 특가 상품 목록 조회 한다.
@@ -399,6 +480,20 @@ public class ShoppingCouponSacController {
 	}
 
 	/**
+	 * One Store 특가 상품 목록 조회 한다.
+	 *
+	 * @param itemCodes
+	 *            itemCodes
+	 * @return List<CouponRes>
+	 */
+	private List<CouponRes> getOneBrandSpecialProductList(String[] itemCodes) {
+		List<CouponRes> result = this.couponProcessService.getOneBrandSpecialProductList(itemCodes);
+		return result;
+
+	}
+
+
+	/**
 	 * 특가 상품 상세 조회 한다.
 	 * 
 	 * @param couponCode
@@ -412,6 +507,21 @@ public class ShoppingCouponSacController {
 		return result;
 
 	}
+
+	/**
+	 * One Store 특가 상품 상세 조회 한다.
+	 *
+	 * @param couponCode
+	 *            couponCode
+	 * @param itemsCodes
+	 *            itemsCodes
+	 * @return CouponRes
+	 */
+	private CouponRes getOneBrandSpecialProductDetail(String couponCode ,String[] itemsCodes) {
+		CouponRes result = this.couponProcessService.getOneBrandSpecialProductDetail(couponCode, itemsCodes);
+		return result;
+
+	}
 	
 	/**
 	 * 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
@@ -422,6 +532,19 @@ public class ShoppingCouponSacController {
 	 */
 	private CouponRes getSpecialProductDetailForDate(CouponReq couponReq) {
 		CouponRes result = this.couponProcessService.getSpecialProductDetailForDate(couponReq);
+		return result;
+
+	}
+
+	/**
+	 * One Store 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return CouponRes
+	 */
+	private CouponRes getOneBrandSpecialProductDetailForDate(CouponReq couponReq) {
+		CouponRes result = this.couponProcessService.getOneBrandSpecialProductDetailForDate(couponReq);
 		return result;
 
 	}
@@ -454,9 +577,6 @@ public class ShoppingCouponSacController {
 			}else if(StringUtils.isBlank(couponReq.getTxType())){
 				result = false;
 				message="필수 파라미터 값이 없습니다. (txType)\n";
-			} else if (!couponReq.checkTxType()) {
-				result = false;
-				message="txType 형식에 맞지 않습니다. [2자리]\n";
 			}
 
 			if (!result) {
@@ -792,6 +912,31 @@ public class ShoppingCouponSacController {
 					}
 				}
 				couponRes.setEventList(eventList.toString());
+				break;
+			case OSLS:
+
+				List<SprcInfo> sprcInfoList =  new ArrayList<SprcInfo>();
+				int kk =0;
+				List<ItemCodeInfo> itemCodeInfoList =  new ArrayList<ItemCodeInfo>();
+				ItemCodeInfo itemCodeInfo = new ItemCodeInfo();
+				SprcInfo sprcInfo = new SprcInfo();
+				if (couponList != null) {
+					for (CouponRes couponInfo : couponList) {
+						kk++;
+						itemCodeInfo.setItemCode(couponInfo.getCouponCode());
+						sprcInfo = new SprcInfo();
+						sprcInfo.setTenantId(couponInfo.getTenantId());
+						sprcInfo.setSprcGubun(couponInfo.getSpecialYN());
+						sprcInfoList.add(sprcInfo);
+						if(kk%3==0){
+							itemCodeInfo.setSprcInfo(sprcInfoList);
+							itemCodeInfoList.add(itemCodeInfo);
+							itemCodeInfo = new ItemCodeInfo();
+							sprcInfoList =  new ArrayList<SprcInfo>();
+						}
+					}
+				}
+				couponRes.setItemCodeInfo(itemCodeInfoList);
 				break;
 			case DT:
 				break;

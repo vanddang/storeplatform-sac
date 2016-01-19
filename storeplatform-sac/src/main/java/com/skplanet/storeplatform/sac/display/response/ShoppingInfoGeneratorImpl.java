@@ -12,7 +12,11 @@ package com.skplanet.storeplatform.sac.display.response;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStats;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
@@ -37,6 +41,8 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 @Component
 public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 
+	@Autowired
+	private ProductInfoManager productInfoManager;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -123,9 +129,12 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	 */
 	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
+
+		ProductStats stats = productInfoManager.getProductStats(new ProductStatsParam(metaInfo.getCatalogId()));
 		Accrual accrual = new Accrual();
-		accrual.setDownloadCount(metaInfo.getPrchsCnt());
+		accrual.setDownloadCount(stats.getPurchaseCount());
 		return accrual;
+
 	}
 
 	/*

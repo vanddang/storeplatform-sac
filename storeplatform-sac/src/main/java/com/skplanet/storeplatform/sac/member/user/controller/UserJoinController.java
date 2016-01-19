@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.member.user.controller;
 
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,9 @@ public class UserJoinController {
 	@Autowired
 	private UserJoinService svc;
 
+	@Autowired
+	private MemberCommonComponent commService;
+
 	/**
 	 * <pre>
 	 * 모바일 전용 회원 가입 (MDN 회원 가입).
@@ -61,12 +65,6 @@ public class UserJoinController {
 		LOGGER.debug("####################################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		// TODO SKT만 가입 처리 되도록 validation 추가
-		if (!StringUtil.equalsIgnoreCase(sacHeader.getTenantHeader().getTenantId(), MemberConstants.TENANT_ID_TSTORE)
-				|| !StringUtil.equalsIgnoreCase(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-			throw new StorePlatformException("SAC_MEM_1203", "deviceTelecom");
-		}
 
 		/**
 		 * 모바일 전용회원 Biz
@@ -250,11 +248,66 @@ public class UserJoinController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+		if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
+			throw new StorePlatformException("SAC_MEM_1509");
+		}
+
+		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+				&& StringUtils.isNotBlank(req.getMdn())){
+			throw new StorePlatformException("SAC_MEM_1514");
+		}
+
+		if(StringUtils.isNotBlank(req.getMdn())){
+			if(StringUtils.isBlank(req.getNativeId())){
+				throw new StorePlatformException("SAC_MEM_0001", "nativeId");
+			}
+			if(StringUtils.isBlank(req.getSimSerialNo())){
+				throw new StorePlatformException("SAC_MEM_0001", "simSerialNo");
+			}
+		}
+
 		CreateByIdSacRes res = this.svc.createById(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
+	}
+
+	/**
+	 * <pre>
+	 * 모바일 전용 회원 가입 (MDN 회원 가입) v2.
+	 * </pre>
+	 *
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	@RequestMapping(value = "/member/user/createByMdn/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateByMdnV2SacRes createByMdnV2(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnV2SacReq req) {
+
+		LOGGER.debug("####################################################");
+		LOGGER.debug("##### 2.1.70. 모바일 전용 회원 가입 (MDN 회원 가입) v2 #####");
+		LOGGER.debug("####################################################");
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
+			throw new StorePlatformException("SAC_MEM_1509");
+		}
+
+		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+				&& StringUtils.isNotBlank(req.getMdn())){
+			throw new StorePlatformException("SAC_MEM_1514");
+		}
+
+		CreateByMdnV2SacRes res = this.svc.regByMdnV2(sacHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
 	}
 }

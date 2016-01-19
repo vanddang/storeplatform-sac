@@ -29,6 +29,7 @@ public class CreateByMdnReq extends CommonInfo {
 	 * 기기 ID 타입
 	 */
 	@NotEmpty
+    @Pattern(regexp = "^msisdn|^uuid|^macaddress")
 	private String deviceIdType = "";
 
 	/**

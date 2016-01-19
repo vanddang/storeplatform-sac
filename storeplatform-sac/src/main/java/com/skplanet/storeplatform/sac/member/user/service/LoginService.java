@@ -36,6 +36,17 @@ public interface LoginService {
 	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
 
 	/**
+	 * 모바일 전용 회원 인증 v3.
+	 *
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeByMdnV3SacReq
+	 * @return AuthorizeByMdnV3SacRes
+	 */
+	public AuthorizeByMdnV3SacRes authorizeByMdnV3(SacRequestHeader requestHeader, AuthorizeByMdnV3SacReq req);
+
+	/**
 	 * <pre>
 	 * 변동성 회원 체크.
 	 * </pre>
@@ -198,5 +209,14 @@ public interface LoginService {
 	 * @return AuthorizeByPwdSacRes
 	 */
 	public AuthorizeByPwdSacRes authorizeByPassword(SacRequestHeader requestHeader, AuthorizeByPwdSacReq req);
+
+	/**
+	 * 심플인즌 (간편인증) v2 [OneStore 단말을 위한 신규규격].
+	 *
+	 * @param requestHeader SacRequestHeader
+	 * @param req           AuthorizeSimpleByMdnV2Req
+	 * @return AuthorizeSimpleByMdnV2Res
+	 */
+	public AuthorizeSimpleByMdnV2Res authorizeSimpleByMdnV2(SacRequestHeader requestHeader, AuthorizeSimpleByMdnV2Req req);
 
 }

@@ -1,12 +1,13 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
+import com.skplanet.storeplatform.framework.test.SuccessCallback;
+import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
+import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq.PolicyCode;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,14 +25,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.test.RequestBodySetter;
-import com.skplanet.storeplatform.framework.test.SuccessCallback;
-import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
-import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq.PolicyCode;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * 2.3.8. 사용자별 정책 조회

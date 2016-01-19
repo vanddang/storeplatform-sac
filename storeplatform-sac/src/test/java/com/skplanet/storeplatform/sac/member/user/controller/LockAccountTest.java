@@ -156,7 +156,7 @@ public class LockAccountTest {
 
 						reqJson.setUserId("sacsimpleuser020691");
 						reqJson.setUserPw("abcd1234");
-						reqJson.setReleaseLock("Y");
+//						reqJson.setReleaseLock("Y");
 
 						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;
@@ -223,7 +223,7 @@ public class LockAccountTest {
 
 						reqJson.setUserId("simdae07");
 						reqJson.setUserPw("12qwer");
-						reqJson.setReleaseLock("Y");
+//						reqJson.setReleaseLock("Y");
 
 						TestConvertMapperUtils.convertObjectToJson(reqJson);
 						return reqJson;

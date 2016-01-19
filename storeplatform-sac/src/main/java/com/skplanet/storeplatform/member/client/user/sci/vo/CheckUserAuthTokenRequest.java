@@ -25,6 +25,9 @@ public class CheckUserAuthTokenRequest extends CommonInfo implements Serializabl
     /** 사용자 인증 토큰 */
     private String userAuthToken;
 
+    /** 휴면계정 여부. */
+    private String isDormant;
+
     /**
      * 공통 요청 Value Object를 리턴한다.
      *
@@ -81,6 +84,34 @@ public class CheckUserAuthTokenRequest extends CommonInfo implements Serializabl
      */
     public void setUserAuthToken(String userAuthToken) {
         this.userAuthToken = userAuthToken;
+    }
+
+    /**
+     * 휴면계정 여부를 리턴한다.
+     *
+     * @return isDormant - 휴면계정 여부
+     */
+    public String getIsDormant() {
+        return isDormant;
+    }
+
+    /**
+     * 휴면계정 여부를 설정한다.
+     *
+     * @param isDormant
+     *            휴면계정 여부
+     */
+    public void setIsDormant(String isDormant) {
+        this.isDormant = isDormant;
+    }
+
+    /**
+     * Returns the serial version UID.
+     *
+     * @return serialVersionUID - the serial version UID
+     */
+    public static long getSerialversionuid() {
+        return serialVersionUID;
     }
 
     /*

@@ -13,10 +13,7 @@ package com.skplanet.storeplatform.sac.purchase.common.util;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * 값을 조정하는 각종 기능을 한다.
@@ -25,14 +22,6 @@ import java.util.TreeSet;
  * Updated by : 황민규, SK 플래닛.
  */
 public class AdjustValueUtil {
-
-	public static void main(String []args)
-	{
-		String org = "11:0;12:0;13:0";
-
-		System.out.println(adjuestValue(org, "12:4000;11:300"));
-	}
-
 
 	/**
 	 * Extends value.
@@ -59,9 +48,9 @@ public class AdjustValueUtil {
 		if(sortKey) {
 			keySet = new TreeSet<String>();
 			keySet.addAll(resultMap.keySet());
-			result = concatStr(keySet, resultMap, separator, delimiter);
+			result = concatStr(keySet, resultMap, separator, delimiter, true);
 		} else {
-			result = concatStr(resultMap, separator, delimiter);
+			result = concatStr(resultMap, separator, delimiter, true);
 		}
 		return StringUtils.defaultString(result);
 	}
@@ -104,23 +93,43 @@ public class AdjustValueUtil {
 		return classifyValuesToMap(str, PurchaseConstants.SEPARATOR, PurchaseConstants.DELIMITER);
 	}
 
-	private static String concatStr(Map<String,String> dataMap, String separator, String delimiter)
+	public static String concatStr(Map<String,String> dataMap, String separator, String delimiter, boolean includeNullValue)
 	{
-		return concatStr(dataMap.keySet(), dataMap, separator, delimiter);
+		return concatStr(dataMap.keySet(), dataMap, separator, delimiter, includeNullValue);
 	}
 
-	private static String concatStr(Set<String> keySet, Map<String,String> dataMap, String separator, String delimiter)
+	public static String concatStr(Set<String> keySet, Map<String,String> dataMap, String separator, String delimiter, boolean includeNullValue)
 	{
 		StringBuffer sb = new StringBuffer();
 
 		for(String key : keySet)
 		{
+			Object value = dataMap.get(key);
+			if(!includeNullValue && value == null) continue;
+			if(sb.length()>0) sb.append(separator);
 			sb.append(key);
 			sb.append(delimiter);
-			sb.append(dataMap.get(key));
-			sb.append(separator);
+			sb.append(value);
 		}
-		if(sb.length()>0) sb.deleteCharAt(sb.length()-1);
+		return sb.toString();
+	}
+
+	public static String concatStr(List<Object []> list, String separator, String delimiter)
+	{
+		StringBuffer sb = new StringBuffer();
+
+		for(Object [] obj : list)
+		{
+			if(sb.length()>0) sb.append(separator);
+			StringBuffer subSb = new StringBuffer();
+			for(Object o : obj)
+			{
+				if(subSb.length()>0)
+					subSb.append(delimiter);
+				subSb.append(o == null ? "" : o);
+			}
+			sb.append(subSb.toString());
+		}
 		return sb.toString();
 	}
 }

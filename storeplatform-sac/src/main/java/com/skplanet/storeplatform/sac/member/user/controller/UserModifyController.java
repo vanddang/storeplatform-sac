@@ -82,13 +82,7 @@ public class UserModifyController {
             throw new StorePlatformException("SAC_MEM_0007", "userBirthDay");
         }
 
-        // 04. 사용자 생일
-        if(StringUtils.isNotBlank(req.getUserCalendar()) && (!StringUtils.equalsIgnoreCase(req.getUserCalendar(), MemberConstants.BIRTHDAY_TYPE_SOCAL)
-                && !StringUtils.equalsIgnoreCase(req.getUserCalendar(), MemberConstants.BIRTHDAY_TYPE_LUCAL))){
-            throw new StorePlatformException("SAC_MEM_0007", "userCalendar");
-        }
-
-        // 05. 사용자 업데이트 이메일
+        // 04. 사용자 업데이트 이메일
         if(StringUtils.isNotBlank(req.getUserUpdEmail()) && !ValidationCheckUtils.isEmail(req.getUserUpdEmail())){
             throw new StorePlatformException("SAC_MEM_0007", "userUpdEmail");
         }
@@ -349,12 +343,20 @@ public class UserModifyController {
 	 */
 	@RequestMapping(value = "/member/user/modifyId/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyIdSacRes modifyId(SacRequestHeader header,
-													   @RequestBody @Validated ModifyIdSacReq req) {
+	public ModifyIdSacRes modifyId(SacRequestHeader header, @RequestBody @Validated ModifyIdSacReq req) {
+
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if (StringUtils.isEmpty(req.getNewUserEmail())) {
+			throw new StorePlatformException("SAC_MEM_0002", "newUserEmail");
+		}
+
 		ModifyIdSacRes res = this.svc.modifyId(header, req);
+
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
 		return res;
+
 	}
 
 }

@@ -219,12 +219,6 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-//		if (removeDeviceRequest.getCommonRequest().getTenantID() == null
-//				|| removeDeviceRequest.getCommonRequest().getTenantID().length() <= 0) {
-//			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-//		}
-
 		// 사용자키 없음
 		if (removeDeviceRequest.getUserKey() == null || removeDeviceRequest.getUserKey().length() <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
@@ -308,26 +302,27 @@ public class DeviceSCIController implements DeviceSCI {
 			if (!keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_KEY)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_DEVICE_ID)
 					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)
-					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_MDN)) {
+					&& !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_MDN)
+                    && !keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_AUTHORIZE_SVC_MANG_NO)) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.wrongKeyType", ""));
 			}
 		}
 
 		// 검색 조건에 서비스 관리번호가 포함되었는지 여부
-		boolean isSvcMangNoExist = false;
-		for (KeySearch keySearch : keySearchList) {
-			if (keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
-				isSvcMangNoExist = true;
-			}
-		}
+//		boolean isSvcMangNoExist = false;
+//		for (KeySearch keySearch : keySearchList) {
+//			if (keySearch.getKeyType().equalsIgnoreCase(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
+//				isSvcMangNoExist = true;
+//			}
+//		}
 
 		// 검색 조건에 서비스 관리번호가 존재하는 경우 userKey가 필수아님, 서비스 관리번호로만 조회
-		if (isSvcMangNoExist) {
-			// 사용자키 없음
-			if (searchDeviceRequest.getUserKey() == null || searchDeviceRequest.getUserKey().length() <= 0) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
-			}
-		}
+//		if (isSvcMangNoExist) {
+//			// 사용자키 없음
+//			if (searchDeviceRequest.getUserKey() == null || searchDeviceRequest.getUserKey().length() <= 0) {
+//				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+//			}
+//		}
 
 		try {
 

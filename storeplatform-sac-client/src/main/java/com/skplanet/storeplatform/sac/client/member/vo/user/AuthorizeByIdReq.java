@@ -1,12 +1,11 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import java.io.Serializable;
-import java.util.List;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * [REQUEST] ID 기반 회원 인증 (One ID, IDP 회원).
@@ -63,11 +62,6 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	 * 클라이언트 ip.
 	 */
 	private String ipAddress;
-
-	/**
-	 * 계정잠금 해제 요청(Y/N).
-	 */
-	private String releaseLock;
 
 	/**
 	 * 휴대기기 부가정보 리스트.
@@ -207,21 +201,6 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	 */
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
-	}
-
-	/**
-	 * @return releaseLock
-	 */
-	public String getReleaseLock() {
-		return this.releaseLock;
-	}
-
-	/**
-	 * @param releaseLock
-	 *            String
-	 */
-	public void setReleaseLock(String releaseLock) {
-		this.releaseLock = releaseLock;
 	}
 
 	/**

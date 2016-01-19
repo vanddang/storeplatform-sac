@@ -207,27 +207,27 @@ public class ProductListServiceImpl implements ProductListService{
 	}
 
 	@Override
-	public Product getProduct( SacRequestHeader header, ListProduct listProd ) {
-        if (listProd == null) {
-            return null;
-        }
+	public Product getProduct( SacRequestHeader header, ListProduct productInList ) {
 
-		Product product = null;
-		String prodId=listProd.getProdId();
-		String topMenuId=listProd.getTopMenuId();
-		String svcGrpCd=listProd.getSvcGrpCd();
+        if ( productInList == null ) return null;
 
-		MetaInfo metaInfo; // 메타정보 VO
-		AlbumMeta albumMeta; // 메타정보 VO
-		ProductBasicInfo productInfo = new ProductBasicInfo(); // 메타정보 조회용 상품 파라미터
-		Map<String, Object> paramMap = new HashMap<String, Object>(); // 메타정보 조회용 파라미터
+		Product product   = null;
+
+		String  prodId    = productInList.getProdId();
+		String  topMenuId = productInList.getTopMenuId();
+		String  svcGrpCd  = productInList.getSvcGrpCd();
+
+		MetaInfo            metaInfo;   // 메타정보 VO
+		AlbumMeta           albumMeta;  // 메타정보 VO
+		ProductBasicInfo    productInfo = new ProductBasicInfo(); // 메타정보 조회용 상품 파라미터
+		Map<String, Object> paramMap    = new HashMap<String, Object>(); // 메타정보 조회용 파라미터
 
 		// 메타정보 조회를 위한 파라미터 세팅
 		productInfo.setProdId(prodId);
 		productInfo.setPartProdId(prodId);
 		productInfo.setCatalogId(prodId);
 		productInfo.setTopMenuId(topMenuId);
-		productInfo.setContentsTypeCd(listProd.getContentsTypeCd());
+		productInfo.setContentsTypeCd(productInList.getContentsTypeCd());
 		productInfo.setSvcGrpCd(svcGrpCd);
 		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("tenantHeader", header.getTenantHeader());
@@ -305,12 +305,12 @@ public class ProductListServiceImpl implements ProductListService{
 			}
 		}
 
-		if( product==null ) return null;
+		if( product == null ) return null;
 
-		product.setRecommendedReason(listProd.getRecomReason());
-		product.setEtcProp(listProd.getEtcProp());
-		product.setExpoOrd(listProd.getExpoOrd());
-		product.setExpoOrdSub(listProd.getExpoOrdSub());
+		product.setRecommendedReason( productInList.getRecomReason() );
+		product.setEtcProp( productInList.getEtcProp() );
+		product.setExpoOrd( productInList.getExpoOrd() );
+		product.setExpoOrdSub( productInList.getExpoOrdSub() );
 
 		return product;
 

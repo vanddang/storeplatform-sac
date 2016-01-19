@@ -108,7 +108,7 @@ public interface PurchaseMemberRepository {
 	 *            판매자 내부 회원 번호
 	 * @return 판매자 정보
 	 */
-	public SellerMbrSac searchSellerInfo(String sellerKey);
+	public SellerMbrSac detailInformation(String sellerKey, String tenantProdGrpCd);
 
 	/**
 	 * 

@@ -587,6 +587,8 @@ public class PurchaseOrderController {
 		final String prchsReqPathCd = req.getPrchsReqPathCd();
 		final String prchsCaseCd = req.getPrchsCaseCd();
 		final String networkTypeCd = req.getNetworkTypeCd();
+		final String doubtFlag = req.getFlag();
+
 		final List<String> prodIdList = new ArrayList<String>();
 		final List<Long> prodPriceList = new ArrayList<Long>();
 		for (CreatePurchaseSacReqProduct product : req.getProductList()) {
@@ -600,7 +602,7 @@ public class PurchaseOrderController {
 				shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_REQUEST).insd_usermbr_no(insdUsermbrNo)
 						.insd_device_id(insdDeviceId).system_id(systemId).purchase_channel(prchsReqPathCd)
 						.purchase_inflow_channel(prchsCaseCd).device_ip(clientIp).network_type(networkTypeCd)
-						.product_id(prodIdList).product_price(prodPriceList);
+						.product_id(prodIdList).product_price(prodPriceList).doubt_flag(doubtFlag);
 			}
 		});
 	}

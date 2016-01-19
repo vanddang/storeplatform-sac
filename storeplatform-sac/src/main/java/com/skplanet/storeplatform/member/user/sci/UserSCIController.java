@@ -343,11 +343,6 @@ public class UserSCIController implements UserSCI {
 			}
 		}
 
-        // isMobile 일 경우 deviceInfo 정보 체크
-        if(loginUserRequest.getIsMobile().equals(Constant.TYPE_YN_Y) && loginUserRequest.getDeviceInfo() == null){
-            throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
-        }
-
 		// TLog
 		final String tlogIP = loginUserRequest.getIpAddress();
 		final String tlogSystemID = loginUserRequest.getCommonRequest().getSystemID();
@@ -444,6 +439,48 @@ public class UserSCIController implements UserSCI {
 		return removeUserResponse;
 	}
 
+	/**
+	 * <pre>
+	 * 회원 정보를 delete하는 기능을 제공한다.
+	 * 정상회원가입후 휴대기기 등록 오류 발생시 롤백개념으로 사용한다.
+	 * </pre>
+	 *
+	 * @param deleteUserRequest 회원 탈퇴 요청 Value Object
+	 * @return DeleteUserResponse - 회원 탈퇴 응답 Value Object
+	 */
+	@Override
+	public DeleteUserResponse delete(DeleteUserRequest deleteUserRequest) {
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - 회원정보 delete");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		LOGGER.debug("### 받은 데이터 deleteUserRequest : {}", deleteUserRequest);
+
+		// 입력 파라미터가 없음
+		if (deleteUserRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (deleteUserRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 사용자키 없음
+		if (StringUtils.isBlank(deleteUserRequest.getUserKey())) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+		}
+
+		DeleteUserResponse deleteUserResponse = null;
+		try {
+			deleteUserResponse = this.service.delete(deleteUserRequest);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return deleteUserResponse;
+	}
 	/**
 	 * <pre>
 	 * 사용자 약관동의 등록/수정.
@@ -951,6 +988,7 @@ public class UserSCIController implements UserSCI {
 	 * @param updatePasswordUserRequest
 	 *            사용자회원 비밀번호 변경 요청 Value Object
 	 * @return UpdatePasswordUserResponse - 사용자회원 비밀번호 변경 응답 Value Object
+	 * @deprecated
 	 */
 	@Override
 	public UpdatePasswordUserResponse updatePasswordUser(UpdatePasswordUserRequest updatePasswordUserRequest) {
@@ -1005,6 +1043,61 @@ public class UserSCIController implements UserSCI {
 		}
 
 		return updatePasswordUserResponse;
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 비밀번호를 변경하는 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param modifyUserPwdRequest
+	 *            비밀번호 변경 Value Object
+	 * @return ModifyUserPwdResponse - 비밀번호 변경 응답 Value Object
+	 */
+	public ModifyUserPwdResponse modifyUserPwd(ModifyUserPwdRequest modifyUserPwdRequest){
+
+		LOGGER.debug("\n\n\n\n\n");
+		LOGGER.debug("==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - 사용자 회원 비밀번호 변경");
+		LOGGER.debug("==================================================================================\n\n\n\n\n");
+
+		ModifyUserPwdResponse modifyUserPwdResponse = null;
+
+		// 입력 파라미터가 없음
+		if (modifyUserPwdRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (modifyUserPwdRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 필수 파라미터, userKey
+		if (modifyUserPwdRequest.getUserKey() == null || modifyUserPwdRequest.getUserKey().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		// 필수 파라미터, oldPassWord
+		if (modifyUserPwdRequest.getOldPassword() == null || modifyUserPwdRequest.getOldPassword().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		// 필수 파라미터, newPassWord
+		if (modifyUserPwdRequest.getNewPassword() == null || modifyUserPwdRequest.getNewPassword().length() <= 0) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+
+			modifyUserPwdResponse = this.service.modifyUserPwd(modifyUserPwdRequest);
+
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
+		return modifyUserPwdResponse;
 
 	}
 
@@ -2749,7 +2842,8 @@ public class UserSCIController implements UserSCI {
 
 	/**
 	 * <pre>
-	 * 심플 인증(간편인증).
+	 * 심플 인증(간편 인증)v1
+	 *  - deviceId를 이용하여 DB조회 인증후 로그인이력 저장.
 	 * </pre>
 	 * 
 	 * @param simpleLoginRequest
@@ -2758,9 +2852,9 @@ public class UserSCIController implements UserSCI {
 	 */
 	@Override
 	public SimpleLoginResponse simpleLogin(SimpleLoginRequest simpleLoginRequest) {
-		LOGGER.debug("\n\n\n\n\n");
-		LOGGER.debug("==================================================================================");
-		LOGGER.debug("사용자 컨트롤러 - 회원 부가속성 정보 조회");
+
+		LOGGER.debug("\n\n\n\n\n==================================================================================");
+		LOGGER.debug("사용자 컨트롤러 - 심플 인증(간편 인증) v1");
 		LOGGER.debug("==================================================================================\n\n\n\n\n");
 
 		LOGGER.debug("### 받은 데이터 simpleLoginRequest : {}", simpleLoginRequest);
@@ -2777,19 +2871,14 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (simpleLoginRequest.getCommonRequest().getTenantID() == null
-				|| simpleLoginRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
-		// 필수 파라미터 없음
-		if (simpleLoginRequest.getDeviceID() == null || simpleLoginRequest.getDeviceID().length() <= 0) {
+		// 필수 파라미터 없음 mdn과 deviceId 모두 유효하지 않으면
+		if ( (simpleLoginRequest.getDeviceID() == null || simpleLoginRequest.getDeviceID().length() <= 0)
+				&& (simpleLoginRequest.getMdn() == null || simpleLoginRequest.getMdn().length() <= 0)){
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 		}
 
 		try {
-			//
+
 			simpleLoginResponse = this.service.simpleLogin(simpleLoginRequest);
 
 		} catch (StorePlatformException ex) {
@@ -3706,7 +3795,7 @@ public class UserSCIController implements UserSCI {
 		if (modifyIdRequest.getUserKey() == null || modifyIdRequest.getUserId() == null
 				|| modifyIdRequest.getUserType() == null || modifyIdRequest.getUserAuthToken() == null
 				|| modifyIdRequest.getNewUserId() == null || modifyIdRequest.getNewUserType() == null
-				|| modifyIdRequest.getNewUserAuthToken() == null ) {
+				|| modifyIdRequest.getNewUserAuthToken() == null || modifyIdRequest.getNewUserEmail() ==  null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 		}
 

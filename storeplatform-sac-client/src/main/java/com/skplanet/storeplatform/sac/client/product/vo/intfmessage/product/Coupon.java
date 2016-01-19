@@ -157,6 +157,10 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	 */
 	private Lists lists;
 
+	/**
+	 * 단말기 지원 여부
+	 */
+	private String isDeviceSupported;
 	
 	/**
 	 * @return rights
@@ -561,7 +565,13 @@ public class Coupon extends CommonInfo implements Serializable, PromotionEventAc
 	public void setLists(Lists lists) {
 		this.lists = lists;
 	}
-	
-	
 
+
+	public String getIsDeviceSupported() {
+		return isDeviceSupported;
+	}
+
+	public void setIsDeviceSupported(String isDeviceSupported) {
+		this.isDeviceSupported = isDeviceSupported;
+	}
 }

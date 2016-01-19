@@ -17,7 +17,6 @@
                     m.pwd = #{memberPW}
                     ,m.act_tk = null
                     ,m.upd_dt = SYSDATE
-                    ,m.fail_cnt = 0
         /* 비밀번호가 없는 경우 비밀번호 추가 */
         WHEN  NOT MATCHED THEN
             INSERT
@@ -25,26 +24,27 @@
                     m.insd_usermbr_no
                     ,m.pwd
                     ,m.upd_dt
-                    ,m.fail_cnt
                 )
             VALUES
                 (
                     #{memberKey}
                     ,#{memberPW}
                     ,SYSDATE
-                    ,0
                 )
     </update>
 
-    <!-- 회원 비밀번호 존재여부 체크 -->
-    <select id="checkUserPassword" parameterType="chkUserPwdRequest" resultType="String">
-        SELECT /* UserMapper.xml, checkPasswordUser, SAC(SC), 최진호, 2015-12-23 */
-            INSD_USERMBR_NO
+    <!-- 회원 비밀번호 정보 조회 -->
+    <select id="searchUserPassword" parameterType="chkUserPwdRequest" resultType="chkUserPwdResponse">
+        SELECT /* UserMapper.xml, searchUserPassword, SAC(SC), 최진호, 2015-12-23 */
+            INSD_USERMBR_NO AS userKey
+            ,PWD AS userPw
+            ,SALT AS userSalt
+            ,ACT_TK AS userAuthToken
+            ,IDP_ONEID_CD AS userPwType
         FROM
             TB_US_OUSERMBR_PWD
         WHERE
             INSD_USERMBR_NO = #{userKey}
-            AND PWD = #{userPw}
     </select>
 
     <!--  회원 비밀번호 변경. -->
@@ -62,7 +62,6 @@
                     u.pwd = #{memberPW}
                     ,u.act_tk = null
                     ,u.upd_dt = TO_DATE(#{pwRegDate},'YYYYMMDDHH24MISS')
-                    ,u.fail_cnt = 0
         /* 비밀번호가 없는 경우 비밀번호 추가 */
         WHEN NOT MATCHED THEN
             INSERT
@@ -70,16 +69,30 @@
                     u.insd_usermbr_no
                     ,u.pwd
                     ,u.upd_dt
-                    ,u.fail_cnt
                 )
             VALUES
                 (
                     #{memberKey}
                     ,#{memberPW}
                     ,SYSDATE
-                    ,0
                 )
     </update>
+
+    <!--  회원 비밀번호 변경. -->
+    <update id="modifyUserPassword" parameterType="modifyUserPwdRequest">
+        UPDATE /* UserMapper.xml, modifyUserPassword, SAC(SC), 최진호, 2016-01-14 */
+            TB_US_OUSERMBR_PWD
+        SET
+            PWD = #{newPassword}
+            ,ACT_TK = null
+            ,UPD_DT = SYSDATE
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
+            AND PWD = #{oldPassword}
+            AND IDP_ONEID_CD = #{userPwType}
+    </update>
+
+
 
     <!-- 사용자 정보 조회 -->
     <select id="searchUser" parameterType="searchUserRequest" resultMap="searchUserResultMap">
@@ -191,7 +204,6 @@
                  a.mbr_clas_cd               userType,
                  a.mbr_status_main_cd        userMainStatus,
                  a.mbr_status_sub_cd         userSubStatus,
-                 a.login_status_cd           loginStatusCode,
                  a.start_dt,
                  a.end_dt,
                  a.mbr_id                    userID,
@@ -200,11 +212,8 @@
                  a.mbr_nm                    userName,
                  a.sex                       userSex,
                  a.birth                     userBirthDay,
-                 a.nation_cd                 userCountry,
-                 a.lang_cd                   userLanguage,
                  a.entry_day regDate,
-                 TO_CHAR( b.upd_dt ,'YYYYMMDDHH24MISS')            updateDate,
-                 b.fail_cnt                  failCnt
+                 TO_CHAR( b.upd_dt ,'YYYYMMDDHH24MISS')            updateDate
            FROM  tb_us_ousermbr a
       LEFT JOIN  tb_us_ousermbr_pwd b ON a.insd_usermbr_no = b.insd_usermbr_no 
           WHERE  a.mbr_id = #{userID}
@@ -219,7 +228,6 @@
                 mbr_clas_cd             userType,
                 mbr_status_main_cd      userMainStatus,
                 mbr_status_sub_cd       userSubStatus,
-                login_status_cd         loginStatusCode,
                 start_dt,
                 end_dt,
                 mbr_id                  userID,
@@ -230,8 +238,6 @@
                 mbr_nm                  userName,
                 sex                     userSex,
                 birth                   userBirthDay,
-                nation_cd               userCountry,
-                lang_cd                 userLanguage,
                 entry_day               regDate,
                 upd_email_addr          userUpdEmail
            FROM tb_us_ousermbr
@@ -242,14 +248,14 @@
     <!-- DeviceKey 로 MBR_ID 조회(로그인) -->
     <select id="getUserIDByDeviceKey" parameterType="loginUserRequest" resultType="userMbrDevice">
         SELECT  /* UserMapper.xml, getUserIDByDeviceKey, SAC(SC), 윤보영, 2016-01-06 */
-                u.deviceNickName AS deviceNickName,
+                u.userID AS userID,
                 u.nativeID AS nativeID,
                 u.deviceTelecom AS deviceTelecom,
                 u.svcMangNum AS svcMangNum,
                 u.deviceModelNo AS deviceModelNo,
                 u.deviceId AS deviceId,
                 u.mdn AS mdn
-        FROM ( SELECT a.mbr_id AS deviceNickName,
+        FROM ( SELECT a.mbr_id AS userID,
                 b.device_natv_id AS nativeID,
                 b.mno_cd AS deviceTelecom,
                 b.svc_mang_no AS svcMangNum,
@@ -276,7 +282,6 @@
        <foreach collection="keySearchList" item="keySearch" open="AND" close="" separator="AND">
            <if test=" keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO') "> a.insd_usermbr_no =  #{keySearch.keyString} </if>
            <if test=" keySearch.keyType.equalsIgnoreCase('MBR_ID') "> a.mbr_id =  #{keySearch.keyString} </if>
-           <if test=" keySearch.keyType.equalsIgnoreCase('USERMBR_NO') "> a.usermbr_no =  #{keySearch.keyString} </if>
            <if test=" keySearch.keyType.equalsIgnoreCase('EMAIL_ADDR') "> a.email_addr =  #{keySearch.keyString} </if>
        </foreach>
     </select>
@@ -293,7 +298,7 @@
            <if test=" keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') "> b.insd_device_id =  #{keySearch.keyString} </if>
            <if test=" keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> b.device_id =  #{keySearch.keyString} </if>
            <if test=" keySearch.keyType.equalsIgnoreCase('MDN') "> b.mdn =  #{keySearch.keyString} </if>
-           <if test=" keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') "> b.svc_mang_no = #{keySearch.keyString} AND MDN IS NOT NULL</if>
+           <if test=" keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') "> b.svc_mang_no = #{keySearch.keyString}</if>
        </foreach>
          ORDER BY b.auth_dt DESC) u
          WHERE ROWNUM = 1
@@ -621,8 +626,6 @@
                     ,email_recv_yn
                     ,realnm_auth_yn
                     ,lgl_agent_agree_yn
-                    ,nation_cd
-                    ,lang_cd
                     ,system_id
                     ,mbr_clas_cd
                     ,upd_email_addr
@@ -649,8 +652,6 @@
                 ,email_recv_yn
                 ,realnm_auth_yn
                 ,lgl_agent_agree_yn
-                ,nation_cd
-                ,lang_cd
                 ,system_id
                 ,mbr_clas_cd
                 ,upd_email_addr
@@ -675,9 +676,6 @@
           </if>
           <if test="userSubStatus != null">
                ,mbr_status_sub_cd = #{userSubStatus}
-          </if>
-          <if test="loginStatusCode != null">
-               ,login_status_cd = #{loginStatusCode}
           </if>
           <if test="secedeDate != null">
                ,bolter_day = #{secedeDate}
@@ -781,60 +779,53 @@
     
     <!--  회원 비밀번호 로그인 success. -->
     <update id="updateLoginSuccess" parameterType="mbrPwd">
-       MERGE  /* UserMapper.xml, updateLoginSuccess, SAC(SC), 최진호, 2015-12-21 */
-              INTO tb_us_ousermbr_pwd m
-       USING  DUAL ON 
-              (
-                   m.insd_usermbr_no = #{memberKey}
-              )
+        MERGE  /* UserMapper.xml, updateLoginSuccess, SAC(SC), 최진호, 2015-12-21 */
+        INTO tb_us_ousermbr_pwd m
+        USING DUAL ON
+            (
+                m.insd_usermbr_no = #{memberKey}
+            )
 
          /* 비밀번호가 존재하는 경우 */
-         WHEN MATCHED THEN
-      UPDATE  SET
-              m.fail_cnt = 0
-              , upd_dt = SYSDATE
-
-       /* 비밀번호가 없는 경우 비밀번호 추가 */
-       WHEN NOT MATCHED THEN
-      INSERT
-              (
-                  insd_usermbr_no
-                , upd_dt
-                , fail_cnt
-              )
-      VALUES  (
+        WHEN MATCHED THEN
+            UPDATE  SET
+                , upd_dt = SYSDATE
+        /* 비밀번호가 없는 경우 비밀번호 추가 */
+        WHEN NOT MATCHED THEN
+            INSERT
+                (
+                    insd_usermbr_no
+                    ,upd_dt
+                )
+            VALUES
+                (
                     #{memberKey}
-                  , SYSDATE
-                  , 0
-              )
+                    ,SYSDATE
+                )
     </update>
 
     <!--  회원 비밀번호 로그인 fail. -->
     <update id="updateLoginFail" parameterType="mbrPwd">
-       MERGE  /* UserMapper.xml, updateLoginFail,  SAC(SC), 최진호, 2015-12-21 */
-              INTO tb_us_ousermbr_pwd m
-       USING  DUAL ON 
-              ( 
-                  m.insd_usermbr_no = #{memberKey}
-              )
-
-         /* 비밀번호가 존재하는 경우 */
-         WHEN MATCHED THEN
-       UPDATE SET 
-              m.fail_cnt = m.fail_cnt + 1
-
-       /* 비밀번호가 없는 경우 비밀번호 추가 */
-       WHEN NOT MATCHED THEN
-       INSERT (
+        MERGE  /* UserMapper.xml, updateLoginFail,  SAC(SC), 최진호, 2015-12-21 */
+        INTO tb_us_ousermbr_pwd m
+        USING  DUAL ON
+            (
+                m.insd_usermbr_no = #{memberKey}
+            )
+        /* 비밀번호가 존재하는 경우 */
+        WHEN MATCHED THEN
+        /* 비밀번호가 없는 경우 비밀번호 추가 */
+        WHEN NOT MATCHED THEN
+            INSERT
+                (
                     insd_usermbr_no
-                  , upd_dt
-                  , fail_cnt
-              )
-       VALUES (
+                    ,upd_dt
+                )
+            VALUES
+                (
                     #{memberKey}
-                  , SYSDATE
-                  , 1
-              )
+                    ,SYSDATE
+                )
     </update>
     
     <!-- 사용자 탈퇴 -->
@@ -919,10 +910,7 @@
                <if test="isRecvEmail != null">,email_recv_yn </if>
                <if test="isRealName != null">,realnm_auth_yn </if>
                <if test="isParent != null">,lgl_agent_agree_yn </if>
-               <if test="userCountry != null">,nation_cd </if>
-               <if test="userLanguage != null">,lang_cd </if>
                <if test="systemID != null">,system_id</if>
-               <if test="loginStatusCode != null">,login_status_cd </if>
         ) VALUES (
             #{userKey},
             #{userType},
@@ -939,10 +927,7 @@
             <if test="isRecvEmail != null">,#{isRecvEmail} </if>
             <if test="isRealName != null">,#{isRealName} </if>
             <if test="isParent != null">,#{isParent} </if>
-            <if test="userCountry != null">,#{userCountry} </if>
-            <if test="userLanguage != null">,#{userLanguage} </if>
             <if test="systemID != null">,#{systemID} </if>
-            <if test="loginStatusCode != null">,#{loginStatusCode}</if>
         )
     </update>
     
@@ -961,8 +946,6 @@
                 <if test="isRecvEmail != null">,email_recv_yn = #{isRecvEmail}</if>
                 <if test="isRealName != null">,realnm_auth_yn = #{isRealName}</if>
                 <if test="isParent != null">,lgl_agent_agree_yn = #{isParent}</if>
-                <if test="userCountry != null">,nation_cd = #{userCountry}</if>
-                <if test="userLanguage != null">,lang_cd = #{userLanguage}</if>
                 <if test="systemID != null">,system_id = #{systemID}</if>
                 <if test="userType != null">,mbr_clas_cd = #{userType}</if>
                 <if test="userMainStatus != null">,mbr_status_main_cd = #{userMainStatus}</if>
@@ -1102,7 +1085,7 @@
     
     <!-- policy 업데이트 History -->
     <update id="updatePolicyHistory">
-       UPDATE tb_us_ousermbr_limt_target   /* updatePolicyHistory.updatePolicyHistory, policy 업데이트 History, wisestone_mikepark, 2014-06-27 */
+       UPDATE tb_us_olimt_target   /* updatePolicyHistory.updatePolicyHistory, policy 업데이트 History, wisestone_mikepark, 2014-06-27 */
           SET 
               end_dt = SYSDATE,
               upd_id = #{updateID},
@@ -1115,7 +1098,7 @@
     <!-- policy 등록 -->
     <insert id="insertPolicy">
        INSERT /* updatePolicyHistory.insertPolicy, policy 업데이트 History, wisestone_mikepark, 2014-06-27 */
-              INTO tb_us_ousermbr_limt_target (
+              INTO tb_us_olimt_target (
                    seq,
                    limt_policy_cd,
                    start_dt,
@@ -1156,7 +1139,7 @@
     <!-- policy 등록/수정 -->
     <update id="updatePolicy">
         MERGE  /* UserMapper.updatePolicy, policy 등록/수정, wisestone_dinga, 2013-12-30 */
-               INTO tb_us_ousermbr_limt_target u 
+               INTO tb_us_olimt_target u
         USING  DUAL ON
                (
                        u.limt_policy_cd  = #{limitPolicyCode} 
@@ -1175,7 +1158,7 @@
 
                <if test="limitAmount != null">
                ,u.pre_limt_amt = (SELECT  limt_amt 
-                                   FROM  tb_us_ousermbr_limt_target
+                                   FROM  tb_us_olimt_target
                                   WHERE  limt_policy_cd = #{limitPolicyCode}
                                     AND  limt_policy_key = #{limitPolicyKey}
                                   )
@@ -1218,7 +1201,7 @@
     <!-- policy Key 수정 -->
     <update id="updatePolicyKey">
        UPDATE  /* UserMapper.updatePolicyKey, policy Key 수정, wisestone_dinga, 2014-02-25 */
-               tb_us_ousermbr_limt_target
+               tb_us_olimt_target
           SET  limt_policy_key = #{newLimitPolicyKey}
         WHERE  limt_policy_key = #{oldLimitPolicyKey}
     </update>
@@ -1226,7 +1209,7 @@
     <!-- policy Value 수정 -->
     <update id="updatePolicyValue">
        UPDATE  /* UserMapper.updatePolicyValue, apply value 수정, wisestone_dinga, 2014-02-25 */
-               tb_us_ousermbr_limt_target
+               tb_us_olimt_target
           SET  policy_apply_value = #{newApplyValue}
         WHERE  policy_apply_value = #{oldApplyValue}
     </update>
@@ -1281,7 +1264,7 @@
     <!-- Policy 삭제 -->
     <update id="removePolicy" parameterType="limitTarget">
         UPDATE  /* UserMapper.removePolicy, Policy 삭제, wisestone_dinga, 2013-12-30 */
-                tb_us_ousermbr_limt_target
+                tb_us_olimt_target
            SET  end_dt = SYSDATE
          WHERE  limt_policy_cd = #{limitPolicyCode}
            AND  limt_policy_key = #{limitPolicyKey}
@@ -1437,7 +1420,7 @@
                 , pre_limt_amt preLimitAmount
                 , ins_dt insDate
                 , line_mang_status lineMangStatus
-          FROM  tb_us_ousermbr_limt_target
+          FROM  tb_us_olimt_target
          WHERE  end_dt > SYSDATE
                 <if test="limitPolicyKey != null">AND limt_policy_key = #{limitPolicyKey} AND </if>
                 <foreach collection="limitPolicyCodeList" item="keySearch"   open="(" close=")" separator="OR">
@@ -1451,16 +1434,12 @@
                 INTO tb_us_ousermbr_pwd 
                 (
                       insd_usermbr_no
-                    , fail_cnt
                     , upd_dt
-                    <if test="userAuthToken != userAuthToken">, act_tk</if>
-                ) 
+                )
         VALUES  
                 (
                       #{memberKey}
-                    , 0
                     , SYSDATE
-                    <if test="userAuthToken != userAuthToken">, #{userAuthToken}</if>
                 )
     </insert>
     
@@ -1484,7 +1463,6 @@
                 mbr_clas_cd             userType,
                 mbr_status_main_cd      userMainStatus,
                 mbr_status_sub_cd       userSubStatus,
-                login_status_cd         loginStatusCode,
                 start_dt,
                 end_dt,
                 mbr_id                  userID,
@@ -1495,8 +1473,6 @@
                 mbr_nm                  userName,
                 sex                     userSex,
                 birth                   userBirthDay,
-                nation_cd               userCountry,
-                lang_cd                 userLanguage,
                 entry_day               regDate
           FROM  tb_us_ousermbr
          WHERE  email_addr = #{userEmail}
@@ -1826,19 +1802,25 @@
                 )                
          </if>
     </select>
-    
+
+    <!-- 심플 인증 -->
     <select id="simpleLogin" parameterType="simpleLoginRequest" resultType="simpleLoginResponse">
-        SELECT /* UserMapper.simpleLogin, 심플 인증, burkhan_rejoice, 2014-11-04 */
-               B.INSD_USERMBR_NO AS userKey,
-               B.INSD_DEVICE_ID AS deviceKey
-          FROM    tb_us_ousermbr a
-               LEFT JOIN
-                  tb_us_ousermbr_DEVICE b
-               ON  a.INSD_USERMBR_NO = b.INSD_USERMBR_NO
-         WHERE a.MBR_STATUS_MAIN_CD = 'US010201'
-           AND a.MBR_STATUS_SUB_CD = 'US010301'
-           AND b.AUTH_YN = 'Y'
-           AND b.DEVICE_ID = #{deviceID}
+        SELECT /* UserMapper.xml, simpleLogin, SAC(SC), 최진호, 2016-01-18 */
+            B.INSD_USERMBR_NO AS userKey,
+            B.INSD_DEVICE_ID AS deviceKey
+        FROM
+            TB_US_OUSERMBR a
+            LEFT JOIN
+                TB_US_OUSERMBR_DEVICE b
+                ON a.INSD_USERMBR_NO = b.INSD_USERMBR_NO
+        WHERE
+            a.MBR_STATUS_MAIN_CD = 'US010201'
+            AND a.MBR_STATUS_SUB_CD = 'US010301'
+            AND b.AUTH_YN = 'Y'
+            <if test="mdn != null">AND b.MDN = #{mdn}</if>
+            <if test="deviceID != null">AND b.DEVICE_ID = #{deviceID}</if>
+            <if test="userId != null">AND a.MBR_ID = #{userId}</if>
+            <if test="userType != null">AND a.MBR_CLAS_CD = #{userType}</if>
     </select> 
     
     <!-- 회원가입여부 리스트 조회 -->
@@ -1895,11 +1877,46 @@
 
     <!-- 사용자 회원 인증 삭제 -->
     <delete id="removeUserMbrAuth" parameterType="userMbr">
-        DELETE   /* UserMapper.xml, removeUserMbrOneId, SAC(SC), 윤보영, 2015-12-22 */
+        DELETE   /* UserMapper.xml, removeUserMbrAuth, SAC(SC), 윤보영, 2015-12-22 */
         FROM  tb_us_ousermbr_auth
         WHERE insd_usermbr_no = #{userKey}
     </delete>
-    
+
+    <!-- 사용자 회원 삭제 -->
+    <delete id="removeUserMbr" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbr, SAC(SC), 반범진, 2016-01-14 */
+        FROM  tb_us_ousermbr
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
+
+    <!-- 패스워드정보 삭제 -->
+    <delete id="removeUserMbrPwd" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbrPwd, SAC(SC), 반범진, 2016-01-14 */
+        FROM  tb_us_ousermbr_pwd
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
+
+    <!-- 법정대리인인증 정보 삭제 -->
+    <delete id="removeUserMbrLglAgent" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbrLglAgent, SAC(SC), 반범진, 2016-01-14 */
+        FROM  tb_us_ousermbr_lgl_agent
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
+
+    <!-- 부가정보 삭제 -->
+    <delete id="removeUserMbrMangItemPtcr" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbrMangItemPtcr, SAC(SC), 반범진, 2016-01-14 */
+        FROM  tb_us_ousermbr_mang_item_ptcr
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
+
+    <!-- 약관정보 삭제 -->
+    <delete id="removeUserMbrClauseAgree" parameterType="userMbr">
+        DELETE   /* UserMapper.xml, removeUserMbrClauseAgree, SAC(SC), 반범진, 2016-01-14 */
+        FROM  tb_us_ousermbr_clause_agree
+        WHERE insd_usermbr_no = #{userKey}
+    </delete>
+
     <!-- 마지막 로그인일자 컬럼 체크  -->
     <select id="selectAlreadyLastLoginDtUpdateYn" parameterType="userMbrLoginLog" resultType="String">
       SELECT  /* UserMapper.xml, selectAlreadyLastLoginDtUpdateYn, SAC(SC), 최진호, 2015-12-21 */
@@ -1941,9 +1958,7 @@
             ,email_recv_yn            as emailRecvYn         
             ,realnm_auth_yn           as realNmAuthYn        
             ,lgl_agent_agree_yn       as lglAgentAgreeYn     
-            ,nation_cd                as nationCd            
-            ,lang_cd                  as langCd              
-            ,system_id                as systemId            
+            ,system_id                as systemId
             ,bolter_case_cd           as bolterCaseCd        
             ,login_status_cd          as loginStatusCd       
             ,upd_email_addr           as updEmailAddr        
@@ -1977,8 +1992,6 @@
                     <if test="emailRecvYn != null"> ,email_recv_yn</if>
                     <if test="realNmAuthYn != null">,realnm_auth_yn</if>
                     <if test="lglAgentAgreeYn != null"> ,lgl_agent_agree_yn</if>
-                    <if test="nationCd != null">,nation_cd</if>
-                    <if test="langCd != null"> ,lang_cd</if>
                     <if test="systemId != null">,system_id</if>
                     <if test="bolterCaseCd != null">,bolter_case_cd</if>
                     <if test="loginStatusCd != null">,login_status_cd</if>
@@ -2007,8 +2020,6 @@
                     <if test="emailRecvYn != null">,#{emailRecvYn}</if>
                     <if test="realNmAuthYn != null">,#{realNmAuthYn}</if>
                     <if test="lglAgentAgreeYn != null">,#{lglAgentAgreeYn}</if>
-                    <if test="nationCd != null">,#{nationCd}</if>
-                    <if test="langCd != null">,#{langCd}</if>
                     <if test="systemId != null">,#{systemId}</if>
                     <if test="bolterCaseCd != null">,#{bolterCaseCd}</if>
                     <if test="loginStatusCd != null">,#{loginStatusCd}</if>
@@ -2202,7 +2213,7 @@
         <if test="brandId != null">
             AND brand_id = #{brandId}
         </if>
-        ORDER BY brand_nm, charger_id
+        ORDER BY NVL(upd_dt, reg_dt) DESC
    </select>
    
    <!-- 상품권충전소 정보 조회 -->
@@ -2285,9 +2296,10 @@
     </insert>
 
     <!-- 사용자 인증 토큰 체크 -->
-    <select id="checkUserAuthToken" parameterType="chkUserAuthTkRequest" resultType="String">
+    <select id="checkUserAuthToken" parameterType="chkUserAuthTkRequest" resultType="chkUserAuthTkResponse">
         SELECT /* UserMapper.xml, checkUserAuthToken, SAC(SC), 최진호, 2016-01-04 */
             INSD_USERMBR_NO AS userKey
+            ,ACT_TK AS userAuthToken
         FROM
             TB_US_OUSERMBR_PWD
         WHERE
@@ -2313,24 +2325,13 @@
         SET
             MBR_ID = #{newUserId}
             ,MBR_CLAS_CD = #{newUserType}
+            ,EMAIL_ADDR = #{newUserEmail}
             ,START_DT = SYSDATE
             ,UPD_DT = SYSDATE
         WHERE
             INSD_USERMBR_NO = #{userKey}
             AND MBR_ID = #{userId}
             AND MBR_CLAS_CD = #{userType}
-    </update>
-
-    <!-- 사용자 인증 토큰 변경 -->
-    <update id="updateUserAuthToken" parameterType="modifyIdRequest">
-        UPDATE  /* UserMapper.xml, updateUserAuthToken,  SAC(SC), 최진호, 2016-01-06 */
-            TB_US_OUSERMBR_PWD
-        SET
-            ACT_TK = #{newUserAuthToken}
-            ,UPD_DT = SYSDATE
-        WHERE
-            INSD_USERMBR_NO = #{userKey}
-            AND ACT_TK = #{userAuthToken}
     </update>
 
 </mapper>

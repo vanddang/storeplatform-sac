@@ -293,8 +293,8 @@ public class IdpServiceImpl implements IdpService {
 			if (StringUtils.isNotBlank(map.get("user_birthday")))
 				userMbr.setUserBirthDay(map.get("user_birthday")); // 사용자 생년월일
 
-			if (StringUtils.isNotBlank(map.get("user_nation_code")))
-				userMbr.setUserCountry(map.get("user_nation_code")); // 사용자 국가 코드
+//			if (StringUtils.isNotBlank(map.get("user_nation_code")))
+//				userMbr.setUserCountry(map.get("user_nation_code")); // 사용자 국가 코드
 
 			userMbr.setImSiteCode(joinSiteTotalList); // OneID 이용동의 사이트 정보
 			// 실명인증 여부 신규인경우 Y로 전달받아도 실명인증정보에서 신규인경우 N으로 수정이됨
@@ -719,8 +719,8 @@ public class IdpServiceImpl implements IdpService {
 
 		if (StringUtils.isNotBlank(hashMap.get("user_birthday")))
 			getUserMbr.setUserBirthDay(hashMap.get("user_birthday")); // 사용자 생년월일
-		if (StringUtils.isNotBlank(hashMap.get("user_nation_code")))
-			getUserMbr.setUserCountry(hashMap.get("user_nation_code")); // 사용자 국가 코드
+//		if (StringUtils.isNotBlank(hashMap.get("user_nation_code")))
+//			getUserMbr.setUserCountry(hashMap.get("user_nation_code")); // 사용자 국가 코드
 		getUserMbr.setImSiteCode(hashMap.get("join_sst_list")); // OneID 이용동의 사이트 정보
 
 		String ocbJoinCodeYn = "N"; // 통합 포인트 여부 (Y/N)
@@ -2861,8 +2861,8 @@ public class IdpServiceImpl implements IdpService {
 							if (StringUtils.isNotBlank(map.get("user_birthday")))
 								userMbr.setUserBirthDay(map.get("user_birthday")); // 사용자 생년월일
 
-							if (StringUtils.isNotBlank(map.get("user_nation_code")))
-								userMbr.setUserCountry(map.get("user_nation_code")); // 사용자 국가 코드
+//							if (StringUtils.isNotBlank(map.get("user_nation_code")))
+//								userMbr.setUserCountry(map.get("user_nation_code")); // 사용자 국가 코드
 
 							userMbr.setImSiteCode(joinSiteTotalList); // OneID 이용동의 사이트 정보
 							// 실명인증 여부 신규인경우 Y로 전달받아도 실명인증정보에서 신규인경우 N으로 수정이됨

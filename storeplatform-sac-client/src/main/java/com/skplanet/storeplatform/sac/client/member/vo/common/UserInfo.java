@@ -43,11 +43,6 @@ public class UserInfo extends CommonInfo {
 	private String isMemberPoint;
 
 	/*
-	 * 로그인 상태 코드.
-	 */
-	private String loginStatusCode;
-
-	/*
 	 * 등록일시.
 	 */
 	private String regDate;
@@ -178,16 +173,6 @@ public class UserInfo extends CommonInfo {
 	private String userState;
 
 	/*
-	 * 국가코드
-	 */
-	private String userCountry;
-
-	/*
-	 * 언어코드
-	 */
-	private String userLanguage;
-
-	/*
 	 * 법정대리인 동의 여부
 	 */
 	private String isParent;
@@ -209,9 +194,6 @@ public class UserInfo extends CommonInfo {
 
 	/** 회원의 만나이. */
 	private String realAge;
-
-	/** 원아이디 가입상태코드. */
-	private String entryStatusCode;
 
 	/**
 	 * 샵클 업데이트 여부(sap 회원용).
@@ -304,21 +286,6 @@ public class UserInfo extends CommonInfo {
 	 */
 	public void setIsMemberPoint(String isMemberPoint) {
 		this.isMemberPoint = isMemberPoint;
-	}
-
-	/**
-	 * @return the loginStatusCode
-	 */
-	public String getLoginStatusCode() {
-		return this.loginStatusCode;
-	}
-
-	/**
-	 * @param loginStatusCode
-	 *            the loginStatusCode to set
-	 */
-	public void setLoginStatusCode(String loginStatusCode) {
-		this.loginStatusCode = loginStatusCode;
 	}
 
 	/**
@@ -712,36 +679,6 @@ public class UserInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the userCountry
-	 */
-	public String getUserCountry() {
-		return this.userCountry;
-	}
-
-	/**
-	 * @param userCountry
-	 *            the userCountry to set
-	 */
-	public void setUserCountry(String userCountry) {
-		this.userCountry = userCountry;
-	}
-
-	/**
-	 * @return the userLanguage
-	 */
-	public String getUserLanguage() {
-		return this.userLanguage;
-	}
-
-	/**
-	 * @param userLanguage
-	 *            the userLanguage to set
-	 */
-	public void setUserLanguage(String userLanguage) {
-		this.userLanguage = userLanguage;
-	}
-
-	/**
 	 * @return the isParent
 	 */
 	public String getIsParent() {
@@ -829,21 +766,6 @@ public class UserInfo extends CommonInfo {
 	 */
 	public void setUserExtraInfoList(List<UserExtraInfo> userExtraInfoList) {
 		this.userExtraInfoList = userExtraInfoList;
-	}
-
-	/**
-	 * @return entryStatusCode
-	 */
-	public String getEntryStatusCode() {
-		return this.entryStatusCode;
-	}
-
-	/**
-	 * @param entryStatusCode
-	 *            String
-	 */
-	public void setEntryStatusCode(String entryStatusCode) {
-		this.entryStatusCode = entryStatusCode;
 	}
 
 	/**

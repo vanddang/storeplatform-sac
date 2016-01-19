@@ -74,9 +74,6 @@ public class LoginUserRequest extends CommonInfo implements Serializable {
 	/** 기기_OS_버전. */
 	private String deviceOsVersion;
 
-    /** device 정보 */
-    private DeviceInfo deviceInfo;
-
 	/**
 	 * 로그인 상태 코드를 리턴한다.
 	 * 
@@ -369,14 +366,6 @@ public class LoginUserRequest extends CommonInfo implements Serializable {
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
 	}
-
-	public DeviceInfo getDeviceInfo() {
-        return deviceInfo;
-    }
-
-    public void setDeviceInfo(DeviceInfo deviceInfo) {
-        this.deviceInfo = deviceInfo;
-    }
 
     /*
          * (non-Javadoc)

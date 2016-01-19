@@ -26,7 +26,14 @@
 		       AND TP.PROD_ID = TPP.PROD_ID
 		       AND TP.TENANT_ID = TPP.TENANT_ID  
 		       AND PCM.USE_YN = 'Y'
-		       AND SC.CHNL_CNT > 0
+			   AND EXISTS(
+					   SELECT 'X'
+						 FROM TB_DP_TENANT_PROD
+						WHERE TENANT_ID =#{tenantHeader.tenantId}
+						  AND PROD_ID =SC.CATALOG_ID
+						  AND PROD_STATUS_CD ='PD000403'
+						  AND EXPO_YN = 'Y'
+					)
 		       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
 		       <if test = "list !=null">
 		       AND PR.PART_PROD_ID IN
@@ -42,7 +49,6 @@
 		       AND TP.PROD_STATUS_CD = #{prodStatusCd}
 		       AND TP.EXPO_YN = 'Y'
 		       AND TP.TENANT_ID = #{tenantHeader.tenantId}
-		       AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
 		       AND PR.PROD_RSHP_CD = #{rshpCd}
 		    </if>     
 		    <if test = "req.productType=='normal'">
@@ -65,7 +71,6 @@
 			       AND CD.USE_YN = 'Y'
 			       AND TP.PROD_STATUS_CD IN (#{prodStatusCd}, #{passProdStatusCd})
 			       AND TP.TENANT_ID = #{tenantHeader.tenantId}
-			       AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
 			        <if test = "list !=null">
 	               AND P.PROD_ID IN
 	                   <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 

@@ -58,7 +58,6 @@
 		        AND    D.TENANT_ID = #{tenantId}
 		        AND    A.PROD_ID = E.PROD_ID
 		        AND    E.TENANT_ID = #{tenantId}
-		        AND    SYSDATE BETWEEN E.APPLY_START_DT AND E.APPLY_END_DT
 		        AND    A.CID = F.CID
 		        AND    F.PROD_ID = G.PROD_ID
 		        AND    F.PROD_ID = H.PROD_ID
@@ -69,7 +68,6 @@
 		        AND    A.USE_POLICY_ID = K.USE_POLICY_ID(+)
 		        AND    F.USE_POLICY_ID = L.USE_POLICY_ID(+)
 		        AND    J.TENANT_ID = #{tenantId}
-		        AND    SYSDATE BETWEEN J.APPLY_START_DT AND J.APPLY_END_DT
 		        -----------------------------------------------------------------
 		        -- INPUT PARAMETER
 		        -----------------------------------------------------------------

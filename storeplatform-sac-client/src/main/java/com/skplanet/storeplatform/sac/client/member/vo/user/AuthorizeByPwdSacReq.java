@@ -27,11 +27,6 @@ public class AuthorizeByPwdSacReq  extends CommonInfo implements Serializable {
     private String userPw;
 
     /**
-     * 계정잠금 해제 요청(Y/N).
-     */
-    private String releaseLock;
-
-    /**
      * @return userId
      */
     public String getUserId() {
@@ -59,21 +54,6 @@ public class AuthorizeByPwdSacReq  extends CommonInfo implements Serializable {
      */
     public void setUserPw(String userPw) {
         this.userPw = userPw;
-    }
-
-    /**
-     * @return releaseLock
-     */
-    public String getReleaseLock() {
-        return this.releaseLock;
-    }
-
-    /**
-     * @param releaseLock
-     *            String
-     */
-    public void setReleaseLock(String releaseLock) {
-        this.releaseLock = releaseLock;
     }
 
 }

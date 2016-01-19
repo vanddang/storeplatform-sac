@@ -491,7 +491,7 @@ public class AuthorizeByIdTest {
 							AuthorizeByIdReq req = new AuthorizeByIdReq();
 							req.setUserId("vanddangtest020");
 							req.setUserPw("abcd1234");
-							req.setReleaseLock("Y");
+//							req.setReleaseLock("Y");
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
@@ -541,7 +541,7 @@ public class AuthorizeByIdTest {
 							AuthorizeByIdReq req = new AuthorizeByIdReq();
 							req.setUserId("sacuser0011");
 							req.setUserPw("!@34qwer");
-							req.setReleaseLock("Y");
+//							req.setReleaseLock("Y");
 
 							try {
 								ObjectMapper objMapper = new ObjectMapper();

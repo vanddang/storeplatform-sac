@@ -8,9 +8,9 @@ import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 
 /**
- * Class 설명
+ * 심플 인증(간편 인증) v1 요청 VO
  * 
- * Updated on : 2014. 11. 4. Updated by : Rejoice, Burkhan
+ * Updated on : 2016. 1. 18. Updated by : 최진호, 보고지티.
  */
 public class SimpleLoginRequest extends CommonInfo {
 
@@ -20,8 +20,17 @@ public class SimpleLoginRequest extends CommonInfo {
 	/** 공통 요청 Value Object. */
 	private CommonRequest commonRequest;
 
-	/** 휴대기기 ID(MDN/UUID/MAC). */
+	/** 휴대기기 ID (MDN). */
+	private String mdn; // MDN
+
+	/** 휴대기기 ID(UUID/MAC). */
 	private String deviceID; // DEVICE_ID
+
+	/** 사용자 타입. */
+	private String userType;
+
+	/** 사용자 ID. */
+	private String userId;
 
 	/** 접속_IP. */
 	private String connIp;
@@ -61,9 +70,28 @@ public class SimpleLoginRequest extends CommonInfo {
 	}
 
 	/**
-	 * 휴대기기 ID(MDN/UUID/MAC) 정보를 리턴한다.
+	 * 휴대기기 ID(MDN) 정보를 리턴한다.
+	 *
+	 * @return mdn - 휴대기기 ID(MDN) 정보
+	 */
+	public String getMdn() {
+		return this.mdn;
+	}
+
+	/**
+	 * 휴대기기 ID(MDN) 정보를 설정한다.
+	 *
+	 * @param mdn
+	 *            휴대기기 ID(MDN) 정보
+	 */
+	public void setMdn(String mdn) {
+		this.mdn = mdn;
+	}
+
+	/**
+	 * 휴대기기 ID(UUID/MAC) 정보를 리턴한다.
 	 * 
-	 * @return deviceID - 휴대기기 ID(MDN/UUID/MAC) 정보
+	 * @return deviceID - 휴대기기 ID(UUID/MAC) 정보
 	 */
 	public String getDeviceID() {
 		return this.deviceID;
@@ -77,6 +105,44 @@ public class SimpleLoginRequest extends CommonInfo {
 	 */
 	public void setDeviceID(String deviceID) {
 		this.deviceID = deviceID;
+	}
+
+	/**
+	 * 사용자 타입을 리턴한다.
+	 *
+	 * @return userType - 사용자 타입
+	 */
+	public String getUserType() {
+		return this.userType;
+	}
+
+	/**
+	 * 사용자 타입을 설정한다.
+	 *
+	 * @param userType
+	 *            사용자 타입
+	 */
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	/**
+	 * 사용자 ID를 리턴한다.
+	 *
+	 * @return userId - 사용자 ID
+	 */
+	public String getUserId() {
+		return this.userId;
+	}
+
+	/**
+	 * 사용자 ID를 설정한다.
+	 *
+	 * @param userId
+	 *            사용자 ID
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	/**

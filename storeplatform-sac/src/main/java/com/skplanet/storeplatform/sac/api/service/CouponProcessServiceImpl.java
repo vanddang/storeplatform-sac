@@ -656,7 +656,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				IcmsJobPrint.printTbTenantDpProd(dtpd, "TB_DP_TENANT_PROD - ITEM:::" + i);
 			}
 			// 저장
-			this.couponItemService.insertTbDpTenantProdInfo(tbDpTenantProdList, couponInfo.getProdId());
+			this.couponItemService.insertTbDpTenantProdInfo(tbDpTenantProdList, couponInfo);
 			this.log.info("■■■■■ setTbDpTenantProdListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_TENANT_PROD VO 셋팅 실패", null);
@@ -989,7 +989,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private boolean setCallSpSettRegProd(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<SpRegistProd> spRegistProdList, String cudType, CouponReq couponReq) {
-		this.log.info("■■■■■ setCallSpSettRegProd Start ■■■■■");
+		//this.log.info("■■■■■ setCallSpSettRegProd Start ■■■■■");
 		SpRegistProd spRegistProd = new SpRegistProd();
 		try {
 
@@ -1019,8 +1019,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 
 			// 저장
-			this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
-			this.log.info("■■■■■ setCallSpSettRegProd End ■■■■■");
+			//this.couponItemService.insertCallSpSettRegProd(spRegistProdList);  2016.01.11 김형식 수정 (백승현 과장 요청사항)
+			//this.log.info("■■■■■ setCallSpSettRegProd End ■■■■■");
 
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), e.getMessage(), null);
@@ -1239,9 +1239,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	/**
 	 * 팅/특가 쿠폰 ID 조회 한다.
 	 * 
-	 * @param couponCodes
-	 *            couponCodes
-	 * @return List<CouponRes>
+	 * @param couponReq
+	 *            couponReq
+	 * @return String
 	 */
 	@Override
 	public String getSpecialProductCouponId(CouponReq couponReq) {
@@ -1376,7 +1376,154 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 		return true;
 	} // End processForCouponStatus
-	
+
+	/**
+	 * One Store 팅/특가 쿠폰 ID 조회 한다.
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return String
+	 */
+	@Override
+	public String getOneBrandSpecialProductCouponId(CouponReq couponReq) {
+		this.log.info("<<<<< CouponContentService >>>>> getOneBrandSpecialProductCouponId...");
+		String couponCode = couponReq.getCouponCode();
+
+		if (StringUtils.isBlank(couponReq.getTenantIds())) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (tenantIds)", null);
+		}
+
+		if (StringUtils.isBlank(couponReq.getCouponCode())) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (couponCode)", null);
+		}
+
+		if (StringUtils.isBlank(couponReq.getItemCodes())) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemCodes)", null);
+		}
+		String[] itemCodes = couponReq.getItemCodes().split(",");
+		String[] tenantIds = couponReq.getTenantIds().split(",");
+		// 기등록된 컨텐트 존재여부 확인 old쿠폰ID,아이템ID로 new쿠폰ID,아이템ID 가져오기 조회
+		String newCouponCode = this.couponItemService.getCouponGenerateId(couponCode);
+
+		if (StringUtils.isBlank(newCouponCode)) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_COUPONID, null, null);
+		}
+
+		List<String> itemList = this.couponItemService.getCouponCompareItemCode(newCouponCode);
+
+		boolean compareFlag = false;
+		for (int kk=0 ; kk< itemCodes.length; kk++){
+			for (String val : itemList) {
+				if(val.equals(itemCodes[kk])){
+					compareFlag = true;
+				}
+			}
+			if(compareFlag){
+				if(kk != itemCodes.length-1){
+					compareFlag = false;
+				}
+			}else{
+				break;
+			}
+		}
+		if(!compareFlag){
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponCode 에 매핑되어 있는 itemCodes 값이 아닙니다.", null);
+		}
+
+
+
+		StringBuffer couponIdBuff = new StringBuffer();
+		List<String> result = null;
+		try {
+			String episodeId ="";
+			int kk = 0;
+			for (String itemCode : itemCodes) {
+				if (StringUtils.isBlank(itemCode)) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_ITEMID, null, null);
+				}// end if
+				episodeId = this.couponItemService.getItemGenerateId(itemCode);
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("episodeId", episodeId);
+				reqMap.put("tenantIds", tenantIds);
+				int ssCnt = this.couponItemService.getOneBrandSpecialProdCnt(reqMap);
+
+				if (ssCnt <= 0) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_SPECIAL, "특가(팅) 상품이 아닙니다.",
+							episodeId);
+				}//end if
+				result = this.couponItemService.getOneBrandSpecialProductCouponId(reqMap);
+				if (result == null) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_COUPON_ID, null, null);
+				}//end if
+				for(String vo : result) {
+					if (kk == 0) {
+						couponIdBuff.append(vo);
+					} else {
+						couponIdBuff.append(",");
+						couponIdBuff.append(vo);
+					}
+					kk++;
+				}
+			}//end for
+		} catch (CouponException e) {
+			throw e;
+		}
+		return couponIdBuff.toString();
+	}
+
+	/**
+	 * One Store 팅/특가 상품 상태 변경 한다.
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return boolean
+	 */
+	@Override
+	public boolean updateForOneBrandSpecialCouponStatus(CouponReq couponReq) {
+		// 호출
+		this.log.info("■■■■■ updateForOneBrandSpecialCouponStatus ■■■■■");
+		String couponCode = couponReq.getCouponCode();
+		String[] itemCodes = couponReq.getItemCodes().split(",");
+		String[] tenantIds = couponReq.getTenantIds().split(",");
+		String dpStatusCode = "";
+
+		// 기등록된 컨텐트 존재여부 확인 old쿠폰ID,아이템ID로 new쿠폰ID,아이템ID 가져오기 조회
+		String newCouponCode = this.couponItemService.getCouponGenerateId(couponCode);
+
+		// 쿠폰상태 코드 -> 전시 코드로 변환
+		dpStatusCode = this.getDPStatusCode("4");
+		String episodeId = "";
+		StringBuffer episodeIdBuff = new StringBuffer();
+		int kk =0;
+		for (String itemCode : itemCodes) {
+			episodeId = this.couponItemService.getItemGenerateId(itemCode);
+			if(kk ==0){
+				episodeIdBuff.append(episodeId);
+			}else{
+				episodeIdBuff.append(",");
+				episodeIdBuff.append(episodeId);
+			}
+			kk++;
+		}
+		// 2. DB Update
+		try {
+			// TB_DP_TENANT_PROD 상태 처리
+			this.couponItemService.updateCouponStatusForOneBrandSpecialProd(newCouponCode, dpStatusCode, "2", episodeIdBuff.toString() ,tenantIds);
+
+		} catch (CouponException e) {
+			throw new CouponException(e.getErrCode(), e.getErrorData().getErrorMsg(), null);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
+		} finally {
+			this.log.info("■■■■■ DB Transaction END ■■■■■");
+		}
+
+		// 검색 서버를 위한 MQ 연동
+		this.setShoppingCatalogIdByChannelIdForMq(newCouponCode);
+
+		return true;
+	} // End processForCouponStatus
+
 
 	/**
 	 * 쿠폰 상태코드별 전시상태코드를 반환한다.
@@ -1428,10 +1575,38 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		}
 		return list;
 	}
+
+
+	/**
+	 * One Store 특가 상품 목록 조회 한다.
+	 *
+	 * @param itemCodes
+	 *            itemCodes
+	 * @return List<CouponRes>
+	 */
+	@Override
+	public List<CouponRes> getOneBrandSpecialProductList(String[] itemCodes) {
+		this.log.info("<<<<< CouponContentService >>>>> getOneBrandSpecialProductList...");
+		List<CouponRes> list = null;
+		try {
+			for (String itemCode : itemCodes) {
+				if (StringUtils.isBlank(itemCode)) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemCode)", null);
+				}
+			}
+			list = this.couponItemService.getOneBrandSpecialProductList(itemCodes);
+
+
+		} catch (CouponException e) {
+			throw e;
+
+		}
+		return list;
+	}
 	
 	/**
 	 * 특가 상품 상세 조회 한다.
-	 * 
+	 *
 	 * @param couponCode
 	 *            couponCode
 	 * @param itemsCodes
@@ -1444,6 +1619,28 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		CouponRes info = null;
 		try {
 			info = this.couponItemService.getSpecialProductDetail(couponCode, itemsCodes);
+		} catch (CouponException e) {
+			throw e;
+
+		}
+		return info;
+	}
+
+	/**
+	 * One Store 특가 상품 상세 조회 한다.
+	 *
+	 * @param couponCode
+	 *            couponCode
+	 * @param itemsCodes
+	 *            itemsCodes
+	 * @return CouponRes
+	 */
+	@Override
+	public CouponRes getOneBrandSpecialProductDetail(String couponCode, String[] itemsCodes) {
+		this.log.info("<<<<< CouponContentService >>>>> getOneBrandSpecialProductDetail...");
+		CouponRes info = null;
+		try {
+			info = this.couponItemService.getOneBrandSpecialProductDetail(couponCode, itemsCodes);
 		} catch (CouponException e) {
 			throw e;
 
@@ -1484,6 +1681,37 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		return info;
 	}
 
+	/**
+	 * <pre>
+	 * One Store 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+	 * </pre>
+	 *
+	 * @param couponReq
+	 *            couponReq
+	 * @return CouponRes
+	 */
+	@Override
+	public CouponRes getOneBrandSpecialProductDetailForDate(CouponReq couponReq) {
+		this.log.info("<<<<< CouponContentService >>>>> getOneBrandSpecialProductDetailForDate...");
+		if (StringUtils.isBlank(couponReq.getStartDate())) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (startDate)", null);
+		}
+		if (StringUtils.isBlank(couponReq.getEndDate())) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (endDate)", null);
+		}
+
+		if (couponReq.getStartDate().compareTo(couponReq.getEndDate()) == 1) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "startDate가 endDate 값보다 클수 없습니다.", null);
+		}
+		CouponRes info = null;
+		try {
+			info = this.couponItemService.getOneBrandSpecialProductDetailForDate(couponReq);
+		} catch (CouponException e) {
+			throw e;
+
+		}
+		return info;
+	}
 
 	/**
 	 * 카탈로그 및 메뉴ID 조회 한다.

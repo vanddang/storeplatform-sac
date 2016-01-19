@@ -291,7 +291,7 @@
                       ,  b.svc_mang_no as svc_mang_no
                    FROM  tb_us_ousermbr_device b
                    		 JOIN tb_us_ousermbr a
-                         AND b.insd_usermbr_no = a.insd_usermbr_no
+                         ON b.insd_usermbr_no = a.insd_usermbr_no
                   WHERE  b.auth_yn = 'Y'
                <foreach collection="keySearchList" item="keySearch"   open="" close="" separator="">
                    <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') ">AND b.svc_mang_no =  #{keySearch.keyString} </if>
@@ -483,16 +483,16 @@
                reg_dt,
                auth_dt,
                auth_yn,
-               sms_recv_yn
+               sms_recv_yn,
+               rep_device_yn
                <if test="deviceID != null">,device_id </if>
                <if test="mdn != null">,mdn </if>
                <if test="deviceTelecom != null">,mno_cd </if>
-               <if test="isPrimary != null">,rep_device_yn </if>
                <if test="nativeID != null">,device_natv_id </if>
                <if test="svcMangNum != null">,svc_mang_no </if>
                <if test="joinId != null">,entry_chnl_cd </if>
                <if test="changeCaseCode != null">,chg_case_cd </if>
-               <if test="deviceSimNm != null">,device_sim_nm </if>
+               <if test="simSerialNo != null">,device_sim_nm </if>
                <if test="deviceAccount != null">,device_acct </if>
         ) VALUES (
             #{userKey},
@@ -506,15 +506,17 @@
             <choose>
               <when test="isRecvSMS != null">,#{isRecvSMS}</when><otherwise>,'N'</otherwise>
             </choose>
+            <choose>
+                <when test="isPrimary != null">,#{isPrimary}</when><otherwise>,'N'</otherwise>
+            </choose>
             <if test="deviceID != null">,#{deviceID} </if>
             <if test="mdn != null">,#{mdn} </if>
             <if test="deviceTelecom != null">,#{deviceTelecom} </if>
-            <if test="isPrimary != null">,#{isPrimary} </if>
             <if test="nativeID != null">,#{nativeID} </if>
             <if test="svcMangNum != null">,#{svcMangNum} </if>
             <if test="joinId != null">,#{joinId} </if>
             <if test="changeCaseCode != null">,#{changeCaseCode} </if>
-            <if test="deviceSimNm != null">,#{deviceSimNm} </if>
+            <if test="simSerialNo != null">,#{simSerialNo} </if>
             <if test="deviceAccount != null">,#{deviceAccount} </if>
         )
     </update>
@@ -581,7 +583,7 @@
                <if test="deviceID != null">,device_id = #{deviceID} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
-               <if test="deviceSimNm != null">,device_sim_nm = #{deviceSimNm}</if>
+               <if test="simSerialNo != null">,device_sim_nm = #{simSerialNo}</if>
                <choose>
                <when test="changeCaseCode != null">,chg_case_cd = #{changeCaseCode} </when>
                <otherwise>,chg_case_cd = 'US012001' </otherwise>
@@ -609,7 +611,7 @@
                <if test="deviceID != null">,device_id = #{deviceID} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
-               <if test="deviceSimNm != null">,device_sim_nm = #{deviceSimNm} </if>
+               <if test="simSerialNo != null">,device_sim_nm = #{simSerialNo} </if>
         WHERE insd_usermbr_no = #{userKey}
           AND insd_device_id = #{deviceKey}
           AND auth_yn = 'Y'
@@ -733,7 +735,6 @@
                 mbr_clas_cd             userType,
                 mbr_status_main_cd      userMainStatus,
                 mbr_status_sub_cd       userSubStatus,
-                login_status_cd         loginStatusCode,
                 mbr_id                  userID
            FROM tb_us_ousermbr
           WHERE insd_usermbr_no = #{userKey}
@@ -825,7 +826,7 @@
                <if test="joinId != null">,entry_chnl_cd = #{joinId} </if>
                <if test="deviceModelNo != null">,device_model_cd = #{deviceModelNo} </if>
                <if test="mdn != null">,mdn = #{mdn} </if>
-               <if test="deviceSimNm != null">,device_sim_nm = #{deviceSimNm} </if>
+               <if test="simSerialNo != null">,device_sim_nm = #{simSerialNo} </if>
                <if test="deviceID != null">,device_id = #{deviceID} </if>
         WHERE insd_usermbr_no = #{userKey}
           AND insd_device_id = #{deviceKey}
@@ -864,8 +865,8 @@
         )
     </insert>
 
-    <select id="searchDeviceOrderbyUpdDt" parameterType="userMbrDevice" resultType="userMbrDevice">
-        SELECT /* DeviceMapper.searchDeviceOrderbyStartDt, 최근에 수정된 휴대기기 정보 조회, SAC(SC), 반범진, 2016-01-08 */
+    <select id="searchDeviceOrderLastLoginDt" parameterType="userMbrDevice" resultType="userMbrDevice">
+        SELECT /* DeviceMapper.searchDeviceOrderLastLoginDt, 최근에 수정된 휴대기기 정보 조회, SAC(SC), 반범진, 2016-01-08 */
             insd_usermbr_no as userKey,
             insd_device_id as deviceKey
         FROM
@@ -874,7 +875,7 @@
               FROM tb_us_ousermbr_device
              WHERE auth_yn = 'Y'
                AND insd_usermbr_no = #{userKey}
-            ORDER BY upd_dt DESC
+            ORDER BY last_login_dt DESC, upd_dt desc
           )
           WHERE ROWNUM = 1
     </select>
@@ -1073,8 +1074,8 @@
     <!-- onebrand 추가 쿼리 -->
 
     <!-- 서비스관리번호(svcMangNo)로 최근 로그인된 모바일 회원 휴대기기 정보 조회 -->
-    <select id="searchDeviceOrderBySvcMangNo" parameterType="String" resultMap="searchDeviceResultMap">
-        SELECT /* DeviceMapper.xml, searchDeviceOrderBySvcMangNo, SAC(SC), 반범진, 2016-01-04 */
+    <select id="searchDeviceOrderByLastLoginDt" parameterType="searchDeviceRequest" resultMap="searchDeviceResultMap">
+        SELECT /* DeviceMapper.xml, searchDeviceOrderByLastLoginDt, SAC(SC), 윤보영, 2016-01-14 */
                 a.mbr_id AS userId,
                 a.insd_usermbr_no AS userKey,
                 'INSD_DEVICE_ID' AS keyType,
@@ -1085,14 +1086,26 @@
             (
                 SELECT insd_usermbr_no, insd_device_id
                 FROM tb_us_ousermbr_device
-                WHERE svc_mang_no =  #{svcMangNo}
-                      AND auth_yn = 'Y'
+                WHERE auth_yn = 'Y'
+                    <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+                        <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID')">
+                            device_id = #{keySearch.keyString}
+                        </if>
+                        <if test="keySearch.keyType.equalsIgnoreCase('MDN')">
+                            mdn = #{keySearch.keyString}
+                        </if>
+                        <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO')">
+                            svc_mang_no = #{keySearch.keyString}
+                        </if>
+                        <if test="keySearch.keyType.equalsIgnoreCase('AUTHORIZE_SVC_MANG_NO')">
+                            svc_mang_no = #{keySearch.keyString} AND mdn IS NOT NULL
+                        </if>
+                    </foreach>
                 ORDER BY last_login_dt DESC
             )
             WHERE ROWNUM = 1
         ) b ON a.insd_usermbr_no = b.insd_usermbr_no
         WHERE a.mbr_status_main_cd != 'US010202'
-              AND a.mbr_clas_cd = 'US011501'
     </select>
 
     <!-- 휴대기기 목록 조회 -->
@@ -1109,7 +1122,7 @@
             b.auth_yn as isUsed,
             b.sms_recv_yn as isRecvSMS,
             b.device_natv_id as nativeID,
-            b.device_sim_nm as deviceSimNm,
+            b.device_sim_nm as simSerialNo,
             b.device_acct as deviceAccount,
             b.rep_device_yn as isPrimary
         FROM TB_US_OUSERMBR a

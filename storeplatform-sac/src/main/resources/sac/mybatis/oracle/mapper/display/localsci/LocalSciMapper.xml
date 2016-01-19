@@ -261,6 +261,7 @@
           FROM TB_DP_SPRC_PROD_PRCHS_MANG
          WHERE 1=1
            AND PROD_ID = #{productId}
+           AND TENANT_ID =#{tenantId}
            AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
     </select>      
 
@@ -271,6 +272,7 @@
           FROM TB_DP_SPRC_PROD_PRCHS_MANG
          WHERE 1=1
            AND PROD_ID = #{productId}
+           AND TENANT_ID =#{tenantId}
            AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
     </select>        
     <!--특가 상품 구매건수 업데이트 상품이 없을시 Insert-->
@@ -280,12 +282,14 @@
              PRCHS_DT
            , PROD_ID
            , PRCHS_CNT
+           , TENANT_ID
            , REG_DT
            , UPD_DT
         )VALUES(
             #{purchaseDate}
            ,#{productId}
            ,#{purchaseCount,jdbcType=NUMERIC}
+           ,#{tenantId}
            , SYSDATE
            , SYSDATE
         )
@@ -299,11 +303,13 @@
                                   FROM TB_DP_SPRC_PROD_PRCHS_MANG
                                  WHERE 1=1
                                    AND PROD_ID = #{productId}
+                                   AND TENANT_ID =#{tenantId}
                                    AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
                               )
                 ,UPD_DT = SYSDATE            
          WHERE 1=1 
            AND PROD_ID= #{productId}
+           AND TENANT_ID =#{tenantId}
            AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
     </update>    
     
