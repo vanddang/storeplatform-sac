@@ -2492,20 +2492,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 				throw new StorePlatformException("SAC_DSP_0003", "specialTypeCd", req.getSpecialTypeCd());
 			}
 
-			if (compareTypeCd.equals("DP007503")) {
-//				if (StringUtils.isEmpty(req.getDeviceKey())) {
-//					throw new StorePlatformException("SAC_DSP_0026", "deviceKey", req.getDeviceKey());
-//				}
-//				if (StringUtils.isEmpty(req.getUserKey())) {
-//					throw new StorePlatformException("SAC_DSP_0026", "userKey", req.getUserKey());
-//				}
-//				if (!this.tingPaidYn(req.getUserKey(), req.getDeviceKey())) {
-//					this.log.debug("----------------------------------------------------------------");
-//					this.log.debug("팅 요금제을 사용하지 않음");
-//					this.log.debug("----------------------------------------------------------------");
-//					throw new StorePlatformException("SAC_DSP_0026");
-//				}
-			}
 		}
 
 		// '+'로 연결 된 상품등급코드를 배열로 전달
@@ -3662,22 +3648,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setSpecialTypeCd(tingPaidQuery);
 		}
 
-		if ("DP007503".equals(req.getSpecialTypeCd()) || "DP007504".equals(req.getSpecialTypeCd())) {
-//			if (StringUtils.isEmpty(req.getDeviceKey())) {
-//				throw new StorePlatformException("SAC_DSP_0026", "deviceKey", req.getDeviceKey());
-//			}
-//			if (StringUtils.isEmpty(req.getUserKey())) {
-//				throw new StorePlatformException("SAC_DSP_0026", "userKey", req.getUserKey());
-//			}
-
-//			if (!this.tingPaidYn(req.getUserKey(), req.getDeviceKey())) {
-//				this.log.debug("----------------------------------------------------------------");
-//				this.log.debug("팅 요금제을 사용하지 않음");
-//				this.log.debug("----------------------------------------------------------------");
-//				throw new StorePlatformException("SAC_DSP_0026");
-//			}
-		}
-
 		if (StringUtils.isNotEmpty(req.getSpecialType())) {
 			if (!DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(req.getSpecialType())
 					&& !DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(req.getSpecialType())) {
@@ -4546,97 +4516,4 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		return resultMap;
 	} // End businessPartnerInfo
-	/**
-	 * 팅요금제 여부 확인.
-	 * 
-	 * @param req
-	 *            req
-	 * @return boolean
-	 */
-
-	private boolean tingPaidYn(String userKey, String deviceKey) {
-
-		String deviceId = null; // Device Id
-		String deviceTelecom = null;
-		SearchDeviceIdSacReq deviceReq = null;
-		SearchDeviceIdSacRes deviceRes = null;
-		boolean memberFlag = true;
-		boolean tingMemberFlag = false;
-
-		try {
-			deviceReq = new SearchDeviceIdSacReq();
-			deviceReq.setUserKey(userKey);
-			deviceReq.setDeviceKey(deviceKey);
-
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("*******************회원 단말 정보 조회 파라미터*********************");
-			this.log.debug("[ShoppingServiceImpl] userKey : {}", deviceReq.getUserKey());
-			this.log.debug("[ShoppingServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
-			this.log.debug("----------------------------------------------------------------");
-
-			// 기기정보 조회
-			this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
-			long start = System.currentTimeMillis();
-			deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-			this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
-			long end = System.currentTimeMillis();
-			this.log.debug("##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms", (end - start));
-		} catch (Exception ex) {
-			memberFlag = false;
-			this.log.debug("[ShoppingServiceImpl] SearchDevice Id Search Exception : {}");
-			this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-			throw new StorePlatformException("SAC_DSP_1001", ex);
-		}
-
-		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("[ShoppingServiceImpl] memberFlag	:	{}", memberFlag);
-		this.log.debug("[ShoppingServiceImpl] deviceRes	:	{}", deviceRes);
-		this.log.debug("----------------------------------------------------------------");
-
-		if (memberFlag && deviceRes != null) {
-			// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
-			if ("Y".equals(deviceRes.getAuthYn())) {
-				deviceId = deviceRes.getDeviceId();
-				deviceTelecom = deviceRes.getDeviceTelecom();
-
-				// 단말의 통신사가 SKT 일때만 적용
-				if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
-					try {
-						UapsEcReq uapsEcReq = new UapsEcReq();
-						uapsEcReq.setDeviceId(deviceId);
-						uapsEcReq.setType("mdn");
-						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("********************UAPS 정보 조회************************");
-						this.log.debug("[ShoppingServiceImpl] DeviceId : {}", uapsEcReq.getDeviceId());
-						this.log.debug("[ShoppingServiceImpl] Type : {}", uapsEcReq.getType());
-						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("##### [SAC DSP LocalSCI] SAC EC Start : uapsSCI.getMappingInfo");
-						long start = System.currentTimeMillis();
-						UserEcRes uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
-						this.log.debug("##### [SAC DSP LocalSCI] SAC EC End : uapsSCI.getMappingInfo");
-						long end = System.currentTimeMillis();
-						this.log.debug("##### [SAC DSP LocalSCI] SAC Member uapsSCI.getMappingInfo takes {} ms",
-								(end - start));
-						this.log.debug("-------------------------------------------------------------");
-						for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-							this.log.debug("[ShoppingServiceImpl] serviceCd	:{}", uapsEcRes.getServiceCD()[k]);
-							if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING.equals(uapsEcRes.getServiceCD()[k])) {
-								tingMemberFlag = true;
-							}
-						}
-						this.log.debug("-------------------------------------------------------------");
-					} catch (Exception e) {
-						this.log.debug("[ShoppingServiceImpl] :	PacketFee Is Not Half");
-					}
-				}
-			}
-
-		} else {
-			this.log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
-			this.log.debug("##### [SAC DSP LocalSCI] deviceKey : {}", deviceReq.getDeviceKey());
-			this.log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : " + deviceRes.getDeviceId());
-		}
-		return tingMemberFlag;
-	}
-
 }
