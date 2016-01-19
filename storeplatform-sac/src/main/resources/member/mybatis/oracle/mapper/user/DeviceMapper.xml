@@ -865,8 +865,8 @@
         )
     </insert>
 
-    <select id="searchDeviceOrderbyUpdDt" parameterType="userMbrDevice" resultType="userMbrDevice">
-        SELECT /* DeviceMapper.searchDeviceOrderbyStartDt, 최근에 수정된 휴대기기 정보 조회, SAC(SC), 반범진, 2016-01-08 */
+    <select id="searchDeviceOrderLastLoginDt" parameterType="userMbrDevice" resultType="userMbrDevice">
+        SELECT /* DeviceMapper.searchDeviceOrderLastLoginDt, 최근에 수정된 휴대기기 정보 조회, SAC(SC), 반범진, 2016-01-08 */
             insd_usermbr_no as userKey,
             insd_device_id as deviceKey
         FROM
@@ -875,7 +875,7 @@
               FROM tb_us_ousermbr_device
              WHERE auth_yn = 'Y'
                AND insd_usermbr_no = #{userKey}
-            ORDER BY upd_dt DESC
+            ORDER BY last_login_dt DESC, upd_dt desc
           )
           WHERE ROWNUM = 1
     </select>

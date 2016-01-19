@@ -759,9 +759,6 @@ public class MemberCommonComponent {
 
 		}
 
-		/** 통신사 정보 확인 */
-		majorDeviceInfo.setDeviceTelecom(this.validDeviceTelecomCode(deviceTelecom));
-
 		/**
 		 * SKT 가입자일 경우 처리
 		 */
@@ -788,28 +785,27 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * 정상 통신사가 아니면 NSH 통신사 코드로 셋팅.
+	 * 유효 통신사코드 체크.
 	 * </pre>
 	 * 
 	 * @param deviceTelecomCode
 	 *            String
-	 * @return String 통신사코드
+	 * @return 유효한 통신사 코드 여부
 	 */
-	public String validDeviceTelecomCode(String deviceTelecomCode) {
-		if (StringUtils.isBlank(deviceTelecomCode)) {
-			return "";
-		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKT)
+	public boolean isValidDeviceTelecomCode(String deviceTelecomCode) {
+		if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_KT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_NON)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_IOS)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_NSH)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKM)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_KTM)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGM)) {
 
-			return deviceTelecomCode;
+			return true;
 		} else {
-			return MemberConstants.DEVICE_TELECOM_NSH;
+			return false;
 		}
 	}
 

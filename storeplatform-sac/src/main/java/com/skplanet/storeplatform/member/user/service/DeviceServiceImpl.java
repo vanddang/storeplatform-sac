@@ -1191,14 +1191,14 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// 대표기기가 invalid된 경우 최신 등록 기기를 대표기기로 등록한다.
 		if (StringUtils.equals(userMbrDevice.getIsPrimary(), Constant.TYPE_YN_Y)) {
-			UserMbrDevice userMbrDeviceOrderByUpdDt = this.commonDAO.queryForObject("Device.searchDeviceOrderbyUpdDt", userMbrDevice, UserMbrDevice.class);
-			if(userMbrDeviceOrderByUpdDt != null){
-				row = dao.update("Device.insertUpdateDeviceHistory", userMbrDeviceOrderByUpdDt);
+			UserMbrDevice userMbrDeviceOrderByLoginDt = this.commonDAO.queryForObject("Device.searchDeviceOrderLastLoginDt", userMbrDevice, UserMbrDevice.class);
+			if(userMbrDeviceOrderByLoginDt != null){
+				row = dao.update("Device.insertUpdateDeviceHistory", userMbrDeviceOrderByLoginDt);
 				if (row <= 0) {
 					return row;
 				}
-				userMbrDeviceOrderByUpdDt.setIsPrimary(Constant.TYPE_YN_Y);
-				row = dao.update("Device.updateDevice", userMbrDeviceOrderByUpdDt);
+				userMbrDeviceOrderByLoginDt.setIsPrimary(Constant.TYPE_YN_Y);
+				row = dao.update("Device.updateDevice", userMbrDeviceOrderByLoginDt);
 				if (row <= 0) {
 					return row;
 				}
