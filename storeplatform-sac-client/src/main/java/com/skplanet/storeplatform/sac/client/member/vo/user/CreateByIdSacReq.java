@@ -37,11 +37,6 @@ public class CreateByIdSacReq extends CommonInfo {
 	private String userAuthToken = "";
 
 	/**
-	 * social아이디 회원 번호.
-	 */
-	private String socialUserNo = "";
-
-	/**
 	 * 기기 ID
 	 */
 	@NotEmpty
@@ -526,17 +521,4 @@ public class CreateByIdSacReq extends CommonInfo {
 		this.simSerialNo = simSerialNo;
 	}
 
-	/**
-	 * @return socialUserNo
-	 */
-	public String getSocialUserNo() {
-		return socialUserNo;
-	}
-
-	/**
-	 * @param socialUserNo String
-	 */
-	public void setSocialUserNo(String socialUserNo) {
-		this.socialUserNo = socialUserNo;
-	}
 }

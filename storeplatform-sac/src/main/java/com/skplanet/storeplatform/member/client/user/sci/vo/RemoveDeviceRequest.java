@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
  * 휴대기기 삭제 요청을 위한 Value Object
  * 
  * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2016. 01. 18. Updated by : 윤보영, 카레즈
  */
 public class RemoveDeviceRequest extends CommonInfo implements Serializable {
 
@@ -36,13 +37,19 @@ public class RemoveDeviceRequest extends CommonInfo implements Serializable {
 	private List<String> deviceKey;
 
 	/**
-	 * 휴면계정유무.
-	 */
-	private String isDormant;
+     * 휴면계정유무.
+     */
+    private String isDormant;
 
-	/**
+    /**
+     * 대표단말삭제여부.
+     */
+    private String isDeletePrimary;
+
+    /**
 	 * 공통 요청 Value Object를 리턴한다.
-	 * 
+	 *
+
 	 * @return commonRequest - 공통 요청 Value Object
 	 */
 	public CommonRequest getCommonRequest() {
@@ -120,6 +127,14 @@ public class RemoveDeviceRequest extends CommonInfo implements Serializable {
 	public void setIsDormant(String isDormant) {
 		this.isDormant = isDormant;
 	}
+
+    public String getIsDeletePrimary() {
+        return isDeletePrimary;
+    }
+
+    public void setIsDeletePrimary(String isDeletePrimary) {
+        this.isDeletePrimary = isDeletePrimary;
+    }
 
 	/*
 	 * (non-Javadoc)
