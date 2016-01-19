@@ -643,6 +643,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
 		}
 
+		// 약관 유효성 체크
+		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
+
 		// 모번호 조회
 		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
 				&& StringUtils.isNotBlank(req.getMdn())){
@@ -661,9 +664,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
 		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
-
-		// 약관 맵핑정보 setting
-		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
 
 		// 법정 대리인 정보 setting
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
@@ -687,14 +687,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
+		// 사용자 가입요청
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setUserMbr(userMbr);
 		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
 		createUserRequest.setMbrLglAgent(mbrLglAgent);
-
-		// 부가속성 setting
 		if(StringUtils.isNotBlank(socialUserNo)){
+			// social 회원번호 부가속성으로 저장
 			List<MbrMangItemPtcr> mbrMangItemPtcrList = new ArrayList<MbrMangItemPtcr>();
 			MbrMangItemPtcr mbrMangItemPtcr = new MbrMangItemPtcr();
 			mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO);
@@ -702,9 +702,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrMangItemPtcrList.add(mbrMangItemPtcr);
 			createUserRequest.setMbrMangItemPtcrList(mbrMangItemPtcrList);
 		}
-
-
-		// 사용자 가입요청
 		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 
 		// 휴대기기 등록 요청

@@ -522,18 +522,34 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if(isNew){
 			/* 등록 가능한 휴대기기 개수 초과 체크 */
-			if (searchDeviceListResponse != null
-					&& searchDeviceListResponse.getUserMbrDevice() != null
-					&& searchDeviceListResponse.getUserMbrDevice().size() >= deviceRegMaxCnt) {
-				throw new StorePlatformException("SAC_MEM_1501");
+			if (searchDeviceListResponse != null && searchDeviceListResponse.getUserMbrDevice() != null){
+				if(searchDeviceListResponse.getUserMbrDevice().size() >= deviceRegMaxCnt) {
+					throw new StorePlatformException("SAC_MEM_1501");
+				}
+
+				/*	등록된 단말중에 대표기기가 없는경우 대표기기 설정처리 */
+				if(StringUtils.isBlank(deviceInfo.getIsPrimary())){
+					boolean isExistPrimary = false;
+					for(UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()){
+						if(StringUtils.equals(userMbrDevice.getIsPrimary(), MemberConstants.USE_Y)){
+							isExistPrimary = true;
+							break;
+						}
+					}
+					if(!isExistPrimary){
+						deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+					}
+				}
 			}
 
 			/* SKT 통신사인 경우 CSP 연동 imei 체크*/
-			if(StringUtils.isNotBlank(deviceInfo.getNativeId())
-					&& StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceInfo.getDeviceTelecom())
-					&& StringUtils.isNotBlank(deviceInfo.getMdn())){
-				if(!StringUtils.equals(this.getIcasImei(deviceInfo.getMdn()), deviceInfo.getNativeId())){
-					throw new StorePlatformException("SAC_MEM_1503");
+			if(!System.getProperty("spring.profiles.active", "local").equals("local")) { // TODO. LOCAL 에서는 csp 연동하지 않는다.
+				if(StringUtils.isNotBlank(deviceInfo.getNativeId())
+						&& StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceInfo.getDeviceTelecom())
+						&& StringUtils.isNotBlank(deviceInfo.getMdn())){
+					if(!StringUtils.equals(this.getIcasImei(deviceInfo.getMdn()), deviceInfo.getNativeId())){
+						throw new StorePlatformException("SAC_MEM_1503");
+					}
 				}
 			}
 		}

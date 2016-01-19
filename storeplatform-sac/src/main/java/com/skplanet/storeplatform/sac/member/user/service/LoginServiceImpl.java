@@ -844,6 +844,7 @@ public class LoginServiceImpl implements LoginService {
 
 			if(StringUtils.isNotBlank(svcMangNo)){
 				// 서비스관리번호로 휴대기기 정보 조회
+				// TODO. MDN이 존재하고 모바일 회원인 경우에만 인증처리
 				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_SVC_MANG_NO, svcMangNo, null);
 				if(deviceInfo != null){
 					List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -858,6 +859,7 @@ public class LoginServiceImpl implements LoginService {
 					searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
 					SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
 					if(!StringUtils.equals(res.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)){
+						// TODO. 회원정보 없음 에러 !
 						throw new StorePlatformException("SAC_MEM_1205");
 					}
 
@@ -1301,26 +1303,6 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 		deviceInfo.setNativeId(req.getNativeId());
 		deviceInfo.setSimSerialNo(req.getSimSerialNo());
-		SearchDeviceListRequest searchDeviceListRequest = new SearchDeviceListRequest();
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		key.setKeyString(chkDupRes.getUserMbr().getUserKey());
-		keySearchList.add(key);
-		searchDeviceListRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
-		searchDeviceListRequest.setKeySearchList(keySearchList);
-		searchDeviceListRequest.setIsMainDevice(MemberConstants.USE_Y);
-		try{
-			SearchDeviceListResponse searchDeviceListResponse = this.deviceSCI.searchDeviceList(searchDeviceListRequest);
-		}catch(StorePlatformException e){
-			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-				// 대표기기가 없는 회원인경우 대표기기 Y로 업데이트
-				deviceInfo.setIsPrimary(MemberConstants.USE_Y);
-			}else{
-				throw e;
-			}
-		}
-
 		String deviceKey = this.deviceService.regDeviceInfo(requestHeader, deviceInfo);
 
 		// 로그인 이력 저장
