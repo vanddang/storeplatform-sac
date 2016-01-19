@@ -23,7 +23,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.UserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.*;
-import com.skplanet.storeplatform.sac.purchase.common.util.PrchsUtil;
+import com.skplanet.storeplatform.sac.purchase.common.util.PrchsUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SellerMbrAppSacParam;
@@ -279,7 +279,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	public SellerMbrSac detailInformation(String sellerKey, String tenantProdGrpCd) {
 		SellerMbrSac sellerMbrSac = new SellerMbrSac();
 		sellerMbrSac.setSellerKey(sellerKey);
-		sellerMbrSac.setCategoryCd(PrchsUtil.getTopMenuID(tenantProdGrpCd));
+		sellerMbrSac.setCategoryCd(PrchsUtils.getTopMenuID(tenantProdGrpCd));
 
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 		sellerMbrSacList.add(sellerMbrSac);
@@ -327,7 +327,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	public SellerMbrAppSacParam detailInformationListForProduct(String sellerKey, String tenantProdGrpCd) {
 		SellerMbrSac sellerMbrSac = new SellerMbrSac();
 		sellerMbrSac.setSellerKey(sellerKey);
-		sellerMbrSac.setCategoryCd(PrchsUtil.getTopMenuID(tenantProdGrpCd));
+		sellerMbrSac.setCategoryCd(PrchsUtils.getTopMenuID(tenantProdGrpCd));
 
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 		sellerMbrSacList.add(sellerMbrSac);

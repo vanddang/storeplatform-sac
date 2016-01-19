@@ -7,19 +7,21 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.purchase.order.service;
+package com.skplanet.storeplatform.sac.purchase.migration.service;
 
+import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
+import com.skplanet.storeplatform.sac.client.purchase.vo.migration.PurchaseMigInformationSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.migration.PurchaseMigInformationSacRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseTransferSCI;
+import com.skplanet.storeplatform.purchase.client.migration.sci.PurchaseTransferSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.PurchaseTransferScReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseTransferSac;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseTransferSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseTransferSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.*;
+import com.skplanet.storeplatform.sac.purchase.common.util.PrchsUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
@@ -76,7 +78,7 @@ public class PurchaseTransferServiceImpl implements PurchaseTransferService {
 				this.purchaseTransferSCI.createPurchaseTransfer(purchaseTransferScReq);
 				succCount++;
 			} catch (Exception e) {
-				this.logger.info("## PRCHS,ORDER,SAC,CREATE,HIST,FAIL,{},{},{}",
+				this.logger.info("PRCHS,ORDER,SAC,CREATE,HIST,FAIL,{},{},{}",
 						purchaseTransferScReq.getMarketPrchsId(), purchaseTransferScReq.getMarketDeviceKey(), e);
 				failCount++;
 			}
@@ -85,9 +87,9 @@ public class PurchaseTransferServiceImpl implements PurchaseTransferService {
 
 		PurchaseTransferSacRes response = new PurchaseTransferSacRes();
 
-		this.logger.info("## PRCHS,ORDER,SAC,CREATE,HIST,TOTAL,CNT {}", count);
-		this.logger.info("## PRCHS,ORDER,SAC,CREATE,HIST,SUCC,CNT {}", succCount);
-		this.logger.info("## PRCHS,ORDER,SAC,CREATE,HIST,FAIL,CNT {}", failCount);
+		this.logger.info("PRCHS,ORDER,SAC,CREATE,HIST,TOTAL,CNT {}", count);
+		this.logger.info("PRCHS,ORDER,SAC,CREATE,HIST,SUCC,CNT {}", succCount);
+		this.logger.info("PRCHS,ORDER,SAC,CREATE,HIST,FAIL,CNT {}", failCount);
 
 		if (succCount > 0) {
 			response.setCode(PurchaseConstants.SAP_SUCCESS);
@@ -100,4 +102,33 @@ public class PurchaseTransferServiceImpl implements PurchaseTransferService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 구매이관정보 조회.
+	 * </pre>
+	 *
+	 * @param request
+	 *            구매이관정보조회 요청 정보
+	 * @return CreatePurchaseSacRes
+	 */
+	@Override
+	public PurchaseMigInformationSacRes searchMigInformation(PurchaseMigInformationSacReq request) {
+		PurchaseMigInformationSacRes res = new PurchaseMigInformationSacRes();
+
+		this.logger.info("PRCHS,MIGRATION,SAC,INFO,REQ,{}",request);
+		request.setMarketCd(PurchaseCDConstants.PURCHASE_MARKET_CD_NAVER); // 현재는 Naver만 Resource 기반 이관 목록 제공함
+
+		res.setTotalCount(this.purchaseTransferSCI.countMigrationListByStatus(request));
+
+		// 이관 목록 조회
+		if(request.getOffset()>0)
+		{
+			int pRows[] = PrchsUtils.calRowcount(request.getOffset(), request.getCount(), PurchaseConstants.PURCHASE_PAGING_MAX_COUNT);
+			request.setStartrow(pRows[0]);
+			request.setEndrow(pRows[1]);
+			res.setMigList(this.purchaseTransferSCI.searchMigrationListByStatus(request));
+		}
+		this.logger.info("PRCHS,MIGRATION,SAC,INFO,RES,{}",res);
+		return res;
+	}
 }

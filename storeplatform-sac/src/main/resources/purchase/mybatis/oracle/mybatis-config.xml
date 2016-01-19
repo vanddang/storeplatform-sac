@@ -128,6 +128,8 @@
         
         <!-- SAP 구매내역이관 -->
         <typeAlias alias="PurchaseTransferScReq" type="com.skplanet.storeplatform.purchase.client.order.vo.PurchaseTransferScReq" />
+        <typeAlias alias="PurchaseMigHistoryListSacReq" type="com.skplanet.storeplatform.sac.client.purchase.vo.migration.PurchaseMigInformationSacReq" />
+        <typeAlias alias="PurchaseMigList" type="com.skplanet.storeplatform.sac.client.purchase.migration.vo.PurchaseMigList"/>
         
         <!-- DRM업데이트 -->
         <typeAlias alias="PurchaseDrmInfoScReq" type="com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScReq" />

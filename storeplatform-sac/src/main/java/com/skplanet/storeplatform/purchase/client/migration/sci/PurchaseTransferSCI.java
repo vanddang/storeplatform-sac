@@ -7,11 +7,15 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.purchase.client.order.sci;
+package com.skplanet.storeplatform.purchase.client.migration.sci;
 
 import com.skplanet.storeplatform.framework.core.proxy.SCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.PurchaseTransferScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.PurchaseTransferScRes;
+import com.skplanet.storeplatform.sac.client.purchase.migration.vo.PurchaseMigList;
+import com.skplanet.storeplatform.sac.client.purchase.vo.migration.PurchaseMigInformationSacReq;
+
+import java.util.List;
 
 /**
  * 
@@ -34,4 +38,24 @@ public interface PurchaseTransferSCI {
 	 */
 	public PurchaseTransferScRes createPurchaseTransfer(PurchaseTransferScReq req);
 
+	/**
+	 * <pre>
+	 * 구매이관정보 상태별 카운트.
+	 * </pre>
+	 *
+	 * @param req
+	 *            구매이관정보 조회 요청 VO
+	 * @return 구매이관정보 상태별 카운트
+	 */
+	public int countMigrationListByStatus(PurchaseMigInformationSacReq req);
+
+	/**
+	 * <pre>
+	 * 구매내역이관정보 목록 조회.
+	 * </pre>
+	 *
+	 * @param req the req
+	 * @return the list
+	 */
+	public List<PurchaseMigList> searchMigrationListByStatus(PurchaseMigInformationSacReq req);
 }
