@@ -51,9 +51,6 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
 
     @Override
     public SyncPromotionEventResult syncPromotionEvent(String tenantId, String key) {
-<<<<<<< Updated upstream
-        return syncPromotionEvent(tenantId, key, false);
-=======
         if (tenantId == null && key == null) {
             return new SyncPromotionEventResult(ERR_UPDT_CNT, 0, null, new HashMap<String, PromotionEvent>());
         }
@@ -65,7 +62,6 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
             PromotionEvent promotionEvent = syncPromotion(tenantId, key);
             return new SyncPromotionEventResult(promotionEvent == null ? ERR_UPDT_CNT : 1, 0, new ArrayList<Integer>(), new HashMap<String, PromotionEvent>());
         }
->>>>>>> Stashed changes
     }
 
     @Override

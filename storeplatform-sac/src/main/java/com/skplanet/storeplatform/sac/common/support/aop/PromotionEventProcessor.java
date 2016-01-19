@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Poin
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisDataService;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.service.PromotionEventRequestService;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetProductBaseInfoParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetPromotionEventParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.ProductBaseInfo;
@@ -53,7 +54,7 @@ public class PromotionEventProcessor {
     public static final String DEFAULT_TENANT_ID = "S01";
 
     @Autowired
-    private CachedExtraInfoManager cachedExtraInfoManager;
+    PromotionEventRequestService promotionEventRequestService;
 
     @Autowired
     private RedisDataService dataService;
@@ -122,7 +123,7 @@ public class PromotionEventProcessor {
             }
 
             // attach promotion event
-            PromotionEvent promotionEvent = cachedExtraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId, userKey));
+            PromotionEvent promotionEvent = promotionEventRequestService.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId, userKey));
             MileageInfo mileageInfo = new MileageInfo();
             if (promotionEvent != null) {
                 mileageInfo.setPolicyTargetCd(promotionEvent.getTargetTp());
