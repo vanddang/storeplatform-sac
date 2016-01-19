@@ -20,7 +20,35 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.CommonResponse;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
-import com.skplanet.storeplatform.member.client.user.sci.vo.*;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateDeviceManagementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateDeviceManagementResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceSet;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserkeyTrack;
 import com.skplanet.storeplatform.member.common.code.DeviceManagementCode;
 import com.skplanet.storeplatform.member.common.code.MainStateCode;
 import com.skplanet.storeplatform.member.common.code.SubStateCode;
@@ -87,47 +115,59 @@ public class DeviceServiceImpl implements DeviceService {
 		UserMbr userMbr = null;
 
 		boolean isDeviceRequest = false;
+        boolean isSvcMangDevice = false;
 		List<KeySearch> keySearchList = searchDeviceListRequest.getKeySearchList();
 		for (KeySearch keySearch : keySearchList) {
 			if (keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_KEY)
 					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)
-					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)
-					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
+					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)) {
 				isDeviceRequest = true;
-			}
+			}else if(keySearch.getKeyType().equals(Constant.SEARCH_TYPE_SVC_MANG_NO)){
+                isSvcMangDevice = true;
+            }
 		}
 
-		// 휴대기기 정보로 조회
-		if (isDeviceRequest) {
-			userMbr = dao.queryForObject("Device.searchDeviceListD", searchDeviceListRequest, UserMbr.class);
-		} else {
-			userMbr = dao.queryForObject("Device.searchDeviceList", searchDeviceListRequest, UserMbr.class);
-		}
+        if(!isSvcMangDevice){
+            // 휴대기기 정보로 조회
+            if (isDeviceRequest) {
+                userMbr = dao.queryForObject("Device.searchDeviceListD", searchDeviceListRequest, UserMbr.class);
+            } else {
+                userMbr = dao.queryForObject("Device.searchDeviceList", searchDeviceListRequest, UserMbr.class);
+            }
 
-		// 휴면DB 조회
-		if (userMbr == null) {
-			dao = this.idleDAO;
-			if (isDeviceRequest) {
-				userMbr = dao.queryForObject("Device.searchDeviceListD", searchDeviceListRequest, UserMbr.class);
-			} else {
-				userMbr = dao.queryForObject("Device.searchDeviceList", searchDeviceListRequest, UserMbr.class);
-			}
-		}
+            // 휴면DB 조회
+            if (userMbr == null) {
+                dao = this.idleDAO;
+                if (isDeviceRequest) {
+                    userMbr = dao.queryForObject("Device.searchDeviceListD", searchDeviceListRequest, UserMbr.class);
+                } else {
+                    userMbr = dao.queryForObject("Device.searchDeviceList", searchDeviceListRequest, UserMbr.class);
+                }
+            }
 
-		if (userMbr == null || userMbr.getUserID() == null)
-			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
+            if (userMbr == null || userMbr.getUserID() == null)
+                throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
 
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(userMbr.getUserID());
-		searchDeviceListRequest.setCommonRequest(commonRequest);
+            CommonRequest commonRequest = new CommonRequest();
+            commonRequest.setSystemID(userMbr.getUserID());
+            searchDeviceListRequest.setCommonRequest(commonRequest);
+        }
 
 		SearchDeviceListResponse searchDeviceListResponse;
 
-		// 휴대기기 정보로 조회
+		/**  휴대기기 정보로 조회 */
 		if (isDeviceRequest) {
 			searchDeviceListResponse = dao.queryForObject("Device.searchDeviceList2D", searchDeviceListRequest,
 					SearchDeviceListResponse.class);
-		} else {
+        /** SVC_NO 정보로 조회 */
+		} else if(isSvcMangDevice){
+            searchDeviceListRequest.setIsUsed(StringUtils.isNotEmpty(searchDeviceListRequest.getIsUsed()) ? searchDeviceListRequest.getIsUsed() : MemberConstants.USE_Y);
+            List<UserMbrDevice> userMbrDeviceList = this.commonDAO.queryForList("Device.searchDeviceList3", searchDeviceListRequest, UserMbrDevice.class);
+            searchDeviceListResponse = new SearchDeviceListResponse();
+            searchDeviceListResponse.setUserMbrDevice(userMbrDeviceList);
+
+        /** INSD_USERMBR_NO, MBR_ID로 조회 */
+        } else {
 			searchDeviceListResponse = dao.queryForObject("Device.searchDeviceList2", searchDeviceListRequest,
 					SearchDeviceListResponse.class);
 		}

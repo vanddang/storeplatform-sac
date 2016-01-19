@@ -66,6 +66,10 @@ public class UserJoinController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+        if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
+            throw new StorePlatformException("SAC_MEM_1509");
+        }
+
 		/**
 		 * 모바일 전용회원 Biz
 		 */
