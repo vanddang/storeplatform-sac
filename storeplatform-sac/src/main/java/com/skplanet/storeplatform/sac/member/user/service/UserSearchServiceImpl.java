@@ -41,7 +41,7 @@ import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
-import com.skplanet.storeplatform.sac.member.domain.UserClauseAgree;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserClauseAgree;
 import com.skplanet.storeplatform.sac.member.repository.UserClauseAgreeRepository;
 import com.skplanet.storeplatform.sac.member.repository.UserMemberRepository;
 import org.apache.commons.lang.ObjectUtils;

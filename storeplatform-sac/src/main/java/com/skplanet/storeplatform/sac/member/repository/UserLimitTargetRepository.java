@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
-import com.skplanet.storeplatform.sac.member.domain.UserLimitTarget;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserLimitTarget;
 
 import java.util.List;
 

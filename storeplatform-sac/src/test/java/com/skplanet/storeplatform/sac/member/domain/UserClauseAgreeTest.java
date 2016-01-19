@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.member.domain;
 
+import com.skplanet.storeplatform.sac.member.domain.shared.UserClauseAgree;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 import com.skplanet.storeplatform.sac.member.repository.UserClauseAgreeRepository;
 import com.skplanet.storeplatform.sac.member.repository.UserMemberTestRepository;
 import org.junit.Test;

@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
-import com.skplanet.storeplatform.sac.member.domain.UserClauseAgree;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserClauseAgree;
 
 import java.util.List;
 

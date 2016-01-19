@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.member.domain;
+package com.skplanet.storeplatform.sac.member.domain.shared;
 
 import javax.persistence.*;
 import java.io.Serializable;

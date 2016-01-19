@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
-import com.skplanet.storeplatform.sac.member.domain.UserMember;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 
 /**
  * <p>

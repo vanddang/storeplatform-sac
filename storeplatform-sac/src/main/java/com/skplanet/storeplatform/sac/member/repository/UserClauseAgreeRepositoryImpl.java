@@ -10,8 +10,8 @@
 package com.skplanet.storeplatform.sac.member.repository;
 
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.skplanet.storeplatform.sac.member.domain.QUserClauseAgree;
-import com.skplanet.storeplatform.sac.member.domain.UserClauseAgree;
+import com.skplanet.storeplatform.sac.member.domain.shared.QUserClauseAgree;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserClauseAgree;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

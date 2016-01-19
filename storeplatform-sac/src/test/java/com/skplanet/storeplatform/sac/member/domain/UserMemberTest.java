@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.member.domain;
 
+import com.skplanet.storeplatform.sac.member.domain.shared.UserDevice;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 import com.skplanet.storeplatform.sac.member.repository.UserMemberRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;

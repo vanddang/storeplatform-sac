@@ -5,7 +5,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CheckUserMarketPinRe
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckUserMarketPinRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateUserMarketPinReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateUserMarketPinRes;
-import com.skplanet.storeplatform.sac.member.domain.UserMarketPin;
+import com.skplanet.storeplatform.sac.member.domain.mbr.UserMarketPin;
 import com.skplanet.storeplatform.sac.member.repository.UserMarketPinRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
