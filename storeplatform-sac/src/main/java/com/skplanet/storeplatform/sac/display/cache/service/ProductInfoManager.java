@@ -157,6 +157,4 @@ public interface ProductInfoManager {
 	 */
 	ProductStats getProductStats( String prodId );
 
-
-
 }
