@@ -17,6 +17,14 @@ public class UserMarketPin {
     private String rnameAuthMdn;
     private Integer authFailCnt;
 
+    public UserMarketPin() {}
+
+    public UserMarketPin(String insdUsermbrNo, String pinNo, Integer authFailCnt) {
+        this.insdUsermbrNo = insdUsermbrNo;
+        this.pinNo = pinNo;
+        this.authFailCnt = authFailCnt;
+    }
+
     public String getInsdUsermbrNo() {
         return insdUsermbrNo;
     }
