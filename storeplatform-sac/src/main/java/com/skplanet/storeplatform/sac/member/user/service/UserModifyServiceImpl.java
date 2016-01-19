@@ -347,16 +347,8 @@ public class UserModifyServiceImpl implements UserModifyService {
             searchExtentUserRequest.setCommonRequest(commonRequest);
             searchExtentUserRequest.setKeySearchList(keySearchList);
             searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
-            SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+            this.userSCI.searchExtentUser(searchExtentUserRequest);
 
-            /**
-             * 변경 가능 상테 체크 (매인, 서브상태 정상인 회원)
-             */
-            if(!StringUtils.equalsIgnoreCase(res.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_NORMAL)
-                    || !StringUtils.equalsIgnoreCase(res.getUserMbr().getUserSubStatus(), MemberConstants.SUB_STATUS_NORMAL)){
-                throw new StorePlatformException("SAC_MEM_2001", res.getUserMbr().getUserMainStatus(),
-                        res.getUserMbr().getUserSubStatus());
-            }
         } catch (StorePlatformException ex) {
             if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
                     || StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
@@ -941,10 +933,12 @@ public class UserModifyServiceImpl implements UserModifyService {
         // 1.회원 정보 조회
         SearchUserRequest searchUserRequest = new SearchUserRequest();
         searchUserRequest.setCommonRequest(commonRequest);
+
         DetailReq detailReq = new DetailReq();
         detailReq.setUserKey(req.getUserKey());
         SearchExtentReq searchExtent = new SearchExtentReq();
         searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+        searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
         detailReq.setSearchExtent(searchExtent);
         DetailV2Res detailRes = this.userSearchService.detailV2(header, detailReq);
 

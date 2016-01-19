@@ -636,6 +636,7 @@ public class DeviceServiceImpl implements DeviceService {
 		// ACTION 4. 휴대기기 부가정보(TB_US_OUSERMBR_DEVICE_DTL) 삭제
 		// ACTION 5. 휴대기기 삭제 카운트 증가
 		// ACTION 6. 휴대기기 설정정보(TB_US_OUSERMBR_DEVICE_SET) 삭제
+        // ACTION 7. 대표 단말 삭제 처리 시 last_login_dt 최신인 단말로 대표단말 설정 (isDeletePrimary = 'Y')
 
 		LOGGER.debug(">>>> >>> DeviceServiceImpl removeDevice : {}", removeDeviceRequest);
 		String isDormant = StringUtils.isBlank(removeDeviceRequest.getIsDormant()) ? Constant.TYPE_YN_N : removeDeviceRequest
@@ -654,6 +655,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String lastDeviceKey = "";
 		List<String> deviceKeyList = removeDeviceRequest.getDeviceKey();
 		int sizeList = deviceKeyList.size();
+        boolean isPrimary = false;
 
 		// ACTION 1. 단말 존재여부 확인 : deviceKey, userKey로 단말 조회
 		for (int i = 0; i < sizeList; i++) {
@@ -712,7 +714,27 @@ public class DeviceServiceImpl implements DeviceService {
 			userMbrDeviceSet.setDeviceKey(deviceKeyList.get(i));
 			row = dao.delete("DeviceSet.removeDeviceSetInfo", userMbrDeviceSet);
 			LOGGER.debug("### Device.removeDeviceSetInfo row : {}", row);
+
 		}
+
+        // ACTION 6. 대표 단말 삭제 처리 시 last_login_dt 최신인 단말로 대표단말 설정
+        if(StringUtils.isNotEmpty(removeDeviceRequest.getIsDeletePrimary())
+                && StringUtils.equals(removeDeviceRequest.getIsDeletePrimary(), MemberConstants.USE_Y)){
+            UserMbrDevice userMbrDevice = new UserMbrDevice();
+            userMbrDevice.setUserKey(userKey);
+
+            UserMbrDevice keyInfo = dao.queryForObject("Device.searchDeviceOrderLastLoginDt", userMbrDevice, UserMbrDevice.class);
+            if(keyInfo != null){
+                // 휴대기기 이력 테이블 insert.
+                row = dao.update("Device.insertUpdateDeviceHistory", keyInfo);
+                LOGGER.debug("### Device.insertUpdateDeviceHistory row : {}", row);
+
+                // 대표 단말 설정
+                keyInfo.setIsPrimary(MemberConstants.USE_Y);
+                row = dao.update("Device.updateDevice", keyInfo);
+                LOGGER.debug("### Device.updateDevice row : {}", row);
+            }
+        }
 
 		// TLog
 		final String insdusermbrno = userKey;
