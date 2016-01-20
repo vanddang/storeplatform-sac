@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -68,6 +67,15 @@ public class UserJoinController {
 
         if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
             throw new StorePlatformException("SAC_MEM_1509");
+        }
+
+        if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
+            throw new StorePlatformException("SAC_MEM_1509");
+        }
+
+        if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+                && StringUtils.equals(MemberConstants.DEVICE_ID_TYPE_MSISDN, req.getDeviceIdType())){
+            throw new StorePlatformException("SAC_MEM_1514");
         }
 
 		/**

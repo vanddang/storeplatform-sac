@@ -282,6 +282,14 @@ public class LoginServiceImpl implements LoginService {
                     }
 
                     if(deviceInfo != null){
+                        // SKT인경우 DB와 imei가 다르면 CSP연동해서 비교처리
+                        if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+                                && !StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())){
+                            if(!StringUtils.equals(req.getNativeId(), this.deviceService.getIcasImei(req.getDeviceId()))){
+                                throw new StorePlatformException("SAC_MEM_1503");
+                            }
+                        }
+
                         DeviceInfo updateDeviceInfo = new DeviceInfo();
                         updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
                         updateDeviceInfo.setMdn(req.getDeviceId());
@@ -347,6 +355,8 @@ public class LoginServiceImpl implements LoginService {
                     LOGGER.info("MDN 회원 {} 의 조회된 deviceKey {}와 수정 처리한 deviceKey {} 정보 상이", deviceInfo.getUserKey(), deviceInfo.getDeviceKey(), deviceKey);
                     throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 등록에 실패하였습니다.
                 }
+            }else {
+                throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
             }
         }
 
@@ -636,6 +646,14 @@ public class LoginServiceImpl implements LoginService {
                         }
 
                         if(deviceInfo != null){
+                            // SKT인경우 DB와 imei가 다르면 CSP연동해서 비교처리
+                            if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+                                    && !StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())){
+                                if(!StringUtils.equals(req.getNativeId(), this.deviceService.getIcasImei(req.getDeviceId()))){
+                                    throw new StorePlatformException("SAC_MEM_1503");
+                                }
+                            }
+
                             DeviceInfo updateDeviceInfo = new DeviceInfo();
                             updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
                             updateDeviceInfo.setMdn(req.getDeviceId());
@@ -702,6 +720,8 @@ public class LoginServiceImpl implements LoginService {
                     LOGGER.info("MDN 회원 {} 의 조회된 deviceKey {}와 수정 처리한 deviceKey {} 정보 상이", deviceInfo.getUserKey(), deviceInfo.getDeviceKey(), deviceKey);
                     throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 등록에 실패하였습니다.
                 }
+            }else {
+                throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
             }
         }
 

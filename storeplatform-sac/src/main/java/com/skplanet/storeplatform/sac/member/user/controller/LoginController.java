@@ -19,7 +19,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -79,6 +78,11 @@ public class LoginController {
             throw new StorePlatformException("SAC_MEM_1509");
         }
 
+        if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+                && StringUtils.equals(MemberConstants.DEVICE_ID_TYPE_MSISDN, req.getDeviceIdType())){
+            throw new StorePlatformException("SAC_MEM_1514");
+        }
+
 		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
@@ -107,6 +111,15 @@ public class LoginController {
 		});
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+        if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
+            throw new StorePlatformException("SAC_MEM_1509");
+        }
+
+        if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+                && StringUtils.equals(MemberConstants.DEVICE_ID_TYPE_MSISDN, req.getDeviceIdType())){
+            throw new StorePlatformException("SAC_MEM_1514");
+        }
 
         /** SKM 일 경우 NATIVE_ID 필수 처리 */
         if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
