@@ -166,9 +166,10 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
-		if (StringUtil.isNotBlank(req.getDeviceInfo().getDeviceIdType())
-				&& StringUtils.isBlank(req.getDeviceInfo().getDeviceId())) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+		if (StringUtil.isNotBlank(req.getDeviceInfo().getDeviceId())){
+			if(StringUtils.isBlank(req.getDeviceInfo().getDeviceIdType())) {
+				throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
+			}
 		}
 
 		/* deviceId, deviceKey 둘중하나는 필수 */
