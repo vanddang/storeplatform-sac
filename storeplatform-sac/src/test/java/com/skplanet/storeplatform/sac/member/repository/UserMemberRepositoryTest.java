@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.member.repository;
 
-import com.skplanet.storeplatform.sac.member.domain.UserMember;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +9,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
-
 /**
- * Created with IntelliJ IDEA.
+ * UserMemberRepositoryTest
  * User: 1002210
  * Date: 16. 1. 4.
  * Time: 오후 7:36
@@ -20,11 +18,14 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @ActiveProfiles("local")
-@Transactional("transactionManagerForJpaMember")
+@Transactional("transactionManagerForScMember")
 public class UserMemberRepositoryTest {
 
     @Autowired
     UserMemberRepository userMemberRepository;
+
+    @Autowired
+    UserMemberTestRepository userMemberTestRepository;
 
     @Test
     public void test01() {

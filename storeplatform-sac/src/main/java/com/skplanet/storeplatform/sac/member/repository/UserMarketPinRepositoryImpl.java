@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
-import com.skplanet.storeplatform.sac.member.domain.QUserMarketPin;
-import com.skplanet.storeplatform.sac.member.domain.UserMarketPin;
+import com.skplanet.storeplatform.sac.member.domain.mbr.QUserMarketPin;
+import com.skplanet.storeplatform.sac.member.domain.mbr.UserMarketPin;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

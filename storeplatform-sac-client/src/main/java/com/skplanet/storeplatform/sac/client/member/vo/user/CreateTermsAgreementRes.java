@@ -15,7 +15,13 @@ public class CreateTermsAgreementRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
+    public CreateTermsAgreementRes() {}
+
+    public CreateTermsAgreementRes(String userKey) {
+        this.userKey = userKey;
+    }
+
+    /**
 	 * 사용자 고유키.
 	 */
 	private String userKey;

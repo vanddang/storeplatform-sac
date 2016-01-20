@@ -9,9 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
+import com.google.common.base.Strings;
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.skplanet.storeplatform.sac.member.domain.QUserMember;
-import com.skplanet.storeplatform.sac.member.domain.UserMember;
+import com.skplanet.storeplatform.sac.member.common.MemberRepositoryContext;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.domain.shared.QUserMember;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -27,14 +30,51 @@ import javax.persistence.PersistenceContext;
 public class UserMemberRepositoryImpl implements UserMemberRepository {
 
     public static final QUserMember $ = QUserMember.userMember;
+
     @PersistenceContext(unitName = "puMbr")
-    private EntityManager em;
+    private EntityManager emMbr;
+
+    @PersistenceContext(unitName = "puIdleMbr")
+    private EntityManager emIdleMbr;
+
+    private EntityManager getCurrentEntityManager() {
+        return MemberRepositoryContext.isNormal() ? emMbr : emIdleMbr;
+    }
+
+    @Override
+    public UserMember findOne(String userKey) {
+        return new JPAQuery(getCurrentEntityManager()).from($)
+                .where($.insdUsermbrNo.eq(userKey))
+                .uniqueResult($);
+    }
 
     @Override
     public UserMember findByEmail(String email) {
-        JPAQuery query = new JPAQuery(em)
-                .from($).where($.emailAddr.eq(email));
+        return new JPAQuery(getCurrentEntityManager()).from($)
+                .where($.emailAddr.eq(email))
+                .uniqueResult($);
+    }
 
-        return query.uniqueResult($);
+    @Override
+    public UserMember findDetachedActiveByUserKey(String userKey) {
+        EntityManager em = getCurrentEntityManager();
+        UserMember member = new JPAQuery(em).from($)
+                .where($.insdUsermbrNo.eq(userKey).and($.mbrStatusMainCd.ne(MemberConstants.MAIN_STATUS_SECEDE)))
+                .uniqueResult($);
+
+        if(member == null)
+            return null;
+
+        em.detach(member);
+        return member;
+    }
+
+    @Override
+    public boolean isExist(String userKey) {
+        String r = new JPAQuery(getCurrentEntityManager()).from($)
+                .where($.insdUsermbrNo.eq(userKey))
+                .uniqueResult($.insdUsermbrNo);
+
+        return !Strings.isNullOrEmpty(r);
     }
 }

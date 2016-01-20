@@ -21,27 +21,27 @@ public interface MemberCommonRepository {
 	 * 
 	 * @return List<ClauseDTO>
 	 */
-	public List<Clause> searchClauseList(String tenantId);
+	public List<Clause> searchClauseList();
 
 	/**
 	 * <pre>
 	 * 약관 목록 상세 조회.
 	 * </pre>
 	 * 
-	 * @param clauseItemCd
+	 * @param clauseId
 	 * @return List<Clause>
 	 */
-	public List<Clause> searchClauseDetail(String tenantId, String clauseId);
+	public List<Clause> searchClauseDetail(String clauseId);
 
 	/**
 	 * <pre>
 	 * 테넌트 약관 코드 조회
 	 * </pre>
 	 * 
-	 * @param clauseItemCd
+	 * @param clauseId
 	 * @return Clause
 	 */
-	public Clause searchTenantClauseCode(String tenantId, String clauseId);
+	public Clause searchTenantClauseCode(String clauseId);
 
 	/**
 	 * <pre>

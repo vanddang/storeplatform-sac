@@ -66,6 +66,10 @@ public class UserJoinController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+        if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
+            throw new StorePlatformException("SAC_MEM_1509");
+        }
+
 		/**
 		 * 모바일 전용회원 Biz
 		 */
@@ -297,6 +301,13 @@ public class UserJoinController {
 
 		if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
 			throw new StorePlatformException("SAC_MEM_1509");
+		}
+
+		// MVNO 통신사 요청시 에러
+		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKM, req.getDeviceTelecom())
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_KTM, req.getDeviceTelecom())
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())){
+			throw new StorePlatformException("SAC_MEM_1515");
 		}
 
 		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())

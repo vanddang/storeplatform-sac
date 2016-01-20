@@ -24,7 +24,14 @@ public class UserExtraInfoRes extends CommonInfo {
 	/* 부가정보 리스트 */
 	private List<UserExtraInfo> userExtraInfoList;
 
-	public String getUserKey() {
+    public UserExtraInfoRes() {}
+
+    public UserExtraInfoRes(String userKey, List<UserExtraInfo> userExtraInfoList) {
+        this.userKey = userKey;
+        this.userExtraInfoList = userExtraInfoList;
+    }
+
+    public String getUserKey() {
 		return this.userKey;
 	}
 
@@ -38,10 +45,6 @@ public class UserExtraInfoRes extends CommonInfo {
 
 	public void setUserExtraInfoList(List<UserExtraInfo> userExtraInfoList) {
 		this.userExtraInfoList = userExtraInfoList;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }

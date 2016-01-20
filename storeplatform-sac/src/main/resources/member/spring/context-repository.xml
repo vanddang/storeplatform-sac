@@ -19,7 +19,6 @@
 
     <!-- Transaction configuration -->
     <tx:annotation-driven transaction-manager="transactionManagerForMember" />
-
     <tx:advice id="transactionAdviceForScMember" transaction-manager="transactionManagerForMember" >
         <tx:attributes>
             <tx:method name="create*" propagation="REQUIRED" read-only="false" /> <!-- 생성 -->
@@ -32,6 +31,12 @@
             <tx:method name="delete*" propagation="REQUIRED" read-only="false" /> <!-- 삭제 -->
 
             <tx:method name="execute*" propagation="REQUIRED" read-only="false" /> <!-- 생성,수정,삭제등 복합 비지니스 -->
+            <tx:method name="merge*" propagation="REQUIRED" read-only="false" /> <!-- 생성,수정,삭제등 복합 비지니스 -->
+
+            <tx:method name="search*" propagation="REQUIRED" read-only="true" />    <!-- EntityManager boundary 설정을 위해 필요 -->
+            <tx:method name="find*" propagation="REQUIRED" read-only="true" />      <!-- EntityManager boundary 설정을 위해 필요 -->
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />      <!-- EntityManager boundary 설정을 위해 필요 -->
+            <tx:method name="list*" propagation="REQUIRED" read-only="true" />      <!-- EntityManager boundary 설정을 위해 필요 -->
         </tx:attributes>
     </tx:advice>
     <tx:advice id="transactionAdviceForScIdleMember" transaction-manager="transactionManagerForMember" >
@@ -99,21 +104,51 @@
     <bean id="entityManagerFactoryForMbr" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="puMbr"/>
         <property name="dataSource" ref="defaultDataSourceForScMember"/>
-        <property name="packagesToScan" value="com.skplanet.storeplatform.sac.member.domain"/>
+        <property name="packagesToScan">
+            <list>
+                <value>com.skplanet.storeplatform.sac.member.domain.shared</value>
+                <value>com.skplanet.storeplatform.sac.member.domain.mbr</value>
+            </list>
+        </property>
         <property name="jpaVendorAdapter">
             <bean class="com.skplanet.storeplatform.sac.common.support.jpa.ImprovedJpaVendorAdapter"/>
         </property>
-        <property name="jpaProperties" ref="propertiesForScMember" />
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">#{propertiesForScMember['hibernate.dialect']}</prop>
+                <prop key="hibernate.implicit_naming_strategy">#{propertiesForScMember['hibernate.implicit_naming_strategy']}</prop>
+                <prop key="hibernate.id.new_generator_mappings">#{propertiesForScMember['hibernate.id.new_generator_mappings']}</prop>
+                <prop key="hibernate.hbm2ddl.auto">#{propertiesForScMember['hibernate.hbm2ddl.auto']}</prop>
+                <prop key="hibernate.format_sql">#{propertiesForScMember['hibernate.format_sql']}</prop>
+                <prop key="hibernate.show_sql">#{propertiesForScMember['hibernate.show_sql']}</prop>
+                <prop key="hibernate.default_schema">SPMBR</prop>
+            </props>
+        </property>
     </bean>
 
     <bean id="entityManagerFactoryForIdleMbr" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="puIdleMbr"/>
         <property name="dataSource" ref="defaultDataSourceForScIdleMember"/>
-        <property name="packagesToScan" value="com.skplanet.storeplatform.sac.member.domain.idle"/>
+        <property name="packagesToScan">
+            <list>
+                <value>com.skplanet.storeplatform.sac.member.domain.shared</value>
+                <value>com.skplanet.storeplatform.sac.member.domain.idle</value>
+            </list>
+        </property>
         <property name="jpaVendorAdapter">
             <bean class="com.skplanet.storeplatform.sac.common.support.jpa.ImprovedJpaVendorAdapter"/>
         </property>
-        <property name="jpaProperties" ref="propertiesForScMember" />
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">#{propertiesForScMember['hibernate.dialect']}</prop>
+                <prop key="hibernate.implicit_naming_strategy">#{propertiesForScMember['hibernate.implicit_naming_strategy']}</prop>
+                <prop key="hibernate.id.new_generator_mappings">#{propertiesForScMember['hibernate.id.new_generator_mappings']}</prop>
+                <prop key="hibernate.hbm2ddl.auto">#{propertiesForScMember['hibernate.hbm2ddl.auto']}</prop>
+                <prop key="hibernate.format_sql">#{propertiesForScMember['hibernate.format_sql']}</prop>
+                <prop key="hibernate.show_sql">#{propertiesForScMember['hibernate.show_sql']}</prop>
+                <prop key="hibernate.default_schema">SPIDL</prop>
+            </props>
+        </property>
     </bean>
 
 </beans>

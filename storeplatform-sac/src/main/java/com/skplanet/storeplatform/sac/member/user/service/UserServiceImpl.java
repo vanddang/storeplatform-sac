@@ -75,12 +75,6 @@ public class UserServiceImpl implements UserService {
 	@Value("#{propertiesForSac['sac.member.mail.img.path']}")
 	private String mailImagePath;
 
-	private static CommonRequest commonRequest;
-
-	static {
-		commonRequest = new CommonRequest();
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -208,11 +202,9 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public MoveUserInfoSacRes moveUserInfo(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq) {
-		/* 헤더 정보 셋팅 */
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		MoveUserInfoRequest moveUserInfoRequest = new MoveUserInfoRequest();
-		moveUserInfoRequest.setCommonRequest(commonRequest);
+		moveUserInfoRequest.setCommonRequest(CommonRequest.convert(sacHeader));
 		moveUserInfoRequest.setUserKey(moveUserInfoSacReq.getUserKey());
 		// 실제 moveType 정보는 정상/휴면 회원 여부를 체크 해서 아래 둘중 하나로 넣도록 한다.
 		// Constant.USERMBR_MOVE_TYPE_ACTIVATE(정상 처리), Constant.USERMBR_MOVE_TYPE_DORMANT(휴면 처리)
@@ -357,11 +349,9 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public void updateActiveMoveUserLastLoginDt(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq) {
-		/* 헤더 정보 셋팅 */
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		MoveUserInfoRequest moveUserInfoRequest = new MoveUserInfoRequest();
-		moveUserInfoRequest.setCommonRequest(commonRequest);
+		moveUserInfoRequest.setCommonRequest(CommonRequest.convert(sacHeader));
 		moveUserInfoRequest.setUserKey(moveUserInfoSacReq.getUserKey());
 
 		this.userSCI.updateActiveMoveUserLastLoginDt(moveUserInfoRequest);

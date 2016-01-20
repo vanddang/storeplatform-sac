@@ -6,6 +6,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * [REQUEST] 휴대기기 목록 조회.
  * 
  * Updated on : 2015. 12. 28. Updated by : 윤보영. 카레즈.
+ * Updated on : 2016. 01. 18. Updated by : 윤보영. 카레즈.
  */
 public class ListDeviceReq extends CommonInfo {
 
@@ -40,6 +41,11 @@ public class ListDeviceReq extends CommonInfo {
      * MDN.
      */
     private String mdn;
+
+    /**
+     * 서비스망 번호.
+     */
+    private String svcMangNo;
 
 	/**
 	 * @return userId
@@ -118,6 +124,14 @@ public class ListDeviceReq extends CommonInfo {
 
     public String getMdn() {
         return mdn;
+    }
+
+    public String getSvcMangNo() {
+        return svcMangNo;
+    }
+
+    public void setSvcMangNo(String svcMangNo) {
+        this.svcMangNo = svcMangNo;
     }
 
     public void setMdn(String mdn) {

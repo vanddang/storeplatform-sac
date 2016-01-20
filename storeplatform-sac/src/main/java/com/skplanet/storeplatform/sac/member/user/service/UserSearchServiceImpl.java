@@ -9,25 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import com.skplanet.storeplatform.member.client.common.constant.Constant;
-import com.skplanet.storeplatform.member.client.common.vo.*;
-import com.skplanet.storeplatform.member.client.user.sci.vo.*;
-import com.skplanet.storeplatform.sac.client.member.vo.user.*;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
@@ -36,36 +19,40 @@ import com.skplanet.storeplatform.external.client.syrup.sci.SyrupSCI;
 import com.skplanet.storeplatform.external.client.syrup.vo.SsoCredentialCreateEcReq;
 import com.skplanet.storeplatform.external.client.syrup.vo.SsoCredentialCreateEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.client.common.constant.Constant;
+import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
-import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeliveryInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.GiftChargeInfoSac;
-import com.skplanet.storeplatform.sac.client.member.vo.common.GradeInfo;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.*;
+import com.skplanet.storeplatform.sac.client.member.vo.common.*;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SocialAccountInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.TenantInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserClauseAgree;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
+import com.skplanet.storeplatform.sac.member.repository.UserClauseAgreeRepository;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 회원 조회 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -89,12 +76,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Autowired
 	private SyrupSCI syrupSCI;
 
-	private static CommonRequest commonRequest;
-
-	static {
-		commonRequest = new CommonRequest();
-	}
-
 	@Autowired
 	private UserSCI userSCI;
 
@@ -107,6 +88,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Autowired
 	private ImIdpSCI imIdpSCI;
 
+    @Autowired
+    private UserClauseAgreeRepository clauseAgreeRepository;
+
+    @Autowired
+    private UserMemberService memberService;
+
 	/**
 	 * 회원 가입 조회
 	 */
@@ -114,9 +101,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public ExistRes exist(SacRequestHeader sacHeader, ExistReq req) {
 		ExistRes result = new ExistRes();
 		DetailReq detailReq = new DetailReq();
-
-		/** 1. 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 
 		/** 2. 모번호 조회 (989 일 경우만) */
 		if (req.getDeviceId() != null) {
@@ -166,9 +150,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 */
 	@Override
 	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req) {
-
-		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -233,7 +214,6 @@ public class UserSearchServiceImpl implements UserSearchService {
                             deviceInfo = listDeviceRes.getDeviceInfoList().get(0);
                             deviceInfo.setDeviceId(req.getDeviceId());
                             deviceInfo.setMdn(null);
-                            deviceInfo.setSimSerialNo(null);
                             getDeviceInfoList.add(deviceInfo);
 
                         }else {
@@ -249,7 +229,6 @@ public class UserSearchServiceImpl implements UserSearchService {
                                     deviceInfo.setMdn(null);
                                 }
 
-                                deviceInfo.setSimSerialNo(null);
                                 getDeviceInfoList.add(deviceInfo);
                             }
                         }
@@ -308,8 +287,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public MbrOneidSacRes srhUserOneId(SacRequestHeader sacHeader, MbrOneidSacReq req) {
 		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+        CommonRequest commonRequest = CommonRequest.convert(sacHeader);
 
 		/* 회원 기본 정보 */
 		UserInfo info = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
@@ -360,55 +338,30 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/**
 	 * 약관동의 목록 조회
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
+	 *
 	 * @param req
 	 * @return
 	 */
 	@Override
-	public ListTermsAgreementSacRes listTermsAgreement(SacRequestHeader sacHeader, ListTermsAgreementSacReq req)
+	public ListTermsAgreementSacRes listTermsAgreement(SacRequestHeader sacHeader, ListTermsAgreementSacReq req) {
 
-	{
+        String userKey = req.getUserKey();
 
-		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+        UserMember member = memberService.findByUserKeyAndTransitRepo(userKey);
 
-		/* 회원 정보 조회 */
-		// this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+        if(member == null)
+            throw new StorePlatformException("SC_MEM_9995");
 
-		/* 약관동의 목록 조회 */
-		List<Agreement> agreementList = new ArrayList<Agreement>();
-		SearchAgreementListRequest schAgreementListReq = new SearchAgreementListRequest();
-		schAgreementListReq.setUserKey(req.getUserKey());
-		schAgreementListReq.setCommonRequest(commonRequest);
-		SearchAgreementListResponse scRes = this.userSCI.searchAgreementList(schAgreementListReq);
+        List<UserClauseAgree> agreeList = clauseAgreeRepository.findByInsdUsermbrNo(userKey);
+        List<Agreement> mbrClauseAgreeList = Lists.transform(agreeList, new Function<UserClauseAgree, Agreement>() {
+            @Override
+            public Agreement apply(UserClauseAgree a) {
+                return a.convertToAgreement();
+            }
+        });
 
-		ListTermsAgreementSacRes res = new ListTermsAgreementSacRes();
-		res.setUserKey(scRes.getUserKey());
-
-		for (MbrClauseAgree scAgree : scRes.getMbrClauseAgreeList()) {
-			Agreement agree = new Agreement();
-			agree.setExtraAgreementId(StringUtil.setTrim(scAgree.getExtraAgreementID()));
-			agree.setExtraAgreementVersion(StringUtil.setTrim(scAgree.getExtraAgreementVersion()));
-			agree.setIsExtraAgreement(StringUtil.setTrim(scAgree.getIsExtraAgreement()));
-			agree.setIsMandatory(StringUtil.setTrim(scAgree.getIsMandatory()));
-			agree.setRegDate(StringUtil.setTrim(scAgree.getRegDate()));
-			agree.setUpdateDate(StringUtil.setTrim(scAgree.getUpdateDate()));
-			agree.setIsMandatory(StringUtil.setTrim(scAgree.getIsMandatory()));
-
-			agreementList.add(agree);
-		}
-
-		res.setAgreementList(agreementList);
-
-		LOGGER.debug("ListTermsAgreementSacReq : ", res.toString());
-
-		return res;
-	}
+        return new ListTermsAgreementSacRes(userKey, mbrClauseAgreeList);
+    }
 
 	/**
 	 * ID 찾기
@@ -424,7 +377,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public SearchIdSacRes srhId(SacRequestHeader sacHeader, SearchIdSacReq req) {
 
 		/** 1. 헤더 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+        // Removed
 
 		List<SearchIdSac> sacList = new ArrayList<SearchIdSac>();
 
@@ -449,7 +402,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			keySearchList.add(keySchUserKey);
 
 			SearchExtentUserRequest srhExtUserRequest = new SearchExtentUserRequest();
-			srhExtUserRequest.setCommonRequest(commonRequest);
+			srhExtUserRequest.setCommonRequest(CommonRequest.convert(sacHeader));
 			srhExtUserRequest.setKeySearchList(keySearchList);
 			srhExtUserRequest.setUserInfoYn(MemberConstants.USE_Y);
 
@@ -492,8 +445,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public SearchPasswordSacRes srhPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req) {
 
-		/** 1. 헤더 정보 셋팅. */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		/** 1. 헤더 정보 셋팅 */
+        CommonRequest commonRequest = CommonRequest.convert(sacHeader);
 
 		/** 2. 회원 정보 조회. */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -590,7 +543,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public List<SearchIdSac> srhUserEmail(SearchIdSacReq req, SacRequestHeader sacHeader) {
 
 		SearchUserEmailRequest scReq = new SearchUserEmailRequest();
-		scReq.setCommonRequest(commonRequest);
+		scReq.setCommonRequest(CommonRequest.convert(sacHeader));
 		scReq.setUserEmail(req.getUserEmail());
 
 		SearchUserEmailResponse scRes = this.userSCI.searchUserEmail(scReq);
@@ -620,12 +573,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/* 각 단말의 OS별 누적 가입자 수 조회 */
 	@Override
 	public ListDailyPhoneOsSacRes listDailyPhoneOs(SacRequestHeader sacHeader) {
-		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		SearchDeviceOSNumberRequest scReq = new SearchDeviceOSNumberRequest();
-		scReq.setCommonRequest(commonRequest);
+		scReq.setCommonRequest(CommonRequest.convert(sacHeader));
 		SearchDeviceOSNumberResponse scRes = this.userSCI.searchDeviceOSNumber(scReq);
 
 		Iterator<List<DeviceSystemStats>> it = scRes.getDeviceSystemStatsMap().values().iterator();
@@ -705,7 +655,7 @@ public class UserSearchServiceImpl implements UserSearchService {
          * SearchUserRequest setting
          */
         SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
-        searchExtentUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+        searchExtentUserRequest.setCommonRequest(CommonRequest.convert(sacHeader));
         searchExtentUserRequest.setKeySearchList(keySearchList);
 
         // 검색 테이블 조건
@@ -937,52 +887,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		return userInfo;
 	}
 
-	/* SC API 회원부가정보 조회 Request : userKey */
-	@Override
-	public UserExtraInfoRes listUserExtra(DetailReq req, SacRequestHeader sacHeader) {
-
-		/**
-		 * SearchManagementListRequest setting
-		 */
-		SearchManagementListRequest searchUserExtraRequest = new SearchManagementListRequest();
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-		searchUserExtraRequest.setCommonRequest(commonRequest);
-		searchUserExtraRequest.setUserKey(req.getUserKey());
-
-		/**
-		 * SC 사용자 회원 부가정보를 조회
-		 */
-		UserExtraInfoRes extraRes = new UserExtraInfoRes();
-		List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
-
-		SearchManagementListResponse schUserExtraRes = this.userSCI.searchManagementList(searchUserExtraRequest);
-
-		LOGGER.debug("############ 부가정보 리스트 Size : {}", schUserExtraRes.getMbrMangItemPtcrList().size());
-
-		/* 유저키 세팅 */
-		extraRes.setUserKey(schUserExtraRes.getUserKey());
-		/* 부가정보 값 세팅 */
-		for (MbrMangItemPtcr ptcr : schUserExtraRes.getMbrMangItemPtcrList()) {
-
-			LOGGER.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
-			LOGGER.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
-
-			UserExtraInfo extra = new UserExtraInfo();
-			extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
-			extra.setExtraProfileValue(StringUtil.setTrim(ptcr.getExtraProfileValue()));
-
-			listExtraInfo.add(extra);
-
-			extraRes.setUserExtraInfoList(listExtraInfo);
-
-		}
-		return extraRes;
-
-	}
-
-	/* SC API 디바이스 리스트 조회 */
+    /* SC API 디바이스 리스트 조회 */
 	@Override
 	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader) {
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
@@ -2054,7 +1959,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		searchManagementListRequest.setUserKey(req.getUserKey());
 		SearchManagementListResponse searchManagementListResponse = null;
 		try {
-			searchManagementListResponse = this.userSCI.searchManagementList(searchManagementListRequest);
+			searchManagementListResponse = new SearchManagementListResponse(); // this.userSCI.searchManagementList(searchManagementListRequest);
 		} catch (StorePlatformException e) {
 			if (e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				throw new StorePlatformException("SAC_MEM_0002", "social 계정");
@@ -2244,6 +2149,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 				if (StringUtils.isNotBlank(ssoCredential)) {
 					// ssoCredential 저장
 					LOGGER.info("{}, ssoCredential 저장 : {}", req.getUserKey(), ssoCredential);
+                    // TODO-JOY userSCI.updateManagement()
 					UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
 					List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 					MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
