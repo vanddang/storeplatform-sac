@@ -62,6 +62,7 @@ public class CreateRealNameReq extends CommonInfo {
 	/**
 	 * 이동 통신사
 	 */
+    @NotEmpty
 	private String deviceTelecom = "";
 
 	/**
