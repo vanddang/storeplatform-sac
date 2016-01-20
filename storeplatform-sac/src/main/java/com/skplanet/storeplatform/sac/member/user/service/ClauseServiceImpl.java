@@ -9,17 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
@@ -28,6 +20,14 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * 약관목록 관련 인터페이스.
@@ -47,34 +47,10 @@ public class ClauseServiceImpl implements ClauseService {
 	 */
 	@Override
 	public ListClauseSacRes listClause(SacRequestHeader sacHeader) {
-		List<Clause> clauseList = this.commService.getListClause(sacHeader.getTenantHeader().getTenantId());
+        String systemId = sacHeader.getTenantHeader().getSystemId();
+        List<Clause> clauseList = this.commService.getListClause();
 
-		List<ClauseSacRes> clauseSacResList = new ArrayList<ClauseSacRes>();
-		for (Clause clause : clauseList) {
-			ClauseSacRes clauseRes = new ClauseSacRes();
-			clauseRes.setClauseId(StringUtil.setTrim(clause.getClauseId()));
-			clauseRes.setClauseItemCd(StringUtil.setTrim(clause.getClauseItemCd()));
-			clauseRes.setClauseVer(StringUtil.setTrim(clause.getClauseVer()));
-			clauseRes.setEndDay(StringUtil.setTrim(clause.getEndDay()));
-			// 티스토어 포털 웹인경우와 아닌 경우의 약관의 경로 systemId를 가지고 분기 처리.
-			if (MemberConstants.SYSTEM_ID_TSTORE_PORTAL_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
-				clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
-				clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
-			} else {
-				clauseRes.setFileNm(StringUtil.setTrim(clause.getMwFileNm()));
-				clauseRes.setFilePath(StringUtil.setTrim(clause.getMwFilePath()));
-			}
-
-			clauseRes.setStartDay(StringUtil.setTrim(clause.getStartDay()));
-			clauseRes.setReAgreeYn(StringUtil.setTrim(clause.getReAgreeYn()));
-
-			clauseSacResList.add(clauseRes);
-		}
-
-		ListClauseSacRes res = new ListClauseSacRes();
-		res.setClauseList(clauseSacResList);
-
-		return res;
+        return new ListClauseSacRes(convert(systemId, clauseList));
 	}
 
 	/**
@@ -82,52 +58,51 @@ public class ClauseServiceImpl implements ClauseService {
 	 */
 	@Override
 	public DetailClauseSacRes detailClauseList(SacRequestHeader sacHeader, DetailClauseSacReq req) {
-		String clauseItemCd = req.getClauseItemCd();
-
-		// Header에 tenantId가 없는 경우 S01로 디폴트값 설정.
-		String tenantId = StringUtils.defaultIfBlank(sacHeader.getTenantHeader().getTenantId(),
-				MemberConstants.TENANT_ID_TSTORE);
+		String clauseItemCd = req.getClauseItemCd(),
+                systemId = sacHeader.getTenantHeader().getSystemId();
 
 		/* Tenant에 등록된 코드인지 확인 */
-		Clause clauseCode = this.commService.getTenantClauseCode(tenantId, clauseItemCd);
+		Clause clauseCode = this.commService.getTenantClauseCode(clauseItemCd);
 		if (clauseCode == null) {
 			throw new StorePlatformException("SAC_MEM_1105", clauseItemCd);
 		}
 
 		/* Tenant에 등록된 코드면 TB_CM_CLAUSE 조회 */
-		List<Clause> clauseList = this.commService.getDetailClauseList(tenantId, clauseItemCd);
+		List<Clause> clauseList = this.commService.getDetailClauseList(clauseItemCd);
 
 		if (clauseList.size() == 0) {
 			throw new StorePlatformException("SAC_MEM_0002", req.getClauseItemCd());
 		}
 
-		List<ClauseSacRes> detailClauseList = new ArrayList<ClauseSacRes>();
-		for (Clause clause : clauseList) {
-			ClauseSacRes clauseRes = new ClauseSacRes();
-			clauseRes.setClauseId(StringUtil.setTrim(clause.getClauseId()));
-			clauseRes.setClauseItemCd(StringUtil.setTrim(clause.getClauseItemCd()));
-			clauseRes.setClauseVer(StringUtil.setTrim(clause.getClauseVer()));
-			clauseRes.setEndDay(StringUtil.setTrim(clause.getEndDay()));
-
-			// 티스토어 포털 웹인경우와 아닌 경우의 약관의 경로 systemId를 가지고 분기 처리.
-			if (MemberConstants.SYSTEM_ID_TSTORE_PORTAL_WEB.equals(sacHeader.getTenantHeader().getSystemId())) {
-				clauseRes.setFileNm(StringUtil.setTrim(clause.getFileNm()));
-				clauseRes.setFilePath(StringUtil.setTrim(clause.getFilePath()));
-			} else {
-				clauseRes.setFileNm(StringUtil.setTrim(clause.getMwFileNm()));
-				clauseRes.setFilePath(StringUtil.setTrim(clause.getMwFilePath()));
-			}
-
-			clauseRes.setStartDay(StringUtil.setTrim(clause.getStartDay()));
-			clauseRes.setReAgreeYn(StringUtil.setTrim(clause.getReAgreeYn()));
-
-			detailClauseList.add(clauseRes);
-		}
-
-		DetailClauseSacRes res = new DetailClauseSacRes();
-		res.setDetailClauseList(detailClauseList);
-
-		return res;
+		return new DetailClauseSacRes(convert(systemId, clauseList));
 	}
+
+    private List<ClauseSacRes> convert(final String systemId, final List<Clause> clauseList) {
+        return Lists.transform(clauseList, new Function<Clause, ClauseSacRes>() {
+            @Nullable
+            @Override
+            public ClauseSacRes apply(Clause clause) {
+                ClauseSacRes clauseRes = new ClauseSacRes();
+                clauseRes.setClauseId(StringUtils.trim(clause.getClauseId()));
+                clauseRes.setClauseItemCd(StringUtils.trim(clause.getClauseItemCd()));
+                clauseRes.setClauseVer(StringUtils.trim(clause.getClauseVer()));
+                clauseRes.setEndDay(StringUtils.trim(clause.getEndDay()));
+
+                // 티스토어 포털 웹인경우와 아닌 경우의 약관의 경로 systemId를 가지고 분기 처리.
+                if (MemberConstants.SYSTEM_ID_TSTORE_PORTAL_WEB.equals(systemId)) {
+                    clauseRes.setFileNm(StringUtils.trim(clause.getFileNm()));
+                    clauseRes.setFilePath(StringUtils.trim(clause.getFilePath()));
+                } else {
+                    clauseRes.setFileNm(StringUtils.trim(clause.getMwFileNm()));
+                    clauseRes.setFilePath(StringUtils.trim(clause.getMwFilePath()));
+                }
+
+                clauseRes.setStartDay(StringUtils.trim(clause.getStartDay()));
+                clauseRes.setReAgreeYn(StringUtils.trim(clause.getReAgreeYn()));
+
+                return clauseRes;
+            }
+        });
+    }
 
 }

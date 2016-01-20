@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.member.domain;
+package com.skplanet.storeplatform.sac.member.domain.mbr;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

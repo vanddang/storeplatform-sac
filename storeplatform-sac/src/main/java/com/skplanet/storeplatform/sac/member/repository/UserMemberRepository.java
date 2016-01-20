@@ -9,15 +9,21 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
-import com.skplanet.storeplatform.sac.member.domain.UserMember;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 
 /**
  * <p>
- * DESC
+ * UserMemberRepository
  * </p>
  * Updated on : 2016. 01. 04 Updated by : 정희원, SK 플래닛.
  */
 public interface UserMemberRepository {
 
+    UserMember findOne(String userKey);
+
     UserMember findByEmail(String email);
+
+    UserMember findDetachedActiveByUserKey(String userKey);
+
+    boolean isExist(String userKey);
 }

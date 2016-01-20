@@ -174,8 +174,8 @@ public class MemberCommonComponent {
 	 * 
 	 * @return List<ClauseDTO>
 	 */
-	public List<Clause> getListClause(String tenantId) {
-		return this.repository.searchClauseList(tenantId);
+	public List<Clause> getListClause() {
+		return this.repository.searchClauseList();
 	}
 
 	/**
@@ -185,8 +185,8 @@ public class MemberCommonComponent {
 	 * 
 	 * @return List<ClauseDTO>
 	 */
-	public List<Clause> getDetailClauseList(String tenantId, String clauseItemCd) {
-		return this.repository.searchClauseDetail(tenantId, clauseItemCd);
+	public List<Clause> getDetailClauseList(String clauseItemCd) {
+		return this.repository.searchClauseDetail(clauseItemCd);
 	}
 
 	/**
@@ -196,8 +196,8 @@ public class MemberCommonComponent {
 	 * 
 	 * @return ClauseDTO
 	 */
-	public Clause getTenantClauseCode(String tenantId, String clauseItemCd) {
-		return this.repository.searchTenantClauseCode(tenantId, clauseItemCd);
+	public Clause getTenantClauseCode(String clauseItemCd) {
+		return this.repository.searchTenantClauseCode(clauseItemCd);
 	}
 
 	/**

@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.member.domain;
+package com.skplanet.storeplatform.sac.member.domain.shared;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,25 +21,25 @@ import java.util.Date;
  * Updated on : 2015. 12. 24 Updated by : 정희원, SK 플래닛.
  */
 @Entity
-@Table(name = "TB_US_OUSERMBR_DEVICE", schema = "SPMBR")
+@Table(name = "TB_US_OUSERMBR_DEVICE")
 @IdClass(UserDevice.PK.class)
 public class UserDevice {
 
     public static class PK implements Serializable {
 
-        private UserMember userMember;
+        private UserMember member;
 
         /**
          * 내부 생성 디바이스 식별자
          */
         private String insdDeviceId;
 
-        public UserMember getUserMember() {
-            return userMember;
+        public UserMember getMember() {
+            return member;
         }
 
-        public void setUserMember(UserMember userMember) {
-            this.userMember = userMember;
+        public void setMember(UserMember member) {
+            this.member = member;
         }
 
         public String getInsdDeviceId() {
@@ -57,14 +57,14 @@ public class UserDevice {
 
             PK pk = (PK) o;
 
-            if (!userMember.equals(pk.userMember)) return false;
+            if (!member.equals(pk.member)) return false;
             return insdDeviceId.equals(pk.insdDeviceId);
 
         }
 
         @Override
         public int hashCode() {
-            int result = userMember.hashCode();
+            int result = member.hashCode();
             result = 31 * result + insdDeviceId.hashCode();
             return result;
         }
@@ -73,7 +73,7 @@ public class UserDevice {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INSD_USERMBR_NO")   // 컬럼 이름 규칙에 따라 의도하지 않은 이름이 지정되므로 명시적으로 지정함
-    private UserMember userMember;
+    private UserMember member;
 
     /**
      * 내부 생성 디바이스 식별자
@@ -107,12 +107,14 @@ public class UserDevice {
     /**
      * 대표 기기 여부
      */
-    private Character repDeviceYn;
+    @Column(columnDefinition = "char(1)")
+    private String repDeviceYn;
 
     /**
      * 인증 여부
      */
-    private Character authYn;
+    @Column(columnDefinition = "char(1)")
+    private String authYn;
 
     /**
      * 인증 일자
@@ -122,7 +124,8 @@ public class UserDevice {
     /**
      * SMS 수신 여부
      */
-    private Character smsRecvYn;
+    @Column(columnDefinition = "char(1)")
+    private String smsRecvYn;
 
     private String deviceNatvId;
 
@@ -143,13 +146,15 @@ public class UserDevice {
 
     private Date lastLoginDt;
 
+    private String deviceAcct;
+
     ////////// GETTER & SETTER //////////
-    public UserMember getUserMember() {
-        return userMember;
+    public UserMember getMember() {
+        return member;
     }
 
-    public void setUserMember(UserMember userMember) {
-        this.userMember = userMember;
+    public void setMember(UserMember userMember) {
+        this.member = userMember;
     }
 
     public String getInsdDeviceId() {
@@ -208,27 +213,27 @@ public class UserDevice {
         this.mdn = mdn;
     }
 
-    public Character getRepDeviceYn() {
+    public String getRepDeviceYn() {
         return repDeviceYn;
     }
 
-    public void setRepDeviceYn(Character repDeviceYn) {
+    public void setRepDeviceYn(String repDeviceYn) {
         this.repDeviceYn = repDeviceYn;
     }
 
-    public Character getAuthYn() {
+    public String getAuthYn() {
         return authYn;
     }
 
-    public void setAuthYn(Character authYn) {
+    public void setAuthYn(String authYn) {
         this.authYn = authYn;
     }
 
-    public Character getSmsRecvYn() {
+    public String getSmsRecvYn() {
         return smsRecvYn;
     }
 
-    public void setSmsRecvYn(Character smsRecvYn) {
+    public void setSmsRecvYn(String smsRecvYn) {
         this.smsRecvYn = smsRecvYn;
     }
 
@@ -302,6 +307,25 @@ public class UserDevice {
 
     public void setLastLoginDt(Date lastLoginDt) {
         this.lastLoginDt = lastLoginDt;
+    }
+
+    public String getDeviceAcct() {
+        return deviceAcct;
+    }
+
+    public void setDeviceAcct(String deviceAcct) {
+        this.deviceAcct = deviceAcct;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.regDt = new Date();
+        this.updDt = this.regDt;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updDt = new Date();
     }
 
 }

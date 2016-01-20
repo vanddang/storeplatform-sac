@@ -50,12 +50,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	@Autowired
 	private UserSCI userSCI;
 
-	private static CommonRequest commonRequest;
-
-	static {
-		commonRequest = new CommonRequest();
-	}
-
 	@Autowired
 	private MemberCommonComponent mcc;
 
@@ -68,31 +62,25 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	@Override
 	public UserExtraInfoRes modAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-
-		UserInfo searchUser = this.srhUser(req, sacHeader);
+        UserInfo searchUser = this.srhUser(req, sacHeader);
 
 		/* 입력받은 profileCode 정상인지 확인 */
-		String validProfileCode = this.validProfileCode(req);
+        String validProfileCode = this.validProfileCode(req);
 
 		/* 정상회원이면 SC 회원 부가 정보 등록/수정 호출 */
-		UserExtraInfoRes res = new UserExtraInfoRes();
-		if (searchUser != null && "Y".equals(validProfileCode)) {
-			res = this.modUserExtra(req, sacHeader);
-		}
+        UserExtraInfoRes res = new UserExtraInfoRes();
+        if (searchUser != null && "Y".equals(validProfileCode)) {
+            res = this.modUserExtra(req, sacHeader);
+        }
 
-		return res;
-	}
+        return res;
+    }
 
 	/**
 	 * 사용자 부가정보 리스트
 	 */
 	@Override
 	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
-
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
 		UserInfo searchUser = this.srhUser(req, sacHeader);
@@ -111,9 +99,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	 */
 	@Override
 	public UserExtraInfoRes remAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
-
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
 		UserInfo searchUser = this.srhUser(req, sacHeader);
@@ -170,7 +155,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		removeReq.setUserKey(req.getUserKey());
 		removeReq.setMbrMangItemPtcr(ptcrList);
-		removeReq.setCommonRequest(commonRequest);
+        removeReq.setCommonRequest(CommonRequest.convert(sacHeader));
 
 		RemoveManagementResponse removeRes = this.userSCI.removeManagement(removeReq);
 
@@ -200,7 +185,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		updateReq.setUserKey(req.getUserKey());
 		updateReq.setMbrMangItemPtcr(ptcrList);
-		updateReq.setCommonRequest(commonRequest);
+		updateReq.setCommonRequest(CommonRequest.convert(sacHeader));
 
 		UpdateManagementResponse updateRes = this.userSCI.updateManagement(updateReq);
 

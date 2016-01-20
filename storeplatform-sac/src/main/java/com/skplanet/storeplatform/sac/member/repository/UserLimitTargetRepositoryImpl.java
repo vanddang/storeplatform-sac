@@ -12,8 +12,8 @@ package com.skplanet.storeplatform.sac.member.repository;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.jpa.impl.JPAUpdateClause;
-import com.skplanet.storeplatform.sac.member.domain.QUserLimitTarget;
-import com.skplanet.storeplatform.sac.member.domain.UserLimitTarget;
+import com.skplanet.storeplatform.sac.member.domain.mbr.QUserLimitTarget;
+import com.skplanet.storeplatform.sac.member.domain.mbr.UserLimitTarget;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 

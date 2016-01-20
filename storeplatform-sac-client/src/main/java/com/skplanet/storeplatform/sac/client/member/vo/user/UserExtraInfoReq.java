@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * [REQUEST] 회원 부가정보 등록/수정
@@ -15,6 +16,7 @@ public class UserExtraInfoReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/* 사용자 키 */
+    @NotEmpty
 	private String userKey;
 
 	/* 사용자 부가정보 관리 항목 */
@@ -34,10 +36,6 @@ public class UserExtraInfoReq extends CommonInfo {
 
 	public void setUserExtraInfoList(List<UserExtraInfo> userExtraInfoList) {
 		this.userExtraInfoList = userExtraInfoList;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }

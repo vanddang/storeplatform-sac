@@ -15,7 +15,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyReque
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyValueRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyValueResponse;
-import com.skplanet.storeplatform.sac.member.domain.UserLimitTarget;
+import com.skplanet.storeplatform.sac.member.domain.mbr.UserLimitTarget;
 import com.skplanet.storeplatform.sac.member.repository.UserLimitTargetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
