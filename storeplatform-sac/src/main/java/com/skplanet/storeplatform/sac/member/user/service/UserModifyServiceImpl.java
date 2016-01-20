@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.google.common.base.Function;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.member.client.common.vo.*;
@@ -24,12 +28,19 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
+import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserClauseAgree;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
+import com.skplanet.storeplatform.sac.member.repository.UserClauseAgreeRepository;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -48,10 +59,19 @@ public class UserModifyServiceImpl implements UserModifyService {
     private MemberCommonComponent mcc;
 
     @Autowired
+    private MemberCommonRepository mcr;
+
+    @Autowired
     private UserSCI userSCI;
 
     @Autowired
     private UserSearchService userSearchService;
+
+    @Autowired
+    private UserMemberService memberService;
+
+    @Autowired
+    private UserClauseAgreeRepository clauseAgreeRepository;
 
     @Override
     public ModifyRes modUser(SacRequestHeader sacHeader, ModifyReq req) {
@@ -299,37 +319,55 @@ public class UserModifyServiceImpl implements UserModifyService {
     }
 
     @Override
-    public CreateTermsAgreementRes regTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req) {
+    @Transactional("transactionManagerForScMember")
+    public void _mergeTermsAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreeList) {
 
-        /**
-         * SC Store 약관동의 등록/수정 연동.
-         */
-        this.modAgreement(sacHeader, req.getUserKey(), req.getAgreementList(), MemberConstants.TYPE_CREATE);
+        UserMember member = memberService.findByUserKeyAndTransitRepo(userKey);
 
-        /**
-         * 결과 setting.
-         */
-        CreateTermsAgreementRes response = new CreateTermsAgreementRes();
-        response.setUserKey(req.getUserKey());
+        if (member == null)
+            throw new StorePlatformException("SAC_MEM_0003", "userKey", userKey);
 
-        return response;
-    }
+        if(member.isFromIdle())
+            return; // 휴면DB에 있는 경우 무시
 
-    @Override
-    public ModifyTermsAgreementRes modTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req) {
+        List<UserClauseAgree> userClauseAgrees = clauseAgreeRepository.findByInsdUsermbrNo(userKey);
+        ImmutableMap<String, UserClauseAgree> userAgreeMap = Maps.uniqueIndex(userClauseAgrees, new Function<UserClauseAgree, String>() {
+            @Nullable
+            @Override
+            public String apply(UserClauseAgree input) {
+                return input.getClauseId();
+            }
+        });
 
-        /**
-         * SC Store 약관동의 등록/수정 연동.
-         */
-        this.modAgreement(sacHeader, req.getUserKey(), req.getAgreementList(), MemberConstants.TYPE_MODIFY);
+        for (AgreementInfo agreementInfo : agreeList) {
+            UserClauseAgree userClauseAgree = userAgreeMap.get(agreementInfo.getExtraAgreementId());
 
-        /**
-         * 결과 setting.
-         */
-        ModifyTermsAgreementRes response = new ModifyTermsAgreementRes();
-        response.setUserKey(req.getUserKey());
+            Clause clause = mcr.getClauseItemInfo(agreementInfo.getExtraAgreementId());
+            if (clause == null)
+                throw new StorePlatformException("SAC_MEM_1105", agreementInfo.getExtraAgreementId());
 
-        return response;
+            String lastVer = clause.getClauseVer(),
+                    mandAgreeYn = clause.getMandAgreeYn();
+
+            if (userClauseAgree == null) {
+                // NEW
+                UserClauseAgree newAgree = new UserClauseAgree();
+                newAgree.setMember(member);
+                newAgree.setClauseId(agreementInfo.getExtraAgreementId());
+                newAgree.setAgreeYn(agreementInfo.getIsExtraAgreement());
+                newAgree.setMandAgreeYn(mandAgreeYn);
+                newAgree.setClauseVer(!Strings.isNullOrEmpty(agreementInfo.getExtraAgreementVersion()) ?
+                        agreementInfo.getExtraAgreementVersion() : lastVer);
+                clauseAgreeRepository.save(newAgree);
+            } else {
+                // UPDATE
+                userClauseAgree.setAgreeYn(agreementInfo.getIsExtraAgreement());
+                userClauseAgree.setMandAgreeYn(mandAgreeYn);
+                userClauseAgree.setMaxClauseVer(agreementInfo.getExtraAgreementVersion());
+                if (Strings.isNullOrEmpty(userClauseAgree.getClauseVer()))
+                    userClauseAgree.setClauseVer(lastVer);
+            }
+        }
     }
 
     @Override
@@ -580,6 +618,7 @@ public class UserModifyServiceImpl implements UserModifyService {
      * @param agreementList
      *            약관 동의 정보 리스트
      */
+    @Deprecated
     private void modAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreementList,
                               String methodType) {
 
@@ -769,6 +808,7 @@ public class UserModifyServiceImpl implements UserModifyService {
      * @return CreateSocialAccountSacRes
      */
     @Override
+    @Deprecated
     public CreateSocialAccountSacRes regSocialAccount(SacRequestHeader header, CreateSocialAccountSacReq req) {
 
         CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
@@ -848,7 +888,7 @@ public class UserModifyServiceImpl implements UserModifyService {
         removeManagementRequest.setCommonRequest(commonRequest);
         removeManagementRequest.setUserKey(req.getUserKey());
         removeManagementRequest.setMbrMangItemPtcr(remPtcrList);
-        this.userSCI.removeManagement(removeManagementRequest);
+//        this.userSCI.removeManagement(removeManagementRequest);
 
         // 3.부가속성 등록/수정
         UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
@@ -895,7 +935,7 @@ public class UserModifyServiceImpl implements UserModifyService {
         updateManagementRequest.setUserKey(req.getUserKey());
         updateManagementRequest.setMbrMangItemPtcr(ptcrList);
         updateManagementRequest.setCommonRequest(commonRequest);
-        this.userSCI.updateManagement(updateManagementRequest);
+//        this.userSCI.updateManagement(updateManagementRequest);
 
         // 4.소셜이력 등록
         CreateSocialAccountRequest createSocialAccountRequest = new CreateSocialAccountRequest();
@@ -926,6 +966,7 @@ public class UserModifyServiceImpl implements UserModifyService {
      * @return RemoveSocialAccountSacRes
      */
     @Override
+    @Deprecated
     public RemoveSocialAccountSacRes removeSocialAccount(SacRequestHeader header, RemoveSocialAccountSacReq req) {
 
         CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
@@ -994,7 +1035,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 
         removeManagementRequest.setUserKey(req.getUserKey());
         removeManagementRequest.setMbrMangItemPtcr(ptcrList);
-        RemoveManagementResponse removeManagementResponse = this.userSCI.removeManagement(removeManagementRequest);
+        RemoveManagementResponse removeManagementResponse = new RemoveManagementResponse(); // this.userSCI.removeManagement(removeManagementRequest);
 
         // 3. 응답 셋팅
         RemoveSocialAccountSacRes res = new RemoveSocialAccountSacRes();

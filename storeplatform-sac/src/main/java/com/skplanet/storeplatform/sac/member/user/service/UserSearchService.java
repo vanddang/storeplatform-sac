@@ -106,19 +106,7 @@ public interface UserSearchService {
 	 */
 	public DetailRes srhUser(DetailReq req, SacRequestHeader sacHeader);
 
-	/**
-	 * 
-	 * <pre>
-	 * 회원 부가정보 조회 SC API.
-	 * </pre>
-	 * 
-	 * @param req
-	 * @return
-	 * @throws Exception
-	 */
-	public UserExtraInfoRes listUserExtra(DetailReq req, SacRequestHeader sacHeader);
-
-	/**
+    /**
 	 * 
 	 * <pre>
 	 * 회원 징계정보 조회 SC API.

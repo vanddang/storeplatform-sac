@@ -3405,6 +3405,7 @@ public class LoginServiceImpl implements LoginService {
 	private String isAgreementByAgreementCode(SacRequestHeader requestHeader, String userKey, String agreementCode,
 			String isDormant) {
 
+        // FIXME use JPA version
 		String isAgreeYn = "N";
 
 		CommonRequest commonRequest = new CommonRequest();

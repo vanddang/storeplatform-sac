@@ -17,18 +17,20 @@ public class ListClauseSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	List<ClauseSacRes> ClauseList;
+	private List<ClauseSacRes> ClauseList;
 
-	public List<ClauseSacRes> getClauseList() {
+    public ListClauseSacRes() {}
+
+    public ListClauseSacRes(List<ClauseSacRes> clauseList) {
+        ClauseList = clauseList;
+    }
+
+    public List<ClauseSacRes> getClauseList() {
 		return this.ClauseList;
 	}
 
 	public void setClauseList(List<ClauseSacRes> clauseList) {
 		this.ClauseList = clauseList;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }

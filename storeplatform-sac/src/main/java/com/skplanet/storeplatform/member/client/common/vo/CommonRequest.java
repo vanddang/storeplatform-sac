@@ -12,18 +12,17 @@
  */
 package com.skplanet.storeplatform.member.client.common.vo;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 
-// TODO: Auto-generated Javadoc
 /**
  * 공통으로 사용되는 요청 Value Object.
  * 
  * Updated on : 2013. 12. 16. Updated by : wisestone_mikepark
  */
-public class CommonRequest extends CommonInfo implements Serializable {
+public class CommonRequest extends CommonInfo {
 
 	/** The Constant serial Version UID. */
 	private static final long serialVersionUID = 1L;
@@ -34,16 +33,14 @@ public class CommonRequest extends CommonInfo implements Serializable {
 	/** System ID. */
 	private String systemID;
 
-	/**
-	 * Returns the serial version UID.
-	 * 
-	 * @return serialVersionUID - the serial version UID
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+    public CommonRequest() {}
 
-	/**
+    public CommonRequest(String tenantID, String systemID) {
+        this.tenantID = tenantID;
+        this.systemID = systemID;
+    }
+
+    /**
 	 * Tenant ID를 리턴한다.
 	 * 
 	 * @return tenantID - Tenant ID
@@ -90,4 +87,12 @@ public class CommonRequest extends CommonInfo implements Serializable {
 	public String toString() {
 		return Utils.printKeyValues(this);
 	}
+
+    public static CommonRequest convert(SacRequestHeader sacRequestHeader) {
+        if(sacRequestHeader == null)
+            return new CommonRequest();
+
+        TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
+        return new CommonRequest(tenantHeader.getTenantId(), tenantHeader.getSystemId());
+    }
 }
