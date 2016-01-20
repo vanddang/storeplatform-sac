@@ -943,6 +943,7 @@ public class LoginServiceImpl implements LoginService {
 							throw new StorePlatformException("SAC_MEM_1503");
 						}
 					}
+
 					isLoginSucc = true;
 				}else{
 					// 서비스관리번호로 없는경우 MDN 으로 조회
@@ -963,6 +964,22 @@ public class LoginServiceImpl implements LoginService {
 						}else{
 							isRemoveUser = true;
 						}
+					}
+				}
+
+				if(isLoginSucc){
+					DeviceInfo updateDeviceInfo = new DeviceInfo();
+					updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
+					updateDeviceInfo.setDeviceId(req.getDeviceId());
+					updateDeviceInfo.setMdn(req.getMdn());
+					updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+					updateDeviceInfo.setNativeId(req.getNativeId());
+					updateDeviceInfo.setSimSerialNo(req.getSimSerialNo());
+					updateDeviceInfo.setSvcMangNum(svcMangNo);
+					updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
+					String deviceKey = deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
+					if(!StringUtils.equals(deviceKey, deviceInfo.getDeviceKey())){
+						throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 처리 실패
 					}
 				}
 			}else{
@@ -996,22 +1013,6 @@ public class LoginServiceImpl implements LoginService {
 
 		if(!isLoginSucc) {
 			throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
-		}
-
-		String deviceKey = null;
-		if(isLoginSucc && !isOmpd) {
-			DeviceInfo updateDeviceInfo = new DeviceInfo();
-			updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
-			updateDeviceInfo.setDeviceId(req.getDeviceId());
-			updateDeviceInfo.setMdn(req.getMdn());
-			updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-			updateDeviceInfo.setNativeId(req.getNativeId());
-			updateDeviceInfo.setSimSerialNo(req.getSimSerialNo());
-			updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-			deviceKey = deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
-			if(!StringUtils.equals(deviceKey, deviceInfo.getDeviceKey())){
-				throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 처리 실패
-			}
 		}
 
 		/* 로그인 성공이력 저장 */

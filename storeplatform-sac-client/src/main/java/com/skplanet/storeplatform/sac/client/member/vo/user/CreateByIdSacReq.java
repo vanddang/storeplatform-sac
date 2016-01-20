@@ -51,7 +51,6 @@ public class CreateByIdSacReq extends CommonInfo {
 	/**
 	 * 사용자 이메일.
 	 */
-	@NotEmpty
 	private String userEmail = "";
 
 	/**

@@ -571,19 +571,22 @@ public class DeviceServiceImpl implements DeviceService {
 						deviceInfo.setIsPrimary(MemberConstants.USE_Y);
 					}
 				}
-			}
+			}else{
+                // 아이디에 처음 등록되는 휴대기기인데 대표기기 여부 값이 없으면 Y로 셋팅
+                if(StringUtils.isBlank(deviceInfo.getIsPrimary())){
+                    deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+                }
+            }
 
 			/* SKT 통신사인 경우 CSP 연동 imei 체크*/
-			if(!System.getProperty("spring.profiles.active", "local").equals("local")) { // TODO. LOCAL 에서는 csp 연동하지 않는다.
-				if(!StringUtils.equals(methodName, "regByMdn") // 모바일 회원 가입 v1 은 imei 체크 제외
-						&& StringUtils.isNotBlank(deviceInfo.getNativeId())
-						&& StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceInfo.getDeviceTelecom())
-						&& StringUtils.isNotBlank(deviceInfo.getMdn())){
-					if(!StringUtils.equals(this.getIcasImei(deviceInfo.getMdn()), deviceInfo.getNativeId())){
-						throw new StorePlatformException("SAC_MEM_1503");
-					}
-				}
-			}
+            if(!StringUtils.equals(methodName, "regByMdn") // 모바일 회원 가입 v1 은 imei 체크 제외
+                    && StringUtils.isNotBlank(deviceInfo.getNativeId())
+                    && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceInfo.getDeviceTelecom())
+                    && StringUtils.isNotBlank(deviceInfo.getMdn())){
+                if(!StringUtils.equals(this.getIcasImei(deviceInfo.getMdn()), deviceInfo.getNativeId())){
+                    throw new StorePlatformException("SAC_MEM_1503");
+                }
+            }
 		}
 
 
@@ -995,12 +998,12 @@ public class DeviceServiceImpl implements DeviceService {
 		String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
 		String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
-				osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
-				deviceInfo.getDeviceExtraInfoList())); // osVersion 휴대기기
+                osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
+                deviceInfo.getDeviceExtraInfoList())); // osVersion 휴대기기
 		// 부가속성에 셋팅
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
-				svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
-				deviceInfo.getDeviceExtraInfoList())); // svcVersion
+                svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
+                deviceInfo.getDeviceExtraInfoList())); // svcVersion
 		// 휴대기기 부가속성에
 		// 셋팅
 
