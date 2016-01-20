@@ -819,6 +819,7 @@ public class LoginServiceImpl implements LoginService {
 
 		String oDeviceId = req.getDeviceId();
 		DeviceInfo deviceInfo = null;
+
 		// 모번호 조회 및 셋팅
 		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
 		String svcMangNo = null;
@@ -840,25 +841,15 @@ public class LoginServiceImpl implements LoginService {
 
 			if(StringUtils.isNotBlank(svcMangNo)){
 				// 서비스관리번호로 휴대기기 정보 조회
-				// TODO. MDN이 존재하고 모바일 회원인 경우에만 인증처리
 				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_SVC_MANG_NO, svcMangNo, null);
 				if(deviceInfo != null){
-					List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-					KeySearch keySchUserKey = new KeySearch();
-					keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-					keySchUserKey.setKeyString(deviceInfo.getUserKey());
-					keySearchList.add(keySchUserKey);
-					SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
-					CommonRequest commonRequest = new CommonRequest();
-					searchExtentUserRequest.setCommonRequest(commonRequest);
-					searchExtentUserRequest.setKeySearchList(keySearchList);
-					searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
-					SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
-					if(!StringUtils.equals(res.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)){
-						// TODO. 회원정보 없음 에러 !
-						throw new StorePlatformException("SAC_MEM_1205");
+					// SKT인경우 DB와 imei가 다르면 CSP연동해서 비교처리
+					if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+							&& !StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())){
+						if(!StringUtils.equals(req.getNativeId(), this.deviceService.getIcasImei(req.getMdn()))){
+							throw new StorePlatformException("SAC_MEM_1503");
+						}
 					}
-
 					isLoginSucc = true;
 				}else{
 					// 서비스관리번호로 없는경우 MDN 으로 조회
@@ -914,6 +905,7 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
 		}
 
+		String deviceKey = null;
 		if(isLoginSucc && !isOmpd) {
 			DeviceInfo updateDeviceInfo = new DeviceInfo();
 			updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
@@ -923,7 +915,10 @@ public class LoginServiceImpl implements LoginService {
 			updateDeviceInfo.setNativeId(req.getNativeId());
 			updateDeviceInfo.setSimSerialNo(req.getSimSerialNo());
 			updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-			deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
+			deviceKey = deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
+			if(!StringUtils.equals(deviceKey, deviceInfo.getDeviceKey())){
+				throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 처리 실패
+			}
 		}
 
 		/* 로그인 성공이력 저장 */
@@ -1244,17 +1239,24 @@ public class LoginServiceImpl implements LoginService {
 		/* 회원정보 조회 (ID로 조회) */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, req.getUserId());
 
-		/*  회원정보 없으면 Exception (ID자체가 없음) */
 		if (chkDupRes.getUserMbr() == null) {
 			/* 회원 정보가 존재 하지 않습니다. */
 			throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
 		}
 
 		boolean isValid = true;
+		/*	TODO. social 아이디 userAuthToken/socialUserNo 유효성 체크 필요*/
 		if(StringUtils.isNotBlank(req.getUserAuthToken())){ // userAuthToken이 넘어온 경우만 유효성 체크
-			/*	TODO. userAuthToken/socialUserNo 유효성 체크 필요*/
 			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
-
+				CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
+				chkUserAuthTkReqeust.setCommonRequest(commService.getSCCommonRequest(requestHeader));
+				chkUserAuthTkReqeust.setUserKey(chkDupRes.getUserMbr().getUserKey());
+				chkUserAuthTkReqeust.setUserAuthToken(req.getUserAuthToken());
+				chkUserAuthTkReqeust.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
+				CheckUserAuthTokenResponse chkUserAuthTkResponse = this.userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
+				if(chkUserAuthTkResponse == null || StringUtils.isBlank(chkUserAuthTkResponse.getUserKey())){
+					isValid = false;
+				}
 			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 
 			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
@@ -1270,6 +1272,8 @@ public class LoginServiceImpl implements LoginService {
 			res.setIsLoginSuccess(MemberConstants.USE_N);
 			return res;
 		}
+
+		/* TODO. IMEI 비교 */
 
 		/* 휴유회원 복구 */
 		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {

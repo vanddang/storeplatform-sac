@@ -1098,7 +1098,8 @@
                             svc_mang_no = #{keySearch.keyString}
                         </if>
                         <if test="keySearch.keyType.equalsIgnoreCase('AUTHORIZE_SVC_MANG_NO')">
-                            svc_mang_no = #{keySearch.keyString} AND mdn IS NOT NULL
+                            <!-- 모바일 전용회원 인증 v3에서 회원 존재여부 체크-->
+                            svc_mang_no = #{keySearch.keyString} AND mdn IS NOT NULL and mbr_clas_cd = 'US011501'
                         </if>
                     </foreach>
                 ORDER BY last_login_dt DESC
