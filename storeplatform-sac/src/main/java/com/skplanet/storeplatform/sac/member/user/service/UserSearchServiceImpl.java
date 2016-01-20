@@ -455,24 +455,23 @@ public class UserSearchServiceImpl implements UserSearchService {
 		keySchUserKey.setKeyString(req.getUserId());
 		keySearchList.add(keySchUserKey);
 
-		SearchExtentUserRequest srhExtUserRequest = new SearchExtentUserRequest();
+		SearchExtentUserRequest srhExtUserReq = new SearchExtentUserRequest();
+		srhExtUserReq.setCommonRequest(commonRequest);
+		srhExtUserReq.setKeySearchList(keySearchList);
+		srhExtUserReq.setUserInfoYn(MemberConstants.USE_Y);
 
-        srhExtUserRequest.setCommonRequest(commonRequest);
-		srhExtUserRequest.setKeySearchList(keySearchList);
-		srhExtUserRequest.setUserInfoYn(MemberConstants.USE_Y);
-
-		SearchExtentUserResponse srhExtUserResponse = this.userSCI.searchExtentUser(srhExtUserRequest);
+		SearchExtentUserResponse srhExtUserRes = this.userSCI.searchExtentUser(srhExtUserReq);
 
 		/** 3. 가가입 상태일 경우 오류. */
-		if (StringUtils.equals(srhExtUserResponse.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) {
-			throw new StorePlatformException("SAC_MEM_0003", "userId", srhExtUserResponse.getUserMbr().getUserID());
+		if (StringUtils.equals(srhExtUserRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) {
+			throw new StorePlatformException("SAC_MEM_0003", "userId", srhExtUserRes.getUserMbr().getUserID());
 		}
 
 		String checkId = "";
 
 		/** 4. Email값이 있다면 UserId와 Email이 일치하는지 체크. */
 		if (!req.getUserEmail().equals("")) {
-			if (srhExtUserResponse.getUserMbr().getUserEmail().equals(req.getUserEmail())) {
+			if (srhExtUserRes.getUserMbr().getUserEmail().equals(req.getUserEmail())) {
 				checkId = "Y";
 			} else {
 				checkId = "N";
@@ -483,7 +482,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			req.setUserPhone(opmdMdn);
 
 			ListDeviceReq scReq = new ListDeviceReq();
-			scReq.setUserKey(srhExtUserResponse.getUserMbr().getUserKey());
+			scReq.setUserKey(srhExtUserRes.getUserMbr().getUserKey());
 			// req의 전호번호는 mdn이다.
 			scReq.setMdn(req.getUserPhone());
 			scReq.setIsMainDevice("Y");
@@ -505,16 +504,17 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchPasswordSacRes res = new SearchPasswordSacRes();
 
 		/** 6. 모바일, 네이버, 구글, 페이스북 아이디 사용자는 비밀번호 찾기 불가. */
-		if(StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)
-				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)
-				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
-				|| StringUtils.equals(srhExtUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
-			throw new StorePlatformException("SAC_MEM_1300", srhExtUserResponse.getUserMbr().getUserType());
+		if(StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)
+				|| StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)
+				|| StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
+				|| StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+			throw new StorePlatformException("SAC_MEM_1300", srhExtUserRes.getUserMbr().getUserType());
 		/** 7. 그외의 사용자는 비밀번호를 리셋후 응답처리.  */
 		}else{
 			/** 7-1. 새로운 암호 생성 및 암호화하여 DB 저장. */
 			MbrPwd mbrPwd = new MbrPwd();
-			mbrPwd.setMemberKey(srhExtUserResponse.getUserMbr().getUserKey());
+			mbrPwd.setMemberKey(srhExtUserRes.getUserMbr().getUserKey());
+			mbrPwd.setIsDormant(srhExtUserRes.getUserMbr().getIsDormant());
 
 			ResetPasswordUserRequest scRPUReq = new ResetPasswordUserRequest();
 			scRPUReq.setCommonRequest(commonRequest);

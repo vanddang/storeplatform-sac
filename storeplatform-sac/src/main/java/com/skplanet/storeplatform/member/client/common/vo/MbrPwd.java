@@ -34,6 +34,9 @@ public class MbrPwd extends CommonInfo implements Serializable {
 	/** 비밀번호encType . */
 	private String encType;
 
+	/** 휴면 계정 유무 */
+	private String isDormant;
+
 	/**
 	 * 비밀번호를 반환한다.
 	 * 
@@ -221,6 +224,25 @@ public class MbrPwd extends CommonInfo implements Serializable {
 	 */
 	public void setUserAuthToken(String userAuthToken) {
 		this.userAuthToken = userAuthToken;
+	}
+
+	/**
+	 * 휴면 계정 유무을 리턴한다.
+	 *
+	 * @return isDormant - 휴면 계정 유무
+	 */
+	public String getIsDormant() {
+		return isDormant;
+	}
+
+	/**
+	 * 휴면 계정 유무을 설정한다.
+	 *
+	 * @param isDormant
+	 *            휴면 계정 유무
+	 */
+	public void setIsDormant(String isDormant) {
+		this.isDormant = isDormant;
 	}
 
 	/**

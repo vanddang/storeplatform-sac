@@ -1673,7 +1673,7 @@ public class UserServiceImpl implements UserService {
 		CheckUserPwdRequest chkUserPwdReq = new CheckUserPwdRequest();
 		chkUserPwdReq.setCommonRequest(resetPasswordUserRequest.getCommonRequest());
 		chkUserPwdReq.setUserKey(resetPasswordUserRequest.getMbrPwd().getMemberKey());
-		chkUserPwdReq.setIsDormant(MemberConstants.USE_N);
+		chkUserPwdReq.setIsDormant(resetPasswordUserRequest.getMbrPwd().getIsDormant());
 		CheckUserPwdResponse chkUserPwdRes = this.checkUserPwd(chkUserPwdReq);
 
 		/** 3. 패스워드가 OneID 타입 암호화 */
@@ -1699,7 +1699,13 @@ public class UserServiceImpl implements UserService {
 
 		resetPasswordUserRequest.getMbrPwd().setMemberPW(encNewPw);
 
-		Integer row = this.commonDAO.update("User.resetPasswordUser", resetPasswordUserRequest.getMbrPwd());
+		Integer row = 0;
+		if (StringUtils.equals(resetPasswordUserRequest.getMbrPwd().getIsDormant(), MemberConstants.USE_N)) {
+			row = this.commonDAO.update("User.resetPasswordUser", resetPasswordUserRequest.getMbrPwd());
+		} else {
+			row = this.idleDAO.update("User.resetPasswordUser", resetPasswordUserRequest.getMbrPwd());
+		}
+
 		LOGGER.debug("### updateStatus row : {}", row);
 		if (row == 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
@@ -4188,7 +4194,7 @@ public class UserServiceImpl implements UserService {
 		CheckUserPwdResponse checkUserPwdResponse;
 
 		/** 1. userKey 해당 pw 정보 조회. */
-		if (StringUtils.equals(chkUserPwdRequest.getIsDormant(), "N")) {
+		if (StringUtils.equals(chkUserPwdRequest.getIsDormant(), MemberConstants.USE_N)) {
 			checkUserPwdResponse = (CheckUserPwdResponse)this.commonDAO.queryForObject("User.searchUserPassword", chkUserPwdRequest);
 		} else {
 			checkUserPwdResponse = (CheckUserPwdResponse)this.idleDAO.queryForObject("User.searchUserPassword", chkUserPwdRequest);
@@ -4201,20 +4207,20 @@ public class UserServiceImpl implements UserService {
 
 			String encReqUserPw = "";
 
-			/** 2-1. 패스워드가 OneID 타입 암호화 */
-			if ( StringUtils.equals(checkUserPwdResponse.getUserPwType(), "US011503") ) {
+			/** 2-1. 패스워드가 IDP(US011502) 타입 암호화 */
+			if ( StringUtils.equals(checkUserPwdResponse.getUserPwType(), MemberConstants.USER_TYPE_TSTORE) ) {
+				CryptoCode cryptoCode = new CryptoCode();
+				try {
+					encReqUserPw = cryptoCode.generateIdpUserPW(chkUserPwdRequest.getUserPw());
+				} catch (Exception e) {
+					// 패스워드 암호화 실패 skip
+				}
+			/** 2-2. 패스워드가 OneID(US011503) 타입 암호화 */
+			} else {
 				CryptoCodeIm cryptoCode = new CryptoCodeIm();
 				try {
 					encReqUserPw = cryptoCode.generateImIdpUserPW(chkUserPwdRequest.getUserPw(),
 							checkUserPwdResponse.getUserSalt());
-				} catch (Exception e) {
-					// 패스워드 암호화 실패 skip
-				}
-			/** 2-2. 패스워드가 IDP 타입 암호화 */
-			} else {
-				CryptoCode cryptoCode = new CryptoCode();
-				try {
-					encReqUserPw = cryptoCode.generateIdpUserPW(chkUserPwdRequest.getUserPw());
 				} catch (Exception e) {
 					// 패스워드 암호화 실패 skip
 				}
