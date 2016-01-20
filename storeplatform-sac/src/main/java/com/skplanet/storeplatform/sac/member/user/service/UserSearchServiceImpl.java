@@ -214,7 +214,6 @@ public class UserSearchServiceImpl implements UserSearchService {
                             deviceInfo = listDeviceRes.getDeviceInfoList().get(0);
                             deviceInfo.setDeviceId(req.getDeviceId());
                             deviceInfo.setMdn(null);
-                            deviceInfo.setSimSerialNo(null);
                             getDeviceInfoList.add(deviceInfo);
 
                         }else {
@@ -230,7 +229,6 @@ public class UserSearchServiceImpl implements UserSearchService {
                                     deviceInfo.setMdn(null);
                                 }
 
-                                deviceInfo.setSimSerialNo(null);
                                 getDeviceInfoList.add(deviceInfo);
                             }
                         }

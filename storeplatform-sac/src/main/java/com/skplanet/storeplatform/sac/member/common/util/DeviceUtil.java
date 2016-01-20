@@ -143,6 +143,7 @@ public class DeviceUtil {
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
         deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount()); // 기기 계정
         deviceInfo.setIsDormant(userMbrDevice.getIsDormant());
+        deviceInfo.setLastLoginDt(userMbrDevice.getLastloginDt());
 
 		return deviceInfo;
 	}

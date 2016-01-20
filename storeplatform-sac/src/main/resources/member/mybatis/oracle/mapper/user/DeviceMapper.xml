@@ -153,7 +153,7 @@
                     , entry_chnl_cd
                     , svc_mang_no
                     , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS') AS upd_dt
-                    , last_login_dt
+                    , TO_CHAR( last_login_dt,'YYYYMMDDHH24MISS') AS last_login_dt
                     , device_acct
               FROM  tb_us_ousermbr_device
              WHERE  auth_yn = 'Y'
@@ -186,13 +186,14 @@
                     , mno_cd
                     , rep_device_yn
                     , TO_CHAR( auth_dt,'YYYYMMDDHH24MISS') AS auth_dt
-                    , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS')
+                    , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS') AS upd_dt
                     , sms_recv_yn
                     , device_natv_id
                     , device_acct
                     , svc_mang_no
                     , entry_chnl_cd
                     , auth_yn
+                    , device_sim_nm
               FROM  tb_us_usermbr_device
              WHERE  insd_usermbr_no = #{userKey}
                 AND insd_device_id = #{deviceKey}
@@ -206,7 +207,6 @@
         <result property="mdn"                  column="mdn"                jdbcType="VARCHAR"  />
         <result property="deviceModelNo"        column="device_model_cd"    jdbcType="VARCHAR"  />
         <result property="deviceTelecom"        column="mno_cd"             jdbcType="VARCHAR"  />
-        <result property="deviceNickName"       column="device_alias"       jdbcType="VARCHAR"  />
         <result property="isPrimary"            column="rep_device_yn"      jdbcType="VARCHAR"  />
         <result property="authenticationDate"   column="auth_dt"            jdbcType="DATE"     />
         <result property="updateDate"           column="upd_dt"             jdbcType="DATE"     />
@@ -217,6 +217,7 @@
         <result property="userKey"              column="insd_usermbr_no"    jdbcType="VARCHAR"  />
         <result property="joinId"               column="entry_chnl_cd"      jdbcType="VARCHAR"  />
         <result property="isUsed"               column="auth_yn"            jdbcType="VARCHAR"  />
+        <result property="simSerialNo"          column="device_sim_nm"      jdbcType="VARCHAR"  />
         <collection
             property="userMbrDeviceDetail"
             column="{userKey=insd_usermbr_no, deviceKey=insd_device_id}"
@@ -1125,15 +1126,18 @@
             b.device_natv_id as nativeID,
             b.device_sim_nm as simSerialNo,
             b.device_acct as deviceAccount,
-            b.rep_device_yn as isPrimary
+            b.rep_device_yn as isPrimary,
+            TO_CHAR (b.last_login_dt, 'YYYYMMDDHH24MISS') as lastLoginDt
         FROM TB_US_OUSERMBR a
         INNER JOIN TB_US_OUSERMBR_DEVICE b ON a.insd_usermbr_no = b.insd_usermbr_no
         WHERE a.mbr_status_main_cd != 'US010202'
-        <if test="isMine.equalsIgnoreCase('Y')">
-            AND b.insd_usermbr_no = #{userKey}
-        </if>
-        <if test="isMine.equalsIgnoreCase('N')">
-            AND b.insd_usermbr_no != #{userKey}
+        <if test="isMine != null">
+            <if test="isMine.equalsIgnoreCase('Y')">
+                AND b.insd_usermbr_no = #{userKey}
+            </if>
+            <if test="isMine.equalsIgnoreCase('N')">
+                AND b.insd_usermbr_no != #{userKey}
+            </if>
         </if>
         <if test="isUsed.equalsIgnoreCase('Y')">
             AND b.auth_yn = 'Y'
