@@ -28,10 +28,6 @@ public class AuthorizeForUplusStoreSacRes extends CommonInfo {
 	 */
 	private String trxNo = "";
 	/**
-	 * 테넌트 ID.
-	 */
-	private String tenantId = "";
-	/**
 	 * 기기 ID (msisdn).
 	 */
 	private String deviceId = "";
@@ -76,21 +72,6 @@ public class AuthorizeForUplusStoreSacRes extends CommonInfo {
 	 */
 	public void setTrxNo(String trxNo) {
 		this.trxNo = trxNo;
-	}
-
-	/**
-	 * @return tenantId
-	 */
-	public String getTenantId() {
-		return this.tenantId;
-	}
-
-	/**
-	 * @param tenantId
-	 *            String
-	 */
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
 	}
 
 	/**

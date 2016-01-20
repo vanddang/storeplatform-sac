@@ -2153,7 +2153,6 @@ public class LoginServiceImpl implements LoginService {
 
 				res.setTrxNo(req.getTrxNo());
 				res.setDeviceId(marketRes.getDeviceId());
-				res.setTenantId(MemberConstants.TENANT_ID_OLLEH_MARKET); // S02
 				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(userInfo);
@@ -2194,7 +2193,6 @@ public class LoginServiceImpl implements LoginService {
 
 				res.setTrxNo(req.getTrxNo());
 				res.setDeviceId(req.getDeviceId());
-				res.setTenantId(MemberConstants.TENANT_ID_OLLEH_MARKET); // S02
 				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
@@ -2207,7 +2205,6 @@ public class LoginServiceImpl implements LoginService {
 
 				res.setTrxNo(req.getTrxNo());
 				res.setDeviceId(req.getDeviceId());
-				res.setTenantId(MemberConstants.TENANT_ID_OLLEH_MARKET); // S02
 				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
@@ -2249,7 +2246,7 @@ public class LoginServiceImpl implements LoginService {
 		MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
 		marketReq.setTrxNo(req.getTrxNo());
 		marketReq.setDeviceId(req.getDeviceId());
-		marketReq.setDeviceTelecom(req.getDeviceTelecom());
+		marketReq.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
 		marketReq.setNativeId(req.getNativeId());
 		marketReq.setSimSerialNo(req.getSimSerialNo());
 		marketReq.setDeviceType(req.getDeviceType());
@@ -2410,7 +2407,6 @@ public class LoginServiceImpl implements LoginService {
 
 				res.setTrxNo(req.getTrxNo());
 				res.setDeviceId(marketRes.getDeviceId());
-				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S03
 				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(userInfo);
@@ -2451,7 +2447,6 @@ public class LoginServiceImpl implements LoginService {
 
 				res.setTrxNo(req.getTrxNo());
 				res.setDeviceId(req.getDeviceId());
-				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S03
 				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
@@ -2464,7 +2459,6 @@ public class LoginServiceImpl implements LoginService {
 
 				res.setTrxNo(req.getTrxNo());
 				res.setDeviceId(req.getDeviceId());
-				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S03
 				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
