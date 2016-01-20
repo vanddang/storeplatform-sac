@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PkgToAppInfoManager">
+
+    <select id="getProdIdByPkgNm" parameterType="map" resultType="String">
+        SELECT /* PkgToAppInfoManagerMapper.xml, PkgToAppInfoManager.getProdIdByPkgNm, 양해엽, 2015-01-18 */
+          PROD_ID
+        FROM (
+            SELECT PROD_ID FROM (
+                SELECT SC.PROD_ID, LAST_DEPLOY_DT
+                FROM TB_DP_SUB_CONTENTS SC
+                    INNER JOIN TB_DP_PROD P
+                        ON P.PROD_ID = SC.PROD_ID
+                WHERE 1=1
+                      AND SC.APK_PKG_HASH = #{hashedPkgNm}
+                ORDER BY LAST_DEPLOY_DT DESC
+            )
+        )
+        WHERE ROWNUM = 1
+    </select>
+
+</mapper>

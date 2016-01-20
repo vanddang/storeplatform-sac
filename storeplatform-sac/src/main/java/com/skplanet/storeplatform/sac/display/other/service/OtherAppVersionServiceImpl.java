@@ -11,9 +11,10 @@ package com.skplanet.storeplatform.sac.display.other.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.common.support.redis.RedisDataService;
+import com.skplanet.storeplatform.sac.display.cache.service.PkgToAppInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.service.SupportDeviceManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.PkgToAppInfo;
 import com.skplanet.storeplatform.sac.display.cache.vo.SupportDevice;
-import com.skplanet.storeplatform.sac.display.cache.vo.SupportDeviceParam;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.other.vo.GetVersionInfoByPkgParam;
@@ -41,6 +42,12 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
     @Autowired
     private RedisDataService dataService;
 
+    @Autowired
+    private SupportDeviceManager supportDeviceManager;
+
+    @Autowired
+    private PkgToAppInfoManager pkgToAppInfoManager;
+
     @Override
     public VersionInfo getVersionInfoByPkg(GetVersionInfoByPkgParam param) {
         String osVer = DisplayCommonUtil.extractOsVer(param.getOsVersion());
@@ -51,13 +58,11 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
         if(osVer.equals(DisplayCommonUtil.WRONG_OS_VER))
             throw new StorePlatformException("SAC_DSP_0030");
 
-        PkgToAppInfo appInfo = dataService.get(PkgToAppInfo.class, param.getApkPkgNm());
+        PkgToAppInfo appInfo = pkgToAppInfoManager.get(param.getApkPkgNm());
         if(appInfo == null)
             return null;
 
-        String prodId = appInfo.getProdId();
-
-        SupportDevice supportDevice = dataService.get(SupportDevice.class, new SupportDeviceParam(prodId, param.getDeviceModelCd()));
+        SupportDevice supportDevice = supportDeviceManager.get(appInfo.getProdId(), param.getDeviceModelCd());
 
         if (supportDevice == null)
             return null;
@@ -67,13 +72,7 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
         if(!verSet.contains(osVer))
             return null;
 
-        // 통계처리
-        /*
-        final Plandasj plandasj = connectionFactory.getConnectionPool().getClient();
-        plandasj.hincrBy("product:version:stats", prodId + ":" + param.getDeviceModelCd() + ":" + osVer, 1);
-        */
-
-        return new VersionInfo(prodId, supportDevice.getVerCd(), supportDevice.getVer());
+        return new VersionInfo(appInfo.getProdId(), supportDevice.getVerCd(), supportDevice.getVer());
     }
 
 }
