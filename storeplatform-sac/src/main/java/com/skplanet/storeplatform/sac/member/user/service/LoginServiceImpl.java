@@ -1343,6 +1343,14 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
 		}
 
+		if(!StringUtils.equals(chkDupRes.getUserMbr().getUserType(), req.getUserType())){
+			LOGGER.info("회원 타입이 다름 req : {}, db : {}", req.getUserType(), chkDupRes.getUserMbr().getUserType());
+			// 로그인 실패이력 저장
+			this.regLoginHistory(requestHeader, req.getUserId(), null, "N", "N", req.getDeviceIp(), "N", null, "N", null);
+			res.setIsLoginSuccess(MemberConstants.USE_N);
+			return res;
+		}
+
 		boolean isValid = true;
 		/*	TODO. social 아이디 userAuthToken/socialUserNo 유효성 체크 필요*/
 		if(StringUtils.isNotBlank(req.getUserAuthToken())){ // userAuthToken이 넘어온 경우만 유효성 체크

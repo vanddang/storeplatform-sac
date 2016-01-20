@@ -166,6 +166,12 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
+		if (StringUtil.isNotBlank(req.getDeviceInfo().getDeviceId())){
+			if(StringUtils.isBlank(req.getDeviceInfo().getDeviceIdType())) {
+				throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
+			}
+		}
+
 		/* deviceId, deviceKey 둘중하나는 필수 */
 		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceKey())
 				&& StringUtil.isBlank(req.getDeviceInfo().getDeviceId())) {
@@ -179,9 +185,11 @@ public class DeviceController {
 				req.getDeviceInfo().setDeviceId("");
 			}
 		}else{
-			if(!ValidationCheckUtils.isDeviceId(req.getDeviceInfo().getDeviceId())){
-				req.getDeviceInfo().setMdn(req.getDeviceInfo().getDeviceId());
-				req.getDeviceInfo().setDeviceId("");
+			if(StringUtils.isNotBlank(req.getDeviceInfo().getDeviceId())){
+				if(!ValidationCheckUtils.isDeviceId(req.getDeviceInfo().getDeviceId())){
+					req.getDeviceInfo().setMdn(req.getDeviceInfo().getDeviceId());
+					req.getDeviceInfo().setDeviceId("");
+				}
 			}
 		}
 
