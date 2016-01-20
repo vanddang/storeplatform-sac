@@ -30,14 +30,14 @@ import java.util.List;
 public class ProductInfoManagerImpl implements ProductInfoManager {
 
 	@Autowired
-	ProductInfoCacheManager cachedManager;
+	private ProductInfoCacheManager cachedManager;
 
 	@Autowired
 	private CachedExtraInfoManager extraInfoManager;
-	
+
 	@Autowired
-	HeaderExtractor header;
-	
+	private HeaderExtractor header;
+
 	@Override
 	public ProductBaseInfo getBaseInformation( String prodId ) {
 		return extraInfoManager.getProductBaseInfo( new GetProductBaseInfoParam( prodId ) );
@@ -82,7 +82,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 		if ( baseInfo.getSvcGrpCd() != null && baseInfo.getContentsTypeCd().equals(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD)) {
 			param.setEpisodeSvcGrpCd( baseInfo.getSvcGrpCd() );
 
-		// DEFAULT
+			// DEFAULT
 		} else {
 			param.setEpisodeSvcGrpCd( DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD );
 		}
@@ -139,7 +139,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 
 		return cachedManager.getEbookComicMeta( param, isCacheable() );
 
-    }
+	}
 
 	@Override
 	public AlbumMeta getAlbumMeta( String prodId ) {
