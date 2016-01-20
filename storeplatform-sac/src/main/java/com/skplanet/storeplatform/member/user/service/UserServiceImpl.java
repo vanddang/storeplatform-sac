@@ -3202,10 +3202,9 @@ public class UserServiceImpl implements UserService {
 	/**
 	 * <pre>
 	 * 심플 인증(간편 인증) v1.
-	 *  - DB조회 인증후 로그인 이력 저장
+	 *  - deviceId를 이용하여 DB조회 인증후 로그인 이력 저장
 	 * 심플 인증(간편 인증)v2
-	 *  - 모바일, Tstore 회원 : deviceId를 이용하여 DB조회 인증후 로그인이력 저장.
-	 *  - 소셜아이디 회원 : 인증절차 없이 로그인이력 저장.
+	 *  - deviceId, userType을 이용하여 DB조회 인증후 로그인이력 저장.
 	 * </pre>
 	 * 
 	 * @param simpleLoginRequest
@@ -3219,9 +3218,7 @@ public class UserServiceImpl implements UserService {
 
 		/**
 		 *  1. 심플 인증(간편 인증) v1
-		 *   - DB조회 인증.
 		 *  2. 심플 인증(간편 인증) v2
-		 *   - DB조회 인증.
 		 */
 		simpleLoginResponse = (SimpleLoginResponse) this.commonDAO.queryForObject("User.simpleLogin",
 				simpleLoginRequest);
