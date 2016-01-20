@@ -1100,7 +1100,7 @@
                         </if>
                         <if test="keySearch.keyType.equalsIgnoreCase('AUTHORIZE_SVC_MANG_NO')">
                             <!-- 모바일 전용회원 인증 v3에서 회원 존재여부 체크-->
-                            svc_mang_no = #{keySearch.keyString} AND mdn IS NOT NULL and mbr_clas_cd = 'US011501'
+                            svc_mang_no = #{keySearch.keyString}
                         </if>
                     </foreach>
                 ORDER BY last_login_dt DESC
@@ -1108,6 +1108,12 @@
             WHERE ROWNUM = 1
         ) b ON a.insd_usermbr_no = b.insd_usermbr_no
         WHERE a.mbr_status_main_cd != 'US010202'
+        <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+            <if test="keySearch.keyType.equalsIgnoreCase('AUTHORIZE_SVC_MANG_NO')">
+                <!-- 모바일 전용회원 인증 v3에서 회원 존재여부 체크-->
+                mbr_clas_cd = 'US011501'
+            </if>
+        </foreach>
     </select>
 
     <!-- 휴대기기 목록 조회 -->
