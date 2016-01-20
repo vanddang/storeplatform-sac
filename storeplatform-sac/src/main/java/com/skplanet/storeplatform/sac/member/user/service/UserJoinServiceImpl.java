@@ -625,7 +625,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		}
 		if(!isValid){
-
+			throw new StorePlatformException("SAC_MEM_1204");
 		}
 
 		// 법정대리인 나이 유효성 체크.
@@ -714,6 +714,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		deviceInfo.setSimSerialNo(req.getSimSerialNo());
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 		String deviceKey = null;
 		try{
 			deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);

@@ -1771,6 +1771,7 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public ModifyDeviceResponse modifyDevice(ModifyDeviceRequest modifyDeviceRequest) {
 		StringBuffer logBuf = new StringBuffer();
+		String isDormant = Constant.TYPE_YN_N;
 		String chgCaseCd = modifyDeviceRequest.getUserMbrDevice().getChangeCaseCode() == null ? MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT :  modifyDeviceRequest.getUserMbrDevice().getChangeCaseCode();
 		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -1790,8 +1791,14 @@ public class DeviceServiceImpl implements DeviceService {
 		keySearchList.add(keySearch);
 		searchDeviceRequest.setKeySearchList(keySearchList);
 		searchDeviceRequest.setUserKey(modifyDeviceRequest.getUserKey());
-		SearchDeviceResponse searchDeviceResponse = this.commonDAO.queryForObject("Device.searchDevice", searchDeviceRequest,
-				SearchDeviceResponse.class);
+		SearchDeviceResponse searchDeviceResponse = null;
+		searchDeviceResponse = this.commonDAO.queryForObject("Device.searchDevice", searchDeviceRequest, SearchDeviceResponse.class);
+		if (searchDeviceResponse == null) {
+			searchDeviceResponse = this.idleDAO.queryForObject("Device.searchDevice", searchDeviceRequest, SearchDeviceResponse.class);
+			if (searchDeviceResponse != null) {
+				isDormant = Constant.TYPE_YN_Y;
+			}
+		}
 		if (searchDeviceResponse == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
 		}
@@ -1845,8 +1852,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if(logBuf.length() > 0){
 			updateMbrDevice.setChangeCaseCode(chgCaseCd);
-			this.commonDAO.update("Device.insertUpdateDeviceHistory", updateMbrDevice);
-			this.commonDAO.update("Device.updateDevice", updateMbrDevice);
+			if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
+				this.commonDAO.update("Device.insertUpdateDeviceHistory", updateMbrDevice);
+				this.commonDAO.update("Device.updateDevice", updateMbrDevice);
+			}else{
+				this.idleDAO.update("Device.updateDevice", updateMbrDevice);
+			}
 		}
 
 		// 휴대기기 부가속성
@@ -1869,10 +1880,10 @@ public class DeviceServiceImpl implements DeviceService {
 				userMbrDeviceDetailForReq.setUserKey(searchDeviceResponse.getUserMbrDevice().getUserKey());
 				userMbrDeviceDetailForReq.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
 				userMbrDeviceDetailForReq.setSystemID(modifyDeviceRequest.getCommonRequest().getSystemID());
-				if(StringUtils.equals(searchDeviceResponse.getUserMbrDevice().getIsDormant(), Constant.TYPE_YN_Y)) {
-					this.idleDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
-				}else{
+				if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
 					this.commonDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
+				}else{
+					this.idleDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
 				}
 			}
 		}

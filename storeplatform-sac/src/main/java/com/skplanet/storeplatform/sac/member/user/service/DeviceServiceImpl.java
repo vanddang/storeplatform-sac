@@ -433,6 +433,9 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String regDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
+		StackTraceElement[] ste = new Throwable().getStackTrace();
+		String methodName = ste[1].getMethodName();
+
 		if(StringUtils.isBlank(deviceInfo.getUserKey())){
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
@@ -455,8 +458,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/*	타사 서비스관리번호를 구해서 호출하는 API인 경우 서비스관리번호 필수 파라메터 체크 */
 		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceInfo.getDeviceTelecom())
 				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceInfo.getDeviceTelecom())){
-			StackTraceElement[] ste = new Throwable().getStackTrace();
-			String methodName = ste[1].getMethodName();
 			if(StringUtils.equals(methodName, "authorizeForOllehMarket") // 2.1.50.	Olleh Market용 인증
 					|| StringUtils.equals(methodName, "authorizeForUplusStore") // 2.1.51. Uplus Store용 인증
 					|| StringUtils.equals(methodName, "authorizeV2") // 2.1.52. PayPlanet 인증 v2
@@ -567,7 +568,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 			/* SKT 통신사인 경우 CSP 연동 imei 체크*/
 			if(!System.getProperty("spring.profiles.active", "local").equals("local")) { // TODO. LOCAL 에서는 csp 연동하지 않는다.
-				if(StringUtils.isNotBlank(deviceInfo.getNativeId())
+				if(!StringUtils.equals(methodName, "regByMdn") // 모바일 회원 가입 v1 은 imei 체크 제외
+						&& StringUtils.isNotBlank(deviceInfo.getNativeId())
 						&& StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceInfo.getDeviceTelecom())
 						&& StringUtils.isNotBlank(deviceInfo.getMdn())){
 					if(!StringUtils.equals(this.getIcasImei(deviceInfo.getMdn()), deviceInfo.getNativeId())){
