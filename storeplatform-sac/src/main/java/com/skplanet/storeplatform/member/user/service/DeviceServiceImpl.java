@@ -293,7 +293,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 					if (StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) {
 						// 모바일 회원 전환 정보 셋팅
-						this.setMobileUserMemberInfo(userMbrDevice, createDeviceRequest, createDeviceResponse);
+						mobileUserMbrDevice = userMbrDevice;
+						this.setMobileUserMemberInfo(mobileUserMbrDevice, createDeviceRequest, createDeviceResponse);
 						LOGGER.info("모바일 회원 탈퇴 userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 						// 탈퇴처리
 						int row = this.doRemoveMobileUser(userMbrDevice, isDormant);
@@ -378,7 +379,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 						if (StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) { // 모바일 회원
 							// 모바일 회원 전환 정보 셋팅
-							this.setMobileUserMemberInfo(userMbrDevice, createDeviceRequest, createDeviceResponse);
+							mobileUserMbrDevice = userMbrDevice;
+							this.setMobileUserMemberInfo(mobileUserMbrDevice, createDeviceRequest, createDeviceResponse);
 							LOGGER.info("deviceId가 없는 모바일 회원 탈퇴 userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 							int row = this.doRemoveMobileUser(userMbrDevice, isDormant);
 							if (row < 1)
@@ -530,10 +532,10 @@ public class DeviceServiceImpl implements DeviceService {
 					if(StringUtils.equals(userMbrDevice.getIsUsed(), Constant.TYPE_YN_Y)){
 						if(StringUtils.isBlank(userMbrDevice.getDeviceID()) && StringUtils.isBlank(createDeviceRequest.getUserMbrDevice().getDeviceID())){
 							LOGGER.info("기존단말 정상 인증처리 userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
-						} else if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getDeviceID())){
+						}else if(StringUtils.isBlank(userMbrDevice.getDeviceID()) && StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getDeviceID())){
 							LOGGER.info("기존단말에서 OneStore로 접속 정상 인증처리 userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 						}else{
-							LOGGER.info("OneStore 재설치로 deviceId 변경 {} -> {} ", userKey, userMbrDevice.getDeviceID(), createDeviceRequest.getUserMbrDevice().getDeviceID());
+							LOGGER.info("deviceId 변경 {} -> {} ", userKey, userMbrDevice.getDeviceID(), createDeviceRequest.getUserMbrDevice().getDeviceID());
 						}
 						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, createDeviceRequest.getUserMbrDevice(), Constant.TYPE_YN_N);
 						// mno_cd, svc_mang_no중 하나라도 변경되면 tb_us_ousermbr_device_set 테이블의 실명인증일자, mdn을 null 처리
