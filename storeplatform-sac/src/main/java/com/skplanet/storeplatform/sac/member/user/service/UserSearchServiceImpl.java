@@ -220,7 +220,7 @@ public class UserSearchServiceImpl implements UserSearchService {
                             // 2. 다중 조회
                             for(DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()){
 
-                                if(StringUtils.isNotEmpty(deviceInfo.getDeviceId()) && ValidationCheckUtils.isDeviceId(deviceInfo.getDeviceId())){
+                                if(StringUtils.isNotEmpty(deviceInfo.getMdn()) && ValidationCheckUtils.isDeviceId(deviceInfo.getMdn())){
                                     // mdn 초기화
                                     deviceInfo.setMdn(null);
                                 }else {
