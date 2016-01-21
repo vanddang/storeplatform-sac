@@ -25,6 +25,7 @@ public class SupportDevice extends CommonInfo {
     private String osVer;
     private String ver;
     private Integer verCd;
+    private String pkgNm;
 
     public String getScId() {
         return scId;
@@ -56,5 +57,13 @@ public class SupportDevice extends CommonInfo {
 
     public void setVerCd(Integer verCd) {
         this.verCd = verCd;
+    }
+
+    public String getPkgNm() {
+        return pkgNm;
+    }
+
+    public void setPkgNm(String pkgNm) {
+        this.pkgNm = pkgNm;
     }
 }

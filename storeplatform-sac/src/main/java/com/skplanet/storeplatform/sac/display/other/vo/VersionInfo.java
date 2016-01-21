@@ -19,11 +19,19 @@ public class VersionInfo {
     private String prodId;
     private Integer versionCode;
     private String version;
+    private String packageName;
 
     public VersionInfo(String prodId, Integer versionCode, String version) {
         this.prodId = prodId;
         this.versionCode = versionCode;
         this.version = version;
+    }
+
+    public VersionInfo(String prodId, Integer versionCode, String version, String packageName) {
+        this.prodId = prodId;
+        this.versionCode = versionCode;
+        this.version = version;
+        this.packageName = packageName;
     }
 
     public String getProdId() {
@@ -48,5 +56,13 @@ public class VersionInfo {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 }

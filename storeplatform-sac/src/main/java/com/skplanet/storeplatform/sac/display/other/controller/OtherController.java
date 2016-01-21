@@ -9,16 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.display.other.controller;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.other.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.PromotionEventSyncService;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.other.service.*;
-import com.skplanet.storeplatform.sac.display.other.vo.GetVersionInfoByPkgParam;
-import com.skplanet.storeplatform.sac.display.other.vo.VersionInfo;
-import org.apache.commons.lang3.StringUtils;
+import com.skplanet.storeplatform.sac.display.other.service.OtherArtistService;
+import com.skplanet.storeplatform.sac.display.other.service.OtherServiceGroupService;
+import com.skplanet.storeplatform.sac.display.other.service.OtherTMembershipService;
+import com.skplanet.storeplatform.sac.display.other.service.OtherTagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * 기타 카테고리 Controller
@@ -53,18 +47,6 @@ public class OtherController {
 
 	@Autowired
 	private OtherArtistService otherArtistService;
-
-	@Autowired
-	private OtherPackageListService otherPackageListService;
-
-	@Autowired
-	private OtherAIDListService otherAIDListService;
-
-    @Autowired
-    private OtherTenantProductMappingService otherTenantProductMappingService;
-
-	@Autowired
-	private OtherAppVersionService appVersionService;
 
     @Autowired
     private PromotionEventSyncService promotionEventSyncService;
@@ -153,46 +135,6 @@ public class OtherController {
 
 	/**
 	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param req
-	 *            req
-	 * @param header
-	 *            header
-	 * @return OtherPakcageListRes
-	 */
-	@RequestMapping(value = "/package/list/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public OtherPackageListRes searchProductListByPackageNm(@Validated OtherPackageListReq req, SacRequestHeader header) {
-		List<String> packageInfoList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
-		if (packageInfoList.size() > DisplayConstants.DP_UPDATE_PARAM_LIMIT) {
-			throw new StorePlatformException("SAC_DSP_0004", "packageInfo", DisplayConstants.DP_UPDATE_PARAM_LIMIT);
-		}
-		return this.otherPackageListService.searchProductListByPackageNm(req, header, packageInfoList);
-	}
-
-	/**
-	 * <pre>
-	 * 상품 ID 조회(by AID)
-	 * </pre>
-	 * 
-	 * @param req
-	 * @param header
-	 * @return OtherAIDListRes
-	 */
-	@RequestMapping(value = "/aid/list/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public OtherAIDListRes searchProductListByAID(@Validated OtherAIDListReq req, SacRequestHeader header) {
-		List<String> aIdList = Arrays.asList(StringUtils.split(req.getAidList(), "+"));
-		if (aIdList.size() > DisplayConstants.DP_UPDATE_PARAM_LIMIT) {
-			throw new StorePlatformException("SAC_DSP_0004", "list", DisplayConstants.DP_UPDATE_PARAM_LIMIT);
-		}
-		return this.otherAIDListService.searchProductListByAID(req, header, aIdList);
-	}
-
-	/**
-	 * <pre>
 	 * T맴버십 할인 사용여부
 	 * </pre>
 	 * 
@@ -208,28 +150,6 @@ public class OtherController {
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.otherTMembershipService.searchTMembershipUseStatus(header);
-	}
-
-    @RequestMapping(value = "/tenantProdMapg/get/v1", method = RequestMethod.GET)
-    @ResponseBody
-    public OtherTenantProductMappingRes getTenantProductMapping(@Validated OtherTenantProductMappingReq req) {
-        return otherTenantProductMappingService.getTenantProductMapping(req.getProdId());
-    }
-    
-    @RequestMapping(value = "/userTenant/get/v1", method = RequestMethod.GET)
-    @ResponseBody
-    public OtherUserTenantRes getUserTenant(@Validated OtherUserTenantReq req) {
-    	return otherTenantProductMappingService.getUserTenant(req);
-    }
-
-	@RequestMapping(value = "/appVersion/get/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public OtherAppVersionRes getAppVersion(@Valid OtherAppVersionReq req) {
-		VersionInfo versionInfo = appVersionService.getVersionInfoByPkg(new GetVersionInfoByPkgParam(req.getPkgNm(), req.getDeviceModelCd(), req.getOsVer()));
-		if(versionInfo == null)
-			throw new StorePlatformException("SAC_DSP_0009");
-
-		return new OtherAppVersionRes(versionInfo.getProdId(), versionInfo.getVersionCode(), versionInfo.getVersion());
 	}
 
     @RequestMapping(value = "/promotion/sync/v1", method = RequestMethod.GET)
