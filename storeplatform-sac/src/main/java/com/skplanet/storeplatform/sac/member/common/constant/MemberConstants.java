@@ -88,7 +88,7 @@ public final class MemberConstants {
 	public static final String KEY_TYPE_USERMBR_NO = "USERMBR_NO"; // 통합서비스 키
 	public static final String KEY_TYPE_INSD_DEVICE_ID = "INSD_DEVICE_ID"; // 내부 기기 키
 	public static final String KEY_TYPE_DEVICE_ID = "DEVICE_ID"; // 기기 ID
-	public static final String KEY_TYPE_SVC_MANG_NO = "SVC_MANG_NO"; // SKT 서비스 관리번호
+	public static final String KEY_TYPE_SVC_MANG_NO = "SVC_MANG_NO"; // 서비스 관리번호
 	public static final String KEY_TYPE_INTG_SVC_NO = "INTG_SVC_NO"; // OneID 회원키
 	public static final String KEY_TYPE_EMAIL_ADDR = "EMAIL_ADDR"; // 사용자 이메일
 	public static final String KEY_TYPE_EMAIL = "EMAIL"; // 판매자 이메일
@@ -96,7 +96,8 @@ public final class MemberConstants {
 	public static final String KEY_TYPE_WILS_TEL_NO = "WILS_TEL_NO"; // 판매자 연락처
 	public static final String KEY_TYPE_SELLERMBR_BIZ_NO = "BIZ_REG_NO"; // 사업자 등록번호
 	public static final String KEY_TYPE_MDN = "MDN"; // 전화번호
-    public static final String KEY_TYPE_AUTHORIZE_SVC_MANG_NO = "AUTHORIZE_SVC_MANG_NO"; // SKT 서비스 관리번호 (모바일 인증 시 LAST_LOGIN_DT DESC 정렬)
+    public static final String KEY_TYPE_AUTHORIZE_SVC_MANG_NO = "AUTHORIZE_SVC_MANG_NO"; // 서비스 관리번호 (모바일 인증 시)
+	public static final String KEY_TYPE_AUTHORIZE_MDN = "AUTHORIZE_MDN"; // MDN (모바일 인증 시)
 
 	/** 통신사 코드. */
 	public static final String DEVICE_TELECOM_SKT = "US001201"; // SKT
