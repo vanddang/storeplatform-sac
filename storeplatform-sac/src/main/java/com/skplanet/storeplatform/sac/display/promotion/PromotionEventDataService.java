@@ -10,6 +10,8 @@
 package com.skplanet.storeplatform.sac.display.promotion;
 
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
+import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionUser;
+import com.skplanet.storeplatform.sac.display.promotion.vo.PromotionTargetUserKeysPaginated;
 
 import java.util.List;
 
@@ -63,4 +65,12 @@ public interface PromotionEventDataService {
 
     List<RawPromotionEvent> getRawEventList(String tenantId, List<Integer> promIdList);
 
+    RawPromotionEvent getForemostRawEvent(String tenantId, String promTypeValue);
+    List<RawPromotionEvent> getForemostRawEvents(String tenantId);
+    PromotionTargetUserKeysPaginated getPromotionTargetUserKeysPaginated(int promId, String startKey, int count);
+    void insertRawPromotionEvent(RawPromotionEvent rawPromotionEvent);
+    void insertRawPromotionUser(RawPromotionUser rawPromotionUser);
+    Integer maxPromId();
+    int deleteEvents(String tenantId, Integer promId);
+    int deleteTargetUsers(Integer promId);
 }

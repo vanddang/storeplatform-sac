@@ -148,7 +148,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
 
             // 정상적인 데이터가 아닌 경우 다시 동기화 처리를 수행한다
             if(event == null) {
-                SyncPromotionEventResult eventResult = promotionEventSyncService.syncPromotionEvent(tenantId, key);
+                SyncPromotionEventResult eventResult = promotionEventSyncService.syncPromotionEvent(tenantId, key, false);
                 if(eventResult.getUpdtCnt() > 0) {
                     event = eventResult.getLiveEventMap().get(tenantId + ":" + key);
                 }

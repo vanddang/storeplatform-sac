@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -18,27 +20,41 @@ import java.util.Date;
  * Updated on : 2015. 07. 17 Updated by : 정희원, SK 플래닛.
  */
 public class RawPromotionEvent {
-
     private String tenantId;
+    private Date startDt;
+    private Date endDt;
     private String promTypeCd;
     private String promTypeValue;
-    private String datetimeKey;
-
     private Integer promId;
+    private String promTitle;
     private String acmlMethodCd;
     private Integer acmlLimt;
-    private String acmlDt;
+    private Date acmlDate;
     private Integer rateGrd1;
     private Integer rateGrd2;
     private Integer rateGrd3;
-    private Integer payMethodVdtyDt;
-    private String targetUserKind;
-
-    private Date startDt;
-    private Date endDt;
-
+    private Integer amtGrd1;
+    private Integer amtGrd2;
+    private Integer amtGrd3;
+    private String regId;
+    private Date regDt;
+    private String updId;
+    private Date updDt;
+    private Integer promAcmlLimt;
     private String promForceCloseCd;
     private Date promForceCloseDt;
+    private String eventIssuChrgpers;
+    private String eventIssuDept;
+    private String settTargetYn;
+    private String developerTargetSett;
+    private String storeSaleCognYn;
+    private Date promAcmlLimtLastCheckDate;
+    private Integer promAcmlNowAmt;
+    private String targetUserKind;
+    private Integer payMethodVdtyDt;
+    private String targetUserFileName;
+    private String linkKeyGameInfoSeq;
+
 
     public String getTenantId() {
         return tenantId;
@@ -46,6 +62,22 @@ public class RawPromotionEvent {
 
     public void setTenantId(String tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public Date getStartDt() {
+        return startDt;
+    }
+
+    public void setStartDt(Date startDt) {
+        this.startDt = startDt;
+    }
+
+    public Date getEndDt() {
+        return endDt;
+    }
+
+    public void setEndDt(Date endDt) {
+        this.endDt = endDt;
     }
 
     public String getPromTypeCd() {
@@ -64,20 +96,20 @@ public class RawPromotionEvent {
         this.promTypeValue = promTypeValue;
     }
 
-    public String getDatetimeKey() {
-        return datetimeKey;
-    }
-
-    public void setDatetimeKey(String datetimeKey) {
-        this.datetimeKey = datetimeKey;
-    }
-
     public Integer getPromId() {
         return promId;
     }
 
     public void setPromId(Integer promId) {
         this.promId = promId;
+    }
+
+    public String getPromTitle() {
+        return promTitle;
+    }
+
+    public void setPromTitle(String promTitle) {
+        this.promTitle = promTitle;
     }
 
     public String getAcmlMethodCd() {
@@ -88,12 +120,20 @@ public class RawPromotionEvent {
         this.acmlMethodCd = acmlMethodCd;
     }
 
-    public String getAcmlDt() {
-        return acmlDt;
+    public Integer getAcmlLimt() {
+        return acmlLimt;
     }
 
-    public void setAcmlDt(String acmlDt) {
-        this.acmlDt = acmlDt;
+    public void setAcmlLimt(Integer acmlLimt) {
+        this.acmlLimt = acmlLimt;
+    }
+
+    public Date getAcmlDate() {
+        return acmlDate;
+    }
+
+    public void setAcmlDate(Date acmlDate) {
+        this.acmlDate = acmlDate;
     }
 
     public Integer getRateGrd1() {
@@ -120,28 +160,68 @@ public class RawPromotionEvent {
         this.rateGrd3 = rateGrd3;
     }
 
-    public Date getStartDt() {
-        return startDt;
+    public Integer getAmtGrd1() {
+        return amtGrd1;
     }
 
-    public void setStartDt(Date startDt) {
-        this.startDt = startDt;
+    public void setAmtGrd1(Integer amtGrd1) {
+        this.amtGrd1 = amtGrd1;
     }
 
-    public Date getEndDt() {
-        return endDt;
+    public Integer getAmtGrd2() {
+        return amtGrd2;
     }
 
-    public void setEndDt(Date endDt) {
-        this.endDt = endDt;
+    public void setAmtGrd2(Integer amtGrd2) {
+        this.amtGrd2 = amtGrd2;
     }
 
-    public Integer getAcmlLimt() {
-        return acmlLimt;
+    public Integer getAmtGrd3() {
+        return amtGrd3;
     }
 
-    public void setAcmlLimt(Integer acmlLimt) {
-        this.acmlLimt = acmlLimt;
+    public void setAmtGrd3(Integer amtGrd3) {
+        this.amtGrd3 = amtGrd3;
+    }
+
+    public String getRegId() {
+        return regId;
+    }
+
+    public void setRegId(String regId) {
+        this.regId = regId;
+    }
+
+    public Date getRegDt() {
+        return regDt;
+    }
+
+    public void setRegDt(Date regDt) {
+        this.regDt = regDt;
+    }
+
+    public String getUpdId() {
+        return updId;
+    }
+
+    public void setUpdId(String updId) {
+        this.updId = updId;
+    }
+
+    public Date getUpdDt() {
+        return updDt;
+    }
+
+    public void setUpdDt(Date updDt) {
+        this.updDt = updDt;
+    }
+
+    public Integer getPromAcmlLimt() {
+        return promAcmlLimt;
+    }
+
+    public void setPromAcmlLimt(Integer promAcmlLimt) {
+        this.promAcmlLimt = promAcmlLimt;
     }
 
     public String getPromForceCloseCd() {
@@ -160,12 +240,60 @@ public class RawPromotionEvent {
         this.promForceCloseDt = promForceCloseDt;
     }
 
-    public Integer getPayMethodVdtyDt() {
-        return payMethodVdtyDt;
+    public String getEventIssuChrgpers() {
+        return eventIssuChrgpers;
     }
 
-    public void setPayMethodVdtyDt(Integer payMethodVdtyDt) {
-        this.payMethodVdtyDt = payMethodVdtyDt;
+    public void setEventIssuChrgpers(String eventIssuChrgpers) {
+        this.eventIssuChrgpers = eventIssuChrgpers;
+    }
+
+    public String getEventIssuDept() {
+        return eventIssuDept;
+    }
+
+    public void setEventIssuDept(String eventIssuDept) {
+        this.eventIssuDept = eventIssuDept;
+    }
+
+    public String getSettTargetYn() {
+        return settTargetYn;
+    }
+
+    public void setSettTargetYn(String settTargetYn) {
+        this.settTargetYn = settTargetYn;
+    }
+
+    public String getDeveloperTargetSett() {
+        return developerTargetSett;
+    }
+
+    public void setDeveloperTargetSett(String developerTargetSett) {
+        this.developerTargetSett = developerTargetSett;
+    }
+
+    public String getStoreSaleCognYn() {
+        return storeSaleCognYn;
+    }
+
+    public void setStoreSaleCognYn(String storeSaleCognYn) {
+        this.storeSaleCognYn = storeSaleCognYn;
+    }
+
+    public Date getPromAcmlLimtLastCheckDate() {
+        return promAcmlLimtLastCheckDate;
+    }
+
+    public void setPromAcmlLimtLastCheckDate(Date promAcmlLimtLastCheckDate) {
+        this.promAcmlLimtLastCheckDate = promAcmlLimtLastCheckDate;
+    }
+
+    public Integer getPromAcmlNowAmt() {
+        return promAcmlNowAmt;
+    }
+
+    public void setPromAcmlNowAmt(Integer promAcmlNowAmt) {
+        this.promAcmlNowAmt = promAcmlNowAmt;
     }
 
     public String getTargetUserKind() {
@@ -174,5 +302,29 @@ public class RawPromotionEvent {
 
     public void setTargetUserKind(String targetUserKind) {
         this.targetUserKind = targetUserKind;
+    }
+
+    public Integer getPayMethodVdtyDt() {
+        return payMethodVdtyDt;
+    }
+
+    public void setPayMethodVdtyDt(Integer payMethodVdtyDt) {
+        this.payMethodVdtyDt = payMethodVdtyDt;
+    }
+
+    public String getTargetUserFileName() {
+        return targetUserFileName;
+    }
+
+    public void setTargetUserFileName(String targetUserFileName) {
+        this.targetUserFileName = targetUserFileName;
+    }
+
+    public String getLinkKeyGameInfoSeq() {
+        return linkKeyGameInfoSeq;
+    }
+
+    public void setLinkKeyGameInfoSeq(String linkKeyGameInfoSeq) {
+        this.linkKeyGameInfoSeq = linkKeyGameInfoSeq;
     }
 }
