@@ -9,13 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * <p>
  * PkgToAppInfo
  * </p>
  * Updated on : 2015. 11. 05 Updated by : 정희원, SK 플래닛.
  */
-public class PkgToAppInfo {
+public class PkgToAppInfo extends CommonInfo {
+    private static final long serialVersionUID = 1L;
+
     private String prodId;
 
     public PkgToAppInfo() {}
