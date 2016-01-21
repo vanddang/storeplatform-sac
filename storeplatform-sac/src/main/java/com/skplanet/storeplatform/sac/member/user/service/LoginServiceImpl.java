@@ -910,20 +910,18 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeByMdnV3SacRes authorizeByMdnV3(SacRequestHeader requestHeader, AuthorizeByMdnV3SacReq req) {
 
-		String oDeviceId = req.getDeviceId();
-		DeviceInfo deviceInfo = null;
-
-		// 모번호 조회 및 셋팅
-		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
-		String svcMangNo = null;
-		boolean isLoginSucc = false;
-		boolean isRemoveUser = false;
-		boolean isOmpd = this.commService.isOpmd(oDeviceId);
+		String oDeviceId = req.getDeviceId(); // 자번호 셋팅
+        req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId)); // 모번호 조회 및 셋팅
+		DeviceInfo deviceInfo = null; // 모바일 회원의 휴대기기 정보
+		String svcMangNo = null; // 각 통신사 서비스관리번호
+		boolean isLoginSucc = false; // 로그인 성공유무
+		boolean isRemoveUser = false; // 잘못된 데이터로 삭제처리 회원 유무
+		boolean isOmpd = this.commService.isOpmd(oDeviceId); // OMPD 단말 유무
 
 		if (!isOmpd) {
 			try {
 				// 서비스 관리 번호 조회
-				svcMangNo = commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
+				svcMangNo = this.commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
 			}catch(StorePlatformException e){
 				if(StringUtils.equals(e.getErrorInfo().getCode(), "SAC_MEM_0003")){ // 타사 연동시 비회원 응답
 					// DB에 회원정보가 있으면 invalid 처리 후 회원정보없음 에러
@@ -947,18 +945,19 @@ public class LoginServiceImpl implements LoginService {
 					isLoginSucc = true;
 				}else{
 					// 서비스관리번호로 없는경우 MDN 으로 조회
-					deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN, req.getMdn(), null);
+					deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
 					if(deviceInfo != null){
 						if(StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
 								&& StringUtils.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())){
 							// 서비스 관리번호 업데이트
 							ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+                            modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 							modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
 							UserMbrDevice userMbrDevice = new UserMbrDevice();
 							userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
 							userMbrDevice.setSvcMangNum(svcMangNo);
 							modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
-							deviceSCI.modifyDevice(modifyDeviceRequest);
+							this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
 							isLoginSucc = true;
 						}else{
@@ -977,13 +976,13 @@ public class LoginServiceImpl implements LoginService {
 					updateDeviceInfo.setSimSerialNo(req.getSimSerialNo());
 					updateDeviceInfo.setSvcMangNum(svcMangNo);
 					updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-					String deviceKey = deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
+					String deviceKey = this.deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
 					if(!StringUtils.equals(deviceKey, deviceInfo.getDeviceKey())){
 						throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 처리 실패
 					}
 				}
 			}else{
-				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN, req.getMdn(), null);
+				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
 				if(deviceInfo != null){
 					if (StringUtils.equals(req.getDeviceId(), deviceInfo.getDeviceId())
 							&& StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
@@ -996,7 +995,7 @@ public class LoginServiceImpl implements LoginService {
 				}
 			}
 		}else{ // 자번호로 인증 요청한 opmd 단말 처리
-			deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN, req.getMdn(), null);
+			deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
 			if(deviceInfo != null){
 				if(StringUtils.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())){
 					// opmd 단말인 경우 mdn으로 조회한 결과와 deviceTelecom정보가 같으면 인증 성공처리
@@ -1475,22 +1474,23 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeSaveAndSyncByMacRes res = new AuthorizeSaveAndSyncByMacRes();
 
-		/* mac 정보 조회 */
+		/** 1. 기가입된 기기를 mac 정보로 조회. */
 		DeviceInfo macDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
 				req.getPreDeviceId(), null);
 
+		/** 2. 기가입된 절보를 찾을 수 없으면 오류. */
 		if (macDeviceInfo == null) {
 			throw new StorePlatformException("SAC_MEM_0003", req.getPreDeviceType(), req.getPreDeviceId());
 		}
 
-		/* 모번호 조회 및 셋팅 */
+		/** 3. 모번호 조회 및 셋팅. */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
-		/* mdn 회원유무 조회 */
+		/** 4. 기가입된 mac주소의 구매내역을 이관받을 MDN으로 회원유무 조회. */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
-				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+				MemberConstants.KEY_TYPE_MDN, req.getDeviceId());
 
-		String isPurchaseChange = "N";
+		String isPurchaseChange = "N"; // 전시/기타, 구매 파트 키 변경 여부
 		String isJoinMdn = "N";
 		String isVariability = "N"; // 변동성 여부
 
@@ -1500,8 +1500,11 @@ public class LoginServiceImpl implements LoginService {
 		String newUserKey = null;
 
 		DeviceInfo mdnDeviceInfo = null;
+
+		/** 5-1. 이관받을 MDN이 회원인 경우. */
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) { // 회원인 경우
 
+			/** 5-1-1. MDN으로 기기 정보를 조회하여 전시/기타, 구매 파트 키를 바꾸기 위한 deviceKey, userKey를 획득, */
 			mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
 					req.getDeviceId(), null);
 
@@ -1512,11 +1515,14 @@ public class LoginServiceImpl implements LoginService {
 
 			LOGGER.info("{} 기가입된 deviceId", req.getDeviceId());
 
+		/** 5-2. 이관받을 MDN이 회원이 아닌 경우. */
 		} else { // 회원이 아닌경우 변동성 대상체크
 
+			/** 5-2-1. 변동성 대상 체크 */
 			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId(),
 					MemberConstants.DEVICE_TELECOM_SKT);
 
+			/** 5-2-2. 변동성 대상이라면 변동성 여부 값을 셋팅하고 체크된 deviceKey, userKey로 device 정보 조회. */
 			if (StringUtils.equals(saveAndSync.getIsSaveAndSyncTarget(), "Y")) { // 변동성 대상인 경우
 
 				isVariability = "Y";
@@ -1525,6 +1531,8 @@ public class LoginServiceImpl implements LoginService {
 
 				mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 						newDeviceKey, newUserKey);
+
+			/** 5-2-3. 변동성 대상이 아니라면 모바일 신규 회원 처리 유무 값 셋팅. */
 			} else { // 변동성 대상이 아닌 경우
 
 				isJoinMdn = "Y";
@@ -1535,12 +1543,15 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 
+		/**
+		 *  6-1. 이관받을 MDN이 이미 회원이여서 전시/기타, 구매 키를 바꿔야 하거나
+		 *       회원은 아니지만 변동성 대상이여서 정보를 옮겨야 하면
+		 */
 		if (StringUtils.equals(isPurchaseChange, "Y") || StringUtils.equals(isVariability, "Y")) {
 
-			/* mac 정보 탈퇴처리 */
+			/** 6-1-1. 가가입된 mac 정보(유저정보+device정보) 탈퇴처리. */
 			RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 			removeUserRequest.setCommonRequest(commonRequest);
 			removeUserRequest.setUserKey(oldUserKey);
@@ -1549,7 +1560,7 @@ public class LoginServiceImpl implements LoginService {
 			this.userSCI.remove(removeUserRequest);
 			LOGGER.info("{} 탈퇴 처리", req.getPreDeviceId());
 
-			/* 휴대기기 정보 수정 */
+			/** 6-1-2. 요청시 보내준 정보로 이미 회원 및 변동성 대상이 되는 휴대기기 정보를 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setUserKey(newUserKey);
 			deviceInfo.setDeviceKey(newDeviceKey);
@@ -1589,34 +1600,16 @@ public class LoginServiceImpl implements LoginService {
 					&& !this.commService.isDefaultDeviceModel(deviceInfo.getDeviceModelNo())) {
 				deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
 				deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
-				if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
-//					deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
-				} else {
-
-					/* 정상단말로 요청시 DB에 단말정보가 미지원단말정보이면 디폴트 모델명을 닉네임에 셋팅 */
-					/*if (StringUtils.equals(mdnDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-							&& StringUtils.equals(mdnDeviceInfo.getDeviceModelNo(),
-									MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
-						deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
-					}*/
-				}
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
 						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
 						deviceInfo.getDeviceExtraInfoList()));
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
 						majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
 						deviceInfo.getDeviceExtraInfoList()));
-			} else {
-			/*	deviceInfo.setDeviceModelNo(null); // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
-				if (!StringUtils.equals(mdnDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
-						&& !StringUtils.equals(mdnDeviceInfo.getDeviceNickName(),
-								MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) { // DB에 저장된 단말정보가 미지원단말이 아닌경우 통신사정보를 업데이트 한다.
-					deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-				}*/
 			}
 			this.deviceService.modDeviceInfo(requestHeader, deviceInfo, false);
 
-			/* 전시/기타, 구매 파트 키 변경 */
+			/** 6-1-3. 전시/기타, 구매 파트 키를 변경해야 한다면 변경처리. */
 			if (StringUtils.equals(isPurchaseChange, "Y")) {
 				this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
 			}
@@ -1624,6 +1617,10 @@ public class LoginServiceImpl implements LoginService {
 			res.setDeviceKey(newDeviceKey);
 			res.setUserKey(newUserKey);
 
+		/**
+		 *  6-2. 이관받을 MDN이 회원이 아니고 변동성 대상도 아니라면 신규 모바일 회원으로 가입처리후
+		 *       요청 정보로 휴대기기 정보를 수정
+		 */
 		} else if (StringUtils.equals(isJoinMdn, "Y")) {
 
 			/* IDP 모바일전용회원 가입 */
@@ -4696,34 +4693,7 @@ public class LoginServiceImpl implements LoginService {
 		/** 1. 모번호 조회. */
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
 
-		String keyType = MemberConstants.KEY_TYPE_MDN;
-		if (ValidationCheckUtils.isDeviceId(req.getDeviceId())) {
-			keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
-		}
-
-		/** 2. 회원 정보 조회. */
-		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, keyType, req.getDeviceId());
-		if (chkDupRes.getUserMbr() != null) {
-			isValid = true;
-			if (StringUtils.isNotBlank(req.getUserId())
-					&& !StringUtils.equals(req.getUserId(), chkDupRes.getUserMbr().getUserID())){
-				isValid = false;
-			}
-		}
-
-		/** 3. 소셜아이디 계정인 경우 연동을 통해서 인증 진행 */
-		//TODO. MDN으로 소셜아이디 유효성 체크
-		if (isValid) {
-			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
-				// 네이버 mdn인증
-			} else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
-				// 구글 mdn인증
-			} else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
-				// 페이스북 mdn인증
-			}
-		}
-
-		/** 4. 심플인증 위한 SC셋팅. */
+		/** 2. 심플인증 위한 SC셋팅. */
 		SimpleLoginRequest simpleLoginRequest = new SimpleLoginRequest();
 
 		simpleLoginRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
@@ -4752,7 +4722,7 @@ public class LoginServiceImpl implements LoginService {
 			simpleLoginRequest.setDeviceOsVersion(os.substring(os.lastIndexOf("/") + 1, os.length()));
 		}
 
-		/** 5. SC 심플인증 처리 (인증후 로그인 이력 저장). */
+		/** 3. SC 심플인증 처리 (인증후 로그인 이력 저장). */
 		SimpleLoginResponse simpleLoginResponse = this.userSCI.simpleLogin(simpleLoginRequest);
 
 		AuthorizeSimpleByMdnV2Res res = new AuthorizeSimpleByMdnV2Res();

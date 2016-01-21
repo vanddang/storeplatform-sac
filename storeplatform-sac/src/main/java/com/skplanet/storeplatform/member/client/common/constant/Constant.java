@@ -56,7 +56,8 @@ public class Constant {
 	public final static String SEARCH_TYPE_DEVICE_ID = "DEVICE_ID"; /* Device 고유ID. */
 	public final static String SEARCH_TYPE_SVC_MANG_NO = "SVC_MANG_NO"; /* Device 서비스 관리 번호. */
 	public final static String SEARCH_TYPE_MDN = "MDN"; /* Device mdn. */
-    public final static String SEARCH_TYPE_AUTHORIZE_SVC_MANG_NO = "AUTHORIZE_SVC_MANG_NO"; /* Device 서비스 관리 번호. (모바일 인증 시 LAST_LOGIN_DT DESC 정렬)*/
+    public final static String SEARCH_TYPE_AUTHORIZE_SVC_MANG_NO = "AUTHORIZE_SVC_MANG_NO"; /* Device 서비스 관리 번호. (모바일 인증 시)*/
+	public static final String SEARCH_TYPE_AUTHORIZE_MDN = "AUTHORIZE_MDN"; // MDN (모바일 인증 시)
 	public final static String REAL_NAME_TYPE_OWN = "OWN"; /* 실명인증 대상 : 본인. */
 	public final static String REAL_NAME_TYPE_PARANT = "PARENT"; /* 실명인증 대상 : 법정대리인. */
 
