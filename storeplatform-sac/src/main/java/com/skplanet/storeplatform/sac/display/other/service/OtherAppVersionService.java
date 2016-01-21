@@ -22,4 +22,5 @@ public interface OtherAppVersionService {
 
     VersionInfo getVersionInfoByPkg(GetVersionInfoByPkgParam param);
 
+    VersionInfo getMapgVersionInfo(String mapgProdId, String deviceModelCd, String osVer);
 }
