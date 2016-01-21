@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.skplanet.storeplatform.sac.common.header.extractor.HeaderExtractor;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductListCacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -23,7 +23,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.product.ProductL
 import com.skplanet.storeplatform.sac.client.display.vo.feature.product.ProductListSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -54,6 +53,9 @@ public class ProductListServiceImpl implements ProductListService{
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	ProductListCacheManager cacheManager;
 
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
@@ -87,7 +89,7 @@ public class ProductListServiceImpl implements ProductListService{
 
 		while( true ) {
 
-			List<ListProduct> prodListFromDB = getListProducts( param );
+			List<ListProduct> prodListFromDB = cacheManager.getListProducts( param );
 
 			addListProductIntoResponse( response, prodListFromDB, param.getCount() );
 
@@ -112,17 +114,11 @@ public class ProductListServiceImpl implements ProductListService{
 
 	}
 
-	@Cacheable(value = "sac:display:listProduct:v1", key = "#param.getCacheKey()", unless = "#result == null")
-	public List<ListProduct> getListProducts( ListProductCriteria param ) {
-		logger.trace( ">> cacheKey : {}", param.getCacheKey() );
-		return commonDAO.queryForList( "ProductList.selectListProdList", param, ListProduct.class );
-	}
-
 	private void setListIdAndEtcProp( ProductListSacRes response, String listId ) {
 
 		DisplayListCriteria listCriteria = new DisplayListCriteria( header.getTenantId(), listId, "N", 1 );
 
-		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class);
+		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class );
 
 		if( ! listsFromDB.isEmpty() ){
     		response.setEtcProp(listsFromDB.get(0).getEtcProp());

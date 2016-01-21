@@ -76,4 +76,10 @@ public interface CacheEvictManager {
      *
      */
     void evictAllDeviceProfile();
+
+    /**
+     * 상품리스트 캐시정보를 모두 초기화한다.
+     */
+    void evictAllListProd();
+
 }
