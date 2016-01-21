@@ -38,11 +38,11 @@ public class UserMemberServiceImpl implements UserMemberService {
         UserMember member;
 
         MemberRepositoryContext.setTarget(MemberRepositoryContext.RepositoryTarget.Normal);
-        member = memberRepository.findDetachedActiveByUserKey(userKey); // from Normal DB
+        member = memberRepository.findByUserKeyAndActive(userKey); // from Normal DB
 
         if(member == null) {
             MemberRepositoryContext.setTarget(MemberRepositoryContext.RepositoryTarget.Idle);
-            member = memberRepository.findDetachedActiveByUserKey(userKey); // from Idle DB
+            member = memberRepository.findByUserKeyAndActive(userKey); // from Idle DB
         }
 
         if(member == null) {

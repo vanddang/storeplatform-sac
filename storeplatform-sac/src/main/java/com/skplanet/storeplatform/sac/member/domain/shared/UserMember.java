@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.domain.shared;
 
+import com.google.common.base.Objects;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 import javax.persistence.*;
@@ -357,5 +358,18 @@ public class UserMember {
 
     public boolean isAvailable() {
         return !MemberConstants.MAIN_STATUS_SECEDE.equals(mbrStatusMainCd);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserMember that = (UserMember) o;
+        return Objects.equal(insdUsermbrNo, that.insdUsermbrNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(insdUsermbrNo);
     }
 }

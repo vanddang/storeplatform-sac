@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.member.domain.shared;
 
 import com.google.common.base.Objects;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,6 +32,13 @@ public class UserManagementItem {
         private UserMember member;
 
         private String mangItemCd;
+
+        public PK() {}
+
+        public PK(UserMember member, String mangItemCd) {
+            this.member = member;
+            this.mangItemCd = mangItemCd;
+        }
 
         public UserMember getMember() {
             return member;
@@ -135,6 +143,13 @@ public class UserManagementItem {
 
     public void setUpdId(String updId) {
         this.updId = updId;
+    }
+
+    public UserExtraInfo convertToExtraInfo() {
+        UserExtraInfo v = new UserExtraInfo();
+        v.setExtraProfile(mangItemCd);
+        v.setExtraProfileValue(regResultValue);
+        return v;
     }
 
     @PrePersist

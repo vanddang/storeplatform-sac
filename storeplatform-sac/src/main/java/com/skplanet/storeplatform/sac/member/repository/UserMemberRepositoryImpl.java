@@ -56,17 +56,11 @@ public class UserMemberRepositoryImpl implements UserMemberRepository {
     }
 
     @Override
-    public UserMember findDetachedActiveByUserKey(String userKey) {
+    public UserMember findByUserKeyAndActive(String userKey) {
         EntityManager em = getCurrentEntityManager();
-        UserMember member = new JPAQuery(em).from($)
+        return new JPAQuery(em).from($)
                 .where($.insdUsermbrNo.eq(userKey).and($.mbrStatusMainCd.ne(MemberConstants.MAIN_STATUS_SECEDE)))
                 .uniqueResult($);
-
-        if(member == null)
-            return null;
-
-        em.detach(member);
-        return member;
     }
 
     @Override

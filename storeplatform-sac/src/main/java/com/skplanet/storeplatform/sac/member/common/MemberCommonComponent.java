@@ -573,6 +573,7 @@ public class MemberCommonComponent {
 	 * @return UserExtraInfoRes
 	 * @throws Exception
 	 */
+    @Deprecated
 	public UserExtraInfoRes getUserExtraInfo(String userKey, SacRequestHeader sacHeader) {
 
 		LOGGER.info("회원부가정보조회 Request : {}", userKey);

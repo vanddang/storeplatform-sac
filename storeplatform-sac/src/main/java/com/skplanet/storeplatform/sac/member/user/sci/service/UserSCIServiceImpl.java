@@ -6,6 +6,7 @@ package com.skplanet.storeplatform.sac.member.user.sci.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.member.user.service.UserExtraInfoService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,9 @@ public class UserSCIServiceImpl implements UserSCIService {
 	@Autowired
 	private MemberCommonComponent mcc;
 
+    @Autowired
+    private UserExtraInfoService extraInfoService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -66,18 +70,9 @@ public class UserSCIServiceImpl implements UserSCIService {
 		LOGGER.info("{} ssoCredential 초기화", request.getUserKey());
 		RemoveSSOCredentialSacRes res = new RemoveSSOCredentialSacRes();
 
-		UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
-		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
-		MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
-		ptcr.setExtraProfile(MemberConstants.USER_EXTRA_SYRUP_SSO_CREDENTIAL);
-		ptcr.setExtraProfileValue("");
-		ptcrList.add(ptcr);
-		updateManagementRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-		updateManagementRequest.setUserKey(request.getUserKey());
-		updateManagementRequest.setMbrMangItemPtcr(ptcrList);
-		UpdateManagementResponse updateManagementResponse = this.userSCI.updateManagement(updateManagementRequest);
+        extraInfoService.modifyExtraInfo(request.getUserKey(), MemberConstants.USER_EXTRA_SYRUP_SSO_CREDENTIAL, "");
 
-		res.setUserKey(updateManagementResponse.getUserKey());
+		res.setUserKey(request.getUserKey());
 		return res;
 	}
 

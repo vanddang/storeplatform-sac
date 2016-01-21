@@ -23,7 +23,12 @@ public interface UserMemberRepository {
 
     UserMember findByEmail(String email);
 
-    UserMember findDetachedActiveByUserKey(String userKey);
+    /**
+     * userKey로 유효한 회원을 조회한다.
+     * @param userKey
+     * @return
+     */
+    UserMember findByUserKeyAndActive(String userKey);
 
     boolean isExist(String userKey);
 }
