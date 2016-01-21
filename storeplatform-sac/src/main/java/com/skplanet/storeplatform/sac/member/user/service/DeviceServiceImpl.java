@@ -460,22 +460,7 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new StorePlatformException("SAC_MEM_1514");
 		}
 
-		/*	타사 서비스관리번호를 구해서 호출하는 API인 경우 서비스관리번호 필수 파라메터 체크 */
-		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceInfo.getDeviceTelecom())
-				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceInfo.getDeviceTelecom())){
-			if(StringUtils.equals(methodName, "authorizeForOllehMarket") // 2.1.50.	Olleh Market용 인증
-					|| StringUtils.equals(methodName, "authorizeForUplusStore") // 2.1.51. Uplus Store용 인증
-					|| StringUtils.equals(methodName, "authorizeV2") // 2.1.52. PayPlanet 인증 v2
-					|| StringUtils.equals(methodName, "authorizeForInAppV3")) // 2.1.53.	PayPlanet InApp용 인증 v3
-			{
-				if(StringUtils.isBlank(deviceInfo.getSvcMangNum())) {
-					throw new StorePlatformException("SAC_MEM_0001", "svcMangNo");
-				}
-			}
-		}
-
 		String userKey = deviceInfo.getUserKey();
-
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 
 		/* 헤더 정보 셋팅 */
@@ -578,15 +563,17 @@ public class DeviceServiceImpl implements DeviceService {
                 }
             }
 
-			/* SKT 통신사인 경우 CSP 연동 imei 체크*/
-            if(!StringUtils.equals(methodName, "regByMdn") // 모바일 회원 가입 v1 은 imei 체크 제외
-                    && StringUtils.isNotBlank(deviceInfo.getNativeId())
-                    && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceInfo.getDeviceTelecom())
-                    && StringUtils.isNotBlank(deviceInfo.getMdn())){
-                if(!StringUtils.equals(this.getIcasImei(deviceInfo.getMdn()), deviceInfo.getNativeId())){
-                    throw new StorePlatformException("SAC_MEM_1503");
+			/* CSP 연동 imei 체크*/
+            /*if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceInfo.getDeviceTelecom())){
+                if(StringUtils.isNotBlank(deviceInfo.getIsNativeIdAuth())
+                        && StringUtils.equals(deviceInfo.getIsNativeIdAuth(), MemberConstants.USE_Y)
+                        && StringUtils.isNotBlank(deviceInfo.getNativeId())
+                        && StringUtils.isNotBlank(deviceInfo.getMdn())){
+                    if(!StringUtils.equals(this.getIcasImei(deviceInfo.getMdn()), deviceInfo.getNativeId())){
+                        throw new StorePlatformException("SAC_MEM_1503");
+                    }
                 }
-            }
+            }*/
 		}
 
 
@@ -727,7 +714,7 @@ public class DeviceServiceImpl implements DeviceService {
 				mqInfo.setUserId(createDeviceRes.getPreviousUserID());
 				mqInfo.setUserKey(previousUserKey);
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-				mqInfo.setDeviceId(deviceInfo.getDeviceId());
+                mqInfo.setDeviceId(deviceInfo.getMdn());
 				mqInfo.setProfileImgPath(createDeviceRes.getPreviousProfileImgPath());
 				mqInfo.setChgMemberYn(MemberConstants.USE_Y);
 				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
@@ -782,7 +769,11 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 			mqInfo.setUserKey(userKey);
 			mqInfo.setDeviceKey(deviceKey);
-			mqInfo.setDeviceId(deviceInfo.getDeviceId());
+            if(StringUtils.isNotBlank(deviceInfo.getMdn())){
+                mqInfo.setDeviceId(deviceInfo.getMdn());
+            }else{
+                mqInfo.setDeviceId(deviceInfo.getDeviceId());
+            }
 			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
 			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 		} catch (AmqpException ex) {

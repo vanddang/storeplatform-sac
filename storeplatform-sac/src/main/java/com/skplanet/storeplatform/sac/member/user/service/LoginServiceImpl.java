@@ -910,20 +910,18 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeByMdnV3SacRes authorizeByMdnV3(SacRequestHeader requestHeader, AuthorizeByMdnV3SacReq req) {
 
-		String oDeviceId = req.getDeviceId();
-		DeviceInfo deviceInfo = null;
-
-		// 모번호 조회 및 셋팅
-		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
-		String svcMangNo = null;
-		boolean isLoginSucc = false;
-		boolean isRemoveUser = false;
-		boolean isOmpd = this.commService.isOpmd(oDeviceId);
+		String oDeviceId = req.getDeviceId(); // 자번호 셋팅
+        req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId)); // 모번호 조회 및 셋팅
+		DeviceInfo deviceInfo = null; // 모바일 회원의 휴대기기 정보
+		String svcMangNo = null; // 각 통신사 서비스관리번호
+		boolean isLoginSucc = false; // 로그인 성공유무
+		boolean isRemoveUser = false; // 잘못된 데이터로 삭제처리 회원 유무
+		boolean isOmpd = this.commService.isOpmd(oDeviceId); // OMPD 단말 유무
 
 		if (!isOmpd) {
 			try {
 				// 서비스 관리 번호 조회
-				svcMangNo = commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
+				svcMangNo = this.commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
 			}catch(StorePlatformException e){
 				if(StringUtils.equals(e.getErrorInfo().getCode(), "SAC_MEM_0003")){ // 타사 연동시 비회원 응답
 					// DB에 회원정보가 있으면 invalid 처리 후 회원정보없음 에러
@@ -947,18 +945,19 @@ public class LoginServiceImpl implements LoginService {
 					isLoginSucc = true;
 				}else{
 					// 서비스관리번호로 없는경우 MDN 으로 조회
-					deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN, req.getMdn(), null);
+					deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
 					if(deviceInfo != null){
 						if(StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
 								&& StringUtils.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())){
 							// 서비스 관리번호 업데이트
 							ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+                            modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 							modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
 							UserMbrDevice userMbrDevice = new UserMbrDevice();
 							userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
 							userMbrDevice.setSvcMangNum(svcMangNo);
 							modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
-							deviceSCI.modifyDevice(modifyDeviceRequest);
+							this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
 							isLoginSucc = true;
 						}else{
@@ -977,13 +976,13 @@ public class LoginServiceImpl implements LoginService {
 					updateDeviceInfo.setSimSerialNo(req.getSimSerialNo());
 					updateDeviceInfo.setSvcMangNum(svcMangNo);
 					updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-					String deviceKey = deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
+					String deviceKey = this.deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
 					if(!StringUtils.equals(deviceKey, deviceInfo.getDeviceKey())){
 						throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 처리 실패
 					}
 				}
 			}else{
-				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN, req.getMdn(), null);
+				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
 				if(deviceInfo != null){
 					if (StringUtils.equals(req.getDeviceId(), deviceInfo.getDeviceId())
 							&& StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
@@ -996,7 +995,7 @@ public class LoginServiceImpl implements LoginService {
 				}
 			}
 		}else{ // 자번호로 인증 요청한 opmd 단말 처리
-			deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN, req.getMdn(), null);
+			deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
 			if(deviceInfo != null){
 				if(StringUtils.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())){
 					// opmd 단말인 경우 mdn으로 조회한 결과와 deviceTelecom정보가 같으면 인증 성공처리
