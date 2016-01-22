@@ -18,6 +18,8 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
@@ -1451,27 +1453,38 @@ public class LoginServiceImpl implements LoginService {
             }
         }
         if(searchDeviceListResponse != null && searchDeviceListResponse.getUserMbrDevice().size() > 0) {
-            UserMbrDevice deviceInfo = null;
-            for (UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()) {
-                if (StringUtils.isNotBlank(req.getMdn()) && StringUtils.equals(userMbrDevice.getMdn(), req.getMdn())) {
-                    deviceInfo = userMbrDevice;
-                    isNew = false;
-                    break;
+            if(StringUtils.isBlank(req.getMdn())){
+
+            }else{
+                UserMbrDevice deviceInfo = null;
+                for (UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()) {
+                    if(StringUtils.isBlank(req.getMdn())){
+                        // non MDN 요청인경우 deviceId로 비교
+                        if(StringUtils.equals(req.getDeviceId(), userMbrDevice.getDeviceID())){
+                            isNew = false;
+                            break;
+                        }
+                    }else{
+                        if (StringUtils.equals(userMbrDevice.getMdn(), req.getMdn())) {
+                            deviceInfo = userMbrDevice;
+                            isNew = false;
+                            break;
+                        }
+
+                        if (StringUtils.equals(userMbrDevice.getSvcMangNum(), svcMangNo)) {
+                            deviceInfo = userMbrDevice;
+                            isNew = false;
+                            break;
+                        }
+                    }
                 }
 
-                if (StringUtils.equals(userMbrDevice.getSvcMangNum(), svcMangNo)) {
-                    deviceInfo = userMbrDevice;
-                    isNew = false;
-                    break;
-                }
-            }
-
-            if (!isNew && deviceInfo != null) {
-                // TODO. NON MDN 상태에서 USIM 삽입후 들어왔을떄 비교도 하나??
-                if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-                    if (StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)) {
-                        if (!StringUtils.equals(req.getNativeId(), deviceInfo.getNativeID())) {
-                            throw new StorePlatformException("SAC_MEM_1503");
+                if (!isNew && deviceInfo != null) {
+                    if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+                        if (StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)) {
+                            if (!StringUtils.equals(req.getNativeId(), deviceInfo.getNativeID())) {
+                                throw new StorePlatformException("SAC_MEM_1503");
+                            }
                         }
                     }
                 }
