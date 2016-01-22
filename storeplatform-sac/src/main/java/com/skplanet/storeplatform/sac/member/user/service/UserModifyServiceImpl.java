@@ -1138,7 +1138,7 @@ public class UserModifyServiceImpl implements UserModifyService {
             throw new StorePlatformException("SAC_MEM_1403");
         }
 
-        /** 2. 그외의 사용자면 회원 정보 조회. */
+        /** 2. 그외의 사용자면 사용자 아이디 조회후 변경가능 여부 확인. */
         List<KeySearch> keySearchList = new ArrayList<KeySearch>();
         KeySearch keySchUserKey = new KeySearch();
 
@@ -1162,8 +1162,12 @@ public class UserModifyServiceImpl implements UserModifyService {
             if (!StringUtils.equals(searchUserRes.getUserMbr().getUserID(), req.getUserId())) {
                 throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
             }
+            /** 2-3. 조회된 유저타입과 req의 유저타입이 다르면 오류. */
+            if (!StringUtils.equals(searchUserRes.getUserMbr().getUserType(), req.getUserId())) {
+                throw new StorePlatformException("SAC_MEM_0003", "userType", req.getUserType());
+            }
         } catch (StorePlatformException spe) {
-            /** 2-2. 아이디가 없거나 회원 정보 조회시 오류. */
+            /** 2-4. 아이디가 없거나 회원 정보 조회시 오류. */
             if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
                     || StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
                 throw new StorePlatformException("SAC_MEM_0003", "userKey", req.getUserKey());
@@ -1172,8 +1176,24 @@ public class UserModifyServiceImpl implements UserModifyService {
             }
         }
 
-        /** 3. userId, userAuthToken 로 인증시도 실패시 오류.  */
-        /** 3-1. tstore Id 인증 시도 */
+        /** 3. 신규 사용자 아이디 존재 여부 확인. */
+        keySearchList = new ArrayList<KeySearch>();
+        keySchUserKey = new KeySearch();
+        keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
+        keySchUserKey.setKeyString(req.getNewUserId());
+        keySearchList.add(keySchUserKey);
+
+        CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
+        chkDupReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+        chkDupReq.setKeySearchList(keySearchList);
+        CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
+
+        if (StringUtils.equals(chkDupRes.getIsRegistered(), MemberConstants.USE_Y)) {
+            throw new StorePlatformException("SAC_MEM_1104");
+        }
+
+        /** 4. userId, userAuthToken 로 인증시도 실패시 오류.  */
+        /** 4-1. tstore Id 인증 시도 */
         if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)) {
             CheckUserAuthTokenRequest chkUserAuthTkReq = new CheckUserAuthTokenRequest();
             chkUserAuthTkReq.setCommonRequest(commonRequest);
@@ -1185,18 +1205,18 @@ public class UserModifyServiceImpl implements UserModifyService {
                 throw new StorePlatformException("SAC_MEM_1204");
             }
         // TODO. 소셜계정 아이디 userAuthToken 값이 있으면 체크 없으면 회원여부로 인증 처리
-        /** 3-2. 네이버 Id 인증 시도 */
+        /** 4-2. 네이버 Id 인증 시도 */
         } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
             // 네이버 연동 성공처리
-        /** 3-3. 구글 Id 인증 시도 */
+        /** 4-3. 구글 Id 인증 시도 */
         } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
             // 구글 연동 성공처리
-        /** 3-4. 페이스북 Id 인증 시도 */
+        /** 4-4. 페이스북 Id 인증 시도 */
         } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
             // 페이스북 연동 성공처리
         }
 
-        /** 4. userAuthToken 인증이 되었으면 ID변경 */
+        /** 5. userAuthToken 인증이 되었으면 ID변경 */
         ModifyIdSacRes res = new ModifyIdSacRes();
 
         try {
@@ -1210,8 +1230,9 @@ public class UserModifyServiceImpl implements UserModifyService {
             modIdReq.setNewUserId(req.getNewUserId());
             modIdReq.setNewUserType(req.getNewUserType());
             modIdReq.setNewUserAuthToken(req.getNewUserAuthToken());
-            modIdReq.setNewUserEmail(req.getNewUserEmail());
-            modIdReq.setNewSocialUserNo(req.getNewSocialUserNo());
+            if (StringUtils.isNotBlank(req.getNewUserEmail())) {
+                modIdReq.setNewUserEmail(req.getNewUserEmail());
+            }
 
             // SC ID 변경
             ModifyIdResponse scRes = this.userSCI.modifyId(modIdReq);

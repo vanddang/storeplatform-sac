@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
 
 		// ACTION 3. 사용자 회원 추가
 		row = (Integer) this.commonDAO.insert("User.createUser", usermbr);
-		LOGGER.debug("### 0 row : {}", row);
+		LOGGER.debug("### User.createUser row : {}", row);
 		if (row == 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
 		// 사용자 패스워드 추가
 		row = (Integer) this.commonDAO.insert("User.insertPassword", mbrPwd);
-		LOGGER.debug("### row 0: {}", row);
+		LOGGER.debug("### User.insertPassword row : {}", row);
 		if (row == 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
@@ -205,7 +205,7 @@ public class UserServiceImpl implements UserService {
 			mbrAuth = createUserRequest.getMbrAuth();
 			mbrAuth.setMemberKey(generatedUserKey);
 			row = (Integer) this.commonDAO.insert("User.updateOwnRealName", mbrAuth);
-			LOGGER.debug("### 2  row : {}", row);
+			LOGGER.debug("### User.updateOwnRealName  row : {}", row);
 
 			if (row == 0) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
@@ -261,7 +261,7 @@ public class UserServiceImpl implements UserService {
 				mbrMangItemPtcr.setUserID(createUserRequest.getUserMbr().getUserID());
 
 				row = this.commonDAO.update("User.updateManagement", mbrMangItemPtcr);
-				LOGGER.debug("###  3 row : {}", row);
+				LOGGER.debug("###  User.updateManagement row : {}", row);
 
 				if (row == 0) {
 					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
@@ -276,7 +276,7 @@ public class UserServiceImpl implements UserService {
 				MbrClauseAgree mbrClauseAgree = mbrClauseAgreeList.get(i);
 				mbrClauseAgree.setMemberKey(generatedUserKey);
 				row = this.commonDAO.update("User.updateAgreement", mbrClauseAgree);
-				LOGGER.debug("###  4 row : {}", row);
+				LOGGER.debug("###  User.updateAgreement row : {}", row);
 
 				if (row == 0) {
 					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));

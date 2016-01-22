@@ -1353,9 +1353,11 @@ public class DeviceServiceImpl implements DeviceService {
 
 		CheckSaveNSyncResponse checkSaveNSyncResponse = null;
 
+		/** Save & Sync 조회. */
 		checkSaveNSyncResponse = this.commonDAO.queryForObject("Device.checkRealSaveNSync", checkSaveNSyncRequest,
 				CheckSaveNSyncResponse.class);
 
+		/** 조회값이 없으면 Save & Sync가 아님. */
 		if (checkSaveNSyncResponse == null) {
 			checkSaveNSyncResponse = new CheckSaveNSyncResponse();
 			checkSaveNSyncResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
@@ -1368,11 +1370,13 @@ public class DeviceServiceImpl implements DeviceService {
 		checkSaveNSyncResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
 
+		/** 조회값이 있어도 변경 유효 코드가 없다면 Save & Sync가 아님. */
 		if (checkSaveNSyncResponse.getChangeCaseCode() == null) {
 			checkSaveNSyncResponse.setIsSaveNSync(Constant.TYPE_YN_N);
 			return checkSaveNSyncResponse;
 		}
 
+		/** 조회값이 있어도 탈퇴 회원이고 변동처리대상 회원이 아니라면 Save & Sync가 아님. */
 		if (checkSaveNSyncResponse.getIsActive().equals(MainStateCode.SECEDE.getCode()) == true
 				&& checkSaveNSyncResponse.getUserSubStatus().equals(SubStateCode.CHANGE_MANAGEMENT.getCode()) == false) {
 			checkSaveNSyncResponse.setIsSaveNSync(Constant.TYPE_YN_N);
@@ -1380,10 +1384,13 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		checkSaveNSyncResponse.setIsSaveNSync(Constant.TYPE_YN_Y);
+
+		/** 탈퇴회원이면 Save & Sync가 아니고 탈퇴회원이 아니라면 대상임. */
 		if (checkSaveNSyncResponse.getIsActive().equals(MainStateCode.SECEDE.getCode()))
 			checkSaveNSyncResponse.setIsActive(Constant.TYPE_YN_N);
 		else
 			checkSaveNSyncResponse.setIsActive(Constant.TYPE_YN_Y);
+
 		return checkSaveNSyncResponse;
 	}
 
@@ -1885,6 +1892,123 @@ public class DeviceServiceImpl implements DeviceService {
 				this.commonDAO.update("Device.updateDevice", updateMbrDevice);
 			}else{
 				this.idleDAO.update("Device.updateDevice", updateMbrDevice);
+			}
+		}
+
+		// 휴대기기 부가속성
+		if (modifyDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail() != null) {
+			for (UserMbrDeviceDetail userMbrDeviceDetailForReq : modifyDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail()) {
+				boolean isExsitExtra = false;
+				for (UserMbrDeviceDetail userMbrDeviceDetailForDb : searchDeviceResponse.getUserMbrDevice().getUserMbrDeviceDetail()) {
+					if(StringUtils.equals(userMbrDeviceDetailForReq.getExtraProfile(), userMbrDeviceDetailForDb.getExtraProfile())){
+						isExsitExtra = true;
+						if(!StringUtils.equals(userMbrDeviceDetailForReq.getExtraProfileValue(), userMbrDeviceDetailForDb.getExtraProfileValue())){
+							logBuf.append("[").append(userMbrDeviceDetailForReq.getExtraProfile()).append("]").append(userMbrDeviceDetailForDb.getExtraProfileValue()).append("->").append(userMbrDeviceDetailForReq.getExtraProfileValue());
+						}
+						break;
+					}
+				}
+				if(!isExsitExtra){
+					logBuf.append("[").append(userMbrDeviceDetailForReq.getExtraProfile()).append("]").append("null").append("->").append(userMbrDeviceDetailForReq.getExtraProfileValue());
+				}
+				userMbrDeviceDetailForReq.setRegID(searchDeviceResponse.getUserMbrDevice().getUserID());
+				userMbrDeviceDetailForReq.setUserKey(searchDeviceResponse.getUserMbrDevice().getUserKey());
+				userMbrDeviceDetailForReq.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
+				userMbrDeviceDetailForReq.setSystemID(modifyDeviceRequest.getCommonRequest().getSystemID());
+				if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
+					this.commonDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
+				}else{
+					this.idleDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
+				}
+			}
+		}
+
+		if(logBuf.length() > 0){
+			LOGGER.info("{} : 휴대기기 수정정보 : {}", modifyDeviceRequest.getUserKey(), logBuf.toString());
+		}else{
+			LOGGER.info("{} : 수정된 휴대기기 정보 없음", modifyDeviceRequest.getUserKey());
+		}
+
+		ModifyDeviceResponse modifyDeviceResponse = new ModifyDeviceResponse();
+		modifyDeviceResponse.setUserKey(modifyDeviceRequest.getUserKey());
+		modifyDeviceResponse.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
+		return modifyDeviceResponse;
+	}
+
+	@Override
+	public ModifyDeviceResponse modifySaveNSyncDevice(ModifyDeviceRequest modifyDeviceRequest) {
+		StringBuffer logBuf = new StringBuffer();
+		String isDormant = Constant.TYPE_YN_N;
+		String chgCaseCd = modifyDeviceRequest.getUserMbrDevice().getChangeCaseCode() == null ?
+				MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT :  modifyDeviceRequest.getUserMbrDevice().getChangeCaseCode();
+		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType(Constant.SEARCH_TYPE_DEVICE_KEY);
+		keySearch.setKeyString(modifyDeviceRequest.getUserMbrDevice().getDeviceKey());
+		keySearchList.add(keySearch);
+		searchDeviceRequest.setKeySearchList(keySearchList);
+		searchDeviceRequest.setUserKey(modifyDeviceRequest.getUserKey());
+		SearchDeviceResponse searchDeviceResponse = null;
+		searchDeviceResponse = this.commonDAO.queryForObject("Device.searchDevice", searchDeviceRequest, SearchDeviceResponse.class);
+		if (searchDeviceResponse == null) {
+			searchDeviceResponse = this.idleDAO.queryForObject("Device.searchDevice", searchDeviceRequest, SearchDeviceResponse.class);
+			if (searchDeviceResponse != null) {
+				isDormant = Constant.TYPE_YN_Y;
+			}
+		}
+		if (searchDeviceResponse == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
+		}
+
+		UserMbrDevice updateMbrDevice = new UserMbrDevice();
+		updateMbrDevice.setUserKey(modifyDeviceRequest.getUserKey());
+		updateMbrDevice.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
+
+		// deviceId
+		if (!StringUtils.equals(searchDeviceResponse.getUserMbrDevice().getDeviceID(), modifyDeviceRequest.getUserMbrDevice().getDeviceID())) {
+			logBuf.append("[device_id]").append(searchDeviceResponse.getUserMbrDevice().getDeviceID()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getDeviceID());
+			updateMbrDevice.setDeviceID(modifyDeviceRequest.getUserMbrDevice().getDeviceID());
+		}
+
+		// MDN
+		if (modifyDeviceRequest.getUserMbrDevice().getMdn() != null) {
+			logBuf.append("[mdn]").append(searchDeviceResponse.getUserMbrDevice().getMdn()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getMdn());
+			updateMbrDevice.setMdn(modifyDeviceRequest.getUserMbrDevice().getMdn());
+		}
+
+		// 단말모델
+		if (modifyDeviceRequest.getUserMbrDevice().getDeviceModelNo() != null) {
+			logBuf.append("[device_model_cd]").append(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getDeviceModelNo());
+			updateMbrDevice.setDeviceModelNo(modifyDeviceRequest.getUserMbrDevice().getDeviceModelNo());
+		}
+
+		// 기기계정(gmail)
+		if (modifyDeviceRequest.getUserMbrDevice().getDeviceAccount() != null) {
+			logBuf.append("[device_acct]").append(searchDeviceResponse.getUserMbrDevice().getDeviceAccount()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getDeviceAccount());
+			updateMbrDevice.setDeviceAccount(modifyDeviceRequest.getUserMbrDevice().getDeviceAccount());
+		}
+
+		// 기기 고유ID(imei)
+		if (modifyDeviceRequest.getUserMbrDevice().getNativeID() != null) {
+			logBuf.append("[device_natv_id]").append(searchDeviceResponse.getUserMbrDevice().getNativeID()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getNativeID());
+			chgCaseCd = MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE;
+			updateMbrDevice.setNativeID(modifyDeviceRequest.getUserMbrDevice().getNativeID());
+		}
+
+		// 서비스관리번호
+		if (modifyDeviceRequest.getUserMbrDevice().getSvcMangNum() != null) {
+			logBuf.append("[svc_mang_no]").append(searchDeviceResponse.getUserMbrDevice().getSvcMangNum()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getSvcMangNum());
+			updateMbrDevice.setSvcMangNum(modifyDeviceRequest.getUserMbrDevice().getSvcMangNum());
+		}
+
+		if(logBuf.length() > 0){
+			updateMbrDevice.setChangeCaseCode(chgCaseCd);
+			if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
+				this.commonDAO.update("Device.insertUpdateDeviceHistory", updateMbrDevice);
+				this.commonDAO.update("Device.modifySaveNSyncDevice", updateMbrDevice);
+			}else{
+				this.idleDAO.update("Device.modifySaveNSyncDevice", updateMbrDevice);
 			}
 		}
 

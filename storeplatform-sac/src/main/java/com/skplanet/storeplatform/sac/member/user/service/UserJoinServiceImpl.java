@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -574,7 +575,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		this.checkAlreadyJoin(sacHeader, req.getDeviceId());
 
 		/**
-		 * 회원 가입 MSISDN, MAC (변동성 대상 체크 로직 포함)
+		 * 회원 가입 MAC
 		 */
 		return this.regSaveAndSyncUserJoin(sacHeader, req);
 
@@ -983,7 +984,6 @@ public class UserJoinServiceImpl implements UserJoinService {
             }
             deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-//			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());// 단말 모델
 			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
@@ -1005,7 +1005,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-//			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말 모델
 			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
@@ -1026,7 +1025,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-//			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말 모델
 			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
@@ -1047,7 +1045,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(""); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-//			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말 모델
 			deviceInfo.setDeviceAccount(""); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(""); // 기기고유 ID (imei)
@@ -1199,36 +1196,37 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 */
 	private void checkAlreadyJoin(SacRequestHeader sacHeader, String deviceId) {
 
-		try {
-			UserInfo userInfo = this.mcc.getUserBaseInfo("deviceId", deviceId, sacHeader);
-			LOGGER.debug("## 메인 상태 : {}", userInfo.getUserMainStatus());
-			LOGGER.debug("## 서브 상태 : {}", userInfo.getUserSubStatus());
-			throw new StorePlatformException("SAC_MEM_1104");
-		} catch (StorePlatformException spe) {
-
-			/**
-			 * 회원 조회시 [ 검색결과 없음 OR 사용자키 또는 회원키 없음 ] 일 경우 Skip.
-			 */
-			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
-					|| StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-
-				LOGGER.debug("## 회원 조회시 [ 검색결과 없음 OR 사용자키 또는 회원키 없음 ] 일 경우 Skip.....");
-				LOGGER.debug("## Error Code : {}", spe.getErrorInfo().getCode());
-				LOGGER.debug("## Error Msg  : {}", spe.getErrorInfo().getMessage());
-
-			} else {
-
-				throw spe;
-
-			}
-
+		/** 검색조건 정보 setting. */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		if (ValidationCheckUtils.isDeviceId(deviceId)){
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+		} else {
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MDN);
 		}
+		keySchUserKey.setKeyString(deviceId); // 모번호 조회가 된 deviceId 여야 한다..
+		keySearchList.add(keySchUserKey);
+
+		/** 회원 조회 연동. */
+		CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
+		chkDupReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		chkDupReq.setKeySearchList(keySearchList);
+		CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
+
+		/** 이미 가입된 회원이면 오류 처리. */
+		if (org.apache.commons.lang3.StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
+			LOGGER.debug("## 메인 상태 : {}", chkDupRes.getUserMbr().getUserMainStatus());
+			LOGGER.debug("## 서브 상태 : {}", chkDupRes.getUserMbr().getUserSubStatus());
+			throw new StorePlatformException("SAC_MEM_1104");
+		}
+
+		LOGGER.debug("## 회원 조회시 [ 검색결과 없음 OR 사용자키 또는 회원키 없음 ] 일 경우 Skip.....");
 
 	}
 
 	/**
 	 * <pre>
-	 * Save & Sync 회원 가입 MSISDN, MAC (변동성 체크 포함).
+	 * Save & Sync 회원 가입 MAC
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -1243,58 +1241,24 @@ public class UserJoinServiceImpl implements UserJoinService {
 		String deviceKey = null; // 휴대기기 Key
 		String deviceTelecom = MemberConstants.DEVICE_TELECOM_SKT; // 이동통신사
 
-		/**
-		 * 단말등록시 필요한 기본 정보 세팅.
-		 */
+		/** 단말등록시 필요한 기본 정보 세팅 - 기기모델번호. */
 		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(),
 				deviceTelecom, req.getDeviceId(), req.getDeviceIdType(), true);
 
+		LOGGER.debug("=========================================");
+		LOGGER.debug("## >> SAVE & SYNC 기타 가가입 START ======");
+		LOGGER.debug("=========================================");
+
 		/**
-		 * MSISDN 가입자와 기타 가입자(macaddress, imei)를 분기하여 처리한다.
+		 * IDP 연동없이 DB 만 가입처리.
 		 */
-		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
-			LOGGER.debug("==========================================");
-			LOGGER.debug("## >> SAVE & SYNC MSISDN 가입 START ======");
-			LOGGER.debug("==========================================");
+		userKey = this.regSaveAndSyncMacUser(sacHeader, req);
 
-			/**
-			 * 변동성 대상 체크
-			 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(sacHeader, req.getDeviceId(),
-					deviceTelecom);
-			if (StringUtils.equals(saveAndSync.getIsSaveAndSyncTarget(), MemberConstants.USE_Y)) { // 변동성 대상임.
-
-				userKey = saveAndSync.getUserKey();
-				deviceKey = saveAndSync.getDeviceKey();
-
-			} else { // 변동성 대상 아님.
-
-				/**
-				 * MSISDN IDP와 DB 모두 가입처리.
-				 */
-				userKey = this.regSaveAndSyncMsisdnUser(sacHeader, req);
-
-				/**
-				 * 휴대기기 등록.
-				 */
-				deviceKey = this.regDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
-
-			}
-		} else {
-			LOGGER.debug("=========================================");
-			LOGGER.debug("## >> SAVE & SYNC 기타 가가입 START ======");
-			LOGGER.debug("=========================================");
-
-			/**
-			 * IDP 연동없이 DB 만 가입처리.
-			 */
-			userKey = this.regSaveAndSyncMacUser(sacHeader, req);
-
-			/**
-			 * 휴대기기 등록.
-			 */
-			deviceKey = this.regDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
-		}
+		/**
+		 * 휴대기기 등록.
+		 */
+		majorDeviceInfo.setDeviceTelecom(deviceTelecom);
+		deviceKey = this.regDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
 
 		/**
 		 * 결과 세팅
@@ -1386,10 +1350,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * SC 사용자 기본정보 setting
 		 */
 		UserMbr userMbr = new UserMbr();
+
 		/**
 		 * MAC 가입시에 IDP 연동을 하지 않으므로 MBR_NO 가 없다. (정의된 값을 넣기로 김덕중 과장님 결정.) [MAC-yyyyMMdd] MBR_NO (26)
 		 */
-		// userMbr.setImMbrNo(this.getFixMbrNo(req.getDeviceIdType())); // 고정된 MBR_NO 세팅함.
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입

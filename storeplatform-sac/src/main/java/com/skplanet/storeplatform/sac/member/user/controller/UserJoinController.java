@@ -9,8 +9,24 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnV2SacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnV2SacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +37,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
 
 /**
  * 회원 가입 서비스 Controller
@@ -67,15 +77,6 @@ public class UserJoinController {
 
         if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
             throw new StorePlatformException("SAC_MEM_1509");
-        }
-
-        if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
-            throw new StorePlatformException("SAC_MEM_1509");
-        }
-
-        if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
-                && StringUtils.equals(MemberConstants.DEVICE_ID_TYPE_MSISDN, req.getDeviceIdType())){
-            throw new StorePlatformException("SAC_MEM_1514");
         }
 
 		/**
@@ -218,15 +219,10 @@ public class UserJoinController {
 			@Validated @RequestBody CreateSaveAndSyncReq req) {
 
 		LOGGER.debug("#################################");
-		LOGGER.debug("##### 2.1.39. Save&Sync 가입 #####");
+		LOGGER.debug("##### 2.1.38. Save&Sync 가입 #####");
 		LOGGER.debug("#################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		// 미지원 단말 정보 수정으로 인한 주서처리...
-		// if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
-		// throw new StorePlatformException("SAC_MEM_0002", "model");
-		// }
 
 		/**
 		 * Save&Sync 가입 Biz

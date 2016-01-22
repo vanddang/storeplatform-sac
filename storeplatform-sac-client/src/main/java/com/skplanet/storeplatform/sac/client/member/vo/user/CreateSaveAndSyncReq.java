@@ -1,14 +1,12 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import java.util.List;
-
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Pattern;
+import java.util.List;
 
 /**
  * [REQUEST] Save&Sync 가입
@@ -29,7 +27,7 @@ public class CreateSaveAndSyncReq extends CommonInfo {
 	 * 기기 ID 타입 (MSISDN or MAC or IMEI)
 	 */
 	@NotEmpty
-	@Pattern(regexp = "^msisdn|macaddress|imei")
+	@Pattern(regexp = "^macaddress|imei")
 	private String deviceIdType = "";
 
 	/**

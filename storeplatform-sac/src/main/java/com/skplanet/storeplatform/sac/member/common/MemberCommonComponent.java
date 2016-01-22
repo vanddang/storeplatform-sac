@@ -10,7 +10,12 @@
 package com.skplanet.storeplatform.sac.member.common;
 
 import com.skplanet.storeplatform.external.client.csp.sci.CspSCI;
-import com.skplanet.storeplatform.external.client.csp.vo.*;
+import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerCardEcReq;
+import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerCardEcRes;
+import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcReq;
+import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
+import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcReq;
+import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.market.sci.MarketSCI;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
@@ -36,12 +41,18 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.common.*;
+import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
@@ -58,7 +69,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 공통 기능을 임시로 정의해서 사용한다.
@@ -723,7 +738,6 @@ public class MemberCommonComponent {
 		/**
 		 * 폰정보 조회후 단말 정보 세팅.
 		 */
-		// if (StringUtils.isBlank(model) || this.isDefaultDeviceModel(model)) {
 		if (StringUtils.isBlank(model)) {
 
 			/**

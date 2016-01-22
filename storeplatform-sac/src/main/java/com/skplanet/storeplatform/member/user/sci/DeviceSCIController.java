@@ -460,12 +460,6 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (checkSaveNSyncRequest.getCommonRequest().getTenantID() == null
-				|| checkSaveNSyncRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, deviceID
 		if (checkSaveNSyncRequest.getDeviceID() == null || checkSaveNSyncRequest.getDeviceID().length() <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -478,9 +472,6 @@ public class DeviceSCIController implements DeviceSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return checkSaveNSyncResponse;
 	}
@@ -817,6 +808,49 @@ public class DeviceSCIController implements DeviceSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
+	}
+
+	@Override
+	public ModifyDeviceResponse modifySaveNSyncDevice(ModifyDeviceRequest modifyDeviceRequest){
+
+		ModifyDeviceResponse modifyDeviceResponse = null;
+
+		// 입력 파라미터가 없음
+		if (modifyDeviceRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (modifyDeviceRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 필수 파라미터 userKey
+		if (modifyDeviceRequest.getUserKey() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		if(modifyDeviceRequest.getUserMbrDevice().getDeviceKey() == null
+				&& modifyDeviceRequest.getUserMbrDevice().getDeviceID() == null
+				&& modifyDeviceRequest.getUserMbrDevice().getMdn() == null){
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+
+			modifyDeviceResponse = this.device.modifySaveNSyncDevice(modifyDeviceRequest);
+
+			if (modifyDeviceResponse != null) {
+				modifyDeviceResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+						"response.ResultMessage.success"));
+				return modifyDeviceResponse;
+			}
+			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
+
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+
 	}
 
 }
