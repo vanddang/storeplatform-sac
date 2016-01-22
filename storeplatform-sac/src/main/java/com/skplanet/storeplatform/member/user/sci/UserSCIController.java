@@ -1147,6 +1147,7 @@ public class UserSCIController implements UserSCI {
 	 * @return SearchManagementListResponse - 사용자 부가정보 목록 조회 응답 Value Object
 	 */
 	@Override
+    @Deprecated
 	public SearchManagementListResponse searchManagementList(SearchManagementListRequest searchManagementListRequest) {
 
 		LOGGER.debug("\n\n\n\n\n");
@@ -1199,6 +1200,7 @@ public class UserSCIController implements UserSCI {
 	 * @return SearchAgreementListResponse - 사용자 약관동의 목록 응답 Value Object
 	 */
 	@Override
+    @Deprecated
 	public SearchAgreementListResponse searchAgreementList(SearchAgreementListRequest searchAgreementListRequest) {
 
 		LOGGER.debug("\n\n\n\n\n");
@@ -1254,6 +1256,7 @@ public class UserSCIController implements UserSCI {
 	 * @return UpdateManagementResponse - 사용자 부가정보 및 관리항목 정보수정 응답 Value Object
 	 */
 	@Override
+    @Deprecated
 	public UpdateManagementResponse updateManagement(UpdateManagementRequest updateManagementRequest) {
 
 		LOGGER.debug("\n\n\n\n\n");
@@ -1325,6 +1328,7 @@ public class UserSCIController implements UserSCI {
 	 * @return removeManagementResponse - 사용자 부가정보 삭제 응답 Value Object
 	 */
 	@Override
+    @Deprecated
 	public RemoveManagementResponse removeManagement(RemoveManagementRequest removeManagementRequest) {
 
 		LOGGER.debug("\n\n\n\n\n");

@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.member.repository;
 
 import com.skplanet.storeplatform.sac.member.domain.shared.UserManagementItem;
 
+import java.util.List;
+
 /**
  * <p>
  * UserManagementItemRepository
@@ -23,6 +25,10 @@ public interface UserManagementItemRepository {
 
     UserManagementItem findByUserKeyAndItemCd(String userKey, String itemCd);
 
+    List<UserManagementItem> findByMemberUserKey(String userKey);
+
     void save(UserManagementItem item);
+
+    void remove(UserManagementItem item);
 
 }

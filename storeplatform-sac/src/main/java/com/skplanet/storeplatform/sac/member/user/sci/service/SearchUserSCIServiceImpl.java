@@ -1190,6 +1190,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	 * @return SearchSocialAccountSacRes
 	 */
 	@Override
+    @Deprecated
 	public SearchSocialAccountSacRes searchSocialAccount(SacRequestHeader header, SearchSocialAccountSacReq req) {
 
 		CommonRequest commonRequest = this.mcc.getSCCommonRequest(header);
@@ -1200,7 +1201,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		searchManagementListRequest.setUserKey(req.getUserKey());
 		SearchManagementListResponse searchManagementListResponse = null;
 		try {
-			searchManagementListResponse = this.userSCI.searchManagementList(searchManagementListRequest);
+			// searchManagementListResponse = this.userSCI.searchManagementList(searchManagementListRequest);
 		} catch (StorePlatformException e) {
 			if (e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				throw new StorePlatformException("SAC_MEM_0002", "social 계정");

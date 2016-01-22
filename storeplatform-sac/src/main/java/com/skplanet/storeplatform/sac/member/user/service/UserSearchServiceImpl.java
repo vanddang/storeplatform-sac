@@ -94,6 +94,9 @@ public class UserSearchServiceImpl implements UserSearchService {
     @Autowired
     private UserMemberService memberService;
 
+    @Autowired
+    private UserExtraInfoService extraInfoService;
+
 	/**
 	 * 회원 가입 조회
 	 */
@@ -2113,54 +2116,28 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 */
 
 		CreateSSOCredentialSacRes res = new CreateSSOCredentialSacRes();
-		String ssoCredential = null;
-		boolean isSsoCredential = false; // ssoCredential 존재유무
+		String ssoCredential;
 
 		// ssoCredential 조회
 		SearchManagementListRequest searchUserExtraRequest = new SearchManagementListRequest();
 		searchUserExtraRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
 		searchUserExtraRequest.setUserKey(req.getUserKey());
-		SearchManagementListResponse schUserExtraRes = null;
-		try {
-			schUserExtraRes = this.userSCI.searchManagementList(searchUserExtraRequest);
-			for (MbrMangItemPtcr info : schUserExtraRes.getMbrMangItemPtcrList()) {
-				if (StringUtils.equals(info.getExtraProfile(), MemberConstants.USER_EXTRA_SYRUP_SSO_CREDENTIAL)) {
-					ssoCredential = info.getExtraProfileValue();
-					if (StringUtils.isNotBlank(ssoCredential)) {
-						isSsoCredential = true;
-					}
-					break;
-				}
-			}
-		} catch (StorePlatformException e) {
-			if (!e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				res.setSsoCredential(StringUtils.defaultString(ssoCredential, ""));
-				return res;
-			}
-		}
-		LOGGER.info("{}, isSsoCredential : {}", req.getUserKey(), isSsoCredential);
-		if (!isSsoCredential) {
+
+        ssoCredential = extraInfoService.getExtraInfoValue(req.getUserKey(), MemberConstants.USER_EXTRA_SYRUP_SSO_CREDENTIAL);
+
+		LOGGER.info("{}, isSsoCredential : {}", req.getUserKey(), ssoCredential);
+		if (ssoCredential == null) {
 			try {
 				// syrup pay ssoCredential 조회 연동
 				SsoCredentialCreateEcReq ssoCredentialCreateEcReq = new SsoCredentialCreateEcReq();
 				ssoCredentialCreateEcReq.setMctUserId(req.getUserKey());
-				SsoCredentialCreateEcRes ssoCredentialCreateEcRes = this.syrupSCI
-						.getSsoCredential(ssoCredentialCreateEcReq);
+				SsoCredentialCreateEcRes ssoCredentialCreateEcRes = this.syrupSCI.getSsoCredential(ssoCredentialCreateEcReq);
 				ssoCredential = ssoCredentialCreateEcRes.getSsoCredential();
+
 				if (StringUtils.isNotBlank(ssoCredential)) {
 					// ssoCredential 저장
 					LOGGER.info("{}, ssoCredential 저장 : {}", req.getUserKey(), ssoCredential);
-                    // TODO-JOY userSCI.updateManagement()
-					UpdateManagementRequest updateManagementRequest = new UpdateManagementRequest();
-					List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
-					MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
-					ptcr.setExtraProfile(MemberConstants.USER_EXTRA_SYRUP_SSO_CREDENTIAL);
-					ptcr.setExtraProfileValue(ssoCredential);
-					ptcrList.add(ptcr);
-					updateManagementRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
-					updateManagementRequest.setUserKey(req.getUserKey());
-					updateManagementRequest.setMbrMangItemPtcr(ptcrList);
-					this.userSCI.updateManagement(updateManagementRequest);
+                    extraInfoService.modifyExtraInfo(req.getUserKey(), MemberConstants.USER_EXTRA_SYRUP_SSO_CREDENTIAL, ssoCredential);
 				}
 			} catch (StorePlatformException e) {
 				LOGGER.info("{}, {}, {}", req.getUserKey(), e.getErrorInfo().getCode(), e.getErrorInfo().getMessage());

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 /**
  * <p>
@@ -41,18 +42,35 @@ public class UserManagementItemRepositoryImpl implements UserManagementItemRepos
 
     @Override
     public UserManagementItem findOne(UserManagementItem.PK id) {
-        return getCurrentEntityManager().find(UserManagementItem.class, id);
+        return emMbr.find(UserManagementItem.class, id);
     }
 
     @Override
     public UserManagementItem findByUserKeyAndItemCd(String userKey, String itemCd) {
-        return new JPAQuery(getCurrentEntityManager()).from($)
+        return new JPAQuery(emMbr).from($)
                 .where($.member.insdUsermbrNo.eq(userKey).and($.mangItemCd.eq(itemCd)))
                 .uniqueResult($);
     }
 
     @Override
+    public List<UserManagementItem> findByMemberUserKey(String userKey) {
+        return new JPAQuery(getCurrentEntityManager()).from($)
+                .where($.member.insdUsermbrNo.eq(userKey))
+                .list($);
+    }
+
+    @Override
     public void save(UserManagementItem item) {
-        emMbr.persist(item);
+        UserManagementItem one = findOne(new UserManagementItem.PK(item.getMember(), item.getMangItemCd()));
+        if(one == null)
+            emMbr.persist(item);
+        else {
+            one.setRegResultValue(item.getRegResultValue());
+        }
+    }
+
+    @Override
+    public void remove(UserManagementItem item) {
+        emMbr.remove(item);
     }
 }
