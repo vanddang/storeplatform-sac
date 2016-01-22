@@ -89,12 +89,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		// if (createUserRequest.getCommonRequest().getTenantID() == null
-		// || createUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		// }
-
 		// 필수 파라미터 > userMbr
 		UserMbr userMbr = createUserRequest.getUserMbr();
 		if (userMbr == null) {
@@ -404,12 +398,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (removeUserRequest.getCommonRequest().getTenantID() == null
-				|| removeUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 사용자키 없음
 		if (removeUserRequest.getUserKey() == null || removeUserRequest.getUserKey().length() <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
@@ -432,9 +420,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return removeUserResponse;
 	}

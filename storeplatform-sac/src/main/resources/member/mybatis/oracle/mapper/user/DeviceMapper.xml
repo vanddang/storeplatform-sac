@@ -1166,4 +1166,31 @@
         SET last_login_dt = sysdate
         WHERE insd_device_id = #{deviceKey}
     </update>
+
+    <!-- Save & Sync 휴대기기 수정 -->
+    <update id="modifySaveNSyncDevice" parameterType="userMbrDevice">
+        UPDATE /* DeviceMapper.xml, modifySaveNSyncDevice, SAC(S), 최진호, 2016-01-22 */
+            TB_US_OUSERMBR_DEVICE
+        SET
+            UPD_DT = SYSDATE
+            ,START_DT = SYSDATE
+            <choose>
+                <when test="deviceID != null">,DEVICE_ID = #{deviceID} </when>
+                <otherwise>,DEVICE_ID = null </otherwise>
+            </choose>
+            <if test="mdn != null">,MDN = #{mdn} </if>
+            <if test="deviceModelNo != null">,DEVICE_MODEL_CD = #{deviceModelNo} </if>
+            <if test="deviceAccount != null">,DEVICE_ACCT = #{deviceAccount} </if>
+            <if test="nativeID != null">,DEVICE_NATV_ID = #{nativeID} </if>
+            <if test="svcMangNum != null">,SVC_MANG_NO = #{svcMangNum} </if>
+            <choose>
+                <when test="changeCaseCode != null">,CHG_CASE_CD = #{changeCaseCode} </when>
+                <otherwise>,CHG_CASE_CD = 'US012001' </otherwise>
+            </choose>
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
+            AND INSD_DEVICE_ID = #{deviceKey}
+            AND AUTH_YN = 'Y'
+    </update>
+
 </mapper>

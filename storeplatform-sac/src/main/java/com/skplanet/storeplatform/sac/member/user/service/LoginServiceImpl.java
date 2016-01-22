@@ -9,15 +9,32 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
 import com.skplanet.storeplatform.external.client.market.vo.MarketClauseExtraInfoEc;
@@ -32,7 +49,45 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.*;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserPwdRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserPwdResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserAuthTokenRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserAuthTokenResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.DeleteUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TlogInfo;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TlogRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateDeviceManagementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UserDownloadInfoRes;
@@ -41,6 +96,7 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListR
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MarketPinInfo;
@@ -101,26 +157,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
-import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.AdditionalServiceService;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.AmqpException;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.annotation.Resource;
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * 회원 로그인 관련 인터페이스 구현체.
@@ -1486,277 +1523,188 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeSaveAndSyncByMacRes res = new AuthorizeSaveAndSyncByMacRes();
 
-		/** 1. 기가입된 기기를 mac 정보로 조회. */
+		/** 1. mac으로 가가입된 휴대기기 정보 조회. */
 		DeviceInfo macDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
 				req.getPreDeviceId(), null);
 
-		/** 2. 기가입된 절보를 찾을 수 없으면 오류. */
+		/** 2. mac으로 가가입된 휴대기기 정보를 찾을 수 없으면 오류. */
 		if (macDeviceInfo == null) {
 			throw new StorePlatformException("SAC_MEM_0003", req.getPreDeviceType(), req.getPreDeviceId());
 		}
 
-		/** 3. 모번호 조회 및 셋팅. */
+		/** 3. 이관받을 MDN의 모번호 조회 및 셋팅. */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
-		/** 4. 기가입된 mac주소의 구매내역을 이관받을 MDN으로 회원유무 조회. */
-		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
-				MemberConstants.KEY_TYPE_MDN, req.getDeviceId());
-
-		String isPurchaseChange = "N"; // 전시/기타, 구매 파트 키 변경 여부
-		String isJoinMdn = "N";
-		String isVariability = "N"; // 변동성 여부
+		/** 4. 이관받을 MDN으로 서비스 관리 번호 조회. */
+        DeviceInfo mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN,
+                req.getDeviceId(), null);
 
 		String oldDeviceKey = macDeviceInfo.getDeviceKey();
 		String oldUserKey = macDeviceInfo.getUserKey();
 		String newDeviceKey = null;
 		String newUserKey = null;
 
-		DeviceInfo mdnDeviceInfo = null;
-
 		/** 5-1. 이관받을 MDN이 회원인 경우. */
-		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) { // 회원인 경우
+		if (mdnDeviceInfo != null && mdnDeviceInfo.getSvcMangNum() != null) { // 회원인 경우
 
-			/** 5-1-1. MDN으로 기기 정보를 조회하여 전시/기타, 구매 파트 키를 바꾸기 위한 deviceKey, userKey를 획득, */
-			mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
-					req.getDeviceId(), null);
+            LOGGER.info("{} 기가입된 MDN", req.getDeviceId());
 
-			isPurchaseChange = "Y";
+            newDeviceKey = mdnDeviceInfo.getDeviceKey();
+            newUserKey = mdnDeviceInfo.getUserKey();
 
-			newDeviceKey = mdnDeviceInfo.getDeviceKey();
-			newUserKey = mdnDeviceInfo.getUserKey();
+            /** 5-1-1. 가가입된 mac 정보(유저정보+device정보) 탈퇴처리. */
+            RemoveUserRequest removeUserRequest = new RemoveUserRequest();
+            removeUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+            removeUserRequest.setUserKey(oldUserKey);
+            removeUserRequest.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+            removeUserRequest.setSecedeReasonMessage("Save&Sync인증탈퇴");
+            this.userSCI.remove(removeUserRequest);
+            LOGGER.info("가가입된 MAC {} 탈퇴 처리", req.getPreDeviceId());
 
-			LOGGER.info("{} 기가입된 deviceId", req.getDeviceId());
+            /** 5-1-2. 요청시 보내준 정보로 이관받을 MDN회원의 휴대기기 정보를 수정 */
+            ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+            UserMbrDevice userMbrDevice = new UserMbrDevice();
+            modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+
+            // 이미 존재하는 MDN회원의 단말정보를 업데이트
+            modifyDeviceRequest.setUserKey(newUserKey);
+            userMbrDevice.setDeviceKey(newDeviceKey);
+
+            // 휴대기기 모델 정보 셋팅
+            userMbrDevice.setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // modelNo
+
+            // 휴대기기 기본 정보 셋팅
+            if (StringUtils.isNotBlank(req.getNativeId())) {
+                userMbrDevice.setNativeID(req.getNativeId());
+            }
+            if (StringUtils.isNotBlank(req.getDeviceAccount())) {
+                userMbrDevice.setDeviceAccount(req.getDeviceAccount());
+            }
+
+            // 휴대기기 부가 정보 셋팅
+            List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+            for (DeviceExtraInfo deviceExtraInfo : req.getDeviceExtraInfoList()) {
+                UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+                userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
+                userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
+                userMbrDeviceDetailList.add(userMbrDeviceDetail);
+            }
+            userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
+
+            // 휴대기기 수정 요청
+            modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
+            this.deviceSCI.modifySaveNSyncDevice(modifyDeviceRequest);
+
+            /** 5-1-3. 전시/기타, 구매 파트 키 변경처리. */
+            this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), newUserKey,
+                    oldUserKey, newDeviceKey, oldDeviceKey);
+
+            res.setDeviceKey(newDeviceKey);
+            res.setUserKey(newUserKey);
 
 		/** 5-2. 이관받을 MDN이 회원이 아닌 경우. */
-		} else { // 회원이 아닌경우 변동성 대상체크
+		} else {
 
-			/** 5-2-1. 변동성 대상 체크 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId(),
-					MemberConstants.DEVICE_TELECOM_SKT);
+            LOGGER.info("{} 기존 MAC 가가입 회원 상태 변경", macDeviceInfo.getDeviceId());
 
-			/** 5-2-2. 변동성 대상이라면 변동성 여부 값을 셋팅하고 체크된 deviceKey, userKey로 device 정보 조회. */
-			if (StringUtils.equals(saveAndSync.getIsSaveAndSyncTarget(), "Y")) { // 변동성 대상인 경우
+            /** 5-2-1. 가가입 MAC정보로 SKT 통합 서비스 관리번호 조회. */
+            // request에 nativeId가 있으면 올라온 값으로 셋팅
+            String nativeId = macDeviceInfo.getNativeId();
+            if (StringUtils.isNotBlank(req.getNativeId())){
+                nativeId = req.getNativeId();
+            }
+            // 통신사는 SKT
+            String deviceTelecom = MemberConstants.DEVICE_TELECOM_SKT;
 
-				isVariability = "Y";
-				newDeviceKey = saveAndSync.getDeviceKey();
-				newUserKey = saveAndSync.getUserKey();
+            String svcMangNo = "";
+            try {
+                if (System.getProperty("spring.profiles.active", "local").equals("local")) {
+                    // local에서는 외부연동이 안되므로 하드코딩
+                    HashMap<String, String> mdnMap = new HashMap<String, String>();
+                    mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
+                    mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
+                    mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
+                    mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
+                    if (mdnMap.get(req.getDeviceId()) != null) {
+                        svcMangNo = mdnMap.get(req.getDeviceId());
+                    } else {
+                        throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
+                    }
+                } else {
+                    svcMangNo = this.commService.getSvcMangNo(req.getDeviceId(), deviceTelecom, nativeId,
+                            macDeviceInfo.getSimSerialNo());
+                }
+            } catch (StorePlatformException spe) {
+                if(StringUtils.equals(spe.getErrorInfo().getCode(), "SAC_MEM_0003")){ // 타사 연동시 비회원 응답
+                    // DB에 회원정보가 있으면 invalid 처리 후 회원정보없음 에러
+                    this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
+                    throw spe;
+                }
+            }
 
-				mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
-						newDeviceKey, newUserKey);
+			/** 5-2-2. 가가입 상태인 mac 회원정보를 정상상태로. */
+            this.modStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getPreDeviceId(),
+                    MemberConstants.USE_N, null, null, MemberConstants.MAIN_STATUS_NORMAL,
+                    MemberConstants.SUB_STATUS_NORMAL);
 
-			/** 5-2-3. 변동성 대상이 아니라면 모바일 신규 회원 처리 유무 값 셋팅. */
-			} else { // 변동성 대상이 아닌 경우
+			/** 5-2-3. mac -> mdn으로 변경 처리 및 휴대기기 정보 수정. */
+            ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+            UserMbrDevice userMbrDevice = new UserMbrDevice();
+            modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 
-				isJoinMdn = "Y";
-				LOGGER.info("{} 신규가입처리대상", req.getDeviceId());
+            // 가가입된 유저의 단말정보를 업데이트
+            modifyDeviceRequest.setUserKey(oldUserKey);
+            userMbrDevice.setDeviceKey(oldDeviceKey);
 
-			}
+            // 휴대기기 deviceId, mdn 셋팅
+            LOGGER.info("deviceId 변경 {} -> {} ", req.getPreDeviceId(), null);
+            LOGGER.info("mdn 변경 {} -> {} ", null, req.getDeviceId());
+            userMbrDevice.setDeviceID("");
+            userMbrDevice.setMdn(req.getDeviceId());
 
-		}
+            // 휴대기기 서비스 관리 번호 셋팅
+            userMbrDevice.setSvcMangNum(svcMangNo);
 
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+            // 휴대기기 모델 정보 셋팅
+            userMbrDevice.setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // modelNo
 
-		/**
-		 *  6-1. 이관받을 MDN이 이미 회원이여서 전시/기타, 구매 키를 바꿔야 하거나
-		 *       회원은 아니지만 변동성 대상이여서 정보를 옮겨야 하면
-		 */
-		if (StringUtils.equals(isPurchaseChange, "Y") || StringUtils.equals(isVariability, "Y")) {
+            // 휴대기기 기본 정보 셋팅
+            if (StringUtils.isNotBlank(req.getNativeId())) {
+                userMbrDevice.setNativeID(req.getNativeId());
+            }
+            if (StringUtils.isNotBlank(req.getDeviceAccount())) {
+                userMbrDevice.setDeviceAccount(req.getDeviceAccount());
+            }
 
-			/** 6-1-1. 가가입된 mac 정보(유저정보+device정보) 탈퇴처리. */
-			RemoveUserRequest removeUserRequest = new RemoveUserRequest();
-			removeUserRequest.setCommonRequest(commonRequest);
-			removeUserRequest.setUserKey(oldUserKey);
-			removeUserRequest.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
-			removeUserRequest.setSecedeReasonMessage("Save&Sync인증탈퇴");
-			this.userSCI.remove(removeUserRequest);
-			LOGGER.info("{} 탈퇴 처리", req.getPreDeviceId());
+            // 휴대기기 부가 정보 셋팅
+            List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+            for (DeviceExtraInfo deviceExtraInfo : req.getDeviceExtraInfoList()) {
+                UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+                userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
+                userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
+                userMbrDeviceDetailList.add(userMbrDeviceDetail);
+            }
+            userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
-			/** 6-1-2. 요청시 보내준 정보로 이미 회원 및 변동성 대상이 되는 휴대기기 정보를 수정 */
-			DeviceInfo deviceInfo = new DeviceInfo();
-			deviceInfo.setUserKey(newUserKey);
-			deviceInfo.setDeviceKey(newDeviceKey);
-			deviceInfo.setDeviceId(req.getDeviceId());
-			if (StringUtils.isNotBlank(req.getNativeId())) {
-				deviceInfo.setNativeId(req.getNativeId());
-			}
-			if (StringUtils.isNotBlank(req.getDeviceAccount())) {
-				deviceInfo.setDeviceAccount(req.getDeviceAccount());
-			}
-			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
+            // 휴대기기 수정 요청
+            modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
+            this.deviceSCI.modifySaveNSyncDevice(modifyDeviceRequest);
 
-			/* 휴대기기 헤더 정보 셋팅 */
-			/* device header 값 셋팅(OS버젼, SC버젼) */
-			String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
-			String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
-			if (StringUtils.isNotBlank(osVersion)) {
-				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
-						osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
-						deviceInfo.getDeviceExtraInfoList()));
-			}
-			if (StringUtils.isNotBlank(svcVersion)) {
-				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
-						MemberConstants.DEVICE_EXTRA_SCVERSION,
-						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
-						deviceInfo.getDeviceExtraInfoList()));
-			}
+			/** MQ 연동 */
+            CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+            try {
+                mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+                mqInfo.setUserKey(oldUserKey);
+                mqInfo.setDeviceKey(oldDeviceKey);
+                mqInfo.setDeviceId(req.getDeviceId()); // request의 deviceId는 mdn이다.
+                mqInfo.setMnoCd(deviceTelecom); // 통신사는 SKT
+                this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+            } catch (AmqpException ex) {
+                LOGGER.info("MQ process fail {}", mqInfo);
+            }
 
-			/* 휴대기기 주요정보 조회 */
-			MajorDeviceInfo majorDeviceInfo = this.commService
-					.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
-							req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN, false);
-
-			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum());
-			/* 디바이스 헤더에 모델정보가 있거나 디폴트 모델이 아닌경우만 단말정보 변경 */
-			if (StringUtils.isNotBlank(deviceInfo.getDeviceModelNo())
-					&& !this.commService.isDefaultDeviceModel(deviceInfo.getDeviceModelNo())) {
-				deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
-				deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
-				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
-						deviceInfo.getDeviceExtraInfoList()));
-				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-						majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
-						deviceInfo.getDeviceExtraInfoList()));
-			}
-			this.deviceService.modDeviceInfo(requestHeader, deviceInfo, false);
-
-			/** 6-1-3. 전시/기타, 구매 파트 키를 변경해야 한다면 변경처리. */
-			if (StringUtils.equals(isPurchaseChange, "Y")) {
-				this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
-			}
-
-			res.setDeviceKey(newDeviceKey);
-			res.setUserKey(newUserKey);
-
-		/**
-		 *  6-2. 이관받을 MDN이 회원이 아니고 변동성 대상도 아니라면 신규 모바일 회원으로 가입처리후
-		 *       요청 정보로 휴대기기 정보를 수정
-		 */
-		} else if (StringUtils.equals(isJoinMdn, "Y")) {
-
-			/* IDP 모바일전용회원 가입 */
-			LOGGER.info("{} IDP 모바일 회원 가입 요청", req.getDeviceId());
-			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
-			joinForWapEcReq.setUserMdn(req.getDeviceId());
-			joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT);
-
-			JoinForWapEcRes joinForWapEcRes = null;
-			try {
-
-				joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
-
-			} catch (StorePlatformException ex) {
-
-				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-						+ IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
-
-					/* IDP 기가입인경우 탈퇴 처리 */
-					SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-					ecReq.setUserMdn(req.getDeviceId());
-					this.idpSCI.secedeForWap(ecReq);
-
-					throw new StorePlatformException("SAC_MEM_1201", ex);
-
-				} else {
-
-					throw ex;
-
-				}
-			}
-
-			/* 가가입 상태인 mac 회원정보를 정상상태로 */
-			this.modStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getPreDeviceId(),
-					MemberConstants.USE_N, null, null, MemberConstants.MAIN_STATUS_NORMAL,
-					MemberConstants.SUB_STATUS_NORMAL);
-
-			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
-			LOGGER.info("{} -> {} deviceId 변경", req.getPreDeviceId(), req.getDeviceId());
-			DeviceInfo deviceInfo = new DeviceInfo();
-			deviceInfo.setUserKey(oldUserKey);
-			deviceInfo.setDeviceKey(oldDeviceKey);
-			deviceInfo.setDeviceId(req.getDeviceId());
-			deviceInfo.setSvcMangNum(joinForWapEcRes.getSvcMngNum());
-			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-			if (StringUtils.isNotBlank(req.getNativeId())) {
-				deviceInfo.setNativeId(req.getNativeId());
-			}
-			if (StringUtils.isNotBlank(req.getDeviceAccount())) {
-				deviceInfo.setDeviceAccount(req.getDeviceAccount());
-			}
-			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-
-			/* device header 값 셋팅(OS버젼, SC버젼) */
-			String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
-			String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
-			if (StringUtils.isNotBlank(osVersion)) {
-				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
-						osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
-						deviceInfo.getDeviceExtraInfoList()));
-			}
-			if (StringUtils.isNotBlank(svcVersion)) {
-				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
-						MemberConstants.DEVICE_EXTRA_SCVERSION,
-						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
-						deviceInfo.getDeviceExtraInfoList()));
-			}
-
-			/* 휴대기기 주요정보 조회 */
-			MajorDeviceInfo majorDeviceInfo = this.commService
-					.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
-							req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN, false);
-
-			/* 디바이스 헤더에 모델정보가 있고 디폴트 모델이 아닌경우만 단말정보 변경 */
-			if (StringUtils.isNotBlank(deviceInfo.getDeviceModelNo())
-					&& !this.commService.isDefaultDeviceModel(deviceInfo.getDeviceModelNo())) {
-				deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
-				deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
-				if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
-//					deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
-				}
-				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
-						deviceInfo.getDeviceExtraInfoList()));
-				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-						majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
-						deviceInfo.getDeviceExtraInfoList()));
-			} else {
-				deviceInfo.setDeviceModelNo(null); // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
-//				if (!StringUtils.equals(macDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
-//						&& !StringUtils.equals(macDeviceInfo.getDeviceNickName(),
-//								MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) { // MAC정보 DB에 저장된 단말정보가 미지원단말이 아닌경우 통신사정보를
-//																			// 업데이트 한다.
-//					deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-//				}
-			}
-
-			this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
-
-			/* mbrNo 변경 */
-			LOGGER.info("{} 신규가입한 IDP userKey로 업데이트 newMbrNo={}", req.getDeviceId(), joinForWapEcRes.getUserKey());
-			UserMbr userMbr = new UserMbr();
-			userMbr.setUserKey(oldUserKey);
-			userMbr.setImMbrNo(joinForWapEcRes.getUserKey());
-			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-			updateUserRequest.setCommonRequest(commonRequest);
-			updateUserRequest.setUserMbr(userMbr);
-			this.userSCI.updateUser(updateUserRequest);
-
-			/* MQ 연동 */
-			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-			try {
-				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-				mqInfo.setUserKey(joinForWapEcRes.getUserKey());
-				mqInfo.setDeviceKey(oldDeviceKey);
-				mqInfo.setDeviceId(deviceInfo.getDeviceId());
-				mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
-			} catch (AmqpException ex) {
-				LOGGER.info("MQ process fail {}", mqInfo);
-			}
-
-			res.setUserKey(oldUserKey);
-			res.setDeviceKey(oldDeviceKey);
+            res.setUserKey(oldUserKey);
+            res.setDeviceKey(oldDeviceKey);
 
 		}
 

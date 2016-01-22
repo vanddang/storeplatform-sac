@@ -347,10 +347,6 @@ public class UserModifyController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		if (StringUtils.isEmpty(req.getNewUserEmail())) {
-			throw new StorePlatformException("SAC_MEM_0002", "newUserEmail");
-		}
-
 		ModifyIdSacRes res = this.svc.modifyId(header, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
