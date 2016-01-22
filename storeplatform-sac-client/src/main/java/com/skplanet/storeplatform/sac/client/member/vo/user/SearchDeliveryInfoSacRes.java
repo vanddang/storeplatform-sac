@@ -20,7 +20,14 @@ public class SearchDeliveryInfoSacRes extends CommonInfo {
 	/** 배송지 정보 리스트 */
 	private List<DeliveryInfo> deliveryInfoList;
 
-	/**
+    public SearchDeliveryInfoSacRes() {}
+
+    public SearchDeliveryInfoSacRes(String userKey, List<DeliveryInfo> deliveryInfoList) {
+        this.userKey = userKey;
+        this.deliveryInfoList = deliveryInfoList;
+    }
+
+    /**
 	 * 사용자 키를 리턴한다.
 	 * 
 	 * @return userKey - 사용자 키
@@ -56,13 +63,6 @@ public class SearchDeliveryInfoSacRes extends CommonInfo {
 	 */
 	public void setDeliveryInfoList(List<DeliveryInfo> deliveryInfoList) {
 		this.deliveryInfoList = deliveryInfoList;
-	}
-
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }

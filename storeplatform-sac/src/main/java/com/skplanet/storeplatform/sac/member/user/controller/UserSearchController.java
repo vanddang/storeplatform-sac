@@ -9,6 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeliveryInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.domain.mbr.UserDelivery;
+import com.skplanet.storeplatform.sac.member.user.service.DeliveryInfoService;
+import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,43 +31,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRemoveDeviceIdReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
+import java.util.List;
 
 /**
  * 회원 조회 서비스 Controller
@@ -69,6 +45,9 @@ public class UserSearchController {
 
 	@Autowired
 	private UserSearchService svc;
+
+    @Autowired
+    private DeliveryInfoService deliveryInfoService;
 
 	@RequestMapping(value = "/member/user/exist/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -394,22 +373,26 @@ public class UserSearchController {
 
 	/**
 	 * <pre>
-	 * 2.1.64.	배송지 정보 조회.
+	 * [I01000135] 2.1.64.	배송지 정보 조회.
 	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            SearchDeliveryInfoSacReq
+	 * @param req SearchDeliveryInfoSacReq
 	 * @return SearchDeliveryInfoSacRes
 	 */
 	@RequestMapping(value = "/member/user/searchDeliveryInfo/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SearchDeliveryInfoSacRes searchDeliveryInfo(SacRequestHeader header,
-			@RequestBody @Validated SearchDeliveryInfoSacReq req) {
+	public SearchDeliveryInfoSacRes searchDeliveryInfo(@RequestBody @Validated SearchDeliveryInfoSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		SearchDeliveryInfoSacRes res = this.svc.searchDeliveryInfo(header, req);
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+        List<UserDelivery> list = deliveryInfoService.find(req.getUserKey(), req.getDeliveryTypeCd());
+        List<DeliveryInfo> deliveryInfoList = Lists.transform(list, new Function<UserDelivery, DeliveryInfo>() {
+            @Override
+            public DeliveryInfo apply(UserDelivery input) {
+                return input.convertToDeliveryInfo();
+            }
+        });
+
+        SearchDeliveryInfoSacRes res = new SearchDeliveryInfoSacRes(req.getUserKey(), deliveryInfoList);
+        LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
 

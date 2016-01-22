@@ -3960,6 +3960,7 @@ public class UserServiceImpl implements UserService {
 	 * @return SearchDeliveryInfoResponse
 	 */
 	@Override
+    @Deprecated
 	public SearchDeliveryInfoResponse searchDeliveryInfo(SearchDeliveryInfoRequest searchDeliveryInfoRequest) {
 
 		SearchDeliveryInfoResponse searchDeliveryInfoResponse = new SearchDeliveryInfoResponse();
