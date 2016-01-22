@@ -50,6 +50,7 @@ public class CreateByMdnV2SacReq extends CommonInfo {
 	/**
 	 * nativeid인증 비교 여부
 	 */
+	@NotEmpty
 	private String isNativeIdAuth = "";
 
 	/**
