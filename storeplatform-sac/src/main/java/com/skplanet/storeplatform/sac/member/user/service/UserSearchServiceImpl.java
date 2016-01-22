@@ -223,12 +223,13 @@ public class UserSearchServiceImpl implements UserSearchService {
                             // 2. 다중 조회
                             for(DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()){
 
-                                if(StringUtils.isNotEmpty(deviceInfo.getMdn()) && ValidationCheckUtils.isDeviceId(deviceInfo.getMdn())){
-                                    // mdn 초기화
-                                    deviceInfo.setMdn(null);
-                                }else {
+                                if(StringUtils.isNotEmpty(deviceInfo.getMdn()) && !ValidationCheckUtils.isDeviceId(deviceInfo.getMdn())){
                                     // 유효한 MDN 일경우 deviceId setting
                                     deviceInfo.setDeviceId(deviceInfo.getMdn());
+                                    deviceInfo.setMdn(null);
+
+                                }else {
+                                    // mdn 초기화
                                     deviceInfo.setMdn(null);
                                 }
 
