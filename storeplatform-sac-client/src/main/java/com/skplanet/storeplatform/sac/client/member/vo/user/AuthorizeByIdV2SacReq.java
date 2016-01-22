@@ -58,6 +58,11 @@ public class AuthorizeByIdV2SacReq extends CommonInfo implements Serializable {
 	private String nativeId;
 
 	/**
+	 * nativeid인증 비교 여부
+	 */
+	private String isNativeIdAuth;
+
+	/**
 	 * 가입자 식별 모듈 ID (USIM 일련번호).
 	 */
 	private String simSerialNo;
@@ -219,5 +224,19 @@ public class AuthorizeByIdV2SacReq extends CommonInfo implements Serializable {
 	 */
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
+	}
+
+	/**
+	 * @return isNativeIdAuth
+	 */
+	public String getIsNativeIdAuth() {
+		return isNativeIdAuth;
+	}
+
+	/**
+	 * @param isNativeIdAuth String
+	 */
+	public void setIsNativeIdAuth(String isNativeIdAuth) {
+		this.isNativeIdAuth = isNativeIdAuth;
 	}
 }

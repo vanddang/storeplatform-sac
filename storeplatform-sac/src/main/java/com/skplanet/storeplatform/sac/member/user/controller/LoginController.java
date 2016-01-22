@@ -259,6 +259,9 @@ public class LoginController {
 			if(StringUtils.isBlank(req.getSimSerialNo())){
 				throw new StorePlatformException("SAC_MEM_0001", "simSerialNo");
 			}
+			if(StringUtils.isBlank(req.getIsNativeIdAuth())){
+				throw new StorePlatformException("SAC_MEM_0001", "isNativeIdAuth");
+			}
 		}
 
 		AuthorizeByIdV2SacRes res = this.loginService.authorizeByIdV2(requestHeader, req);

@@ -188,6 +188,9 @@ public class LoginServiceImpl implements LoginService {
 	@Value("#{propertiesForSac['member.user.pincode.confirm.url']}")
 	private String pinCodeConfirmUrl;
 
+    @Value("#{propertiesForSac['sac.member.device.max.cnt']}")
+    private Integer deviceRegMaxCnt;
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -922,91 +925,96 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeByMdnV3SacRes authorizeByMdnV3(SacRequestHeader requestHeader, AuthorizeByMdnV3SacReq req) {
 
-		String oDeviceId = req.getDeviceId(); // 자번호 셋팅
-        req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId)); // 모번호 조회 및 셋팅
+        boolean isOmpd = this.commService.isOpmd(req.getMdn()); // OMPD 단말 유무
 		DeviceInfo deviceInfo = null; // 모바일 회원의 휴대기기 정보
 		String svcMangNo = null; // 각 통신사 서비스관리번호
 		boolean isLoginSucc = false; // 로그인 성공유무
+        boolean isMdnLoginSucc = false; // 서비스관리번호 조회 실패시 MDN 로그인 성공유무
 		boolean isRemoveUser = false; // 잘못된 데이터로 삭제처리 회원 유무
-		boolean isOmpd = this.commService.isOpmd(oDeviceId); // OMPD 단말 유무
 
 		if (!isOmpd) {
-			try {
-				// 서비스 관리 번호 조회
-				svcMangNo = this.commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
-			}catch(StorePlatformException e){
-				if(StringUtils.equals(e.getErrorInfo().getCode(), "SAC_MEM_0003")){ // 타사 연동시 비회원 응답
-					// DB에 회원정보가 있으면 invalid 처리 후 회원정보없음 에러
-					this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
-					throw e;
-				}
-			}
+            try {
+                // 서비스 관리 번호 조회
+                svcMangNo = this.commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
+            }catch(StorePlatformException e){
+                if(StringUtils.equals(e.getErrorInfo().getCode(), "SAC_MEM_0003")){ // 타사 연동시 비회원 응답
+                    // DB에 회원정보가 있으면 invalid 처리 후 회원정보없음 에러
+                    this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
+                    throw e;
+                }
+            }
 
-			if(StringUtils.isNotBlank(svcMangNo)){
-				// 서비스관리번호로 휴대기기 정보 조회
-				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_SVC_MANG_NO, svcMangNo, null);
-				if(deviceInfo != null){
-					// SKT인경우 DB와 imei가 다르면 CSP연동해서 비교처리
-					if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-							&& !StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())){
-						if(!StringUtils.equals(req.getNativeId(), this.deviceService.getIcasImei(req.getMdn()))){
-							throw new StorePlatformException("SAC_MEM_1503");
-						}
-					}
+            // deviceId로 휴대기기 정보 조회
+            deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_DEVICE_ID, req.getDeviceId(), null);
+            if(deviceInfo != null){
+                isLoginSucc = true;
+            }else{
+                if(StringUtils.isNotBlank(svcMangNo)){
+                    // 서비스관리번호로 휴대기기 정보 조회
+                    deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_SVC_MANG_NO, svcMangNo, null);
+                    if(deviceInfo != null){
+                        isLoginSucc = true;
+                    }else{
+                        // 서비스관리번호로 없는경우 MDN 으로 조회(기존 S01 타사 회원인 경우 서비스관리번호가 없기 때문에 MDN으로 조회 후 서비스관리번호 업데이트)
+                        deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
+                        if(deviceInfo != null){
+                            if(StringUtils.isBlank(deviceInfo.getSvcMangNum())
+                                    && StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
+                                    && StringUtils.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())){
+                                // 서비스 관리번호 업데이트
+                                ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+                                modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+                                modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
+                                UserMbrDevice userMbrDevice = new UserMbrDevice();
+                                userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
+                                userMbrDevice.setSvcMangNum(svcMangNo);
+                                modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
+                                this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
-					isLoginSucc = true;
-				}else{
-					// 서비스관리번호로 없는경우 MDN 으로 조회
-					deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
-					if(deviceInfo != null){
-						if(StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
-								&& StringUtils.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())){
-							// 서비스 관리번호 업데이트
-							ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
-                            modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-							modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
-							UserMbrDevice userMbrDevice = new UserMbrDevice();
-							userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
-							userMbrDevice.setSvcMangNum(svcMangNo);
-							modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
-							this.deviceSCI.modifyDevice(modifyDeviceRequest);
+                                isLoginSucc = true;
+                            }else{
+                                isRemoveUser = true;
+                            }
+                        }
+                    }
+                }else{
+                    deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
+                    if(deviceInfo != null){
+                        if (StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
+                                && StringUtils.equals(req.getSimSerialNo(), deviceInfo.getSimSerialNo())) {
+                            // 서비스관리번호 조회 실패 했지만 mdn으로 조회한 결과와 imei, sim정보가 같으면 인증 예외 성공처리
+                            isLoginSucc = true;
+                            isMdnLoginSucc = true;
+                        }else{
+                            isRemoveUser = true;
+                        }
+                    }
+                }
+            }
 
-							isLoginSucc = true;
-						}else{
-							isRemoveUser = true;
-						}
-					}
-				}
-
-				if(isLoginSucc){
-					DeviceInfo updateDeviceInfo = new DeviceInfo();
-					updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
-					updateDeviceInfo.setDeviceId(req.getDeviceId());
-					updateDeviceInfo.setMdn(req.getMdn());
-					updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-					updateDeviceInfo.setNativeId(req.getNativeId());
-					updateDeviceInfo.setSimSerialNo(req.getSimSerialNo());
-					updateDeviceInfo.setSvcMangNum(svcMangNo);
-					updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-					String deviceKey = this.deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
-					if(!StringUtils.equals(deviceKey, deviceInfo.getDeviceKey())){
-						throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 처리 실패
-					}
-				}
-			}else{
-				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
-				if(deviceInfo != null){
-					if (StringUtils.equals(req.getDeviceId(), deviceInfo.getDeviceId())
-							&& StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
-							&& StringUtils.equals(req.getSimSerialNo(), deviceInfo.getSimSerialNo())) {
-						// 서비스관리번호 조회 실패 했지만 mdn으로 조회한 결과와 deviceId, imei, sim정보가 같으면 인증 성공처리
-						isLoginSucc = true;
-					}else{
-						isRemoveUser = true;
-					}
-				}
-			}
+            if(isLoginSucc && !isMdnLoginSucc){
+                // SKT 통신사인 경우 IMEI 비교
+                if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())){
+                    if(!StringUtils.equals(deviceInfo.getNativeId(), req.getNativeId())){
+                        throw new StorePlatformException("SAC_MEM_1503");
+                    }
+                }
+                DeviceInfo updateDeviceInfo = new DeviceInfo();
+                updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
+                updateDeviceInfo.setDeviceId(req.getDeviceId());
+                updateDeviceInfo.setMdn(req.getMdn());
+                updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+                updateDeviceInfo.setNativeId(req.getNativeId());
+                updateDeviceInfo.setSimSerialNo(req.getSimSerialNo());
+                updateDeviceInfo.setSvcMangNum(svcMangNo);
+                updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
+                String deviceKey = this.deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
+                if(!StringUtils.equals(deviceKey, deviceInfo.getDeviceKey())){
+                    throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 처리 실패
+                }
+            }
 		}else{ // 자번호로 인증 요청한 opmd 단말 처리
+            req.setMdn(this.commService.getOpmdMdnInfo(req.getMdn())); // 모번호 조회 및 셋팅
 			deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
 			if(deviceInfo != null){
 				if(StringUtils.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())){
@@ -1374,7 +1382,92 @@ public class LoginServiceImpl implements LoginService {
 			return res;
 		}
 
-		/* TODO. IMEI 비교 */
+        // 서비스관리번호 조회
+        String svcMangNo = null;
+        boolean isNew = true; // 휴대기기 신규등록여부
+        boolean isExistPrimary = false; // 대표기기 존재 여부
+        if(StringUtils.isNotBlank(req.getMdn())
+                && (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
+                || StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
+                || StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())
+        )){
+            svcMangNo = this.commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
+        }
+
+        // 신규 휴대기기 등록 케이스 구분
+        SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
+        schDeviceListReq.setCommonRequest(commService.getSCCommonRequest(requestHeader));
+        schDeviceListReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+        schDeviceListReq.setIsMainDevice(MemberConstants.USE_N); // 대표기기만 조회(Y), 모든기기 조회(N)
+        List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+        KeySearch key = new KeySearch();
+        key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+        key.setKeyString(chkDupRes.getUserMbr().getUserKey());
+        keySearchList.add(key);
+        schDeviceListReq.setKeySearchList(keySearchList);
+        SearchDeviceListResponse searchDeviceListResponse = null;
+        try{
+            searchDeviceListResponse = this.deviceSCI.searchDeviceList(schDeviceListReq);
+        }catch(StorePlatformException e){
+            if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+                throw e;
+            }
+        }
+        if(searchDeviceListResponse != null && searchDeviceListResponse.getUserMbrDevice().size() > 0) {
+            UserMbrDevice deviceInfo = null;
+            for (UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()) {
+                if (StringUtils.isNotBlank(req.getMdn()) && StringUtils.equals(userMbrDevice.getMdn(), req.getMdn())) {
+                    deviceInfo = userMbrDevice;
+                    isNew = false;
+                    break;
+                }
+
+                if (StringUtils.equals(userMbrDevice.getSvcMangNum(), svcMangNo)) {
+                    deviceInfo = userMbrDevice;
+                    isNew = false;
+                    break;
+                }
+            }
+
+            if (!isNew && deviceInfo != null) {
+                // TODO. NON MDN 상태에서 USIM 삽입후 들어왔을떄 비교도 하나??
+                if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+                    if (StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)) {
+                        if (!StringUtils.equals(req.getNativeId(), deviceInfo.getNativeID())) {
+                            throw new StorePlatformException("SAC_MEM_1503");
+                        }
+                    }
+                }
+            }
+        }
+
+        if(isNew){
+			/* 등록 가능한 휴대기기 개수 초과 체크 */
+            if (searchDeviceListResponse != null && searchDeviceListResponse.getUserMbrDevice() != null){
+                if(searchDeviceListResponse.getUserMbrDevice().size() >= deviceRegMaxCnt) {
+                    throw new StorePlatformException("SAC_MEM_1501");
+                }
+
+				/*	등록된 단말중에 대표기기가 없는경우 대표기기 설정처리 */
+                for(UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()){
+                    if(StringUtils.equals(userMbrDevice.getIsPrimary(), MemberConstants.USE_Y)){
+                        isExistPrimary = true;
+                        break;
+                    }
+                }
+            }else{
+                // 아이디에 첫번째로 등록되는 휴대기기
+            }
+
+            // csp imei 비교
+            if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
+                if(StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)){
+                    if(!StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getMdn()))){
+                        throw new StorePlatformException("SAC_MEM_1503");
+                    }
+                }
+            }
+        }
 
 		/* 휴유회원 복구 */
 		if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
@@ -1404,6 +1497,10 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 		deviceInfo.setNativeId(req.getNativeId());
 		deviceInfo.setSimSerialNo(req.getSimSerialNo());
+        deviceInfo.setSvcMangNum(svcMangNo);
+        if(isNew && !isExistPrimary){
+            deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+        }
 		String deviceKey = this.deviceService.regDeviceInfo(requestHeader, deviceInfo);
 
 		// 로그인 이력 저장

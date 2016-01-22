@@ -189,6 +189,9 @@ public class DeviceServiceImpl implements DeviceService {
                         }
                     }
                 }
+                if(schDeviceListRes.getUserMbrDevice().size() >= deviceRegMaxCnt) {
+                    throw new StorePlatformException("SAC_MEM_1501");
+                }
             }
         } catch (StorePlatformException e) {
             if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
@@ -438,9 +441,6 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String regDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
-		StackTraceElement[] ste = new Throwable().getStackTrace();
-		String methodName = ste[1].getMethodName();
-
 		if(StringUtils.isBlank(deviceInfo.getUserKey())){
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
@@ -503,80 +503,6 @@ public class DeviceServiceImpl implements DeviceService {
 				deviceInfo.setSvcMangNum(svcMangNo);
 			}
 		}
-
-
-		// 신규 휴대기기 등록 케이스 구분
-		SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
-		schDeviceListReq.setCommonRequest(commService.getSCCommonRequest(requestHeader));
-		schDeviceListReq.setUserKey(userKey);
-		schDeviceListReq.setIsMainDevice(MemberConstants.USE_N); // 대표기기만 조회(Y), 모든기기 조회(N)
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		key.setKeyString(userKey);
-		keySearchList.add(key);
-		schDeviceListReq.setKeySearchList(keySearchList);
-		SearchDeviceListResponse searchDeviceListResponse = null;
-		boolean isNew = true;
-		try{
-			searchDeviceListResponse = this.deviceSCI.searchDeviceList(schDeviceListReq);
-			for(UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()){
-				if(StringUtils.isNotBlank(deviceInfo.getDeviceId()) && StringUtils.equals(userMbrDevice.getDeviceID(), deviceInfo.getDeviceId())){
-					isNew = false;
-					break;
-				}
-
-				if(StringUtils.isNotBlank(userMbrDevice.getSvcMangNum()) && StringUtils.equals(userMbrDevice.getSvcMangNum(), deviceInfo.getSvcMangNum())){
-					isNew = false;
-					break;
-				}
-			}
-		}catch(StorePlatformException e){
-			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-				throw e;
-			}
-		}
-
-		if(isNew){
-			/* 등록 가능한 휴대기기 개수 초과 체크 */
-			if (searchDeviceListResponse != null && searchDeviceListResponse.getUserMbrDevice() != null){
-				if(searchDeviceListResponse.getUserMbrDevice().size() >= deviceRegMaxCnt) {
-					throw new StorePlatformException("SAC_MEM_1501");
-				}
-
-				/*	등록된 단말중에 대표기기가 없는경우 대표기기 설정처리 */
-				if(StringUtils.isBlank(deviceInfo.getIsPrimary())){
-					boolean isExistPrimary = false;
-					for(UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()){
-						if(StringUtils.equals(userMbrDevice.getIsPrimary(), MemberConstants.USE_Y)){
-							isExistPrimary = true;
-							break;
-						}
-					}
-					if(!isExistPrimary){
-						deviceInfo.setIsPrimary(MemberConstants.USE_Y);
-					}
-				}
-			}else{
-                // 아이디에 처음 등록되는 휴대기기인데 대표기기 여부 값이 없으면 Y로 셋팅
-                if(StringUtils.isBlank(deviceInfo.getIsPrimary())){
-                    deviceInfo.setIsPrimary(MemberConstants.USE_Y);
-                }
-            }
-
-			/* CSP 연동 imei 체크*/
-            /*if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceInfo.getDeviceTelecom())){
-                if(StringUtils.isNotBlank(deviceInfo.getIsNativeIdAuth())
-                        && StringUtils.equals(deviceInfo.getIsNativeIdAuth(), MemberConstants.USE_Y)
-                        && StringUtils.isNotBlank(deviceInfo.getNativeId())
-                        && StringUtils.isNotBlank(deviceInfo.getMdn())){
-                    if(!StringUtils.equals(this.getIcasImei(deviceInfo.getMdn()), deviceInfo.getNativeId())){
-                        throw new StorePlatformException("SAC_MEM_1503");
-                    }
-                }
-            }*/
-		}
-
 
 		/* device header 값 셋팅(단말모델, OS버젼, SC버젼) */
 		if(StringUtils.isBlank(deviceInfo.getDeviceModelNo())){ // 휴대기기 등록 API에서는 deviceInfo에 단말모델을 파라메터로 받는다. 그외 API에서는 디바이스헤더정보의 단말모델로 처리한다.

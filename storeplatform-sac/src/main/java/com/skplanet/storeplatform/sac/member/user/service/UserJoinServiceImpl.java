@@ -615,9 +615,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/*	TODO. userAuthToken 유효성 체크 필요*/
 		boolean isValid = true; //TODO. 무조건 성공처리
 		String socialUserNo = null; // TODO. Server to Server 연동후 저장 필요!
-		if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
-
-		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+		if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 
 		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
 
@@ -626,6 +624,15 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 		if(!isValid){
 			throw new StorePlatformException("SAC_MEM_1204");
+		}
+
+		// csp imei 비교
+		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
+			if(StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)){
+				if(!StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getMdn()))){
+					throw new StorePlatformException("SAC_MEM_1503");
+				}
+			}
 		}
 
 		// 법정대리인 나이 유효성 체크.
@@ -737,24 +744,20 @@ public class UserJoinServiceImpl implements UserJoinService {
 	public CreateByMdnV2SacRes regByMdnV2(SacRequestHeader sacHeader, CreateByMdnV2SacReq req) {
 
 		/**
-		 * MDN 회원 기가입 체크
+		 * MDN으로 모바일회원 기가입 체크
 		 */
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MDN);
-		keySchUserKey.setKeyString(req.getMdn());
-		keySearchList.add(keySchUserKey);
-		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
-		CommonRequest commonRequest = new CommonRequest();
-		searchExtentUserRequest.setCommonRequest(commonRequest);
-		searchExtentUserRequest.setKeySearchList(keySearchList);
-		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
-		try{
-			SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+		if(this.deviceService.srhDevice(sacHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null) != null){
 			throw new StorePlatformException("SAC_MEM_1104");
-		} catch (StorePlatformException ex) {
-			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-				throw ex;
+		}
+
+		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
+			req.setMdn(this.mcc.getOpmdMdnInfo(req.getMdn())); // 모번호 조회
+
+			// csp imei 비교
+			if(StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)){
+				if(!StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getMdn()))){
+					throw new StorePlatformException("SAC_MEM_1503");
+				}
 			}
 		}
 
@@ -773,12 +776,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 
 			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
-		}
-
-		// 모번호 조회
-		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-				&& StringUtils.isNotBlank(req.getMdn())){
-			req.setMdn(this.mcc.getOpmdMdnInfo(req.getMdn()));
 		}
 
 		/**

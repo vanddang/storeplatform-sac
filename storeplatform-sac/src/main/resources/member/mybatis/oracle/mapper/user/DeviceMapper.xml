@@ -1074,7 +1074,7 @@
 
     <!-- onebrand 추가 쿼리 -->
 
-    <!-- 서비스관리번호(svcMangNo)로 모바일 회원 휴대기기 정보 조회 -->
+    <!-- 모바일 회원 휴대기기 정보 조회 -->
     <select id="searchDeviceMobileUser" parameterType="searchDeviceRequest" resultMap="searchDeviceResultMap">
         SELECT /* DeviceMapper.xml, searchDeviceMobileUser, SAC(SC), 반범진, 2016-01-21 */
                 a.mbr_id AS userId,
@@ -1087,6 +1087,9 @@
               AND a.mbr_clas_cd = 'US011501'
               AND b.auth_yn = 'Y'
         <foreach collection="keySearchList" item="keySearch" open="AND" close="" separator="AND">
+            <if test="keySearch.keyType.equalsIgnoreCase('AUTHORIZE_DEVICE_ID')">
+                b.device_id = #{keySearch.keyString}
+            </if>
             <if test="keySearch.keyType.equalsIgnoreCase('AUTHORIZE_SVC_MANG_NO')">
                 b.svc_mang_no = #{keySearch.keyString}
             </if>

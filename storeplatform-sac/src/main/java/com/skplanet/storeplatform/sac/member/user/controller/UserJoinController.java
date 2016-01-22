@@ -276,6 +276,9 @@ public class UserJoinController {
 			if(StringUtils.isBlank(req.getSimSerialNo())){
 				throw new StorePlatformException("SAC_MEM_0001", "simSerialNo");
 			}
+			if(StringUtils.isBlank(req.getIsNativeIdAuth())){
+				throw new StorePlatformException("SAC_MEM_0001", "isNativeIdAuth");
+			}
 		}
 
 		CreateByIdSacRes res = this.svc.createById(sacHeader, req);
