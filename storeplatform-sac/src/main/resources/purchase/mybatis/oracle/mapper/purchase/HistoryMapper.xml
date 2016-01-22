@@ -194,7 +194,7 @@
               , a.use_period_unit_cd
               , a.use_period
 		      , NVL((CASE WHEN a.tenant_prod_grp_cd like 'OR006221%' 
-		                  THEN (SELECT payment_amt / a.prod_qty
+		                  THEN (SELECT payment_amt / (SELECT MAX(dtl.PRCHS_DTL_ID) FROM TB_PR_PRCHS_DTL dtl  WHERE dtl.tenant_id =a.tenant_id AND dtl.prchs_id = a.prchs_id)
 						          FROM tb_pr_payment
 						         WHERE tenant_id = a.tenant_id
 						           AND prchs_id = a.prchs_id
@@ -408,7 +408,7 @@
               , a.use_period_unit_cd
               , a.use_period
               , NVL((CASE WHEN a.tenant_prod_grp_cd like 'OR006221%' 
-                          THEN (SELECT payment_amt / a.prod_qty
+                          THEN (SELECT payment_amt / (SELECT MAX(dtl.PRCHS_DTL_ID) FROM TB_PR_PRCHS_DTL dtl  WHERE dtl.tenant_id =a.tenant_id AND dtl.prchs_id = a.prchs_id)
                                   FROM tb_pr_payment
                                  WHERE tenant_id = a.tenant_id
                                    AND prchs_id = a.prchs_id
@@ -682,7 +682,7 @@
               , a.menu_id       
               , a.genre_clsf_cd    
               , NVL((CASE WHEN a.tenant_prod_grp_cd like 'OR006221%' 
-                          THEN (SELECT payment_amt / a.prod_qty
+                          THEN (SELECT payment_amt / (SELECT MAX(dtl.PRCHS_DTL_ID) FROM TB_PR_PRCHS_DTL dtl  WHERE dtl.tenant_id =a.tenant_id AND dtl.prchs_id = a.prchs_id)
                                   FROM tb_pr_payment
                                  WHERE tenant_id = a.tenant_id
                                    AND prchs_id = a.prchs_id
@@ -844,7 +844,7 @@
               , a.genre_clsf_cd    
               , a.gift_msg
               , NVL((CASE WHEN a.tenant_prod_grp_cd like 'OR006221%' 
-                          THEN (SELECT payment_amt / a.prod_qty
+                          THEN (SELECT payment_amt / (SELECT MAX(dtl.PRCHS_DTL_ID) FROM TB_PR_PRCHS_DTL dtl  WHERE dtl.tenant_id =a.tenant_id AND dtl.prchs_id = a.prchs_id)
                                   FROM tb_pr_payment
                                  WHERE tenant_id = a.tenant_id
                                    AND prchs_id = a.prchs_id
