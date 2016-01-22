@@ -99,7 +99,7 @@ public class DeviceInfoServiceImpl implements DeviceInfoService {
 
 			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 			KeySearch keySearch = new KeySearch();
-			keySearch.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+			keySearch.setKeyType(MemberConstants.KEY_TYPE_MDN);
 			keySearch.setKeyString(msisdn);
 			keySearchList.add(keySearch);
 			searchUserRequest.setKeySearchList(keySearchList);
