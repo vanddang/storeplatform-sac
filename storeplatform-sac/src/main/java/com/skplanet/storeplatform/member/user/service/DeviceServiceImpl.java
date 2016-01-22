@@ -163,8 +163,14 @@ public class DeviceServiceImpl implements DeviceService {
 		} else if(isSvcMangDevice){
             searchDeviceListRequest.setIsUsed(StringUtils.isNotEmpty(searchDeviceListRequest.getIsUsed()) ? searchDeviceListRequest.getIsUsed() : MemberConstants.USE_Y);
             List<UserMbrDevice> userMbrDeviceList = this.commonDAO.queryForList("Device.searchDeviceList3", searchDeviceListRequest, UserMbrDevice.class);
-            searchDeviceListResponse = new SearchDeviceListResponse();
-            searchDeviceListResponse.setUserMbrDevice(userMbrDeviceList);
+
+            if(userMbrDeviceList != null && userMbrDeviceList.size() > 0){
+                searchDeviceListResponse = new SearchDeviceListResponse();
+                searchDeviceListResponse.setUserMbrDevice(userMbrDeviceList);
+            }else{
+                throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
+            }
+
 
         /** INSD_USERMBR_NO, MBR_ID로 조회 */
         } else {

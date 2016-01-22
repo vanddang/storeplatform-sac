@@ -1740,7 +1740,6 @@ public class UserServiceImpl implements UserService {
 		LOGGER.debug("### searchManagementListRequest : {}", searchManagementListRequest);
 
 		UserMbr usermbr = new UserMbr();
-		usermbr.setTenantID(searchManagementListRequest.getCommonRequest().getTenantID());
 		usermbr.setSystemID(searchManagementListRequest.getCommonRequest().getSystemID());
 		usermbr.setUserKey(searchManagementListRequest.getUserKey());
 
