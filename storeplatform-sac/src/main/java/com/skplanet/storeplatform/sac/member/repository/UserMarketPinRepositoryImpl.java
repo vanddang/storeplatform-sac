@@ -29,7 +29,7 @@ public class UserMarketPinRepositoryImpl implements UserMarketPinRepository {
     private EntityManager em;
 
     public void save(UserMarketPin userMarketPin) {
-        UserMarketPin findUserMarketPin = em.find(UserMarketPin.class, userMarketPin.getInsdUsermbrNo());
+        UserMarketPin findUserMarketPin = em.find(UserMarketPin.class, userMarketPin.getMember().getInsdUsermbrNo());
         if(findUserMarketPin != null) findUserMarketPin.setPinNo(userMarketPin.getPinNo());
         else em.persist(userMarketPin);
     }
