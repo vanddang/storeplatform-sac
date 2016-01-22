@@ -110,10 +110,6 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
-		if (StringUtil.isBlank(req.getRegMaxCnt())) {
-			throw new StorePlatformException("SAC_MEM_0001", "regMaxCnt");
-		}
-
 		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}

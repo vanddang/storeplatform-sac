@@ -48,6 +48,11 @@ public class CreateByMdnV2SacReq extends CommonInfo {
 	private String simSerialNo = "";
 
 	/**
+	 * nativeid인증 비교 여부
+	 */
+	private String isNativeIdAuth = "";
+
+	/**
 	 * SMS 수신 여부.
 	 */
 	private String isRecvSms = "";
@@ -443,5 +448,20 @@ public class CreateByMdnV2SacReq extends CommonInfo {
 	 */
 	public void setSimSerialNo(String simSerialNo) {
 		this.simSerialNo = simSerialNo;
+	}
+
+	/**
+	 * @return String : isNativeIdAuth
+	 */
+	public String getIsNativeIdAuth() {
+		return isNativeIdAuth;
+	}
+
+	/**
+	 * @param isNativeIdAuth
+	 *            String : the isNativeIdAuth to set
+	 */
+	public void setIsNativeIdAuth(String isNativeIdAuth) {
+		this.isNativeIdAuth = isNativeIdAuth;
 	}
 }
