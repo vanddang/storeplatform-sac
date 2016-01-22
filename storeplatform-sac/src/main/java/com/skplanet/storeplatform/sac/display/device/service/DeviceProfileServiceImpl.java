@@ -9,24 +9,19 @@
  */
 package com.skplanet.storeplatform.sac.display.device.service;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.DeviceProfileManager;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.skplanet.storeplatform.sac.display.cache.vo.DeviceProfile;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
 
 /**
  * DeviceProfileService Service 인터페이스(CoreStoreBusiness) 구현체.
@@ -35,63 +30,79 @@ import java.util.Map;
  */
 @Service
 public class DeviceProfileServiceImpl implements DeviceProfileService {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	@Autowired
-	@Qualifier("sac")
-	private CommonDAO commonDAO;
 
     @Autowired
     private DeviceProfileManager deviceProfileManager;
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.product.service.DeviceProfileService#searchDeviceProfile(java.lang.String,
-	 * java.lang.String)
-	 */
-	@Override
-	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq req, SacRequestHeader header) {
 
-        CommonResponse commonResponse = new CommonResponse();
-        DeviceProfileRes deviceProfileResponse = new DeviceProfileRes();
+    @Override
+    public DeviceProfileRes getDeviceProfile(String deviceModelCd, String langCd) {
 
-        DeviceProfile deviceProfile = this.deviceProfileManager.getDeviceProfile(req.getDeviceModelNo(), header.getTenantHeader().getLangCd());
+        Device device;
+        DeviceProfile deviceProfile = this.deviceProfileManager.getDeviceProfile(deviceModelCd, langCd);
+        if (deviceProfile != null) {
+            device = makeDevice(deviceProfile);
+        } else {
+            // 요청한 deviceModelCd가 존재하지 않는경우, android_standard 로 조회해서 내린다.
+            deviceProfile = this.deviceProfileManager.getDeviceProfile(DP_ANDROID_STANDARD_NM, langCd);
+            device = makeDevice(deviceProfile);
 
-		// DeviceHeader Profile 조회
-		Device device = new Device();
-		if (deviceProfile != null) {
-			Map<String, Object> supportedHardwareMap = deviceProfile.getSupportedHardwareMap();
+            device.setIdentifier(DP_ANDROID_STANDARD_NM);
+            device.setType("restrict");
+        }
 
-			String sComp = deviceProfile.getCmntCompCd();
-			StringBuilder sb = new StringBuilder();
+        DeviceProfileRes deviceProfileRes = new DeviceProfileRes();
+        deviceProfileRes.setCommonResponse(new CommonResponse(1));
+        deviceProfileRes.setDevice(device);
 
-			sb.append(deviceProfile.getMakeCompNm());
-			sb.append("/");
-			sb.append(deviceProfile.getDeviceModelCd());
+        return deviceProfileRes;
+    }
 
-			device.setIdentifier(sb.toString());
-			// OMD 여부
-			device.setModel(deviceProfile.getDeviceModelCd());
-			device.setType(DisplayConstants.DP_OMD_TYPE_CD.equals(sComp) ? DisplayConstants.DP_OMD_TYPE_NM : DisplayConstants.DP_OMD_NORMAL_NM);
-			device.setManufacturer(deviceProfile.getMakeCompNm());
-			device.setPlatform(deviceProfile.getVmTypeNm());
-			device.setUaCd(deviceProfile.getUaCd());
+    private Device makeDevice(DeviceProfile deviceProfile) {
+        Device device = new Device();
 
-			device.setServices(deviceProfile.getServicesMap());
-			device.setSupportedHardware(supportedHardwareMap);
-			device.setModelExplain(deviceProfile.getModelNm());
-			device.setPhoneType(DisplayConstants.DP_PHONE_DEVICE_TYPE_CD.equals(deviceProfile.getDeviceTypeCd()) ? DisplayConstants.DP_PHONE_DEVICE_TYPE_NM : DisplayConstants.DP_TABLET_DEVICE_TYPE_NM);
+        device.setIdentifier(deviceProfile.getMakeCompNm()+"/"+deviceProfile.getDeviceModelCd());
+        device.setType(DP_OMD_TYPE_CD.equals(deviceProfile.getCmntCompCd()) ? DP_OMD_TYPE_NM : DP_OMD_NORMAL_NM);
+        device.setManufacturer(deviceProfile.getMakeCompNm());
+        device.setModel(deviceProfile.getDeviceModelCd());
+        device.setUaCd(deviceProfile.getUaCd());
+        device.setPlatform(deviceProfile.getVmTypeNm());
+        device.setModelExplain(deviceProfile.getModelNm());
+        device.setPhoneType(DP_PHONE_DEVICE_TYPE_CD.equals(deviceProfile.getDeviceTypeCd()) ? DP_PHONE_DEVICE_TYPE_NM : DP_TABLET_DEVICE_TYPE_NM);
 
-			commonResponse.setTotalCount(1);
-		} else { // 미지원단말
-			device.setIdentifier(DisplayConstants.DP_ANDROID_STANDARD_NM);
-			device.setType("restrict");
-			commonResponse.setTotalCount(0);
-		}
+        device.setSupportedHardware(makeSupportedHardware(deviceProfile));
+        device.setServices(makeServices(deviceProfile));
 
-		deviceProfileResponse.setDevice(device);
-		deviceProfileResponse.setCommonResponse(commonResponse);
+        return device;
+    }
 
-		return deviceProfileResponse;
-	}
+    private Map<String,Object> makeServices(DeviceProfile deviceProfile) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map.put("music", deviceProfile.getMusicSprtYn());
+        map.put("hdVod", deviceProfile.getHdvSprtYn());
+        map.put("freepassVod", deviceProfile.getVodFixisttSprtYn());
+        map.put("aom", deviceProfile.getAomSprtYn());
+        map.put("comic", deviceProfile.getComicSprtYn());
+        map.put("shoppingStore", deviceProfile.getSclShpgSprtYn());
+        map.put("embedded", deviceProfile.getEmbeddedYn());
+        map.put("ebook", deviceProfile.getEbookSprtYn());
+        map.put("magazine", deviceProfile.getMagazineSprtYn());
+        map.put("sdVod", deviceProfile.getSdVideoSprtYn());
+        map.put("drmVideo", deviceProfile.getVideoDrmSprtYn());
+        map.put("drm", deviceProfile.getSktDrmSprtYn());
+        map.put("webtoon", deviceProfile.getWebtoonSprtYn());
+        map.put("view", deviceProfile.getStrmSprtYn());
+
+        return map;
+    }
+
+    private Map<String, Object> makeSupportedHardware(DeviceProfile deviceProfile) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map.put("hdcp", deviceProfile.getHdcpSprtYn());
+        map.put("resolution", deviceProfile.getLcdSizeNm());
+        map.put("lte", deviceProfile.getNetworkType());
+        map.put("dolby", deviceProfile.getDolbySprtYn());
+        map.put("hdmi", deviceProfile.getHdmiSprtYn());
+
+        return map;
+    }
 }

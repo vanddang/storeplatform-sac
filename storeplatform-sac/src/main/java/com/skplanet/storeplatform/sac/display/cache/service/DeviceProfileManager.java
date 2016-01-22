@@ -10,7 +10,7 @@
 
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfile;
+import com.skplanet.storeplatform.sac.display.cache.vo.DeviceProfile;
 
 /**
  * <pre>
@@ -27,6 +27,6 @@ public interface DeviceProfileManager {
      * @param langCd
      * @return
      */
-    public DeviceProfile getDeviceProfile(String deviceModelCd, String langCd);
+    DeviceProfile getDeviceProfile(String deviceModelCd, String langCd);
 
 }

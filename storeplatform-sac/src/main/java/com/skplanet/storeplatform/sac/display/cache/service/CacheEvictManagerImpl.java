@@ -141,7 +141,7 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = "sac:display:device:profile:v1", allEntries = true)
+    @CacheEvict(value = "sac:display:device:profile:v2", allEntries = true)
     public void evictAllDeviceProfile() {
 
     }
