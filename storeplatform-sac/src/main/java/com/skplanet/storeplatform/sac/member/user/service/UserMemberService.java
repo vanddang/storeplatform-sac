@@ -26,4 +26,12 @@ public interface UserMemberService {
      * @return
      */
     UserMember findByUserKeyAndTransitRepo(String userKey);
+
+    /**
+     * 일반DB에서 유효한 회원 정보를 조회한다.
+     * 휴면DB와 연계 작업을 하지 않는 비즈니스의 경우 이 메소드를 이용한다.
+     * @param userKey
+     * @return
+     */
+    UserMember findByUserKeyAndActive(String userKey);
 }

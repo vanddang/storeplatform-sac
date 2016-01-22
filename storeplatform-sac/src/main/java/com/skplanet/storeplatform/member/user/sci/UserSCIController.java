@@ -3434,6 +3434,7 @@ public class UserSCIController implements UserSCI {
 	 * @return SearchUserDeliveryResponse - 배송지 정보 조회 응답 Value Object
 	 */
 	@Override
+    @Deprecated
 	public SearchDeliveryInfoResponse searchDeliveryInfo(SearchDeliveryInfoRequest searchDeliveryInfoRequest) {
 		LOGGER.debug("\n\n\n\n\n");
 		LOGGER.debug("==================================================================================");

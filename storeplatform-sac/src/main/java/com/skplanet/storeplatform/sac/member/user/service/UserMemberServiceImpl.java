@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 import com.skplanet.storeplatform.sac.member.repository.UserMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -30,6 +31,7 @@ public class UserMemberServiceImpl implements UserMemberService {
     private UserMemberRepository memberRepository;
 
     @Override
+    @Transactional(value = "transactionManagerForMember", readOnly = true)
     public UserMember findByUserKeyAndTransitRepo(String userKey) {
 
         if(Strings.isNullOrEmpty(userKey))
@@ -50,6 +52,20 @@ public class UserMemberServiceImpl implements UserMemberService {
         }
 
         member.setFromNormal(MemberRepositoryContext.isNormal());
+
+        return member;
+    }
+
+    @Override
+    @Transactional(value = "transactionManagerForScMember", readOnly = true)
+    public UserMember findByUserKeyAndActive(String userKey) {
+        if(Strings.isNullOrEmpty(userKey))
+            throw new StorePlatformException("SAC_MEM_0001", "userKey");
+
+        UserMember member = memberRepository.findByUserKeyAndActive(userKey);
+        if(member == null) {
+            throw new StorePlatformException("SAC_MEM_0003", "userKey", userKey);
+        }
 
         return member;
     }

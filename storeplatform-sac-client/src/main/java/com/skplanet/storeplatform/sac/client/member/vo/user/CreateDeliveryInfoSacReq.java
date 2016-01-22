@@ -212,11 +212,4 @@ public class CreateDeliveryInfoSacReq extends CommonInfo {
 		this.deliverySeq = deliverySeq;
 	}
 
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 }

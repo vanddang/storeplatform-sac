@@ -9,7 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.member.domain.mbr;
 
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeliveryInfo;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
+import org.apache.http.client.utils.DateUtils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -58,6 +60,25 @@ public class UserDelivery {
     private String deliveryMsg;
 
     private Date regDt;
+
+    ///// Business
+    public DeliveryInfo convertToDeliveryInfo() {
+        DeliveryInfo v = new DeliveryInfo();
+        v.setDeliveryTypeCd(deliveryTypeCd);
+        v.setDeliveryNm(deliveryNm);
+        v.setReceiverNm(receiverNm);
+        v.setSenderNm(senderNm);
+        v.setZip(zip);
+        v.setAddr(addr);
+        v.setDtlAddr(dtlAddr);
+        v.setConnTelNo(connTelNo);
+        v.setDeliveryMsg(deliveryMsg);
+        v.setDeliverySeq(seq.toString());
+        v.setRegDate(DateUtils.formatDate(regDt));
+        v.setUseDate(DateUtils.formatDate(useDt));
+
+        return v;
+    }
 
     @PrePersist
     public void prePersist() {
