@@ -36,6 +36,7 @@ public class UserMarketPinServiceImpl implements UserMarketPinService {
     }
 
     @Override
+    @Transactional("transactionManagerForScMember")
     public CheckUserMarketPinRes checkMarketPin(CheckUserMarketPinReq checkMarketPinReq) {
         //회원 유효성 체크
         userMemberService.findByUserKeyAndActive(checkMarketPinReq.getUserKey());
@@ -52,9 +53,11 @@ public class UserMarketPinServiceImpl implements UserMarketPinService {
         } else if (StringUtils.equals(checkMarketPinReq.getPinNo(), userMarketPin.getPinNo())) {
             // Market Pin 확인성공 -> 실패 횟수 = 0
             userMarketPin.setAuthFailCnt(0);
+            userMarketPinRepository.save(userMarketPin);
         } else {
             // Market Pin 실패 -> 실패 횟수 ++
             userMarketPin.setAuthFailCnt(userMarketPin.getAuthFailCnt()+1);
+            userMarketPinRepository.save(userMarketPin);
         }
         res = new CheckUserMarketPinRes(checkMarketPinReq.getUserKey(), userMarketPin.getAuthFailCnt());
 

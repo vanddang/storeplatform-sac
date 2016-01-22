@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.member.repository;
 
 import com.skplanet.storeplatform.sac.member.domain.mbr.UserMarketPin;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,10 @@ public class UserMarketPinRepositoryTest {
         //Given
         String insdUsermbrNo = "0";
         String pinNo = "1234";
+        UserMember userMember = new UserMember();
+        userMember.setInsdUsermbrNo(insdUsermbrNo);
         UserMarketPin userMarketPin = new UserMarketPin();
-        userMarketPin.setInsdUsermbrNo(insdUsermbrNo);
+        userMarketPin.setMember(userMember);
         userMarketPin.setPinNo(pinNo);
 
         //When
