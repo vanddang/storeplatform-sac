@@ -788,6 +788,11 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
 		}
 
+		// deviceId, mdn 수정시에는 deviceKey가 필수 파라메터
+		if(modifyDeviceRequest.isUpdDeviceId() && modifyDeviceRequest.getUserMbrDevice().getDeviceKey() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
 		if(modifyDeviceRequest.getUserMbrDevice().getDeviceKey() == null
 				&& modifyDeviceRequest.getUserMbrDevice().getDeviceID() == null
 				&& modifyDeviceRequest.getUserMbrDevice().getMdn() == null){

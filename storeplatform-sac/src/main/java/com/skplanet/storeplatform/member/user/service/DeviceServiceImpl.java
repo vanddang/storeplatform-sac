@@ -1885,6 +1885,20 @@ public class DeviceServiceImpl implements DeviceService {
 			updateMbrDevice.setSvcMangNum(modifyDeviceRequest.getUserMbrDevice().getSvcMangNum());
 		}
 
+		if(modifyDeviceRequest.isUpdDeviceId()) {
+			// deviceId
+			if (modifyDeviceRequest.getUserMbrDevice().getDeviceID() != null) {
+				logBuf.append("[device_id]").append(searchDeviceResponse.getUserMbrDevice().getDeviceID()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getDeviceID());
+				updateMbrDevice.setDeviceID(modifyDeviceRequest.getUserMbrDevice().getDeviceID());
+			}
+
+			// MDN
+			if (modifyDeviceRequest.getUserMbrDevice().getMdn() != null) {
+				logBuf.append("[mdn]").append(searchDeviceResponse.getUserMbrDevice().getMdn()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getMdn());
+				updateMbrDevice.setMdn(modifyDeviceRequest.getUserMbrDevice().getMdn());
+			}
+		}
+
 		if(logBuf.length() > 0){
 			updateMbrDevice.setChangeCaseCode(chgCaseCd);
 			if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
