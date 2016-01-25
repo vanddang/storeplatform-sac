@@ -50,6 +50,9 @@ public class ModifyDeviceRequest extends CommonInfo implements Serializable {
     /** 사용자 Key. */
     private String userKey;
 
+    /** deviceId, mdn 수정여부. */
+    private boolean isUpdDeviceId = false;
+
     /** 사용자 휴대기기 Value Object. */
     private UserMbrDevice userMbrDevice;
 
@@ -91,4 +94,22 @@ public class ModifyDeviceRequest extends CommonInfo implements Serializable {
         this.userKey = userKey;
     }
 
+    /**
+     * deviceId, mdn 수정여부를 리턴한다.
+     *
+     * @return isUpdDeviceId - deviceId, mdn 수정여부
+     */
+    public boolean isUpdDeviceId() {
+        return isUpdDeviceId;
+    }
+
+    /**
+     * deviceId, mdn 수정여부를 설정한다.
+     *
+     * @param isUpdDeviceId
+     *            deviceId, mdn 수정여부
+     */
+    public void setIsUpdDeviceId(boolean isUpdDeviceId) {
+        this.isUpdDeviceId = isUpdDeviceId;
+    }
 }
