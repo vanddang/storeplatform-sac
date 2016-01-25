@@ -151,15 +151,4 @@ public interface DeviceService {
 	 */
 	public ModifyDeviceResponse modifyDevice(ModifyDeviceRequest modifyDeviceRequest);
 
-	/**
-	 * <pre>
-	 * Save & Sync 인증시 단말 수정 기능을 제공한다.
-	 * </pre>
-	 *
-	 * @param modifyDeviceRequest
-	 *            - 단말 수정 요청 Value Object
-	 * @return ModifyDeviceResponse - 단말 수정 응답 Value Object
-	 */
-	public ModifyDeviceResponse modifySaveNSyncDevice(ModifyDeviceRequest modifyDeviceRequest);
-
 }
