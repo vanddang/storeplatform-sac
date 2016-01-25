@@ -41,6 +41,8 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
         DeviceProfile deviceProfile = this.deviceProfileManager.getDeviceProfile(deviceModelCd, langCd);
         if (deviceProfile != null) {
             device = makeDevice(deviceProfile);
+
+            return makeDeviceProfileRes(device, 1);
         } else {
             // 요청한 deviceModelCd가 존재하지 않는경우, android_standard 로 조회해서 내린다.
             deviceProfile = this.deviceProfileManager.getDeviceProfile(DP_ANDROID_STANDARD_NM, langCd);
@@ -48,10 +50,15 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 
             device.setIdentifier(DP_ANDROID_STANDARD_NM);
             device.setType("restrict");
-        }
 
+            return makeDeviceProfileRes(device, 0);
+        }
+    }
+
+    private DeviceProfileRes makeDeviceProfileRes(Device device, int count) {
         DeviceProfileRes deviceProfileRes = new DeviceProfileRes();
-        deviceProfileRes.setCommonResponse(new CommonResponse(1));
+
+        deviceProfileRes.setCommonResponse(new CommonResponse(count));
         deviceProfileRes.setDevice(device);
 
         return deviceProfileRes;
