@@ -130,7 +130,7 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
 
-		ProductStats stats = productInfoManager.getProductStats(new ProductStatsParam(metaInfo.getCatalogId()));
+		ProductStats stats = productInfoManager.getProductStats( metaInfo.getCatalogId() );
 		Accrual accrual = new Accrual();
 		accrual.setDownloadCount(stats.getPurchaseCount());
 		return accrual;

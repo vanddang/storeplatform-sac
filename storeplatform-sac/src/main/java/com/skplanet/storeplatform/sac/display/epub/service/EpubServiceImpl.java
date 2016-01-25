@@ -599,7 +599,7 @@ public class EpubServiceImpl implements EpubService {
 	 * @return
 	 */
 	private Accrual mapAccurual(EpubDetail mapperVO) {
-		ProductStats stats = productInfoManager.getProductStats(new ProductStatsParam(mapperVO.getProdId()));
+		ProductStats stats = productInfoManager.getProductStats( mapperVO.getProdId() );
 		Accrual accrual = new Accrual();
 		accrual.setVoterCount(stats.getParticipantCount());
 		accrual.setDownloadCount(stats.getPurchaseCount());

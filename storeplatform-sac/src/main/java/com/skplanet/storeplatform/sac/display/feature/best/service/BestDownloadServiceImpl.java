@@ -199,24 +199,17 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 					ProductBasicInfo.class);
 
 			if (!bestList.isEmpty()) {
-				Map<String, Object> reqMap = new HashMap<String, Object>();
-				reqMap.put("tenantHeader", tenantHeader);
-				reqMap.put("deviceHeader", deviceHeader);
-				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 				for (ProductBasicInfo productBasicInfo : bestList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
 					MetaInfo retMetaInfo = null;
 					if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
 							|| DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(menuIdSubString)
 							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
 							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(menuIdSubString)) {
 						// 이북, 코믹
-						reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
 					} else {
 						// 영화, 방송
-						reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+						retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 					}
 
 					if (retMetaInfo != null) {
@@ -250,14 +243,8 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 					ProductBasicInfo.class);
 
 			if (!bestList.isEmpty()) {
-				Map<String, Object> reqMap = new HashMap<String, Object>();
-				reqMap.put("tenantHeader", tenantHeader);
-				reqMap.put("deviceHeader", deviceHeader);
-				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 				for (ProductBasicInfo productBasicInfo : bestList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
-					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-					MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(productBasicInfo);
 
 					if (retMetaInfo != null) {
 						Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);

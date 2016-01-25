@@ -157,4 +157,9 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     public void evictAllProductStats() {
 
     }
+
+    @Override
+    @CacheEvict(value = {"sac:display:listProduct:v1"}, allEntries = true)
+    public void evictAllListProd() {}
+
 }

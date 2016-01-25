@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.stat.service;
 
+import com.skplanet.storeplatform.sac.common.header.extractor.HeaderExtractor;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,10 +42,10 @@ import com.skplanet.storeplatform.sac.display.stat.vo.StatLike;
 @Service
 public class StatMemberItemServiceImpl implements StatMemberItemService {
 
-	private static final String CLSF_CARD = "DP01210001";
-	private static final String CLSF_PROD = "DP01210002";
+	private static final String CLSF_CARD   = "DP01210001";
+	private static final String CLSF_PROD   = "DP01210002";
 	private static final String CLSF_ARTIST = "DP01210003";
-	private static final String CLSF_ALBUM = "DP01210004";
+	private static final String CLSF_ALBUM  = "DP01210004";
 
 	@Autowired
 	private CardDetailService cardDetailService;
@@ -52,27 +54,27 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
     private PanelCardInfoManager panelCardInfoManager;
 
 	@Autowired
-	private ProductListService productListService;
-	
+	private MetaInfoService metaInfoService;
+
 	@Autowired
-	private StatMemberDataService dataServcie;
-	
+	HeaderExtractor header;
+
 	@Autowired
 	private OtherArtistService otherArtistService;
 
 	@Override
-	public Object findItem(StatLike like, SacRequestHeader header, PreferredCategoryInfo preferredCategoryInfo) {
+	public Object findItem(StatLike like, PreferredCategoryInfo preferredCategoryInfo) {
 		String statsClsf = like.getStatsClsf();
 		String statsKey = like.getStatsKey();
 		String userKey = like.getUserKey();
 
 		Object item;
 		if (CLSF_CARD.equals(statsClsf)) {
-			item = findCard(statsKey, userKey, header, preferredCategoryInfo);
+			item = findCard( statsKey, userKey, preferredCategoryInfo );
 		} else if (CLSF_PROD.equals(statsClsf) || CLSF_ALBUM.equals(statsClsf)) {
-			item = findProd(statsKey, header);
+			item = findProd( statsKey );
 		} else if (CLSF_ARTIST.equals(statsClsf)) {
-			item = findArtist(statsKey, header);
+			item = findArtist( statsKey );
 		} else {
 			item = new Object();
 		}
@@ -81,12 +83,10 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 	}
 
 	@Override
-	public Card findCard(String cardId, String userKey, SacRequestHeader header, PreferredCategoryInfo preferredCategoryInfo) {
-		String tenantId = header.getTenantHeader().getTenantId();
-		String langCd = header.getTenantHeader().getLangCd();
-		
+	public Card findCard( String cardId, String userKey, PreferredCategoryInfo preferredCategoryInfo) {
+
 		// 정적 처리 (Cache)
-        CardInfo cardInfo = panelCardInfoManager.getCardInfo(tenantId, cardId);
+        CardInfo cardInfo = panelCardInfoManager.getCardInfo(header.getTenantId(), cardId);
         
         if (cardInfo == null)  {
         	return null;
@@ -94,39 +94,29 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
         
         CardDetail cardDetail = new CardDetail();
         BeanUtils.copyProperties(cardInfo, cardDetail);
-        Card card = cardDetailService.makeCard(cardDetail, preferredCategoryInfo, langCd);
+        Card card = cardDetailService.makeCard(cardDetail, preferredCategoryInfo, header.getLangCd());
         
         if (card == null) {
         	return null;
         }
         
         // 동적 처리
-        CardDynamicInfoProcessor processor = new CardDynamicInfoProcessor(tenantId, cardDetailService);
+        CardDynamicInfoProcessor processor = new CardDynamicInfoProcessor(header.getTenantId(), cardDetailService);
         processor.addCard(card);
         processor.execute(userKey);
         return card;
 	}
 
 	@Override
-	public Product findProd(String prodId, SacRequestHeader header) {
-		ListProduct listProd;
-		/* 쇼핑 상품일 경우, prodId만 있어 메타 조회 가능하나,
-		   일반 상품일 경우 TB_DP_PROD 테이블을 조회하여 TopMeuId와 SvcGrpCd를 추가로 획득해야함 */
-		if (prodId.startsWith("CL")) {
-			listProd = new ListProduct();
-			listProd.setProdId(prodId);
-		} else {
-			listProd = dataServcie.selectProdcut(prodId);
-		}
-		Product product = productListService.getProduct(header, listProd);
-		return product;
+	public Product findProd( String prodId ) {
+		return metaInfoService.getProductMeta( prodId );
 	}
 	
 	@Override
-	public Contributor findArtist(String statsKey, SacRequestHeader header) {
+	public Contributor findArtist( String artistId ) {
 		OtherArtistReq req = new OtherArtistReq();
-		req.setArtistId(statsKey);
-		OtherArtistRes otherArtistRes = otherArtistService.searchArtistDetail(req, header);
+		req.setArtistId(artistId);
+		OtherArtistRes otherArtistRes = otherArtistService.searchArtistDetail( req, header.getHeader() );
 		return otherArtistRes.getContributor();
 	}
 

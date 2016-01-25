@@ -22,7 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 신규 가입 고객 추천 상품 조회.
@@ -102,11 +106,9 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 
 				// List<Source> preveiwSourceList = new ArrayList<Source>();
 				String topMenuId = "";
-				String prodId = "";
 				while (iterator.hasNext()) {
 					MetaInfo productBaseInfo = iterator.next();
 					topMenuId = productBaseInfo.getTopMenuId();
-					prodId = productBaseInfo.getProdId();
 					Map<String, Object> reqMap = new HashMap<String, Object>();
 					reqMap.put("tenantHeader", tenantHeader);
 					reqMap.put("deviceHeader", deviceHeader);
@@ -119,11 +121,7 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 							|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
 							|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
 
-						productBasicInfo.setSvcGrpCd(DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
-						productBasicInfo.setProdId(productBaseInfo.getProdId());
-						reqMap.put("productBasicInfo", productBasicInfo);
-						reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+						MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo( productBaseInfo.getProdId() );
 
 						if (retMetaInfo != null) {
 							Product product = this.responseInfoGenerateFacade.generateAppProductShort(retMetaInfo);
@@ -134,12 +132,7 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // 이북/코믹
 
 						// 채널 ID로 상품 조회
-						productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
-						productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-						reqMap.put("productBasicInfo", productBasicInfo);
-
-						reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-						MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+						MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo( productBaseInfo.getChnlProdId() );
 
 						if (retMetaInfo != null) {
 							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 이북일때
@@ -162,12 +155,7 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 							// reqMap.put("stdDt", req.getStdDt().substring(0, 8)); // 배치 완료 기준일시 현재 데이터 미일치로 아래 하드코딩
 							// reqMap.put("stdDt", "20131007");
 
-							productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
-							productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-							productBasicInfo.setTopMenuId(topMenuId);
-							reqMap.put("productBasicInfo", productBasicInfo);
-
-							MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+							MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo( productBaseInfo.getChnlProdId() );
 							if (retMetaInfo != null) {
 								Product product = this.responseInfoGenerateFacade
 										.generateMusicProductShort(retMetaInfo);
@@ -179,11 +167,7 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 							|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) { // 영화/방송
 
 						// 채널 ID로 상품 조회
-						productBasicInfo.setProdId(productBaseInfo.getChnlProdId());
-						productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-						reqMap.put("productBasicInfo", productBasicInfo);
-						reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-						MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+						MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo( productBaseInfo.getChnlProdId() );
 
 						if (retMetaInfo != null) {
 							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) { // 영화일때
@@ -200,13 +184,7 @@ public class RecommendNewMemberProductServiceImpl implements RecommendNewMemberP
 					} else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) { // 쇼핑
 
 						// 채널 ID로 상품 조회
-						productBasicInfo.setCatalogId(productBaseInfo.getChnlProdId());
-						productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-						reqMap.put("productBasicInfo", productBasicInfo);
-						reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-						reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-						// 쇼핑 Meta 정보 조회
-						MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+						MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo( productBaseInfo.getChnlProdId() );
 						if (retMetaInfo != null) {
 							// 쇼핑 Response Generate
 							Product product = this.responseInfoGenerateFacade.generateShoppingProductShort(retMetaInfo);

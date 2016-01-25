@@ -636,18 +636,6 @@ public class BannerServceImpl implements BannerService {
     private MetaInfo getMetaInfo(SacRequestHeader header, String prodId, String topMenuId) {
 
         MetaInfo metaInfo = null; // 메타정보 VO
-        ProductBasicInfo productInfo = new ProductBasicInfo(); // 메타정보 조회용 상품 파라미터
-        Map<String, Object> paramMap = new HashMap<String, Object>(); // 메타정보 조회용 파라미터
-
-        // 메타정보 조회를 위한 파라미터 세팅
-        productInfo.setProdId(prodId);
-        productInfo.setPartProdId(prodId);
-        productInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-        paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-        paramMap.put("tenantHeader", header.getTenantHeader());
-        paramMap.put("deviceHeader", header.getDeviceHeader());
-        paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-        paramMap.put("productBasicInfo", productInfo);
 
         // APP
         if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
@@ -658,8 +646,7 @@ public class BannerServceImpl implements BannerService {
             this.logger.debug("[searchBannerLog] 메타정보조회 : 앱상품");
             this.logger.debug("----------------------------------------------------------------");
 
-            paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-            metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+            metaInfo = this.metaInfoService.getAppMetaInfo( prodId );
         }
         // 이북 및 코믹
         else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
@@ -668,8 +655,7 @@ public class BannerServceImpl implements BannerService {
             this.logger.debug("[searchBannerLog] 메타정보조회 : 이북, 코믹");
             this.logger.debug("----------------------------------------------------------------");
 
-            paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-            metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
+            metaInfo = this.metaInfoService.getEbookComicMetaInfo( prodId );
         }
         // 영화 및 방송
         else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
@@ -678,8 +664,7 @@ public class BannerServceImpl implements BannerService {
             this.logger.debug("[searchBannerLog] 메타정보조회 : 영화, 방송");
             this.logger.debug("----------------------------------------------------------------");
 
-            paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-            metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+            metaInfo = this.metaInfoService.getVODMetaInfo( prodId );
         }
         // Tstore 쇼핑
         else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) {
@@ -687,8 +672,7 @@ public class BannerServceImpl implements BannerService {
             this.logger.debug("[searchBannerLog] 메타정보조회 : Tstore 쇼핑");
             this.logger.debug("----------------------------------------------------------------");
 
-            paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-            metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
+            metaInfo = this.metaInfoService.getShoppingMetaInfo( prodId );
         }
 
         return metaInfo;

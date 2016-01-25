@@ -142,10 +142,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
         CommonResponse commonResponse = new CommonResponse();
         List<Product> productList = new ArrayList<Product>();
 
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        reqMap.put("tenantHeader", tenantHeader);
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
         List<ThemeThemeZoneInfo> themeThemeZoneInfoMeta = null;
         // 테마 조회
         themeThemeZoneInfoMeta = this.commonDAO.queryForList("ThemeThemeZone.selectThemeThemeZoneInfo", req,
@@ -209,20 +205,12 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
                 String topMenuId = productBasicInfo.getTopMenuId();
                 String svcGrpCd = productBasicInfo.getSvcGrpCd();
 
-                reqMap.put("productBasicInfo", productBasicInfo);
-                reqMap.put("req", req);
-                reqMap.put("tenantHeader", tenantHeader);
-                reqMap.put("deviceHeader", deviceHeader);
-                reqMap.put("lang", tenantHeader.getLangCd());
-                reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-
                 product = new Product(); // 결과물
 
                 MetaInfo retMetaInfo = null;
                 // APP 상품의 경우
                 if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-                    reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-                    retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+                    retMetaInfo = this.metaInfoService.getAppMetaInfo(productBasicInfo);
                     if (retMetaInfo != null) {
                         product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
                         productList.add(product);
@@ -232,8 +220,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
                     // 영화/방송 상품의 경우
                     if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
                             || DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-                        reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-                        retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+                        retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
                         // 영화용 Contributor 설정
 							/*
 							 * if (retMetaInfo != null) { Contributor contributor =
@@ -251,8 +238,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
                     } else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
                             || DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
                         // 경우
-                        reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-                        retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+                        retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
                         // Ebook용 Contributor 설정
 							/*
 							 * if (retMetaInfo != null) { Contributor contributor = this.ebookComicGenerator
@@ -268,8 +254,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
                             }
                         }
                     } else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-                        reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-                        retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+                        retMetaInfo = this.metaInfoService.getMusicMetaInfo(productBasicInfo);
                         // Music용 Contributor 설정
 							/*
 							 * if (retMetaInfo != null) { Contributor contributor =
@@ -282,8 +267,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
                             productList.add(product);
                         }
                     } else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // WEBTOON 상품의 경우
-                        reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-                        retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+                        retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(productBasicInfo);
                         // Comic용 Contributor 설정
 							/*
 							 * if (retMetaInfo != null) { Contributor contributor = this.ebookComicGenerator
@@ -295,8 +279,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
                         }
                     }
                 } else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
-                    reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-                    retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);// shopping용 Contributor 설정
+                    retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);// shopping용 Contributor 설정
 						/*
 						 * if (retMetaInfo != null) { Contributor contributor =
 						 * this.shoppingInfoGenerator.generateContributor(retMetaInfo);

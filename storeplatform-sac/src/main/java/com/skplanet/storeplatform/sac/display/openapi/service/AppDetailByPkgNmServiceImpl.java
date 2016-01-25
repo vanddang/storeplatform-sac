@@ -200,7 +200,7 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 				// 평점정보
 				Accrual accrual = new Accrual();
 				// 3사 통함 평점, 구매수, 참여수 조회 (캐쉬적용)
-				ProductStats productStats = this.productInfoManager.getProductStats(new ProductStatsParam(productId));
+				ProductStats productStats = this.productInfoManager.getProductStats( productId );
 				accrual.setVoterCount(productStats.getParticipantCount());
 				accrual.setDownloadCount(productStats.getPurchaseCount());
 				accrual.setScore(productStats.getAverageScore());

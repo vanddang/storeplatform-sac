@@ -242,14 +242,6 @@ public class BrandshopServiceImpl implements BrandshopService {
         List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Brandshop.selectBrandshopList",
                 req, ProductBasicInfo.class);
 
-        // Meta DB 조회 파라미터 생성
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-
-        reqMap.put("req", req);
-        reqMap.put("tenantHeader", tenantHeader);
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("lang", tenantHeader.getLangCd());
-
         // 브렌드샵 테마 조회
         List<BrandshopInfo> brandshopLayout = this.commonDAO.queryForList("Brandshop.selectBrandshopInfo", req,
                 BrandshopInfo.class);
@@ -307,20 +299,13 @@ public class BrandshopServiceImpl implements BrandshopService {
                 String topMenuId = productBasicInfo.getTopMenuId();
                 String svcGrpCd = productBasicInfo.getSvcGrpCd();
 
-                reqMap.put("productBasicInfo", productBasicInfo);
-                reqMap.put("req", req);
-                reqMap.put("tenantHeader", tenantHeader);
-                reqMap.put("deviceHeader", deviceHeader);
-                reqMap.put("lang", tenantHeader.getLangCd());
-
                 product = new Product(); // 결과물
 
                 MetaInfo retMetaInfo = null;
 
                 // APP 상품의 경우
                 if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-                    reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-                    retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+                    retMetaInfo = this.metaInfoService.getAppMetaInfo(productBasicInfo);
                     if (retMetaInfo != null) {
                         product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
                         productList.add(product);
@@ -328,10 +313,9 @@ public class BrandshopServiceImpl implements BrandshopService {
 
                 } else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
                     // 영화/방송 상품의 경우
-                    reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
                     if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
                             || DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-                        retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+                        retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 
                         if (retMetaInfo != null) {
                             if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
@@ -344,7 +328,7 @@ public class BrandshopServiceImpl implements BrandshopService {
                     } else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
                             || DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
                         // 경우
-                        retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+                        retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(productBasicInfo);
                         if (retMetaInfo != null) {
                             if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
                                 product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
@@ -356,7 +340,7 @@ public class BrandshopServiceImpl implements BrandshopService {
                         }
 
                     } else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-                        retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
+                        retMetaInfo = this.metaInfoService.getMusicMetaInfo(productBasicInfo);
                         if (retMetaInfo != null) {
                             // product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
                             product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
@@ -364,7 +348,7 @@ public class BrandshopServiceImpl implements BrandshopService {
                         }
 
                     } else if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // WEBTOON 상품의 경우
-                        retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+                        retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(productBasicInfo);
                         if (retMetaInfo != null) {
                             product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
                             productList.add(product);
@@ -372,7 +356,7 @@ public class BrandshopServiceImpl implements BrandshopService {
 
                     }
                 } else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
-                    retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+                    retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
                     if (retMetaInfo != null) {
                         product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
                         productList.add(product);

@@ -78,28 +78,16 @@ public class MetaServiceTest {
 
     @Test
     public void appTest() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        DeviceHeader deviceHeader = new DeviceHeader();
-        TenantHeader tenantHeader = new TenantHeader();
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("tenantHeader", tenantHeader);
-        deviceHeader.setModel(DEVICE_MODEL_CD);
-        tenantHeader.setLangCd("ko");
-        tenantHeader.setTenantId("S01");
-        reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-        reqMap.put("productBasicInfo", productBasicInfo);
-        productBasicInfo.setProdId("0000653363");
-        productBasicInfo.setSvcGrpCd(DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
 
+        String prodId = "0000653363";
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta1 = metaInfoService.getAppMetaInfo(reqMap);
+        MetaInfo meta1 = metaInfoService.getAppMetaInfo( prodId );
         logger.info("Meta1={}", meta1);
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         cacheEvictManager.evictAllAppMeta();
-        MetaInfo meta2 = metaInfoService.getAppMetaInfo(reqMap);
+        MetaInfo meta2 = metaInfoService.getAppMetaInfo( prodId );
         logger.info("Meta2={}", meta2);
 
         beanDiff(meta1, meta2);
@@ -107,32 +95,16 @@ public class MetaServiceTest {
 
     @Test
     public void musicTest() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        DeviceHeader deviceHeader = new DeviceHeader();
-        TenantHeader tenantHeader = new TenantHeader();
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("tenantHeader", tenantHeader);
-        deviceHeader.setModel(DEVICE_MODEL_CD);
-        tenantHeader.setLangCd("ko");
-        tenantHeader.setTenantId("S01");
-        reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-        reqMap.put("productBasicInfo", productBasicInfo);
-        productBasicInfo.setProdId("H001164297");
-        productBasicInfo.setSvcGrpCd("DP000203");
-        productBasicInfo.setContentsTypeCd("PD002501");
-        productBasicInfo.setTopMenuId("DP16");
-        String dateString = displayCommonService.getBatchStandardDateString("S01", "MELON_DP004901");
-        reqMap.put("stdDt", dateString.substring(0, 8));
-        reqMap.put("chartClsfCd", "DP004901");
+
+        String prodId = "H001164297";
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta1 = metaInfoService.getMusicMetaInfo(reqMap);
+        MetaInfo meta1 = metaInfoService.getMusicMetaInfo( prodId );
         logger.info("Meta1={}", meta1);
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         cacheEvictManager.evictAllMusicMeta();
-        MetaInfo meta2 = metaInfoService.getMusicMetaInfo(reqMap);
+        MetaInfo meta2 = metaInfoService.getMusicMetaInfo( prodId );
         logger.info("Meta2={}", meta2);
 
         beanDiff(meta1, meta2);
@@ -140,30 +112,16 @@ public class MetaServiceTest {
 
     @Test
     public void freepassTest() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        DeviceHeader deviceHeader = new DeviceHeader();
-        TenantHeader tenantHeader = new TenantHeader();
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("tenantHeader", tenantHeader);
-        deviceHeader.setModel(DEVICE_MODEL_CD);
-        tenantHeader.setLangCd("ko");
-        tenantHeader.setTenantId("S01");
-        reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-        reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-        reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
-        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-        reqMap.put("productBasicInfo", productBasicInfo);
-        productBasicInfo.setProdId("F901000867");
-        productBasicInfo.setSvcGrpCd(DisplayConstants.DP_TSTORE_FREEPASS_PROD_SVC_GRP_CD);
 
+        String prodId = "F901000867";
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta1 = metaInfoService.getFreepassMetaInfo(reqMap);
+        MetaInfo meta1 = metaInfoService.getFreepassMetaInfo( prodId );
         logger.info("Meta1={}", meta1);
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         cacheEvictManager.evictAllFreepassMeta();
-        MetaInfo meta2 = metaInfoService.getFreepassMetaInfo(reqMap);
+        MetaInfo meta2 = metaInfoService.getFreepassMetaInfo( prodId );
         logger.info("Meta2={}", meta2);
 
         beanDiff(meta1, meta2);
@@ -171,27 +129,16 @@ public class MetaServiceTest {
 
     @Test
     public void vodTestByChannel() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        DeviceHeader deviceHeader = new DeviceHeader();
-        TenantHeader tenantHeader = new TenantHeader();
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("tenantHeader", tenantHeader);
-        deviceHeader.setModel(DEVICE_MODEL_CD);
-        tenantHeader.setLangCd("ko");
-        tenantHeader.setTenantId("S01");
-        reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-        reqMap.put("productBasicInfo", productBasicInfo);
-        productBasicInfo.setProdId("H000043401");
-        productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+        String prodId = "H000043401";
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta1 = metaInfoService.getVODMetaInfo(reqMap);
+        MetaInfo meta1 = metaInfoService.getVODMetaInfo(prodId);
         logger.info("Meta1={}", meta1);
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         this.cacheEvictManager.evictAllVodMeta();
-        MetaInfo meta2 = metaInfoService.getVODMetaInfo(reqMap);
+        MetaInfo meta2 = metaInfoService.getVODMetaInfo(prodId);
         logger.info("Meta2={}", meta2);
 
         beanDiff(meta1, meta2);
@@ -199,27 +146,16 @@ public class MetaServiceTest {
 
     @Test
     public void vodTestByEpisode() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        DeviceHeader deviceHeader = new DeviceHeader();
-        TenantHeader tenantHeader = new TenantHeader();
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("tenantHeader", tenantHeader);
-        deviceHeader.setModel(DEVICE_MODEL_CD);
-        tenantHeader.setLangCd("ko");
-        tenantHeader.setTenantId("S01");
-        reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-        reqMap.put("productBasicInfo", productBasicInfo);
-        productBasicInfo.setPartProdId("H000043402");
-        productBasicInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+
+        String prodId = "H000043402";
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta1 = metaInfoService.getVODMetaInfo(reqMap);
+        MetaInfo meta1 = metaInfoService.getVODMetaInfo(prodId);
         logger.info("Meta1={}", meta1);
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         this.cacheEvictManager.evictAllVodMeta();
-        MetaInfo meta2 = metaInfoService.getVODMetaInfo(reqMap);
+        MetaInfo meta2 = metaInfoService.getVODMetaInfo(prodId);
         logger.info("Meta2={}", meta2);
 
         beanDiff(meta1, meta2);
@@ -227,27 +163,16 @@ public class MetaServiceTest {
 
     @Test
     public void ebookComicTestByChannel() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        DeviceHeader deviceHeader = new DeviceHeader();
-        TenantHeader tenantHeader = new TenantHeader();
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("tenantHeader", tenantHeader);
-        deviceHeader.setModel(DEVICE_MODEL_CD);
-        tenantHeader.setLangCd("ko");
-        tenantHeader.setTenantId("S01");
-        reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-        reqMap.put("productBasicInfo", productBasicInfo);
-        productBasicInfo.setProdId("H900036398");
-        productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+        String prodId = "H900036398";
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta1 = metaInfoService.getEbookComicMetaInfo(reqMap);
+        MetaInfo meta1 = metaInfoService.getEbookComicMetaInfo(prodId);
         logger.info("Meta1={}", meta1);
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         this.cacheEvictManager.evictAllEbookComicMeta();
-        MetaInfo meta2 = metaInfoService.getEbookComicMetaInfo(reqMap);
+        MetaInfo meta2 = metaInfoService.getEbookComicMetaInfo(prodId);
         logger.info("Meta2={}", meta2);
 
         beanDiff(meta1, meta2);
@@ -255,28 +180,16 @@ public class MetaServiceTest {
 
     @Test
     public void ebookComicTestByEpisode() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        DeviceHeader deviceHeader = new DeviceHeader();
-        TenantHeader tenantHeader = new TenantHeader();
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("tenantHeader", tenantHeader);
-        deviceHeader.setModel(DEVICE_MODEL_CD);
-        tenantHeader.setLangCd("ko");
-        tenantHeader.setTenantId("S01");
-        reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-        reqMap.put("productBasicInfo", productBasicInfo);
-        productBasicInfo.setPartProdId("H001444114");
-        productBasicInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
+        String prodId = "H001444114";
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta1 = metaInfoService.getEbookComicMetaInfo(reqMap);
+        MetaInfo meta1 = metaInfoService.getEbookComicMetaInfo(prodId);
         logger.info("Meta1={}", meta1);
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         this.cacheEvictManager.evictAllEbookComicMeta();
-        MetaInfo meta2 = metaInfoService.getEbookComicMetaInfo(reqMap);
+        MetaInfo meta2 = metaInfoService.getEbookComicMetaInfo(prodId);
         logger.info("Meta2={}", meta2);
 
         beanDiff(meta1, meta2);
@@ -284,28 +197,16 @@ public class MetaServiceTest {
 
     @Test
     public void webtoonTestByChannel() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        DeviceHeader deviceHeader = new DeviceHeader();
-        TenantHeader tenantHeader = new TenantHeader();
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("tenantHeader", tenantHeader);
-        deviceHeader.setModel(DEVICE_MODEL_CD);
-        tenantHeader.setLangCd("ko");
-        tenantHeader.setTenantId("S01");
-        reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-        reqMap.put("productBasicInfo", productBasicInfo);
-        productBasicInfo.setProdId("H002621946");
-        productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 
+        String prodId = "H002621946";
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta1 = metaInfoService.getWebtoonMetaInfo(reqMap);
+        MetaInfo meta1 = metaInfoService.getWebtoonMetaInfo(prodId);
         logger.info("Meta1={}", meta1);
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         this.cacheEvictManager.evictAllWebtoonMeta();
-        MetaInfo meta2 = metaInfoService.getWebtoonMetaInfo(reqMap);
+        MetaInfo meta2 = metaInfoService.getWebtoonMetaInfo(prodId);
         logger.info("Meta2={}", meta2);
 
         beanDiff(meta1, meta2);
@@ -313,27 +214,16 @@ public class MetaServiceTest {
 
     @Test
     public void webtoonTestByEpisode() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        DeviceHeader deviceHeader = new DeviceHeader();
-        TenantHeader tenantHeader = new TenantHeader();
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("tenantHeader", tenantHeader);
-        deviceHeader.setModel(DEVICE_MODEL_CD);
-        tenantHeader.setLangCd("ko");
-        tenantHeader.setTenantId("S01");
-        reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-        reqMap.put("productBasicInfo", productBasicInfo);
-        productBasicInfo.setPartProdId("H001562778");
-        productBasicInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+
+        String prodId = "H001562778";
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta1 = metaInfoService.getWebtoonMetaInfo(reqMap);
+        MetaInfo meta1 = metaInfoService.getWebtoonMetaInfo(prodId);
         logger.info("Meta1={}", meta1);
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         this.cacheEvictManager.evictAllWebtoonMeta();
-        MetaInfo meta2 = metaInfoService.getWebtoonMetaInfo(reqMap);
+        MetaInfo meta2 = metaInfoService.getWebtoonMetaInfo(prodId);
         logger.info("Meta2={}", meta2);
 
         beanDiff(meta1, meta2);
@@ -341,27 +231,11 @@ public class MetaServiceTest {
 
     @Test
     public void shoppingTest() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        DeviceHeader deviceHeader = new DeviceHeader();
-        TenantHeader tenantHeader = new TenantHeader();
-        reqMap.put("deviceHeader", deviceHeader);
-        reqMap.put("tenantHeader", tenantHeader);
-        deviceHeader.setModel(DEVICE_MODEL_CD);
-        tenantHeader.setLangCd("ko");
-        tenantHeader.setTenantId("S01");
-        reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
-        reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-        reqMap.put("productBasicInfo", productBasicInfo);
-//        productBasicInfo.setCatalogId("CL00007545");
-        productBasicInfo.setCatalogId("CL00000404");
-//        productBasicInfo.setCatalogId("CL00000851");
-//        productBasicInfo.setCatalogId("CL00030277");
-        productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+        String catalogId = "CL00000404";
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta1 = metaInfoService.getShoppingMetaInfo(reqMap);
+        MetaInfo meta1 = metaInfoService.getShoppingMetaInfo(catalogId);
         logger.info("Meta1={}", meta1);
 
         cacheEvictManager.evictAllShoppingMeta();
@@ -371,7 +245,7 @@ public class MetaServiceTest {
 //        param.setCatalogId(productBasicInfo.getCatalogId());
 //        cacheEvictManager.evictShoppingMeta(param);
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
-        MetaInfo meta2 = metaInfoService.getShoppingMetaInfo(reqMap);
+        MetaInfo meta2 = metaInfoService.getShoppingMetaInfo(catalogId);
         logger.info("Meta2={}", meta2);
 
         beanDiff(meta1, meta2);

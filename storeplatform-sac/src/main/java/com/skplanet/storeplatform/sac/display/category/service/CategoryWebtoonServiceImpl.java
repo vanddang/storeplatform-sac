@@ -137,14 +137,8 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 				ProductBasicInfo.class);
 
 		if (!resultList.isEmpty()) {
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 			for (ProductBasicInfo productBasicInfo : resultList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
-				reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-				MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+				MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(productBasicInfo);
 
 				if (retMetaInfo != null) {
 					Product product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);

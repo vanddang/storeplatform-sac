@@ -24,12 +24,12 @@ import com.skplanet.storeplatform.sac.display.stat.vo.StatLike;
  */
 public interface StatMemberItemService {
 
-	Object findItem(StatLike like, SacRequestHeader header, PreferredCategoryInfo preferredCategoryInfo);
+	Object findItem( StatLike like, PreferredCategoryInfo preferredCategoryInfo );
 
-	Card findCard(String cardId, String userKey, SacRequestHeader header, PreferredCategoryInfo preferredCategoryInfo);
+	Card findCard( String cardId, String userKey, PreferredCategoryInfo preferredCategoryInfo );
 
-	Product findProd(String prodId, SacRequestHeader header);
+	Product findProd( String prodId );
 	
-	Contributor findArtist(String prodId, SacRequestHeader header);
+	Contributor findArtist( String artistId );
 
 }

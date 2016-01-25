@@ -135,14 +135,8 @@ public class CategoryAppServiceImpl implements CategoryAppService {
                 ProductBasicInfo.class);
 
         if (!appList.isEmpty()) {
-            Map<String, Object> reqMap = new HashMap<String, Object>();
-            reqMap.put("tenantHeader", tenantHeader);
-            reqMap.put("deviceHeader", deviceHeader);
-            reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
             for (ProductBasicInfo productBasicInfo : appList) {
-                reqMap.put("productBasicInfo", productBasicInfo);
-                reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-                MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+                MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(productBasicInfo);
 
                 if (retMetaInfo != null) {
                     // Tstore멤버십 적립율 정보

@@ -7,7 +7,7 @@
 <included>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
+            <pattern>[%d{HH:mm:ss.SSS}|%-5level|%X{requestSystemId}|%X{interfaceId}] %40(\(%file:%line\)) %msg%n</pattern>
         </encoder>
     </appender>
     
@@ -102,7 +102,7 @@
     
     <!-- SERVICE LOGGER -->
     <logger name="com.skplanet.storeplatform.sac" additivity="false">
-        <level value="INFO" />
+        <level value="TRACE" />
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
         <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
@@ -147,7 +147,7 @@
     </logger> 
     <logger name="jdbc.sqltiming" additivity="false">
         <level value="INFO" /> 
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="SIMPLE_CONSOLE" />
         <appender-ref ref="SQL_ERROR_LOGGING_ROLLINGFILE_ASYNC" />
         <appender-ref ref="SQL_LOGGING_ROLLINGFILE_ASYNC" />
     </logger>

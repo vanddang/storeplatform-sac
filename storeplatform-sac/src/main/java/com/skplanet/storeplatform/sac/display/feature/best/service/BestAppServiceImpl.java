@@ -162,7 +162,7 @@ public class BestAppServiceImpl implements BestAppService {
 
         for (ProductBasicInfo prodBasicInfo : appList) {
             req.put("productBasicInfo", prodBasicInfo);
-            MetaInfo meta = metaInfoService.getAppMetaInfo(req);
+            MetaInfo meta = metaInfoService.getAppMetaInfo( prodBasicInfo );
 
             if(meta == null)
                 continue;

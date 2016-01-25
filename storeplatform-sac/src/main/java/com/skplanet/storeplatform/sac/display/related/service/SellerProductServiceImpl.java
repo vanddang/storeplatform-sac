@@ -96,7 +96,6 @@ public class SellerProductServiceImpl implements SellerProductService {
         
 		SellerProductSacRes sellerProductSacRes = new SellerProductSacRes();
 		CommonResponse commonResponse = new CommonResponse();
-		Map<String, Object> reqMap = new HashMap<String, Object>();
 
 		// 특정 판매자별 상품 조회
 		this.log.debug("특정 판매자별 상품 조회");
@@ -112,15 +111,10 @@ public class SellerProductServiceImpl implements SellerProductService {
         Integer cnt = null;
 
 		if (!sellerProductList.isEmpty()) {
-			reqMap.put("tenantHeader", requestHeader.getTenantHeader());
-			reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
 			for (ProductBasicInfo productBasicInfo : sellerProductList) {
 
-				reqMap.put("productBasicInfo", productBasicInfo);
-				reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-                MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+                MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(productBasicInfo);
 				if (retMetaInfo != null) {
                     Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 					productList.add(product);

@@ -287,6 +287,7 @@
             ON TPRC.PROD_ID = EPD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
             LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
             ON TS.PROD_ID = CPD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
+            -- Not Used (과거 대비 순위 변동정보 추출용으로 4.0에서는 보여주지 않는다.)
             LEFT OUTER JOIN TB_DP_MUSIC_CHART MCH
             ON MCH.PROD_ID = EPD.PROD_ID AND MCH.CHART_CLSF_CD = #{chartClsfCd} AND MCH.RANK_START_DAY = #{rankStartDay}
         WHERE 1=1
@@ -1072,7 +1073,7 @@
               AND MC.USE_YN = 'Y'
     </select>
 
-    <select id="getProductStats" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManagerImpl$RawProductStats">
+    <select id="getProductStats" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.service.ProductInfoCacheManager$RawProductStats">
         SELECT /* ProductInfoMapper.xml, getProductStats, 정희원, 2015-02-25 */
             SUM(NVL(PRCHS_CNT, 0)) AS PRCHS_CNT,
             SUM(NVL(TOT_EVLU_SCORE, 0)) AS TOT_EVLU_SCORE,

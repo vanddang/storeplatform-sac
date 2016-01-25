@@ -240,9 +240,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
 					// 쇼핑 Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
 						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -323,9 +322,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
 					// 쇼핑 Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
 						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -460,9 +458,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
 					// 쇼핑 Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
 						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -821,9 +818,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				if (productBasicInfoList != null) {
 					if (productBasicInfoList.size() > 0) {
 						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-							reqMap.put("productBasicInfo", productBasicInfo);
 							// 쇼핑 Meta 정보 조회
-							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 							if (retMetaInfo != null) {
 								// 쇼핑 Response Generate
 								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -1218,9 +1214,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				if (productBasicInfoList != null) {
 					if (productBasicInfoList.size() > 0) {
 						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-							reqMap.put("productBasicInfo", productBasicInfo);
 							// 쇼핑 Meta 정보 조회
-							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 							if (retMetaInfo != null) {
 								// 쇼핑 Response Generate
 								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -1450,9 +1445,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				if (productBasicInfoList != null) {
 					if (productBasicInfoList.size() > 0) {
 						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-							reqMap.put("productBasicInfo", productBasicInfo);
 							// 쇼핑 Meta 정보 조회
-							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 							if (retMetaInfo != null) {
 								// 쇼핑 Response Generate
 								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -1595,9 +1589,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
 					// 쇼핑 Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
 						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -1739,9 +1732,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
 					// 쇼핑 Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
 						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -2834,9 +2826,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				if (productBasicInfoList != null) {
 					if (productBasicInfoList.size() > 0) {
 						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-							reqMap.put("productBasicInfo", productBasicInfo);
 							// 쇼핑 Meta 정보 조회
-							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 							if (retMetaInfo != null) {
 								// 쇼핑 Response Generate
 								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -3273,9 +3264,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				if (productBasicInfoList != null) {
 					if (productBasicInfoList.size() > 0) {
 						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-							reqMap.put("productBasicInfo", productBasicInfo);
 							// 쇼핑 Meta 정보 조회
-							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 							if (retMetaInfo != null) {
 								// 쇼핑 Response Generate
 								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -3428,9 +3418,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
 					// 쇼핑 Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
 						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -3578,9 +3567,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
 					// 쇼핑 Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
 						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
@@ -4443,9 +4431,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				if (productBasicInfoList != null) {
 					if (productBasicInfoList.size() > 0) {
 						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-							reqMap.put("productBasicInfo", productBasicInfo);
 							// 쇼핑 Meta 정보 조회
-							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(productBasicInfo);
 							if (retMetaInfo != null) {
 								// 쇼핑 Response Generate
 								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);

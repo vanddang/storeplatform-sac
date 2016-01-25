@@ -27,8 +27,8 @@ public interface PanelCardInfoManager {
 
 	/**
      * static한 카드 상세 정보를 조회한다.
-     * @param tenantId
-     * @param cardlId
+     * @param tenantId  테넌트ID
+     * @param cardId    카드ID
      * @return
      */
     CardInfo getCardInfo(String tenantId, String cardId);

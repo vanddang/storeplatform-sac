@@ -121,16 +121,10 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
         Layout layout = null;
 
         if (!productBasicPartInfo.isEmpty()) {
-            Map<String, Object> reqMap = new HashMap<String, Object>();
-            reqMap.put("tenantHeader", tenantHeader);
-            reqMap.put("deviceHeader", deviceHeader);
-            reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-            ProductBasicInfo productBasicInfo = null;
-            productBasicInfo = productBasicPartInfo.get(0);
-            reqMap.put("productBasicInfo", productBasicInfo);
-            reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-            MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+            ProductBasicInfo productBasicInfo = productBasicPartInfo.get( 0 );
+
+            MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo( productBasicInfo );
             layout = new Layout();
             Date date = new Date();
             if (retMetaInfo != null) {

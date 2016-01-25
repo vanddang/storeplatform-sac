@@ -12,9 +12,12 @@ package com.skplanet.storeplatform.sac.display.cache.vo;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * <p>
  * FreepassMetaParam
- * </p>
+ *
+ * <pre>
+ *     Voucher 로 기능 확장
+ * </pre>
+ *
  * Updated on : 2014. 04. 10 Updated by : 정희원, SK 플래닛.
  */
 @Deprecated

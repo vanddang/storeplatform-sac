@@ -90,9 +90,8 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 
 		if (productBasicInfoList != null) {
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
 				// VOD Meta 정보 조회
-				MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+				MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 				if (retMetaInfo != null) {
 					// Movie Response Generate
 					Product product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
