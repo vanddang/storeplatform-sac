@@ -1,16 +1,21 @@
 package com.skplanet.storeplatform.sac.member.domain.mbr;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "TB_US_OUSERMBR_PIN")
-public class UserMarketPin {
+public class UserMarketPin implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    private String insdUsermbrNo;
+    @ManyToOne
+    @JoinColumn(name = "INSD_USERMBR_NO")
+    private UserMember member;
 
     private String pinNo;
     private Date rnameAuthDate;
@@ -19,18 +24,10 @@ public class UserMarketPin {
 
     public UserMarketPin() {}
 
-    public UserMarketPin(String insdUsermbrNo, String pinNo, Integer authFailCnt) {
-        this.insdUsermbrNo = insdUsermbrNo;
+    public UserMarketPin(UserMember member, String pinNo, Integer authFailCnt) {
+        this.member = member;
         this.pinNo = pinNo;
         this.authFailCnt = authFailCnt;
-    }
-
-    public String getInsdUsermbrNo() {
-        return insdUsermbrNo;
-    }
-
-    public void setInsdUsermbrNo(String insdUsermbrNo) {
-        this.insdUsermbrNo = insdUsermbrNo;
     }
 
     public String getPinNo() {
@@ -65,5 +62,16 @@ public class UserMarketPin {
         this.authFailCnt = authFailCnt;
     }
 
-    //public void createUserPin()
+    public UserMember getMember() {
+        return member;
+    }
+
+    public void setMember(UserMember member) {
+        this.member = member;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.setAuthFailCnt(0);
+    }
 }
