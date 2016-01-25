@@ -211,16 +211,14 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 				me.setProdAmt(meta.getChnlProdAmt());
 				me.setUnlmtAmt(meta.getChnlUnlmtAmt());
 				me.setPeriodAmt(meta.getChnlPeriodAmt());
-
-				me.setDrmYn(meta.getChnlDrmYn());
 			} else if (param.getContentType() == ContentType.Episode) {
 				me.setProdAmt(meta.getEpsdProdAmt());
 				me.setUnlmtAmt(meta.getEpsdUnlmtAmt());
 				me.setPeriodAmt(meta.getEpsdPeriodAmt());
-
 			}
             // 비슷한 영화 더보기 리스트에서 drm 여부가 노출되지 않는 이슈 해결.
             // 에피소드의 drmYn 세팅. Rights를 생성하는 부분에서 소장이냐 대여냐에 따라 생성 로직이 분리되기 때문에 아래와 같이 처리해도 무방
+            me.setDrmYn(meta.getChnlDrmYn());
             me.setPlayDrmYn(meta.getEpsdDrmYn());
             me.setStoreDrmYn(meta.getEpsdDrmYn());
         } else {
