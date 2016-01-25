@@ -35,6 +35,13 @@ public class UserDeliveryRepositoryImpl implements UserDeliveryRepository {
     private EntityManager emMbr;
 
     @Override
+    public UserDelivery findOne(Long id) {
+        return new JPAQuery(emMbr).from($)
+                .where($.seq.eq(id))
+                .uniqueResult($);
+    }
+
+    @Override
     public List<UserDelivery> findByUserKeyAndType(String userKey, String type) {
         BooleanBuilder expr = new BooleanBuilder($.member.insdUsermbrNo.eq(userKey));
 
@@ -43,6 +50,17 @@ public class UserDeliveryRepositoryImpl implements UserDeliveryRepository {
 
         return new JPAQuery(emMbr).from($)
                 .where(expr)
+                .orderBy($.regDt.desc(), $.useDt.desc())
                 .list($);
+    }
+
+    @Override
+    public void save(UserDelivery delv) {
+        emMbr.merge(delv);
+    }
+
+    @Override
+    public void delete(UserDelivery delv) {
+        emMbr.remove(delv);
     }
 }

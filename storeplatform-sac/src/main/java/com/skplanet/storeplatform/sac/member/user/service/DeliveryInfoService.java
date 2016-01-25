@@ -30,7 +30,17 @@ public interface DeliveryInfoService {
      */
     List<UserDelivery> find(String userKey, @Nullable String type);
 
+    /**
+     * 배송정보를 등록 또는 수정합니다.
+     * @param userKey 사용자 식별자
+     * @param delivery 배송 정보
+     */
     void merge(String userKey, UserDelivery delivery);
 
+    /**
+     * 배송정보를 삭제합니다.
+     * @param userKey 사용자 식별자
+     * @param delvSeq 배송정보 식별자
+     */
     void delete(String userKey, long delvSeq);
 }
