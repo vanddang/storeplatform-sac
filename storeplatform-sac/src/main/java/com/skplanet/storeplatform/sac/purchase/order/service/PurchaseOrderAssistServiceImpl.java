@@ -193,6 +193,11 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 		}
 	}
 
+	@Override
+	public String calculateDayCnt(String today, String periodUnitCd, String periodVal) {
+		return calculateDayCnt(today, periodUnitCd, Integer.parseInt(periodVal));
+	}
+
 	/**
 	 * Calculate day cnt string.
 	 *
