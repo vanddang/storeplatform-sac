@@ -512,7 +512,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 				|| StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)
 				|| StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
 				|| StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
-			throw new StorePlatformException("SAC_MEM_1300", srhExtUserRes.getUserMbr().getUserType());
+			throw new StorePlatformException("SAC_MEM_1304", srhExtUserRes.getUserMbr().getUserType());
 		/** 7. 그외의 사용자는 비밀번호를 리셋후 응답처리.  */
 		}else{
 			/** 7-1. 새로운 암호 생성 및 암호화하여 DB 저장. */

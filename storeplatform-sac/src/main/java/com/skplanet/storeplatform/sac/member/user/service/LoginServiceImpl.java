@@ -1692,22 +1692,27 @@ public class LoginServiceImpl implements LoginService {
             }
 
             // 휴대기기 부가 정보 셋팅
-            List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
-            for (DeviceExtraInfo deviceExtraInfo : req.getDeviceExtraInfoList()) {
-                UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-                userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
-                userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
-                userMbrDeviceDetailList.add(userMbrDeviceDetail);
+            if (req.getDeviceExtraInfoList() != null && req.getDeviceExtraInfoList().size() >= 0) {
+                List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+                for (DeviceExtraInfo deviceExtraInfo : req.getDeviceExtraInfoList()) {
+                    UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+                    userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
+                    userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
+                    userMbrDeviceDetailList.add(userMbrDeviceDetail);
+                }
+                userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
             }
-            userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
             // 휴대기기 수정 요청
             modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
-            this.deviceSCI.modifySaveNSyncDevice(modifyDeviceRequest);
+            modifyDeviceRequest.setIsUpdDeviceId(true);
+            this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
-            /** 5-1-3. 전시/기타, 구매 파트 키 변경처리. */
-            this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), newUserKey,
-                    oldUserKey, newDeviceKey, oldDeviceKey);
+            /** 5-1-3. 전시/기타, 구매 파트 키 변경처리. (로컬테스트시는 연동하지 않음) */
+            if (!System.getProperty("spring.profiles.active", "local").equals("local")) {
+                this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), newUserKey,
+                        oldUserKey, newDeviceKey, oldDeviceKey);
+            }
 
             res.setDeviceKey(newDeviceKey);
             res.setUserKey(newUserKey);
@@ -1787,18 +1792,21 @@ public class LoginServiceImpl implements LoginService {
             }
 
             // 휴대기기 부가 정보 셋팅
-            List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
-            for (DeviceExtraInfo deviceExtraInfo : req.getDeviceExtraInfoList()) {
-                UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-                userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
-                userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
-                userMbrDeviceDetailList.add(userMbrDeviceDetail);
+            if (req.getDeviceExtraInfoList() != null && req.getDeviceExtraInfoList().size() >= 0) {
+                List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+                for (DeviceExtraInfo deviceExtraInfo : req.getDeviceExtraInfoList()) {
+                    UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+                    userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
+                    userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
+                    userMbrDeviceDetailList.add(userMbrDeviceDetail);
+                }
+                userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
             }
-            userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 
             // 휴대기기 수정 요청
             modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
-            this.deviceSCI.modifySaveNSyncDevice(modifyDeviceRequest);
+            modifyDeviceRequest.setIsUpdDeviceId(true);
+            this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
 			/** MQ 연동 */
             CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
