@@ -32,7 +32,6 @@ public class UserMarketPinRepositoryImpl implements UserMarketPinRepository {
         UserMarketPin findUserMarketPin = em.find(UserMarketPin.class, userMarketPin.getMember().getInsdUsermbrNo());
         if(findUserMarketPin != null) {
             findUserMarketPin.setPinNo(userMarketPin.getPinNo());
-            findUserMarketPin.setAuthFailCnt(0);
         }
         else em.persist(userMarketPin);
     }

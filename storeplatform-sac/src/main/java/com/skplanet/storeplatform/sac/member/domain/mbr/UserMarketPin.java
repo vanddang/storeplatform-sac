@@ -69,4 +69,9 @@ public class UserMarketPin implements Serializable {
     public void setMember(UserMember member) {
         this.member = member;
     }
+
+    @PrePersist
+    public void prePersist() {
+        this.setAuthFailCnt(0);
+    }
 }
