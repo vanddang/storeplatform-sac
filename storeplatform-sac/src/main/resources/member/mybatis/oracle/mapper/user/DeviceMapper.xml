@@ -1155,7 +1155,10 @@
                         AND b.insd_usermbr_no = #{userKey}
                     </when>
                     <otherwise>
-                        AND b.insd_usermbr_no != #{userKey}
+                        <choose>
+                            <when test="deviceKey != null">AND (b.insd_usermbr_no != #{userKey} or b.insd_device_id != #{deviceKey})</when>
+                            <otherwise>AND b.insd_usermbr_no != #{userKey}</otherwise>
+                        </choose>
                     </otherwise>
                 </choose>
             </if>

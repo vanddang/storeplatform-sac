@@ -1513,7 +1513,8 @@ public class LoginServiceImpl implements LoginService {
 
 				/*	등록된 단말중에 대표기기가 없는경우 대표기기 설정처리 */
                 for(UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()){
-                    if(StringUtils.equals(userMbrDevice.getIsPrimary(), MemberConstants.USE_Y)){
+                    if(StringUtils.isNotBlank(userMbrDevice.getMdn())
+                            && StringUtils.equals(userMbrDevice.getIsPrimary(), MemberConstants.USE_Y)){
                         isExistPrimary = true;
                         break;
                     }
@@ -1575,6 +1576,11 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserType(req.getUserType());
 		res.setUserStatus(MemberConstants.MAIN_STATUS_NORMAL);
 		res.setIsLoginSuccess(MemberConstants.USE_Y);
+        if(isNew){
+            res.setIsRegDevice(MemberConstants.USE_Y);
+        }else{
+            res.setIsRegDevice(MemberConstants.USE_N);
+        }
 		return res;
 	}
 
