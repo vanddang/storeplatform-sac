@@ -47,12 +47,8 @@
                     ON D.PROD_ID = A.PROD_ID AND D.ARTIST1_ID = #{artistId} AND D.LANG_CD = #{langCd}
                 JOIN TB_DP_TENANT_PROD E
                     ON E.PROD_ID = A.PROD_ID AND E.TENANT_ID = #{tenantId} AND E.PROD_STATUS_CD = 'PD000403' AND E.EXPO_YN = 'Y'
-                JOIN TB_DP_SPRT_DEVICE F
-                    ON F.PROD_ID = A.PROD_ID AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{mmDeviceModelCd})
                 JOIN TB_DP_MUSIC_PROD I
                     ON I.PROD_ID = A.PROD_ID
-                JOIN TB_CM_DEVICE G
-                    ON G.USE_YN = 'Y' AND G.MUSIC_SPRT_YN = 'Y' AND G.DEVICE_MODEL_CD = #{deviceModelCd}
                 <if test="orderedBy == 'popular'">
 				LEFT JOIN TB_DP_TENANT_PROD_STATS H
                     ON H.TENANT_ID IN <foreach collection="tenantList" open="(" close=")" separator="," item="v">#{v}</foreach>
