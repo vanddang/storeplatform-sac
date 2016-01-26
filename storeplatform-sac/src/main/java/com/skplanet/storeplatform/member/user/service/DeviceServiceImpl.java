@@ -326,34 +326,25 @@ public class DeviceServiceImpl implements DeviceService {
 					// device_id가 존재하는 mdn으로 다른회원이 존재하면 mdn, imei, sim null 처리
 					if (StringUtils.isNotBlank(userMbrDevice.getDeviceID())) {
 						String isDormant = StringUtils.isBlank(userMbrDevice.getIsDormant()) ? Constant.TYPE_YN_N : userMbrDevice.getIsDormant(); // 휴면 회원 유무
-						if(!StringUtils.equals(userKey, userMbrDevice.getUserKey())){
-							LOGGER.info("MDN으로 deviceId가 존재하는 기등록된 회원 존재(usim제거)");
-							LOGGER.info("mdn, nativeId, simSerialNo 초기화 처리  userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
-							UserMbrDevice updateMbrDevice = new UserMbrDevice();
-							updateMbrDevice.setMdn("");
-							updateMbrDevice.setSimSerialNo("");
-							updateMbrDevice.setNativeID("");
-							this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, updateMbrDevice, isDormant);
+						LOGGER.info("MDN으로 deviceId가 존재하는 기등록된 회원 존재(usim제거)");
+						LOGGER.info("mdn, nativeId, simSerialNo 초기화 처리  userKey : {}, deviceKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getDeviceKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
+						UserMbrDevice updateMbrDevice = new UserMbrDevice();
+						updateMbrDevice.setMdn("");
+						updateMbrDevice.setSimSerialNo("");
+						updateMbrDevice.setNativeID("");
+						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, updateMbrDevice, isDormant);
 
-							// tb_us_ousermbr_device_set 테이블의 실명인증일자, mdn을 null 처리
-							UserMbrDeviceSet modifyUserMbrDeviceSet = new UserMbrDeviceSet();
-							modifyUserMbrDeviceSet.setUserKey(updateMbrDevice.getUserKey());
-							modifyUserMbrDeviceSet.setDeviceKey(updateMbrDevice.getDeviceKey());
-							modifyUserMbrDeviceSet.setUserID(updateMbrDevice.getUserID());
-							modifyUserMbrDeviceSet.setRealNameDate("");
-							modifyUserMbrDeviceSet.setRealNameMdn("");
-							if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-								//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
-							}else{
-								//this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);  // TODO. 아직 테이블 정의 안됨
-							}
-						}else if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getDeviceKey())
-								&& !StringUtils.equals(createDeviceRequest.getUserMbrDevice().getDeviceKey(), userMbrDevice.getDeviceKey())){
-							// 111 MDN등록 후 OneStore재설치, usim 제거후 사용하다가 111 usim을 다시 삽인 한경우 기존 111MDN 휴대기기를 invalid 한다.
-							LOGGER.info("userKey가 같고 deviceKey가 다른 휴대기기 invalid 처리 userKey : {}, svcMangNo : {}, deviceKey : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceKey(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
-							int row = this.doInvalidDevice(userMbrDevice, isDormant);
-							if (row < 1)
-								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
+						// tb_us_ousermbr_device_set 테이블의 실명인증일자, mdn을 null 처리
+						UserMbrDeviceSet modifyUserMbrDeviceSet = new UserMbrDeviceSet();
+						modifyUserMbrDeviceSet.setUserKey(updateMbrDevice.getUserKey());
+						modifyUserMbrDeviceSet.setDeviceKey(updateMbrDevice.getDeviceKey());
+						modifyUserMbrDeviceSet.setUserID(updateMbrDevice.getUserID());
+						modifyUserMbrDeviceSet.setRealNameDate("");
+						modifyUserMbrDeviceSet.setRealNameMdn("");
+						if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
+							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+						}else{
+							//this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);  // TODO. 아직 테이블 정의 안됨
 						}
 					}
 				}
@@ -362,7 +353,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// 서비스 관리 번호 체크
 		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
-			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest.getUserMbrDevice().getSvcMangNum(), userKey, null, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
+			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest.getUserMbrDevice().getSvcMangNum(), userKey, createDeviceRequest.getUserMbrDevice().getDeviceKey(), Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
 			if(ownerUserMbrDeviceList != null && ownerUserMbrDeviceList.size() > 0){
 				for(UserMbrDevice userMbrDevice : ownerUserMbrDeviceList){
 					String isDormant = StringUtils.isBlank(userMbrDevice.getIsDormant()) ? Constant.TYPE_YN_N : userMbrDevice.getIsDormant(); // 휴면 회원 유무
@@ -414,7 +405,7 @@ public class DeviceServiceImpl implements DeviceService {
 						// device_id가 존재하고 ID 회원인 경우 svc_no, mno_cd 널 처리
 						if (!StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) {
 							LOGGER.info("서비스관리번호로 기등록된 회원 존재(usim제거)");
-							LOGGER.info("deviceId가 존재하는 {} 아이디 회원의 휴대기기 svcMangNo, deviceTelecom 초기화 처리  userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", preUserMbr.getUserID(), userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
+							LOGGER.info("deviceId가 존재하는 {} 아이디 회원의 휴대기기 svcMangNo, deviceTelecom 초기화 처리  userKey : {}, deviceKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", preUserMbr.getUserID(), userMbrDevice.getUserKey(), userMbrDevice.getDeviceKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 							UserMbrDevice updateMbrDevice = new UserMbrDevice();
 							updateMbrDevice.setSvcMangNum("");
 							updateMbrDevice.setDeviceTelecom("");
@@ -1805,9 +1796,9 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if(logBuf.length() > 0){
-			LOGGER.info("{} : 휴대기기 수정정보 : {}", userMbrDevice.getUserKey(), logBuf.toString());
+			LOGGER.info("{}, {} : 휴대기기 수정정보 : {}", userMbrDevice.getUserKey(), userMbrDevice.getDeviceKey(), logBuf.toString());
 		}else{
-			LOGGER.info("{} : 수정된 휴대기기 정보 없음", userMbrDevice.getUserKey());
+			LOGGER.info("{}, {} : 수정된 휴대기기 정보 없음", userMbrDevice.getUserKey(), userMbrDevice.getDeviceKey());
 		}
 	}
 

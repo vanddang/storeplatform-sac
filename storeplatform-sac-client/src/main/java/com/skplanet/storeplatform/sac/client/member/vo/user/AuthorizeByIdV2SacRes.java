@@ -40,6 +40,11 @@ public class AuthorizeByIdV2SacRes extends CommonInfo {
 	private String isLoginSuccess = "";
 
 	/**
+	 * 단말 등록여부(Y/N).
+	 */
+	private String isRegDevice = "";
+
+	/**
 	 * @return userKey
 	 */
 	public String getUserKey() {
@@ -112,5 +117,20 @@ public class AuthorizeByIdV2SacRes extends CommonInfo {
 	 */
 	public void setUserStatus(String userStatus) {
 		this.userStatus = userStatus;
+	}
+
+	/**
+	 * @return isRegDevice
+	 */
+	public String getIsRegDevice() {
+		return isRegDevice;
+	}
+
+	/**
+	 * @param isRegDevice
+	 *            String
+	 */
+	public void setIsRegDevice(String isRegDevice) {
+		this.isRegDevice = isRegDevice;
 	}
 }
