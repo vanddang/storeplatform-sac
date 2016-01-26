@@ -555,19 +555,6 @@ public class DeviceServiceImpl implements DeviceService {
 							LOGGER.info("기존단말에서 OneStore로 접속 정상 인증처리 userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 						}else{
 							LOGGER.info("deviceId 변경 {} -> {} ", userMbrDevice.getDeviceID(), createDeviceRequest.getUserMbrDevice().getDeviceID());
-							// TODO. 보완로직 추가 2016-01-25 OneStore 재설치 후 Non
-							userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_MDN, createDeviceRequest.getUserMbrDevice().getMdn(), userKey, null, Constant.TYPE_YN_Y, Constant.TYPE_YN_Y);
-							if(userMbrDeviceList != null && userMbrDeviceList.size() > 0){
-								for(UserMbrDevice userMbrDevice2 : userMbrDeviceList){
-									if(StringUtils.equals(userMbrDevice2.getMdn(), createDeviceRequest.getUserMbrDevice().getMdn())
-											&& StringUtils.equals(userMbrDevice2.getSvcMangNum(), createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
-										LOGGER.info("휴대기기 invalid 처리 userKey : {}, svcMangNo : {}, deviceKey : {}, deviceId : {}, mdn : {}", userMbrDevice2.getUserKey(), userMbrDevice2.getSvcMangNum(), userMbrDevice2.getDeviceKey(), userMbrDevice2.getDeviceID(), userMbrDevice2.getMdn());
-										int row = this.doInvalidDevice(userMbrDevice2, userMbrDevice2.getIsDormant());
-										if (row < 1)
-											throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
-									}
-								}
-							}
 						}
 						this.updateDeviceInfo(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, createDeviceRequest.getUserMbrDevice(), Constant.TYPE_YN_N);
 						// mno_cd, svc_mang_no중 하나라도 변경되면 tb_us_ousermbr_device_set 테이블의 실명인증일자, mdn을 null 처리
