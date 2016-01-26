@@ -34,7 +34,7 @@
         <aop:advisor advice-ref="transactionAdviceForSac" pointcut-ref="customTransactionPointcutForSac" />
     </aop:config>
     <bean id="customTransactionPointcutForSac" class="com.skplanet.storeplatform.framework.core.aop.support.CustomTransactionPointcut" >
-        <constructor-arg type="java.lang.String" value="execution(* com.skplanet.storeplatform.sac..*ServiceImpl.*(..))" />
+        <constructor-arg type="java.lang.String" value="execution(* com.skplanet.storeplatform.sac..*ServiceImpl.*(..)) &amp;&amp; !target(org.springframework.transaction.annotation.Transactional)" />
         <property name="qualifierName" value="sac" />
     </bean>
 
