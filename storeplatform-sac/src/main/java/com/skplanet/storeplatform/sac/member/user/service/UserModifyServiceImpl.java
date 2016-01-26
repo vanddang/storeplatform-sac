@@ -1167,7 +1167,7 @@ public class UserModifyServiceImpl implements UserModifyService {
                 throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
             }
             /** 2-3. 조회된 유저타입과 req의 유저타입이 다르면 오류. */
-            if (!StringUtils.equals(searchUserRes.getUserMbr().getUserType(), req.getUserId())) {
+            if (!StringUtils.equals(searchUserRes.getUserMbr().getUserType(), req.getUserType())) {
                 throw new StorePlatformException("SAC_MEM_0003", "userType", req.getUserType());
             }
         } catch (StorePlatformException spe) {
