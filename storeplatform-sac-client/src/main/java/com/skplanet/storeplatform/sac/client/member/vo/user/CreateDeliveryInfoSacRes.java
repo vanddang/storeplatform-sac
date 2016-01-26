@@ -14,7 +14,13 @@ public class CreateDeliveryInfoSacRes extends CommonInfo {
 	/** 사용자 고유키. */
 	private String userKey = "";
 
-	/**
+    public CreateDeliveryInfoSacRes() {}
+
+    public CreateDeliveryInfoSacRes(String userKey) {
+        this.userKey = userKey;
+    }
+
+    /**
 	 * 사용자 키를 리턴한다.
 	 * 
 	 * @return userKey - 사용자 키
@@ -31,13 +37,6 @@ public class CreateDeliveryInfoSacRes extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }

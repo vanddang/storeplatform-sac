@@ -21,5 +21,11 @@ import java.util.List;
  */
 public interface UserDeliveryRepository {
 
+    UserDelivery findOne(Long id);
+
     List<UserDelivery> findByUserKeyAndType(String userKey, String type);
+
+    void save(UserDelivery delv);
+
+    void delete(UserDelivery delv);
 }

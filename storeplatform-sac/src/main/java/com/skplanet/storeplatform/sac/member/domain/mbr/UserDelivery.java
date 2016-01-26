@@ -9,9 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.member.domain.mbr;
 
+import com.google.common.base.Strings;
+import com.google.common.primitives.Longs;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeliveryInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
-import org.apache.http.client.utils.DateUtils;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -24,15 +29,15 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "TB_US_OUSERMBR_DELIVERY")
-@SequenceGenerator(name = "DELIVERY", sequenceName = "SQ_US_OUSERMBR_DELIVERY")
+@SequenceGenerator(name = "DELIVERY", sequenceName = "SQ_US_OUSERMBR_DELIVERY", allocationSize = 1)
 public class UserDelivery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DELIVERY")
     private Long seq;
 
-    @ManyToOne
-    @JoinColumn(name = "INSD_USERMBR_NO")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "INSD_USERMBR_NO", updatable = false)
     private UserMember member;
 
     /**
@@ -74,10 +79,31 @@ public class UserDelivery {
         v.setConnTelNo(connTelNo);
         v.setDeliveryMsg(deliveryMsg);
         v.setDeliverySeq(seq.toString());
-        v.setRegDate(DateUtils.formatDate(regDt));
-        v.setUseDate(DateUtils.formatDate(useDt));
+        v.setRegDate(DateUtils.format(regDt));
+        v.setUseDate(DateUtils.format(useDt));
 
         return v;
+    }
+
+    public static UserDelivery convertFromRequest(CreateDeliveryInfoSacReq req) {
+        Assert.notNull(req);
+
+        if(Strings.isNullOrEmpty(req.getDeliverySeq()) && Strings.isNullOrEmpty(req.getDeliveryTypeCd()))
+            throw new StorePlatformException("SC_MEM_9993");
+
+        UserDelivery ud = new UserDelivery();
+        ud.setSeq(Longs.tryParse(Strings.nullToEmpty(req.getDeliverySeq())));
+        ud.setDeliveryTypeCd(req.getDeliveryTypeCd());
+        ud.setDeliveryNm(req.getDeliveryNm());
+        ud.setReceiverNm(req.getReceiverNm());
+        ud.setSenderNm(req.getSenderNm());
+        ud.setZip(req.getZip());
+        ud.setAddr(req.getAddr());
+        ud.setDtlAddr(req.getDtlAddr());
+        ud.setConnTelNo(req.getConnTelNo());
+        ud.setDeliveryMsg(req.getDeliveryMsg());
+
+        return ud;
     }
 
     @PrePersist

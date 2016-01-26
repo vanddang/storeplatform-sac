@@ -1036,6 +1036,7 @@ public class UserModifyServiceImpl implements UserModifyService {
      * 2.1.62.	배송지 정보 등록/수정.
      * </pre>
      *
+     * JPA버전으로 대체됨 com.skplanet.storeplatform.sac.member.repository.UserDeliveryRepository
      * @param sacHeader
      *            SacRequestHeader
      * @param req
@@ -1043,6 +1044,7 @@ public class UserModifyServiceImpl implements UserModifyService {
      * @return CreateDeliveryInfoSacRes
      */
     @Override
+    @Deprecated
     public CreateDeliveryInfoSacRes createDeliveryInfo(SacRequestHeader sacHeader, CreateDeliveryInfoSacReq req) {
 
         CreateDeliveryInfoSacRes res = new CreateDeliveryInfoSacRes();
@@ -1083,6 +1085,7 @@ public class UserModifyServiceImpl implements UserModifyService {
      * 2.1.63.	배송지 정보 삭제.
      * </pre>
      *
+     * JPA버전으로 대체됨 com.skplanet.storeplatform.sac.member.repository.UserDeliveryRepository
      * @param sacHeader
      *            SacRequestHeader
      * @param req
@@ -1090,6 +1093,7 @@ public class UserModifyServiceImpl implements UserModifyService {
      * @return RemoveDeliveryInfoSacRes
      */
     @Override
+    @Deprecated
     public RemoveDeliveryInfoSacRes removeDeliveryInfo(SacRequestHeader sacHeader, RemoveDeliveryInfoSacReq req) {
 
         RemoveDeliveryInfoSacRes res = new RemoveDeliveryInfoSacRes();
@@ -1099,7 +1103,7 @@ public class UserModifyServiceImpl implements UserModifyService {
             RemoveDeliveryInfoRequest scReq = new RemoveDeliveryInfoRequest();
             scReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
             scReq.setUserKey(req.getUserKey());
-            scReq.setDeliverySeq(req.getDeliverySeq());
+//            scReq.setDeliverySeq(req.getDeliverySeq());   TODO-JOY remove
             // 삭제 진행
             RemoveDeliveryInfoResponse scRes = this.userSCI.removeDeliveryInfo(scReq);
             res.setUserKey(scRes.getUserKey());

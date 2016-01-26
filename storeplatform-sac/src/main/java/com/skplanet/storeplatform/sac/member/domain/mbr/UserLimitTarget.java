@@ -13,6 +13,7 @@ import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -185,14 +186,25 @@ public class UserLimitTarget {
 
     @PrePersist
     public void prePersist() {
-        this.regDt = new Date();
-        this.updDt = new Date();
+        Date currDate = new Date();
+        this.regDt = currDate;
+        this.updDt = currDate;
+        this.startDt = currDate;
+
+        DateFormat sdFormat = new SimpleDateFormat("yyyyMMddHHmmSS");
+        Date endDt = null;
+        try { endDt = sdFormat.parse("29991231235959"); } catch (ParseException ignore) {}
+        this.endDt = endDt;
 
     }
 
     @PreUpdate
     public void preUpdate() {
         this.updDt = new Date();
+        DateFormat sdFormat = new SimpleDateFormat("yyyyMMddHHmmSS");
+        Date endDt = null;
+        try { endDt = sdFormat.parse("29991231235959"); } catch (ParseException ignore) {}
+        this.endDt = endDt;
     }
 
     /**
@@ -281,6 +293,7 @@ public class UserLimitTarget {
         userLimitTargetDomain.setPreLimtAmt(limitTarget.getPreLimitAmount());
         userLimitTargetDomain.setUseYn(limitTarget.getIsUsed());
         userLimitTargetDomain.setLineMangStatus(limitTarget.getLineMangStatus());
+        userLimitTargetDomain.setRegId(limitTarget.getRegID());
 
         if(StringUtils.isNotEmpty(limitTarget.getPermissionType())) userLimitTargetDomain.setPmtType(limitTarget.getPermissionType());
         if(StringUtils.isNotEmpty(userLimitTargetDomain.getInsDt())) userLimitTargetDomain.setInsDt(limitTarget.getInsDate());
