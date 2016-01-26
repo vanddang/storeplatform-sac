@@ -19,9 +19,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -79,11 +76,6 @@ public class UserLimitTargetRepositoryImpl implements UserLimitTargetRepository 
     @Override
     public void saveLimitPolicy(UserLimitTarget userLimitTarget)  {
         //UserMapper.xml updatePolicy
-        DateFormat sdFormat = new SimpleDateFormat("yyyyMMddHHmmSS");
-        Date endDt = null;
-        try { endDt = sdFormat.parse("29991231235959"); } catch (ParseException ignore) {}
-        userLimitTarget.setEndDt(endDt);
-
         // merge 쿼리 변환
         if(!existsByLimitPolicyKeyAndLimtPolicyCd(userLimitTarget.getLimtPolicyKey(), userLimitTarget.getLimtPolicyCd()))
             //insert

@@ -13,6 +13,7 @@ import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -190,11 +191,20 @@ public class UserLimitTarget {
         this.updDt = currDate;
         this.startDt = currDate;
 
+        DateFormat sdFormat = new SimpleDateFormat("yyyyMMddHHmmSS");
+        Date endDt = null;
+        try { endDt = sdFormat.parse("29991231235959"); } catch (ParseException ignore) {}
+        this.endDt = endDt;
+
     }
 
     @PreUpdate
     public void preUpdate() {
         this.updDt = new Date();
+        DateFormat sdFormat = new SimpleDateFormat("yyyyMMddHHmmSS");
+        Date endDt = null;
+        try { endDt = sdFormat.parse("29991231235959"); } catch (ParseException ignore) {}
+        this.endDt = endDt;
     }
 
     /**
