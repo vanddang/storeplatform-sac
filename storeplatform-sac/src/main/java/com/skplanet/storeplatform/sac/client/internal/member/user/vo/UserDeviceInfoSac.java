@@ -6,12 +6,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 회원정보 & 디바이스정보.
  * 
  * Updated on : 2014. 2. 21. Updated by : 강신완, 부르칸.
+ * Updated on : 2016. 1. 26. Updated by : 윤보영, 카레즈.
  */
 public class UserDeviceInfoSac extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
-
-	private String tenantId;
 
 	private String userName;
 
@@ -34,6 +33,8 @@ public class UserDeviceInfoSac extends CommonInfo {
 	private String userType;
 
 	private String marketDeviceKey;
+
+    private String mdn;
 
 	public String getUserName() {
 		return this.userName;
@@ -127,12 +128,11 @@ public class UserDeviceInfoSac extends CommonInfo {
 		this.marketDeviceKey = marketDeviceKey;
 	}
 
-	public String getTenantId() {
-		return this.tenantId;
-	}
+    public String getMdn() {
+        return mdn;
+    }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
-
+    public void setMdn(String mdn) {
+        this.mdn = mdn;
+    }
 }

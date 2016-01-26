@@ -18,20 +18,25 @@ import com.skplanet.storeplatform.member.client.common.util.Utils;
  * 휴대기기 상태정보 Value Object
  * 
  * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2016. 01. 26. Updated by : 윤보영, 카레즈
  */
 public class DeviceMbrStatus extends CommonInfo implements Serializable {
 
 	/** The Constant serial Version UID. */
 	private static final long serialVersionUID = 1L;
 
-	/** 테넌트 ID. */
+	/** 테넌트 ID. (타파트 작업 후 삭제 필요) */
+    @Deprecated
 	private String tenantID;
 
 	/** 휴대기기 Key. */
 	private String deviceKey;
 
-	/** 휴대기기 ID(MDN/UUID/MAC). */
+	/** 휴대기기 ID(UUID/MAC). */
 	private String deviceID;
+
+    /** 휴대기기 번호 (MDN) */
+    private String mdn;
 
 	/** 실명인증 여부 (Y/N). */
 	private String isRealName;
@@ -54,8 +59,8 @@ public class DeviceMbrStatus extends CommonInfo implements Serializable {
 	/** 휴대기기 통신사 코드. */
 	private String deviceTelecom;
 
-	/** 외부 회원키. */
-	private String imMbrNo;
+	/** 서비스관리번호 (타사 marketDeviceKey) */
+	private String svcMangNo;
 
 	/**
 	 * 사용자 구분 코드. ex) US011501(모바일회원) , US011502(IDP 회원) , US011503(OneID 회원)
@@ -369,19 +374,19 @@ public class DeviceMbrStatus extends CommonInfo implements Serializable {
 		this.userBirthDay = userBirthDay;
 	}
 
-	/**
-	 * @return imMbrNo
-	 */
-	public String getImMbrNo() {
-		return this.imMbrNo;
-	}
+    public String getMdn() {
+        return mdn;
+    }
 
-	/**
-	 * @param imMbrNo
-	 *            String
-	 */
-	public void setImMbrNo(String imMbrNo) {
-		this.imMbrNo = imMbrNo;
-	}
+    public void setMdn(String mdn) {
+        this.mdn = mdn;
+    }
 
+    public String getSvcMangNo() {
+        return svcMangNo;
+    }
+
+    public void setSvcMangNo(String svcMangNo) {
+        this.svcMangNo = svcMangNo;
+    }
 }

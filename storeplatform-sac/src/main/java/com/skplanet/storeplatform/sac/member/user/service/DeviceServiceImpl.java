@@ -1599,7 +1599,6 @@ public class DeviceServiceImpl implements DeviceService {
 		// 공통 파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		String errorValue = "userKey 또는 ";
 

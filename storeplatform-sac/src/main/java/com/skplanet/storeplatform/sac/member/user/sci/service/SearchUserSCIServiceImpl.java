@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -113,6 +114,7 @@ import com.skplanet.storeplatform.sac.member.common.vo.Device;
  * 사용자 내부 메서드 서비스 구현체
  * 
  * Updated on : 2014. 5. 20. Updated by : 심대진, 다모아 솔루션.
+ * Updated on : 2016. 1. 26. Updated by : 윤보영, 카레즈.
  */
 @Service
 public class SearchUserSCIServiceImpl implements SearchUserSCIService {
@@ -146,15 +148,10 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		// 공통파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		List<String> userKeyList = request.getUserKeyList();
 
 		SearchMbrUserRequest searchMbrUserRequest = new SearchMbrUserRequest();
-		// tenantId 추가, incorss_bottangs, 2015.02.10
-		searchMbrUserRequest
-				.setTenantId(StringUtils.isBlank(request.getTenantId()) ? MemberConstants.TENANT_ID_TSTORE : request
-						.getTenantId());
 		searchMbrUserRequest.setUserKeyList(userKeyList);
 		searchMbrUserRequest.setCommonRequest(commonRequest);
 		LOGGER.debug("SAC Request {}", request);
@@ -168,22 +165,21 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		Map<String, UserInfoSac> userInfo = new HashMap<String, UserInfoSac>();
 		UserInfoSac userInfoSac = null;
 		if (userInfoMap != null) {
-			for (int i = 0; i < userKeyList.size(); i++) {
-				if (userInfoMap.get(userKeyList.get(i)) != null) {
-					userInfoSac = new UserInfoSac();
-					userInfoSac.setUserKey(userInfoMap.get(userKeyList.get(i)).getUserKey());
-					userInfoSac.setUserId(userInfoMap.get(userKeyList.get(i)).getUserID());
-					userInfoSac.setUserMainStatus(userInfoMap.get(userKeyList.get(i)).getUserMainStatus());
-					userInfoSac.setUserSubStatus(userInfoMap.get(userKeyList.get(i)).getUserSubStatus());
-					userInfoSac.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
-					// 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
-					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
-					// tenantId 추가, incross_bottangs, 2015.02.10
-					userInfoSac.setTenantId(userInfoMap.get(userKeyList.get(i)).getTenantID());
 
-					userInfo.put(userKeyList.get(i), userInfoSac);
-				}
-			}
+            for (int i = 0; i < userKeyList.size(); i++) {
+                if (userInfoMap.get(userKeyList.get(i)) != null) {
+                    userInfoSac = new UserInfoSac();
+                    userInfoSac.setUserKey(userInfoMap.get(userKeyList.get(i)).getUserKey());
+                    userInfoSac.setUserId(userInfoMap.get(userKeyList.get(i)).getUserID());
+                    userInfoSac.setUserMainStatus(userInfoMap.get(userKeyList.get(i)).getUserMainStatus());
+                    userInfoSac.setUserSubStatus(userInfoMap.get(userKeyList.get(i)).getUserSubStatus());
+                    userInfoSac.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
+                    // 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
+                    userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
+
+                    userInfo.put(userKeyList.get(i), userInfoSac);
+                }
+            }
 			LOGGER.debug("[ SAC UserInfo Response : {}", userInfo);
 
 		}
@@ -665,11 +661,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 		for (SearchUserDeviceSac schUserDevice : request.getSearchUserDeviceReqList()) {
 			UserDeviceKey userDeviceKey = new UserDeviceKey();
-			if (StringUtils.isBlank(schUserDevice.getTenantId())) {
-				userDeviceKey.setTenantId(MemberConstants.TENANT_ID_TSTORE);
-			} else {
-				userDeviceKey.setTenantId(schUserDevice.getTenantId());
-			}
 
 			userDeviceKey.setDeviceKey(schUserDevice.getDeviceKey());
 			userDeviceKey.setUserKey(schUserDevice.getUserKey());
@@ -700,8 +691,16 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 				if (deviceMbrStatus != null) {
 					userDeviceInfoSac = new UserDeviceInfoSac();
-					userDeviceInfoSac.setTenantId(deviceMbrStatus.getTenantID());
-					userDeviceInfoSac.setDeviceId(deviceMbrStatus.getDeviceID());
+
+                    if(StringUtils.isNotEmpty(deviceMbrStatus.getDeviceID())
+                            && ValidationCheckUtils.isDeviceId(deviceMbrStatus.getDeviceID())){
+                        userDeviceInfoSac.setDeviceId(deviceMbrStatus.getDeviceID());
+                    }
+
+                    if(StringUtils.isNotEmpty(deviceMbrStatus.getMdn())
+                            && !ValidationCheckUtils.isDeviceId(deviceMbrStatus.getMdn())){
+                        userDeviceInfoSac.setMdn(deviceMbrStatus.getMdn());
+                    }
 					userDeviceInfoSac.setDeviceModelNo(deviceMbrStatus.getDeviceModelNo());
 					userDeviceInfoSac.setDeviceTelecom(deviceMbrStatus.getDeviceTelecom());
 					userDeviceInfoSac.setUserMainStatus(deviceMbrStatus.getUserMainStatus());
@@ -727,9 +726,11 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 					}
 
-					if (StringUtils.equals(deviceMbrStatus.getTenantID(), MemberConstants.TENANT_ID_OLLEH_MARKET)
-							|| StringUtils.equals(deviceMbrStatus.getTenantID(), MemberConstants.TENANT_ID_UPLUS_STORE)) {
-						userDeviceInfoSac.setMarketDeviceKey(deviceMbrStatus.getImMbrNo());
+					if (StringUtils.equals(deviceMbrStatus.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
+							|| StringUtils.equals(deviceMbrStatus.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
+                        if(StringUtils.isNotEmpty(deviceMbrStatus.getSvcMangNo())) {
+                            userDeviceInfoSac.setMarketDeviceKey(deviceMbrStatus.getSvcMangNo());
+                        }
 					}
 					resMap.put(deviceMbrStatus.getDeviceKey(), userDeviceInfoSac);
 				}

@@ -2165,6 +2165,7 @@ public class UserSCIController implements UserSCI {
 	 * @return SearchChangedDeviceResponse - 휴대기기 기기변경이력 정보 조회 응답 Value Object
 	 */
 	@Override
+    @Deprecated
 	public SearchChangedDeviceResponse searchChangedDevice(SearchChangedDeviceRequest searchChangedDeviceRequest) {
 		SearchChangedDeviceResponse searchChangedDeviceResponse;
 
@@ -2178,12 +2179,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchChangedDeviceRequest.getCommonRequest().getTenantID() == null
-				|| searchChangedDeviceRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터
 		if (searchChangedDeviceRequest.getUserKey() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -2194,9 +2189,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return searchChangedDeviceResponse;
 	}
@@ -2380,12 +2372,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchMbrUserRequest.getCommonRequest().getTenantID() == null
-				|| searchMbrUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		try {
 
 			searchMbrUserResponse = this.service.searchMbrUser(searchMbrUserRequest);
@@ -2393,9 +2379,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return searchMbrUserResponse;
 
@@ -2627,12 +2610,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchMbrDeviceRequest.getCommonRequest().getTenantID() == null
-				|| searchMbrDeviceRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터 > userDeviceKeyList
 		List<UserDeviceKey> userDeviceKeyList = searchMbrDeviceRequest.getDeviceKeyList();
 		if (userDeviceKeyList == null) {
@@ -2652,9 +2629,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return searchMbrDeviceResponse;
 	}

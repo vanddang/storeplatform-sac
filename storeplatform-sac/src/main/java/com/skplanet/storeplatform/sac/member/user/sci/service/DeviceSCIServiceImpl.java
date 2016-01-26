@@ -84,7 +84,6 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		SearchAllDeviceRequest searchAllDeviceRequest = new SearchAllDeviceRequest();
 		searchAllDeviceRequest.setCommonRequest(commonRequest);
@@ -103,14 +102,6 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 			deviceInfo.setUserId(schAllDeviceRes.getUserID());
 			deviceInfo.setUserKey(schAllDeviceRes.getUserKey());
 			deviceInfo.setIsAuthenticated(schAllDeviceRes.getUserMbrDevice().getIsUsed());
-
-			/* 폰정보 DB 조회하여 추가 정보 반영 */
-			Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
-			if (device != null) {
-				/*deviceInfo.setMakeComp(device.getMnftCompCd());
-				deviceInfo.setModelNm(device.getModelNm());
-				deviceInfo.setVmType(device.getVmTypeCd());*/
-			}
 
 		} catch (StorePlatformException ex) {
 			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
@@ -133,6 +124,7 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 	 * @return ChangedDeviceHistoryRes
 	 */
 	@Override
+    @Deprecated
 	public ChangedDeviceHistorySacRes srhChangedDeviceHistory(SacRequestHeader sacHeader,
 			ChangedDeviceHistorySacReq request) {
 		// 공통 파라미터 셋팅
