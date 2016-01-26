@@ -107,7 +107,7 @@ public class CreateDeviceTest {
 
 							CreateDeviceReq req = new CreateDeviceReq();
 							req.setUserKey(CreateDeviceTest.this.userKey);
-							req.setRegMaxCnt("100");
+//							req.setRegMaxCnt("100");
 
 							DeviceInfo deviceInfo = new DeviceInfo();
 							deviceInfo.setUserKey(CreateDeviceTest.this.userKey);
