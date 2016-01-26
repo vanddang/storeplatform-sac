@@ -628,7 +628,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
 		// csp imei 비교
-		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
+		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT) && StringUtils.isNotBlank(req.getMdn())){
 			if(StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)){
 				if(!StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getMdn()))){
 					throw new StorePlatformException("SAC_MEM_1503");
