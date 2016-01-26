@@ -79,6 +79,10 @@ public class UserLimitTargetRepositoryImpl implements UserLimitTargetRepository 
     @Override
     public void saveLimitPolicy(UserLimitTarget userLimitTarget)  {
         //UserMapper.xml updatePolicy
+        DateFormat sdFormat = new SimpleDateFormat("yyyyMMddHHmmSS");
+        Date endDt = null;
+        try { endDt = sdFormat.parse("29991231235959"); } catch (ParseException ignore) {}
+        userLimitTarget.setEndDt(endDt);
 
         // merge 쿼리 변환
         if(!existsByLimitPolicyKeyAndLimtPolicyCd(userLimitTarget.getLimtPolicyKey(), userLimitTarget.getLimtPolicyCd()))
@@ -86,13 +90,10 @@ public class UserLimitTargetRepositoryImpl implements UserLimitTargetRepository 
             em.persist(userLimitTarget);
         else {
             //update
-            DateFormat sdFormat = new SimpleDateFormat("yyyyMMddHHmmSS");
-            Date endDt = null;
-            try { endDt = sdFormat.parse("29991231235959"); } catch (ParseException ignore) {}
 
             List<UserLimitTarget> userLimitTargetList = findByLimitPolicyKeyAndLimtPolicyCdIn(userLimitTarget.getLimtPolicyKey(), Arrays.asList(userLimitTarget.getLimtPolicyCd()));
             for(UserLimitTarget findUserLimitTarget : userLimitTargetList) {
-                findUserLimitTarget.setEndDt(endDt);
+                findUserLimitTarget.setEndDt(userLimitTarget.getEndDt());
                 if(StringUtils.isNotEmpty(userLimitTarget.getPolicyApplyValue())) findUserLimitTarget.setPolicyApplyValue(userLimitTarget.getPolicyApplyValue());
                 if(StringUtils.isNotEmpty(userLimitTarget.getUpdId())) findUserLimitTarget.setUpdId(userLimitTarget.getUpdId());
                 if(userLimitTarget.getPmtType() != null) findUserLimitTarget.setPmtType(userLimitTarget.getPmtType());

@@ -185,8 +185,10 @@ public class UserLimitTarget {
 
     @PrePersist
     public void prePersist() {
-        this.regDt = new Date();
-        this.updDt = new Date();
+        Date currDate = new Date();
+        this.regDt = currDate;
+        this.updDt = currDate;
+        this.startDt = currDate;
 
     }
 
@@ -281,6 +283,7 @@ public class UserLimitTarget {
         userLimitTargetDomain.setPreLimtAmt(limitTarget.getPreLimitAmount());
         userLimitTargetDomain.setUseYn(limitTarget.getIsUsed());
         userLimitTargetDomain.setLineMangStatus(limitTarget.getLineMangStatus());
+        userLimitTargetDomain.setRegId(limitTarget.getRegID());
 
         if(StringUtils.isNotEmpty(limitTarget.getPermissionType())) userLimitTargetDomain.setPmtType(limitTarget.getPermissionType());
         if(StringUtils.isNotEmpty(userLimitTargetDomain.getInsDt())) userLimitTargetDomain.setInsDt(limitTarget.getInsDate());
