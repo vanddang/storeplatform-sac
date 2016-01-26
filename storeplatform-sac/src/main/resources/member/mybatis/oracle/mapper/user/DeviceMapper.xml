@@ -194,7 +194,7 @@
                     , entry_chnl_cd
                     , auth_yn
                     , device_sim_nm
-              FROM  tb_us_usermbr_device
+              FROM  tb_us_ousermbr_device
              WHERE  insd_usermbr_no = #{userKey}
                 AND insd_device_id = #{deviceKey}
     </select>
