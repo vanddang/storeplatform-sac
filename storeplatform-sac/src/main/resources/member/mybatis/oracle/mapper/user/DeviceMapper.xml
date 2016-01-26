@@ -1099,47 +1099,65 @@
         </foreach>
     </select>
 
-    <!-- 휴대기기 목록 조회 -->
     <select id="searchDeviceList3" parameterType="searchDeviceListRequest" resultType="userMbrDevice">
         SELECT /* DeviceMapper.xml, searchDeviceList3, SAC(SC), 반범진, 2016-01-04 */
-            a.insd_usermbr_no as userKey,
-            a.mbr_id as userId,
-            b.insd_device_id as deviceKey,
-            b.device_id as deviceId,
-            b.mdn as mdn,
-            b.svc_mang_no as svcMangNum,
-            b.mno_cd as deviceTelecom,
-            b.device_model_cd as deviceModelNo,
-            b.auth_yn as isUsed,
-            b.sms_recv_yn as isRecvSMS,
-            b.device_natv_id as nativeID,
-            b.device_sim_nm as simSerialNo,
-            b.device_acct as deviceAccount,
-            b.rep_device_yn as isPrimary,
-            TO_CHAR (b.last_login_dt, 'YYYYMMDDHH24MISS') as lastLoginDt
+        a.insd_usermbr_no as userKey,
+        a.mbr_id as userId,
+        b.insd_device_id as deviceKey,
+        b.device_id as deviceId,
+        b.mdn as mdn,
+        b.svc_mang_no as svcMangNum,
+        b.mno_cd as deviceTelecom,
+        b.device_model_cd as deviceModelNo,
+        b.auth_yn as isUsed,
+        b.sms_recv_yn as isRecvSMS,
+        b.device_natv_id as nativeID,
+        b.device_sim_nm as simSerialNo,
+        b.device_acct as deviceAccount,
+        b.rep_device_yn as isPrimary,
+        TO_CHAR (b.last_login_dt, 'YYYYMMDDHH24MISS') as lastLoginDt
         FROM TB_US_OUSERMBR a
         INNER JOIN TB_US_OUSERMBR_DEVICE b ON a.insd_usermbr_no = b.insd_usermbr_no
         WHERE a.mbr_status_main_cd != 'US010202'
-        <if test="isMine != null">
-            <if test="isMine.equalsIgnoreCase('Y')">
-                AND b.insd_usermbr_no = #{userKey}
-            </if>
-            <if test="isMine.equalsIgnoreCase('N')">
-                AND b.insd_usermbr_no != #{userKey}
-            </if>
-        </if>
         <if test="isUsed.equalsIgnoreCase('Y')">
             AND b.auth_yn = 'Y'
         </if>
         <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
             <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID')">
                 b.device_id = #{keySearch.keyString}
+                <choose>
+                    <when test="isMine.equalsIgnoreCase('Y')">
+                        AND b.insd_usermbr_no = #{userKey}
+                    </when>
+                    <otherwise>
+                        AND b.insd_usermbr_no != #{userKey}
+                    </otherwise>
+                </choose>
             </if>
             <if test="keySearch.keyType.equalsIgnoreCase('MDN')">
                 b.mdn = #{keySearch.keyString}
+                <choose>
+                    <when test="isMine.equalsIgnoreCase('Y')">
+                        AND b.insd_usermbr_no = #{userKey}
+                    </when>
+                    <otherwise>
+                        <choose>
+                            <when test="deviceKey != null">AND (b.insd_usermbr_no != #{userKey} or b.insd_device_id != #{deviceKey})</when>
+                            <otherwise>AND b.insd_usermbr_no != #{userKey}</otherwise>
+                        </choose>
+                    </otherwise>
+                </choose>
             </if>
             <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO')">
                 b.svc_mang_no = #{keySearch.keyString}
+                <choose>
+                    <when test="isMine.equalsIgnoreCase('Y')">
+                        AND b.insd_usermbr_no = #{userKey}
+                    </when>
+                    <otherwise>
+                        AND b.insd_usermbr_no != #{userKey}
+                    </otherwise>
+                </choose>
             </if>
         </foreach>
     </select>
