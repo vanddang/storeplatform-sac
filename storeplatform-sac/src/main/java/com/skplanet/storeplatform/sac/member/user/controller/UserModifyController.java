@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -16,6 +17,8 @@ import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import com.skplanet.storeplatform.sac.member.domain.mbr.UserDelivery;
+import com.skplanet.storeplatform.sac.member.user.service.DeliveryInfoService;
 import com.skplanet.storeplatform.sac.member.user.service.UserModifyService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +43,9 @@ public class UserModifyController {
 
 	@Autowired
 	private UserModifyService svc;
+
+    @Autowired
+    private DeliveryInfoService deliveryInfoService;
 
 	/**
 	 * <pre>
@@ -290,43 +296,39 @@ public class UserModifyController {
 
 	/**
 	 * <pre>
-	 * 2.1.62.	배송지 정보 등록/수정.
+	 * [I01000133] 2.1.62.	배송지 정보 등록/수정.
 	 * </pre>
 	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param req
-	 *            CreateDeliveryInfoSacReq
+	 * @param req CreateDeliveryInfoSacReq
 	 * @return CreateDeliveryInfoSacRes
 	 */
 	@RequestMapping(value = "/member/user/createDeliveryInfo/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateDeliveryInfoSacRes createDeliveryInfo(SacRequestHeader header,
-			@RequestBody @Validated CreateDeliveryInfoSacReq req) {
+	public CreateDeliveryInfoSacRes createDeliveryInfo(@RequestBody @Validated CreateDeliveryInfoSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		CreateDeliveryInfoSacRes res = this.svc.createDeliveryInfo(header, req);
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+        deliveryInfoService.merge(req.getUserKey(), UserDelivery.convertFromRequest(req));
+        CreateDeliveryInfoSacRes res = new CreateDeliveryInfoSacRes(req.getUserKey());
+        LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
 
 	/**
 	 * <pre>
-	 * 2.1.63.	배송지 정보 삭제.
+	 * [I01000134] 2.1.63.	배송지 정보 삭제.
 	 * </pre>
 	 * 
-	 * @param header
-	 *            SacRequestHeader
 	 * @param req
 	 *            RemoveDeliveryInfoSacReq
 	 * @return RemoveDeliveryInfoSacRes
 	 */
 	@RequestMapping(value = "/member/user/removeDeliveryInfo/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoveDeliveryInfoSacRes removeDeliveryInfo(SacRequestHeader header,
-			@RequestBody @Validated RemoveDeliveryInfoSacReq req) {
+	public RemoveDeliveryInfoSacRes removeDeliveryInfo(@RequestBody @Validated RemoveDeliveryInfoSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		RemoveDeliveryInfoSacRes res = this.svc.removeDeliveryInfo(header, req);
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+        deliveryInfoService.delete(req.getUserKey(), req.getDeliverySeq());
+        RemoveDeliveryInfoSacRes res = new RemoveDeliveryInfoSacRes(req.getUserKey());
+        LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
 

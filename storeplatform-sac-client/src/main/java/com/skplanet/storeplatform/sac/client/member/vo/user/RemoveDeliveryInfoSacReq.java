@@ -3,9 +3,10 @@
  */
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import javax.validation.constraints.NotNull;
 
 /**
  * [REQUEST] 배송지 정보 삭제
@@ -21,8 +22,8 @@ public class RemoveDeliveryInfoSacReq extends CommonInfo {
 	private String userKey;
 
 	/** 배송지 시퀀스 */
-	@NotEmpty
-	private String deliverySeq;
+	@NotNull
+	private Long deliverySeq;
 
 	/**
 	 * 사용자 Key을(를) 리턴한다.
@@ -48,7 +49,7 @@ public class RemoveDeliveryInfoSacReq extends CommonInfo {
 	 * 
 	 * @return deliverySeq - 배송지 시퀀스
 	 */
-	public String getDeliverySeq() {
+	public Long getDeliverySeq() {
 		return this.deliverySeq;
 	}
 
@@ -58,15 +59,8 @@ public class RemoveDeliveryInfoSacReq extends CommonInfo {
 	 * @param deliverySeq
 	 *            deliverySeq 배송지 시퀀스
 	 */
-	public void setDeliverySeq(String deliverySeq) {
+	public void setDeliverySeq(Long deliverySeq) {
 		this.deliverySeq = deliverySeq;
-	}
-
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }

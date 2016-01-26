@@ -2151,7 +2151,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * <pre>
 	 * 2.1.64.	배송지 정보 조회.
 	 * </pre>
-	 * 
+	 *
+     * JPA버전으로 대체됨 com.skplanet.storeplatform.sac.member.repository.UserDeliveryRepository
 	 * @param sacHeader
 	 *            SacRequestHeader
 	 * @param req
@@ -2159,6 +2160,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @return SearchDeliveryInfoSacRes
 	 */
 	@Override
+    @Deprecated
 	public SearchDeliveryInfoSacRes searchDeliveryInfo(SacRequestHeader sacHeader, SearchDeliveryInfoSacReq req) {
 
 		// 1. 응답 객체 셋팅

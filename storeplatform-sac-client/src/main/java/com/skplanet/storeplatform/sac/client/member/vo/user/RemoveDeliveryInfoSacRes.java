@@ -17,7 +17,13 @@ public class RemoveDeliveryInfoSacRes extends CommonInfo {
 	/** 사용자 고유키. */
 	private String userKey = "";
 
-	/**
+    public RemoveDeliveryInfoSacRes() {}
+
+    public RemoveDeliveryInfoSacRes(String userKey) {
+        this.userKey = userKey;
+    }
+
+    /**
 	 * 사용자 키를 리턴한다.
 	 * 
 	 * @return userKey - 사용자 키
@@ -36,11 +42,5 @@ public class RemoveDeliveryInfoSacRes extends CommonInfo {
 		this.userKey = userKey;
 	}
 
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
 }
