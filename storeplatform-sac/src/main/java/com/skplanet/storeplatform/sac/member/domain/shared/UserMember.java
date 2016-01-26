@@ -88,7 +88,7 @@ public class UserMember {
     @Transient
     private boolean fromNormal;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "id.member")
     private List<UserDevice> devices;
 
     @OneToMany(mappedBy = "member")
