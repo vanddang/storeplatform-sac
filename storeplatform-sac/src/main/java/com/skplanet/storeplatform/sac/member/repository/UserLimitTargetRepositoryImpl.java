@@ -19,9 +19,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -79,20 +76,16 @@ public class UserLimitTargetRepositoryImpl implements UserLimitTargetRepository 
     @Override
     public void saveLimitPolicy(UserLimitTarget userLimitTarget)  {
         //UserMapper.xml updatePolicy
-
         // merge 쿼리 변환
         if(!existsByLimitPolicyKeyAndLimtPolicyCd(userLimitTarget.getLimtPolicyKey(), userLimitTarget.getLimtPolicyCd()))
             //insert
             em.persist(userLimitTarget);
         else {
             //update
-            DateFormat sdFormat = new SimpleDateFormat("yyyyMMddHHmmSS");
-            Date endDt = null;
-            try { endDt = sdFormat.parse("29991231235959"); } catch (ParseException ignore) {}
 
             List<UserLimitTarget> userLimitTargetList = findByLimitPolicyKeyAndLimtPolicyCdIn(userLimitTarget.getLimtPolicyKey(), Arrays.asList(userLimitTarget.getLimtPolicyCd()));
             for(UserLimitTarget findUserLimitTarget : userLimitTargetList) {
-                findUserLimitTarget.setEndDt(endDt);
+                findUserLimitTarget.setEndDt(userLimitTarget.getEndDt());
                 if(StringUtils.isNotEmpty(userLimitTarget.getPolicyApplyValue())) findUserLimitTarget.setPolicyApplyValue(userLimitTarget.getPolicyApplyValue());
                 if(StringUtils.isNotEmpty(userLimitTarget.getUpdId())) findUserLimitTarget.setUpdId(userLimitTarget.getUpdId());
                 if(userLimitTarget.getPmtType() != null) findUserLimitTarget.setPmtType(userLimitTarget.getPmtType());
