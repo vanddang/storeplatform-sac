@@ -143,6 +143,10 @@ public class PromotionEventRequestServiceImplTest {
         param.setUserKey("NOUSERKEY");
         PromotionEvent noUserKeyP = promotionEventRequestService.getPromotionEvent(param);
         assertNull(noUserKeyP);
+
+        param.setUserKey(null);
+        PromotionEvent nullUserKeyP = promotionEventRequestService.getPromotionEvent(param);
+        assertNull(nullUserKeyP);
     }
 
     /*
