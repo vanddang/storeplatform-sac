@@ -271,7 +271,7 @@ public class DeviceServiceImpl implements DeviceService {
 		LOGGER.info("타인 정보 처리 start");
 		// device_id 존재 체크
 		if (StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getDeviceID())) {
-			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_DEVICE_ID, createDeviceRequest.getUserMbrDevice().getDeviceID(), userKey, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
+			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_DEVICE_ID, createDeviceRequest.getUserMbrDevice().getDeviceID(), userKey, null, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
 			if(ownerUserMbrDeviceList != null && ownerUserMbrDeviceList.size() > 0){
 				for(UserMbrDevice userMbrDevice : ownerUserMbrDeviceList){
 					LOGGER.info("deviceId로 기등록된 회원 존재");
@@ -320,14 +320,14 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// MDN 존재 체크
 		if (StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getMdn())) {
-			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_MDN, createDeviceRequest.getUserMbrDevice().getMdn(), userKey, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
+			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_MDN, createDeviceRequest.getUserMbrDevice().getMdn(), userKey, createDeviceRequest.getUserMbrDevice().getDeviceKey(), Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
 			if(ownerUserMbrDeviceList != null && ownerUserMbrDeviceList.size() > 0){
 				for(UserMbrDevice userMbrDevice : ownerUserMbrDeviceList){
 					// device_id가 존재하는 mdn으로 다른회원이 존재하면 mdn, imei, sim null 처리
 					if (StringUtils.isNotBlank(userMbrDevice.getDeviceID())) {
-						LOGGER.info("MDN으로 deviceId가 존재하는 기등록된 회원 존재(usim제거)");
-						LOGGER.info("mdn, nativeId, simSerialNo 초기화 처리  userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 						String isDormant = StringUtils.isBlank(userMbrDevice.getIsDormant()) ? Constant.TYPE_YN_N : userMbrDevice.getIsDormant(); // 휴면 회원 유무
+						LOGGER.info("MDN으로 deviceId가 존재하는 기등록된 회원 존재(usim제거)");
+						LOGGER.info("mdn, nativeId, simSerialNo 초기화 처리  userKey : {}, deviceKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getDeviceKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 						UserMbrDevice updateMbrDevice = new UserMbrDevice();
 						updateMbrDevice.setMdn("");
 						updateMbrDevice.setSimSerialNo("");
@@ -353,7 +353,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// 서비스 관리 번호 체크
 		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
-			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest.getUserMbrDevice().getSvcMangNum(), userKey, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
+			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest.getUserMbrDevice().getSvcMangNum(), userKey, createDeviceRequest.getUserMbrDevice().getDeviceKey(), Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
 			if(ownerUserMbrDeviceList != null && ownerUserMbrDeviceList.size() > 0){
 				for(UserMbrDevice userMbrDevice : ownerUserMbrDeviceList){
 					String isDormant = StringUtils.isBlank(userMbrDevice.getIsDormant()) ? Constant.TYPE_YN_N : userMbrDevice.getIsDormant(); // 휴면 회원 유무
@@ -405,7 +405,7 @@ public class DeviceServiceImpl implements DeviceService {
 						// device_id가 존재하고 ID 회원인 경우 svc_no, mno_cd 널 처리
 						if (!StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) {
 							LOGGER.info("서비스관리번호로 기등록된 회원 존재(usim제거)");
-							LOGGER.info("deviceId가 존재하는 {} 아이디 회원의 휴대기기 svcMangNo, deviceTelecom 초기화 처리  userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", preUserMbr.getUserID(), userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
+							LOGGER.info("deviceId가 존재하는 {} 아이디 회원의 휴대기기 svcMangNo, deviceTelecom 초기화 처리  userKey : {}, deviceKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", preUserMbr.getUserID(), userMbrDevice.getUserKey(), userMbrDevice.getDeviceKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 							UserMbrDevice updateMbrDevice = new UserMbrDevice();
 							updateMbrDevice.setSvcMangNum("");
 							updateMbrDevice.setDeviceTelecom("");
@@ -431,7 +431,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// device_id가 없는 MDN 회원 체크
 		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getMdn())){
-			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_MDN, createDeviceRequest.getUserMbrDevice().getMdn(), userKey, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
+			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_MDN, createDeviceRequest.getUserMbrDevice().getMdn(), userKey, null, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
 			if(ownerUserMbrDeviceList != null && ownerUserMbrDeviceList.size() > 0) {
 				for (UserMbrDevice userMbrDevice : ownerUserMbrDeviceList) {
 					if(StringUtils.isBlank(userMbrDevice.getDeviceID())){
@@ -469,13 +469,13 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// device_id 존재 체크
 		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getDeviceID())){
-			userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_DEVICE_ID, createDeviceRequest.getUserMbrDevice().getDeviceID(), userKey, Constant.TYPE_YN_Y, Constant.TYPE_YN_N);
+			userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_DEVICE_ID, createDeviceRequest.getUserMbrDevice().getDeviceID(), userKey, null, Constant.TYPE_YN_Y, Constant.TYPE_YN_N);
 		}
 
 		if(userMbrDeviceList == null || userMbrDeviceList.size() == 0){
 			// svc_mang_no 조회
 			if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getSvcMangNum())){
-				userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest.getUserMbrDevice().getSvcMangNum(), userKey, Constant.TYPE_YN_Y,  Constant.TYPE_YN_N);
+				userMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_SVC_MANG_NO, createDeviceRequest.getUserMbrDevice().getSvcMangNum(), userKey, null, Constant.TYPE_YN_Y,  Constant.TYPE_YN_N);
 			}
 			if(userMbrDeviceList == null || userMbrDeviceList.size() == 0){
 				LOGGER.info("신규 단말 등록");
@@ -1644,17 +1644,18 @@ public class DeviceServiceImpl implements DeviceService {
 
 	/**
 	 * <pre>
-	 * 타인의 휴대기기 목록 조회.
+	 * 휴대기기 프로세스용 휴대기기 목록 조회.
 	 * </pre>
 	 *
 	 * @param keyType
 	 * @param keyString
 	 * @param userKey
+	 * @param deviceKey
 	 * @param isMine
 	 * @param authYn
 	 * @return List<UserMbrDevice>
 	 */
-	private List<UserMbrDevice> doSearchDevice(String keyType, String keyString, String userKey, String isMine, String authYn) {
+	private List<UserMbrDevice> doSearchDevice(String keyType, String keyString, String userKey, String deviceKey, String isMine, String authYn) {
 		SearchDeviceListRequest searchDeviceListRequest = new SearchDeviceListRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
@@ -1663,6 +1664,7 @@ public class DeviceServiceImpl implements DeviceService {
 		keySearchList.add(key);
 		searchDeviceListRequest.setKeySearchList(keySearchList);
 		searchDeviceListRequest.setUserKey(userKey);
+		searchDeviceListRequest.setDeviceKey(deviceKey);
 		searchDeviceListRequest.setIsMine(isMine);
 		searchDeviceListRequest.setIsUsed(authYn);
 		List<UserMbrDevice> userMbrDeviceList = this.commonDAO.queryForList("Device.searchDeviceList3", searchDeviceListRequest, UserMbrDevice.class);
@@ -1686,15 +1688,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// 휴대기기 부가속성 조회
 		for(UserMbrDevice userMbrDevice : userMbrDeviceList){
+			UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+			userMbrDeviceDetail.setUserKey(userMbrDevice.getUserKey());
+			userMbrDeviceDetail.setDeviceKey(userMbrDevice.getDeviceKey());
 			if(StringUtils.isBlank(userMbrDevice.getIsDormant()) || StringUtils.equals(userMbrDevice.getIsDormant(), Constant.TYPE_YN_N)){
-				UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-				userMbrDeviceDetail.setUserKey(userMbrDevice.getUserKey());
-				userMbrDeviceDetail.setDeviceKey(userMbrDevice.getDeviceKey());
 				userMbrDevice.setUserMbrDeviceDetail(this.commonDAO.queryForList("Device.getExtraProfile2", userMbrDeviceDetail, UserMbrDeviceDetail.class));
 			}else{
-				UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-				userMbrDeviceDetail.setUserKey(userMbrDevice.getUserKey());
-				userMbrDeviceDetail.setDeviceKey(userMbrDevice.getDeviceKey());
 				userMbrDevice.setUserMbrDeviceDetail(this.idleDAO.queryForList("Device.getExtraProfile2", userMbrDeviceDetail, UserMbrDeviceDetail.class));
 			}
 		}
@@ -1797,9 +1796,9 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if(logBuf.length() > 0){
-			LOGGER.info("{} : 휴대기기 수정정보 : {}", userMbrDevice.getUserKey(), logBuf.toString());
+			LOGGER.info("{}, {} : 휴대기기 수정정보 : {}", userMbrDevice.getUserKey(), userMbrDevice.getDeviceKey(), logBuf.toString());
 		}else{
-			LOGGER.info("{} : 수정된 휴대기기 정보 없음", userMbrDevice.getUserKey());
+			LOGGER.info("{}, {} : 수정된 휴대기기 정보 없음", userMbrDevice.getUserKey(), userMbrDevice.getDeviceKey());
 		}
 	}
 
@@ -1906,123 +1905,6 @@ public class DeviceServiceImpl implements DeviceService {
 				this.commonDAO.update("Device.updateDevice", updateMbrDevice);
 			}else{
 				this.idleDAO.update("Device.updateDevice", updateMbrDevice);
-			}
-		}
-
-		// 휴대기기 부가속성
-		if (modifyDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail() != null) {
-			for (UserMbrDeviceDetail userMbrDeviceDetailForReq : modifyDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail()) {
-				boolean isExsitExtra = false;
-				for (UserMbrDeviceDetail userMbrDeviceDetailForDb : searchDeviceResponse.getUserMbrDevice().getUserMbrDeviceDetail()) {
-					if(StringUtils.equals(userMbrDeviceDetailForReq.getExtraProfile(), userMbrDeviceDetailForDb.getExtraProfile())){
-						isExsitExtra = true;
-						if(!StringUtils.equals(userMbrDeviceDetailForReq.getExtraProfileValue(), userMbrDeviceDetailForDb.getExtraProfileValue())){
-							logBuf.append("[").append(userMbrDeviceDetailForReq.getExtraProfile()).append("]").append(userMbrDeviceDetailForDb.getExtraProfileValue()).append("->").append(userMbrDeviceDetailForReq.getExtraProfileValue());
-						}
-						break;
-					}
-				}
-				if(!isExsitExtra){
-					logBuf.append("[").append(userMbrDeviceDetailForReq.getExtraProfile()).append("]").append("null").append("->").append(userMbrDeviceDetailForReq.getExtraProfileValue());
-				}
-				userMbrDeviceDetailForReq.setRegID(searchDeviceResponse.getUserMbrDevice().getUserID());
-				userMbrDeviceDetailForReq.setUserKey(searchDeviceResponse.getUserMbrDevice().getUserKey());
-				userMbrDeviceDetailForReq.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
-				userMbrDeviceDetailForReq.setSystemID(modifyDeviceRequest.getCommonRequest().getSystemID());
-				if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-					this.commonDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
-				}else{
-					this.idleDAO.update("Device.updateDeviceDetail", userMbrDeviceDetailForReq);
-				}
-			}
-		}
-
-		if(logBuf.length() > 0){
-			LOGGER.info("{} : 휴대기기 수정정보 : {}", modifyDeviceRequest.getUserKey(), logBuf.toString());
-		}else{
-			LOGGER.info("{} : 수정된 휴대기기 정보 없음", modifyDeviceRequest.getUserKey());
-		}
-
-		ModifyDeviceResponse modifyDeviceResponse = new ModifyDeviceResponse();
-		modifyDeviceResponse.setUserKey(modifyDeviceRequest.getUserKey());
-		modifyDeviceResponse.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
-		return modifyDeviceResponse;
-	}
-
-	@Override
-	public ModifyDeviceResponse modifySaveNSyncDevice(ModifyDeviceRequest modifyDeviceRequest) {
-		StringBuffer logBuf = new StringBuffer();
-		String isDormant = Constant.TYPE_YN_N;
-		String chgCaseCd = modifyDeviceRequest.getUserMbrDevice().getChangeCaseCode() == null ?
-				MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT :  modifyDeviceRequest.getUserMbrDevice().getChangeCaseCode();
-		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType(Constant.SEARCH_TYPE_DEVICE_KEY);
-		keySearch.setKeyString(modifyDeviceRequest.getUserMbrDevice().getDeviceKey());
-		keySearchList.add(keySearch);
-		searchDeviceRequest.setKeySearchList(keySearchList);
-		searchDeviceRequest.setUserKey(modifyDeviceRequest.getUserKey());
-		SearchDeviceResponse searchDeviceResponse = null;
-		searchDeviceResponse = this.commonDAO.queryForObject("Device.searchDevice", searchDeviceRequest, SearchDeviceResponse.class);
-		if (searchDeviceResponse == null) {
-			searchDeviceResponse = this.idleDAO.queryForObject("Device.searchDevice", searchDeviceRequest, SearchDeviceResponse.class);
-			if (searchDeviceResponse != null) {
-				isDormant = Constant.TYPE_YN_Y;
-			}
-		}
-		if (searchDeviceResponse == null) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
-		}
-
-		UserMbrDevice updateMbrDevice = new UserMbrDevice();
-		updateMbrDevice.setUserKey(modifyDeviceRequest.getUserKey());
-		updateMbrDevice.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
-
-		// deviceId
-		if (!StringUtils.equals(searchDeviceResponse.getUserMbrDevice().getDeviceID(), modifyDeviceRequest.getUserMbrDevice().getDeviceID())) {
-			logBuf.append("[device_id]").append(searchDeviceResponse.getUserMbrDevice().getDeviceID()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getDeviceID());
-			updateMbrDevice.setDeviceID(modifyDeviceRequest.getUserMbrDevice().getDeviceID());
-		}
-
-		// MDN
-		if (modifyDeviceRequest.getUserMbrDevice().getMdn() != null) {
-			logBuf.append("[mdn]").append(searchDeviceResponse.getUserMbrDevice().getMdn()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getMdn());
-			updateMbrDevice.setMdn(modifyDeviceRequest.getUserMbrDevice().getMdn());
-		}
-
-		// 단말모델
-		if (modifyDeviceRequest.getUserMbrDevice().getDeviceModelNo() != null) {
-			logBuf.append("[device_model_cd]").append(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getDeviceModelNo());
-			updateMbrDevice.setDeviceModelNo(modifyDeviceRequest.getUserMbrDevice().getDeviceModelNo());
-		}
-
-		// 기기계정(gmail)
-		if (modifyDeviceRequest.getUserMbrDevice().getDeviceAccount() != null) {
-			logBuf.append("[device_acct]").append(searchDeviceResponse.getUserMbrDevice().getDeviceAccount()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getDeviceAccount());
-			updateMbrDevice.setDeviceAccount(modifyDeviceRequest.getUserMbrDevice().getDeviceAccount());
-		}
-
-		// 기기 고유ID(imei)
-		if (modifyDeviceRequest.getUserMbrDevice().getNativeID() != null) {
-			logBuf.append("[device_natv_id]").append(searchDeviceResponse.getUserMbrDevice().getNativeID()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getNativeID());
-			chgCaseCd = MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE;
-			updateMbrDevice.setNativeID(modifyDeviceRequest.getUserMbrDevice().getNativeID());
-		}
-
-		// 서비스관리번호
-		if (modifyDeviceRequest.getUserMbrDevice().getSvcMangNum() != null) {
-			logBuf.append("[svc_mang_no]").append(searchDeviceResponse.getUserMbrDevice().getSvcMangNum()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getSvcMangNum());
-			updateMbrDevice.setSvcMangNum(modifyDeviceRequest.getUserMbrDevice().getSvcMangNum());
-		}
-
-		if(logBuf.length() > 0){
-			updateMbrDevice.setChangeCaseCode(chgCaseCd);
-			if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-				this.commonDAO.update("Device.insertUpdateDeviceHistory", updateMbrDevice);
-				this.commonDAO.update("Device.modifySaveNSyncDevice", updateMbrDevice);
-			}else{
-				this.idleDAO.update("Device.modifySaveNSyncDevice", updateMbrDevice);
 			}
 		}
 

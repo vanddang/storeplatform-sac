@@ -114,16 +114,9 @@ public class UserServiceImpl implements UserService {
 			LOGGER.debug("### existLimitWordMemberID : {}", existLimitWordMemberID);
 
 			// ACTION 1-1. userID가 존재하는 경우 Fail 반환
-
 			if (existLimitWordMemberID != null && existLimitWordMemberID.getExistWordID() != null
 					&& existLimitWordMemberID.getExistWordID().length() > 0) {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.duplicatedMemberID", ""));
-			}
-
-			// ACTION 1-2. userID가 제한된 단어인 경우 Fail 반환
-			if (existLimitWordMemberID != null && existLimitWordMemberID.getLimitWordID() != null
-					&& existLimitWordMemberID.getLimitWordID().length() > 0) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.restrictedWordMemberID", ""));
 			}
 		}
 

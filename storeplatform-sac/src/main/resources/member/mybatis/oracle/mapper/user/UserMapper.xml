@@ -1352,20 +1352,11 @@
 
     <!-- 사용자 아이디의 중복/제한단여 여부 정보 조회 -->
     <select id="checkExistLimitWord" parameterType="userMbr" resultType="existLimitWordMemberID">
-          SELECT  /* UserMapper.xml, checkExistLimitWord, SAC(SC), 윤보영, 2015-12-14 */
-                (  
-                 SELECT  mbr_id 
-                   FROM  tb_us_ousermbr
-                  WHERE  mbr_status_main_cd != 'US010202' /* US010202 : 탈퇴 */
-                    AND  mbr_id = #{userID}
-                ) AS existWordID
-             ,  (
-                  SELECT  limt_word 
-                    FROM  tb_us_ousermbr_limt_word
-                   WHERE  limt_word_cd = 'US003602'
-                     AND  limt_word = #{userID}
-                ) AS limitWordID
-          FROM  DUAL
+         SELECT  /* UserMapper.xml, checkExistLimitWord, SAC(SC), 윤보영, 2015-12-14 */
+                mbr_id AS existWordID
+           FROM  tb_us_ousermbr
+          WHERE  mbr_status_main_cd != 'US010202' /* US010202 : 탈퇴 */
+            AND  mbr_id = #{userID}
     </select>
 
 
