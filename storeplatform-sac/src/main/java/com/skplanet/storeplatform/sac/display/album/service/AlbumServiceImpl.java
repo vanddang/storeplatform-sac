@@ -31,6 +31,8 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
 @Service
 public class AlbumServiceImpl implements AlbumService{
 
+    private final String VARIOUS_ARTISTS_ID = "2727"; //알수없는 아티스트 ID
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -67,8 +69,18 @@ public class AlbumServiceImpl implements AlbumService{
 		params.put("artistId", artistId);
 		params.put("langCd", langCd);
 		params.put("imgCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-		
-		List<AlbumMeta> albumMetaList = this.commonDAO.queryForList("AlbumListByArtist.albumList", params, AlbumMeta.class);
+
+        // 알수없는 아티스트의 경우 관련 앨범을 추출하지 않음.
+        // 알수없는 아티스트의 경우 관련 앨범이 의미가 없음.
+        // 관련앨범의 갯수가 너무 많아서 쿼리 속도가 느림.
+		List<AlbumMeta> albumMetaList;
+        if (VARIOUS_ARTISTS_ID.equals(artistId)) {
+            albumMetaList = new LinkedList<AlbumMeta>();
+        }
+        else {
+            albumMetaList = this.commonDAO.queryForList("AlbumListByArtist.albumList", params, AlbumMeta.class);
+        }
+
 		AlbumListByArtistRes res = new AlbumListByArtistRes();
 		List<Product> albums = new LinkedList<Product>();
 		for (AlbumMeta albumMeta : albumMetaList) {
