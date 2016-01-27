@@ -43,6 +43,11 @@
                             LIKE #{menuIdCond.menuId}||'%'
             </foreach>
         </if>
+        /* 상품등급코드 */
+        /* 쇼핑은 등급을 무시하기 위해 NULL인 경우 표시 */
+        <if test='prodGradeCdList != null'>
+                AND ( P.prod_grd_cd IS NULL OR P.prod_grd_cd IN <foreach collection="prodGradeCdList" item="prodGradeCd" index="index" open="(" close=")" separator=",">#{prodGradeCd}</foreach> )
+        </if>
                 <!-- 판매중 (PD000403) 상태 체크 (쇼핑상품 및 앨범상품은 무조건 추출 후 서비스로직으로 판별 -->
                 AND   ( LP.prod_id LIKE 'CL%' OR LP.prod_id LIKE 'AL%' OR (TP.prod_status_cd = 'PD000403' AND TP.expo_yn = 'Y') )
                 <!-- stopKey -->
