@@ -18,20 +18,22 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 사용자 상태정보 Value Object
  * 
  * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2016. 01. 26. Updated by : 윤보영, 카레즈
  */
 public class UserMbrStatus extends CommonInfo implements Serializable {
 
 	/** The Constant serial Version UID. */
 	private static final long serialVersionUID = 1L;
 
-	/** 테넌트 ID. */
+	/** 테넌트 ID. (타파트 작업 후 삭제 필요) */
+    @Deprecated
 	private String tenantID;
 
 	/** 사용자 Key. */
 	private String userKey;
 
 	/**
-	 * 사용자 구분 코드. ex) US011501(모바일회원) , US011502(IDP 회원) , US011503(OneID 회원)
+	 * 사용자 구분 코드. ex) US011501(모바일회원) , US011502(Tstore 회원) , US011504(네이버아이디사용자), US011505(구글아이디사용자), US011506(페이스북아이디사용자)
 	 * 
 	 * @see com.skplanet.storeplatform.member.common.code.UserTypeCode
 	 */
@@ -210,14 +212,6 @@ public class UserMbrStatus extends CommonInfo implements Serializable {
 	 */
 	public List<String> getDeviceKeyList() {
 		return this.deviceKeyList;
-	}
-
-	/**
-	 * @param deviceKeyList
-	 *            the deviceKeyList to set
-	 */
-	public void setDeviceKeyList(List<String> deviceKeyList) {
-		this.deviceKeyList = deviceKeyList;
 	}
 
 }

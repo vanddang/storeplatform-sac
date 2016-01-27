@@ -11,13 +11,15 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 회원 정보.
  * 
  * Updated on : 2014. 2. 21. Updated by : 김다슬, 인크로스.
+ * Updated on : 2016. 1. 26. Updated by : 윤보영, 카레즈.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class UserInfoSac extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/** tenant Id */
+	/** tenant Id (타파트 작업 후 삭제 필요) */
+    @Deprecated
 	private String tenantId;
 
 	/** 회원키. */

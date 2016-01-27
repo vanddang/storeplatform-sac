@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac
  * 회원 정보 조회 내부 메소드 호출 Interface.
  * 
  * Updated on : 2014. 2. 12. Updated by : 김다슬, 인크로스.
+ * Updated on : 2016. 1. 25. Updated by : 윤보영, 카레즈.
  */
 @SCI
 @RequestMapping(value = "/member/user/sci")
@@ -43,7 +44,6 @@ public interface SearchUserSCI {
 	/**
 	 * <pre>
 	 * userKey 목록을 이용하여 회원정보 목록조회. 
-	 * Updated on : 2014. 2. 12. Updated by : 김다슬, 인크로스.
 	 * </pre>
 	 * 
 	 * @param request
