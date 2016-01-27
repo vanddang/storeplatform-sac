@@ -86,8 +86,11 @@ public class PromotionEventRequestServiceImpl implements PromotionEventRequestSe
         if (!promotionEvent.isLiveFor(now)) return false;
 
         String key = SacRedisKeys.promotionEventTargetUserKey(tenantId, promotionEvent.getTargetId());
-        if (promotionEvent.isNeedsUserTargetSync() && !plandasj.sismember(key, userKey)) {
-            return false;
+        if (promotionEvent.isNeedsUserTargetSync()) {
+            // Plandas에 null값을 전달하면 안됨.
+            if (userKey == null || !plandasj.sismember(key, userKey)) {
+                return false;
+            }
         }
 
         return true;
