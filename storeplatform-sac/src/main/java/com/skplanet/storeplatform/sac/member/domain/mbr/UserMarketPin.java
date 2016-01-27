@@ -4,7 +4,6 @@ import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 @Entity
 @Table(name = "TB_US_OUSERMBR_PIN")
@@ -18,8 +17,6 @@ public class UserMarketPin implements Serializable {
     private UserMember member;
 
     private String pinNo;
-    private Date rnameAuthDate;
-    private String rnameAuthMdn;
     private Integer authFailCnt;
 
     public UserMarketPin() {}
@@ -36,22 +33,6 @@ public class UserMarketPin implements Serializable {
 
     public void setPinNo(String pinNo) {
         this.pinNo = pinNo;
-    }
-
-    public Date getRnameAuthDate() {
-        return rnameAuthDate;
-    }
-
-    public void setRnameAuthDate(Date rnameAuthDate) {
-        this.rnameAuthDate = rnameAuthDate;
-    }
-
-    public String getRnameAuthMdn() {
-        return rnameAuthMdn;
-    }
-
-    public void setRnameAuthMdn(String rnameAuthMdn) {
-        this.rnameAuthMdn = rnameAuthMdn;
     }
 
     public Integer getAuthFailCnt() {
