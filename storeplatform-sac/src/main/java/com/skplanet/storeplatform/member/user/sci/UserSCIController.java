@@ -3796,4 +3796,39 @@ public class UserSCIController implements UserSCI {
 
 	}
 
+	/**
+	 * <pre>
+	 * market pin 이관 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param transferMarketPinRequest TransferMarketPinRequest
+	 * @return TransferMarketPinResponse
+	 */
+	@Override
+	public TransferMarketPinResponse transferMarketPin(TransferMarketPinRequest transferMarketPinRequest) {
+
+		TransferMarketPinResponse transferMarketPinResponse = null;
+
+		// 입력 파라미터가 없음
+		if (transferMarketPinRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (transferMarketPinRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 필수 파라미터
+		if (transferMarketPinRequest.getUserKey() == null || transferMarketPinRequest.getPreUserKey() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+			transferMarketPinResponse = this.service.excuteTransferMarketPin(transferMarketPinRequest);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+		return transferMarketPinResponse;
+	}
 }

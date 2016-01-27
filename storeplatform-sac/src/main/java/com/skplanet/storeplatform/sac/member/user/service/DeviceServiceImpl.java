@@ -40,6 +40,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInf
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferMarketPinRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferMarketPinResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
@@ -473,35 +475,8 @@ public class DeviceServiceImpl implements DeviceService {
 					|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceInfo.getDeviceTelecom())
 					|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceInfo.getDeviceTelecom())
 		)){
-			if(System.getProperty("spring.profiles.active", "local").equals("local")) {
-				// local에서는 외부연동이 안되므로 하드코딩
-				HashMap<String, String> mdnMap = new HashMap<String, String>();
-				mdnMap.put("01011110001", "svc001");
-				mdnMap.put("01011110002", "svc002");
-				mdnMap.put("01011110003", "svc003");
-				mdnMap.put("01011110004", "svc004");
-				mdnMap.put("01011110005", "svc005");
-                mdnMap.put("01065260114", "SVC65260114");
-                mdnMap.put("01065260110", "65260110");
-                mdnMap.put("01065260114", "KT65260114");
-                mdnMap.put("01065260115", "LGT65260115");
-                mdnMap.put("01065260118", "LGT65260118");
-                mdnMap.put("01065260119", "LGT65260119");
-                mdnMap.put("01065261244", "KT4486071544");
-                mdnMap.put("01032165294", "79330577777990179913");
-				mdnMap.put("01066786220", "7243371580");
-				mdnMap.put("01066786221", "7243371581");
-				mdnMap.put("01066786230", "7243371582");
-                mdnMap.put("01087878490", "7243371583");
-				if(mdnMap.get(deviceInfo.getMdn()) != null){
-					deviceInfo.setSvcMangNum(mdnMap.get(deviceInfo.getMdn()));
-				}else{
-					throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
-				}
-			}else{
-				String svcMangNo = this.commService.getSvcMangNo(deviceInfo.getMdn(), deviceInfo.getDeviceTelecom(), deviceInfo.getNativeId(), deviceInfo.getSimSerialNo());
-				deviceInfo.setSvcMangNum(svcMangNo);
-			}
+			String svcMangNo = this.commService.getSvcMangNo(deviceInfo.getMdn(), deviceInfo.getDeviceTelecom(), deviceInfo.getNativeId(), deviceInfo.getSimSerialNo());
+			deviceInfo.setSvcMangNum(svcMangNo);
 		}
 
 		/* device header 값 셋팅(단말모델, OS버젼, SC버젼) */
@@ -633,6 +608,18 @@ public class DeviceServiceImpl implements DeviceService {
 				LOGGER.info("기등록된 모바일 회원 상품권 충전소 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
 			}
 
+            /*  market pin 이관*/
+            TransferMarketPinRequest transferMarketPinRequest = new TransferMarketPinRequest();
+            transferMarketPinRequest.setCommonRequest(commonRequest);
+            transferMarketPinRequest.setPreUserKey(previousUserKey);
+            transferMarketPinRequest.setUserKey(userKey);
+            TransferMarketPinResponse transferMarketPinResponse = this.userSCI
+                    .transferMarketPin(transferMarketPinRequest);
+            if (transferMarketPinResponse != null
+                    && StringUtil.isNotBlank(transferMarketPinResponse.getUserKey())) {
+                LOGGER.info("기등록된 모바일 회원 Market pin 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
+            }
+
 			/**
 			 * MQ 연동(회원 탈퇴) - 모바일 회원.
 			 */
@@ -675,14 +662,13 @@ public class DeviceServiceImpl implements DeviceService {
 			transferDeviceSetInfoRequest.setPreUserKey(preUserKey);
 			transferDeviceSetInfoRequest.setPreDeviceKey(preDeviceKey);
 			transferDeviceSetInfoRequest.setPreIsDormant(previousIsDormant);
-			TransferDeviceSetInfoResponse transferDeviceSetInfoResponse = this.deviceSetSCI
-					.transferDeviceSetInfo(transferDeviceSetInfoRequest);
+			//TransferDeviceSetInfoResponse transferDeviceSetInfoResponse = this.deviceSetSCI.transferDeviceSetInfo(transferDeviceSetInfoRequest);
 
-			if (transferDeviceSetInfoResponse != null
+			/*if (transferDeviceSetInfoResponse != null
 					&& StringUtil.isNotEmpty(transferDeviceSetInfoResponse.getUserKey())
 					&& StringUtil.isNotEmpty(transferDeviceSetInfoResponse.getDeviceKey())) {
 				LOGGER.info("기등록된 모바일 회원 상품권 PIN 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
-			}
+			}*/
 
 		}
 
