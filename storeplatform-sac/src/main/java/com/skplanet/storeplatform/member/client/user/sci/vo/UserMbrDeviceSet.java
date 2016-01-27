@@ -1,14 +1,14 @@
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+
+import java.util.List;
 
 /**
  * 휴대기기 설정 정보 Value Object.
  * 
- * Updated on : 2015. 10. 29. Updated by : 최진호, 보고지티.
+ * Updated on : 2016. 1. 27. Updated by : 최진호, 보고지티.
  */
 public class UserMbrDeviceSet extends CommonInfo {
 
@@ -28,7 +28,7 @@ public class UserMbrDeviceSet extends CommonInfo {
 	/** PIN 번호. */
 	private String pinNo; // PIN_NO
 	/** 인증_실패_횟수. */
-	private String authCnt; // AUTH_CNT
+	private String authFailCnt; // AUTH_FAIL_CNT
 	/** PIN 인증_잠금_여부. */
 	private String authLockYn; // AUTH_LOCK_YN
 	/** 자동_업데이트_유무. */
@@ -39,8 +39,6 @@ public class UserMbrDeviceSet extends CommonInfo {
 	private String isAutoUpdateWifi; // WI_FI_AUTO_UPDT_YN
 	/** 로그인_잠금_유무. */
 	private String isLoginLock; // LOGIN_LOCK_YN
-	/** 결제_PIN_재입력_여부. */
-	private String isPinRetry; // APPR_PIN_REINS_YN
 	/** 성인_컨텐츠_잠금_유무. */
 	private String isAdult; // ADULT_CONTENTS_LOCK_YN
 	/** 등록일시. */
@@ -54,15 +52,15 @@ public class UserMbrDeviceSet extends CommonInfo {
 	/** PIN 번호 등록 유무. */
 	private String isPin;
 	/** 성인 컨텐츠 잠금 여부. */
-	private String isAdultLock;
+	private String isAdultLock; // ADULT_CONTENTS_LIMT_YN
 	/** Wi-Fi에서만 다운로드 여부. */
-	private String isDownloadWifiOnly;
+	private String isDownloadWifiOnly; // WI_FI_AUTO_DWLD_YN
 	/** ICAS 인증 여부. */
-	private String isIcasAuth;
+	private String isIcasAuth; // ICAS_AUTH_YN
 	/** 실명인증 일자. */
-	private String realNameDate;
+	private String rnameAuthDate; // RNAME_AUTH_DATE
 	/** 실명인증 MDN. */
-	private String realNameMdn;
+	private String rnameAuthMdn; // RNAME_AUTH_MDN
 
 	/** 조건 객체. */
 	private List<KeySearch> keySearchList;
@@ -158,18 +156,18 @@ public class UserMbrDeviceSet extends CommonInfo {
 	}
 
 	/**
-	 * @return the authCnt
+	 * @return the authFailCnt
 	 */
-	public String getAuthCnt() {
-		return this.authCnt;
+	public String getAuthFailCnt() {
+		return this.authFailCnt;
 	}
 
 	/**
-	 * @param authCnt
-	 *            the authCnt to set
+	 * @param authFailCnt
+	 *            the authFailCnt to set
 	 */
-	public void setAuthCnt(String authCnt) {
-		this.authCnt = authCnt;
+	public void setAuthFailCnt(String authFailCnt) {
+		this.authFailCnt = authFailCnt;
 	}
 
 	/**
@@ -245,21 +243,6 @@ public class UserMbrDeviceSet extends CommonInfo {
 	 */
 	public void setIsLoginLock(String isLoginLock) {
 		this.isLoginLock = isLoginLock;
-	}
-
-	/**
-	 * @return the isPinRetry
-	 */
-	public String getIsPinRetry() {
-		return this.isPinRetry;
-	}
-
-	/**
-	 * @param isPinRetry
-	 *            the isPinRetry to set
-	 */
-	public void setIsPinRetry(String isPinRetry) {
-		this.isPinRetry = isPinRetry;
 	}
 
 	/**
@@ -415,39 +398,39 @@ public class UserMbrDeviceSet extends CommonInfo {
 	/**
 	 * 실명인증 일자(을)를 리턴한다.
 	 * 
-	 * @return realNameDate - realNameDate
+	 * @return rnameAuthDate - rnameAuthDate
 	 */
-	public String getRealNameDate() {
-		return this.realNameDate;
+	public String getRnameAuthDate() {
+		return this.rnameAuthDate;
 	}
 
 	/**
 	 * 실명인증 일자(을)를 셋팅한다.
 	 * 
-	 * @param realNameDate
-	 *            realNameDate
+	 * @param rnameAuthDate
+	 *            rnameAuthDate
 	 */
-	public void setRealNameDate(String realNameDate) {
-		this.realNameDate = realNameDate;
+	public void setRnameAuthDate(String rnameAuthDate) {
+		this.rnameAuthDate = rnameAuthDate;
 	}
 
 	/**
 	 * 실명인증 MDN(을)를 리턴한다.
 	 * 
-	 * @return realNameMdn - realNameMdn
+	 * @return rnameAuthMdn - rnameAuthMdn
 	 */
-	public String getRealNameMdn() {
-		return this.realNameMdn;
+	public String getRnameAuthMdn() {
+		return this.rnameAuthMdn;
 	}
 
 	/**
 	 * 실명인증 MDN(을)를 셋팅한다.
 	 * 
-	 * @param realNameMdn
-	 *            realNameMdn
+	 * @param rnameAuthMdn
+	 *            rnameAuthMdn
 	 */
-	public void setRealNameMdn(String realNameMdn) {
-		this.realNameMdn = realNameMdn;
+	public void setRnameAuthMdn(String rnameAuthMdn) {
+		this.rnameAuthMdn = rnameAuthMdn;
 	}
 
 }

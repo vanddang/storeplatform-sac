@@ -1,16 +1,5 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -51,6 +40,16 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 휴대기기 설정 정보 관련 ServiceImpl
@@ -540,7 +539,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		res.setDeviceId(checkDevicePinResponse.getDeviceId());
 		res.setDeviceKey(checkDevicePinResponse.getDeviceKey());
 		res.setUserKey(checkDevicePinResponse.getUserKey());
-		res.setFailCnt(checkDevicePinResponse.getUserMbrDeviceSet().getAuthCnt());
+		res.setFailCnt(checkDevicePinResponse.getUserMbrDeviceSet().getAuthFailCnt());
 		// PIN 인증 성공 시 진위여부 확인을 위한 Signature, 2015.06.25 추가
 		if (isAuthPin) {
 			res.setPhoneSign(phoneSign);
@@ -595,11 +594,11 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		res.setIsPin(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
 		res.setIsPinClosed(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn(),
 				null));
-		res.setFailCnt(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthCnt(), null));
+		res.setFailCnt(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthFailCnt(), null));
 
 		// Default=Y
-		res.setIsPinRetry(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry(),
-				null));
+		//res.setIsPinRetry(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry(),
+	//			null));
 		// Default=Y
 		res.setIsAutoUpdate(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
 				.getIsAutoUpdate(), null));
@@ -618,8 +617,8 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		// Default=N, ICAS_AUTH_YN 컬럼은 디폴트 값이 없고 기존 데이터는 NULL로 되어 있으므로 주의.
 		res.setIsIcasAuth(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsIcasAuth(),
 				"N"));
-		res.setRealNameDate(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getRealNameDate());
-		res.setRealNameMdn(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getRealNameMdn());
+		res.setRealNameDate(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getRnameAuthDate());
+		res.setRealNameMdn(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getRnameAuthMdn());
 
 		return res;
 	}
@@ -663,13 +662,13 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		userMbrDeviceSet.setAutoUpdateSet(req.getAutoUpdateSet());
 		userMbrDeviceSet.setIsAutoUpdateWifi(req.getIsAutoUpdateWifi());
 		userMbrDeviceSet.setIsLoginLock(req.getIsLoginLock());
-		userMbrDeviceSet.setIsPinRetry(req.getIsPinRetry());
+		//userMbrDeviceSet.setIsPinRetry(req.getIsPinRetry());
 		userMbrDeviceSet.setIsAdult(req.getIsAdult());
 		userMbrDeviceSet.setIsAdultLock(req.getIsAdultLock());
 		userMbrDeviceSet.setIsDownloadWifiOnly(req.getIsDownloadWifiOnly());
 		userMbrDeviceSet.setIsIcasAuth(req.getIsIcasAuth());
-		userMbrDeviceSet.setRealNameDate(req.getRealNameDate());
-		userMbrDeviceSet.setRealNameMdn(req.getRealNameMdn());
+		userMbrDeviceSet.setRnameAuthDate(req.getRealNameDate());
+		userMbrDeviceSet.setRnameAuthMdn(req.getRealNameMdn());
 
 		modifyDeviceSetInfoRequest.setUserMbrDeviceSet(userMbrDeviceSet);
 

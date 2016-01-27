@@ -3,19 +3,6 @@
  */
 package com.skplanet.storeplatform.member.user.service;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
@@ -38,6 +25,18 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInf
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceSet;
 import com.skplanet.storeplatform.member.common.crypto.SHACipher;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * 휴대기기 설정 기능을 제공하는 ServiceImpl
@@ -109,7 +108,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 			// PIN 번호 암호화
 			userMbrDeviceSet.setPinNo(cipher.getHash(createDevicePinRequest.getPinNo()));
 			userMbrDeviceSet.setAuthLockYn(Constant.TYPE_YN_N);
-			userMbrDeviceSet.setAuthCnt("0");
+			userMbrDeviceSet.setAuthFailCnt("0");
 		} catch (NoSuchAlgorithmException ex) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""), ex);
 		} catch (UnsupportedEncodingException ex) {
@@ -207,7 +206,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		if (StringUtils.equals(pinNo, userMbrDeviceSet.getPinNo())) {
 			userMbrDeviceSet.setPinNo(newPinNo);
 			userMbrDeviceSet.setAuthLockYn(Constant.TYPE_YN_N);
-			userMbrDeviceSet.setAuthCnt("0");
+			userMbrDeviceSet.setAuthFailCnt("0");
 		} else {
 			// 요청한 PIN가 일치하지 않음
 			throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
@@ -284,7 +283,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 			// PIN 번호 설정
 			userMbrDeviceSet.setPinNo(cipher.getHash(newPinNo));
 			userMbrDeviceSet.setAuthLockYn(Constant.TYPE_YN_N);
-			userMbrDeviceSet.setAuthCnt("0");
+			userMbrDeviceSet.setAuthFailCnt("0");
 		} catch (NoSuchAlgorithmException ex) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""), ex);
 		} catch (UnsupportedEncodingException ex) {
@@ -372,7 +371,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		}
 
 		// 인증 실패 횟수
-		int authCnt = Integer.parseInt(StringUtils.defaultString(userMbrDeviceSet.getAuthCnt(), "0"));
+		int authCnt = Integer.parseInt(StringUtils.defaultString(userMbrDeviceSet.getAuthFailCnt(), "0"));
 		int failCnt = 0;
 		if (StringUtils.equals(Constant.TYPE_YN_N,
 				StringUtils.defaultString(userMbrDeviceSet.getAuthLockYn(), Constant.TYPE_YN_N))
@@ -383,11 +382,11 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 			if (authCnt == 5) {
 				userMbrDeviceSet.setAuthLockYn(Constant.TYPE_YN_Y);
 			}
-			userMbrDeviceSet.setAuthCnt(String.valueOf(authCnt));
+			userMbrDeviceSet.setAuthFailCnt(String.valueOf(authCnt));
 		} else if (StringUtils.equals(pinNo, userMbrDeviceSet.getPinNo())
 				&& StringUtils.equals(Constant.TYPE_YN_N,
 						StringUtils.defaultString(userMbrDeviceSet.getAuthLockYn(), Constant.TYPE_YN_N))) {
-			userMbrDeviceSet.setAuthCnt("0");
+			userMbrDeviceSet.setAuthFailCnt("0");
 		}
 		int chRow = (Integer) this.commonDAO.insert("DeviceSet.modifyDeviceSet", userMbrDeviceSet);
 		if (chRow <= 0) {
@@ -446,7 +445,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 		if (searchUserMbrDeviceSet == null) {
 			searchUserMbrDeviceSet = new UserMbrDeviceSet();
-			searchUserMbrDeviceSet.setIsPinRetry(Constant.TYPE_YN_Y);
+			//searchUserMbrDeviceSet.setIsPinRetry(Constant.TYPE_YN_Y);
 			searchUserMbrDeviceSet.setIsAutoUpdate(Constant.TYPE_YN_Y);
 			searchUserMbrDeviceSet.setIsAutoUpdateWifi(Constant.TYPE_YN_Y);
 			searchUserMbrDeviceSet.setIsLoginLock(Constant.TYPE_YN_N);

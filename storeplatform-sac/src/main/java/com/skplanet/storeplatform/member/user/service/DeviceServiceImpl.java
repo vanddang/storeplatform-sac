@@ -339,8 +339,8 @@ public class DeviceServiceImpl implements DeviceService {
 						modifyUserMbrDeviceSet.setUserKey(updateMbrDevice.getUserKey());
 						modifyUserMbrDeviceSet.setDeviceKey(updateMbrDevice.getDeviceKey());
 						modifyUserMbrDeviceSet.setUserID(updateMbrDevice.getUserID());
-						modifyUserMbrDeviceSet.setRealNameDate("");
-						modifyUserMbrDeviceSet.setRealNameMdn("");
+						modifyUserMbrDeviceSet.setRnameAuthDate("");
+						modifyUserMbrDeviceSet.setRnameAuthMdn("");
 						if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
 							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
 						}else{
@@ -416,8 +416,8 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserKey(updateMbrDevice.getUserKey());
 							modifyUserMbrDeviceSet.setDeviceKey(updateMbrDevice.getDeviceKey());
 							modifyUserMbrDeviceSet.setUserID(updateMbrDevice.getUserID());
-							modifyUserMbrDeviceSet.setRealNameDate("");
-							modifyUserMbrDeviceSet.setRealNameMdn("");
+							modifyUserMbrDeviceSet.setRnameAuthDate("");
+							modifyUserMbrDeviceSet.setRnameAuthMdn("");
 							if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
 								//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
 							}else{
@@ -555,8 +555,8 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserKey(userMbrDevice.getUserKey());
 							modifyUserMbrDeviceSet.setDeviceKey(userMbrDevice.getDeviceKey());
 							modifyUserMbrDeviceSet.setUserID(userMbrDevice.getUserID());
-							modifyUserMbrDeviceSet.setRealNameDate("");
-							modifyUserMbrDeviceSet.setRealNameMdn("");
+							modifyUserMbrDeviceSet.setRnameAuthDate("");
+							modifyUserMbrDeviceSet.setRnameAuthMdn("");
 							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
 						}
 					}else{
@@ -595,8 +595,8 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserKey(userMbrDevice.getUserKey());
 							modifyUserMbrDeviceSet.setDeviceKey(userMbrDevice.getDeviceKey());
 							modifyUserMbrDeviceSet.setUserID(userMbrDevice.getUserID());
-							modifyUserMbrDeviceSet.setRealNameDate("");
-							modifyUserMbrDeviceSet.setRealNameMdn("");
+							modifyUserMbrDeviceSet.setRnameAuthDate("");
+							modifyUserMbrDeviceSet.setRnameAuthMdn("");
 							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); //TODO. 아직 테이블 정리 안됨
 						}
 					}
