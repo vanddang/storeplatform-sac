@@ -1580,12 +1580,12 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchOrderDeviceResponse searchOrderDeviceResponse = this.commonDAO.queryForObject("Device.searchOrderDevice",
 				searchOrderDeviceRequest, SearchOrderDeviceResponse.class);
 
-		if (searchOrderDeviceResponse == null || searchOrderDeviceResponse.getDeviceId() == null) {
+		if (searchOrderDeviceResponse == null) {
 			searchOrderDeviceResponse = this.idleDAO.queryForObject("Device.searchOrderDevice",
 					searchOrderDeviceRequest, SearchOrderDeviceResponse.class);
 		}
 
-		if (searchOrderDeviceResponse == null || searchOrderDeviceResponse.getDeviceId() == null) {
+		if (searchOrderDeviceResponse == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
 		}
 

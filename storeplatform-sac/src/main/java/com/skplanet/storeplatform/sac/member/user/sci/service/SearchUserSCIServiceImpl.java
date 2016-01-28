@@ -1102,8 +1102,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		SearchUserSegmentResponse searchUserSegmentResponse = this.userSCI.searchUserSegment(searchUserSegmentRequest);
 
 		SearchUserSegmentSacRes res = new SearchUserSegmentSacRes();
-		// 기변여부
-		res.setIsChanged(StringUtils.defaultString(searchUserSegmentResponse.getIsChanged(), null));
 		// 가입일
 		res.setEntryDay(searchUserSegmentResponse.getEntryDay());
 		// 등급
@@ -1114,6 +1112,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		res.setUserKey(searchUserSegmentResponse.getUserKey());
 		// 성별
 		res.setUserSex(searchUserSegmentResponse.getUserSex());
+        //TODO 기변여부 타사 작업 후 삭제 필요
+        res.setIsChanged(null);
 
 		return res;
 	}

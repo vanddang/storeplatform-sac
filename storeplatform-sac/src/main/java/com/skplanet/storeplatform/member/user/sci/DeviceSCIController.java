@@ -674,12 +674,6 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchOrderDeviceRequest.getCommonRequest().getTenantID() == null
-				|| searchOrderDeviceRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, deviceKey, userKey
 		if (searchOrderDeviceRequest.getDeviceKey() == null || searchOrderDeviceRequest.getDeviceKey().length() <= 0
 				|| searchOrderDeviceRequest.getUserKey() == null || searchOrderDeviceRequest.getUserKey().length() <= 0) {

@@ -186,7 +186,6 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 		// 공통 파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
 
 		// SC 회원 기기변경이력 조회 기능 호출.
 		SearchOrderDeviceRequest searchOrderDeviceRequest = new SearchOrderDeviceRequest();
@@ -201,11 +200,11 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 
 		SearchOrderDeviceIdSacRes res = new SearchOrderDeviceIdSacRes();
 
+        res.setDeviceId(searchOrderDeviceResponse.getDeviceId());
+        res.setMdn(searchOrderDeviceResponse.getMdn());
+        res.setDeviceTelecom(searchOrderDeviceResponse.getDeviceTelecom());
 		res.setAuthYn(searchOrderDeviceResponse.getAuthYn());
-		res.setDeviceId(searchOrderDeviceResponse.getDeviceId());
-		res.setDeviceTelecom(searchOrderDeviceResponse.getDeviceTelecom());
 		res.setTableName(searchOrderDeviceResponse.getTableName());
-		res.setTenantId(searchOrderDeviceResponse.getTenantID());
 
 		return res;
 	}
@@ -224,7 +223,6 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 		// 공통 파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
 		LOGGER.debug("[DeviceSCIController.updateLimitChargeYn] SC Request deviceSCI.searchOrderDevice : {}", req);
 
 		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
