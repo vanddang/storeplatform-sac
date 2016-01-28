@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
+import com.mysema.query.jpa.impl.JPAQuery;
 import com.skplanet.storeplatform.sac.member.domain.mbr.QUserMarketPin;
 import com.skplanet.storeplatform.sac.member.domain.mbr.UserMarketPin;
 import org.springframework.stereotype.Repository;
@@ -37,7 +38,9 @@ public class UserMarketPinRepositoryImpl implements UserMarketPinRepository {
     }
 
     public UserMarketPin findOne(String insdUsermbrNo) {
-        return em.find(UserMarketPin.class, insdUsermbrNo);
+        return new JPAQuery(em).from($)
+                .where($.member.insdUsermbrNo.eq(insdUsermbrNo))
+                .uniqueResult($);
     }
 
 

@@ -12,7 +12,7 @@ public class UserMarketPin implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INSD_USERMBR_NO")
     private UserMember member;
 
