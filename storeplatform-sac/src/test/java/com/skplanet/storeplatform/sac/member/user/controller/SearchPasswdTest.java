@@ -128,7 +128,6 @@ public class SearchPasswdTest {
 			public Object requestBody() {
 				SearchPasswordSacReq req = new SearchPasswordSacReq();
 				req.setUserId("vanddangtest021");
-				req.setUserEmail("vanddang@gmail.com");
 
 				logger.debug("request param : {}", req.toString());
 				return req;
@@ -192,7 +191,6 @@ public class SearchPasswdTest {
 					SearchPasswordSacReq req = new SearchPasswordSacReq();
 					req.setUserId("vanddangtest021");
 					req.setUserPhone("");
-					req.setUserEmail("");
 
 					logger.debug("request param : {}", req.toString());
 					return req;

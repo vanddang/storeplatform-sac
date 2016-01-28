@@ -433,7 +433,6 @@ public class DeviceSetSCITest {
 		userMbrDeviceSet.setIsAutoUpdate("Y");
 		userMbrDeviceSet.setIsAutoUpdateWifi("Y");
 		userMbrDeviceSet.setIsLoginLock("Y");
-		userMbrDeviceSet.setIsPinRetry("Y");
 
 		// 요청 필수
 		modifyDeviceSetInfoRequest = new ModifyDeviceSetInfoRequest();
