@@ -994,7 +994,7 @@ public class LoginServiceImpl implements LoginService {
                             throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
                         }else{
                             // deviceInfo 탈퇴처리
-                            this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
+                            this.userWithdrawService.removeDevice(requestHeader, deviceInfo.getDeviceId());
                             // deviceInfoBySvcMangNo 휴대기기 프로세스
                             deviceInfo = deviceInfoBySvcMangNo;
                         }

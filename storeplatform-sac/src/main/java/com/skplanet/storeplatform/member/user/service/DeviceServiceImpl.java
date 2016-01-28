@@ -342,9 +342,9 @@ public class DeviceServiceImpl implements DeviceService {
 						modifyUserMbrDeviceSet.setRnameAuthDate("");
 						modifyUserMbrDeviceSet.setRnameAuthMdn("");
 						if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+							this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}else{
-							//this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);  // TODO. 아직 테이블 정의 안됨
+							this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}
 					}
 				}
@@ -419,9 +419,9 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setRnameAuthDate("");
 							modifyUserMbrDeviceSet.setRnameAuthMdn("");
 							if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-								//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+								this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 							}else{
-								//this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+								this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 							}
 						}
 					}
@@ -557,7 +557,7 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserID(userMbrDevice.getUserID());
 							modifyUserMbrDeviceSet.setRnameAuthDate("");
 							modifyUserMbrDeviceSet.setRnameAuthMdn("");
-							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+							this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}
 					}else{
 						LOGGER.info("기존단말에서 가지고 있었던 휴대기기를 auth_yn = Y 처리");
@@ -597,7 +597,7 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserID(userMbrDevice.getUserID());
 							modifyUserMbrDeviceSet.setRnameAuthDate("");
 							modifyUserMbrDeviceSet.setRnameAuthMdn("");
-							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); //TODO. 아직 테이블 정리 안됨
+							this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}
 					}
 				}else{
