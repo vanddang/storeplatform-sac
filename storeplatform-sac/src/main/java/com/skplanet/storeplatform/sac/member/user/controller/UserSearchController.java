@@ -174,7 +174,6 @@ public class UserSearchController {
 	public SearchPasswordSacRes searchPassword(SacRequestHeader sacHeader, @RequestBody SearchPasswordSacReq req) {
 
 		String userId = StringUtil.nvl(req.getUserId(), "");
-		String userEmail = StringUtil.nvl(req.getUserEmail(), "");
 		String userPhone = StringUtil.nvl(req.getUserPhone(), "");
 
 		if (userId.equals("")) {
@@ -182,7 +181,6 @@ public class UserSearchController {
 		}
 
 		req.setUserId(userId);
-		req.setUserEmail(userEmail);
 		req.setUserPhone(userPhone);
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));

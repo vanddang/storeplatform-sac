@@ -471,71 +471,81 @@ public class UserSearchServiceImpl implements UserSearchService {
 			throw new StorePlatformException("SAC_MEM_0003", "userId", srhExtUserRes.getUserMbr().getUserID());
 		}
 
-		String checkId = "";
-
-		/** 4. Email값이 있다면 UserId와 Email이 일치하는지 체크. */
-		if (!req.getUserEmail().equals("")) {
-			if (srhExtUserRes.getUserMbr().getUserEmail().equals(req.getUserEmail())) {
-				checkId = "Y";
-			} else {
-				checkId = "N";
-			}
-		/** 4-1. Phone이 있다면 UserId와 Phone이 일치하는지 체크. */
-		} else if (!req.getUserPhone().equals("")) {
-			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getUserPhone());
-			req.setUserPhone(opmdMdn);
-
-			ListDeviceReq scReq = new ListDeviceReq();
-			scReq.setUserKey(srhExtUserRes.getUserMbr().getUserKey());
-			// req의 전호번호는 mdn이다.
-			scReq.setMdn(req.getUserPhone());
-			scReq.setIsMainDevice("Y");
-
-			ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
-
-			if (listDeviceRes.getUserKey() != null) {
-				checkId = "Y";
-			} else {
-				checkId = "N";
-			}
-		}
-
-		/** 5. 사용자 이메일 혹은 Phone 이 일치하지 않으면 오류처리. */
-		if (checkId.equals("N")) {
-			throw new StorePlatformException("SAC_MEM_0002", "Email or Phone");
-		}
-
 		SearchPasswordSacRes res = new SearchPasswordSacRes();
 
-		/** 6. 모바일, 네이버, 구글, 페이스북 아이디 사용자는 비밀번호 찾기 불가. */
+		/** 4. 모바일, 네이버, 구글, 페이스북 아이디 사용자는 비밀번호 찾기 불가. */
 		if(StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)
 				|| StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_NAVER)
 				|| StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
 				|| StringUtils.equals(srhExtUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 			throw new StorePlatformException("SAC_MEM_1304", srhExtUserRes.getUserMbr().getUserType());
-		/** 7. 그외의 사용자는 비밀번호를 리셋후 응답처리.  */
+		/** 5. 그외의 사용자는 비밀번호찾기 시작.  */
 		}else{
-			/** 7-1. 새로운 암호 생성 및 암호화하여 DB 저장. */
-			MbrPwd mbrPwd = new MbrPwd();
-			mbrPwd.setMemberKey(srhExtUserRes.getUserMbr().getUserKey());
-			mbrPwd.setIsDormant(srhExtUserRes.getUserMbr().getIsDormant());
-
-			ResetPasswordUserRequest scRPUReq = new ResetPasswordUserRequest();
-			scRPUReq.setCommonRequest(commonRequest);
-			scRPUReq.setMbrPwd(mbrPwd);
-
-			ResetPasswordUserResponse scRPURes = this.userSCI.updateResetPasswordUser(scRPUReq);
-
-			/** 7-2. DB에 저장이 잘 되었으면 req의 userEmail, userPhone에 따라 응답값 설정. */
-			res.setUserPw(scRPURes.getUserPW());
-			if (!req.getUserEmail().equals("")) {
-				res.setSendInfo(StringUtil.setTrim(req.getUserEmail()));
+			/** 5-1. userId에 userEmail이 있으면 email 발송 */
+			if (StringUtils.isNotBlank(srhExtUserRes.getUserMbr().getUserEmail())) {
+				res.setSendInfo(StringUtil.setTrim(srhExtUserRes.getUserMbr().getUserEmail()));
 				res.setSendMean("01");
-			} else if (!req.getUserPhone().equals("")) {
-				res.setSendInfo(StringUtil.setTrim(req.getUserPhone()));
-				res.setSendMean("02");
-			} else if (req.getUserEmail().equals("") && req.getUserPhone().equals("")) {
-				throw new StorePlatformException("SAC_MEM_0001", "userEmail or userPhone");
+			/** 5-2. userId에 userEmail이 없는 경우 */
+			} else {
+				/** 5-2-1. req의 userPhone이 있는 경우 유효성 확인후 sms 발송 */
+				if (StringUtils.isNotBlank(req.getUserPhone())) {
+
+					String opmdMdn = this.mcc.getOpmdMdnInfo(req.getUserPhone());
+					req.setUserPhone(opmdMdn);
+
+					ListDeviceReq scReq = new ListDeviceReq();
+					scReq.setUserKey(srhExtUserRes.getUserMbr().getUserKey());
+					scReq.setMdn(req.getUserPhone());  // userPhone은 현재 접속 단말의 MDN
+
+					ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
+					// 유효한 MDN이 아니면 오류 처리
+					if (StringUtils.isBlank(listDeviceRes.getUserKey())) {
+						throw new StorePlatformException("SAC_MEM_0002", "Phone");
+					}
+
+					res.setSendInfo(StringUtil.setTrim(req.getUserPhone()));
+					res.setSendMean("02");
+				/** 5-2-2. userId에 userEmail이 없고 req의 userPhone도 없는 경우 */
+				} else {
+					ListDeviceReq scReq = new ListDeviceReq();
+					scReq.setUserKey(srhExtUserRes.getUserMbr().getUserKey());
+					scReq.setIsMainDevice(MemberConstants.USE_N);
+
+					ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
+
+					/** 5-2-2-1. 붙어 있는 대표 기기로 sms 전송 */
+					if (listDeviceRes.getDeviceInfoList().size() > 0) {
+						String mainDeviceMdn = "";
+						for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
+							if (StringUtils.equals(deviceInfo.getIsPrimary(), MemberConstants.USE_Y)) {
+								mainDeviceMdn = deviceInfo.getMdn();
+								break;
+							}
+						}
+						res.setSendInfo(mainDeviceMdn);
+						res.setSendMean("02");
+					/** 5-2-2-2. 붙어 있는 기기가 없으면 발송 하지 않음 */
+					} else {
+						res.setSendInfo("");
+						res.setSendMean("03");
+					}
+				}
+			}
+
+			/** 5-3. 발송하지 않는 경우를 제외 하고 비밀번호 신규 생성후 응답 셋팅. */
+			if (!StringUtils.equals(res.getSendMean(),"03")) {
+				MbrPwd mbrPwd = new MbrPwd();
+				mbrPwd.setMemberKey(srhExtUserRes.getUserMbr().getUserKey());
+				mbrPwd.setIsDormant(srhExtUserRes.getUserMbr().getIsDormant());
+
+				ResetPasswordUserRequest scRPUReq = new ResetPasswordUserRequest();
+				scRPUReq.setCommonRequest(commonRequest);
+				scRPUReq.setMbrPwd(mbrPwd);
+
+				ResetPasswordUserResponse scRPURes = this.userSCI.updateResetPasswordUser(scRPUReq);
+				res.setUserPw(scRPURes.getUserPW());
+			} else {
+				res.setUserPw("");
 			}
 		}
 

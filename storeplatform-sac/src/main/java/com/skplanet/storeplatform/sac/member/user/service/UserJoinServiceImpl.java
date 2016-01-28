@@ -10,10 +10,12 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
@@ -575,7 +577,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		this.checkAlreadyJoin(sacHeader, req.getDeviceId());
 
 		/**
-		 * 회원 가입 MAC
+		 * 회원 가입 IMEI, MAC & MSISDN
 		 */
 		return this.regSaveAndSyncUserJoin(sacHeader, req);
 
@@ -1226,7 +1228,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	/**
 	 * <pre>
-	 * Save & Sync 회원 가입 MAC
+	 * Save & Sync 회원 가입
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -1237,32 +1239,93 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 */
 	private CreateSaveAndSyncRes regSaveAndSyncUserJoin(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
 
+		LOGGER.debug("======  SAVE & SYNC 가가입 START ======");
+
 		String userKey = null; // 사용자 Key
 		String deviceKey = null; // 휴대기기 Key
 		String deviceTelecom = MemberConstants.DEVICE_TELECOM_SKT; // 이동통신사
+		String svcMangNum = null;
 
-		/** 단말등록시 필요한 기본 정보 세팅 - 기기모델번호. */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(),
-				deviceTelecom, req.getDeviceId(), req.getDeviceIdType(), true);
+		/** 1. deviceType이 msisdn이면 upas연동을 통해 서비스 관리 번호를 획득. */
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
 
-		LOGGER.debug("=========================================");
-		LOGGER.debug("## >> SAVE & SYNC 기타 가가입 START ======");
-		LOGGER.debug("=========================================");
+			if (System.getProperty("spring.profiles.active", "local").equals("local")) {
+				// local에서는 외부연동이 안되므로 하드코딩
+				HashMap<String, String> mdnMap = new HashMap<String, String>();
+				mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
+				mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
+				mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
+				mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
+				if (mdnMap.get(req.getDeviceId()) != null) {
+					svcMangNum = mdnMap.get(req.getDeviceId());
+				} else {
+					throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
+				}
+			} else {
 
-		/**
-		 * IDP 연동없이 DB 만 가입처리.
-		 */
-		userKey = this.regSaveAndSyncMacUser(sacHeader, req);
+				UserEcRes userRes = this.mcc.getMappingInfo(req.getDeviceId(), "mdn");
+				svcMangNum = userRes.getSvcMngNum();
 
-		/**
-		 * 휴대기기 등록.
-		 */
-		majorDeviceInfo.setDeviceTelecom(deviceTelecom);
-		deviceKey = this.regDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
+				LOGGER.debug("## UAPS 연동 결과 toString() : {}", userRes);
+				LOGGER.debug("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
+			}
 
-		/**
-		 * 결과 세팅
-		 */
+		}
+
+		/** 2. 사용자 가입처리. */
+		/** 2-1. SC 가입 (공통 Request, 약관동의 Request) setting. */
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
+
+		/** 2-2. SC 사용자 기본정보 setting - IDP 연동을 하지 않으므로 MBR_NO 가 없음. */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_WATING); // 가가입
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING); // 가입승인 대기
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
+		userMbr.setIsRecvSMS(MemberConstants.USE_N); // SMS 수신 여부
+		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
+		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
+		createUserRequest.setUserMbr(userMbr);
+
+		/** 2-3. SC 사용자 가입요청 */
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
+		}
+		userKey = createUserResponse.getUserKey();
+
+		/** 3. 휴대기기 등록처리. */
+		/** 3-1. 휴대기기 등록을 위한 정보 셋팅 */
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setUserKey(createUserResponse.getUserKey());
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+			deviceInfo.setMdn(req.getDeviceId());
+		} else {
+			deviceInfo.setDeviceId(req.getDeviceId());
+		}
+		deviceInfo.setSvcMangNum(svcMangNum);
+		deviceInfo.setDeviceTelecom(deviceTelecom);
+		deviceInfo.setIsRecvSms(req.getIsRecvSms());
+		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
+		try{
+			/** 3-2. 휴대기기 등록. */
+			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
+			deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
+		}catch(StorePlatformException e){
+			// // 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
+			DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+			deleteUserRequest.setCommonRequest(mcc.getSCCommonRequest(sacHeader));
+			deleteUserRequest.setUserKey(userKey);
+			userSCI.delete(deleteUserRequest);
+			throw e;
+		}
+
+		/** 5. 결과 세팅 */
 		CreateSaveAndSyncRes response = new CreateSaveAndSyncRes();
 		response.setUserKey(userKey);
 		response.setDeviceKey(deviceKey);

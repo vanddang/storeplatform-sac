@@ -2331,7 +2331,7 @@
         SET
             MBR_ID = #{newUserId}
             ,MBR_CLAS_CD = #{newUserType}
-            ,EMAIL_ADDR = #{newUserEmail}
+            <if test="newUserEmail != null">,EMAIL_ADDR = #{newUserEmail}</if>
             ,START_DT = SYSDATE
             ,UPD_DT = SYSDATE
         WHERE
