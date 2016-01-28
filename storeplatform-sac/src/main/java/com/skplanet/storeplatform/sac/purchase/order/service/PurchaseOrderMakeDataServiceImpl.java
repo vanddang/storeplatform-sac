@@ -898,10 +898,15 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 											PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL)
 									|| StringUtils.equals(product.getPossLendClsfCd(),
 											PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_ALL)) {
+								String usePeriodCnt = this.purchaseOrderAssistService.calculateDayCnt(
+										purchaseOrderInfo.getPrchsDt(), product.getUsePeriodUnitCd(),
+										product.getUsePeriod()); // 이용기간(일)
+
 								sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT,
-										product.getUsePeriod()));
+										usePeriodCnt));
 								sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT,
-										product.getUsePeriod()));
+										usePeriodCnt));
+
 							} else {
 								sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_DWLD_PERIOD_CNT, ""));
 								sbReserveData.append(genResvData(PurchaseConstants.IF_DISPLAY_RES_USE_PERIOD_CNT, ""));

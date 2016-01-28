@@ -32,7 +32,10 @@
         <typeAlias alias="TenantSalePolicy"   type="com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy" />
         <typeAlias alias="PurchaseCommonCode" type="com.skplanet.storeplatform.purchase.client.common.vo.PurchaseCommonCode" />
         <typeAlias alias="PaymentPromotion"   type="com.skplanet.storeplatform.purchase.client.common.vo.PaymentPromotion" />
-        
+
+        <!-- 구매 부가 정보 저장 -->
+        <typeAlias alias="ExtraInfo"           type="com.skplanet.storeplatform.purchase.client.common.vo.ExtraInfo" />
+
         <!-- 구매요청 -->
         <typeAlias alias="AutoPrchsMore"    type="com.skplanet.storeplatform.purchase.client.order.vo.AutoPrchsMore" />
         <typeAlias alias="PrchsDtlMore"     type="com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore" />
@@ -125,6 +128,8 @@
         
         <!-- SAP 구매내역이관 -->
         <typeAlias alias="PurchaseTransferScReq" type="com.skplanet.storeplatform.purchase.client.order.vo.PurchaseTransferScReq" />
+        <typeAlias alias="PurchaseMigHistoryListSacReq" type="com.skplanet.storeplatform.sac.client.purchase.vo.migration.PurchaseMigInformationSacReq" />
+        <typeAlias alias="PurchaseMigList" type="com.skplanet.storeplatform.sac.client.purchase.migration.vo.PurchaseMigList"/>
         
         <!-- DRM업데이트 -->
         <typeAlias alias="PurchaseDrmInfoScReq" type="com.skplanet.storeplatform.purchase.client.history.vo.PurchaseDrmInfoScReq" />

@@ -31,7 +31,8 @@ public class ListProductCriteria {
 	private boolean                       prodCharge;
 	private Integer                       count;
 
-	private String                        cacheKey;
+	private String                        rawMenuId;
+	private String                        rawProdGradeCd;
 
 	public ListProductCriteria( ProductListSacReq req, String tenantId, String stdDt ) {
 
@@ -45,21 +46,20 @@ public class ListProductCriteria {
 		setProdChage(req);
 		setCount(req);
 
-		// set cache key
-		cacheKey = String.format( "key:[%s-%s-%s],menu:[%s],grade:[%s],charge:[%s],start:[%s/%s],count:[%s]",
-			tenantId, listId, stdDt,
-			req.getMenuId(), req.getProdGradeCd(), prodCharge,
-			lastExpoOrd, lastExpoOrdSub,
-			count
-		);
-
-		// To set "hasNext"
-		count++;
+		this.rawMenuId      = req.getMenuId();
+		this.rawProdGradeCd = req.getProdGradeCd();
 
 	}
 
 	public String getCacheKey() {
-		return cacheKey;
+
+		return String.format( "key:[%s-%s-%s],menu:[%s],grade:[%s],charge:[%s],start:[%s/%s],count:[%s]",
+				tenantId, listId, stdDt,
+				rawMenuId, rawProdGradeCd, prodCharge,
+				lastExpoOrd, lastExpoOrdSub,
+				count - 1
+		);
+
 	}
 
 	private void setupMenuIdCondList(ProductListSacReq req) {
@@ -111,7 +111,12 @@ public class ListProductCriteria {
 	}
 
 	private void setCount( ProductListSacReq req ) {
+
 		count = req.getCount() == null ? DEFAULT_LIST_COUNT : req.getCount();
+
+		// To set "hasNext"
+		count++;
+
 	}
 
 	private void setProdChage(ProductListSacReq req) {

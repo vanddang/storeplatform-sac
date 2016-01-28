@@ -326,7 +326,11 @@ public class PurchaseCDConstants {
 	public static final String INTERFACE_ID_TL_SAC_PUR_0006 = "TL_SAC_PUR_0006"; // Biz쿠폰 비동기 응답
 
 	/** 이관결과코드 */
-	public static final String TRC_RESULT_PLAN = "OR030101"; // 예정
+	public static final String TRC_RESULT_PLAN = "OR030101"; // 이관 예정, 이관 요청 완료
+	public static final String TRC_MIG_TARGET = "OR030104"; // 이관 처리 대상(이관 요청 전 상태)
+
+	/** 이관요청코드 **/
+	public static final String PURCHASE_MARKET_CD_NAVER = "OR000457"; // Naver
 
 	/** 판매자 타입 */
 	public static final String SELLER_TYPE_COPORATION = "US010103"; // 법인 사업자
@@ -344,4 +348,9 @@ public class PurchaseCDConstants {
 	public static final String DISPLAY_SVCGRPCD_SOCIAL_SHOPPING = "DP000205"; // 소셜 쇼핑
 	public static final String DISPLAY_SVCGRPCD_TSTORE_SHOPPING = "DP000206"; // Tstore 쇼핑
 	public static final String DISPLAY_SVCGRPCD_TSTORE_FREEPASS = "DP000207"; // 복합상품(정액권)
+
+    /** 구매내역 부가 정보 타입 코드 (EXTRA_INFO_TYPE) */
+    public static final String EXTRA_INFO_TYPE_CANCEL_REASON = "OR006401"; // 구매취소 부가 정보
+    public static final String EXTRA_INFO_TYPE_REFUND_REASON = "OR006402"; // 환불 부가 정보
+
 }

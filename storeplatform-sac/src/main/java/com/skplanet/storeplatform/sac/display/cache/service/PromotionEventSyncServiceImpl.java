@@ -16,10 +16,13 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Promotion;
+import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.SyncPromotionEventResult;
 import com.skplanet.storeplatform.sac.display.promotion.PromotionEventDataService;
+import com.skplanet.storeplatform.sac.display.promotion.vo.PromotionTargetUserKeysPaginated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +51,17 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
 
     @Override
     public SyncPromotionEventResult syncPromotionEvent(String tenantId, String key) {
-        return syncPromotionEvent(tenantId, key, false);
+        if (tenantId == null && key == null) {
+            return new SyncPromotionEventResult(ERR_UPDT_CNT, 0, null, new HashMap<String, PromotionEvent>());
+        }
+        else if (key == null) {
+            Set<PromotionEvent> promotionEvents = syncPromotion(tenantId);
+            return new SyncPromotionEventResult(promotionEvents == null ? ERR_UPDT_CNT : promotionEvents.size(), 0, new ArrayList<Integer>(), new HashMap<String, PromotionEvent>());
+        }
+        else {
+            PromotionEvent promotionEvent = syncPromotion(tenantId, key);
+            return new SyncPromotionEventResult(promotionEvent == null ? ERR_UPDT_CNT : 1, 0, new ArrayList<Integer>(), new HashMap<String, PromotionEvent>());
+        }
     }
 
     @Override
@@ -177,6 +190,127 @@ public class PromotionEventSyncServiceImpl implements PromotionEventSyncService 
         if(userList.size() > 0)
             PromotionEventRedisHelper.saveTargetUsers(client, event, userList);
         logger.debug("Target users are stored to mem #{} - {} ms", promId, stopwatch.stop());
+    }
+
+    @Override
+    public Thread syncPromotionInBackground(final String tenantId, final String promTypeValue) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                syncPromotion(tenantId, promTypeValue);
+            }
+        });
+        t.start();
+        return t;
+    }
+
+    @Override
+    public PromotionEvent syncPromotion(String tenantId, String promTypeValue) {
+        logger.debug("Start synchronizing promotion with {} {}", tenantId, promTypeValue);
+        if(connectionFactory == null) {
+            logger.warn("Redis Connection was not established. Cannot sync data.");
+            return null;
+        }
+        Plandasj plandasj = connectionFactory.getConnectionPool().getClient();
+        PromotionEvent promotionEvent = null;
+        String lockKey = SacRedisKeys.promotionEventLockKey(tenantId, promTypeValue);
+        Long value = plandasj.incr(lockKey);
+        if (value != 1) {
+            logger.debug("Other thread is in synchronization with {} {}", tenantId, promTypeValue);
+            return null;
+        }
+        try {
+            plandasj.expire(lockKey, 60 * 60);// 1시간.
+            RawPromotionEvent rawPromotionEvent = eventDataService.getForemostRawEvent(tenantId, promTypeValue);
+            promotionEvent = PromotionEventConverter.convert(rawPromotionEvent);
+            syncIfNeedTo(plandasj, tenantId, promTypeValue, promotionEvent);
+        } finally {
+            plandasj.del(lockKey);
+        }
+        logger.debug("Finished sync with {} {}", tenantId, promTypeValue);
+        return promotionEvent;
+    }
+
+    @Override
+    public Set<PromotionEvent> syncPromotion(String tenantId) {
+        if(connectionFactory == null) {
+            logger.warn("Redis Connection was not established. Cannot sync data.");
+            return null;
+        }
+
+        List<RawPromotionEvent> rawPromotionEvents = eventDataService.getForemostRawEvents(tenantId);
+        Set<PromotionEvent> promotionEvents = new HashSet<PromotionEvent>();
+        for (RawPromotionEvent rawPromotionEvent : rawPromotionEvents) {
+            PromotionEvent promotionEvent = syncPromotion(tenantId, rawPromotionEvent.getPromTypeValue());
+            if (promotionEvent != null) {
+                promotionEvents.add(promotionEvent);
+            }
+        }
+        return promotionEvents;
+    }
+
+    private void syncIfNeedTo(Plandasj plandasj, String tenantId, String promTypeValue, PromotionEvent promotionEvent) {
+        String key = SacRedisKeys.promotionEventKey();
+        String field = SacRedisKeys.promotionEventField(tenantId, promTypeValue);
+
+        byte[] pEvent = plandasj.hget(key.getBytes(), field.getBytes());
+        PromotionEvent eventFromPlandas = PromotionEventConverter.convert(pEvent);
+
+        if (eventFromPlandas != null && eventFromPlandas.equals(promotionEvent)) {
+            logger.debug("Same data. Skip synchronization. {} {}", tenantId, promotionEvent);
+            return;
+        }
+
+        removeEvent(plandasj, tenantId, promTypeValue);
+        syncTargetUsers(plandasj, tenantId, promTypeValue, promotionEvent);
+        syncEvent(plandasj, tenantId, promTypeValue, promotionEvent);
+
+    }
+
+    private void removeEvent(Plandasj plandasj, String tenantId, String promTypeValue) {
+        String key = SacRedisKeys.promotionEventKey();
+        String field = SacRedisKeys.promotionEventField(tenantId, promTypeValue);
+        plandasj.hdel(key, field);
+    }
+
+    private PromotionEvent syncEvent(Plandasj plandasj, String tenantId, String promTypeValue, PromotionEvent promotionEvent) {
+        String key = SacRedisKeys.promotionEventKey();
+        String field = SacRedisKeys.promotionEventField(tenantId, promTypeValue);
+        if (promotionEvent == null) {
+            plandasj.hdel(key, field);
+            return null;
+        }
+
+        plandasj.hset(key.getBytes(), field.getBytes(), PromotionEventConverter.convert(promotionEvent));
+        return promotionEvent;
+    }
+
+
+    private void syncTargetUsers(Plandasj plandasj, String tenantId, String promTypeValue, PromotionEvent promotionEvent) {
+        String userKey = SacRedisKeys.promotionEventTargetUserKey(tenantId, promTypeValue);
+        plandasj.del(userKey);
+
+        if (promotionEvent == null || !promotionEvent.isNeedsUserTargetSync()) {
+            return;
+        }
+
+        PromotionTargetUserKeysPaginated userKeysPaginated = new PromotionTargetUserKeysPaginated();
+        do {
+            userKeysPaginated = eventDataService.getPromotionTargetUserKeysPaginated(promotionEvent.getPromId(), userKeysPaginated.getStartKey(), 10000);
+            sadd(plandasj, userKey, userKeysPaginated.getUserKeys());
+        }while (userKeysPaginated.hasNext());
+    }
+
+    // Java parameter max: 255(include this)
+    private void sadd(Plandasj plandasj, String key, List<String> members) {
+        int arraySize = 250;
+        int start = 0;
+        int end = 0;
+        while (start < members.size()) {
+            end = Math.min(end + arraySize, members.size());
+            plandasj.sadd(key, members.subList(start, end).toArray(new String[0]));
+            start = end;
+        }
     }
 
 }

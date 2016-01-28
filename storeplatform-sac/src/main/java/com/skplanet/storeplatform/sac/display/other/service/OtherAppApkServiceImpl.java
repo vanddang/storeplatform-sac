@@ -83,11 +83,12 @@ public class OtherAppApkServiceImpl implements OtherAppApkService {
 
     @Override
     public List<AppApkInfo> getApkSignedHash(String packageName) {
-        List<AppApkInfo> appApkInfoList = searchApkSignedKeyHash(packageName);
+        // properties로 관리되는 inHouse앱을 먼저 확인 한다.
+        List<AppApkInfo> appApkInfoList = getAppApkInfoByProp(packageName);
 
         if (appApkInfoList.isEmpty()) {
-            // properties로 관리될 구성요소 앱 (VOD...)을 한번더 확인 해야함
-            appApkInfoList = getAppApkInfoByProp(packageName);
+            // properties에 존재하지 않는 경우 DB에서 확인 한다.
+            appApkInfoList = searchApkSignedKeyHash(packageName);
         }
 
         return appApkInfoList;

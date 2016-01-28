@@ -38,7 +38,7 @@ import java.util.Map;
 
 /**
  * 쇼핑 컨트롤러
- * 
+ *
  * Updated on : 2014-01-20 Updated by : 김형식, SK플래닛.
  */
 @Controller
@@ -60,7 +60,7 @@ public class ShoppingCouponSacController {
 	 * <pre>
 	 * 쇼핑쿠폰 전처리– POST.
 	 * </pre>
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @return CouponRes
@@ -88,7 +88,7 @@ public class ShoppingCouponSacController {
 	 * <pre>
 	 * dePloy.
 	 * </pre>
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @param couponRes
@@ -116,212 +116,212 @@ public class ShoppingCouponSacController {
 				boolean success = false;
 				switch (TX_TYPE_CODE.get(couponReq.getTxType())) {
 
-				case BD:
-					// brand 작업을 호출한다.
-					DpBrandInfo brandInfo = new DpBrandInfo();
-					result = this.doValidParameterBD(couponReq, brandInfo, errorData); // 기본적인 validation 확인 및 parameter
-																					   // 정보 setting
-					IcmsJobPrint.printBrand(brandInfo, "브랜드");
-					if (result) {
-						success = this.insertBrandInfo(brandInfo);
-					}
-					if (success) {
-						couponRes.setFlag(true);
-						couponRes.setBrandId(brandInfo.getCreateBrandId());
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", errorData.getErrorCode());
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					}
-					break;
-				case CT:
-					// 카달로그 작업을 호출한다.
-					DpCatalogInfo catalogInfo = new DpCatalogInfo();
-					result = this.doValidParameterCT(couponReq, catalogInfo, errorData); // 기본적인 validation 확인 및
-																						 // parameter 정보
-					// setting
-					IcmsJobPrint.printCatalog(catalogInfo, "카달로그");
-					if (result) {
-						success = this.insertCatalogInfo(catalogInfo);
-					}
-					if (success) {
-						couponRes.setFlag(true);
-						couponRes.setCatalogId(catalogInfo.getCreateCatalogId());
-						couponRes.setBrandId(catalogInfo.getCreateBrandId());
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", errorData.getErrorCode());
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					}
-					break;
-				case CP:
-					// 쿠폰 정보 작업을 호출한다
-
-					result = this.doValidParameterCP(couponReq, errorData);
-					if (result) {
-						success = this.insertCouponInfo(couponReq);
-					}
-
-					if (success) {
-						couponRes.setFlag(true);
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", errorData.getErrorCode());
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					}
-
-					break;
-				case ST:
-					// 쿠폰 상태 변경 호출한다
-					success = this.updateForCouponStatus(couponReq);
-					if (success) {
-						couponRes.setFlag(true);
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					}
-					break;
-				case LS:
-					// 특가 상품 목록 조회 작업을 호출한다.
-					if (StringUtils.isEmpty(couponReq.getCouponCode())) {
-						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (couponCode)", null);
-					}
-					String[] couponCodes = couponReq.getCouponCode().split(",");
-					couponList = this.getSpecialProductList(couponCodes);
-					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-					map.put("ERROR_MSG", errorData.getErrorMsg());
-					break;
-				case DT:
-					// 특가 상품 상세 조회 작업을 호출한다.
-					if (StringUtils.isEmpty(couponReq.getItemCodes())) {
-						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemsCodes)", null);
-					}
-					
-					String[] itemsCodes = couponReq.getItemCodes().split(",");
-					couponRes = this.getSpecialProductDetail(couponReq.getCouponCode(),itemsCodes);
-					if (couponRes.getRCode().equals("")) {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", couponRes.getRCode());
-					}
-
-					break;
-				case SS:
-					// 특가 쿠폰 상태 변경 호출한다 ( // 1:쿠폰ID 가져오기, 3 : 특가상품 및 상품 중지 처리 )
-					if(couponReq.getSpecialCouponStep().equals("1")){
-						String couponId = this.getSpecialProductCouponId(couponReq);
-						if(StringUtils.isNotBlank(couponId)){
-							success = true;
-							couponRes.setCouponId(couponId);
+					case BD:
+						// brand 작업을 호출한다.
+						DpBrandInfo brandInfo = new DpBrandInfo();
+						result = this.doValidParameterBD(couponReq, brandInfo, errorData); // 기본적인 validation 확인 및 parameter
+						// 정보 setting
+						IcmsJobPrint.printBrand(brandInfo, "브랜드");
+						if (result) {
+							success = this.insertBrandInfo(brandInfo);
 						}
-					}else{
-						success = this.updateForSpecialCouponStatus(couponReq);	
-					}
-					
-					if (success) {
-						couponRes.setFlag(true);
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					}
-
-					break;	
-				case AS:
-					// 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
-					couponRes = this.getSpecialProductDetailForDate(couponReq);
-					if (couponRes.getRCode().equals("")) {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", couponRes.getRCode());
-					}
-
-					break;
-				case OSLS:
-					// One Store 특가 상품 목록 조회 작업을 호출한다.
-					if (StringUtils.isEmpty(couponReq.getItemCodeList())) {
-						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemCodeList)", null);
-					}
-					String[] itemCodes = couponReq.getItemCodeList().split(",");
-					couponList = this.getOneBrandSpecialProductList(itemCodes);
-					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-					map.put("ERROR_MSG", errorData.getErrorMsg());
-
-					break;
-				case OSDT:
-					// One Store 특가 상품 상세 조회 작업을 호출한다.
-					if (StringUtils.isEmpty(couponReq.getItemCodeList())) {
-						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemCodeList)", null);
-					}
-
-					itemsCodes = couponReq.getItemCodeList().split(",");
-					couponRes = this.getOneBrandSpecialProductDetail(couponReq.getCouponCode(),itemsCodes);
-					if (couponRes.getRCode().equals("")) {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", couponRes.getRCode());
-					}
-					break;
-				case OSSS:
-					// One Store 특가 쿠폰 상태 변경 호출한다 ( // 1:쿠폰ID 가져오기, 3 : 특가상품 및 상품 중지 처리 )
-					if(couponReq.getSpecialCouponStep().equals("1")){
-						String couponId = this.getOneBrandSpecialProductCouponId(couponReq);
-						if(StringUtils.isNotBlank(couponId)){
-							success = true;
-							couponRes.setCouponId(couponId);
+						if (success) {
+							couponRes.setFlag(true);
+							couponRes.setBrandId(brandInfo.getCreateBrandId());
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						} else {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+							map.put("ERROR_CODE", errorData.getErrorCode());
+							map.put("ERROR_MSG", errorData.getErrorMsg());
 						}
-					}else{
-						success = this.updateForOneBrandSpecialCouponStatus(couponReq);
-					}
+						break;
+					case CT:
+						// 카달로그 작업을 호출한다.
+						DpCatalogInfo catalogInfo = new DpCatalogInfo();
+						result = this.doValidParameterCT(couponReq, catalogInfo, errorData); // 기본적인 validation 확인 및
+						// parameter 정보
+						// setting
+						IcmsJobPrint.printCatalog(catalogInfo, "카달로그");
+						if (result) {
+							success = this.insertCatalogInfo(catalogInfo);
+						}
+						if (success) {
+							couponRes.setFlag(true);
+							couponRes.setCatalogId(catalogInfo.getCreateCatalogId());
+							couponRes.setBrandId(catalogInfo.getCreateBrandId());
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						} else {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+							map.put("ERROR_CODE", errorData.getErrorCode());
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						}
+						break;
+					case CP:
+						// 쿠폰 정보 작업을 호출한다
 
-					if (success) {
-						couponRes.setFlag(true);
+						result = this.doValidParameterCP(couponReq, errorData);
+						if (result) {
+							success = this.insertCouponInfo(couponReq);
+						}
+
+						if (success) {
+							couponRes.setFlag(true);
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						} else {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+							map.put("ERROR_CODE", errorData.getErrorCode());
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						}
+
+						break;
+					case ST:
+						// 쿠폰 상태 변경 호출한다
+						success = this.updateForCouponStatus(couponReq);
+						if (success) {
+							couponRes.setFlag(true);
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						} else {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						}
+						break;
+					case LS:
+						// 특가 상품 목록 조회 작업을 호출한다.
+						if (StringUtils.isEmpty(couponReq.getCouponCode())) {
+							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (couponCode)", null);
+						}
+						String[] couponCodes = couponReq.getCouponCode().split(",");
+						couponList = this.getSpecialProductList(couponCodes);
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 						map.put("ERROR_MSG", errorData.getErrorMsg());
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
-						map.put("ERROR_MSG", errorData.getErrorMsg());
-					}
+						break;
+					case DT:
+						// 특가 상품 상세 조회 작업을 호출한다.
+						if (StringUtils.isEmpty(couponReq.getItemCodes())) {
+							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemsCodes)", null);
+						}
 
-					break;
+						String[] itemsCodes = couponReq.getItemCodes().split(",");
+						couponRes = this.getSpecialProductDetail(couponReq.getCouponCode(),itemsCodes);
+						if (couponRes.getRCode().equals("")) {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+						} else {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+							map.put("ERROR_CODE", couponRes.getRCode());
+						}
+
+						break;
+					case SS:
+						// 특가 쿠폰 상태 변경 호출한다 ( // 1:쿠폰ID 가져오기, 3 : 특가상품 및 상품 중지 처리 )
+						if(couponReq.getSpecialCouponStep().equals("1")){
+							String couponId = this.getSpecialProductCouponId(couponReq);
+							if(StringUtils.isNotBlank(couponId)){
+								success = true;
+								couponRes.setCouponId(couponId);
+							}
+						}else{
+							success = this.updateForSpecialCouponStatus(couponReq);
+						}
+
+						if (success) {
+							couponRes.setFlag(true);
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						} else {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						}
+
+						break;
+					case AS:
+						// 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+						couponRes = this.getSpecialProductDetailForDate(couponReq);
+						if (couponRes.getRCode().equals("")) {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+						} else {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+							map.put("ERROR_CODE", couponRes.getRCode());
+						}
+
+						break;
+					case OSLS:
+						// One Store 특가 상품 목록 조회 작업을 호출한다.
+						if (StringUtils.isEmpty(couponReq.getItemCodeList())) {
+							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemCodeList)", null);
+						}
+						String[] itemCodes = couponReq.getItemCodeList().split(",");
+						couponList = this.getOneBrandSpecialProductList(itemCodes);
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+						map.put("ERROR_MSG", errorData.getErrorMsg());
+
+						break;
+					case OSDT:
+						// One Store 특가 상품 상세 조회 작업을 호출한다.
+						if (StringUtils.isEmpty(couponReq.getItemCodeList())) {
+							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "필수 파라미터 값이 없습니다. (itemCodeList)", null);
+						}
+
+						itemsCodes = couponReq.getItemCodeList().split(",");
+						couponRes = this.getOneBrandSpecialProductDetail(couponReq.getCouponCode(),itemsCodes);
+						if (couponRes.getRCode().equals("")) {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+						} else {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+							map.put("ERROR_CODE", couponRes.getRCode());
+						}
+						break;
+					case OSSS:
+						// One Store 특가 쿠폰 상태 변경 호출한다 ( // 1:쿠폰ID 가져오기, 3 : 특가상품 및 상품 중지 처리 )
+						if(couponReq.getSpecialCouponStep().equals("1")){
+							String couponId = this.getOneBrandSpecialProductCouponId(couponReq);
+							if(StringUtils.isNotBlank(couponId)){
+								success = true;
+								couponRes.setCouponId(couponId);
+							}
+						}else{
+							success = this.updateForOneBrandSpecialCouponStatus(couponReq);
+						}
+
+						if (success) {
+							couponRes.setFlag(true);
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						} else {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
+							map.put("ERROR_MSG", errorData.getErrorMsg());
+						}
+
+						break;
 					case OSAS:
-					// One Store 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
-					couponRes = this.getOneBrandSpecialProductDetailForDate(couponReq);
-					if (couponRes.getRCode().equals("")) {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", couponRes.getRCode());
-					}
+						// One Store 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
+						couponRes = this.getOneBrandSpecialProductDetailForDate(couponReq);
+						if (couponRes.getRCode().equals("")) {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+							map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+						} else {
+							map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+							map.put("ERROR_CODE", couponRes.getRCode());
+						}
 
-					break;
+						break;
 				}
 				this.sendResponseData(couponReq, map, couponRes, couponList);
 
@@ -362,7 +362,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 브랜드 정보를 추가한다.
-	 * 
+	 *
 	 * @param dpBrandInfo
 	 *            dpBrandInfo
 	 * @return boolean
@@ -375,7 +375,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 카탈로그 정보를 추가한다.
-	 * 
+	 *
 	 * @param dpCatalogInfo
 	 *            dpCatalogInfo
 	 * @return boolean
@@ -388,7 +388,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 쿠폰 정보를 추가한다.
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @return boolean
@@ -401,7 +401,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 상품 상태 변경한다.
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @return boolean
@@ -411,10 +411,10 @@ public class ShoppingCouponSacController {
 		return result;
 
 	}
-	
+
 	/**
 	 * 팅/특가 쿠폰 ID 조회 한다.
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @return String
@@ -429,7 +429,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 팅/특가 상품 상태 변경 한다.
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @return boolean
@@ -468,7 +468,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 특가 상품 목록 조회 한다.
-	 * 
+	 *
 	 * @param couponCodes
 	 *            couponCodes
 	 * @return List<CouponRes>
@@ -495,7 +495,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 특가 상품 상세 조회 한다.
-	 * 
+	 *
 	 * @param couponCode
 	 *            couponCode
 	 * @param itemsCodes
@@ -522,10 +522,10 @@ public class ShoppingCouponSacController {
 		return result;
 
 	}
-	
+
 	/**
 	 * 특정 기간에 대한 특가 상품 상세 조회 작업을 호출한다.
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @return CouponRes
@@ -551,7 +551,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 특가 상품 상세 조회 한다.
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @param errorData
@@ -599,7 +599,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 브랜드 파라미터 셋팅 조회 한다.
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @param brandInfo
@@ -622,7 +622,7 @@ public class ShoppingCouponSacController {
 			brandInfo.setFileNameList(couponReq.getFileNameList());
 			brandInfo.setIsList(couponReq.getIsList());
 			brandInfo.setChargeBrandYn(couponReq.getChargeBrandYn());
-			
+
 			if (StringUtils.isEmpty(couponReq.getCudType())) {
 				result = false;
 				message="필수 파라미터 값이 없습니다. (cudType)\n";
@@ -656,7 +656,7 @@ public class ShoppingCouponSacController {
 				message="chargeBrandYn 값은 Y or N 로만 가능합니다.\n";
 				result = false;
 			}
-			
+
 			if (!result) {
 				errorData.setErrorMsg(message);
 				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
@@ -676,7 +676,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 카탈로그 파라미터 셋팅 조회 한다.
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @param catalogInfo
@@ -704,7 +704,7 @@ public class ShoppingCouponSacController {
 			catalogInfo.setIsList(couponReq.getIsList());
 			catalogInfo.setCatalogVodUrl(couponReq.getCatalogVodUrl());
 			catalogInfo.setCatalogVodThumbnail(couponReq.getCatalogVodThumbnail());
-			
+
 			if (StringUtils.isEmpty(couponReq.getCudType())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (cudType)\n";
@@ -712,7 +712,7 @@ public class ShoppingCouponSacController {
 				message ="cudType 값은 C or U 로만 가능합니다.\n";
 				result = false;
 			}
-			
+
 			if (StringUtils.isEmpty(catalogInfo.getCatalogId())) {
 				result = false;
 				message ="필수 파라미터 값이 없습니다. (catalogCode)\n";
@@ -777,7 +777,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 쿠폰,아이템 파라미터 셋팅 조회 한다.
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @param errorData
@@ -824,10 +824,10 @@ public class ShoppingCouponSacController {
 			result = false;
 		}
 		for (int i = 0; i < itemInfoList.size(); i++) {
-			if (!this.doValidateItemInfo(itemInfoList.get(i), errorData)) {
+			if (!this.doValidateItemInfo(itemInfoList.get(i), errorData ,couponInfo )) {
 				result = false;
+				break;
 			}
-			break;
 		}
 		couponReq.setDpCouponInfo(couponInfo);
 		couponReq.setDpItemInfo(itemInfoList);
@@ -840,7 +840,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 쇼핑쿠폰 API 응답은 VO로 셋팅한다.
-	 * 
+	 *
 	 * @param couponReq
 	 *            couponReq
 	 * @param map
@@ -852,7 +852,7 @@ public class ShoppingCouponSacController {
 	 * @return boolean
 	 */
 	private boolean sendResponseData(CouponReq couponReq, Map<String, String> map, CouponRes couponRes,
-			List<CouponRes> couponList) {
+									 List<CouponRes> couponList) {
 		this.log.info("<CouponControl> sendResponseData...");
 
 		boolean success = true;
@@ -866,84 +866,89 @@ public class ShoppingCouponSacController {
 				}
 			}
 			switch (TX_TYPE_CODE.get(couponReq.getTxType())) {
-			case BD:
-				break;
-			case CT:
-				break;
-			case CP:
-				StringBuffer couponBuff = new StringBuffer();
-				couponBuff.append(couponReq.getDpCouponInfo().getProdId());
-				couponBuff.append(":");
-				couponBuff.append(couponReq.getDpCouponInfo().getCouponCode());
-				couponRes.setCouponId(couponBuff.toString());
+				case BD:
+					break;
+				case CT:
+					break;
+				case CP:
 
-				StringBuffer itemBuff = new StringBuffer();
-				for (int i = 0; i < couponReq.getDpItemInfo().size(); i++) {
-					if (i == 0) {
-						itemBuff.append(couponReq.getDpItemInfo().get(i).getProdId());
-						itemBuff.append(":");
-						itemBuff.append(couponReq.getDpItemInfo().get(i).getItemCode());
-					} else {
-						itemBuff.append(",");
-						itemBuff.append(couponReq.getDpItemInfo().get(i).getProdId());
-						itemBuff.append(":");
-						itemBuff.append(couponReq.getDpItemInfo().get(i).getItemCode());
+					StringBuffer tenantIdBuff = new StringBuffer();
+					int tenantIdCount =0;
+					if(StringUtils.isNotBlank(couponReq.getDpCouponInfo().getCoupnStatus())){
+						tenantIdBuff.append(CouponConstants.TENANT_ID);
+						tenantIdCount++;
 					}
-				}
-				couponRes.setItemId(itemBuff.toString());
-				break;
-			case ST:
-				break;
-			case AT:
-				break;
-			case LS:
-
-				String seperatorComma = "";
-//				String eventList = "";
-				StringBuffer eventList = new StringBuffer();
-				int j = 0;
-				if (couponList != null) {
-					for (CouponRes couponInfo : couponList) {
-						if (j > 0)
-							seperatorComma = ",";
-						eventList.append(seperatorComma).append(couponInfo.getCouponCode()).append(":").append(couponInfo.getSpecialYN());
-
-						j++;
+					if(StringUtils.isNotBlank(couponReq.getDpCouponInfo().getCoupnStatus_kt())){
+						if(tenantIdCount==0) {
+							tenantIdBuff.append(CouponConstants.TENANT_ID_S02);
+						}else{
+							tenantIdBuff.append(",");
+							tenantIdBuff.append(CouponConstants.TENANT_ID_S02);
+						}
+						tenantIdCount++;
 					}
-				}
-				couponRes.setEventList(eventList.toString());
-				break;
-			case OSLS:
-
-				List<SprcInfo> sprcInfoList =  new ArrayList<SprcInfo>();
-				int kk =0;
-				List<ItemCodeInfo> itemCodeInfoList =  new ArrayList<ItemCodeInfo>();
-				ItemCodeInfo itemCodeInfo = new ItemCodeInfo();
-				SprcInfo sprcInfo = new SprcInfo();
-				if (couponList != null) {
-					for (CouponRes couponInfo : couponList) {
-						kk++;
-						itemCodeInfo.setItemCode(couponInfo.getCouponCode());
-						sprcInfo = new SprcInfo();
-						sprcInfo.setTenantId(couponInfo.getTenantId());
-						sprcInfo.setSprcGubun(couponInfo.getSpecialYN());
-						sprcInfoList.add(sprcInfo);
-						if(kk%3==0){
-							itemCodeInfo.setSprcInfo(sprcInfoList);
-							itemCodeInfoList.add(itemCodeInfo);
-							itemCodeInfo = new ItemCodeInfo();
-							sprcInfoList =  new ArrayList<SprcInfo>();
+					if(StringUtils.isNotBlank(couponReq.getDpCouponInfo().getCoupnStatus_lgt())){
+						if(tenantIdCount==0) {
+							tenantIdBuff.append(CouponConstants.TENANT_ID_S03);
+						}else{
+							tenantIdBuff.append(",");
+							tenantIdBuff.append(CouponConstants.TENANT_ID_S03);
 						}
 					}
-				}
-				couponRes.setItemCodeInfo(itemCodeInfoList);
-				break;
-			case DT:
-				break;
-			case SS:
-				break;				
-			default:
-				break;
+					couponRes.setTenantIds(tenantIdBuff.toString());
+					break;
+				case ST:
+					break;
+				case AT:
+					break;
+				case LS:
+
+					String seperatorComma = "";
+//				String eventList = "";
+					StringBuffer eventList = new StringBuffer();
+					int j = 0;
+					if (couponList != null) {
+						for (CouponRes couponInfo : couponList) {
+							if (j > 0)
+								seperatorComma = ",";
+							eventList.append(seperatorComma).append(couponInfo.getCouponCode()).append(":").append(couponInfo.getSpecialYN());
+
+							j++;
+						}
+					}
+					couponRes.setEventList(eventList.toString());
+					break;
+				case OSLS:
+
+					List<SprcInfo> sprcInfoList =  new ArrayList<SprcInfo>();
+					int kk =0;
+					List<ItemCodeInfo> itemCodeInfoList =  new ArrayList<ItemCodeInfo>();
+					ItemCodeInfo itemCodeInfo = new ItemCodeInfo();
+					SprcInfo sprcInfo = new SprcInfo();
+					if (couponList != null) {
+						for (CouponRes couponInfo : couponList) {
+							kk++;
+							itemCodeInfo.setItemCode(couponInfo.getCouponCode());
+							sprcInfo = new SprcInfo();
+							sprcInfo.setTenantId(couponInfo.getTenantId());
+							sprcInfo.setSprcGubun(couponInfo.getSpecialYN());
+							sprcInfoList.add(sprcInfo);
+							if(kk%3==0){
+								itemCodeInfo.setSprcInfo(sprcInfoList);
+								itemCodeInfoList.add(itemCodeInfo);
+								itemCodeInfo = new ItemCodeInfo();
+								sprcInfoList =  new ArrayList<SprcInfo>();
+							}
+						}
+					}
+					couponRes.setItemCodeInfo(itemCodeInfoList);
+					break;
+				case DT:
+					break;
+				case SS:
+					break;
+				default:
+					break;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -953,7 +958,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 쿠폰 정보 유효성 체크.
-	 * 
+	 *
 	 * @param couponInfo
 	 *            couponInfo
 	 * @param errorData
@@ -1058,12 +1063,12 @@ public class ShoppingCouponSacController {
 				}
 			}
 
-			if (!couponInfo.getStoreSaleType().equals("1") 
+			if (!couponInfo.getStoreSaleType().equals("1")
 					&& !couponInfo.getStoreSaleType().equals("2")
 					&& !couponInfo.getStoreSaleType().equals("3")
 					&& !couponInfo.getStoreSaleType().equals("4")
 					&& !couponInfo.getStoreSaleType().equals("5")
-				) 
+					)
 			{
 				message = "유효성 검사 실패 [storeSaleType : 상품유형:" + couponInfo.getStoreSaleType() + "]";
 				result = false;
@@ -1119,8 +1124,21 @@ public class ShoppingCouponSacController {
 				message = "유효성 검사 실패 [bpId : 업체아이디] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getCoupnStatus().equals("")) {
-				message = "유효성 검사 실패 [coupnStatus : 쿠폰상태] 이 XML에 존재하지 않습니다.";
+
+			int couponDetailCnt = 0;
+
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus())) {
+				couponDetailCnt++;
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_kt())) {
+				couponDetailCnt++;
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_lgt())) {
+				couponDetailCnt++;
+			}
+
+			if(couponDetailCnt==0){
+				message = "유효성 검사 실패 [coupnStatus or coupnStatus_kt or coupnStatus_lgt : 쿠폰상태] 이 모두 XML에 존재하지 않습니다.";
 				result = false;
 			}
 
@@ -1144,14 +1162,14 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 아이템 정보 유효성 체크.
-	 * 
+	 *
 	 * @param itemInfo
 	 *            itemInfo
 	 * @param errorData
 	 *            errorData
 	 * @return boolean
 	 */
-	private boolean doValidateItemInfo(DpItemInfo itemInfo, ErrorData errorData) {
+	private boolean doValidateItemInfo(DpItemInfo itemInfo, ErrorData errorData ,DpCouponInfo couponInfo) {
 		boolean result = true;
 		String message = "";
 		try {
@@ -1288,10 +1306,60 @@ public class ShoppingCouponSacController {
 				message = "유효성 검사 실패 [cudType : 추가수정플래그 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getItemStatus().equals("")) {
-				message = "유효성 검사 실패 [itemStatus : 단품상태 ]이 XML에 존재하지 않습니다.";
+
+			int itemDetailCnt = 0;
+			if(StringUtils.isNotBlank(itemInfo.getItemStatus())){
+				itemDetailCnt++;
+			}
+			if(StringUtils.isNotBlank(itemInfo.getItemStatus_kt())){
+				itemDetailCnt++;
+			}
+			if(StringUtils.isNotBlank(itemInfo.getItemStatus_lgt())){
+				itemDetailCnt++;
+			}
+
+			if(itemDetailCnt==0){
+				message = "유효성 검사 실패 [itemStatus or itemStatus_kt or itemStatus_lgt : 단품상태] 이 모두 XML에 존재하지 않습니다.";
 				result = false;
 			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus())) {
+				if(StringUtils.isBlank(itemInfo.getItemStatus())){
+					message = "유효성 검사 실패 [coupnStatus 에 있지만 itemStatus] 에는 존재 하지 않습니다.";
+					result = false;
+				}
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_kt())) {
+				if(StringUtils.isBlank(itemInfo.getItemStatus_kt())){
+					message = "유효성 검사 실패 [coupnStatus_kt 에 있지만 itemStatus_kt] 에는 존재 하지 않습니다.";
+					result = false;
+				}
+			}
+			if (StringUtils.isNotBlank(couponInfo.getCoupnStatus_lgt())) {
+				if(StringUtils.isBlank(itemInfo.getItemStatus_lgt())){
+					message = "유효성 검사 실패 [coupnStatus_lgt 에 있지만 itemStatus_lgt] 에는 존재 하지 않습니다.";
+					result = false;
+				}
+			}
+
+			if (StringUtils.isNotBlank(itemInfo.getItemStatus())) {
+				if(StringUtils.isBlank(couponInfo.getCoupnStatus())){
+					message = "유효성 검사 실패 [itemStatus 에 있지만 coupnStatus] 에는 존재 하지 않습니다.";
+					result = false;
+				}
+			}
+			if (StringUtils.isNotBlank(itemInfo.getItemStatus_kt())) {
+				if(StringUtils.isBlank(couponInfo.getCoupnStatus_kt())){
+					message = "유효성 검사 실패 [itemStatus_kt 에 있지만 coupnStatus_kt] 에는 존재 하지 않습니다.";
+					result = false;
+				}
+			}
+			if (StringUtils.isNotBlank(itemInfo.getItemStatus_lgt())) {
+				if(StringUtils.isBlank(couponInfo.getCoupnStatus_lgt())){
+					message = "유효성 검사 실패 [itemStatus_lgt 에 있지만 coupnStatus_lgt] 에는 존재 하지 않습니다.";
+					result = false;
+				}
+			}
+
 			if (!result) {
 				errorData.setErrorMsg(message);
 				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
@@ -1311,7 +1379,7 @@ public class ShoppingCouponSacController {
 
 	/**
 	 * 2014.04.02 이현남 매니저 요청 사항 C -> U로 수정 해달라고 요청옴.
-	 * 
+	 *
 	 * @param couponInfo
 	 *            couponInfo
 	 * @param itemInfoList
@@ -1329,7 +1397,7 @@ public class ShoppingCouponSacController {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 					"cudType 값은 C or U 로만 가능합니다.", "");
 		}
-		
+
 		if (StringUtils.equalsIgnoreCase("C", couponReq.getCudType())) {
 			if (this.couponItemService.getCouponCountCudType(couponInfo.getCouponCode()) > 0) {
 				couponReq.setCudType("U");

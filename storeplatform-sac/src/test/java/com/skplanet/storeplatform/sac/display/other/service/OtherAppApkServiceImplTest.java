@@ -43,10 +43,16 @@ public class OtherAppApkServiceImplTest {
         assertNotNull(prop);
 
         /**
-         * properties sample
-         * app.apk.signature.hash.prodname=vod,ebook
-         * app.apk.signature.hash.vod=vod.pkg.name:vod-signedkeyhash1,vod-signedkeyhash2
-         * app.apk.signature.hash.ebook=ebook.pkg.name:ebook-signedkeyhash1
+         * # app apk signature hash key : 구성관리 앱(inHouse 앱)
+         * app.apk.signature.hash.prodname=tstore,arm,vod,ebook,kstore1,kstore2,ustore1,ustore2
+         * app.apk.signature.hash.tstore=com.skt.skaf.A000Z00040:be4082453e06da85fcd8ca54610d9afc4a67fafd
+         * app.apk.signature.hash.arm=com.skt.skaf.OA00018282:be4082453e06da85fcd8ca54610d9afc4a67fafd
+         * app.apk.signature.hash.vod=com.skt.skaf.A000VODBOX:be4082453e06da85fcd8ca54610d9afc4a67fafd
+         * app.apk.signature.hash.ebook=com.skt.skaf.OA00050017:79cf0a61fc7d5fed422481d58972115ff9ade51d
+         * app.apk.signature.hash.kstore1=com.kt.olleh.storefront:6413dc7abcc8278e5cd8be5023e5c05e54532247
+         * app.apk.signature.hash.kstore2=com.kt.olleh.istore:6413dc7abcc8278e5cd8be5023e5c05e54532247
+         * app.apk.signature.hash.ustore1=com.lguplus.appstore:094a523a4aa04ff371cd7d858a85b64a8ba1a974
+         * app.apk.signature.hash.ustore2=android.lgt.appstore:094a523a4aa04ff371cd7d858a85b64a8ba1a974
          */
         String prodName = prop.getProperty(SIGNED_HASH_PREFIX + SIGNED_HASH_PRODNAME);
         if (StringUtils.isBlank(prodName)) {
@@ -60,17 +66,15 @@ public class OtherAppApkServiceImplTest {
 
         List<AppApkInfo> appApkInfos;
 
-        appApkInfos = mapApkInfo.get("vod.pkg.name");
-        assertThat(appApkInfos.size(), is(2));
-        assertThat(appApkInfos.get(0).getApkPkgNm(), is("vod.pkg.name"));
-        assertThat(appApkInfos.get(0).getApkSignedKeyHash(), is("vod-signedkeyhash1"));
-        assertThat(appApkInfos.get(1).getApkPkgNm(), is("vod.pkg.name"));
-        assertThat(appApkInfos.get(1).getApkSignedKeyHash(), is("vod-signedkeyhash2"));
-
-        appApkInfos = mapApkInfo.get("ebook.pkg.name");
+        appApkInfos = mapApkInfo.get("com.skt.skaf.A000Z00040");
         assertThat(appApkInfos.size(), is(1));
-        assertThat(appApkInfos.get(0).getApkPkgNm(), is("ebook.pkg.name"));
-        assertThat(appApkInfos.get(0).getApkSignedKeyHash(), is("ebook-signedkeyhash1"));
+        assertThat(appApkInfos.get(0).getApkPkgNm(), is("com.skt.skaf.A000Z00040"));
+        assertThat(appApkInfos.get(0).getApkSignedKeyHash(), is("be4082453e06da85fcd8ca54610d9afc4a67fafd"));
+
+        appApkInfos = mapApkInfo.get("android.lgt.appstore");
+        assertThat(appApkInfos.size(), is(1));
+        assertThat(appApkInfos.get(0).getApkPkgNm(), is("android.lgt.appstore"));
+        assertThat(appApkInfos.get(0).getApkSignedKeyHash(), is("094a523a4aa04ff371cd7d858a85b64a8ba1a974"));
     }
 
     private void putAppApkInfoList(String prodNm) {

@@ -15,4 +15,12 @@
 			  AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
 	</select>
 
+    <select id="getProdIdByMapgProdId" parameterType="map" resultType="String">
+        SELECT /* OtherAppVersionMapper.xml, OtherAppVersion.getProdIdByMapgProdId, 양해엽, 2015-01-21 */
+          PROD_ID
+        FROM TB_DP_TENANT_PROD
+        WHERE MAPG_PROD_ID = #{mapgProdId}
+          AND ROWNUM = 1
+    </select>
+
 </mapper>
