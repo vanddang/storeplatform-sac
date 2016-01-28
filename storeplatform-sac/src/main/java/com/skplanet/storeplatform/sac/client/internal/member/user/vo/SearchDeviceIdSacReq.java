@@ -13,6 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * [REQUEST] 단말 MDN 정보 조회.
  * 
  * Updated on : 2014. 2. 11. Updated by : 김다슬, 인크로스.
+ * Updated on : 2016. 1. 25. Updated by : 윤보영, 카레즈.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SearchDeviceIdSacReq extends CommonInfo {
@@ -33,7 +34,9 @@ public class SearchDeviceIdSacReq extends CommonInfo {
 
 	/**
 	 * 테넌트ID.
+     * // TODO 타 파트 반영 후 삭제 예정
 	 */
+    @Deprecated
 	private String tenantId;
 
 	/**

@@ -2165,6 +2165,7 @@ public class UserSCIController implements UserSCI {
 	 * @return SearchChangedDeviceResponse - 휴대기기 기기변경이력 정보 조회 응답 Value Object
 	 */
 	@Override
+    @Deprecated
 	public SearchChangedDeviceResponse searchChangedDevice(SearchChangedDeviceRequest searchChangedDeviceRequest) {
 		SearchChangedDeviceResponse searchChangedDeviceResponse;
 
@@ -2178,12 +2179,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchChangedDeviceRequest.getCommonRequest().getTenantID() == null
-				|| searchChangedDeviceRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터
 		if (searchChangedDeviceRequest.getUserKey() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -2194,9 +2189,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return searchChangedDeviceResponse;
 	}
@@ -2380,12 +2372,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchMbrUserRequest.getCommonRequest().getTenantID() == null
-				|| searchMbrUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		try {
 
 			searchMbrUserResponse = this.service.searchMbrUser(searchMbrUserRequest);
@@ -2393,9 +2379,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return searchMbrUserResponse;
 
@@ -2627,12 +2610,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchMbrDeviceRequest.getCommonRequest().getTenantID() == null
-				|| searchMbrDeviceRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터 > userDeviceKeyList
 		List<UserDeviceKey> userDeviceKeyList = searchMbrDeviceRequest.getDeviceKeyList();
 		if (userDeviceKeyList == null) {
@@ -2652,9 +2629,6 @@ public class UserSCIController implements UserSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 		return searchMbrDeviceResponse;
 	}
@@ -2755,12 +2729,6 @@ public class UserSCIController implements UserSCI {
 		// 공통 파라미터 없음
 		if (searchUserSegmentRequest.getCommonRequest() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
-		}
-
-		// 테넌트 아이디 없음
-		if (searchUserSegmentRequest.getCommonRequest().getTenantID() == null
-				|| searchUserSegmentRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
 		}
 
 		// 필수 파라미터, userKey
@@ -3554,12 +3522,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (createGiftChargeInfoRequest.getCommonRequest().getTenantID() == null
-				|| createGiftChargeInfoRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, 회원 키, 판매자 키, 제휴사 브랜드명, 제휴사 회원 아이디, 충전자 이름
 		if (StringUtils.isEmpty(createGiftChargeInfoRequest.getUserKey())
 				|| StringUtils.isEmpty(createGiftChargeInfoRequest.getSellerKey())
@@ -3796,4 +3758,39 @@ public class UserSCIController implements UserSCI {
 
 	}
 
+	/**
+	 * <pre>
+	 * market pin 이관 기능을 제공한다.
+	 * </pre>
+	 *
+	 * @param transferMarketPinRequest TransferMarketPinRequest
+	 * @return TransferMarketPinResponse
+	 */
+	@Override
+	public TransferMarketPinResponse transferMarketPin(TransferMarketPinRequest transferMarketPinRequest) {
+
+		TransferMarketPinResponse transferMarketPinResponse = null;
+
+		// 입력 파라미터가 없음
+		if (transferMarketPinRequest == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.inputNotFound", ""));
+		}
+
+		// 공통 파라미터 없음
+		if (transferMarketPinRequest.getCommonRequest() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
+		}
+
+		// 필수 파라미터
+		if (transferMarketPinRequest.getUserKey() == null || transferMarketPinRequest.getPreUserKey() == null) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		}
+
+		try {
+			transferMarketPinResponse = this.service.excuteTransferMarketPin(transferMarketPinRequest);
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
+		return transferMarketPinResponse;
+	}
 }

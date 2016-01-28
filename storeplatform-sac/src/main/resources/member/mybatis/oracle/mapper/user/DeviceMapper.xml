@@ -1040,14 +1040,16 @@
         WHERE ROWNUM = 1
     </select>
 
-    <!-- LocalSCI : 등록된 단말 정보 조회 (2014-10-02) -->
+    <!-- LocalSCI : 등록된 단말 정보 조회 -->
     <select id="searchOrderDevice" parameterType="searchOrderDeviceRequest" resultType="searchOrderDeviceResponse">
-		SELECT /* DeviceMapper.searchOrderDevice, 등록 단말 정보 조회, burkhan_rejoice, 2014-10-02 */
+		SELECT /* DeviceMapper.xml, searchOrderDevice, SAC(SC), 윤보영, 2016-01-27 */
 		       deviceId,
+		       mdn,
 		       deviceTelecom,
 		       authYn,
 		       tableName
 		  FROM (SELECT device_id AS deviceId,
+		               mdn AS mdn,
 		               mno_cd AS deviceTelecom,
 		               auth_yn AS authYn,
 		               'TB_US_OUSERMBR_DEVICE' AS tableName
@@ -1056,6 +1058,7 @@
 		         AND insd_device_id  = #{deviceKey}
 		        UNION ALL
 		        SELECT device_id AS deviceId,
+		               mdn AS mdn,
 		               mno_cd AS deviceTelecom,
 		               auth_yn AS authYn,
 		               'TB_US_OUSERMBR_DEVICE_WD' AS srcName

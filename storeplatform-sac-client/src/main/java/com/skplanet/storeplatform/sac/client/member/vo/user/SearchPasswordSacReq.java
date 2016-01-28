@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * [REQUEST] Password 찾기
  * 
- * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
+ * Updated on : 2016. 1. 26. Updated by : 최진호, 보고지티.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SearchPasswordSacReq extends CommonInfo {
@@ -16,8 +16,6 @@ public class SearchPasswordSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String userId;
-
-	private String userEmail;
 
 	private String userPhone;
 
@@ -27,14 +25,6 @@ public class SearchPasswordSacReq extends CommonInfo {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public String getUserEmail() {
-		return this.userEmail;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
 	}
 
 	public String getUserPhone() {

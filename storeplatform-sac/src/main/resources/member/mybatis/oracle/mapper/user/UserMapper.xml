@@ -1481,6 +1481,20 @@
         <if test="deviceKey != null">  AND  insd_device_id = #{deviceKey}</if>
     </select>
 
+    <!-- 휴대기기 기기변경이력 정보 조회 (삭제해야함) -->
+    <select id="searchIDPChangedDevice" parameterType="searchChangedDeviceRequest" resultType="changedDeviceLog">
+        SELECT  /* UserMapper.searchIDPChangedDevice, 휴대기기 기기변경이력 정보 조회, wisestone_dinga, 2014-02-17 */
+        DISTINCT (b.insd_device_id) AS deviceKey
+        FROM  tb_us_idp_log a, tb_us_ousermbr_device b
+        WHERE  a.chg_cd = 'US012002'
+        AND  a.insd_mbr_no = #{userKey}
+        AND  a.device_id = b.device_id
+        AND  a.insd_mbr_no = b.insd_usermbr_no
+        AND  a.reg_dt > (SYSDATE-30)
+        <if test="deviceID != null"> AND  a.device_id = #{deviceID}</if>
+        <if test="deviceKey != null"> AND  b.insd_device_id = #{deviceKey}</if>
+    </select>
+
     <!-- 단말 OS별 누적 가입자수 조회 -->
     <select id="searchDeviceOSNumber" resultType="deviceSystemStats">
 
@@ -1511,7 +1525,7 @@
              ,  a.mbr_status_main_cd as userMainStatus
              ,  a.mbr_status_sub_cd as userSubStatus
              ,  a.mbr_id as userID
-             ,  b.device_id as deviceID
+             ,  NVL(b.mdn, b.device_id)  as deviceID
              ,  b.insd_device_id as deviceKey
           FROM  tb_us_ousermbr a
           LEFT  OUTER JOIN tb_us_ousermbr_device b
@@ -1571,20 +1585,21 @@
 
     <!-- 복수 사용자 기기정보 조회 -->
     <select id="searchMbrDevice" parameterType="searchMbrDeviceRequest" resultMap="searchMbrDeviceResultMap">
-
-        SELECT  /* UserMapper.searchMbrDevice, 복수 사용자 기기정보 조회, wisestone_dinga, 2014-03-05 */
-                a.insd_device_id as deviceKey
-             ,  a.device_id as deviceID
-             ,  a.device_model_cd as deviceModelNo
-             ,  a.mno_cd as deviceTelecom
-             ,  b.realnm_auth_yn as isRealName
-             ,  b.insd_usermbr_no as userKey
-             ,  b.mbr_status_main_cd as userMainStatus
-             ,  b.mbr_status_sub_cd as userSubStatus
+        SELECT  /* UserMapper.xml, searchMbrDevice, SAC(SC), 윤보영, 2016-01-26 */
+                b.mbr_id userID
+             ,  b.mbr_clas_cd userType
              ,  b.mbr_nm userName
              ,  b.birth as userBirthDay
-             ,  b.mbr_id userID
-             ,  b.mbr_clas_cd userType
+             ,  a.mno_cd as deviceTelecom
+             ,  a.device_id as deviceID
+             ,  a.mdn as mdn
+             ,  a.device_model_cd as deviceModelNo
+             ,  b.realnm_auth_yn as isRealName
+             ,  b.mbr_status_main_cd as userMainStatus
+             ,  b.mbr_status_sub_cd as userSubStatus
+             ,  a.svc_mang_no as svcMangNo
+             ,  b.insd_usermbr_no as userKey
+             ,  a.insd_device_id as deviceKey
           FROM  tb_us_ousermbr_device a, tb_us_ousermbr b
          WHERE  a.insd_usermbr_no = b.insd_usermbr_no
            AND  (a.insd_usermbr_no, a.insd_device_id) 
@@ -1606,11 +1621,11 @@
         <result property="isRealName" column="isRealName"/>
         <result property="userID" column="userID"/>
         <result property="userType" column="userType"/>
-        <result property="imMbrNo" column="imMbrNo"/>
+        <result property="mdn" column="mdn"/>
+        <result property="svcMangNo" column="svcMangNo"/>
         <association property="authName" column="{userKey=userKey}" javaType="String" select="getAuthRealName" />
         <association property="authBirthDay" column="{userKey=userKey}" javaType="String" select="getAuthBirthDay" />
     </resultMap>
-
 
     <!-- 마지막 실명인증 이름 조회 -->
     <select id="getAuthRealName" resultType="String">
@@ -2316,7 +2331,7 @@
         SET
             MBR_ID = #{newUserId}
             ,MBR_CLAS_CD = #{newUserType}
-            ,EMAIL_ADDR = #{newUserEmail}
+            <if test="newUserEmail != null">,EMAIL_ADDR = #{newUserEmail}</if>
             ,START_DT = SYSDATE
             ,UPD_DT = SYSDATE
         WHERE
@@ -2325,4 +2340,41 @@
             AND MBR_CLAS_CD = #{userType}
     </update>
 
+    <!-- market pin 정보 조회 -->
+    <select id="searchMarketPin" parameterType="userMbrMarketPin" resultType="userMbrMarketPin">
+        SELECT /* UserMapper.xml, searchMarketPin, SAC(SC), 반범진, 2016-01-27 */
+          insd_usermbr_no AS userKey
+          , pin_no AS pinNo
+          , auth_fail_cnt AS authFailCnt
+        FROM
+          tb_us_ousermbr_pin
+        WHERE
+          insd_usermbr_no = #{userKey}
+    </select>
+
+    <!--  market pin 정보 수정 -->
+    <update id="updateMarketPin" parameterType="userMbrMarketPin">
+        MERGE  /* UserMapper.xml, updateMarketPin, SAC(SC), 반범진, 2016-01-27 */
+        INTO tb_us_ousermbr_pin USING DUAL ON
+        (
+          insd_usermbr_no  = #{userKey}
+        )
+        WHEN MATCHED THEN
+            UPDATE SET
+              pin_no = #{pinNo}
+              ,auth_fail_cnt = #{authFailCnt}
+        WHEN NOT MATCHED THEN
+            INSERT
+            (
+              insd_usermbr_no
+              ,pin_no
+              ,auth_fail_cnt
+            )
+            VALUES
+            (
+                #{userKey}
+                ,#{pinNo}
+                ,#{authFailCnt}
+            )
+    </update>
 </mapper>

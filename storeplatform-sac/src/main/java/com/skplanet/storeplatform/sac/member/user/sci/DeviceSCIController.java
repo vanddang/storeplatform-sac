@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.user.sci;
 
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,23 +61,26 @@ public class DeviceSCIController implements DeviceSCI {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
-		TenantHeader tenant = requestHeader.getTenantHeader();
-		if (StringUtils.isBlank(request.getTenantId())) { // tenantId 없는경우 default S01 셋팅
-			tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
-		} else {
-			tenant.setTenantId(request.getTenantId());
-		}
-		requestHeader.setTenantHeader(tenant);
-
 		DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				request.getDeviceKey(), request.getUserKey());
 
 		SearchDeviceIdSacRes response = new SearchDeviceIdSacRes();
-		if (deviceInfo != null && StringUtils.isNotBlank(deviceInfo.getDeviceId())) {
-			response.setDeviceId(deviceInfo.getDeviceId());
+
+		if (deviceInfo != null) {
+            if(StringUtils.isNotEmpty(deviceInfo.getMdn())
+                    && !ValidationCheckUtils.isDeviceId(deviceInfo.getMdn())){
+                response.setDeviceId(deviceInfo.getMdn());
+            }else if(StringUtils.isNotEmpty(deviceInfo.getDeviceId())
+                    && ValidationCheckUtils.isDeviceId(deviceInfo.getDeviceId())){
+                response.setDeviceId(deviceInfo.getDeviceId());
+            }else{
+                throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+            }
+
 			response.setDeviceTelecom(deviceInfo.getDeviceTelecom());
 			response.setAuthYn(deviceInfo.getIsAuthenticated());
-		} else {
+
+		}else {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
 
@@ -96,9 +100,10 @@ public class DeviceSCIController implements DeviceSCI {
 	@Override
 	@RequestMapping(value = "/searchChangedDeviceHistory", method = RequestMethod.POST)
 	@ResponseBody
+    @Deprecated
 	public ChangedDeviceHistorySacRes searchChangedDeviceHistory(
 			@RequestBody @Validated ChangedDeviceHistorySacReq request) {
-
+        //TODO 타파트 작업 후 삭제 해야함
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		// 공통 파라미터 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
@@ -131,14 +136,6 @@ public class DeviceSCIController implements DeviceSCI {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		// 공통 파라미터 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-
-		TenantHeader tenant = requestHeader.getTenantHeader();
-		if (StringUtils.isBlank(req.getTenantId())) { // tenantId 없는경우 default S01 셋팅
-			tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
-		} else {
-			tenant.setTenantId(req.getTenantId());
-		}
-		requestHeader.setTenantHeader(tenant);
 
 		SearchOrderDeviceIdSacRes res = this.deviceService.searchOrderDeviceId(requestHeader, req);
 

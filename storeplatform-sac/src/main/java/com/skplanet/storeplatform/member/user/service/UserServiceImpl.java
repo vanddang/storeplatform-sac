@@ -4056,7 +4056,7 @@ public class UserServiceImpl implements UserService {
 		searchGiftChargeInfoRequest.setBrandId(createGiftChargeInfoRequest.getBrandId());
 		searchGiftChargeInfoRequest.setChargerId(createGiftChargeInfoRequest.getChargerId());
 
-		// 중복체크 항목 : tenantId, userKey, sellerKey, 제휴사 브랜드 ID , 제휴사 회원 ID
+		// 중복체크 항목 : userKey, sellerKey, 제휴사 브랜드 ID , 제휴사 회원 ID
 		GiftChargeInfo giftChargeInfo = (GiftChargeInfo) this.commonDAO.queryForObject("User.searchGiftChargeInfo",
 				searchGiftChargeInfoRequest);
 
@@ -4342,4 +4342,37 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	/**
+	 * <pre>
+	 * market pin 정보를 이관하는 기능을 제공한다..
+	 * </pre>
+	 *
+	 * @param transferMarketPinRequest TransferMarketPinRequest
+	 * @return TransferMarketPinResponse
+	 */
+	@Override
+	public TransferMarketPinResponse excuteTransferMarketPin(TransferMarketPinRequest transferMarketPinRequest) {
+
+		TransferMarketPinResponse transferMarketPinResponse = new TransferMarketPinResponse();
+
+		// 이전 사용자의 market pin 정보 조회
+		UserMbrMarketPin userMbrMarketPin = new UserMbrMarketPin();
+		userMbrMarketPin.setUserKey(transferMarketPinRequest.getPreUserKey());
+		userMbrMarketPin = (UserMbrMarketPin) this.commonDAO.queryForObject("User.searchMarketPin", userMbrMarketPin);
+
+		if(userMbrMarketPin != null){
+			// 이관받을 사용자에게 merge 처리
+			userMbrMarketPin.setUserKey(transferMarketPinRequest.getUserKey());
+			int row = this.commonDAO.update("User.updateMarketPin", userMbrMarketPin);
+			if (row <= 0) {
+				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+			}
+			transferMarketPinResponse.setUserKey(transferMarketPinRequest.getUserKey());
+		}
+
+		transferMarketPinResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
+				"response.ResultMessage.success"));
+
+		return transferMarketPinResponse;
+	}
 }

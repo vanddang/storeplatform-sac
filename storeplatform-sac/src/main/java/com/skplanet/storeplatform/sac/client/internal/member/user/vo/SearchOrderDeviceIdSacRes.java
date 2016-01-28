@@ -19,6 +19,10 @@ public class SearchOrderDeviceIdSacRes extends CommonInfo {
 	 * 기기 ID.
 	 */
 	private String deviceId;
+    /**
+     * MDN
+     * */
+    private String mdn;
 	/**
 	 * 통신사 코드
 	 */
@@ -33,7 +37,8 @@ public class SearchOrderDeviceIdSacRes extends CommonInfo {
 	 */
 	private String tableName;
 
-	/** TenantId. */
+	/** TenantId. (타파트 적용 후 삭제 필요) */
+    @Deprecated
 	private String tenantId;
 
 	/**
@@ -111,4 +116,11 @@ public class SearchOrderDeviceIdSacRes extends CommonInfo {
 		this.tenantId = tenantId;
 	}
 
+    public String getMdn() {
+        return mdn;
+    }
+
+    public void setMdn(String mdn) {
+        this.mdn = mdn;
+    }
 }

@@ -339,12 +339,12 @@ public class DeviceServiceImpl implements DeviceService {
 						modifyUserMbrDeviceSet.setUserKey(updateMbrDevice.getUserKey());
 						modifyUserMbrDeviceSet.setDeviceKey(updateMbrDevice.getDeviceKey());
 						modifyUserMbrDeviceSet.setUserID(updateMbrDevice.getUserID());
-						modifyUserMbrDeviceSet.setRealNameDate("");
-						modifyUserMbrDeviceSet.setRealNameMdn("");
+						modifyUserMbrDeviceSet.setRnameAuthDate("");
+						modifyUserMbrDeviceSet.setRnameAuthMdn("");
 						if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+							this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}else{
-							//this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);  // TODO. 아직 테이블 정의 안됨
+							this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}
 					}
 				}
@@ -416,12 +416,12 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserKey(updateMbrDevice.getUserKey());
 							modifyUserMbrDeviceSet.setDeviceKey(updateMbrDevice.getDeviceKey());
 							modifyUserMbrDeviceSet.setUserID(updateMbrDevice.getUserID());
-							modifyUserMbrDeviceSet.setRealNameDate("");
-							modifyUserMbrDeviceSet.setRealNameMdn("");
+							modifyUserMbrDeviceSet.setRnameAuthDate("");
+							modifyUserMbrDeviceSet.setRnameAuthMdn("");
 							if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-								//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+								this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 							}else{
-								//this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+								this.idleDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 							}
 						}
 					}
@@ -555,9 +555,9 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserKey(userMbrDevice.getUserKey());
 							modifyUserMbrDeviceSet.setDeviceKey(userMbrDevice.getDeviceKey());
 							modifyUserMbrDeviceSet.setUserID(userMbrDevice.getUserID());
-							modifyUserMbrDeviceSet.setRealNameDate("");
-							modifyUserMbrDeviceSet.setRealNameMdn("");
-							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); // TODO. 아직 테이블 정의 안됨
+							modifyUserMbrDeviceSet.setRnameAuthDate("");
+							modifyUserMbrDeviceSet.setRnameAuthMdn("");
+							this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}
 					}else{
 						LOGGER.info("기존단말에서 가지고 있었던 휴대기기를 auth_yn = Y 처리");
@@ -595,9 +595,9 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserKey(userMbrDevice.getUserKey());
 							modifyUserMbrDeviceSet.setDeviceKey(userMbrDevice.getDeviceKey());
 							modifyUserMbrDeviceSet.setUserID(userMbrDevice.getUserID());
-							modifyUserMbrDeviceSet.setRealNameDate("");
-							modifyUserMbrDeviceSet.setRealNameMdn("");
-							//this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet); //TODO. 아직 테이블 정리 안됨
+							modifyUserMbrDeviceSet.setRnameAuthDate("");
+							modifyUserMbrDeviceSet.setRnameAuthMdn("");
+							this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}
 					}
 				}else{
@@ -1580,12 +1580,12 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchOrderDeviceResponse searchOrderDeviceResponse = this.commonDAO.queryForObject("Device.searchOrderDevice",
 				searchOrderDeviceRequest, SearchOrderDeviceResponse.class);
 
-		if (searchOrderDeviceResponse == null || searchOrderDeviceResponse.getDeviceId() == null) {
+		if (searchOrderDeviceResponse == null) {
 			searchOrderDeviceResponse = this.idleDAO.queryForObject("Device.searchOrderDevice",
 					searchOrderDeviceRequest, SearchOrderDeviceResponse.class);
 		}
 
-		if (searchOrderDeviceResponse == null || searchOrderDeviceResponse.getDeviceId() == null) {
+		if (searchOrderDeviceResponse == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
 		}
 

@@ -265,68 +265,10 @@ public class SearchUserSCIController implements SearchUserSCI {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-
-		// // Respone 를 가지고 오기 위한 devceKeyList Setting
-		// List<String> deviceKeyList = new ArrayList<String>();
-		//
-		// // Request 를 보내기 위한 세팅
-		// List<SearchUserDevice> schUserDeviceList = new ArrayList<SearchUserDevice>();
-		//
-		// for (SearchUserDeviceSac schUserDevice : request.getSearchUserDeviceReqList()) {
-		// String deviceKey = schUserDevice.getDeviceKey();
-		// SearchUserDevice schUser = new SearchUserDevice();
-		// schUser.setDeviceKey(schUserDevice.getDeviceKey());
-		// schUser.setUserKey(schUserDevice.getUserKey());
-		//
-		// schUserDeviceList.add(schUser);
-		// deviceKeyList.add(deviceKey);
-		// }
-		//
-		// SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
-		// searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
-
 		Map<String, UserDeviceInfoSac> userInfoMap = this.searchUserSCIService.srhUserByDeviceKey(requestHeader,
 				request);
 
-		// Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
-		// UserDeviceInfoSac userDeviceInfoSac;
-		//
-		// for (int i = 0; i < deviceKeyList.size(); i++) {
-		// if (userInfoMap.get(deviceKeyList.get(i)) != null) {
-		// userDeviceInfoSac = new UserDeviceInfoSac();
-		// userDeviceInfoSac.setDeviceId(userInfoMap.get(deviceKeyList.get(i)).getDeviceId());
-		// userDeviceInfoSac.setDeviceModelNo(userInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
-		// userDeviceInfoSac.setDeviceTelecom(userInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
-		// userDeviceInfoSac.setIsRealName(userInfoMap.get(deviceKeyList.get(i)).getIsRealName());
-		// userDeviceInfoSac.setUserMainStatus(userInfoMap.get(deviceKeyList.get(i)).getUserMainStatus());
-		// userDeviceInfoSac.setUserSubStatus(userInfoMap.get(deviceKeyList.get(i)).getUserSubStatus());
-		//
-		// if (userInfoMap.get(deviceKeyList.get(i)).getIsRealName().equals("Y")) {
-		// String birthday = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthBirthday(), "");
-		// String name = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthName(), "");
-		//
-		// if (birthday.equals("")) {
-		// userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
-		// } else {
-		// userDeviceInfoSac.setUserBirthday(birthday);
-		// }
-		//
-		// if (name.equals("")) {
-		// userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
-		// } else {
-		// userDeviceInfoSac.setUserName(name);
-		// }
-		// } else {
-		// userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
-		// userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
-		// }
-		//
-		// resMap.put(deviceKeyList.get(i), userDeviceInfoSac);
-		// }
-		// }
-
 		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
-		// searchUserDeviceSacRes.setUserDeviceInfo(resMap);
 		searchUserDeviceSacRes.setUserDeviceInfo(userInfoMap);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(searchUserDeviceSacRes));
@@ -387,7 +329,6 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 	/**
 	 * <pre>
-	 * @TODO [QA] 2014-10-07 적용 예정.
 	 * 2.1.9.	회원 segment 정보 조회.
 	 * </pre>
 	 * 

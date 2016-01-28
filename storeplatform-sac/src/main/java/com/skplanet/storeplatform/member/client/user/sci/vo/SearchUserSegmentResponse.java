@@ -25,8 +25,6 @@ public class SearchUserSegmentResponse extends CommonInfo implements Serializabl
 	private String userSex;
 	/** 회원 생년월일. */
 	private String userBirthDay;
-	/** 기변여부. */
-	private String isChanged;
 	/** 등록일자. */
 	private String entryDay;
 
@@ -123,25 +121,6 @@ public class SearchUserSegmentResponse extends CommonInfo implements Serializabl
 	 */
 	public void setUserBirthDay(String userBirthDay) {
 		this.userBirthDay = userBirthDay;
-	}
-
-	/**
-	 * 기변여부 정보를 리턴한다.
-	 * 
-	 * @return isChanged - 기변여부
-	 */
-	public String getIsChanged() {
-		return this.isChanged;
-	}
-
-	/**
-	 * 기변여부 정보를 설정한다.
-	 * 
-	 * @param isChanged
-	 *            기변여부
-	 */
-	public void setIsChanged(String isChanged) {
-		this.isChanged = isChanged;
 	}
 
 	/**

@@ -14,8 +14,9 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * [REQUEST] UserKey를 이용한 회원정보 조회.
- * 
+ *
  * Updated on : 2014. 2. 12. Updated by : 김다슬, 인크로스.
+ * Updated on : 2016. 1. 25. Updated by : 윤보영, 카레즈.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SearchUserSacReq extends CommonInfo {
@@ -27,7 +28,8 @@ public class SearchUserSacReq extends CommonInfo {
 	@javax.validation.constraints.NotNull.List(value = { @NotNull })
 	private List<String> userKeyList;
 
-	/** tenant Id */
+	/** tenant Id (타파트 작업 후 삭제 필요) */
+    @Deprecated
 	private String tenantId;
 
 	/**
