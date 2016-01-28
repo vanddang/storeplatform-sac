@@ -70,6 +70,9 @@ public class PromotionEventProcessor {
      * @param retVal 컨트롤러 응답(*Res)객체
      */
     public void postProcess(Object retVal) {
+        if (retVal == null) {
+            return;
+        }
 
         if(!checkServiceAvailable())
             return;
