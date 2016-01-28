@@ -13,18 +13,72 @@ import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
-import com.skplanet.storeplatform.member.client.common.vo.*;
+import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
+import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
+import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
+import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.*;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserPwdRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserPwdResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeliveryInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateSocialAccountResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyIdRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyIdResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyUserPwdRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeliveryInfoResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
+import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -1241,6 +1295,24 @@ public class UserModifyServiceImpl implements UserModifyService {
             // SC ID 변경
             ModifyIdResponse scRes = this.userSCI.modifyId(modIdReq);
             res.setUserKey(scRes.getUserKey());
+
+            // ID 변경 성공시 tlog(TL_SAC_MEM_0001) 데이터 셋팅
+            final String fdsMbrIdPre = req.getUserId();
+            final String fdsMbrId = req.getNewUserId();
+            final String fdsUsermbrNoPre = res.getUserKey();
+            final String fdsUsermbrNoPost = res.getUserKey();
+            final String fdsUserId = req.getNewUserId();
+            final String fdsSystemId = commonRequest.getSystemID();
+
+            new TLogUtil().set(new TLogUtil.ShuttleSetter() {
+                @Override
+                public void customize(TLogSentinelShuttle shuttle) {
+                    shuttle.mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
+                            .usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost)
+                            .mbr_id(fdsUserId).request_system_id(fdsSystemId);
+                }
+            });
+
         } catch (StorePlatformException spe) {
             LOGGER.info("ID 변경 실패 [{}]", req.getUserKey());
             throw spe;

@@ -1678,12 +1678,15 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeSaveAndSyncByMacRes res = new AuthorizeSaveAndSyncByMacRes();
 
-		/** 1. mac으로 가가입된 휴대기기 정보 조회. */
-		DeviceInfo macDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+        String svcMangNo = null;
+        String deviceTelecom = MemberConstants.DEVICE_TELECOM_SKT;
+
+		/** 1. deviceId 으로 가가입된 휴대기기 정보 조회. */
+		DeviceInfo preDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
 				req.getPreDeviceId(), null);
 
-		/** 2. mac으로 가가입된 휴대기기 정보를 찾을 수 없으면 오류. */
-		if (macDeviceInfo == null) {
+		/** 2. deviceId 으로 가가입된 휴대기기 정보를 찾을 수 없으면 오류. */
+		if (preDeviceInfo == null) {
 			throw new StorePlatformException("SAC_MEM_0003", req.getPreDeviceType(), req.getPreDeviceId());
 		}
 
@@ -1691,30 +1694,48 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
 		/** 4. 이관받을 MDN으로 서비스 관리 번호 조회. */
-        DeviceInfo mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN,
-                req.getDeviceId(), null);
+        if (System.getProperty("spring.profiles.active", "local").equals("local")) {
+            // local에서는 외부연동이 안되므로 하드코딩
+            HashMap<String, String> mdnMap = new HashMap<String, String>();
+            mdnMap.put("01029088625", "svcNoTest29088625"); // SKT
+            mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
+            mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
+            mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
+            mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
+            if (mdnMap.get(req.getDeviceId()) != null) {
+                svcMangNo = mdnMap.get(req.getDeviceId());
+            } else {
+                throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
+            }
+        } else {
+            svcMangNo = this.commService.getSvcMangNo(req.getDeviceId(), deviceTelecom, null, null);
+        }
 
-		String oldDeviceKey = macDeviceInfo.getDeviceKey();
-		String oldUserKey = macDeviceInfo.getUserKey();
+        /** 5. 조회된 서비스 관리 번호로 회원 유무 확인 */
+        DeviceInfo mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_SVC_MANG_NO,
+                svcMangNo, null);
+
+		String preDeviceKey = preDeviceInfo.getDeviceKey();
+		String preUserKey = preDeviceInfo.getUserKey();
 		String newDeviceKey = null;
 		String newUserKey = null;
 
 		/** 5-1. 이관받을 MDN이 회원인 경우. */
-		if (mdnDeviceInfo != null && mdnDeviceInfo.getSvcMangNum() != null) { // 회원인 경우
+		if (mdnDeviceInfo != null) { // 회원인 경우
 
-            LOGGER.info("{} 기가입된 MDN", req.getDeviceId());
+            LOGGER.info("MDN {} 이 이미 회원", req.getDeviceId());
 
             newDeviceKey = mdnDeviceInfo.getDeviceKey();
             newUserKey = mdnDeviceInfo.getUserKey();
 
-            /** 5-1-1. 가가입된 mac 정보(유저정보+device정보) 탈퇴처리. */
+            /** 5-1-1. 가가입된 정보(유저정보+device정보) 탈퇴처리. */
             RemoveUserRequest removeUserRequest = new RemoveUserRequest();
             removeUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-            removeUserRequest.setUserKey(oldUserKey);
+            removeUserRequest.setUserKey(preUserKey);
             removeUserRequest.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
             removeUserRequest.setSecedeReasonMessage("Save&Sync인증탈퇴");
             this.userSCI.remove(removeUserRequest);
-            LOGGER.info("가가입된 MAC {} 탈퇴 처리", req.getPreDeviceId());
+            LOGGER.info("가가입된 deviceId {} 탈퇴 처리", req.getPreDeviceId());
 
             /** 5-1-2. 요청시 보내준 정보로 이관받을 MDN회원의 휴대기기 정보를 수정 */
             ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
@@ -1727,7 +1748,6 @@ public class LoginServiceImpl implements LoginService {
 
             // 휴대기기 모델 정보 셋팅
             userMbrDevice.setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // modelNo
-
             // 휴대기기 기본 정보 셋팅
             if (StringUtils.isNotBlank(req.getNativeId())) {
                 userMbrDevice.setNativeID(req.getNativeId());
@@ -1735,7 +1755,6 @@ public class LoginServiceImpl implements LoginService {
             if (StringUtils.isNotBlank(req.getDeviceAccount())) {
                 userMbrDevice.setDeviceAccount(req.getDeviceAccount());
             }
-
             // 휴대기기 부가 정보 셋팅
             if (req.getDeviceExtraInfoList() != null && req.getDeviceExtraInfoList().size() >= 0) {
                 List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
@@ -1750,13 +1769,14 @@ public class LoginServiceImpl implements LoginService {
 
             // 휴대기기 수정 요청
             modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
-            modifyDeviceRequest.setIsUpdDeviceId(true);
+            modifyDeviceRequest.setIsUpdDeviceId(false);  // deviceId, mdn의 수정이 없음
             this.deviceSCI.modifyDevice(modifyDeviceRequest);
+            LOGGER.info("MDN 회원의 휴대기기 기기 정보 수정");
 
             /** 5-1-3. 전시/기타, 구매 파트 키 변경처리. (로컬테스트시는 연동하지 않음) */
             if (!System.getProperty("spring.profiles.active", "local").equals("local")) {
                 this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), newUserKey,
-                        oldUserKey, newDeviceKey, oldDeviceKey);
+                        preUserKey, newDeviceKey, preDeviceKey);
             }
 
             res.setDeviceKey(newDeviceKey);
@@ -1765,69 +1785,32 @@ public class LoginServiceImpl implements LoginService {
 		/** 5-2. 이관받을 MDN이 회원이 아닌 경우. */
 		} else {
 
-            LOGGER.info("{} 기존 MAC 가가입 회원 상태 변경", macDeviceInfo.getDeviceId());
+            LOGGER.info("MDN {} 이 회원 아님", req.getDeviceId());
 
-            /** 5-2-1. 가가입 MAC정보로 SKT 통합 서비스 관리번호 조회. */
-            // request에 nativeId가 있으면 올라온 값으로 셋팅
-            String nativeId = macDeviceInfo.getNativeId();
-            if (StringUtils.isNotBlank(req.getNativeId())){
-                nativeId = req.getNativeId();
-            }
-            // 통신사는 SKT
-            String deviceTelecom = MemberConstants.DEVICE_TELECOM_SKT;
-
-            String svcMangNo = "";
-            try {
-                if (System.getProperty("spring.profiles.active", "local").equals("local")) {
-                    // local에서는 외부연동이 안되므로 하드코딩
-                    HashMap<String, String> mdnMap = new HashMap<String, String>();
-                    mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
-                    mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
-                    mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
-                    mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
-                    if (mdnMap.get(req.getDeviceId()) != null) {
-                        svcMangNo = mdnMap.get(req.getDeviceId());
-                    } else {
-                        throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
-                    }
-                } else {
-                    svcMangNo = this.commService.getSvcMangNo(req.getDeviceId(), deviceTelecom, nativeId,
-                            macDeviceInfo.getSimSerialNo());
-                }
-            } catch (StorePlatformException spe) {
-                if(StringUtils.equals(spe.getErrorInfo().getCode(), "SAC_MEM_0003")){ // 타사 연동시 비회원 응답
-                    // DB에 회원정보가 있으면 invalid 처리 후 회원정보없음 에러
-                    this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
-                    throw spe;
-                }
-            }
-
-			/** 5-2-2. 가가입 상태인 mac 회원정보를 정상상태로. */
+			/** 5-2-1. 가가입 회원정보를 정상상태로. */
             this.modStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getPreDeviceId(),
                     MemberConstants.USE_N, null, null, MemberConstants.MAIN_STATUS_NORMAL,
                     MemberConstants.SUB_STATUS_NORMAL);
+            LOGGER.info("가가입 회원 상태를 정상으로 변경");
 
-			/** 5-2-3. mac -> mdn으로 변경 처리 및 휴대기기 정보 수정. */
+			/** 5-2-3. 가가입 deviceId -> mdn으로 변경 처리 및 휴대기기 정보 수정. */
             ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
             UserMbrDevice userMbrDevice = new UserMbrDevice();
             modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 
             // 가가입된 유저의 단말정보를 업데이트
-            modifyDeviceRequest.setUserKey(oldUserKey);
-            userMbrDevice.setDeviceKey(oldDeviceKey);
+            modifyDeviceRequest.setUserKey(preUserKey);
+            userMbrDevice.setDeviceKey(preDeviceKey);
 
             // 휴대기기 deviceId, mdn 셋팅
-            LOGGER.info("deviceId 변경 {} -> {} ", req.getPreDeviceId(), null);
-            LOGGER.info("mdn 변경 {} -> {} ", null, req.getDeviceId());
+            LOGGER.info("휴대기기 정보 deviceId 변경 {} -> {} ", req.getPreDeviceId(), null);
+            LOGGER.info("휴대기기 정보 mdn 변경 {} -> {} ", null, req.getDeviceId());
             userMbrDevice.setDeviceID("");
             userMbrDevice.setMdn(req.getDeviceId());
-
             // 휴대기기 서비스 관리 번호 셋팅
             userMbrDevice.setSvcMangNum(svcMangNo);
-
             // 휴대기기 모델 정보 셋팅
             userMbrDevice.setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // modelNo
-
             // 휴대기기 기본 정보 셋팅
             if (StringUtils.isNotBlank(req.getNativeId())) {
                 userMbrDevice.setNativeID(req.getNativeId());
@@ -1835,7 +1818,6 @@ public class LoginServiceImpl implements LoginService {
             if (StringUtils.isNotBlank(req.getDeviceAccount())) {
                 userMbrDevice.setDeviceAccount(req.getDeviceAccount());
             }
-
             // 휴대기기 부가 정보 셋팅
             if (req.getDeviceExtraInfoList() != null && req.getDeviceExtraInfoList().size() >= 0) {
                 List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
@@ -1850,15 +1832,16 @@ public class LoginServiceImpl implements LoginService {
 
             // 휴대기기 수정 요청
             modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
-            modifyDeviceRequest.setIsUpdDeviceId(true);
+            modifyDeviceRequest.setIsUpdDeviceId(true); // deviceId, mdn의 수정이 있음
             this.deviceSCI.modifyDevice(modifyDeviceRequest);
+            LOGGER.info("가가입 회원의 휴대기기 기기 정보 수정");
 
 			/** MQ 연동 */
             CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
             try {
                 mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-                mqInfo.setUserKey(oldUserKey);
-                mqInfo.setDeviceKey(oldDeviceKey);
+                mqInfo.setUserKey(preUserKey);
+                mqInfo.setDeviceKey(preDeviceKey);
                 mqInfo.setDeviceId(req.getDeviceId()); // request의 deviceId는 mdn이다.
                 mqInfo.setMnoCd(deviceTelecom); // 통신사는 SKT
                 this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
@@ -1866,8 +1849,8 @@ public class LoginServiceImpl implements LoginService {
                 LOGGER.info("MQ process fail {}", mqInfo);
             }
 
-            res.setUserKey(oldUserKey);
-            res.setDeviceKey(oldDeviceKey);
+            res.setUserKey(preUserKey);
+            res.setDeviceKey(preDeviceKey);
 
 		}
 
