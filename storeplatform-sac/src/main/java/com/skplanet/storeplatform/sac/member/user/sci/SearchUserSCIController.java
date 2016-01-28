@@ -329,7 +329,6 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 	/**
 	 * <pre>
-	 * @TODO [QA] 2014-10-07 적용 예정.
 	 * 2.1.9.	회원 segment 정보 조회.
 	 * </pre>
 	 * 

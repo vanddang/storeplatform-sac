@@ -25,7 +25,8 @@ public class SearchOrderDeviceIdSacReq extends CommonInfo {
 	@NotBlank
 	private String deviceKey;
 
-	/** TenantID. */
+	/** TenantID. (타파트 적용 시 제거 필요)*/
+    @Deprecated
 	private String tenantId;
 
 	/**

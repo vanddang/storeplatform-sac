@@ -2731,12 +2731,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchUserSegmentRequest.getCommonRequest().getTenantID() == null
-				|| searchUserSegmentRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, userKey
 		if (searchUserSegmentRequest.getUserKey() == null || searchUserSegmentRequest.getUserKey().length() <= 0) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -3526,12 +3520,6 @@ public class UserSCIController implements UserSCI {
 		// 공통 파라미터 없음
 		if (createGiftChargeInfoRequest.getCommonRequest() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
-		}
-
-		// 테넌트 아이디 없음
-		if (createGiftChargeInfoRequest.getCommonRequest().getTenantID() == null
-				|| createGiftChargeInfoRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
 		}
 
 		// 필수 파라미터, 회원 키, 판매자 키, 제휴사 브랜드명, 제휴사 회원 아이디, 충전자 이름

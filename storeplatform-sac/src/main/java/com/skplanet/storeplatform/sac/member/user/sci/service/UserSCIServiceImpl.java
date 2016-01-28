@@ -92,7 +92,7 @@ public class UserSCIServiceImpl implements UserSCIService {
 
 		// 공통 파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 
 		// 01. 회원 여부 조회
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();

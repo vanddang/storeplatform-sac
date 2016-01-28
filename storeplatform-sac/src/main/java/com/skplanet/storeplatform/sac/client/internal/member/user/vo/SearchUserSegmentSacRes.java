@@ -9,6 +9,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 2.1.9. 회원 segment 정보 조회 [RESPONSE].
  * 
  * Updated on : 2014. 9. 22. Updated by : Rejoice, Burkhan
+ * Updated on : 2016. 1. 28. Updated by : 윤보영, 카레즈
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SearchUserSegmentSacRes extends CommonInfo {
@@ -32,8 +33,9 @@ public class SearchUserSegmentSacRes extends CommonInfo {
 	 */
 	private String userBirthDay;
 	/**
-	 * 기변 여부.
+	 * 기변 여부. (타사 작업 후 삭제 필요)
 	 */
+    @Deprecated
 	private String isChanged;
 	/**
 	 * 등록 일자.
