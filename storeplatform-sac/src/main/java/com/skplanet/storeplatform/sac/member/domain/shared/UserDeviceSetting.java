@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.member.domain.shared;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacRes;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -53,15 +57,24 @@ public class UserDeviceSetting {
     @Column(columnDefinition = "char(1)")
     private String loginLockYn;
 
+    /**
+     * ?
+     */
     @Column(columnDefinition = "char(1)")
     private String adultContentsLockYn;
 
+    /**
+     * 성인 컨텐츠 제한 여부
+     */
     @Column(columnDefinition = "char(1)")
     private String adultContentsLimtYn;
 
     @Column(columnDefinition = "char(1)")
     private String wiFiAutoDwldYn;
 
+    /**
+     * WIFI 자동 업데이트 여부
+     */
     @Column(columnDefinition = "char(1)")
     private String wiFiAutoUpdtYn;
 
@@ -70,19 +83,94 @@ public class UserDeviceSetting {
      */
     private String pinNo;
 
+    /**
+     * 인증 실패 횟수
+     */
     private Integer authFailCnt;
 
     @Column(columnDefinition = "char(1)")
     private String authLockYn;
 
-    @Transient  // TODO-JOY 데이터형 픽스되면 변경
+    /**
+     * 실명인증 일시
+     */
     private Date rnameAuthDate;
 
+    /**
+     * 실명인증 MDN
+     */
     @Column(columnDefinition = "char(1)")
     private String rnameAuthMdn;
 
+    /**
+     * ICAS 인증여부
+     */
     @Column(columnDefinition = "char(1)")
     private String icasAuthYn;
+
+    @Transient
+    private boolean useMarketPin = false;
+
+    @Transient
+    private Integer marketPinFailCnt = null;
+
+    /**
+     * 기본값을 응답한다.
+     * @return
+     */
+    public static UserDeviceSetting createDefault() {
+        UserDeviceSetting v = new UserDeviceSetting();
+        v.setAutoUpdtYn("Y");
+        v.setWiFiAutoUpdtYn("Y");
+        v.setLoginLockYn("N");
+        v.setAdultContentsLimtYn("Y");
+        v.setWiFiAutoDwldYn("Y");
+        v.setIcasAuthYn("N");
+        v.setPinNo("N");
+
+        return v;
+    }
+    
+    public SearchDeviceSetInfoSacRes convertToResponse() {
+        SearchDeviceSetInfoSacRes res = new SearchDeviceSetInfoSacRes();
+
+        // 원래 처리하던 SQL문장의 주석 부분을 반영하여 아래와 같이 주석 처리함
+        res.setAutoUpdateSet(autoUpdtSetClsf);
+        res.setIsAdult(adultContentsLockYn);
+        res.setIsPin(pinNo == null ? "N" : "Y");
+        res.setIsPinClosed(authLockYn);
+        res.setFailCnt(authFailCnt != null ? authFailCnt.toString() : null);
+
+        res.setIsPinRetry(null);    // FIXME 컬럼이 없음!
+        res.setIsAutoUpdate(autoUpdtYn);
+        res.setIsAutoUpdateWifi(wiFiAutoUpdtYn);
+        res.setIsLoginLock(loginLockYn);
+        res.setIsAdultLock(adultContentsLimtYn);
+
+        res.setIsDownloadWifiOnly(wiFiAutoDwldYn);
+        res.setIsIcasAuth(StringUtils.defaultString(icasAuthYn, "N"));
+        res.setRealNameDate(DateUtils.format(rnameAuthDate));
+        res.setRealNameMdn(rnameAuthMdn);
+
+        return res;
+    }
+
+    public SearchDeviceSetInfoSacRes convertToResponseV2() {
+        SearchDeviceSetInfoSacRes res = new SearchDeviceSetInfoSacRes();
+
+        res.setIsPin(useMarketPin ? "Y" : "N");
+        res.setIsAutoUpdate(autoUpdtYn);
+        res.setAutoUpdateSet(autoUpdtSetClsf);
+        res.setIsAutoUpdateWifi(wiFiAutoUpdtYn);
+        res.setIsLoginLock(loginLockYn);
+
+        res.setIsAdult(adultContentsLockYn);
+        res.setFailCnt(marketPinFailCnt != null ? marketPinFailCnt.toString() : null);
+        res.setIsAdultLock(adultContentsLimtYn);
+        res.setIsDownloadWifiOnly(wiFiAutoDwldYn);
+
+        return res;
+    }
 
     @PrePersist
     public void prePersist() {
@@ -247,5 +335,21 @@ public class UserDeviceSetting {
 
     public void setIcasAuthYn(String icasAuthYn) {
         this.icasAuthYn = icasAuthYn;
+    }
+
+    public boolean isUseMarketPin() {
+        return useMarketPin;
+    }
+
+    public void setUseMarketPin(boolean useMarketPin) {
+        this.useMarketPin = useMarketPin;
+    }
+
+    public Integer getMarketPinFailCnt() {
+        return marketPinFailCnt;
+    }
+
+    public void setMarketPinFailCnt(Integer marketPinFailCnt) {
+        this.marketPinFailCnt = marketPinFailCnt;
     }
 }

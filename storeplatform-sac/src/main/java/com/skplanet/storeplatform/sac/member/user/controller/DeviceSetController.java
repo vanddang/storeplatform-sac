@@ -8,8 +8,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserDeviceSetting;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.PinService;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceSetService;
+import com.skplanet.storeplatform.sac.member.user.service.DeviceSettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class DeviceSetController {
 
 	@Autowired
 	private PinService pinService;
+
+    @Autowired
+    private DeviceSettingService settingService;
 
 	/**
 	 * <pre>
@@ -141,25 +146,41 @@ public class DeviceSetController {
 
 	/**
 	 * <pre>
-	 * 2.1.47. 휴대기기 설정 정보 조회.
+	 * [I01000106] 2.1.47. 휴대기기 설정 정보 조회.
 	 * </pre>
-	 * 
-	 * @param header
-	 *            SearchDeviceSetInfoSacRes
-	 * @param req
-	 *            SearchDeviceSetInfoSacReq
+	 * @param req SearchDeviceSetInfoSacReq
 	 * @return SearchDeviceSetInfoSacRes
 	 */
 	@RequestMapping(value = "/searchDeviceSetInfo/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SearchDeviceSetInfoSacRes searchDeviceSetInfo(SacRequestHeader header,
-			@RequestBody @Validated SearchDeviceSetInfoSacReq req) {
+	public SearchDeviceSetInfoSacRes searchDeviceSetInfo(@RequestBody @Validated SearchDeviceSetInfoSacReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		SearchDeviceSetInfoSacRes res = this.deviceSetService.searchDeviceSetInfo(header, req);
+        UserDeviceSetting deviceSetting = settingService.find(req.getUserKey(), req.getDeviceKey());
+        SearchDeviceSetInfoSacRes res = deviceSetting.convertToResponse();
+
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
+
+    /**
+     * <pre>
+     * [I01000148] 2.1.81. 휴대기기 설정 정보 조회 V2
+     * </pre>
+     * @param req SearchDeviceSetInfoSacReq
+     * @return SearchDeviceSetInfoSacRes
+     */
+    @RequestMapping(value = "/searchDeviceSetInfo/v2", method = RequestMethod.POST)
+    @ResponseBody
+    public SearchDeviceSetInfoSacRes searchDeviceSetInfoV2(@RequestBody @Validated SearchDeviceSetInfoSacReq req) {
+
+        LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+        UserDeviceSetting deviceSetting = settingService.find(req.getUserKey(), req.getDeviceKey(), true);
+        SearchDeviceSetInfoSacRes res = deviceSetting.convertToResponseV2();
+
+        LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+        return res;
+    }
 
 	/**
 	 * <pre>

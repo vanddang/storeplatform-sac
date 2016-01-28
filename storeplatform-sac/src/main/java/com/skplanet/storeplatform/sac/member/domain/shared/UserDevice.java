@@ -93,6 +93,10 @@ public class UserDevice {
 
     private String deviceAcct;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private UserDeviceSetting setting;
+
     ////////// GETTER & SETTER //////////
     public UserDevicePK getId() {
         return id;
@@ -252,6 +256,14 @@ public class UserDevice {
 
     public void setDeviceAcct(String deviceAcct) {
         this.deviceAcct = deviceAcct;
+    }
+
+    public UserDeviceSetting getSetting() {
+        return setting;
+    }
+
+    public void setSetting(UserDeviceSetting setting) {
+        this.setting = setting;
     }
 
     @PrePersist
