@@ -564,14 +564,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
 		/**
-		 * 약관 맵핑정보 세팅.
-		 */
-		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
-
-		// 약관 버전 정보 추가
-		req.setAgreementList(agreementInfoList);
-
-		/**
 		 * 회원 기가입 여부 체크
 		 */
 		this.checkAlreadyJoin(sacHeader, req.getDeviceId());
@@ -1239,46 +1231,18 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 */
 	private CreateSaveAndSyncRes regSaveAndSyncUserJoin(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
 
-		LOGGER.debug("======  SAVE & SYNC 가가입 START ======");
-
 		String userKey = null; // 사용자 Key
 		String deviceKey = null; // 휴대기기 Key
 		String deviceTelecom = MemberConstants.DEVICE_TELECOM_SKT; // 이동통신사
-		String svcMangNum = null;
 
-		/** 1. deviceType이 msisdn이면 upas연동을 통해 서비스 관리 번호를 획득. */
-		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
-
-			if (System.getProperty("spring.profiles.active", "local").equals("local")) {
-				// local에서는 외부연동이 안되므로 하드코딩
-				HashMap<String, String> mdnMap = new HashMap<String, String>();
-				mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
-				mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
-				mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
-				mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
-				if (mdnMap.get(req.getDeviceId()) != null) {
-					svcMangNum = mdnMap.get(req.getDeviceId());
-				} else {
-					throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
-				}
-			} else {
-
-				UserEcRes userRes = this.mcc.getMappingInfo(req.getDeviceId(), "mdn");
-				svcMangNum = userRes.getSvcMngNum();
-
-				LOGGER.debug("## UAPS 연동 결과 toString() : {}", userRes);
-				LOGGER.debug("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
-			}
-
-		}
-
-		/** 2. 사용자 가입처리. */
-		/** 2-1. SC 가입 (공통 Request, 약관동의 Request) setting. */
+		/** 1. 사용자 가입처리. */
+		/** 1-1. SC 가입 (공통 Request, 약관동의 Request) setting. */
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(
+				this.mcc.getClauseMappingInfo(req.getAgreementList())));
 
-		/** 2-2. SC 사용자 기본정보 setting - IDP 연동을 하지 않으므로 MBR_NO 가 없음. */
+		/** 1-2. SC 사용자 기본정보 setting - IDP 연동을 하지 않으므로 MBR_NO 가 없음. */
 		UserMbr userMbr = new UserMbr();
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
@@ -1291,32 +1255,44 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
 		createUserRequest.setUserMbr(userMbr);
 
-		/** 2-3. SC 사용자 가입요청 */
+		/** 1-3. SC 사용자 가입요청 */
 		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
 			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
 		userKey = createUserResponse.getUserKey();
 
-		/** 3. 휴대기기 등록처리. */
-		/** 3-1. 휴대기기 등록을 위한 정보 셋팅 */
+		/** 2. 휴대기기 등록처리. */
+		/** 2-1. 휴대기기 등록을 위한 정보 셋팅 */
 		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setUserKey(createUserResponse.getUserKey());
-		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
-			deviceInfo.setMdn(req.getDeviceId());
-		} else {
-			deviceInfo.setDeviceId(req.getDeviceId());
+
+		// local에서는 외부연동이 안되므로 svcMangNum 하드코딩
+		if (System.getProperty("spring.profiles.active", "local").equals("local")) {
+			HashMap<String, String> mdnMap = new HashMap<String, String>();
+			mdnMap.put("01029088625", "svcNoTest29088625"); // SKT
+			mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
+			mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
+			mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
+			mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
+			if (mdnMap.get(req.getDeviceId()) != null) {
+				deviceInfo.setSvcMangNum(mdnMap.get(req.getDeviceId()));
+			} else {
+				throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
+			}
 		}
-		deviceInfo.setSvcMangNum(svcMangNum);
+
+		deviceInfo.setUserKey(createUserResponse.getUserKey());
+		deviceInfo.setDeviceId(req.getDeviceId());
 		deviceInfo.setDeviceTelecom(deviceTelecom);
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
 		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-		try{
-			/** 3-2. 휴대기기 등록. */
+
+		try {
+			/** 2-2. 휴대기기 등록. */
 			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
 			deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
-		}catch(StorePlatformException e){
+		} catch (StorePlatformException e) {
 			// // 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
 			DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
 			deleteUserRequest.setCommonRequest(mcc.getSCCommonRequest(sacHeader));
@@ -1325,7 +1301,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw e;
 		}
 
-		/** 5. 결과 세팅 */
+		/** 3. 결과 세팅 */
 		CreateSaveAndSyncRes response = new CreateSaveAndSyncRes();
 		response.setUserKey(userKey);
 		response.setDeviceKey(deviceKey);
@@ -1344,6 +1320,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 * @param req
 	 *            Request Value Object
 	 * @return 사용자 Key
+	 * @deprecated
 	 */
 	private String regSaveAndSyncMsisdnUser(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
 
@@ -1399,6 +1376,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 * @param req
 	 *            Request Value Object
 	 * @return 사용자 Key
+	 * @deprecated
 	 */
 	private String regSaveAndSyncMacUser(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
 
@@ -1448,6 +1426,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 * @param deviceType
 	 *            String
 	 * @return fix MBR_NO {MAC}{yyyyMMddHHmmssSSS}{난수} (21자리)
+	 * @deprecated
 	 */
 	private String getFixMbrNo(String deviceType) {
 		StringBuffer fixMbrNo = new StringBuffer();

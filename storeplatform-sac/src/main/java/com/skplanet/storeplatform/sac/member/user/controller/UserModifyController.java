@@ -9,9 +9,29 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import com.google.common.collect.Lists;
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeliveryInfoSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSocialAccountSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeliveryInfoSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -346,6 +366,13 @@ public class UserModifyController {
 	@RequestMapping(value = "/member/user/modifyId/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyIdSacRes modifyId(SacRequestHeader header, @RequestBody @Validated ModifyIdSacReq req) {
+
+		new TLogUtil().set(new TLogUtil.ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SAC_MEM_0001");
+			}
+		});
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
