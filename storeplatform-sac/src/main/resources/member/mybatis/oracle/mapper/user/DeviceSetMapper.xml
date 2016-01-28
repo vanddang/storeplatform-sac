@@ -15,7 +15,7 @@
             TB_US_OUSERMBR_DEVICE b
             ON a.INSD_USERMBR_NO = b.INSD_USERMBR_NO
         WHERE
-            AND b.AUTH_YN = 'Y'
+            b.AUTH_YN = 'Y'
             AND a.MBR_STATUS_MAIN_CD != 'US010202'
             <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                 <if test="keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID')"> b.INSD_DEVICE_ID = #{keySearch.keyString} </if>
@@ -30,41 +30,41 @@
         (
             INSD_USERMBR_NO,
             INSD_DEVICE_ID,
-            REG_DT,
-            <if test="userID != null">REG_ID, </if>
-            <if test="systemID != null">SYSTEM_ID, </if>
-            <if test="isAutoUpdate != null">AUTO_UPDT_YN, </if>
-            <if test="autoUpdateSet != null">AUTO_UPDT_SET_CLSF, </if>
-            <if test="isLoginLock != null">LOGIN_LOCK_YN, </if>
-            <if test="isAdult != null">ADULT_CONTENTS_LOCK_YN, </if>
-            <if test="isAdultLock != null">ADULT_CONTENTS_LIMT_YN, </if>
-            <if test="isDownloadWifiOnly != null">WI_FI_AUTO_DWLD_YN, </if>
-            <if test="isAutoUpdateWifi != null">WI_FI_AUTO_UPDT_YN, </if>
-            <if test="pinNo != null">PIN_NO, </if>
-            <if test="authFailCnt != null">AUTH_FAIL_CNT, </if>
-            <if test="authLockYn != null">AUTH_LOCK_YN, </if>
-            <if test="rnameAuthDate != null">RNAME_AUTH_DATE, </if>
-            <if test="rnameAuthMdn != null">RNAME_AUTH_MDN </if>
-            <if test="isIcasAuth != null">ICAS_AUTH_YN, </if>
+            REG_DT
+            <if test="userID != null">,REG_ID </if>
+            <if test="systemID != null">,SYSTEM_ID </if>
+            <if test="isAutoUpdate != null">,AUTO_UPDT_YN </if>
+            <if test="autoUpdateSet != null">,AUTO_UPDT_SET_CLSF </if>
+            <if test="isLoginLock != null">,LOGIN_LOCK_YN </if>
+            <if test="isAdult != null">,ADULT_CONTENTS_LOCK_YN </if>
+            <if test="isAdultLock != null">,ADULT_CONTENTS_LIMT_YN </if>
+            <if test="isDownloadWifiOnly != null">,WI_FI_AUTO_DWLD_YN </if>
+            <if test="isAutoUpdateWifi != null">,WI_FI_AUTO_UPDT_YN </if>
+            <if test="pinNo != null">,PIN_NO </if>
+            <if test="authFailCnt != null">,AUTH_FAIL_CNT </if>
+            <if test="authLockYn != null">,AUTH_LOCK_YN </if>
+            <if test="rnameAuthDate != null">,RNAME_AUTH_DATE </if>
+            <if test="rnameAuthMdn != null">,RNAME_AUTH_MDN </if>
+            <if test="isIcasAuth != null">,ICAS_AUTH_YN </if>
         ) VALUES (
             #{userKey},
             #{deviceKey},
-            SYSDATE,
-            <if test="userID != null">#{userID}, </if>
-            <if test="systemID != null">#{systemID}, </if>
-            <if test="isAutoUpdate != null">#{isAutoUpdate}, </if>
-            <if test="autoUpdateSet != null">#{autoUpdateSet}, </if>
-            <if test="isLoginLock != null">#{isLoginLock}, </if>
-            <if test="isAdult != null">#{isAdult}, </if>
-            <if test="isAdultLock != null">#{isAdultLock}, </if>
-            <if test="isDownloadWifiOnly != null">#{isDownloadWifiOnly}, </if>
-            <if test="isAutoUpdateWifi != null">#{isAutoUpdateWifi}, </if>
-            <if test="pinNo != null">#{pinNo}, </if>
-            <if test="authFailCnt != null">#{authFailCnt}, </if>
-            <if test="authLockYn != null">#{authLockYn}, </if>
-            <if test="rnameAuthDate != null">TO_DATE(#{rnameAuthDate}, 'YYYYMMDDHH24MISS'), </if>
-            <if test="rnameAuthMdn != null">#{rnameAuthMdn} </if>
-            <if test="isIcasAuth != null">#{isIcasAuth}, </if>
+            SYSDATE
+            <if test="userID != null">,#{userID} </if>
+            <if test="systemID != null">,#{systemID} </if>
+            <if test="isAutoUpdate != null">,#{isAutoUpdate} </if>
+            <if test="autoUpdateSet != null">,#{autoUpdateSet} </if>
+            <if test="isLoginLock != null">,#{isLoginLock} </if>
+            <if test="isAdult != null">,#{isAdult} </if>
+            <if test="isAdultLock != null">,#{isAdultLock} </if>
+            <if test="isDownloadWifiOnly != null">,#{isDownloadWifiOnly} </if>
+            <if test="isAutoUpdateWifi != null">,#{isAutoUpdateWifi} </if>
+            <if test="pinNo != null">,#{pinNo} </if>
+            <if test="authFailCnt != null">,#{authFailCnt} </if>
+            <if test="authLockYn != null">,#{authLockYn} </if>
+            <if test="rnameAuthDate != null">,TO_DATE(#{rnameAuthDate} 'YYYYMMDDHH24MISS') </if>
+            <if test="rnameAuthMdn != null">,#{rnameAuthMdn} </if>
+            <if test="isIcasAuth != null">,#{isIcasAuth} </if>
         )
     </update>
 
@@ -73,21 +73,21 @@
         UPDATE /* DeviceSetMapper.xml, modifyDeviceSet, SAC(SC), 최진호, 2016-01-27 */
             TB_US_OUSERMBR_DEVICE_SET
         SET
-            UPD_DT = SYSDATE,
-            <if test="userID != null">UPD_ID = #{userID}, </if>
-            <if test="pinNo != null">PIN_NO = #{pinNo}, </if>
-            <if test="authFailCnt != null">AUTH_FAIL_CNT = #{authFailCnt}, </if>
-            <if test="authLockYn != null">AUTH_LOCK_YN = #{authLockYn}, </if>
-            <if test="isAutoUpdate != null">AUTO_UPDT_YN = #{isAutoUpdate}, </if>
-            <if test="autoUpdateSet != null">AUTO_UPDT_SET_CLSF = #{autoUpdateSet}, </if>
-            <if test="isAutoUpdateWifi != null">WI_FI_AUTO_UPDT_YN = #{isAutoUpdateWifi}, </if>
-            <if test="isLoginLock != null">LOGIN_LOCK_YN = #{isLoginLock}, </if>
-            <if test="isAdult != null">ADULT_CONTENTS_LOCK_YN = #{isAdult}, </if>
-            <if test="isAdultLock != null">ADULT_CONTENTS_LIMT_YN = #{isAdultLock}, </if>
-            <if test="isDownloadWifiOnly != null">WI_FI_AUTO_DWLD_YN = #{isDownloadWifiOnly}, </if>
-            <if test="isIcasAuth != null">ICAS_AUTH_YN = #{isIcasAuth}, </if>
-            <if test="rnameAuthDate != null">RNAME_AUTH_DATE = TO_DATE(#{rnameAuthDate}, 'YYYYMMDDHH24MISS'), </if>
-            <if test="rnameAuthMdn != null">RNAME_AUTH_MDN = #{rnameAuthMdn} </if>
+            UPD_DT = SYSDATE
+            <if test="userID != null">,UPD_ID = #{userID} </if>
+            <if test="pinNo != null">,PIN_NO = #{pinNo} </if>
+            <if test="authFailCnt != null">,AUTH_FAIL_CNT = #{authFailCnt} </if>
+            <if test="authLockYn != null">,AUTH_LOCK_YN = #{authLockYn} </if>
+            <if test="isAutoUpdate != null">,AUTO_UPDT_YN = #{isAutoUpdate} </if>
+            <if test="autoUpdateSet != null">,AUTO_UPDT_SET_CLSF = #{autoUpdateSet} </if>
+            <if test="isAutoUpdateWifi != null">,WI_FI_AUTO_UPDT_YN = #{isAutoUpdateWifi} </if>
+            <if test="isLoginLock != null">,LOGIN_LOCK_YN = #{isLoginLock} </if>
+            <if test="isAdult != null">,ADULT_CONTENTS_LOCK_YN = #{isAdult} </if>
+            <if test="isAdultLock != null">,ADULT_CONTENTS_LIMT_YN = #{isAdultLock} </if>
+            <if test="isDownloadWifiOnly != null">WI_FI_AUTO_DWLD_YN = #{isDownloadWifiOnly} </if>
+            <if test="isIcasAuth != null">,ICAS_AUTH_YN = #{isIcasAuth}, </if>
+            <if test="rnameAuthDate != null">,RNAME_AUTH_DATE = TO_DATE(#{rnameAuthDate}, 'YYYYMMDDHH24MISS') </if>
+            <if test="rnameAuthMdn != null">,RNAME_AUTH_MDN = #{rnameAuthMdn} </if>
         WHERE
             INSD_USERMBR_NO = #{userKey}
             AND INSD_DEVICE_ID = #{deviceKey}
@@ -99,9 +99,9 @@
             a.MBR_ID AS userID,
             b.INSD_USERMBR_NO AS userKey,
             b.INSD_DEVICE_ID AS deviceKey,
-            /*b.PIN_NO AS pinNo,
-            b.AUTH_FAIL_CNT AS authFailCnt,*/
-            /*b.AUTH_LOCK_YN AS authLockYn,*/
+            b.PIN_NO AS pinNo,
+            b.AUTH_FAIL_CNT AS authFailCnt,
+            b.AUTH_LOCK_YN AS authLockYn,
             b.AUTO_UPDT_YN AS isAutoUpdate,
             b.AUTO_UPDT_SET_CLSF AS autoUpdateSet,
             b.WI_FI_AUTO_UPDT_YN AS isAutoUpdateWifi,
@@ -113,10 +113,10 @@
             b.REG_ID AS regID,
             TO_CHAR(b.UPD_DT,'YYYYMMDDHH24MISS') updateDate,
             b.UPD_ID AS updateID,
-            b.SYSTEM_ID AS systemID
-            /*b.ICAS_AUTH_YN AS isIcasAuth,*/
-            /*TO_CHAR(b.RNAME_AUTH_DATE,'YYYYMMDDHH24MISS') AS rnameAuthDate,*/
-            /*b.RNAME_AUTH_MDN AS rnameAuthMdn*/
+            b.SYSTEM_ID AS systemID,
+            b.ICAS_AUTH_YN AS isIcasAuth,
+            TO_CHAR(b.RNAME_AUTH_DATE,'YYYYMMDDHH24MISS') AS rnameAuthDate,
+            b.RNAME_AUTH_MDN AS rnameAuthMdn
         FROM
             TB_US_OUSERMBR a
             LEFT JOIN
