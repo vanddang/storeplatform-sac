@@ -245,14 +245,14 @@ public interface CouponItemService {
 	 * 
 	 * @param newCouponCode
 	 *            newCouponCode
-	 * @param dpStatusCode
-	 *            dpStatusCode
+	 * @param couponList
+	 *            couponList
 	 * @param upType
 	 *            upType
 	 * @param itemCode
 	 *            itemCode
 	 */
-	public void updateCouponStatus(String newCouponCode, String dpStatusCode, String upType, String itemCode);
+	public void updateCouponStatus(String newCouponCode, List<Map<String, Object>> couponList , String upType, String itemCode);
 
 	
 	/**

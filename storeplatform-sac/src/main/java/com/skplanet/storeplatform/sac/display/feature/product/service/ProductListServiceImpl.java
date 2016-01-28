@@ -8,8 +8,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.product.ProductL
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.extractor.HeaderExtractor;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.ProductListCacheManager;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -63,24 +61,25 @@ public class ProductListServiceImpl implements ProductListService{
 	 * TB_DP_LISTPROD 테이블에서 listId를 기준으로 상품목록을 만들어주는 함수
 	 * </pre>
 	 * @param request 상품 목록 조회 조건
-	 * @param header
 	 * @return 상품 목록
 	 */
 	@Override
-	public ProductListSacRes searchProductList( ProductListSacReq request, SacRequestHeader header ) {
+	public ProductListSacRes searchProductList( ProductListSacReq request ) {
 
 		ProductListSacRes response = new ProductListSacRes();
 
-		String stdDt = getBatchStdDateStringFromDB(request, header);
+		String listId = request.getListId();
+		String stdDt  = getStandardDate( listId );
 
 		// 1건을 더 조회하도록 파라미터가 세팅된다.
-		ListProductCriteria param = new ListProductCriteria( request, header.getTenantHeader().getTenantId(), stdDt );
+		ListProductCriteria param = new ListProductCriteria( request, header.getTenantId(), stdDt );
+
 
 		while( true ) {
 
 			List<ListProduct> prodListFromDB = cacheManager.getListProducts( param );
 
-			addListProductIntoResponse( header, response, prodListFromDB, param.getCount() );
+			addListProductIntoResponse( response, prodListFromDB, param.getCount() );
 
 			if( hasResponseEnoughProdList(response, param.getCount()) || noMoreProdToGet(prodListFromDB, param.getCount()) ) break;
 
@@ -97,7 +96,7 @@ public class ProductListServiceImpl implements ProductListService{
 		setStartKey( response );
 		setCount( response );
 		setStdDt( response, stdDt );
-		setListIdAndEtcProp( response, request.getListId() );
+		setListIdAndEtcProp( response, listId );
 
 		return response;
 
@@ -105,13 +104,11 @@ public class ProductListServiceImpl implements ProductListService{
 
 	private void setListIdAndEtcProp( ProductListSacRes response, String listId ) {
 
-		String tenantId = header.getTenantHeader().getTenantId();
-
-		DisplayListCriteria listCriteria = new DisplayListCriteria( tenantId, listId, "N", 1 );
+		DisplayListCriteria listCriteria = new DisplayListCriteria( header.getTenantId(), listId, "N", 1 );
 
 		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class );
 
-		if(!listsFromDB.isEmpty()){
+		if( ! listsFromDB.isEmpty() ){
     		response.setEtcProp(listsFromDB.get(0).getEtcProp());
     		response.setListId(listsFromDB.get(0).getListId());
     		response.setListNm(listsFromDB.get(0).getListNm());
@@ -127,9 +124,7 @@ public class ProductListServiceImpl implements ProductListService{
 	}
 
 	private void setHasNext( ProductListSacRes response, ProductListSacReq requestVO ) {
-
 		response.setHasNext( response.getProductList().size() > requestVO.getCount() ? "Y" : "N" );
-
 	}
 
 	private boolean noMoreProdToGet(List<ListProduct> prodListFromDB, int countExpected) {
@@ -141,7 +136,7 @@ public class ProductListServiceImpl implements ProductListService{
 		ListProduct lastProd = prodListFromDB.get( prodListFromDB.size() - 1 );
 
 		lpCriteria.setLastExpoOrd(    Integer.valueOf(lastProd.getExpoOrd()) );
-		lpCriteria.setLastExpoOrdSub( Integer.valueOf(lastProd.getExpoOrdSub()) );
+		lpCriteria.setLastExpoOrdSub( Integer.valueOf( lastProd.getExpoOrdSub() ) );
 	}
 
 	private void removeRedundantLastItem(ProductListSacRes response, ProductListSacReq requestedCount) {
@@ -154,23 +149,30 @@ public class ProductListServiceImpl implements ProductListService{
 	}
 
 	private void setStdDt(ProductListSacRes response, String stdDt) {
-		Date date = commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, stdDt);
-		response.setDate(date);
+		Date date = commonGenerator.generateDate( DisplayConstants.DP_DATE_REG, stdDt );
+		response.setDate( date );
 	}
 
-	private String getBatchStdDateStringFromDB( ProductListSacReq requestVO, SacRequestHeader header ) {
-		TenantHeader tenantHeader = header.getTenantHeader();
+	/**
+	 * 배치완료 기준일시를 조회한다.
+	 *
+	 * @param listId 리스트ID
+	 * @return 배치완료 기준일시
+	 */
+	private String getStandardDate( String listId ) {
 
 		// 배치완료 기준일시 조회
-		String stdDt = displayCommonService.getBatchStandardDateString(tenantHeader.getTenantId(), requestVO.getListId());
+		String stdDt = displayCommonService.getBatchStandardDateString( header.getTenantId(), listId );
 
 		// 기준일시 체크
-		if (StringUtils.isEmpty(stdDt))
+		if ( StringUtils.isEmpty(stdDt) )
 			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+
 		return stdDt;
+
 	}
 
-	private void addListProductIntoResponse( SacRequestHeader header, ProductListSacRes response, List<ListProduct> listProds, int limitCount ) {
+	private void addListProductIntoResponse( ProductListSacRes response, List<ListProduct> listProds, int limitCount ) {
 
 		List<Product> productList = response.getProductList();
 
@@ -198,20 +200,27 @@ public class ProductListServiceImpl implements ProductListService{
 		response.setCount( response.getProductList().size() );
 	}
 
-	private Product getProduct( ListProduct productInList ) {
+	/**
+	 * 상품 메타를 구한다.
+	 *
+	 * @param product 상품리스트에서 추출한 상품정보
+	 * @return 상품메타
+	 */
+	@Override
+	public Product getProduct( ListProduct product ) {
 
-        if ( productInList == null ) return null;
+        if ( product == null ) return null;
 
-		Product product = metaInfoService.getProductMeta( productInList.getProdId() );
+		Product productMeta = metaInfoService.getProductMeta( product.getProdId() );
 
-		if( product == null ) return null;
+		if( productMeta == null ) return null;
 
-		product.setRecommendedReason( productInList.getRecomReason() );
-		product.setEtcProp( productInList.getEtcProp() );
-		product.setExpoOrd( productInList.getExpoOrd() );
-		product.setExpoOrdSub( productInList.getExpoOrdSub() );
+		productMeta.setRecommendedReason( product.getRecomReason() );
+		productMeta.setEtcProp( product.getEtcProp() );
+		productMeta.setExpoOrd( product.getExpoOrd() );
+		productMeta.setExpoOrdSub( product.getExpoOrdSub() );
 
-		return product;
+		return productMeta;
 
 	}
 

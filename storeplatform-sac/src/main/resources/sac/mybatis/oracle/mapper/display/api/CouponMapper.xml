@@ -622,45 +622,6 @@
         )
         WHERE PROD_ID = #{prodId}
     </update>    
-    
-    <!-- 전시단 판매중인 채널의 갯수 변경 -->
-    <update id="updateDPCouponCNT" parameterType="HashMap">
-        /* CouponMapper.xml, updateDPCouponCNT, 전시단 판매중인 채널의 갯수 변경, 김형식/SK플래닛  , 2014-01-08 */
-        UPDATE 
-            TB_DP_SHPG_CATALOG
-        SET CHNL_CNT =  (
-                  SELECT 
-                        COUNT(B.PROD_ID)
-                  FROM  TB_DP_PROD_CATALOG_MAPG A
-                       ,TB_DP_TENANT_PROD B
-                  WHERE A.PROD_ID = B.PROD_ID
-                    AND A.BASE_YN ='Y'
-                    AND A.USE_YN ='Y'
-                    AND B.EXPO_YN ='Y' 
-                    AND B.PROD_STATUS_CD = 'PD000403' 
-                    AND B.TENANT_ID =#{tenentId}     
-                    AND A.CATALOG_ID = (
-                         SELECT 
-                             CATALOG_ID 
-                         FROM TB_DP_PROD_CATALOG_MAPG
-                         WHERE PROD_ID =#{prodId}
-                           AND BASE_YN ='Y'
-                           AND USE_YN ='Y'      
-                           AND ROWNUM =1                     
-                   )                 
-        )
-        WHERE CATALOG_ID =
-        (
-          SELECT 
-                 CATALOG_ID 
-            FROM TB_DP_PROD_CATALOG_MAPG
-           WHERE PROD_ID =#{prodId}
-             AND BASE_YN ='Y'
-             AND USE_YN ='Y'
-             AND ROWNUM =1    
-        )
-        
-    </update>
 
     <!-- TB_DP_TENANT_PROD 테이블에 CATALOG_ID 저장 및 수정 -->
     <update id="updateCatalogTenantStatus" parameterType="HashMap">
@@ -853,32 +814,8 @@
         FROM   TB_DP_SPRC_PROD A
               ,TB_DP_SHPG_PROD B
         WHERE A.PROD_ID = B.PROD_ID
-          AND B.SRC_CONTENT_ID =
-                                 CASE WHEN PROD_CASE_CD = 'DP006303'
-                                  THEN
-                                        (  SELECT 
-                                                SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD SP
-                                                 ,TB_DP_SPRC_PROD SP1
-                                            WHERE 1=1
-                                              AND SP.PROD_ID = SP1.PROD_ID
-                                              AND SP.PROD_ID IN (
-                                                    SELECT 
-                                                           B.PART_PROD_ID 
-                                                      FROM TB_DP_SHPG_PROD A 
-                                                          ,TB_DP_PROD_RSHP B
-                                                     WHERE A.PROD_ID = B.PROD_ID 
-                                                      AND A.SRC_CONTENT_ID =#{itemCode}
-                                                   ) 
-                                               AND SP1.EXPO_YN = 'Y'
-                                               AND SP1.TENANT_ID =  #{tenantId}
-                                               AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT      
-                                               AND SP1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가                                           
-                                               AND ROWNUM =1     
-                                          )                                   
-                                  ELSE #{itemCode}
-                                  END
-          AND A.EXPO_YN = 'Y' 
+          AND B.SRC_CONTENT_ID = #{itemCode}
+          AND A.EXPO_YN = 'Y'
           AND A.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
           AND A.TENANT_ID = #{tenantId}
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
@@ -892,32 +829,8 @@
         FROM   TB_DP_SPRC_PROD A
               ,TB_DP_SHPG_PROD B
         WHERE A.PROD_ID = B.PROD_ID
-          AND B.SRC_CONTENT_ID =  
-                                 CASE WHEN PROD_CASE_CD = 'DP006303'
-                                  THEN
-                                        (  SELECT 
-                                                SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD SP
-                                                 ,TB_DP_SPRC_PROD SP1
-                                            WHERE 1=1
-                                              AND SP.PROD_ID = SP1.PROD_ID
-                                              AND SP.PROD_ID IN (
-                                                    SELECT 
-                                                           B.PART_PROD_ID 
-                                                      FROM TB_DP_SHPG_PROD A 
-                                                          ,TB_DP_PROD_RSHP B
-                                                     WHERE A.PROD_ID = B.PROD_ID 
-                                                      AND A.SRC_CONTENT_ID =#{itemCode}
-                                                   ) 
-                                               AND SP1.EXPO_YN = 'Y'
-                                               AND SP1.TENANT_ID =  #{tenantId}
-                                               AND SYSDATE BETWEEN SP1.SPRC_APPLY_START_DT AND SP1.SPRC_APPLY_END_DT
-                                               AND SP1.SPRC_TYPE_CD IN ('DP007503','DP007504')                                                   
-                                               AND ROWNUM =1     
-                                          )                                   
-                                  ELSE #{itemCode}
-                                  END
-          AND A.EXPO_YN = 'Y' 
+          AND B.SRC_CONTENT_ID = #{itemCode}
+          AND A.EXPO_YN = 'Y'
           AND A.SPRC_TYPE_CD IN ('DP007503','DP007504') --DP007503 : 팅요금제 일반 특가 , DP007504 팅요금제 배송 특가
           AND A.TENANT_ID = #{tenantId}
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT

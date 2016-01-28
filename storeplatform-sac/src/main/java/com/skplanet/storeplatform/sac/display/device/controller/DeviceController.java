@@ -57,32 +57,16 @@ public class DeviceController {
 	}
 
 	/**
-	 * <pre>
-	 * 특정 단말 조회.
-	 * </pre>
-	 * 
-	 * @param req
-	 *            req
-	 * @param header
-	 *            header
-	 * @return DeviceProfileRes
+	 * 특정 단말 정보 조회.
 	 */
 	@RequestMapping(value = "/specific/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DeviceProfileRes searchSpecificDetail(@Validated DeviceProfileReq req, SacRequestHeader header) {
-		return this.deviceProfileService.searchDeviceProfile(req, header);
+		return this.deviceProfileService.getDeviceProfile(req.getDeviceModelNo(), header.getTenantHeader().getLangCd());
 	}
 
 	/**
-	 * <pre>
 	 * 상품 ID에 대한 단말 Provisioning.
-	 * </pre>
-	 * 
-	 * @param req
-	 *            req
-	 * @param header
-	 *            header
-	 * @return DeviceProductProvisioningRes
 	 */
 	@RequestMapping(value = "/product/provisioning/get/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -97,15 +81,7 @@ public class DeviceController {
 	}
 
 	/**
-	 * <pre>
 	 * 이용 가능 단말 조회.
-	 * </pre>
-	 * 
-	 * @param req
-	 *            req
-	 * @param header
-	 *            header
-	 * @return DeviceProductProvisioningRes
 	 */
 	@RequestMapping(value = "/useableDevice/list/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -115,11 +91,7 @@ public class DeviceController {
 	}
 
 	/**
-	 * <pre>
 	 * 단말 모델 정보 조회 (운영자 관리)
-	 * </pre>
-	 * 
-	 * @return DeviceChangeSacRes
 	 */
 	@RequestMapping(value = "/changeModel/list/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -128,13 +100,7 @@ public class DeviceController {
 	}
 
 	/**
-	 * <pre>
 	 * 단말 모델 정보 조회 (by UserAgent).
-	 * </pre>
-	 * 
-	 * @param deviceReq
-	 *            deviceReq
-	 * @return DeviceUserAgentSacRes
 	 */
 	@RequestMapping(value = "/userAgent/list/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -143,15 +109,7 @@ public class DeviceController {
 	}
 	
 	/**
-	 * <pre>
 	 * 단말 리스트 정보 조회.
-	 * </pre>
-	 * 
-	 * @param req
-	 *            req
-	 * @param header
-	 *            header
-	 * @return DeviceModelListSacRes
 	 */
 	@RequestMapping(value = "/deviceModel/list/v1", method = RequestMethod.GET)
 	@ResponseBody

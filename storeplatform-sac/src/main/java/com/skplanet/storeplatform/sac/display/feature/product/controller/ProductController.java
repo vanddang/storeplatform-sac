@@ -8,8 +8,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.product.ProductL
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
 import com.skplanet.storeplatform.sac.display.feature.product.service.ProductListService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Updated by : 정화수
  */
 @Controller
-@RequestMapping("/display/feature/product")
+@RequestMapping( "/display/feature/product" )
 public class ProductController {
-
-	private transient Logger logger = LoggerFactory.getLogger( ProductController.class );
 
 	@Autowired
 	private ProductListService productListService;
@@ -43,10 +39,8 @@ public class ProductController {
 	 */
 	@RequestMapping( value = "/list/v1", method = RequestMethod.GET )
 	@ResponseBody
-	public ProductListSacRes searchProductList( ProductListSacReq request, SacRequestHeader header) {
-		ProductListSacRes responseVO;
-		responseVO = this.productListService.searchProductList(request, header);
-		return responseVO;
+	public ProductListSacRes searchProductList( ProductListSacReq request, SacRequestHeader header ) {
+		return productListService.searchProductList( request );
 	}
 
 	/**

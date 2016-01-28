@@ -11,8 +11,7 @@
 package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.cache.vo.CardInfo;
-import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfile;
+import com.skplanet.storeplatform.sac.display.cache.vo.DeviceProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
@@ -35,11 +34,11 @@ public class DeviceProfileManagerImpl implements DeviceProfileManager {
     private CommonDAO commonDAO;
 
     @Override
-    @Cacheable(value = "sac:display:device:profile:v1", key = "#deviceModelCd + '_' + #langCd", unless = "#result == null")
+    @Cacheable(value = "sac:display:device:profile:v2", key = "#deviceModelCd + '_' + #langCd", unless = "#result == null")
     public DeviceProfile getDeviceProfile(String deviceModelCd, String langCd) {
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("deviceModelCd", deviceModelCd);
         req.put("langCd", langCd);
-        return commonDAO.queryForObject("DeviceProfile.selectDeviceProfile", req, DeviceProfile.class);
+        return commonDAO.queryForObject("DeviceProfile.getDeviceProfile", req, DeviceProfile.class);
     }
 }

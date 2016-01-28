@@ -9,18 +9,23 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * <p>
  * SupportDevice
  * </p>
  * Updated on : 2015. 11. 05 Updated by : 정희원, SK 플래닛.
  */
-public class SupportDevice {
+public class SupportDevice extends CommonInfo {
+
+    private static final long serialVersionUID = 1L;
 
     private String scId;
     private String osVer;
     private String ver;
     private Integer verCd;
+    private String pkgNm;
 
     public String getScId() {
         return scId;
@@ -52,5 +57,13 @@ public class SupportDevice {
 
     public void setVerCd(Integer verCd) {
         this.verCd = verCd;
+    }
+
+    public String getPkgNm() {
+        return pkgNm;
+    }
+
+    public void setPkgNm(String pkgNm) {
+        this.pkgNm = pkgNm;
     }
 }

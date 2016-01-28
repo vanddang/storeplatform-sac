@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
 import org.msgpack.MessagePack;
@@ -46,12 +47,13 @@ public class PromotionEventConverter {
         event.setRateGrd2(rawEvent.getRateGrd2());
         event.setRateGrd3(rawEvent.getRateGrd3());
         event.setAcmlMethodCd(rawEvent.getAcmlMethodCd());
-        event.setAcmlDt(rawEvent.getAcmlDt());
+        event.setAcmlDt(DateUtils.format(rawEvent.getAcmlDate()));
         event.setStartDt(rawEvent.getStartDt());
         event.setEndDt(rawEvent.getEndDt());
         event.setTargetId(rawEvent.getPromTypeValue());
         event.setPrvAcmlLimt(rawEvent.getAcmlLimt());
         event.setUserTargetTp(rawEvent.getTargetUserKind());
+        event.setUpdDt(rawEvent.getUpdDt());
 
         return event;
     }

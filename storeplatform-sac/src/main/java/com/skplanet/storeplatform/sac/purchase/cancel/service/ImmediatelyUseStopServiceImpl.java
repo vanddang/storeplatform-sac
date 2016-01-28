@@ -11,7 +11,9 @@ package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,27 +63,51 @@ public class ImmediatelyUseStopServiceImpl implements ImmediatelyUseStopService 
 		scRequest.setReqPathCd(request.getReqPathCd());
 		scRequest.setDrawbackAmt(request.getDrawbackAmt());
 		scRequest.setUserKey(request.getUserKey());
+        scRequest.setReasonCd(request.getReasonCd());
+        scRequest.setReasonMsg(request.getReasonMsg());
 
 		// 정액권 상품정보 조회
-		List<PrchsDtl> prchsDtl = this.immediatelyUseStopSci.searchPrchsDtl(scRequest);
+		List<PrchsDtl> prchsDtlList = this.immediatelyUseStopSci.searchPrchsDtl(scRequest);
 
 		// 구매정보가 없는 경우 Exception
-		if (prchsDtl == null || prchsDtl.size() < 1) {
+		if (CollectionUtils.isEmpty(prchsDtlList)) {
 			throw new StorePlatformException("SAC_PUR_8100"); // 구매정보 없음
 		}
 
-		for (PrchsDtl dtl : prchsDtl) {
-
-			// 권한상품이 아닌경우 상태가 아닌 경우 Exception
-			if (!PurchaseCDConstants.PRCHS_PROD_TYPE_AUTH.equals(dtl.getPrchsProdType())) {
-				throw new StorePlatformException("SAC_PUR_8130"); // 정액권상품 아님
-			}
-
-			// 구매완료 상태가 아닌 경우 Exception
-			if (!PurchaseCDConstants.PRCHS_STATUS_COMPT.equals(dtl.getStatusCd())) {
-				throw new StorePlatformException("SAC_PUR_8101"); // 구매완료상태 아님
-			}
+        /*
+         * VOD, 이북코믹의 정액권패스는 지원
+         * 시리즈패스(전권 포함)는 지원하지 않음..
+         *
+         * 기존 전권상품의 경우 하기 권한상품 체크에서 오류 발생..
+         * VOD 시리즈 패스는 적용 가능..???
+         */
+        PrchsDtl fixrateProdPrchsDtl = null;
+		for (PrchsDtl prchsDtl : prchsDtlList) {
+            // 권한상품이 아닌경우 상태가 아닌 경우 Exception
+            if(PurchaseCDConstants.PRCHS_PROD_TYPE_AUTH.equals(prchsDtl.getPrchsProdType())){
+                fixrateProdPrchsDtl = prchsDtl;
+                break;
+            }
 		}
+
+        if (fixrateProdPrchsDtl == null) {
+            throw new StorePlatformException("SAC_PUR_8130"); // 정액권상품 아님
+        }
+
+        // 구매완료 상태가 아닌 경우 Exception
+        if (!StringUtils.equals(fixrateProdPrchsDtl.getStatusCd(), PurchaseCDConstants.PRCHS_STATUS_COMPT)) {
+            throw new StorePlatformException("SAC_PUR_8101"); // 구매완료상태 아님
+        }
+
+        // 환불 금액이 결제금액보다 큰 경우..
+        if (Double.parseDouble(scRequest.getDrawbackAmt()) > fixrateProdPrchsDtl.getTotAmt() ) {
+            throw new StorePlatformException("SAC_PUR_8133", scRequest.getDrawbackAmt(), fixrateProdPrchsDtl.getTotAmt()); // 환불 금액 오류
+        }
+
+        // 이용내역 조회를 위해 이용 내역 발생 가능 구간 설정
+        scRequest.setDwldStartDt(fixrateProdPrchsDtl.getDwldStartDt());
+        scRequest.setDwldExprDt(fixrateProdPrchsDtl.getDwldExprDt());
+        scRequest.setUserKey(fixrateProdPrchsDtl.getUseInsdUsermbrNo());
 
 		// 즉시이용정지 UPDATE
 		ImmediatelyUseStopScRes scResponse = this.immediatelyUseStopSci.updateUseStop(scRequest);

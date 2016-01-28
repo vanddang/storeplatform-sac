@@ -10,9 +10,11 @@
 package com.skplanet.storeplatform.purchase.cancel.service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.purchase.cancel.vo.PurchaseRefundReason;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.ImmediatelyUseStopScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.ImmediatelyUseStopScRes;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.purchase.common.service.PurchaseExtraInfoService;
 import com.skplanet.storeplatform.purchase.constant.PurchaseCDConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ import java.util.List;
  * 즉시이용정지 Implements
  * 
  * Updated on : 2014-01-10 Updated by : 양주원, 엔텔스.
+ * Updated on : 2016-01-16 Updated by : eastaim, SK planet
  */
 @Service
 public class ImmediatelyUseStopScServiceImpl implements ImmediatelyUseStopScService {
@@ -35,6 +38,9 @@ public class ImmediatelyUseStopScServiceImpl implements ImmediatelyUseStopScServ
 	@Autowired
 	@Qualifier("scPurchase")
 	private CommonDAO commonDAO;
+
+    @Autowired
+    private PurchaseExtraInfoService purchaseExtraInfoService;
 
 	/**
 	 * 구매이력을 조회한다.
@@ -62,19 +68,39 @@ public class ImmediatelyUseStopScServiceImpl implements ImmediatelyUseStopScServ
 
 		request.setPrchsStatusCd(PurchaseCDConstants.PRCHS_STATUS_DRBK); // 구매상태(환불:OR000305)
 		request.setPaymentMtdCd(PurchaseCDConstants.PAYMENT_METHOD_FIXRATE_REFUND); // 결제수단코드(정액권 환불:OR000692)
-		request.setStatusCd(PurchaseCDConstants.PRCHS_STATUS_COMPT); // 구매상태(완료:OR000305)
+		request.setStatusCd(PurchaseCDConstants.PRCHS_STATUS_COMPT); // 구매상태(완료:OR000301)
 
-		this.commonDAO.update("UseStop.updatePrchsUseFix", request); // 구매 - 정액권으로 이용한 상품 update
-		this.commonDAO.update("UseStop.updatePrchsDtlUseFix", request); // 구매상세 - 정액권으로 이용한 상품 update
+		this.commonDAO.update("UseStop.updatePrchsUseContent", request); // 구매 - 정액권으로 이용한 상품 update
+		this.commonDAO.update("UseStop.updatePrchsDtlUseContent", request); // 구매상세 - 정액권으로 이용한 상품 update
 
 		this.commonDAO.update("UseStop.updatePrchs", request); // 구매Update
 		this.commonDAO.update("UseStop.updatePrchsDtl", request);// 구매상세Update
 		this.commonDAO.update("UseStop.updateAutoPrchs", request);// 자동구매Update
 		this.commonDAO.insert("UseStop.insertPayment", request);// 결제Insert
 
+        insertRefundReason(request);
+
 		ImmediatelyUseStopScRes response = new ImmediatelyUseStopScRes();
 		response.setPrchsId(request.getPrchsId());
 
 		return response;
 	}
+
+    /**
+     * 환불 사유 저장
+     * @param request
+     */
+    private void insertRefundReason(ImmediatelyUseStopScReq request){
+        // 환불 사유 저장
+        PurchaseRefundReason purchaseRefundReason = new PurchaseRefundReason();
+        purchaseRefundReason.setTenantId(request.getTenantId());
+        purchaseRefundReason.setPrchsId(request.getPrchsId());
+        purchaseRefundReason.setInfoTypeCd(PurchaseCDConstants.EXTRA_INFO_TYPE_REFUND_REASON);
+        purchaseRefundReason.setInfoSeq(1);
+        purchaseRefundReason.setRegId(request.getAdminId());
+        purchaseRefundReason.setReasonCd(request.getReasonCd());
+        purchaseRefundReason.setReasonMsg(request.getReasonMsg());
+
+        purchaseExtraInfoService.createExtraInfo(purchaseRefundReason);
+    }
 }

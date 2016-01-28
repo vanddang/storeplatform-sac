@@ -9,9 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.device.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 특정 단말 정보 조회(CoreStoreBusiness).
@@ -20,16 +18,5 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  */
 public interface DeviceProfileService {
 
-	/**
-	 * <pre>
-	 * 특정 상품 조회 API.
-	 * </pre>
-	 * 
-	 * @param requestVO
-	 *            requestVO
-	 * @param header
-	 *            header
-	 * @return DeviceProfileRes
-	 */
-	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq requestVO, SacRequestHeader header);
+	DeviceProfileRes getDeviceProfile(String deviceModelCd, String langCd);
 }
