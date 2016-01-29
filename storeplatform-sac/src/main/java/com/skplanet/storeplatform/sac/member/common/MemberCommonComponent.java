@@ -1297,6 +1297,7 @@ public class MemberCommonComponent {
 
 			if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
 				deviceTelecomInfo.setSvcMangNum(marketRes.getDeviceInfo().getDeviceKey());
+				deviceTelecomInfo.setUserBirth(getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl()));
 			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) {
 				throw new StorePlatformException("SAC_MEM_0003", "mdn", mdn);
 			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_IMEI_MISMATCH)) {
