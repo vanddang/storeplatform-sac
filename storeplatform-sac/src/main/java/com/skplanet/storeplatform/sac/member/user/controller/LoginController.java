@@ -160,13 +160,6 @@ public class LoginController {
             throw new StorePlatformException("SAC_MEM_1509");
 		}
 
-		// MVNO 통신사 요청시 에러
-		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKM, req.getDeviceTelecom())
-				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_KTM, req.getDeviceTelecom())
-				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())){
-			throw new StorePlatformException("SAC_MEM_1515");
-		}
-
 		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
 				&& StringUtils.isNotBlank(req.getMdn())){
 			throw new StorePlatformException("SAC_MEM_1514");

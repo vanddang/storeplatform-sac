@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.vo.*;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceTelecomInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
@@ -621,8 +622,26 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new StorePlatformException("SAC_MEM_1204");
 		}
 
+		// 모번호 조회
+		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+				&& StringUtils.isNotBlank(req.getMdn())){
+			req.setMdn(this.mcc.getOpmdMdnInfo(req.getMdn()));
+		}
+
+		/* 서비스관리번호 조회 */
+		DeviceTelecomInfo deviceTelecomInfo = null;
+		if(StringUtils.isNotBlank(req.getMdn())
+				&& (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())
+		)){
+			deviceTelecomInfo = this.mcc.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
+		}
+
 		// csp imei 비교
-		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT) && StringUtils.isNotBlank(req.getMdn())){
+		if( (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM) )
+				&& StringUtils.isNotBlank(req.getMdn())){
 			if(StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)){
 				if(!StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getMdn()))){
 					throw new StorePlatformException("SAC_MEM_1503");
@@ -648,17 +667,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 		// 약관 유효성 체크
 		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
 
-		// 모번호 조회
-		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-				&& StringUtils.isNotBlank(req.getMdn())){
-			req.setMdn(this.mcc.getOpmdMdnInfo(req.getMdn()));
-		}
-
 		// SC 사용자 기본정보 setting
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserID(req.getUserId());
 		userMbr.setUserType(req.getUserType());
-		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
@@ -666,6 +678,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
 		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
+		if(StringUtils.isNotBlank(req.getOwnBirth())){
+			userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
+		}else{
+			if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
+					|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())){
+				userMbr.setUserBirthDay(deviceTelecomInfo.getUserBirth()); // 타사 연동한 생년월일
+			}
+		}
 
 		// 법정 대리인 정보 setting
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
@@ -716,6 +736,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		deviceInfo.setSimSerialNo(req.getSimSerialNo());
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+		deviceInfo.setSvcMangNum(deviceTelecomInfo.getSvcMangNum());
 		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 		String deviceKey = null;
 		try{
@@ -747,7 +768,19 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
 			req.setMdn(this.mcc.getOpmdMdnInfo(req.getMdn())); // 모번호 조회
+		}
 
+		/* 서비스관리번호 조회 */
+		DeviceTelecomInfo deviceTelecomInfo = null;
+		if(StringUtils.isNotBlank(req.getMdn())
+				&& (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())
+		)){
+			deviceTelecomInfo = this.mcc.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
+		}
+
+		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
 			// csp imei 비교
 			if(StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)){
 				if(!StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getMdn()))){
@@ -806,7 +839,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * SC 사용자 기본정보 setting
 		 */
 		UserMbr userMbr = new UserMbr();
-		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
@@ -815,6 +847,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
+		if(StringUtils.isNotBlank(req.getOwnBirth())){
+			userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
+		}else{
+			if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
+					|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())){
+				userMbr.setUserBirthDay(deviceTelecomInfo.getUserBirth()); // 타사 연동한 생년월일
+			}
+		}
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setUserMbr(userMbr);
 		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
@@ -840,6 +880,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		deviceInfo.setNativeId(req.getNativeId());
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+		deviceInfo.setSvcMangNum(deviceTelecomInfo.getSvcMangNum());
 		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 		String deviceKey = null;
 		try{
