@@ -17,11 +17,6 @@ public class DeviceTelecomInfo extends CommonInfo {
 	private String svcMangNum;
 
 	/**
-	 * KT/LGT 회원의 생년월일
-	 */
-	private String userBirth;
-
-	/**
 	 * @return String : svcMangNum
 	 */
 	public String getSvcMangNum() {
@@ -36,18 +31,4 @@ public class DeviceTelecomInfo extends CommonInfo {
 		this.svcMangNum = svcMangNum;
 	}
 
-	/**
-	 * @return String : userBirth
-	 */
-	public String getUserBirth() {
-		return userBirth;
-	}
-
-	/**
-	 * @param userBirth
-	 *            String : the userBirth to set
-	 */
-	public void setUserBirth(String userBirth) {
-		this.userBirth = userBirth;
-	}
 }

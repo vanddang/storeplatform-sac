@@ -636,7 +636,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		searchExtentUserRequest.setKeySearchList(keySearchList);
 		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
 		try{
-			SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+			this.userSCI.searchExtentUser(searchExtentUserRequest);
 			throw new StorePlatformException("SAC_MEM_1104");
 		} catch (StorePlatformException ex) {
 			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
@@ -672,12 +672,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())
 		)){
 			deviceTelecomInfo = this.mcc.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
+			if(deviceTelecomInfo == null){ // 타사 연동시 EC_SYS_ERROR 이나 타사 시스템오류 발생시
+				throw new StorePlatformException("SAC_MEM_1106", this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
+			}
 		}
 
 		// csp imei 비교
-		if( (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM) )
-				&& StringUtils.isNotBlank(req.getMdn())){
+		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)){
 			if(StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)){
 				if(!StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getMdn()))){
 					throw new StorePlatformException("SAC_MEM_1503");
@@ -714,14 +716,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
 		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
-		if(StringUtils.isNotBlank(req.getOwnBirth())){
-			userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
-		}else{
-			if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
-					|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())){
-				userMbr.setUserBirthDay(deviceTelecomInfo.getUserBirth()); // 타사 연동한 생년월일
-			}
-		}
+		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
 
 		// 법정 대리인 정보 setting
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
@@ -772,8 +767,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 		deviceInfo.setSimSerialNo(req.getSimSerialNo());
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
-		deviceInfo.setSvcMangNum(deviceTelecomInfo.getSvcMangNum());
 		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
+		if(deviceTelecomInfo != null && StringUtils.isNotBlank(deviceTelecomInfo.getSvcMangNum())){
+			deviceInfo.setSvcMangNum(deviceTelecomInfo.getSvcMangNum());
+		}
 		String deviceKey = null;
 		try{
 			deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
@@ -808,12 +805,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		/* 서비스관리번호 조회 */
 		DeviceTelecomInfo deviceTelecomInfo = null;
-		if(StringUtils.isNotBlank(req.getMdn())
-				&& (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
+		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
 				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
 				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())
-		)){
+		){
 			deviceTelecomInfo = this.mcc.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
+			if(deviceTelecomInfo == null){ // 타사 연동시 EC_SYS_ERROR 이나 타사 시스템오류 발생시
+				throw new StorePlatformException("SAC_MEM_1106", this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
+			}
 		}
 
 		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
@@ -883,14 +882,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
-		if(StringUtils.isNotBlank(req.getOwnBirth())){
-			userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
-		}else{
-			if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
-					|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())){
-				userMbr.setUserBirthDay(deviceTelecomInfo.getUserBirth()); // 타사 연동한 생년월일
-			}
-		}
+		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
+
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setUserMbr(userMbr);
 		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
@@ -916,7 +909,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		deviceInfo.setNativeId(req.getNativeId());
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
-		deviceInfo.setSvcMangNum(deviceTelecomInfo.getSvcMangNum());
+		if(deviceTelecomInfo != null && StringUtils.isNotBlank(deviceTelecomInfo.getSvcMangNum())){
+			deviceInfo.setSvcMangNum(deviceTelecomInfo.getSvcMangNum());
+		}
 		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
 		String deviceKey = null;
 		try{
