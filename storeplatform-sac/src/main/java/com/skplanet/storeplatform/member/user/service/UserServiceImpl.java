@@ -663,7 +663,6 @@ public class UserServiceImpl implements UserService {
 
 		usermbr = new UserMbr();
 		usermbr.setUserKey(removeUserRequest.getUserKey());
-		usermbr.setSecedeReasonCode(removeUserRequest.getSecedeReasonCode());
 		usermbr.setSecedeReasonMessage(removeUserRequest.getSecedeReasonMessage());
 		usermbr.setUserMainStatus(MainStateCode.SECEDE.getCode()); // 탈퇴 MAIN CODE, US010202
 		usermbr.setUserSubStatus(SubStateCode.WITHDRAW.getCode()); // 탈퇴완료 SUB CODE, US010303

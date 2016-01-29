@@ -848,7 +848,6 @@ public class UserSearchServiceImpl implements UserSearchService {
         userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
         userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
         userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
-        userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
         userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
@@ -1574,7 +1573,6 @@ public class UserSearchServiceImpl implements UserSearchService {
         userInfo.setUserUpdEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserUpdEmail()));
         userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
         userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
-        userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
         userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
         userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
         userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));

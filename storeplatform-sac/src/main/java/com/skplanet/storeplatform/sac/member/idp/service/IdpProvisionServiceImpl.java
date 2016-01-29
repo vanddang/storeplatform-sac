@@ -772,7 +772,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					RemoveUserRequest scReq = new RemoveUserRequest();
 					scReq.setCommonRequest(commonRequest);
 					scReq.setUserKey(userKey);
-					scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
 					scReq.setSecedeReasonMessage("");
 					scReq.setIsDormant(isDormant);
 					this.userSCI.remove(scReq);
@@ -945,7 +944,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			removeUserReq.setCommonRequest(commonRequest);
 			removeUserReq.setUserKey(userKey);
 			removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_JOIN_AGREE_EXPIRED); // 가입승인만료
-			removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER); // 기타
 			removeUserReq.setSecedeReasonMessage("가입승인만료");
 			removeUserReq.setIsDormant(isDormant);
 			this.userSCI.remove(removeUserReq);

@@ -1,9 +1,9 @@
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 사용자 전체 기본정보 Value Object
@@ -26,7 +26,6 @@ public class UserMbrInfo extends CommonInfo implements Serializable {
 	private int deviceRegCnt;
 	private String entryDay;
 	private String bolterDay;
-	private String bolterReasonCd;
 	private String bolterReasonDesc;
 	private Date updDt;
 	private String mbrId;
@@ -219,21 +218,6 @@ public class UserMbrInfo extends CommonInfo implements Serializable {
 	 */
 	public void setBolterDay(String bolterDay) {
 		this.bolterDay = bolterDay;
-	}
-
-	/**
-	 * @return the bolterReasonCd
-	 */
-	public String getBolterReasonCd() {
-		return this.bolterReasonCd;
-	}
-
-	/**
-	 * @param bolterReasonCd
-	 *            the bolterReasonCd to set
-	 */
-	public void setBolterReasonCd(String bolterReasonCd) {
-		this.bolterReasonCd = bolterReasonCd;
 	}
 
 	/**

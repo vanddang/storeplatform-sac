@@ -1,23 +1,5 @@
 package com.skplanet.storeplatform.sac.member.idp.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -67,6 +49,22 @@ import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.idp.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * IDP에서 전달되는 Provisioning 및 Rx 처리를 위한 인터페이스
@@ -1648,7 +1646,6 @@ public class IdpServiceImpl implements IdpService {
 				RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 				removeUserRequest.setCommonRequest(commonRequest);
 				removeUserRequest.setUserKey(searchUserResponse.getUserKey());
-				removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
 				removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
 				removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
 				removeUserRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
@@ -2033,7 +2030,6 @@ public class IdpServiceImpl implements IdpService {
 					RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 					removeUserRequest.setCommonRequest(commonRequest);
 					removeUserRequest.setUserKey(searchUserResponse.getUserKey());
-					removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
 					removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
 					removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
 					removeUserRequest.setIsDormant(searchUserResponse.getUserMbr().getIsDormant());
