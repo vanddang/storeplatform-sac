@@ -789,15 +789,5 @@ public interface UserService {
 	 */
 	public ModifyIdResponse modifyId(ModifyIdRequest modifyIdRequest);
 
-	/**
-	 * <pre>
-	 * market pin 정보를 이관하는 기능을 제공한다..
-	 * </pre>
-	 *
-	 * @param transferMarketPinRequest
-	 *            TransferMarketPinRequest
-	 * @return TransferMarketPinResponse
-	 */
-	public TransferMarketPinResponse excuteTransferMarketPin(TransferMarketPinRequest transferMarketPinRequest);
 
 }

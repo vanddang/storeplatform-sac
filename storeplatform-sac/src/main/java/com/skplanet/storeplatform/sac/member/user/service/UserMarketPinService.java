@@ -41,4 +41,14 @@ public interface UserMarketPinService {
 	 */
 	CheckUserMarketPinRes checkMarketPin(CheckUserMarketPinReq checkMarketPinReq);
 
+
+	/**
+	 * market pin 정보 이관
+	 * - prevInsdUsermbrNo (모바일 회원) => newInsdUsermbrNo (아이디회원) 전환 시 이관
+	 * - 모바일 회원 Market Pin 기준으로 변경
+	 * @param prevInsdUsermbrNo
+	 * @param newInsdUsermbrNo
+	 * @return boolean 정상 이관 시 true / 이관 대상이 없거나 이관 실패 시 false
+	 */
+	boolean transferMarketPin(String prevInsdUsermbrNo, String newInsdUsermbrNo);
 }
