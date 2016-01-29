@@ -1747,7 +1747,7 @@
     </select>
 
     <select id="searchUserSegmentD" parameterType="searchUserSegmentRequest" resultType="searchUserSegmentResponse">
-        SELECT /* UserMapper.searchUserSegmentD, 회원 segment 정보, burkhan_rejoice, 2014-10-02 */
+        SELECT /* UserMapper.xml, searchUserSegmentD, SAC(SC), 윤보영, 2016-01-27 */
               a.insd_usermbr_no AS userKey,
                NVL (
                   (SELECT CASE MBR_LVL_CD
@@ -1760,19 +1760,6 @@
                     WHERE mbr_no = #{userKey}
                           AND BASE_YM = TO_CHAR (ADD_MONTHS (SYSDATE, -1), 'YYYYMM')),
                   'gold') AS userGradeCd,
-            <if test="isDormant.equalsIgnoreCase('N')">                  
-               CASE WHEN EXISTS (SELECT 1
-                                 FROM tb_us_ousermbr_device_his
-                                 WHERE INSD_USERMBR_NO = #{userKey}
-                                   AND INSD_DEVICE_ID = #{deviceKey}
-                                   AND CHG_CASE_CD = 'US012002'
-                                   AND UPD_DT > (SYSDATE - 7)
-                                )
-                    THEN 'Y'
-                    ELSE 'N'
-               END
-                  AS isChanged,
-            </if>
                   A.ENTRY_DAY AS entryDay
           FROM tb_us_ousermbr a, tb_us_ousermbr_device b
          WHERE     a.insd_usermbr_no = b.insd_usermbr_no

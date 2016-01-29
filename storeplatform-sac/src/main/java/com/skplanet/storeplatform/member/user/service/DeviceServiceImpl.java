@@ -120,11 +120,10 @@ public class DeviceServiceImpl implements DeviceService {
 		for (KeySearch keySearch : keySearchList) {
 			if (keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_KEY)
 					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)
-					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)) {
+					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)
+                    || keySearch.getKeyType().equals(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
 				isDeviceRequest = true;
-			}else if(keySearch.getKeyType().equals(Constant.SEARCH_TYPE_SVC_MANG_NO)){
-                isSvcMangDevice = true;
-            }
+			}
 		}
 
         if(!isSvcMangDevice){
@@ -159,18 +158,6 @@ public class DeviceServiceImpl implements DeviceService {
 		if (isDeviceRequest) {
 			searchDeviceListResponse = dao.queryForObject("Device.searchDeviceList2D", searchDeviceListRequest,
 					SearchDeviceListResponse.class);
-        /** SVC_NO 정보로 조회 */
-		} else if(isSvcMangDevice){
-            searchDeviceListRequest.setIsUsed(StringUtils.isNotEmpty(searchDeviceListRequest.getIsUsed()) ? searchDeviceListRequest.getIsUsed() : MemberConstants.USE_Y);
-            List<UserMbrDevice> userMbrDeviceList = this.commonDAO.queryForList("Device.searchDeviceList3", searchDeviceListRequest, UserMbrDevice.class);
-
-            if(userMbrDeviceList != null && userMbrDeviceList.size() > 0){
-                searchDeviceListResponse = new SearchDeviceListResponse();
-                searchDeviceListResponse.setUserMbrDevice(userMbrDeviceList);
-            }else{
-                throw new StorePlatformException(this.getMessage("response.ResultCode.resultNotFound", ""));
-            }
-
 
         /** INSD_USERMBR_NO, MBR_ID로 조회 */
         } else {
