@@ -272,6 +272,11 @@ public class UserJoinController {
 			throw new StorePlatformException("SAC_MEM_1514");
 		}
 
+		if(!StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+				&& StringUtils.isBlank(req.getMdn())){
+			throw new StorePlatformException("SAC_MEM_0001", "mdn");
+		}
+
 		if(StringUtils.isNotBlank(req.getMdn())){
 			if(StringUtils.isBlank(req.getNativeId())){
 				throw new StorePlatformException("SAC_MEM_0001", "nativeId");
