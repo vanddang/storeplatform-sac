@@ -1,11 +1,10 @@
 package com.skplanet.storeplatform.sac.client.member.vo.common;
 
-import java.util.List;
-
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import java.util.List;
 
 /**
  * 사용자 정보
@@ -51,11 +50,6 @@ public class UserInfo extends CommonInfo {
 	 * 탈퇴일자.
 	 */
 	private String secedeDate;
-
-	/*
-	 * 탈퇴 사유 코드.
-	 */
-	private String secedeReasonCode;
 
 	/*
 	 * 탈퇴사유 설명
@@ -316,21 +310,6 @@ public class UserInfo extends CommonInfo {
 	 */
 	public void setSecedeDate(String secedeDate) {
 		this.secedeDate = secedeDate;
-	}
-
-	/**
-	 * @return the secedeReasonCode
-	 */
-	public String getSecedeReasonCode() {
-		return this.secedeReasonCode;
-	}
-
-	/**
-	 * @param secedeReasonCode
-	 *            the secedeReasonCode to set
-	 */
-	public void setSecedeReasonCode(String secedeReasonCode) {
-		this.secedeReasonCode = secedeReasonCode;
 	}
 
 	/**

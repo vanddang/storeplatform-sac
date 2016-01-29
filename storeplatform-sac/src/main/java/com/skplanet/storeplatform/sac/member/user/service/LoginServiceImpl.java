@@ -136,7 +136,6 @@ import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.AdditionalServiceService;
 import org.apache.commons.lang.StringUtils;
@@ -1361,7 +1360,6 @@ public class LoginServiceImpl implements LoginService {
 				removeUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 				removeUserReq.setUserKey(userKey);
 				removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
-				removeUserReq.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
 				removeUserReq.setSecedeReasonMessage("변동성인증수단없음");
 				removeUserReq.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
 				this.userSCI.remove(removeUserReq);
@@ -1865,7 +1863,6 @@ public class LoginServiceImpl implements LoginService {
             removeUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
             removeUserRequest.setUserKey(preUserKey);
             removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
-            removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
             removeUserRequest.setSecedeReasonMessage("Save&Sync인증탈퇴");
             this.userSCI.remove(removeUserRequest);
             LOGGER.info("가가입된 deviceId {} 탈퇴 처리", req.getPreDeviceId());
@@ -4302,7 +4299,6 @@ public class LoginServiceImpl implements LoginService {
 		RemoveUserRequest scReq = new RemoveUserRequest();
 		scReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 		scReq.setUserKey(detailRes.getUserKey());
-		scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
 		scReq.setSecedeReasonMessage("SAP 회원탈퇴");
 		this.userSCI.remove(scReq);
 

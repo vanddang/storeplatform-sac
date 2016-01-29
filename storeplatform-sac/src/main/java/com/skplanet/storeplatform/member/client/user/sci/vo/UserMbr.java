@@ -9,10 +9,10 @@
  */
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
+
+import java.io.Serializable;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -121,9 +121,6 @@ public class UserMbr extends CommonInfo implements Serializable {
 
 	/** 탈퇴 유형 코드(탈퇴 GROUP CODE : US0107). */
 	private String secedeTypeCode; // BOLTER_CASE_CD 탈퇴유형코드
-
-	/** 탈퇴 사유 코드(탈퇴 GROUP CODE : US0104). */
-	private String secedeReasonCode; // BOLTER_REASON_CD 탈퇴사유코드
 
 	/** 탈퇴사유 설명. */
 	private String secedeReasonMessage; // BOLTER_REASON_DESC 탈퇴사유설명
@@ -597,25 +594,6 @@ public class UserMbr extends CommonInfo implements Serializable {
 	 */
 	public void setSecedeTypeCode(String secedeTypeCode) {
 		this.secedeTypeCode = secedeTypeCode;
-	}
-
-	/**
-	 * 탈퇴사유코드를 리턴한다.
-	 * 
-	 * @return secedeReasonCode - 탈퇴사유코드
-	 */
-	public String getSecedeReasonCode() {
-		return this.secedeReasonCode;
-	}
-
-	/**
-	 * 탈퇴사유코드를 설정한다.
-	 * 
-	 * @param secedeReasonCode
-	 *            탈퇴사유코드
-	 */
-	public void setSecedeReasonCode(String secedeReasonCode) {
-		this.secedeReasonCode = secedeReasonCode;
 	}
 
 	/**

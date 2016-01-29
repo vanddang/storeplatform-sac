@@ -462,7 +462,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		RemoveUserRequest scReq = new RemoveUserRequest();
 		scReq.setCommonRequest(this.mcc.getSCCommonRequest(requestHeader));
 		scReq.setUserKey(userKey);
-		scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
 		scReq.setSecedeReasonMessage("");
 		scReq.setIsDormant(isDormant);
 		this.userSCI.remove(scReq);

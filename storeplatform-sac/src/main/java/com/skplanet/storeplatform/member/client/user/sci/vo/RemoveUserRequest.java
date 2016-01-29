@@ -9,11 +9,11 @@
  */
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+
+import java.io.Serializable;
 
 /**
  * 사용자 탈퇴 요청을 위한 value object
@@ -63,25 +63,6 @@ public class RemoveUserRequest extends CommonInfo implements Serializable {
 	 * */
 	private String secedeTypeCode;
 
-	/**
-	 * <pre>
-	 * 탈퇴사유 코드.
-	 * 
-	 * US010401 ID 변경
-	 * US010402 판매 성과 부진
-	 * US010403 정산에 대한 불신
-	 * US010404 장기간 부재 (군입대, 유학)
-	 * US010405 마켓 변경
-	 * US010406 시스템 장애
-	 * US010407 개인정보 보안문제
-	 * US010409 기타
-	 * US010410 미방문
-	 * US010411 서비스 이용 불편
-	 * US010412 컨텐츠 부족
-	 * </pre>
-	 * */
-	private String secedeReasonCode;
-
 	/** 탈퇴사유 내용. */
 	private String secedeReasonMessage;
 
@@ -126,25 +107,6 @@ public class RemoveUserRequest extends CommonInfo implements Serializable {
 	 */
 	public void setSecedeTypeCode(String secedeTypeCode) {
 		this.secedeTypeCode = secedeTypeCode;
-	}
-
-	/**
-	 * 탈퇴사유 코드를 리턴한다.
-	 * 
-	 * @return secedeReasonCode - 탈퇴사유 코드
-	 */
-	public String getSecedeReasonCode() {
-		return this.secedeReasonCode;
-	}
-
-	/**
-	 * 탈퇴사유 코드를 설정한다.
-	 * 
-	 * @param secedeReasonCode
-	 *            탈퇴사유 코드
-	 */
-	public void setSecedeReasonCode(String secedeReasonCode) {
-		this.secedeReasonCode = secedeReasonCode;
 	}
 
 	/**

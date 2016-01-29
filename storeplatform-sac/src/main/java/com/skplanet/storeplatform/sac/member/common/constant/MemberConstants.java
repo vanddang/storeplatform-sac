@@ -248,9 +248,6 @@ public final class MemberConstants {
 	public static final String PARENT_TYPE_MOTHER = "US011802"; // 어머니
 	public static final String PARENT_TYPE_ECT = "US011803"; // 기타
 
-	/** 탈퇴 사유 코드. */
-	public static final String WITHDRAW_REASON_OTHER = "US010408"; // 기타
-
 	/** 탈퇴유형 코드. */
 	public static final String USER_WITHDRAW_CLASS_CHANGE_ID = "US010701"; // ID 전환
 	public static final String USER_WITHDRAW_CLASS_USER_SELECTED = "US010702"; // 사용자선택
