@@ -1629,7 +1629,8 @@ public class LoginServiceImpl implements LoginService {
             RemoveUserRequest removeUserRequest = new RemoveUserRequest();
             removeUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
             removeUserRequest.setUserKey(preUserKey);
-            removeUserRequest.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+            removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+            removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
             removeUserRequest.setSecedeReasonMessage("Save&Sync인증탈퇴");
             this.userSCI.remove(removeUserRequest);
             LOGGER.info("가가입된 deviceId {} 탈퇴 처리", req.getPreDeviceId());
