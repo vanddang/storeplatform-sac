@@ -86,6 +86,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Override
 	public CreateByMdnRes regByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
 
+        String svcMangNo = null;
+
         /**
          * MDN 회원 기가입 체크
          */
@@ -111,6 +113,40 @@ public class UserJoinServiceImpl implements UserJoinService {
                 // SKIP
             }else{
                 throw ex;
+            }
+        }
+
+        /**
+         * 통신사 / MVNO 체크
+         */
+        if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+
+            // 01. SKT imei 비교
+            if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+                    && !StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getDeviceId()))){
+                    throw new StorePlatformException("SAC_MEM_1503");
+            }
+
+            // 02. MVNO 처리
+            if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+                    || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
+                    || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)){
+
+                // TODO [EC] MVNO 연동 처리 작업 필요
+                String isMvno = MemberConstants.USE_N;
+                String deviceKey = "";
+
+                LOGGER.info("{} 휴대기기 MVNO 단말 여부", req.getDeviceId(), isMvno);
+                if(StringUtils.equals(isMvno, MemberConstants.USE_Y)){
+                    // 02-01. SKM 만 가입 처리
+                    if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
+                        // 통신사 SKM 설정
+                        req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKM);
+                    }else{
+                        LOGGER.info("{} 휴대기기 타사 MVNO로 가입 실패 처리", req.getDeviceId());
+                        throw new StorePlatformException("SAC_MEM_1515");
+                    }
+                }
             }
         }
 
