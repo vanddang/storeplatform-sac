@@ -114,8 +114,7 @@ import com.skplanet.storeplatform.sac.member.common.vo.Device;
 /**
  * 사용자 내부 메서드 서비스 구현체
  * 
- * Updated on : 2014. 5. 20. Updated by : 심대진, 다모아 솔루션.
- * Updated on : 2016. 1. 26. Updated by : 윤보영, 카레즈.
+ * Updated on : 2016. 2. 1. Updated by : 최진호, 보고지티.
  */
 @Service
 public class SearchUserSCIServiceImpl implements SearchUserSCIService {
@@ -186,9 +185,9 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
                             deviceInfoSac.setMdn(StringUtils.isNotEmpty(userMbrDevice.getMdn()) ? userMbrDevice.getMdn() : "");
                             deviceIdList.add(deviceInfoSac);
                         }
-                        userInfoSac.setDeviceIdList(deviceIdList);
+                        userInfoSac.setDeviceIdListSac(deviceIdList);
                     }else {
-                        userInfoSac.setDeviceIdList(new ArrayList<DeviceInfoSac>());
+                        userInfoSac.setDeviceIdListSac(new ArrayList<DeviceInfoSac>());
                     }
 
                     userInfo.put(userKeyList.get(i), userInfoSac);
@@ -397,7 +396,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 		searchUserRequest.setCommonRequest(commonRequest);
 		searchUserRequest.setKeySearchList(keySearchList);
 
@@ -541,7 +539,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		String userKey = req.getUserKey();
 
@@ -554,9 +551,15 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		ListDeviceRes res = new ListDeviceRes();
 
 		if (StringUtils.isNotBlank(req.getDeviceId())) {
+			DeviceInfo deviceInfo = null;
 			/* 단건 조회 처리 */
-			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
-					req.getDeviceId(), userKey);
+			if (ValidationCheckUtils.isDeviceId(req.getDeviceId())) {
+				deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+						req.getDeviceId(), userKey);
+			} else {
+				deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN,
+						req.getDeviceId(), userKey);
+			}
 			if (deviceInfo != null) {
 				res.setUserId(deviceInfo.getUserId());
 				res.setUserKey(deviceInfo.getUserKey());
@@ -630,7 +633,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 		searchDeviceRequest.setCommonRequest(commonRequest);
