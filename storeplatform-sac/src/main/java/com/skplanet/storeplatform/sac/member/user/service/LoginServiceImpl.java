@@ -741,16 +741,25 @@ public class LoginServiceImpl implements LoginService {
                 || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)){
             deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
             if(deviceInfo != null){
+				LOGGER.info("MVNO 단말인증 mdn : {}", req.getMdn());
                 if(StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())){
                     ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
                     modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
                     modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
                     UserMbrDevice userMbrDevice = new UserMbrDevice();
                     userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
-                    userMbrDevice.setDeviceID(req.getDeviceId());
-                    userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
-                    userMbrDevice.setNativeID(req.getNativeId());
-                    userMbrDevice.setSimSerialNo(req.getSimSerialNo());
+					if(!StringUtils.equals(req.getDeviceId(), deviceInfo.getDeviceId())){
+						userMbrDevice.setDeviceID(req.getDeviceId());
+					}
+					if(!StringUtils.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())){
+						userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
+					}
+					if(!StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())){
+						userMbrDevice.setNativeID(req.getNativeId());
+					}
+					if(!StringUtils.equals(req.getSimSerialNo(), deviceInfo.getSimSerialNo())){
+						userMbrDevice.setSimSerialNo(req.getSimSerialNo());
+					}
                     List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
                     for (DeviceExtraInfo deviceExtraInfo : req.getDeviceExtraInfoList()) {
                         UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
@@ -774,6 +783,7 @@ public class LoginServiceImpl implements LoginService {
                     res.setUserStatus(MemberConstants.MAIN_STATUS_NORMAL);
                     return res;
                 }else{
+					LOGGER.info("MVNO 단말인증 실패 mdn : {} 삭제처리", req.getMdn());
                     this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
                     throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
                 }
@@ -1289,7 +1299,7 @@ public class LoginServiceImpl implements LoginService {
         if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
                 || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KTM)
                 || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)){
-            if(searchDeviceListResponse != null || searchDeviceListResponse.getUserMbrDevice().size() > 0){
+            if(searchDeviceListResponse != null && searchDeviceListResponse.getUserMbrDevice().size() > 0){
                 for (UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()) {
                     if(StringUtils.equals(req.getMdn(), userMbrDevice.getMdn())){
                         LOGGER.info("MVNO 단말인증 mdn : {}", req.getMdn());
@@ -1312,10 +1322,18 @@ public class LoginServiceImpl implements LoginService {
                             modifyDeviceRequest.setUserKey(userMbrDevice.getUserKey());
                             UserMbrDevice updateUserMbrDevice = new UserMbrDevice();
                             updateUserMbrDevice.setDeviceKey(userMbrDevice.getDeviceKey());
-                            updateUserMbrDevice.setDeviceID(req.getDeviceId());
-                            updateUserMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
-                            updateUserMbrDevice.setNativeID(req.getNativeId());
-                            updateUserMbrDevice.setSimSerialNo(req.getSimSerialNo());
+							if(!StringUtils.equals(req.getDeviceId(), userMbrDevice.getDeviceID())){
+								userMbrDevice.setDeviceID(req.getDeviceId());
+							}
+							if(!StringUtils.equals(req.getDeviceTelecom(), userMbrDevice.getDeviceTelecom())){
+								userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
+							}
+							if(!StringUtils.equals(req.getNativeId(), userMbrDevice.getNativeID())){
+								userMbrDevice.setNativeID(req.getNativeId());
+							}
+							if(!StringUtils.equals(req.getSimSerialNo(), userMbrDevice.getSimSerialNo())){
+								userMbrDevice.setSimSerialNo(req.getSimSerialNo());
+							}
                             modifyDeviceRequest.setUserMbrDevice(updateUserMbrDevice);
                             modifyDeviceRequest.setIsUpdDeviceId(true);
                             this.deviceSCI.modifyDevice(modifyDeviceRequest);

@@ -668,7 +668,7 @@ public class DeviceServiceImpl implements DeviceService {
 			if (transferDeviceSetInfoResponse != null
 					&& StringUtil.isNotEmpty(transferDeviceSetInfoResponse.getUserKey())
 					&& StringUtil.isNotEmpty(transferDeviceSetInfoResponse.getDeviceKey())) {
-				LOGGER.info("기등록된 모바일 회원 상품권 PIN 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
+				LOGGER.info("기등록된 모바일 회원 휴대기기 설정 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
 			}
 
 		}
