@@ -15,6 +15,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 
+import javax.validation.constraints.Pattern;
+
 /**
  * 사용자 휴대기기기 수정 요청 Value Object
  *
@@ -55,6 +57,15 @@ public class ModifyDeviceRequest extends CommonInfo implements Serializable {
 
     /** 사용자 휴대기기 Value Object. */
     private UserMbrDevice userMbrDevice;
+
+    /**
+     * 단말 변경 케이스 코드.
+     * 	- US012015 : SMS 수신동의 변경
+        - US012014 : gmail 정보 변경
+        - US012013 : imei 정보 변경
+     */
+    @Pattern(regexp = "^US012013|^US012014|^US012015")
+    private String chgCaseCd;
 
     /**
      * 사용자 휴대기기 Value Object를 리턴한다.
@@ -111,5 +122,20 @@ public class ModifyDeviceRequest extends CommonInfo implements Serializable {
      */
     public void setIsUpdDeviceId(boolean isUpdDeviceId) {
         this.isUpdDeviceId = isUpdDeviceId;
+    }
+
+    /**
+     * @return chgCaseCd
+     */
+    public String getChgCaseCd() {
+        return chgCaseCd;
+    }
+
+    /**
+     * @param chgCaseCd
+     *            String
+     */
+    public void setChgCaseCd(String chgCaseCd) {
+        this.chgCaseCd = chgCaseCd;
     }
 }

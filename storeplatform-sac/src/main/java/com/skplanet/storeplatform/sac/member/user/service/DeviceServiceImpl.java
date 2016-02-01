@@ -244,6 +244,7 @@ public class DeviceServiceImpl implements DeviceService {
         modifyDeviceRequest.setCommonRequest(commService.getSCCommonRequest(requestHeader));
         modifyDeviceRequest.setUserKey(req.getUserKey());
         modifyDeviceRequest.setUserMbrDevice(DeviceUtil.getConverterUserMbrDeviceInfo(req.getDeviceInfo()));
+        modifyDeviceRequest.setChgCaseCd(req.getChgCaseCd());
         ModifyDeviceResponse modifyDeviceResponse = deviceSCI.modifyDevice(modifyDeviceRequest);
 
         ModifyDeviceRes res = new ModifyDeviceRes();

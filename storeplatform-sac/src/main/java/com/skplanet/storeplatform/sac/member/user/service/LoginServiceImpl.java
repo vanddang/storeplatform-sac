@@ -907,9 +907,6 @@ public class LoginServiceImpl implements LoginService {
                 }
                 updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
                 String deviceKey = this.deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
-                if(!StringUtils.equals(deviceKey, deviceInfo.getDeviceKey())){
-                    throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 처리 실패
-                }
             }
 		}else{ // 자번호로 인증 요청한 경우 MDN으로만 인증 처리
 			deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
