@@ -352,8 +352,13 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 			keyType = "deviceKey";
 			keyValue = deviceKey;
 		} else if (!deviceId.equals("")) {
-			keyType = "deviceId";
-			keyValue = deviceId;
+			if (ValidationCheckUtils.isDeviceId(deviceId)) {
+				keyType = "deviceId";
+				keyValue = deviceId;
+			} else {
+				keyType = "mdn";
+				keyValue = deviceId;
+			}
 		}
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
@@ -361,6 +366,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
 		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
+		keyTypeMap.put("mdn", MemberConstants.KEY_TYPE_MDN);
 
 		/**
 		 * 검색 조건 setting
@@ -404,7 +410,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		DetailRes detailRes = new DetailRes();
 
 		/* 기본정보 세팅 */
-//		detailRes.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
 		detailRes.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
 		detailRes.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
 
