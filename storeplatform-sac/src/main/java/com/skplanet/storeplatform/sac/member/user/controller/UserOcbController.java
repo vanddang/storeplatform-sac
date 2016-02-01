@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserOcb;
+import com.skplanet.storeplatform.sac.member.user.service.OcbService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,9 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserOcbService;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
 /**
  * 회원 OCB 정보 Controller
  * 
@@ -42,6 +49,9 @@ public class UserOcbController {
 
 	@Autowired
 	private UserOcbService svc;
+
+    @Autowired
+    private OcbService ocbService;
 
 	/**
 	 * <pre>
@@ -111,7 +121,7 @@ public class UserOcbController {
 
 	/**
 	 * <pre>
-	 * 회원 OCB 정보 조회.
+	 * [I01000031] 회원 OCB 정보 조회.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -122,8 +132,7 @@ public class UserOcbController {
 	 */
 	@RequestMapping(value = "/member/user/getOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetOcbInformationRes getOcbInformation(SacRequestHeader sacHeader,
-			@Validated @RequestBody GetOcbInformationReq req) {
+	public GetOcbInformationRes getOcbInformation(@Validated @RequestBody GetOcbInformationReq req) {
 
 		LOGGER.debug("###################################");
 		LOGGER.debug("##### 2.1.29 회원 OCB 정보 조회 #####");
@@ -131,23 +140,30 @@ public class UserOcbController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		/**
+        List<UserOcb> list = ocbService.find(req.getUserKey());
+        List<OcbInfo> transform = Lists.transform(list, new Function<UserOcb, OcbInfo>() {
+            @Override
+            public OcbInfo apply(UserOcb input) {
+                return input.convertToOcbInfo();
+            }
+        });
+
+        /**
 		 * 회원 OCB 정보 조회 Biz
 		 */
-		GetOcbInformationRes res = this.svc.getOcbInformation(sacHeader, req);
+//		GetOcbInformationRes res = this.svc.getOcbInformation(sacHeader, req);
+//
+//		if (res.getOcbInfoList().size() > 0) {
+//
+//			for (OcbInfo info : res.getOcbInfoList()) {
+//
+//				LOGGER.info("Response : {}", info.getUserKey());
+//
+//			}
+//
+//		}
 
-		if (res.getOcbInfoList().size() > 0) {
-
-			for (OcbInfo info : res.getOcbInfoList()) {
-
-				LOGGER.info("Response : {}", info.getUserKey());
-
-			}
-
-		}
-
-		return res;
-
+		return new GetOcbInformationRes(transform);
 	}
 
 }

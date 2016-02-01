@@ -10,6 +10,8 @@
 package com.skplanet.storeplatform.sac.member.domain.shared;
 
 import com.google.common.base.Objects;
+import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -116,6 +118,19 @@ public class UserOcb {
     @PreUpdate
     public void preUpdate() {
         updDt = new Date();
+    }
+
+    public OcbInfo convertToOcbInfo() {
+        OcbInfo ocbInfo = new OcbInfo();
+        ocbInfo.setUserKey(member.getInsdUsermbrNo()); // 사용자 Key
+        ocbInfo.setAuthMethodCode(ocbAuthMtdCd); // 인증방법 코드
+        ocbInfo.setCardNumber(ocbNo); // 카드 번호
+        ocbInfo.setStartDate(DateUtils.format(useStartDt)); // 사용시작 일시
+        ocbInfo.setEndDate(DateUtils.format(useEndDt)); // 사용종료 일시
+        ocbInfo.setIsUsed(useYn); // 사용여부 (Y/N)
+        ocbInfo.setRegDate(DateUtils.format(regDt));
+
+        return ocbInfo;
     }
 
     public UserMember getMember() {
