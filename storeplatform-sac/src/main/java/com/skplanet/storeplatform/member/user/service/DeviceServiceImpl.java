@@ -1793,7 +1793,7 @@ public class DeviceServiceImpl implements DeviceService {
 	public ModifyDeviceResponse modifyDevice(ModifyDeviceRequest modifyDeviceRequest) {
 		StringBuffer logBuf = new StringBuffer();
 		String isDormant = Constant.TYPE_YN_N;
-		String chgCaseCd = modifyDeviceRequest.getUserMbrDevice().getChangeCaseCode() == null ? MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT :  modifyDeviceRequest.getUserMbrDevice().getChangeCaseCode();
+		String chgCaseCd = modifyDeviceRequest.getChgCaseCd() == null ? MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT :  modifyDeviceRequest.getChgCaseCd();
 		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
@@ -1861,7 +1861,6 @@ public class DeviceServiceImpl implements DeviceService {
 		// 기기 고유ID(imei)
 		if (modifyDeviceRequest.getUserMbrDevice().getNativeID() != null) {
 			logBuf.append("[device_natv_id]").append(searchDeviceResponse.getUserMbrDevice().getNativeID()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getNativeID());
-			chgCaseCd = MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE;
 			updateMbrDevice.setNativeID(modifyDeviceRequest.getUserMbrDevice().getNativeID());
 		}
 
@@ -1888,7 +1887,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if(logBuf.length() > 0){
 			updateMbrDevice.setChangeCaseCode(chgCaseCd);
 			if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
-				this.commonDAO.update("Device.insertUpdateDeviceHistory", updateMbrDevice);
+				this.commonDAO.update("Device.insertUpdateDeviceHistoryCode", updateMbrDevice);
 				this.commonDAO.update("Device.updateDevice", updateMbrDevice);
 			}else{
 				this.idleDAO.update("Device.updateDevice", updateMbrDevice);
