@@ -38,7 +38,7 @@ public class UserInfoSac extends CommonInfo {
 	private String userId;
 
 	/** 기기 ID List. */
-	private List<DeviceInfoSac> deviceIdList;
+	private List<DeviceInfoSac> deviceIdListSac;
 
 	/**
 	 * @return the userKey
@@ -115,22 +115,15 @@ public class UserInfoSac extends CommonInfo {
 		this.userId = userId;
 	}
 
-	/**
-	 * @return the deviceIdList
-	 */
-	public List<DeviceInfoSac> getDeviceIdList() {
-		return this.deviceIdList;
-	}
+    public List<DeviceInfoSac> getDeviceIdListSac() {
+        return deviceIdListSac;
+    }
 
-	/**
-	 * @param deviceIdList
-	 *            the deviceIdList to set
-	 */
-	public void setDeviceIdList(List<DeviceInfoSac> deviceIdList) {
-		this.deviceIdList = deviceIdList;
-	}
+    public void setDeviceIdListSac(List<DeviceInfoSac> deviceIdListSac) {
+        this.deviceIdListSac = deviceIdListSac;
+    }
 
-	/**
+    /**
 	 * @return the tenantId
 	 */
 	public String getTenantId() {
