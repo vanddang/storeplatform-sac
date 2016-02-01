@@ -797,7 +797,11 @@ public class LoginServiceImpl implements LoginService {
 		if (!isOmpd) {
             try {
                 // 서비스 관리 번호 조회
-                deviceTelecomInfo = this.commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
+				if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
+						|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
+						|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())){
+					deviceTelecomInfo = this.commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
+				}
             }catch(StorePlatformException e){
                 if(StringUtils.equals(e.getErrorInfo().getCode(), "SAC_MEM_0003")){ // 타사 연동시 비회원 응답
                     // DB에 회원정보가 있으면 invalid 처리 후 회원정보없음 에러
@@ -821,16 +825,14 @@ public class LoginServiceImpl implements LoginService {
                             this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
                             throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
                         }else{
-                            if(!StringUtils.equals(deviceInfo.getDeviceId(), deviceInfoBySvcMangNo.getDeviceId())){
-                                // 기존 회원 탈퇴처리
-                                this.userWithdrawService.removeDevice(requestHeader, deviceInfo.getDeviceId());
-                                // deviceInfoBySvcMangNo 휴대기기 프로세스
-                                deviceInfo = deviceInfoBySvcMangNo;
-                            }
+							// 기존 회원 탈퇴처리 후 조회된 서비스관리번호 회원정보 업데이트
+							this.userWithdrawService.removeDevice(requestHeader, deviceInfo.getDeviceId());
+							deviceInfo = deviceInfoBySvcMangNo;
                         }
                     }else if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())){ // LGT 서비스 관리번호 변경 처리
                         // 기존 회원 탈퇴처리
                         this.userWithdrawService.removeDevice(requestHeader, deviceInfo.getDeviceId());
+						throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
                     }
                 }
 
@@ -907,6 +909,9 @@ public class LoginServiceImpl implements LoginService {
                 }
                 updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
                 String deviceKey = this.deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
+				if(!StringUtils.equals(deviceInfo.getDeviceKey(), deviceKey)){
+					throw new StorePlatformException("SAC_MEM_1102");
+				}
             }
 		}else{ // 자번호로 인증 요청한 경우 MDN으로만 인증 처리
 			deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
@@ -1507,7 +1512,7 @@ public class LoginServiceImpl implements LoginService {
                 // 아이디에 첫번째로 등록되는 휴대기기
             }
 
-            // csp imei 비교
+            // SKT, SKM 통신사 csp imei 비교
             if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
                     || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)){
                 if(StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)){

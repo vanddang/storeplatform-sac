@@ -160,11 +160,6 @@ public class LoginController {
             throw new StorePlatformException("SAC_MEM_1509");
 		}
 
-		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
-				&& StringUtils.isNotBlank(req.getMdn())){
-			throw new StorePlatformException("SAC_MEM_1514");
-		}
-
 		AuthorizeByMdnV3SacRes res = this.loginService.authorizeByMdnV3(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
