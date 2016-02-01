@@ -184,22 +184,26 @@ public class DeviceSetController {
 
 	/**
 	 * <pre>
-	 * 2.1.48. 휴대기기 설정 정보 등록/수정.
+	 * [I01000107] 2.1.48. 휴대기기 설정 정보 등록/수정.
 	 * </pre>
 	 * 
-	 * @param header
-	 *            SacRequestHeader
 	 * @param req
 	 *            ModifyDeviceSetInfoSacReq
 	 * @return ModifyDeviceSetInfoSacRes
 	 */
 	@RequestMapping(value = "/modifyDeviceSetInfo/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyDeviceSetInfoSacRes modifyDeviceSetInfo(SacRequestHeader header,
-			@RequestBody @Validated ModifyDeviceSetInfoSacReq req) {
+	public ModifyDeviceSetInfoSacRes modifyDeviceSetInfo(@RequestBody @Validated ModifyDeviceSetInfoSacReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		ModifyDeviceSetInfoSacRes res = this.deviceSetService.modDeviceSetInfo(header, req);
+
+        UserDeviceSetting setting = new UserDeviceSetting();
+        setting.setIcasAuthYn(req.getIsIcasAuth());
+        setting.setAutoUpdtYn(req.getIsAutoUpdate());
+
+        String deviceId = settingService.merge(req.getUserKey(), req.getDeviceKey(), setting);
+        ModifyDeviceSetInfoSacRes res = new ModifyDeviceSetInfoSacRes(req.getDeviceKey(), deviceId, req.getUserKey());
+//        ModifyDeviceSetInfoSacRes res = this.deviceSetService.modDeviceSetInfo(header, req);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}

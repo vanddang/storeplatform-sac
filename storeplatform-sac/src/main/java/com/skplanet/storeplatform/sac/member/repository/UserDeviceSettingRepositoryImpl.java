@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
+import com.mysema.query.jpa.impl.JPAQuery;
+import com.skplanet.storeplatform.sac.member.domain.shared.QUserDeviceSetting;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserDevicePK;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserDeviceSetting;
 import org.springframework.stereotype.Repository;
 
@@ -24,11 +27,25 @@ import javax.persistence.PersistenceContext;
 @Repository
 public class UserDeviceSettingRepositoryImpl implements UserDeviceSettingRepository {
 
+    public static final QUserDeviceSetting $ = QUserDeviceSetting.userDeviceSetting;
+
     @PersistenceContext(unitName = "puMbr")
     private EntityManager emMbr;
 
     @Override
     public void save(UserDeviceSetting userDeviceSetting) {
         emMbr.merge(userDeviceSetting);
+    }
+
+    @Override
+    public UserDeviceSetting findOne(UserDevicePK id) {
+        return emMbr.find(UserDeviceSetting.class, id);
+    }
+
+    @Override
+    public UserDeviceSetting findOne(String userKey, String deviceKey) {
+        return new JPAQuery(emMbr).from($)
+                .where($.id.member.insdUsermbrNo.eq(userKey).and($.id.insdDeviceId.eq(deviceKey)))
+                .uniqueResult($);
     }
 }

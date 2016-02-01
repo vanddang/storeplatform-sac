@@ -35,6 +35,13 @@ public class UserDevicePK implements Serializable {
      */
     private String insdDeviceId;
 
+    public UserDevicePK() {}
+
+    public UserDevicePK(UserMember member, String insdDeviceId) {
+        this.member = member;
+        this.insdDeviceId = insdDeviceId;
+    }
+
     public UserMember getMember() {
         return member;
     }

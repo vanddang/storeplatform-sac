@@ -29,8 +29,10 @@ public class UserDeviceSetting {
     @EmbeddedId
     private UserDevicePK id;
 
+    @Column(updatable = false)
     private Date regDt;
 
+    @Column(updatable = false)
     private String regId;
 
     private Date updDt;
@@ -130,7 +132,7 @@ public class UserDeviceSetting {
 
         return v;
     }
-    
+
     public SearchDeviceSetInfoSacRes convertToResponse() {
         SearchDeviceSetInfoSacRes res = new SearchDeviceSetInfoSacRes();
 
@@ -141,7 +143,7 @@ public class UserDeviceSetting {
         res.setIsPinClosed(authLockYn);
         res.setFailCnt(authFailCnt != null ? authFailCnt.toString() : null);
 
-        res.setIsPinRetry(null);    // FIXME 컬럼이 없음!
+        //res.setIsPinRetry(null);    // 컬럼이 존재하지 않아 제거
         res.setIsAutoUpdate(autoUpdtYn);
         res.setIsAutoUpdateWifi(wiFiAutoUpdtYn);
         res.setIsLoginLock(loginLockYn);

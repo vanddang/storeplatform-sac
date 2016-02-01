@@ -340,6 +340,7 @@ public class LoginController {
 	 * @return AuthorizeForInAppSacRes
 	 */
 	// @RequestMapping(value = "/member/user/authorizeForInApp/v1", method = RequestMethod.POST)
+    @Deprecated
 	@ResponseBody
 	public AuthorizeForInAppSacRes authorizeForInApp(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForInAppSacReq req) {

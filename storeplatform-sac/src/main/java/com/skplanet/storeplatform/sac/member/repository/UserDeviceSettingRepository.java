@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
+import com.skplanet.storeplatform.sac.member.domain.shared.UserDevicePK;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserDeviceSetting;
 
 /**
@@ -20,4 +21,8 @@ import com.skplanet.storeplatform.sac.member.domain.shared.UserDeviceSetting;
 public interface UserDeviceSettingRepository {
 
     void save(UserDeviceSetting userDeviceSetting);
+
+    UserDeviceSetting findOne(UserDevicePK id);
+
+    UserDeviceSetting findOne(String userKey, String deviceKey);
 }
