@@ -1229,6 +1229,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @return SearchUserSacRes
 	 */
 	@Override
+    @Deprecated
 	public SearchUserSacRes srhUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request) {
 
 		// 공통파라미터 셋팅
@@ -1261,7 +1262,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					userInfoSac.setUserSubStatus(userInfoMap.get(userKeyList.get(i)).getUserSubStatus());
 					userInfoSac.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
 					// 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
-					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
+//					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
 
 					userInfo.put(userKeyList.get(i), userInfoSac);
 				}
@@ -2078,8 +2079,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 							userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getUserType())) {
 						if (userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList() != null
 								&& userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList().size() > 0) {
-							socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
-									.getDeviceIDList().get(0));
+//							socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+//									.getDeviceIDList().get(0));
 						}
 					} else {
 						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())

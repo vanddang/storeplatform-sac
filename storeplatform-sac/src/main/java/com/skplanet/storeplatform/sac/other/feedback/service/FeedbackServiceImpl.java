@@ -1267,8 +1267,10 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 							// 회원정보는 있으나 단말정보가 없을경우 방어로직.
 							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
-								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0),
-										userInfoSac.getUserId());
+                                //TODO userInfoSac vo 변경으로 수정 필요, 컴파일 오류로 임의 수정 함 (SAC 회원 파트 - 윤보영)
+//								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
+								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0).getMdn(),
+                                        userInfoSac.getUserId());
 							} else { // 단말정보가 미존재.
 								regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
 							}
@@ -1297,7 +1299,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 							// 회원정보는 있으나 단말정보가 없을경우 방어로직.
 							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
-								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0),
+                                //TODO userInfoSac vo 변경으로 수정 필요, 컴파일 오류로 임의 수정 함 (SAC 회원 파트 - 윤보영)
+//								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
+								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0).getMdn(),
 										userInfoSac.getUserId());
 							} else { // 단말정보가 미존재.
 								regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());

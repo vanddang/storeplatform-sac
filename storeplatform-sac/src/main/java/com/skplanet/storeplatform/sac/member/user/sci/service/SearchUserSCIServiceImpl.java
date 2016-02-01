@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.DeviceInfoSac;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -174,8 +175,21 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
                     userInfoSac.setUserMainStatus(userInfoMap.get(userKeyList.get(i)).getUserMainStatus());
                     userInfoSac.setUserSubStatus(userInfoMap.get(userKeyList.get(i)).getUserSubStatus());
                     userInfoSac.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
+
                     // 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
-                    userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
+                    if(userInfoMap.get(userKeyList.get(i)).getDeviceIDList() != null){
+                        List<DeviceInfoSac> deviceIdList = new ArrayList<DeviceInfoSac>();
+                        for(UserMbrDevice userMbrDevice : userInfoMap.get(userKeyList.get(i)).getDeviceIDList()){
+                            DeviceInfoSac deviceInfoSac = new DeviceInfoSac();
+
+                            deviceInfoSac.setDeviceId(StringUtils.isNotEmpty(userMbrDevice.getDeviceID()) ? userMbrDevice.getDeviceID() : "");
+                            deviceInfoSac.setMdn(StringUtils.isNotEmpty(userMbrDevice.getMdn()) ? userMbrDevice.getMdn() : "");
+                            deviceIdList.add(deviceInfoSac);
+                        }
+                        userInfoSac.setDeviceIdList(deviceIdList);
+                    }else {
+                        userInfoSac.setDeviceIdList(new ArrayList<DeviceInfoSac>());
+                    }
 
                     userInfo.put(userKeyList.get(i), userInfoSac);
                 }
@@ -244,7 +258,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 							.setUserSubStatus(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getUserSubStatus());
 					userInfoSac.setUserType(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getUserType());
 					// 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
-					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getDeviceIDList());
+//					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getDeviceIDList());
 					// tenantId 추가, incross_bottangs, 2015.02.10
 					userInfoSac.setTenantId(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getTenantID());
 
@@ -1300,11 +1314,11 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 					// userId 셋팅
 					if (StringUtils.equals(MemberConstants.USER_TYPE_MOBILE,
 							userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getUserType())) {
-						if (userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList() != null
-								&& userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList().size() > 0) {
-							socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
-									.getDeviceIDList().get(0));
-						}
+//						if (userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList() != null
+//								&& userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList().size() > 0) {
+//							socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+//									.getDeviceIDList().get(0));
+//						}
 					} else {
 						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
 								.getUserID());

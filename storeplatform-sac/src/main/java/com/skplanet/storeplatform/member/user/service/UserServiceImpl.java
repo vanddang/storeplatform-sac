@@ -29,6 +29,7 @@ import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
 import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
 import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
 import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.DeviceInfoSac;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -2590,7 +2591,7 @@ public class UserServiceImpl implements UserService {
 				continue;
 
 			if (userMbrStatus.getDeviceIDList() == null) {
-				userMbrStatus.setDeviceIDList(new ArrayList<String>());
+				userMbrStatus.setDeviceIDList(new ArrayList<UserMbrDevice>());
 			}
 
 			userMbrStatusMap.put(userKey, userMbrStatus);
@@ -2633,7 +2634,7 @@ public class UserServiceImpl implements UserService {
 				continue;
 
 			if (userMbrStatus.getDeviceIDList() == null) {
-				userMbrStatus.setDeviceIDList(new ArrayList<String>());
+				userMbrStatus.setDeviceIDList(new ArrayList<UserMbrDevice>());
 			}
 
 			userMbrStatusMap.put(userKey, userMbrStatus);
