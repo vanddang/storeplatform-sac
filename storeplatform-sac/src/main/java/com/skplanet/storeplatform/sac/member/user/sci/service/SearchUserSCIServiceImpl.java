@@ -185,9 +185,9 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
                             deviceInfoSac.setMdn(StringUtils.isNotEmpty(userMbrDevice.getMdn()) ? userMbrDevice.getMdn() : "");
                             deviceIdList.add(deviceInfoSac);
                         }
-                        userInfoSac.setDeviceIdList(deviceIdList);
+                        userInfoSac.setDeviceIdListSac(deviceIdList);
                     }else {
-                        userInfoSac.setDeviceIdList(new ArrayList<DeviceInfoSac>());
+                        userInfoSac.setDeviceIdListSac(new ArrayList<DeviceInfoSac>());
                     }
 
                     userInfo.put(userKeyList.get(i), userInfoSac);
