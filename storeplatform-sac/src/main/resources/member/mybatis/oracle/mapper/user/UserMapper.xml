@@ -1523,7 +1523,7 @@
              ,  a.mbr_status_main_cd as userMainStatus
              ,  a.mbr_status_sub_cd as userSubStatus
              ,  a.mbr_id as userID
-             ,  NVL(b.mdn, b.device_id)  as deviceID
+             ,  b.device_id  as deviceID
              ,  b.insd_device_id as deviceKey
           FROM  tb_us_ousermbr a
           LEFT  OUTER JOIN tb_us_ousermbr_device b
@@ -1563,7 +1563,7 @@
             )
            AND  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
     </select>
-    
+
     <!-- 복수 사용자 상태정보 조회맵 -->
     <resultMap id="searchMbrUserResultMap" type="userMbrStatus">
         <result property="userKey" column="userKey"/>
@@ -1571,15 +1571,30 @@
         <result property="userMainStatus" column="userMainStatus"/>
         <result property="userSubStatus" column="userSubStatus"/>
         <result property="userID" column="userID"/>
-        
-        <collection property="deviceIDList" javaType="java.util.ArrayList" ofType="String" >
-            <result property="deviceID" column="deviceID"/>
-        </collection>
+
+        <collection
+                property="deviceIDList"
+                column="{userKey=userKey}"
+                javaType="java.util.ArrayList"
+                ofType="userMbrDevice"
+                select="getDeviceInfo"/>
 
         <collection property="deviceKeyList" javaType="java.util.ArrayList" ofType="String" >
             <result property="devicekey" column="devicekey"/>
         </collection>
     </resultMap>
+
+    <select id="getDeviceInfo" resultType="userMbrDevice">
+        SELECT  /* UserMapper.xml, getDeviceInfo, SAC(SC), 윤보영, 2016-02-01 */
+                b.device_id AS deviceId,
+                b.mdn AS mdn
+        FROM  tb_us_ousermbr_device b
+        JOIN  tb_us_ousermbr a
+          ON  b.insd_usermbr_no = a.insd_usermbr_no
+        WHERE  b.insd_usermbr_no = #{userKey}
+          AND  b.auth_yn = 'Y'
+          AND  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
+    </select>
 
     <!-- 복수 사용자 기기정보 조회 -->
     <select id="searchMbrDevice" parameterType="searchMbrDeviceRequest" resultMap="searchMbrDeviceResultMap">
