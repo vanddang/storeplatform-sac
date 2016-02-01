@@ -52,8 +52,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
@@ -137,6 +135,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserDeviceSetting;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.AdditionalServiceService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -211,6 +210,9 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	@Resource(name = "memberRetireAmqpTemplate")
 	private AmqpTemplate memberRetireAmqpTemplate;
+
+    @Autowired
+    private DeviceSettingService deviceSettingService;
 
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	private String tempUserAuthKey;
@@ -907,9 +909,6 @@ public class LoginServiceImpl implements LoginService {
                 }
                 updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
                 String deviceKey = this.deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
-                if(!StringUtils.equals(deviceKey, deviceInfo.getDeviceKey())){
-                    throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 처리 실패
-                }
             }
 		}else{ // 자번호로 인증 요청한 경우 MDN으로만 인증 처리
 			deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
@@ -2689,29 +2688,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceExtraInfoList(detailRes.getDeviceInfoList().get(0).getDeviceExtraInfoList());
 
 			// PIN 정보
-			SearchDeviceSetInfoRequest searchDeviceSetInfoRequest = new SearchDeviceSetInfoRequest();
-			searchDeviceSetInfoRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-			KeySearch keySearch = null;
-			keySearch = new KeySearch();
-			keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-			keySearch.setKeyString(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-			keySearchList.add(keySearch);
-
-			keySearch = new KeySearch();
-			keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-			keySearch.setKeyString(detailRes.getUserKey());
-			keySearchList.add(keySearch);
-
-			searchDeviceSetInfoRequest.setKeySearchList(keySearchList);
-
-			SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
-					.searchDeviceSetInfo(searchDeviceSetInfoRequest);
-			MarketPinInfo pinInfo = new MarketPinInfo();
-			pinInfo.setIsPinSet(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
-			//pinInfo.setIsPinRetry(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry());
-			pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
-			pinInfo.setSetPinUrl(this.getPinSetUrl(pinInfo));
+            MarketPinInfo pinInfo = getMarketPinInfo(detailRes.getUserInfo().getUserKey(), detailRes.getDeviceInfoList().get(0).getDeviceKey());
 
 			res.setUserMainStatus(MemberConstants.INAPP_USER_STATUS_NORMAL); // 회원상태 정상
 			res.setUserAuthKey(this.tempUserAuthKey); // 임시 인증키
@@ -2999,7 +2976,33 @@ public class LoginServiceImpl implements LoginService {
 		return res;
 	}
 
-	/**
+    /**
+     * PIN 정보 응답
+     * @param userKey
+     * @param deviceKey
+     * @return
+     */
+    private MarketPinInfo getMarketPinInfo(final String userKey, final String deviceKey) {
+        UserDeviceSetting setting = deviceSettingService.find(userKey, deviceKey);
+        MarketPinInfo pinInfo = new MarketPinInfo();
+        pinInfo.setIsPinSet(setting.getPinNo());
+//        pinInfo.setIsPinRetry(??);
+        pinInfo.setIsPinClosed(setting.getAuthLockYn());
+
+        if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_N)) { // PIN 설정
+            pinInfo.setSetPinUrl(this.pinCodeSetUrl);
+        } else if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_Y)
+                && StringUtils.equals(pinInfo.getIsPinClosed(), MemberConstants.USE_Y)) { // PIN 재설정
+            pinInfo.setSetPinUrl(this.pinCodeInitUrl);
+        } else if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_Y)
+                && StringUtils.equals(pinInfo.getIsPinClosed(), MemberConstants.USE_N)) { // PIN 확인
+            pinInfo.setSetPinUrl(this.pinCodeConfirmUrl);
+        }
+
+        return pinInfo;
+    }
+
+    /**
 	 * <pre>
 	 * PayPlanet InApp 에 제공할 Tstore 회원정보 조회.
 	 * </pre>
@@ -3010,8 +3013,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            AuthorizeForInAppSacReq
 	 * @return AuthorizeForInAppSacRes
 	 */
-	private AuthorizeForInAppSacRes getTstoreMemberInfoForInApp(SacRequestHeader requestHeader,
-			AuthorizeForInAppSacReq req) {
+	private AuthorizeForInAppSacRes getTstoreMemberInfoForInApp(SacRequestHeader requestHeader, AuthorizeForInAppSacReq req) {
 
 		AuthorizeForInAppSacRes res = new AuthorizeForInAppSacRes();
 
@@ -3119,28 +3121,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceExtraInfoList(detailRes.getDeviceInfoList().get(0).getDeviceExtraInfoList());
 
 		// PIN 정보
-		SearchDeviceSetInfoRequest searchDeviceSetInfoRequest = new SearchDeviceSetInfoRequest();
-		searchDeviceSetInfoRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySearch = null;
-		keySearch = new KeySearch();
-		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-		keySearch.setKeyString(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-		keySearchList.add(keySearch);
-		keySearch = new KeySearch();
-		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		keySearch.setKeyString(detailRes.getUserKey());
-		keySearchList.add(keySearch);
-
-		searchDeviceSetInfoRequest.setKeySearchList(keySearchList);
-
-		SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
-				.searchDeviceSetInfo(searchDeviceSetInfoRequest);
-		MarketPinInfo pinInfo = new MarketPinInfo();
-		pinInfo.setIsPinSet(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
-		//pinInfo.setIsPinRetry(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry());
-		pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
-		pinInfo.setSetPinUrl(this.getPinSetUrl(pinInfo));
+        MarketPinInfo pinInfo = getMarketPinInfo(detailRes.getUserKey(), detailRes.getDeviceInfoList().get(0).getDeviceKey());
 
 		res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL); // 회원상태 정상
 		res.setUserAuthKey(this.tempUserAuthKey); // 임시 인증키
@@ -3153,32 +3134,6 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
 		return res;
-	}
-
-	/**
-	 * <pre>
-	 * Tstore 회원의 PIN 정보에 따라서 PIN 설정 URL을 리턴.
-	 * </pre>
-	 *
-	 * @param pinInfo
-	 *            MarketPinInfo
-	 * @return pinSetUrl String
-	 */
-	private String getPinSetUrl(MarketPinInfo pinInfo) {
-		String pinSetUrl = "";
-
-		if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_N)) { // PIN 설정
-			pinSetUrl = this.pinCodeSetUrl;
-		} else if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_Y)
-				&& StringUtils.equals(pinInfo.getIsPinClosed(), MemberConstants.USE_Y)) { // PIN 재설정
-			pinSetUrl = this.pinCodeInitUrl;
-		} else if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_Y)
-				&& StringUtils.equals(pinInfo.getIsPinClosed(), MemberConstants.USE_N)) { // PIN 확인
-			pinSetUrl = this.pinCodeConfirmUrl;
-		}
-
-		return pinSetUrl;
-
 	}
 
 	/**
@@ -3540,7 +3495,7 @@ public class LoginServiceImpl implements LoginService {
 	private String isAgreementByAgreementCode(SacRequestHeader requestHeader, String userKey, String agreementCode,
 			String isDormant) {
 
-        // FIXME use JPA version
+        // TODO-JPA use JPA version
 		String isAgreeYn = "N";
 
 		CommonRequest commonRequest = new CommonRequest();
@@ -4466,29 +4421,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceExtraInfoList(detailRes.getDeviceInfoList().get(0).getDeviceExtraInfoList());
 
 		// PIN 정보
-		SearchDeviceSetInfoRequest searchDeviceSetInfoRequest = new SearchDeviceSetInfoRequest();
-		searchDeviceSetInfoRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySearch = null;
-		keySearch = new KeySearch();
-		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-		keySearch.setKeyString(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-		keySearchList.add(keySearch);
-
-		keySearch = new KeySearch();
-		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		keySearch.setKeyString(detailRes.getUserKey());
-		keySearchList.add(keySearch);
-
-		searchDeviceSetInfoRequest.setKeySearchList(keySearchList);
-
-		SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
-				.searchDeviceSetInfo(searchDeviceSetInfoRequest);
-		MarketPinInfo pinInfo = new MarketPinInfo();
-		pinInfo.setIsPinSet(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
-		//pinInfo.setIsPinRetry(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry());
-		pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
-		pinInfo.setSetPinUrl(this.getPinSetUrl(pinInfo));
+        MarketPinInfo pinInfo = getMarketPinInfo(detailRes.getUserKey(), detailRes.getDeviceInfoList().get(0).getDeviceKey());
 
 		res.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 회원상태 정상
 		res.setUserAuthKey(this.tempUserAuthKey); // 임시 인증키

@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.member.domain.shared;
 
 import com.google.common.base.Objects;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.domain.mbr.UserMarketPin;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -88,7 +89,7 @@ public class UserMember {
     @Transient
     private boolean fromNormal;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "id.member")
     private List<UserDevice> devices;
 
     @OneToMany(mappedBy = "member")

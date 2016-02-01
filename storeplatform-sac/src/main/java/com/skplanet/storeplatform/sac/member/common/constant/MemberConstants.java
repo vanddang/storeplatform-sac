@@ -184,7 +184,9 @@ public final class MemberConstants {
 	public static final String DEVICE_CHANGE_TYPE_SECEDE_ECG = "US012011"; // 부가서비스해지
 	public static final String DEVICE_CHANGE_TYPE_NUMBER_MOVE = "US012012"; // 번호이동
 	public static final String DEVICE_CHANGE_TYPE_IMEI_CHANGE = "US012013"; // imei변경
-	public static final String DEVICE_CHANGE_TYPE_DEVICEID_CHANGE = "US012014"; // deviceId변경(oneStore 재설치) // TODO. 공통코드 추가 필요!!
+	public static final String DEVICE_CHANGE_TYPE_GMAIL_CHANGE = "US012014"; // gmail변경
+	public static final String DEVICE_CHANGE_TYPE_SMS_CHANGE = "US012015"; // SMS 수신동의 변경
+	public static final String DEVICE_CHANGE_TYPE_DEVICEID_CHANGE = "US012016"; // deviceId변경(oneStore 재설치) // TODO. 공통코드 추가 필요!!
 
 	/** 미지원 단말. */
 	public static final String NOT_SUPPORT_HP_CORP = "NSH";
