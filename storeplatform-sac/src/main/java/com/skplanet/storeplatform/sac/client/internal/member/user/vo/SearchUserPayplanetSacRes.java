@@ -11,15 +11,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * [REQUEST]userKey, deviceKey 이용하여 회원 결제페이지 노출 정보 조회
  * 
- * Updated on : 2014. 3. 06. Updated by : 강신완, 부르칸.
+ * Updated on : 2016. 1. 29. Updated by : 최진호, 보고지티.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SearchUserPayplanetSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String skpAgreementYn;
-
-	private String ocbAgreementYn;
 
 	private String ocbCardNumber;
 
@@ -31,14 +29,6 @@ public class SearchUserPayplanetSacRes extends CommonInfo {
 
 	public void setSkpAgreementYn(String skpAgreementYn) {
 		this.skpAgreementYn = skpAgreementYn;
-	}
-
-	public String getOcbAgreementYn() {
-		return this.ocbAgreementYn;
-	}
-
-	public void setOcbAgreementYn(String ocbAgreementYn) {
-		this.ocbAgreementYn = ocbAgreementYn;
 	}
 
 	public String getOcbCardNumber() {
