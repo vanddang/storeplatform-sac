@@ -615,7 +615,6 @@
                     ,login_status_cd
                     ,entry_day
                     ,bolter_day
-                    ,bolter_reason_cd
                     ,bolter_reason_desc
                     ,upd_dt
                     ,mbr_id
@@ -641,7 +640,6 @@
                 ,login_status_cd
                 ,entry_day
                 ,bolter_day
-                ,bolter_reason_cd
                 ,bolter_reason_desc
                 ,sysdate /* upd_dt */
                 ,mbr_id
@@ -832,7 +830,7 @@
     <update id="removeUser" parameterType="userMbr">
        UPDATE  /* UserMapper.removeUser, 사용자 탈퇴, wisestone_mikepark, 2013-12-23 */
                tb_us_ousermbr
-          SET  bolter_reason_cd = #{secedeReasonCode},           /* 탈퇴_사유_코드 */
+          SET
                bolter_reason_desc = #{secedeReasonMessage},      /* 탈퇴_사유_설명 */
                mbr_status_main_cd = #{userMainStatus},
                mbr_status_sub_cd = #{userSubStatus},
@@ -1749,7 +1747,7 @@
     </select>
 
     <select id="searchUserSegmentD" parameterType="searchUserSegmentRequest" resultType="searchUserSegmentResponse">
-        SELECT /* UserMapper.searchUserSegmentD, 회원 segment 정보, burkhan_rejoice, 2014-10-02 */
+        SELECT /* UserMapper.xml, searchUserSegmentD, SAC(SC), 윤보영, 2016-01-27 */
               a.insd_usermbr_no AS userKey,
                NVL (
                   (SELECT CASE MBR_LVL_CD
@@ -1762,19 +1760,6 @@
                     WHERE mbr_no = #{userKey}
                           AND BASE_YM = TO_CHAR (ADD_MONTHS (SYSDATE, -1), 'YYYYMM')),
                   'gold') AS userGradeCd,
-            <if test="isDormant.equalsIgnoreCase('N')">                  
-               CASE WHEN EXISTS (SELECT 1
-                                 FROM tb_us_ousermbr_device_his
-                                 WHERE INSD_USERMBR_NO = #{userKey}
-                                   AND INSD_DEVICE_ID = #{deviceKey}
-                                   AND CHG_CASE_CD = 'US012002'
-                                   AND UPD_DT > (SYSDATE - 7)
-                                )
-                    THEN 'Y'
-                    ELSE 'N'
-               END
-                  AS isChanged,
-            </if>
                   A.ENTRY_DAY AS entryDay
           FROM tb_us_ousermbr a, tb_us_ousermbr_device b
          WHERE     a.insd_usermbr_no = b.insd_usermbr_no
@@ -1952,8 +1937,7 @@
             ,mbr_status_sub_cd        as mbrStatusSubCd      
 
             ,entry_day                as entryDay            
-            ,bolter_day               as bolterDay           
-            ,bolter_reason_cd         as bolterReasonCd      
+            ,bolter_day               as bolterDay
             ,bolter_reason_desc       as bolterReasonDesc    
             ,upd_dt                   as updDt               
             ,mbr_id                   as mbrId               
@@ -1987,7 +1971,6 @@
                     ,mbr_status_sub_cd
                     <if test="entryDay != null">,entry_day</if>
                     <if test="bolterDay != null">,bolter_day</if>
-                    <if test="bolterReasonCd != null">,bolter_reason_cd</if>
                     <if test="bolterReasonDesc != null">,bolter_reason_desc</if>
                     <if test="updDt != null">,upd_dt</if>
                     <if test="mbrId != null">,mbr_id</if>
@@ -2015,7 +1998,6 @@
                     ,#{mbrStatusSubCd}
                     <if test="entryDay != null">,#{entryDay}</if>
                     <if test="bolterDay != null">,#{bolterDay}</if>
-                    <if test="bolterReasonCd != null">,#{bolterReasonCd}</if>
                     <if test="bolterReasonDesc != null">,#{bolterReasonDesc}</if>
                     <if test="updDt != null">,#{updDt}</if>
                     <if test="mbrId != null">,#{mbrId}</if>

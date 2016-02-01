@@ -42,6 +42,8 @@ public class PromotionEvent {
     private String targetId;    // chnlId, menuId, topMenuId
     private String userTargetTp;
 
+    private Date updDt;
+
     public Integer getPromId() {
         return promId;
     }
@@ -130,6 +132,14 @@ public class PromotionEvent {
         this.userTargetTp = userTargetTp;
     }
 
+    public Date getUpdDt() {
+        return updDt;
+    }
+
+    public void setUpdDt(Date updDt) {
+        this.updDt = updDt;
+    }
+
     @Transient
     public boolean isNeedsUserTargetSync() {
         return !StringUtils.equals(this.userTargetTp, DisplayConstants.PROM_TARGET_USER_ALL);
@@ -140,6 +150,7 @@ public class PromotionEvent {
         return StringUtils.defaultString(targetId).startsWith("DP") ? "DP01160102" : "DP01160101";
     }
 
+    @Transient
     public boolean isLiveFor(Date now) {
         return !(this.startDt == null || this.endDt == null || now == null) &&
                 !now.before(startDt) && !now.after(endDt);
@@ -167,6 +178,7 @@ public class PromotionEvent {
         if (!startDt.equals(event.startDt)) return false;
         if (!endDt.equals(event.endDt)) return false;
         if (!userTargetTp.equals(event.userTargetTp)) return false;
+        if (!updDt.equals(event.updDt)) return false;
         return targetId.equals(event.targetId);
 
     }
@@ -184,6 +196,7 @@ public class PromotionEvent {
         result = 31 * result + endDt.hashCode();
         result = 31 * result + targetId.hashCode();
         result = 31 * result + userTargetTp.hashCode();
+        result = 31 * result + updDt.hashCode();
         return result;
     }
 }

@@ -643,7 +643,8 @@
                                                <if test="idType == 'episode'">
                                                AND J.PROD_ID = #{productId} /* 에피소드 ID 조회 */
                                                </if>
-                                               AND J.PROD_ID  = PREFIX.PROD_ID(+)  /* 에피소드 상품의 PREFIX 및 BADGE 정보 */                                              
+                                               AND J.PROD_ID  = PREFIX.PROD_ID(+)  /* 에피소드 상품의 PREFIX 및 BADGE 정보 */
+                                               AND PREFIX.TENANT_ID(+) = #{tenantId}
                                            ) IA
                                    )JA
                               GROUP BY JA.CID
@@ -1060,6 +1061,7 @@
                                                AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */
                                                AND J.PROD_ID = #{episodeId} /* 에피소드 ID 조회 */
                                                AND J.PROD_ID  = PREFIX.PROD_ID(+)
+                                               AND PREFIX.TENANT_ID(+) = #{tenantId}
                                            ) IA
                                    )JA
                               GROUP BY JA.CID

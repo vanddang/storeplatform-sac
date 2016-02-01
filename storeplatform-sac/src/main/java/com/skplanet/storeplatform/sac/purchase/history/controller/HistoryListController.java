@@ -9,6 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.controller;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
+import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacV2Req;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacV2Res;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
-import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
  * 구매내역 Controller
@@ -53,7 +47,7 @@ public class HistoryListController {
 	 * 
 	 * @param request
 	 *            구매내역요청
-	 * @param requestHeader
+	 * @param sacRequestHeader
 	 *            공통헤더정보
 	 * @return HistoryListSacRes
 	 */
@@ -72,7 +66,7 @@ public class HistoryListController {
 	 * 
 	 * @param request
 	 *            구매내역요청
-	 * @param requestHeader
+	 * @param sacRequestHeader
 	 *            공통헤더정보
 	 * @return HistoryListSacRes
 	 */
@@ -97,7 +91,7 @@ public class HistoryListController {
 	 * 
 	 * @param request
 	 *            구매내역요청
-	 * @param requestHeader
+	 * @param sacRequestHeader
 	 *            공통헤더정보
 	 * @return HistoryCountSacRes
 	 */
@@ -110,5 +104,4 @@ public class HistoryListController {
 
 		return this.historyListService.searchHistoryCount(request);
 	}
-
 }

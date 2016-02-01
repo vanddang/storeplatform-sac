@@ -75,8 +75,15 @@ public class UserJoinController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+        /** 유효 통신사코드 체크. */
         if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
             throw new StorePlatformException("SAC_MEM_1509");
+        }
+
+        /** NON 통신사 시 MSISDN 체크 */
+        if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+                && StringUtils.equals(MemberConstants.DEVICE_ID_TYPE_MSISDN, req.getDeviceIdType())){
+            throw new StorePlatformException("SAC_MEM_1514");
         }
 
 		/**
@@ -263,6 +270,11 @@ public class UserJoinController {
 		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
 				&& StringUtils.isNotBlank(req.getMdn())){
 			throw new StorePlatformException("SAC_MEM_1514");
+		}
+
+		if(!StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+				&& StringUtils.isBlank(req.getMdn())){
+			throw new StorePlatformException("SAC_MEM_0001", "mdn");
 		}
 
 		if(StringUtils.isNotBlank(req.getMdn())){

@@ -2088,7 +2088,6 @@ public class UserSCITest {
 		removeUserRequest = new RemoveUserRequest();
 		removeUserRequest.setUserKey(MULTI_DEVICE_INSD_USERMBR_NO);
 		// removeUserRequest.setUserKey("IW1314481420140626192708");
-		removeUserRequest.setSecedeReasonCode("test1");
 		removeUserRequest.setSecedeReasonMessage("test...");
 		removeUserRequest.setCommonRequest(commonRequest);
 

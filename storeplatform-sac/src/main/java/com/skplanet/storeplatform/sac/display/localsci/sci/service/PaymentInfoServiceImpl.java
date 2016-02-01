@@ -348,7 +348,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV3, event.getRateGrd3());
 
             paymentInfo.setPromId(event.getPromId());
-            paymentInfo.setAcmlDt(event.getAcmlDt());
+            paymentInfo.setAcmlDt(DateUtils.format(event.getAcmlDate()));
             paymentInfo.setAcmlMethodCd(event.getAcmlMethodCd());
             paymentInfo.setPrivateAcmlLimit(event.getAcmlLimt());
             paymentInfo.setPromForceCloseCd(event.getPromForceCloseCd());

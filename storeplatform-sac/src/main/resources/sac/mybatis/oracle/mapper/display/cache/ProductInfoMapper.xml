@@ -498,7 +498,7 @@
           INNER JOIN TB_DP_MENU_CATEGORY_DESC TMCD
             ON TMCD.MENU_ID = CPROD.TOP_MENU_ID AND TMCD.LANG_CD = CPDESC.LANG_CD
           LEFT OUTER JOIN TB_DP_PROD_PREFIX CPP
-            ON CPP.PROD_ID = CPROD.PROD_ID
+            ON CPP.PROD_ID = CPROD.PROD_ID AND CPP.TENANT_ID = #{tenantId}
         WHERE 1 = 1 ]]>
             AND RSHP.PROD_RSHP_CD = 'DP010802'
             <if test="prodIdType == 'CHANNEL'">
@@ -683,7 +683,7 @@
                 LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS CTSTAT
                 ON CTSTAT.PROD_ID = RSHP.PROD_ID AND CTSTAT.TENANT_ID = CTPROD.TENANT_ID
                 LEFT OUTER JOIN TB_DP_PROD_PREFIX CPP
-                ON CPP.PROD_ID = CPROD.PROD_ID
+                ON CPP.PROD_ID = CPROD.PROD_ID AND CPP.TENANT_ID = #{tenantId}
             WHERE 1 = 1
                 AND RSHP.PROD_RSHP_CD = 'DP010802'
                 AND CTPROD.TENANT_ID = #{tenantId}

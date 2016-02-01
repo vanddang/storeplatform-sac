@@ -7,8 +7,10 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.purchase.order.service;
+package com.skplanet.storeplatform.sac.purchase.migration.service;
 
+import com.skplanet.storeplatform.sac.client.purchase.vo.migration.PurchaseMigInformationSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.migration.PurchaseMigInformationSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseTransferSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseTransferSacRes;
 
@@ -32,4 +34,15 @@ public interface PurchaseTransferService {
 	 */
 	public PurchaseTransferSacRes createPurchaseTransfer(PurchaseTransferSacReq request);
 
+	/**
+	 *
+	 * <pre>
+	 * 구매이관정보 조회.
+	 * </pre>
+	 *
+	 * @param request
+	 *            구매이관정보조회 요청 정보
+	 * @return CreatePurchaseSacRes
+	 */
+	public PurchaseMigInformationSacRes searchMigInformation(PurchaseMigInformationSacReq request);
 }

@@ -8,6 +8,7 @@ import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseHeaderSa
  * 즉시이용정지 요청 VO
  * 
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
+ * Updated on : 2016. 01. 14. Updated by : eastaim
  */
 public class ImmediatelyUseStopSacReq extends PurchaseHeaderSacReq {
 
@@ -21,7 +22,9 @@ public class ImmediatelyUseStopSacReq extends PurchaseHeaderSacReq {
 	private String reqPathCd; // 요청경로코드
 	@NotBlank
 	private String drawbackAmt; // 환불금액
-	private String userKey;
+    private String userKey; // 사용자 Key
+    private String reasonCd; // 환불 사유 코드
+    private String reasonMsg; // 환불 사유 메세지
 
 	/**
 	 * @return the prchsId
@@ -98,4 +101,33 @@ public class ImmediatelyUseStopSacReq extends PurchaseHeaderSacReq {
 		this.userKey = userKey;
 	}
 
+    /**
+     * @return 환불 사유 코드
+     */
+    public String getReasonCd() {
+        return reasonCd;
+    }
+
+    /**
+     * 환불 사유 코드 저장
+     * @param reasonCd
+     */
+    public void setReasonCd(String reasonCd) {
+        this.reasonCd = reasonCd;
+    }
+
+    /**
+     * @return 환불 사유 기타 메세지
+     */
+    public String getReasonMsg() {
+        return reasonMsg;
+    }
+
+    /**
+     * 환불 사유 기타 메세지 저장
+     * @param reasonMsg
+     */
+    public void setReasonMsg(String reasonMsg) {
+        this.reasonMsg = reasonMsg;
+    }
 }

@@ -535,6 +535,7 @@
                          AND B.PROD_ID = I.PROD_ID
                          AND B.PROD_ID = M.PROD_ID
                          AND D.PROD_ID = CH_PF.PROD_ID(+) /* 채널의 PREFIX */
+                         AND CH_PF.TENANT_ID(+) = #{tenantId}
                          AND G.TENANT_ID = H.TENANT_ID                      
                          AND G.TENANT_ID = N.TENANT_ID(+)
                          AND G.TENANT_ID = O.TENANT_ID           
@@ -934,6 +935,7 @@
                    AND I.PART_PROD_ID = L.PROD_ID
                    AND I.PART_PROD_ID = O.PROD_ID
                    AND CPP.PROD_ID(+) = D.PROD_ID
+                   AND CPP.TENANT_ID(+) = #{tenantId}
                    <if test='contentsTypeCd == "PD002502"'>
                    AND I.PART_PROD_ID = M1.PROD_ID(+)
                    </if>

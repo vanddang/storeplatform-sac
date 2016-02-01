@@ -29,7 +29,6 @@ public class GetPromotionEventParam {
 
     public GetPromotionEventParam() {}
 
-    @Deprecated
     public GetPromotionEventParam(String tenantId, String menuId, String chnlId) {
         this.tenantId = tenantId;
         this.menuId = menuId;

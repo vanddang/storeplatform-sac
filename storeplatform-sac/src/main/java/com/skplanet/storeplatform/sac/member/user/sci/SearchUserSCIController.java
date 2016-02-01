@@ -3,18 +3,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci;
 
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
@@ -52,6 +40,16 @@ import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.sci.service.SearchUserSCIService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 /**
  * 회원정보 조회 내부메소드 호출 Controller.
@@ -200,23 +198,6 @@ public class SearchUserSCIController implements SearchUserSCI {
 			}
 		}
 
-		// OCB이용약관 동의여부 searchOneId
-		String ocbAgreementYn = "N";
-		// try {
-		// ocbAgreementYn = StringUtil.setTrimYn(detailRes.getUserInfo().getIsMemberPoint());
-		// } catch (StorePlatformException ex) {
-		// if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-		// ocbAgreementYn = "N";
-		// } else if (ex.getErrorInfo().getCode().equals(MemberConstants.SAC_ERROR_NO_ONEID)) {
-		// ocbAgreementYn = "N";
-		// }
-		// LOGGER.debug("====== OneId Response : {}", ex.getCode());
-		// }
-		if (StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())
-				&& this.searchUserSCIService.isOcbJoinIDP(detailRes.getUserInfo().getImSvcNo())) {
-			ocbAgreementYn = "Y";
-		}
-
 		// OCB 카드번호
 		GetOcbInformationReq ocbReq = new GetOcbInformationReq();
 		ocbReq.setUserKey(request.getUserKey());
@@ -240,7 +221,6 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserPayplanetSacRes payplanetSacRes = new SearchUserPayplanetSacRes();
 		payplanetSacRes.setSkpAgreementYn(skpAgreementYn);
 		payplanetSacRes.setOcbCardNumber(StringUtil.setTrim(ocbCardNumber));
-		payplanetSacRes.setOcbAgreementYn(ocbAgreementYn);
 		payplanetSacRes.setOcbAuthMethodCode(ocbAuthMethodCode);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(payplanetSacRes));

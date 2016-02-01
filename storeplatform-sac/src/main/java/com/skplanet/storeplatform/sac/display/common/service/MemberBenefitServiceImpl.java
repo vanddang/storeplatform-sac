@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.common.service;
 import com.google.common.base.Stopwatch;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.service.PromotionEventRequestService;
 import com.skplanet.storeplatform.sac.display.cache.vo.GetPromotionEventParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.PromotionEvent;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -38,7 +39,7 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
     private SacServiceService sacServiceDataService;
     
     @Autowired
-    private CachedExtraInfoManager cachedExtraInfoManager;
+    private PromotionEventRequestService promotionEventRequestService;
 
     private static final Logger logger = LoggerFactory.getLogger(MemberBenefitServiceImpl.class);
     
@@ -56,7 +57,7 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
             return mileageInfo;
 
         Stopwatch stopwatch = Stopwatch.createStarted();
-        PromotionEvent event = cachedExtraInfoManager.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId));
+        PromotionEvent event = promotionEventRequestService.getPromotionEvent(new GetPromotionEventParam(tenantId, menuId, chnlId));
         logger.debug("Event fetch from redis - {}", stopwatch.stop());
 
         if (event != null) {
@@ -66,20 +67,6 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
             mileageInfo.setRateLv2(event.getRateGrd2());
             mileageInfo.setRateLv3(event.getRateGrd3());
         }
-
-        //노출 여부. ResponseInfoGenerateFacadeImpl.appendMileageInfo 에서 처리.
-            /*
-	        if(mileageInfo != null) {
-		        //Tstore멤버십 적립율 정보
-		        //예외 상품이 아닌 경우 무료 상품은 적립율을 노출하지 않는다.
-		        //무료 상품 && 카테고리 => 마일리지 비노출
-		        if (prodAmt == null || prodAmt == 0
-		        		&& StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)
-		        		) {
-		        	mileageInfo = null;
-		        }
-	        }
-	        */
 
         return mileageInfo;
     }
@@ -95,7 +82,7 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
             return mileageInfo;
 
         GetPromotionEventParam param = new GetPromotionEventParam(tenantId, menuId, chnlId, userKey);
-        PromotionEvent event = cachedExtraInfoManager.getPromotionEvent(param);
+        PromotionEvent event = promotionEventRequestService.getPromotionEvent(param);
 
         if (event != null) {
             mileageInfo = new MileageInfo();

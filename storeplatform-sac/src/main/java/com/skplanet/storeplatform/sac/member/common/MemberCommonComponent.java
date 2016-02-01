@@ -43,6 +43,7 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceTelecomInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
@@ -522,7 +523,6 @@ public class MemberCommonComponent {
 		userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
 		userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
 		userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
-		userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
 		userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
 		userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
 		userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
@@ -1226,10 +1226,10 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * SKT, KT, U+ 각 통신사의 서비스관리번호를 구한다.
+	 * SKT, KT, U+ 각 통신사의 주요정보를 구한다.
 	 * SKT는 mdn, deviceTelecom 파라메터만 필수.
 	 * KT/U+는 모든 파라메터 필수.
-	 * KT/U+ 응답결과에 따라 Exception을 발생시킨다. 단, 시스템 오류 응답, E/C 연동 에러시에는 svcMangNo null로 리턴한다.
+	 * KT/U+ 응답결과에 따라 Exception을 발생시킨다. 단, 시스템 오류 응답, E/C 연동 에러시에는 null로 리턴한다.
 	 * </pre>
 	 *
 	 * @param mdn
@@ -1240,10 +1240,11 @@ public class MemberCommonComponent {
 	 *            String
 	 * @param simSerialNo
 	 *            String
-	 * @return svcMangNo
+	 * @return DeviceTelecomInfo
 	 */
-	public String getSvcMangNo(String mdn, String deviceTelecom, String nativeId, String simSerialNo){
-		String svcMangNo = null;
+	public DeviceTelecomInfo getSvcMangNo(String mdn, String deviceTelecom, String nativeId, String simSerialNo){
+
+		DeviceTelecomInfo deviceTelecomInfo = new DeviceTelecomInfo();
 
 		// MDN 형식만 조회 가능
 		if(StringUtils.isBlank(mdn) && ValidationCheckUtils.isDeviceId(mdn)){
@@ -1272,7 +1273,7 @@ public class MemberCommonComponent {
 
 		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 			UserEcRes userRes = this.getMappingInfo(mdn, "mdn");
-			svcMangNo = userRes.getSvcMngNum();
+			deviceTelecomInfo.setSvcMangNum(userRes.getSvcMngNum());
 		} else {
 			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
 			MarketAuthorizeEcRes marketRes = null;
@@ -1290,12 +1291,13 @@ public class MemberCommonComponent {
 					marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
 				}
 			}catch(StorePlatformException e){
-				// 타사 연동 오류인 경우 svcMangNo null로 리턴
+				// 타사 연동 오류
 				return null;
 			}
 
 			if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-				svcMangNo = marketRes.getDeviceInfo().getDeviceKey();
+				deviceTelecomInfo.setSvcMangNum(marketRes.getDeviceInfo().getDeviceKey());
+				deviceTelecomInfo.setUserBirth(getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl()));
 			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) {
 				throw new StorePlatformException("SAC_MEM_0003", "mdn", mdn);
 			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_IMEI_MISMATCH)) {
@@ -1305,12 +1307,11 @@ public class MemberCommonComponent {
 			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_PARAM_ERROR)) {
 				throw new StorePlatformException("SAC_MEM_0001", "필수");
 			}else if(StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_SYSTEM_ERROR)) {
-				// 타사 시스템 오류인 경우 svcMangNo null로 리턴
 				return null;
 			}
 		}
 
-		return svcMangNo;
+		return deviceTelecomInfo;
 	}
 
 	/**
@@ -1363,5 +1364,43 @@ public class MemberCommonComponent {
 	 */
 	public MarketAuthorizeEcRes authorizeForUplusStore(MarketAuthorizeEcReq marketReq){
 		return this.marketSCI.authorizeForUplusStore(marketReq);
+	}
+
+	/**
+	 * <pre>
+	 * 회원 연령코드를 생년월일로 변환.
+	 * 만생년 + 1231 임시로 생성
+	 * </pre>
+	 *
+	 * @param prodExpoLevl
+	 *            String
+	 * @return birth 생년월일
+	 */
+	public String getProdExpoLevlToBirth(String prodExpoLevl) {
+
+		String birth = "";
+		if (StringUtils.isBlank(prodExpoLevl)) {
+			return birth;
+		}
+
+		Integer year = Integer.parseInt(DateUtil.getToday("yyyy"));
+
+		if (MemberConstants.PROD_EXPO_LEVL_19_MORE.equals(prodExpoLevl)) {
+			year -= 20;
+		} else if (MemberConstants.PROD_EXPO_LEVL_18_MORE.equals(prodExpoLevl)) {
+			year -= 19;
+		} else if (MemberConstants.PROD_EXPO_LEVL_15_MORE.equals(prodExpoLevl)) {
+			year -= 16;
+		} else if (MemberConstants.PROD_EXPO_LEVL_12_MORE.equals(prodExpoLevl)) {
+			year -= 13;
+		} else if (MemberConstants.PROD_EXPO_LEVL_12_UNDER.equals(prodExpoLevl)) {
+			year -= 12;
+		} else {
+			return birth;
+		}
+
+		birth = String.valueOf(year) + "1231";
+
+		return birth;
 	}
 }

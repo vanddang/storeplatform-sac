@@ -16,10 +16,13 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.common.util.PartialProcessor;
 import com.skplanet.storeplatform.sac.common.util.PartialProcessorHandler;
 import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionEvent;
+import com.skplanet.storeplatform.sac.display.cache.vo.RawPromotionUser;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.promotion.vo.PromotionTargetUserKeysPaginated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -76,7 +79,6 @@ public class PromotionEventDataServiceImpl implements PromotionEventDataService 
     public List<String> getPromotionUserList(int promId) {
         Map<String, Object> req = Maps.newHashMap();
         req.put("promId", promId);
-
         return commonDAO.queryForList("PromotionEventMapper.getPromotionUserList", req, String.class);
     }
 
@@ -119,6 +121,70 @@ public class PromotionEventDataServiceImpl implements PromotionEventDataService 
         }, 20);
 
         return res;
+    }
+
+    @Override
+    public RawPromotionEvent getForemostRawEvent(String tenantId, String promTypeValue) {
+        final Map<String, Object> req = Maps.newHashMap();
+        req.put("tenantId", tenantId);
+        req.put("promTypeValue", promTypeValue);
+        return commonDAO.queryForObject("PromotionEventMapper.selectForemostEvent", req, RawPromotionEvent.class);
+    }
+
+    @Override
+    public List<RawPromotionEvent> getForemostRawEvents(String tenantId) {
+        final Map<String, Object> req = Maps.newHashMap();
+        req.put("tenantId", tenantId);
+        return commonDAO.queryForList("PromotionEventMapper.selectForemostEvents", req, RawPromotionEvent.class);
+    }
+
+    @Override
+    public PromotionTargetUserKeysPaginated getPromotionTargetUserKeysPaginated(int promId, String startKey, int count) {
+        final Map<String, Object> req = Maps.newHashMap();
+        req.put("promId", promId);
+        req.put("startKey", startKey);
+        req.put("count", count + 1);
+        List<String> userKeys = commonDAO.queryForList("PromotionEventMapper.selectPromotionTargetUserKeysPaginated", req, String.class);
+        PromotionTargetUserKeysPaginated p = new PromotionTargetUserKeysPaginated();
+        if (userKeys.size() == count + 1) {
+            p.setUserKeys(userKeys.subList(0, userKeys.size() - 1));
+            p.setStartKey(userKeys.get(userKeys.size() - 1));
+        }
+        else {
+            p.setUserKeys(userKeys);
+            p.setStartKey(null);
+        }
+        return p;
+    }
+
+    @Override
+    public void insertRawPromotionEvent(RawPromotionEvent rawPromotionEvent) {
+        commonDAO.insert("PromotionEventMapper.insertEvent", rawPromotionEvent);
+    }
+
+    @Override
+    public void insertRawPromotionUser(RawPromotionUser rawPromotionUser) {
+        commonDAO.insert("PromotionEventMapper.insertTargetUser", rawPromotionUser);
+    }
+
+    @Override
+    public Integer maxPromId() {
+        return commonDAO.queryForInt("PromotionEventMapper.maxPromId", null);
+    }
+
+    @Override
+    public int deleteEvents(String tenantId, Integer promId) {
+        final Map<String, Object> req = Maps.newHashMap();
+        req.put("tenantId", tenantId);
+        req.put("promId", promId);
+        return commonDAO.delete("PromotionEventMapper.deleteEvents", req);
+    }
+
+    @Override
+    public int deleteTargetUsers(Integer promId) {
+        final Map<String, Object> req = Maps.newHashMap();
+        req.put("promId", promId);
+        return commonDAO.delete("PromotionEventMapper.deleteTargetUsers", req);
     }
 
 }

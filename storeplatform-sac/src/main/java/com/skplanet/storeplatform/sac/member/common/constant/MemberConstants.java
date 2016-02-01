@@ -112,10 +112,10 @@ public final class MemberConstants {
 	public static final String DEVICE_TELECOM_KTM = "US001209"; // KTM
 	public static final String DEVICE_TELECOM_LGM = "US001210"; // LGM
 
-	/** 통신사 코드. */
+	/** 통신사 코드명. */
 	public static final String NM_DEVICE_TELECOM_SKT = "SKT"; // SKT
-	public static final String NM_DEVICE_TELECOM_KT = "KTF"; // KT
-	public static final String NM_DEVICE_TELECOM_LGT = "LGT"; // U+
+	public static final String NM_DEVICE_TELECOM_KT = "KT"; // KT
+	public static final String NM_DEVICE_TELECOM_LGT = "U+"; // U+
 	public static final String NM_DEVICE_TELECOM_OMD = "OMD"; // 자급제 단말
 	public static final String NM_DEVICE_TELECOM_NSH = "NSH"; // NSH
 	public static final String NM_DEVICE_TELECOM_NON = "NON"; // NON
@@ -247,9 +247,6 @@ public final class MemberConstants {
 	public static final String PARENT_TYPE_FATHER = "US011801"; // 아버지
 	public static final String PARENT_TYPE_MOTHER = "US011802"; // 어머니
 	public static final String PARENT_TYPE_ECT = "US011803"; // 기타
-
-	/** 탈퇴 사유 코드. */
-	public static final String WITHDRAW_REASON_OTHER = "US010408"; // 기타
 
 	/** 탈퇴유형 코드. */
 	public static final String USER_WITHDRAW_CLASS_CHANGE_ID = "US010701"; // ID 전환

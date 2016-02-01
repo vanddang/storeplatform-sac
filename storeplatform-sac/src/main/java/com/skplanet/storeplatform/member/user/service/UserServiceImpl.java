@@ -663,7 +663,6 @@ public class UserServiceImpl implements UserService {
 
 		usermbr = new UserMbr();
 		usermbr.setUserKey(removeUserRequest.getUserKey());
-		usermbr.setSecedeReasonCode(removeUserRequest.getSecedeReasonCode());
 		usermbr.setSecedeReasonMessage(removeUserRequest.getSecedeReasonMessage());
 		usermbr.setUserMainStatus(MainStateCode.SECEDE.getCode()); // 탈퇴 MAIN CODE, US010202
 		usermbr.setUserSubStatus(SubStateCode.WITHDRAW.getCode()); // 탈퇴완료 SUB CODE, US010303
@@ -3065,7 +3064,6 @@ public class UserServiceImpl implements UserService {
 		if (StringUtils.isNumeric(birth) && birth.length() == 8) {
 			searchUserSegmentResponse.setUserBirthDay(resultUserMbr.getUserBirthDay());
 		}
-		searchUserSegmentResponse.setUserSex(StringUtils.defaultString(resultUserMbr.getUserSex()));
 
 		if (StringUtils.equals(Constant.TYPE_YN_Y, resultUserMbr.getIsRealName())) {
 			// 실명인증 정보 조회
@@ -4068,6 +4066,7 @@ public class UserServiceImpl implements UserService {
 					"User.searchGiftChargeInfoList", searchGiftChargeInfoRequest);
 
 			if (giftChargeInfoList != null && giftChargeInfoList.size() >= 5) {
+                /** 01-01-01. 브랜드 ID에 매핑되는 제휴사 아이디 5개 초과 시 최초 등록 순으로 삭제 후 등록 */
 				throw new StorePlatformException(this.getMessage("response.ResultCode.exceedMaxCount", ""));
 			}
 

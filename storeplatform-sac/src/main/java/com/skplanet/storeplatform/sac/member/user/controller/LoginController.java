@@ -160,13 +160,6 @@ public class LoginController {
             throw new StorePlatformException("SAC_MEM_1509");
 		}
 
-		// MVNO 통신사 요청시 에러
-		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKM, req.getDeviceTelecom())
-				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_KTM, req.getDeviceTelecom())
-				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())){
-			throw new StorePlatformException("SAC_MEM_1515");
-		}
-
 		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
 				&& StringUtils.isNotBlank(req.getMdn())){
 			throw new StorePlatformException("SAC_MEM_1514");
@@ -247,11 +240,19 @@ public class LoginController {
 			throw new StorePlatformException("SAC_MEM_1509");
 		}
 
+		// NON 통신사는 MDN이 존재할 수 없음.
 		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
 				&& StringUtils.isNotBlank(req.getMdn())){
 			throw new StorePlatformException("SAC_MEM_1514");
 		}
 
+		// NON 통신사가 아닌경우 MDN 필수.
+		if(!StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+				&& StringUtils.isBlank(req.getMdn())){
+			throw new StorePlatformException("SAC_MEM_0001", "mdn");
+		}
+
+		// MDN이 존재하는경우 필수파라메터 체크.
 		if(StringUtils.isNotBlank(req.getMdn())){
 			if(StringUtils.isBlank(req.getNativeId())){
 				throw new StorePlatformException("SAC_MEM_0001", "nativeId");

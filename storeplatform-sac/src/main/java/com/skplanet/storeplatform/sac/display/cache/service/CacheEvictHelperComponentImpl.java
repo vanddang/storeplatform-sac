@@ -50,6 +50,13 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
     @Autowired
     private RedisDataService dataService;
 
+    @Autowired
+    private PkgToAppInfoManager pkgToAppInfoManager;
+
+    @Autowired
+    private SupportDeviceManager supportDeviceManager;
+
+
     @Value("#{propertiesForSac['skp.common.service.language']}")
     private String SERVICE_LANG;
 
@@ -73,9 +80,8 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
                 supportDeviceList = cacheSupportService.getSupportDeviceList(_prodId);
                 menuList = cacheSupportService.getMenuList(_prodId);
 
-                cachedExtraInfoManager.evictPkgsInProd(_prodId);
-                c.del(SacRedisKeys.pkgsInProd(_prodId));
-                c.del(SacRedisKeys.sprtdev(_prodId));
+                pkgToAppInfoManager.evict(_prodId);
+                supportDeviceManager.evict(_prodId);
             }
 
             // del productBaseInfo

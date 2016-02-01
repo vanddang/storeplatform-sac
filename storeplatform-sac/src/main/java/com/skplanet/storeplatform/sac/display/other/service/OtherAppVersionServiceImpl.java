@@ -10,22 +10,28 @@
 package com.skplanet.storeplatform.sac.display.other.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.common.support.redis.RedisDataService;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.display.cache.service.PkgToAppInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.service.SupportDeviceManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.PkgToAppInfo;
 import com.skplanet.storeplatform.sac.display.cache.vo.SupportDevice;
-import com.skplanet.storeplatform.sac.display.cache.vo.SupportDeviceParam;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.other.vo.AppApkInfo;
 import com.skplanet.storeplatform.sac.display.other.vo.GetVersionInfoByPkgParam;
 import com.skplanet.storeplatform.sac.display.other.vo.VersionInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * <p>
@@ -36,10 +42,15 @@ import java.util.HashSet;
 @Service
 public class OtherAppVersionServiceImpl implements OtherAppVersionService {
 
-    private static final Logger logger = LoggerFactory.getLogger(OtherAppVersionServiceImpl.class);
+    @Autowired
+    @Qualifier("sac")
+    private CommonDAO commonDAO;
 
     @Autowired
-    private RedisDataService dataService;
+    private SupportDeviceManager supportDeviceManager;
+
+    @Autowired
+    private PkgToAppInfoManager pkgToAppInfoManager;
 
     @Override
     public VersionInfo getVersionInfoByPkg(GetVersionInfoByPkgParam param) {
@@ -51,14 +62,11 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
         if(osVer.equals(DisplayCommonUtil.WRONG_OS_VER))
             throw new StorePlatformException("SAC_DSP_0030");
 
-        PkgToAppInfo appInfo = dataService.get(PkgToAppInfo.class, param.getApkPkgNm());
+        PkgToAppInfo appInfo = pkgToAppInfoManager.get(param.getApkPkgNm());
         if(appInfo == null)
             return null;
 
-        String prodId = appInfo.getProdId();
-
-        SupportDevice supportDevice = dataService.get(SupportDevice.class, new SupportDeviceParam(prodId, param.getDeviceModelCd()));
-
+        SupportDevice supportDevice = supportDeviceManager.get(appInfo.getProdId(), param.getDeviceModelCd());
         if (supportDevice == null)
             return null;
 
@@ -67,13 +75,32 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
         if(!verSet.contains(osVer))
             return null;
 
-        // 통계처리
-        /*
-        final Plandasj plandasj = connectionFactory.getConnectionPool().getClient();
-        plandasj.hincrBy("product:version:stats", prodId + ":" + param.getDeviceModelCd() + ":" + osVer, 1);
-        */
-
-        return new VersionInfo(prodId, supportDevice.getVerCd(), supportDevice.getVer());
+        return new VersionInfo(appInfo.getProdId(), supportDevice.getVerCd(), supportDevice.getVer());
     }
 
+    @Override
+    public VersionInfo getMapgVersionInfo(String mapgProdId, String deviceModelCd, String osVer) {
+
+        String prodId = searchProdIdByMapgProdId(mapgProdId);
+        if (StringUtils.isBlank(prodId))
+            return null;
+
+        SupportDevice supportDevice = supportDeviceManager.get(prodId, deviceModelCd);
+        if (supportDevice == null)
+            return null;
+
+        // OS 프로비저닝
+        HashSet<String> verSet = new HashSet<String>(Arrays.asList(supportDevice.getOsVer().split(";")));
+        if(!verSet.contains(osVer))
+            return null;
+
+        return new VersionInfo(prodId, supportDevice.getVerCd(), supportDevice.getVer(), supportDevice.getPkgNm());
+    }
+
+    private String searchProdIdByMapgProdId(String mapgProdId) {
+        HashMap<String, Object> req = new HashMap<String, Object>();
+        req.put("mapgProdId", mapgProdId);
+
+        return this.commonDAO.queryForObject("OtherAppVersion.getProdIdByMapgProdId", req, String.class);
+    }
 }

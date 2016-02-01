@@ -3,66 +3,76 @@
 <mapper namespace="UseStop">
     
     <!-- 구매내역조회 -->
-    <select id="searchPrchsDtl" parameterType="ImmediatelyUseStopScReq" resultType="prchsDtl">
+    <select id="searchPrchsDtl" parameterType="ImmediatelyUseStopScReq" resultType="PrchsDtl">
 		SELECT  /* UseStop.searchPrchsDtl, 구매상세 내역 조회 ntels_yjw/nTels, 2014-07-22 */
-		        TENANT_ID
-		      , PRCHS_ID
-		      , PRCHS_DTL_ID
-		      , USE_TENANT_ID
-		      , USE_INSD_USERMBR_NO
-		      , USE_INSD_DEVICE_ID
-		      , PRCHS_DT
-		      , TOT_AMT
-		      , PROD_ID
-		      , PROD_AMT
-		      , PROD_QTY
-		      , TENANT_PROD_GRP_CD
-		      , STATUS_CD
-		      , PRCHS_PROD_TYPE
+		        tenant_id
+		      , prchs_id
+		      , prchs_dtl_id
+		      , use_insd_usermbr_no
+		      , use_insd_device_id
+		      , TO_CHAR(prchs_dt, 'YYYYMMDDHH24MISS') prchs_dt
+              , TO_CHAR(dwld_start_dt, 'YYYYMMDDHH24MISS') dwld_start_dt
+              , TO_CHAR(dwld_expr_dt, 'YYYYMMDDHH24MISS') dwld_expr_dt
+              , tot_amt
+		      , prod_id
+		      , prod_amt
+		      , prod_qty
+		      , tenant_prod_grp_cd
+		      , status_cd
+		      , prchs_prod_type
 		  FROM tb_pr_prchs_dtl
 		 WHERE tenant_id = #{tenantId}
 		   AND prchs_id = #{prchsId}
-		   <if test="userKey != null and userKey != ''">
-		   AND use_tenant_id = #{tenantId}
-		   AND use_insd_usermbr_no = #{userKey} 
+		   <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(userKey)">
+    		   AND use_insd_usermbr_no = #{userKey}
 		   </if>
     </select>
     
     <!-- 정액권으로 구매한 상품 이용정지 -->
-    <update id="updatePrchsUseFix" parameterType="ImmediatelyUseStopScReq">
-        UPDATE  tb_pr_prchs /* UseStop.updatePrchs, 구매 내역 업데이트 ntels_yjw/nTels, 2014-07-22 */
-           SET  status_cd = #{prchsStatusCd} 
-              , cancel_req_path_cd = #{reqPathCd}
-              , cancel_dt = SYSDATE
-              , upd_id = #{adminId}
-              , upd_dt = SYSDATE
-         WHERE (tenant_id, prchs_id) IN (SELECT a.tenant_id ,a.prchs_id
-									       FROM tb_pr_prchs_dtl a
-									          ,(SELECT  use_tenant_id
-											           ,use_insd_usermbr_no
-											           ,use_insd_device_id
-											           ,prod_id
-											           ,use_start_dt
-											           ,use_expr_dt
-											      FROM  tb_pr_prchs_dtl
-										         WHERE  tenant_id = #{tenantId}
-										           AND  prchs_id = #{prchsId}
-										           AND  status_cd = #{statusCd}
-										           <if test="userKey != null and userKey != ''">
-										           AND  use_tenant_id = #{tenantId}
-										           AND  use_insd_usermbr_no = #{userKey}
-										           </if>
-										           ) b
-										 WHERE a.use_tenant_id = b.use_tenant_id
-										   AND a.use_insd_usermbr_no = b.use_insd_usermbr_no
-										   AND a.use_insd_device_id = b.use_insd_device_id
-										   AND a.use_fixrate_prod_id = b.prod_id
-										   AND a.prchs_dt BETWEEN b.use_start_dt AND b.use_expr_dt)
+    <!--<update id="updatePrchsUseFix" parameterType="ImmediatelyUseStopScReq">-->
+        <!--UPDATE  tb_pr_prchs /* UseStop.updatePrchs, 구매 내역 업데이트 ntels_yjw/nTels, 2014-07-22 */-->
+           <!--SET  status_cd = #{prchsStatusCd} -->
+              <!--, cancel_req_path_cd = #{reqPathCd}-->
+              <!--, cancel_dt = SYSDATE-->
+              <!--, upd_id = #{adminId}-->
+              <!--, upd_dt = SYSDATE-->
+         <!--WHERE (tenant_id, prchs_id) IN (SELECT a.tenant_id ,a.prchs_id-->
+									       <!--FROM tb_pr_prchs_dtl a-->
+										 <!--WHERE a.use_insd_usermbr_no = #{userKey}-->
+										   <!--AND a.use_insd_device_id = #{deviceKey}-->
+										   <!--AND a.use_fixrate_prod_id = #{prodId}-->
+										   <!--AND a.prchs_dt BETWEEN TO_DATE(#{useStartDt}, 'YYYYMMDDHH24MISS') AND TO_DATE(#{useExprDt}, 'YYYYMMDDHH24MISS'))-->
+		 <!--AND  status_cd = #{statusCd}-->
+    <!--</update>-->
+
+    <!-- 정액권으로 구매한 에피소드 상품 구매 테이블 이용정지 상태변경
+        전권상품(권한상품과 에피소드상품의 구매ID가 동일..)인 경우 TB_PR_PRCHS는 권한 상품 update시 수정한다.
+        AND  prchs_id != #{prchsId} 옵션 추가
+     -->
+    <update id="updatePrchsUseContent" parameterType="ImmediatelyUseStopScReq">
+        UPDATE  tb_pr_prchs /* UseStop.updatePrchsUseContent, 이용권 사용 내역 업데이트, eastaim SK planet, 2016-01-15 */
+        SET  status_cd = #{prchsStatusCd}
+            , cancel_req_path_cd = #{reqPathCd}
+            , cancel_dt = SYSDATE
+            , upd_id = #{adminId}
+            , upd_dt = SYSDATE
+        WHERE 1=1
+        AND (tenant_id, prchs_id) IN (
+                                        SELECT a.tenant_id ,a.prchs_id
+                                        FROM tb_pr_prchs_dtl a
+                                        WHERE 1=1
+                                        AND  use_tenant_id = #{tenantId} /* TODO remove use_tenant_id */
+                                        AND  use_insd_usermbr_no = #{userKey}
+                                        AND  use_fixrate_prchs_id = #{prchsId}
+                                        AND  prchs_id != #{prchsId}
+                                        AND  status_cd = #{statusCd}
+                                        AND  prchs_dt BETWEEN TO_DATE(#{dwldStartDt}, 'YYYYMMDDHH24MISS') AND TO_DATE(#{dwldExprDt}, 'YYYYMMDDHH24MISS')
+                                      )
     </update>
     
-    <!-- 정액권으로 구매한 상품 이용정지 -->
-    <update id="updatePrchsDtlUseFix" parameterType="ImmediatelyUseStopScReq">
-        UPDATE  tb_pr_prchs_dtl /* UseStop.updatePrchsDtl, 구매상세 내역 업데이트 ntels_yjw/nTels, 2014-07-22 */
+    <!-- 정액권으로 구매한 에피소드 상품 구매상세 테이블 이용정지 상태변경 -->
+    <update id="updatePrchsDtlUseContent" parameterType="ImmediatelyUseStopScReq">
+        UPDATE  tb_pr_prchs_dtl /* UseStop.updatePrchsDtlUseContent, 구매상세 내역 업데이트 eastaim/SK planet, 2016-01-15 */
            SET  status_cd = #{prchsStatusCd} 
               , dwld_expr_dt = SYSDATE
               , use_expr_dt = SYSDATE
@@ -70,28 +80,12 @@
               , cancel_dt = SYSDATE
               , upd_id = #{adminId}
               , upd_dt = SYSDATE
-         WHERE (tenant_id, prchs_id) IN (SELECT a.tenant_id ,a.prchs_id
-                                           FROM tb_pr_prchs_dtl a
-                                              ,(SELECT  use_tenant_id
-                                                       ,use_insd_usermbr_no
-                                                       ,use_insd_device_id
-                                                       ,prod_id
-                                                       ,use_start_dt
-                                                       ,use_expr_dt
-                                                  FROM  tb_pr_prchs_dtl
-                                                 WHERE  tenant_id = #{tenantId}
-                                                   AND  prchs_id = #{prchsId}
-                                                   AND  status_cd = #{statusCd}
-                                                   <if test="userKey != null and userKey != ''">
-                                                   AND  use_tenant_id = #{tenantId}
-                                                   AND  use_insd_usermbr_no = #{userKey}
-                                                   </if>
-                                                   ) b
-                                         WHERE a.use_tenant_id = b.use_tenant_id
-                                           AND a.use_insd_usermbr_no = b.use_insd_usermbr_no
-                                           AND a.use_insd_device_id = b.use_insd_device_id
-                                           AND a.use_fixrate_prod_id = b.prod_id
-                                           AND a.prchs_dt BETWEEN b.use_start_dt AND b.use_expr_dt)
+         WHERE 1=1
+           AND use_tenant_id = #{tenantId} /* TODO remove use_tenant_id */
+           AND use_insd_usermbr_no = #{userKey}
+           AND use_fixrate_prchs_id = #{prchsId}
+           AND status_cd = #{statusCd}
+           AND prchs_dt BETWEEN TO_DATE(#{dwldStartDt}, 'YYYYMMDDHH24MISS') AND TO_DATE(#{dwldExprDt}, 'YYYYMMDDHH24MISS')
     </update>
     
     <!-- 이용정지 -->
@@ -107,7 +101,9 @@
            AND  status_cd = #{statusCd}
     </update>
     
-    <!-- 이용정지 -->
+    <!-- 이용정지
+        전권 상품의 경우 에피소드는 updatePrchsDtlUseContent에서 update가 되고.. 권한 상품은 updatePrchsDtl에서 상태 변경이 된다.
+    -->
     <update id="updatePrchsDtl" parameterType="ImmediatelyUseStopScReq">
         UPDATE  tb_pr_prchs_dtl /* UseStop.updatePrchsDtl, 구매상세 내역 업데이트 ntels_yjw/nTels, 2014-07-22 */
            SET  status_cd = #{prchsStatusCd} 
@@ -120,10 +116,7 @@
          WHERE  tenant_id = #{tenantId}
            AND  prchs_id = #{prchsId}
            AND  status_cd = #{statusCd}
-           <if test="userKey != null and userKey != ''">
-           AND  use_tenant_id = #{tenantId}
-           AND  use_insd_usermbr_no = #{userKey}        
-           </if>
+           AND  use_fixrate_prod_id IS NULL
     </update>
     
     <!-- 이용정지 -->
@@ -178,7 +171,5 @@
 		   AND status_cd = #{statusCd}
 		   AND ROWNUM = 1
     </update>
-    
-    
     
 </mapper>

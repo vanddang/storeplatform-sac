@@ -514,7 +514,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
 
 					/** 5-2-2-1. 붙어 있는 대표 기기로 sms 전송 */
-					if (listDeviceRes.getDeviceInfoList().size() > 0) {
+					if (listDeviceRes.getDeviceInfoList() != null) {
 						String mainDeviceMdn = "";
 						for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
 							if (StringUtils.equals(deviceInfo.getIsPrimary(), MemberConstants.USE_Y)) {
@@ -522,8 +522,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 								break;
 							}
 						}
-						res.setSendInfo(mainDeviceMdn);
-						res.setSendMean("02");
+						if (StringUtils.isEmpty(mainDeviceMdn)){
+							res.setSendInfo("");
+							res.setSendMean("03");
+						} else {
+							res.setSendInfo(mainDeviceMdn);
+							res.setSendMean("02");
+						}
 					/** 5-2-2-2. 붙어 있는 기기가 없으면 발송 하지 않음 */
 					} else {
 						res.setSendInfo("");
@@ -843,7 +848,6 @@ public class UserSearchServiceImpl implements UserSearchService {
         userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
         userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
         userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
-        userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
         userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
 		userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
@@ -1569,7 +1573,6 @@ public class UserSearchServiceImpl implements UserSearchService {
         userInfo.setUserUpdEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserUpdEmail()));
         userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
         userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
-        userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
         userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
         userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
         userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
