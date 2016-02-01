@@ -33,13 +33,9 @@ public class SearchUserPayplanetSacRes extends CommonInfo {
 		this.skpAgreementYn = skpAgreementYn;
 	}
 
-	public String getOcbAgreementYn() {
-		return this.ocbAgreementYn;
-	}
+	public String getOcbAgreementYn() { return this.ocbAgreementYn; }
 
-	public void setOcbAgreementYn(String ocbAgreementYn) {
-		this.ocbAgreementYn = ocbAgreementYn;
-	}
+	public void setOcbAgreementYn(String ocbAgreementYn) { this.ocbAgreementYn = ocbAgreementYn; }
 
 	public String getOcbCardNumber() {
 		return this.ocbCardNumber;
