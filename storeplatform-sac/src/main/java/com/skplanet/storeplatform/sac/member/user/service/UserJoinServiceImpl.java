@@ -792,15 +792,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Override
 	public CreateByMdnV2SacRes regByMdnV2(SacRequestHeader sacHeader, CreateByMdnV2SacReq req) {
 
-		/**
-		 * MDN으로 모바일회원 기가입 체크
-		 */
-		if(this.deviceService.srhDevice(sacHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null) != null){
-			throw new StorePlatformException("SAC_MEM_1104");
+		// 모번호 조회
+		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
+			req.setMdn(this.mcc.getOpmdMdnInfo(req.getMdn()));
 		}
 
-		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
-			req.setMdn(this.mcc.getOpmdMdnInfo(req.getMdn())); // 모번호 조회
+		// MDN으로 모바일회원 기가입 체크
+		if(this.deviceService.srhDevice(sacHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null) != null){
+			throw new StorePlatformException("SAC_MEM_1104");
 		}
 
 		/* 서비스관리번호 조회 */
@@ -815,8 +814,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
+		// SKT 통신사 csp imei 비교
 		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
-			// csp imei 비교
 			if(StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)){
 				if(!StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getMdn()))){
 					throw new StorePlatformException("SAC_MEM_1503");
@@ -824,9 +823,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
-		/**
-		 * 법정대리인 나이 유효성 체크.
-		 */
+		// 법정대리인 나이 유효성 체크.
 		MbrLglAgent mbrLglAgent = null;
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
 
@@ -841,14 +838,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
 		}
 
-		/**
-		 * 약관 맵핑정보 세팅.
-		 */
+		// 약관 맵핑정보 세팅.
 		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
 
-		/**
-		 * 법정대리인 setting.
-		 */
+		// 법정대리인 setting.
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
 			mbrLglAgent = new MbrLglAgent();
 			mbrLglAgent.setIsParent(req.getIsParent()); // 법정대리인 동의 여부
@@ -863,16 +856,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrLglAgent.setParentCI(req.getParentCi()); // 법정대리인 CI
 			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
 			mbrLglAgent.setParentRealNameSite(sacHeader.getTenantHeader().getSystemId()); // 법정대리인 실명인증사이트 코드
-			if (StringUtils.equals(req.getParentIsDomestic(), "")) {
+			if (StringUtils.isBlank(req.getParentIsDomestic())) {
 				mbrLglAgent.setIsDomestic(MemberConstants.USE_Y); // 내외국인 여부
 			} else {
 				mbrLglAgent.setIsDomestic(req.getParentIsDomestic()); // 내외국인 여부
 			}
 		}
 
-		/**
-		 * SC 사용자 기본정보 setting
-		 */
+		// SC 사용자 기본정보 setting
 		UserMbr userMbr = new UserMbr();
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
@@ -889,17 +880,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
 
-		/**
-		 * SC 사용자 가입요청
-		 */
+		// SC 사용자 가입요청
 		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
 			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
 
-		/**
-		 * 휴대기기 등록.
-		 */
+		// 휴대기기 등록요청
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(createUserResponse.getUserKey());
 		deviceInfo.setDeviceId(req.getDeviceId());
@@ -925,9 +912,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw e;
 		}
 
-		/**
-		 * 결과 세팅
-		 */
 		CreateByMdnV2SacRes response = new CreateByMdnV2SacRes();
 		response.setUserKey(createUserResponse.getUserKey());
 		response.setDeviceKey(deviceKey);
