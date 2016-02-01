@@ -117,10 +117,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 회원 SCI 연동, 회원조회, 없으면 Exception.
 		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-		List<String> userKeyList = new ArrayList<String>();
-		userKeyList.add(createFeedbackSacReq.getUserKey());
-		searchUserSacReq.setUserKeyList(userKeyList);
-		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		searchUserSacReq.setUserKeyList(Arrays.asList(createFeedbackSacReq.getUserKey()));
 
 		try {
 			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
@@ -173,10 +170,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 회원 SCI 연동, 회원조회, 없으면 Exception.
 		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-		List<String> userKeyList = new ArrayList<String>();
-		userKeyList.add(modifyFeedbackSacReq.getUserKey());
-		searchUserSacReq.setUserKeyList(userKeyList);
-		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		searchUserSacReq.setUserKeyList(Arrays.asList(modifyFeedbackSacReq.getUserKey()));
 		try {
 			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 		} catch (StorePlatformException e) {
@@ -226,10 +220,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 회원 SCI 연동, 회원조회, 없으면 Exception.
 		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-		List<String> userKeyList = new ArrayList<String>();
-		userKeyList.add(removeFeedbackSacReq.getUserKey());
-		searchUserSacReq.setUserKeyList(userKeyList);
-		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		searchUserSacReq.setUserKeyList(Arrays.asList(removeFeedbackSacReq.getUserKey()));
 		try {
 			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 		} catch (StorePlatformException e) {
@@ -306,10 +297,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 회원 SCI 연동, 회원조회, 없으면 Exception.
 		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-		List<String> userKeyList = new ArrayList<String>();
-		userKeyList.add(createRecommendFeedbackReq.getUserKey());
-		searchUserSacReq.setUserKeyList(userKeyList);
-		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		searchUserSacReq.setUserKeyList(Arrays.asList(createRecommendFeedbackReq.getUserKey()));
 		try {
 			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 		} catch (StorePlatformException e) {
@@ -376,10 +364,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 
 		// 회원 조회 요청.
-		userKeyList.clear();
-		userKeyList.add(res.getMbrNo());
-		searchUserSacReq.setUserKeyList(userKeyList);
-		searchUserSacReq.setTenantId(res.getTenantId());
+		searchUserSacReq.setUserKeyList(Arrays.asList(res.getMbrNo()));
 		SearchUserSacRes searchUserSacRes = null;
 
 		// 회원 조회.
@@ -405,10 +390,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 회원 SCI 연동, 회원조회, 없으면 Exception.
 		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-		List<String> userKeyList = new ArrayList<String>();
-		userKeyList.add(removeRecommendFeedbackSacReq.getUserKey());
-		searchUserSacReq.setUserKeyList(userKeyList);
-		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		searchUserSacReq.setUserKeyList(Arrays.asList(removeRecommendFeedbackSacReq.getUserKey()));
 		try {
 			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 		} catch (StorePlatformException e) {
@@ -475,10 +457,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 
 		// 회원 조회 요청.
-		userKeyList.clear();
-		userKeyList.add(res.getMbrNo());
-		searchUserSacReq.setUserKeyList(userKeyList);
-		searchUserSacReq.setTenantId(res.getTenantId());
+		searchUserSacReq.setUserKeyList(Arrays.asList(res.getMbrNo()));
 		SearchUserSacRes searchUserSacRes = null;
 
 		// 회원 조회.
@@ -1267,10 +1246,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 							// 회원정보는 있으나 단말정보가 없을경우 방어로직.
 							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceInfoListSac())) { // 단말정보가 존재.
-                                //TODO userInfoSac vo 변경으로 수정 필요, 컴파일 오류로 임의 수정 함 (SAC 회원 파트 - 윤보영)
-//								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
-								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceInfoListSac().get(0).getMdn(),
-                                        userInfoSac.getUserId());
+								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceInfoListSac().get(0).getMdn(), userInfoSac.getUserId());
 							} else { // 단말정보가 미존재.
 								regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
 							}
@@ -1299,10 +1275,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 							// 회원정보는 있으나 단말정보가 없을경우 방어로직.
 							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceInfoListSac())) { // 단말정보가 존재.
-                                //TODO userInfoSac vo 변경으로 수정 필요, 컴파일 오류로 임의 수정 함 (SAC 회원 파트 - 윤보영)
-//								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
-								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceInfoListSac().get(0).getMdn(),
-										userInfoSac.getUserId());
+								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceInfoListSac().get(0).getMdn(), userInfoSac.getUserId());
 							} else { // 단말정보가 미존재.
 								regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
 							}
