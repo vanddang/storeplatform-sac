@@ -1351,6 +1351,14 @@ public class LoginServiceImpl implements LoginService {
                         }else{
                             LOGGER.info("MVNO 단말인증 실패 mdn : {} 삭제처리", req.getMdn());
                             this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
+							try {
+								// 휴대기기 삭제 후 재조회
+								searchDeviceListResponse = this.deviceSCI.searchDeviceList(schDeviceListReq);
+							}catch(StorePlatformException e){
+								if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+									throw e;
+								}
+							}
                         }
                     }
                 }
