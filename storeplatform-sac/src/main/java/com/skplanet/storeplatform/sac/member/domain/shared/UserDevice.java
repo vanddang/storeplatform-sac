@@ -15,71 +15,16 @@ import java.util.Date;
 
 /**
  * <p>
- * DESC
- * FIXME 모든 필드들이 기술되지 않았음
+ * UserDevice
  * </p>
  * Updated on : 2015. 12. 24 Updated by : 정희원, SK 플래닛.
  */
 @Entity
 @Table(name = "TB_US_OUSERMBR_DEVICE")
-@IdClass(UserDevice.PK.class)
 public class UserDevice {
 
-    public static class PK implements Serializable {
-
-        private UserMember member;
-
-        /**
-         * 내부 생성 디바이스 식별자
-         */
-        private String insdDeviceId;
-
-        public UserMember getMember() {
-            return member;
-        }
-
-        public void setMember(UserMember member) {
-            this.member = member;
-        }
-
-        public String getInsdDeviceId() {
-            return insdDeviceId;
-        }
-
-        public void setInsdDeviceId(String insdDeviceId) {
-            this.insdDeviceId = insdDeviceId;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            PK pk = (PK) o;
-
-            if (!member.equals(pk.member)) return false;
-            return insdDeviceId.equals(pk.insdDeviceId);
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = member.hashCode();
-            result = 31 * result + insdDeviceId.hashCode();
-            return result;
-        }
-    }
-
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INSD_USERMBR_NO")   // 컬럼 이름 규칙에 따라 의도하지 않은 이름이 지정되므로 명시적으로 지정함
-    private UserMember member;
-
-    /**
-     * 내부 생성 디바이스 식별자
-     */
-    @Id
-    private String insdDeviceId;
+    @EmbeddedId
+    private UserDevicePK id;
 
     /**
      * 시작 일시
@@ -148,21 +93,17 @@ public class UserDevice {
 
     private String deviceAcct;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private UserDeviceSetting setting;
+
     ////////// GETTER & SETTER //////////
-    public UserMember getMember() {
-        return member;
+    public UserDevicePK getId() {
+        return id;
     }
 
-    public void setMember(UserMember userMember) {
-        this.member = userMember;
-    }
-
-    public String getInsdDeviceId() {
-        return insdDeviceId;
-    }
-
-    public void setInsdDeviceId(String insdDeviceId) {
-        this.insdDeviceId = insdDeviceId;
+    public void setId(UserDevicePK id) {
+        this.id = id;
     }
 
     public Date getStartDt() {
@@ -315,6 +256,14 @@ public class UserDevice {
 
     public void setDeviceAcct(String deviceAcct) {
         this.deviceAcct = deviceAcct;
+    }
+
+    public UserDeviceSetting getSetting() {
+        return setting;
+    }
+
+    public void setSetting(UserDeviceSetting setting) {
+        this.setting = setting;
     }
 
     @PrePersist

@@ -17,12 +17,22 @@ public class ModifyDeviceSetInfoSacRes extends CommonInfo {
 
 	/** 기기Key. */
 	private String deviceKey;
+
 	/** 기기 ID. */
 	private String deviceId;
+
 	/** 사용자 Key. */
 	private String userKey;
 
-	/**
+    public ModifyDeviceSetInfoSacRes() {}
+
+    public ModifyDeviceSetInfoSacRes(String deviceKey, String deviceId, String userKey) {
+        this.deviceKey = deviceKey;
+        this.deviceId = deviceId;
+        this.userKey = userKey;
+    }
+
+    /**
 	 * @return the deviceKey
 	 */
 	public String getDeviceKey() {
