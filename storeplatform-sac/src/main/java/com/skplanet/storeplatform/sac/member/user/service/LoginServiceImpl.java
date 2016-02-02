@@ -4826,74 +4826,13 @@ public class LoginServiceImpl implements LoginService {
             modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
             this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
+            // 신규 등록 후 재조회
+            deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN, req.getDeviceId(), null);
+
         } else {
-            LOGGER.info("IMEI 불일치 : 휴대기기 삭제 후 신규 등록");
-            DetailV2Res res = this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
-
-            if(res != null){
-                // 모바일 회원일 경우 신규 모바일 회원으로 등록
-                if(res.getUserInfo() != null
-                        && StringUtils.equals(res.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)){
-
-                    CreateUserRequest createUserRequest = new CreateUserRequest();
-                    createUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader)); // 공통코드 셋팅
-
-                    // SC 사용자 기본정보 setting
-                    UserMbr userMbr = new UserMbr();
-                    userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
-                    userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
-                    userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
-                    userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
-                    userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
-                    userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
-                    createUserRequest.setUserMbr(userMbr);
-
-                    // SC 사용자 가입요청
-                    CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-                    if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
-                        throw new StorePlatformException("SAC_MEM_0002", "userKey");
-                    }
-
-                    // SC 휴대기기 등록
-                    DeviceInfo createDeviceInfo = new DeviceInfo();
-                    createDeviceInfo.setUserKey(createUserResponse.getUserKey());
-                    createDeviceInfo.setDeviceIdType(MemberConstants.DEVICE_ID_TYPE_MSISDN); // 기기 ID 타입
-                    createDeviceInfo.setDeviceId("");
-                    createDeviceInfo.setMdn(req.getDeviceId()); // MDN 번호
-                    createDeviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
-                    createDeviceInfo.setNativeId(req.getNativeId()); // 기기 IMEI
-                    createDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-                    createDeviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
-
-                    try{
-                        this.deviceService.regDeviceInfo(requestHeader, deviceInfo);
-                    }catch(StorePlatformException e){
-                        LOGGER.info("[휴대기기 등록 실패하면 회원정보 롤백처리] {}", createUserResponse.getUserKey());
-                        // 휴대기기 등록 실패하면 회원정보 롤백처리(delete)
-                        DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
-                        deleteUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-                        deleteUserRequest.setUserKey(createUserResponse.getUserKey());
-                        userSCI.delete(deleteUserRequest);
-                        throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 등록에 실패하였습니다.
-                    }
-
-                   // 등록 후 재조회
-                   deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN, req.getDeviceId(), null);
-
-                }else {
-                    DeviceInfo updateDeviceInfo = new DeviceInfo();
-                    updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
-                    updateDeviceInfo.setMdn(req.getDeviceId());
-                    updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-                    updateDeviceInfo.setNativeId(req.getNativeId());
-                    updateDeviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
-                    String deviceKey = deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
-
-                    if(!StringUtils.equals(deviceInfo.getDeviceKey(), deviceKey)){
-                        throw new StorePlatformException("SAC_MEM_1102");
-                    }
-                }
-            }
+            LOGGER.info("IMEI 불일치 : 휴대기기 삭제 처리");
+            this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
+            throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
         }
 
         return deviceInfo;

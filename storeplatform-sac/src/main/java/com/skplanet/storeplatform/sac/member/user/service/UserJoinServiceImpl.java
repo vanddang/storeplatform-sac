@@ -130,6 +130,15 @@ public class UserJoinServiceImpl implements UserJoinService {
                 String isMvno = MemberConstants.USE_N;
                 String deviceKey = "";
 
+                if(System.getProperty("spring.profiles.active", "local").equals("local")) {
+                    if(req.getDeviceId().contains("+")){
+                        isMvno = MemberConstants.USE_Y;
+                    }
+                }else {
+                    // TODO [EC] MVNO 조회 연동
+
+                }
+
                 LOGGER.info("{} 휴대기기 MVNO 단말 여부", req.getDeviceId(), isMvno);
                 if(StringUtils.equals(isMvno, MemberConstants.USE_Y)){
                     // 02-01. SKM 만 가입 처리

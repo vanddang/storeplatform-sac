@@ -35,7 +35,7 @@ public interface UserWithdrawService {
 	 * @param userAuthKey
 	 *            String
 	 */
-	public DetailV2Res removeDevice(SacRequestHeader requestHeader, String deviceId);
+	public void removeDevice(SacRequestHeader requestHeader, String deviceId);
 
 	/**
 	 * <pre>

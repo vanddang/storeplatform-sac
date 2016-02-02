@@ -255,7 +255,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 *            String
 	 */
 	@Override
-	public DetailV2Res removeDevice(SacRequestHeader requestHeader, String mdn) {
+	public void removeDevice(SacRequestHeader requestHeader, String mdn) {
 
 		/**
 		 * deviceId로 회원 정보 조회.
@@ -332,8 +332,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		} catch (StorePlatformException e) {
 			// ignore Exception
 		}
-
-        return detailRes;
 	}
 
 	@Override
