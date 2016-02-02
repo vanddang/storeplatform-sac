@@ -42,11 +42,6 @@ public class AuthorizeV2SacRes extends CommonInfo {
 	private String tenantId;
 
 	/**
-	 * 인증 Key.
-	 */
-	private String userAuthKey = "";
-
-	/**
 	 * 사용자 정보.
 	 */
 	private UserInfo userInfo;
@@ -70,11 +65,6 @@ public class AuthorizeV2SacRes extends CommonInfo {
 	 * 실명인증 정보.
 	 */
 	private MbrAuth mbrAuth;
-
-	/**
-	 * Tstore 기타 정보.
-	 */
-	private TstoreEtcInfo tstoreEtcInfo;
 
 	/**
 	 * @return userMainStatus
@@ -119,21 +109,6 @@ public class AuthorizeV2SacRes extends CommonInfo {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
-	}
-
-	/**
-	 * @return userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
 	}
 
 	/**
@@ -194,21 +169,6 @@ public class AuthorizeV2SacRes extends CommonInfo {
 	 */
 	public void setMbrAuth(MbrAuth mbrAuth) {
 		this.mbrAuth = mbrAuth;
-	}
-
-	/**
-	 * @return tstoreEtcInfo
-	 */
-	public TstoreEtcInfo getTstoreEtcInfo() {
-		return this.tstoreEtcInfo;
-	}
-
-	/**
-	 * @param tstoreEtcInfo
-	 *            TstoreEtcInfo
-	 */
-	public void setTstoreEtcInfo(TstoreEtcInfo tstoreEtcInfo) {
-		this.tstoreEtcInfo = tstoreEtcInfo;
 	}
 
 	/**

@@ -161,11 +161,14 @@ public final class MemberConstants {
 	public static final String DEVICE_EXTRA_SCVERSION = "US011406"; // 샵클 버전
 	@Deprecated
 	public static final String DEVICE_EXTRA_APPSTATISTICS_YN = "US011407"; // 앱 사용통계 사용여부
+	@Deprecated
 	public static final String DEVICE_EXTRA_DODORYAUTH_DATE = "US011408"; // 도토리 인증일
+	@Deprecated
 	public static final String DEVICE_EXTRA_DODORYAUTH_YN = "US011409"; // 도토리 인증여부
 	public static final String DEVICE_EXTRA_EMBEDDED_YN = "US011410"; // 임베디드 여부
 	public static final String DEVICE_EXTRA_OMDUACD = "US011411"; // OMD UA코드
 	public static final String DEVICE_EXTRA_ROOTING_YN = "US011412"; // 루팅 여부
+	@Deprecated
 	public static final String DEVICE_EXTRA_TCLOUD_SUPPORT_YN = "US011413"; // Tcloud 약관동의 여부
 	public static final String DEVICE_EXTRA_PUSH_YN = "US011414"; // PUSH 알림 수신 동의 여부
 	public static final String DEVICE_EXTRA_LIMIT_CHARGE_YN = "US011415"; // 한도요금제 여부

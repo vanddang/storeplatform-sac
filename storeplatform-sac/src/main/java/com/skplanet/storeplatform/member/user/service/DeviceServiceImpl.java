@@ -1255,11 +1255,12 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		// 회원 탈퇴
-		userMbr.setSecedeTypeCode(WithdrawClassCode.CHANGE_ID.getCode());
+		userMbr.setSecedeReasonMessage("ID 전환");
 		userMbr.setUserMainStatus(MainStateCode.SECEDE.getCode());
 		userMbr.setUserSubStatus(SubStateCode.WITHDRAW.getCode());
 		userMbr.setSecedeDate(Utils.getLocalDateTimeinYYYYMMDD());
-		row = dao.update("Device.removeOwner", userMbr);
+		userMbr.setBolterDeviceId(userMbrDevice.getDeviceKey());
+		row = dao.update("User.removeUser", userMbr);
 		if (row <= 0) {
 			return row;
 		}

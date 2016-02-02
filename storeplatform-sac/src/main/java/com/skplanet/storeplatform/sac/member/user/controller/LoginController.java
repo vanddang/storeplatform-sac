@@ -594,7 +594,7 @@ public class LoginController {
 
 		AuthorizeV2SacRes res = this.loginService.authorizeV2(requestHeader, req);
 
-		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
+		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getMdn(), res.getUserInfo().getUserKey(),
 				res.getUserMainStatus());
 
 		return res;
