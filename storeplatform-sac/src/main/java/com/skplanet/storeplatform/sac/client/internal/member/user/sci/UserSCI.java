@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.internal.member.user.sci;
 
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.CreatePurchaseNaverIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.CreatePurchaseNaverIdSacRes;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,4 +47,17 @@ public interface UserSCI {
 	@RequestMapping(value = "/createGiftChargeInfo", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateGiftChargeInfoSacRes createGiftChargeInfo(@RequestBody @Validated CreateGiftChargeInfoSacReq request);
+
+    /**
+     * <pre>
+     * 2.1.17.	Naver 구매 이관 정보 등록
+     * </pre>
+     *
+     * @param request
+     *            CreatePurchaseNaverIdSacReq
+     * @return CreatePurchaseNaverIdSacRes
+     */
+    @RequestMapping(value = "/createPurchaseNaverId", method = RequestMethod.POST)
+    @ResponseBody
+    public CreatePurchaseNaverIdSacRes createPurchaseNaverId(@RequestBody @Validated CreatePurchaseNaverIdSacReq request);
 }

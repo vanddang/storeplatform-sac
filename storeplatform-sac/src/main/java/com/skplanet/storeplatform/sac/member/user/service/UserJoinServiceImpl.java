@@ -121,13 +121,7 @@ public class UserJoinServiceImpl implements UserJoinService {
          */
         if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
 
-            // 01. SKT imei 비교
-            if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-                    && !StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getDeviceId()))){
-                    throw new StorePlatformException("SAC_MEM_1503");
-            }
-
-            // 02. MVNO 처리
+            // 01. MVNO 처리
             if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
                     || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
                     || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)){
@@ -135,6 +129,15 @@ public class UserJoinServiceImpl implements UserJoinService {
                 // TODO [EC] MVNO 연동 처리 작업 필요
                 String isMvno = MemberConstants.USE_N;
                 String deviceKey = "";
+
+                if(System.getProperty("spring.profiles.active", "local").equals("local")) {
+                    if(req.getDeviceId().contains("+")){
+                        isMvno = MemberConstants.USE_Y;
+                    }
+                }else {
+                    // TODO [EC] MVNO 조회 연동
+
+                }
 
                 LOGGER.info("{} 휴대기기 MVNO 단말 여부", req.getDeviceId(), isMvno);
                 if(StringUtils.equals(isMvno, MemberConstants.USE_Y)){
@@ -147,6 +150,12 @@ public class UserJoinServiceImpl implements UserJoinService {
                         throw new StorePlatformException("SAC_MEM_1515");
                     }
                 }
+            }
+
+            // 02. SKT imei 비교
+            if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+                    && !StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getDeviceId()))){
+                throw new StorePlatformException("SAC_MEM_1503");
             }
         }
 

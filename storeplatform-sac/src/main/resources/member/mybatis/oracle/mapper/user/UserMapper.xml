@@ -2274,7 +2274,14 @@
             AND brand_id  = #{brandId}
             AND charger_id  = #{chargerId}
    </update>
-   
+
+    <!-- 상품권 충전정보 삭제 -->
+    <delete id="deleteGiftChargeInfo" parameterType="giftChargeInfo">
+        DELETE /* UserMapper.xml, deleteGiftChargeInfo, SAC(SC), 윤보영, 2016-02-01 */
+          FROM tb_us_ousermbr_gift_chrg
+        WHERE seq = #{seq}
+    </delete>
+
    <!-- 상품권 충전소 정보 이관 등록 -->
     <insert id="insertTransferGiftChargeInfo" parameterType="giftChargeInfo">
      INSERT /* UserMapper.xml, insertTransferGiftChargeInfo, SAC(SC), 최진호, 2015-11-24 */

@@ -245,9 +245,11 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 		detailReq.setSearchExtent(searchExtent);
 
+        DetailV2Res detailRes = null;
+
 		try {
 
-			DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+			detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
 			if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
