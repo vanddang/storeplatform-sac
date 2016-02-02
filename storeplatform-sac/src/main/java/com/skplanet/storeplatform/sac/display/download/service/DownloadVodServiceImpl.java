@@ -176,7 +176,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 					SearchDeviceIdSacRes deviceRes = null;
 					try {
-						SearchDeviceIdSacReq deviceReq = makeSearchDeviceIdSacReq(downloadVodSacReq, tenantHeader); // 회원 단말 정보 조회 Parameter Set
+						SearchDeviceIdSacReq deviceReq = makeSearchDeviceIdSacReq(downloadVodSacReq); // 회원 단말 정보 조회 Parameter Set
 						deviceRes = deviceSCI.searchDeviceId(deviceReq); // 회원 단말 정보 조회
 					} catch (Exception ex) {
 						log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
@@ -340,7 +340,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 					SearchDeviceIdSacRes deviceRes = null;
 					try {
-						SearchDeviceIdSacReq deviceReq = makeSearchDeviceIdV3SacReq(downloadVodV3SacReq, tenantHeader); // 회원 단말 정보 조회 Parameter Set
+						SearchDeviceIdSacReq deviceReq = makeSearchDeviceIdV3SacReq(downloadVodV3SacReq); // 회원 단말 정보 조회 Parameter Set
 						deviceRes = deviceSCI.searchDeviceId(deviceReq); // 회원 단말 정보 조회
 					} catch (Exception ex) {
 						log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
@@ -596,11 +596,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		return metaInfo;
 	}
 
-	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader) {
+	private SearchDeviceIdSacReq makeSearchDeviceIdSacReq(DownloadVodSacReq downloadVodSacReq) {
 		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
 		deviceReq.setUserKey(downloadVodSacReq.getUserKey());
 		deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
-		deviceReq.setTenantId(tenantHeader.getTenantId());
 		log.debug("----------------------------------------------------------------");
 		log.debug("*******************회원 단말 정보 조회 파라미터*********************");
 		log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
@@ -610,11 +609,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		return deviceReq;
 	}
 	
-	private SearchDeviceIdSacReq makeSearchDeviceIdV3SacReq(DownloadVodV3SacReq downloadVodV3SacReq, TenantHeader tenantHeader) {
+	private SearchDeviceIdSacReq makeSearchDeviceIdV3SacReq(DownloadVodV3SacReq downloadVodV3SacReq) {
 		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
 		deviceReq.setUserKey(downloadVodV3SacReq.getUserKey());
 		deviceReq.setDeviceKey(downloadVodV3SacReq.getDeviceKey());
-		deviceReq.setTenantId(tenantHeader.getTenantId());
 		log.debug("----------------------------------------------------------------");
 		log.debug("*******************회원 단말 정보 조회 파라미터*********************");
 		log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
