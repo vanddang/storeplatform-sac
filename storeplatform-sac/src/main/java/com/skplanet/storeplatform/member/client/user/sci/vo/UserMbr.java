@@ -14,11 +14,10 @@ import com.skplanet.storeplatform.member.client.common.util.Utils;
 
 import java.io.Serializable;
 
-// TODO: Auto-generated Javadoc
 /**
  * 사용자 기본정보 Value Object
  * 
- * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2016. 2. 2. Updated by : 최진호, 보고지티.
  */
 public class UserMbr extends CommonInfo implements Serializable {
 
@@ -142,6 +141,9 @@ public class UserMbr extends CommonInfo implements Serializable {
 
 	/** 휴면계정유무. */
 	private String isDormant;
+
+	/** 탈퇴 기기 ID. */
+	private String bolterDeviceId;
 
 	/**
 	 * 통합포인트 사용여부(Y/N)를 리턴한다.
@@ -747,6 +749,21 @@ public class UserMbr extends CommonInfo implements Serializable {
 	 */
 	public void setIsDormant(String isDormant) {
 		this.isDormant = isDormant;
+	}
+
+	/**
+	 * @return bolterDeviceId
+	 */
+	public String getBolterDeviceId() {
+		return this.bolterDeviceId;
+	}
+
+	/**
+	 * @param bolterDeviceId
+	 *            String
+	 */
+	public void setBolterDeviceId(String bolterDeviceId) {
+		this.bolterDeviceId = bolterDeviceId;
 	}
 
 	/*

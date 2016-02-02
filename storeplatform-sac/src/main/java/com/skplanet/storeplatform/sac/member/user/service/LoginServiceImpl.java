@@ -150,7 +150,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1127,6 +1126,7 @@ public class LoginServiceImpl implements LoginService {
 				removeUserReq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
 				removeUserReq.setSecedeReasonMessage("변동성인증수단없음");
 				removeUserReq.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
+				removeUserReq.setBolterDeviceId(req.getDeviceId());
 				this.userSCI.remove(removeUserReq);
 
 				/** 5-2-3. 회원 탈퇴후 오류 처리 회원 정보가 존재 하지 않습니다. */
@@ -1703,6 +1703,7 @@ public class LoginServiceImpl implements LoginService {
             removeUserRequest.setUserKey(preUserKey);
             removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
             removeUserRequest.setSecedeReasonMessage("Save&Sync인증탈퇴");
+			removeUserRequest.setBolterDeviceId(req.getPreDeviceId());
             this.userSCI.remove(removeUserRequest);
             LOGGER.info("가가입된 deviceId {} 탈퇴 처리", req.getPreDeviceId());
 
@@ -4094,6 +4095,7 @@ public class LoginServiceImpl implements LoginService {
 		scReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 		scReq.setUserKey(detailRes.getUserKey());
 		scReq.setSecedeReasonMessage("SAP 회원탈퇴");
+		scReq.setBolterDeviceId(detailRes.getDeviceInfoList().get(0).getMdn());
 		this.userSCI.remove(scReq);
 
 		// 탈퇴 MQ연동
@@ -4101,7 +4103,7 @@ public class LoginServiceImpl implements LoginService {
 		//mqInfo.setTenantId(detailRes.getDeviceInfoList().get(0).getTenantId());
 		mqInfo.setUserId(detailRes.getDeviceInfoList().get(0).getUserId());
 		mqInfo.setUserKey(detailRes.getUserKey());
-		mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+		mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getMdn());
 		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 		LOGGER.info("{} 탈퇴 MQ info: {}", detailRes.getDeviceInfoList().get(0).getDeviceId(), mqInfo);
 		try {
@@ -4625,7 +4627,17 @@ public class LoginServiceImpl implements LoginService {
 		srhExtUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 		srhExtUserReq.setKeySearchList(keySearchList);
 		srhExtUserReq.setUserInfoYn(MemberConstants.USE_Y);
-		SearchExtentUserResponse srhExtUserRes = this.userSCI.searchExtentUser(srhExtUserReq);
+		SearchExtentUserResponse srhExtUserRes = null;
+		try {
+			srhExtUserRes = this.userSCI.searchExtentUser(srhExtUserReq);
+		} catch (StorePlatformException spe) {
+			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				/* 회원 정보가 존재 하지 않습니다. */
+				throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
+			} else {
+				throw spe;
+			}
+		}
 
 		/**  2. 조회된 회원정보 셋팅 */
 		userKey = srhExtUserRes.getUserMbr().getUserKey();

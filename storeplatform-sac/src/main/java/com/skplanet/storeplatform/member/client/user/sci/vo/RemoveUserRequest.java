@@ -18,7 +18,7 @@ import java.io.Serializable;
 /**
  * 사용자 탈퇴 요청을 위한 value object
  * 
- * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2016. 2. 2. Updated by : 최진호, 보고지티.
  */
 public class RemoveUserRequest extends CommonInfo implements Serializable {
 
@@ -70,6 +70,11 @@ public class RemoveUserRequest extends CommonInfo implements Serializable {
 	 * 휴면계정유무.
 	 */
 	private String isDormant;
+
+	/**
+	 * 탈퇴 기기 ID.
+	 */
+	private String bolterDeviceId;
 
 	/**
 	 * 사용자 Key를 리턴한다.
@@ -150,6 +155,21 @@ public class RemoveUserRequest extends CommonInfo implements Serializable {
 	 */
 	public void setIsDormant(String isDormant) {
 		this.isDormant = isDormant;
+	}
+
+	/**
+	 * @return bolterDeviceId
+	 */
+	public String getBolterDeviceId() {
+		return this.bolterDeviceId;
+	}
+
+	/**
+	 * @param bolterDeviceId
+	 *            String
+	 */
+	public void setBolterDeviceId(String bolterDeviceId) {
+		this.bolterDeviceId = bolterDeviceId;
 	}
 
 	/*

@@ -825,20 +825,22 @@
                     ,SYSDATE
                 )
     </update>
-    
+
     <!-- 사용자 탈퇴 -->
     <update id="removeUser" parameterType="userMbr">
-       UPDATE  /* UserMapper.removeUser, 사용자 탈퇴, wisestone_mikepark, 2013-12-23 */
-               tb_us_ousermbr
-          SET
-               bolter_reason_desc = #{secedeReasonMessage},      /* 탈퇴_사유_설명 */
-               mbr_status_main_cd = #{userMainStatus},
-               mbr_status_sub_cd = #{userSubStatus},
-               bolter_day = #{secedeDate},                       /* 탈퇴_일 */
-               start_dt = SYSDATE,
-               end_dt = SYSDATE,
-               upd_dt = SYSDATE
-        WHERE  insd_usermbr_no = #{userKey}
+        UPDATE  /* UserMapper.xml, removeUser, SAC(SC), 최진호, 2016-02-01 */
+            TB_US_OUSERMBR
+        SET
+            BOLTER_REASON_DESC = #{secedeReasonMessage},      /* 탈퇴_사유_설명 */
+            <if test="bolterDeviceId != null">BOLTER_DEVICE_ID = #{bolterDeviceId},</if> /* 탈퇴 기기 ID */
+            MBR_STATUS_MAIN_CD = #{userMainStatus},
+            MBR_STATUS_SUB_CD = #{userSubStatus},
+            BOLTER_DAY = #{secedeDate},                       /* 탈퇴_일 */
+            START_DT = SYSDATE,
+            END_DT = SYSDATE,
+            UPD_DT = SYSDATE
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
     </update>
 
 
@@ -2335,6 +2337,20 @@
             INSD_USERMBR_NO = #{userKey}
             AND MBR_ID = #{userId}
             AND MBR_CLAS_CD = #{userType}
+    </update>
+
+    <!-- 사용자 pwd 정보 변경 -->
+    <update id="updateUserPwdInfo" parameterType="modifyIdRequest">
+        UPDATE
+            TB_US_OUSERMBR_PWD
+        SET
+            PWD = NULL,
+            SALT = NULL,
+            IDP_ONEID_CD = NULL,
+            ACT_TK = #{newUserAuthToken},
+            UPD_DT = SYSDATE
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
     </update>
 
     <!-- market pin 정보 조회 -->

@@ -9,21 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
-import com.skplanet.storeplatform.member.client.user.sci.vo.*;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.AmqpException;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
@@ -32,16 +17,34 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 회원탈퇴 관련 인터페이스 구현체
@@ -88,66 +91,40 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) {
 
-		/** 1. 요청 파라미터에 따라서 회원 조회 key값 설정. */
 		DetailReq detailReq = new DetailReq();
 
-		if (StringUtils.isNotBlank(req.getUserId())) {
-
-			LOGGER.debug("########################################");
-			LOGGER.info("userId 존재 Case.");
-			LOGGER.debug("########################################");
-
-			detailReq.setUserId(req.getUserId());
-
-		} else {
-
-			LOGGER.debug("########################################");
-			LOGGER.info("deviceId 존재 Case.");
-			LOGGER.debug("########################################");
-
-			/** 모번호 조회 (989 일 경우만) */
-			req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
-			detailReq.setDeviceId(req.getDeviceId());
-
-		}
-
-		/** 2. 회원 정보 조회. */
+		/** 1. 회원 정보 조회. */
 		SearchExtentReq searchExtent = new SearchExtentReq();
 		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+		detailReq.setDeviceId(req.getDeviceId());
 		detailReq.setSearchExtent(searchExtent);
 
 		DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
 		/**
-		 * 3. userAuthToken 이 있으면서 소셜 아이디인 경우만 userAuthToken 인증(S2S)후 회원 탈퇴
+		 * 2. 소셜아이디인 경우 userAuthToken 이 필수, userAuthToken 인증(S2S)후 회원 탈퇴.
 		 *   - mdn 회원은 인증 단계 없이 탈퇴
 		 *   - 기존 Tstore 아이디는 단말에서 id/pwd 인증 단계 후에 탈퇴 진행되므로 인증 불필요
-		 *   - 신규 소셜 계정 아이디는 인증단계가 없으므로 id/token인증 필요하지만 token값은 optional
+		 *   - 신규 소셜 계정 아이디는 인증단계가 없으므로 userId/userAuthToken 인증 필요
 		 */
-		if (StringUtils.isNotBlank(req.getUserAuthToken()) &&
-				(StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
+		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
 				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER))) {
-
-			LOGGER.info("소셜 아이디(Facebook, google, naver) > userAuthToken 인증");
-
-			LOGGER.info("소셜 아이디인 경우 s2s로 인증 후에 처리");
-			/*
-			CheckUserAuthTokenRequest chkUserAuthTkReq = new CheckUserAuthTokenRequest();
-			chkUserAuthTkReq.setCommonRequest(mcc.getSCCommonRequest(requestHeader));
-			chkUserAuthTkReq.setUserKey(detailRes.getUserInfo().getUserKey());
-			chkUserAuthTkReq.setUserAuthToken(req.getUserAuthToken());
-			chkUserAuthTkReq.setIsDormant(detailRes.getUserInfo().getIsDormant());
-			CheckUserAuthTokenResponse chkUserAuthTkRes = this.userSCI.checkUserAuthToken(chkUserAuthTkReq);
-			if (chkUserAuthTkRes.getUserKey() == null || chkUserAuthTkRes.getUserKey().length() <= 0) {
-				throw new StorePlatformException("SAC_MEM_1204");
-			}*/
-
+				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER)) {
+			if (StringUtils.isBlank(req.getUserAuthToken())) {
+				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
+			} else {
+				LOGGER.info("소셜 아이디(Facebook, google, naver) > userAuthToken 인증(S2S) 시작");
+				boolean isCheckToken = true;
+				LOGGER.info("현재는 by pass");
+				if (!isCheckToken) {
+					throw new StorePlatformException("SAC_MEM_1204");
+				}
+			}
 		}
 
 		/**
-		 *  4-1. 요청 파라미터에 따라서 분기 처리한다.
+		 *  3-1. 요청 파라미터에 따라서 분기 처리한다.
 		 *  아이디, 휴대기기 삭제처리, MQ연동 : memberRetireAmqpTemplate
 		 *   - userId 탈퇴요청
 		 *   - 모바일회원
@@ -157,10 +134,11 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 			LOGGER.info("userId요청 혹은 모바일 회원 > 회원 탈퇴");
 
-			/** 4-1-1. 회원 탈퇴. */
-			this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes.getUserInfo().getIsDormant());
+			/** 3-1-1. 회원 탈퇴. */
+			this.rem(requestHeader, detailRes.getUserInfo().getUserKey(),
+					detailRes.getUserInfo().getIsDormant(), req.getDeviceId());
 
-			/** 4-1-2. MQ 연동 (회원 탈퇴). */
+			/** 3-1-2. MQ 연동 (회원 탈퇴). */
 			StringBuffer buf = new StringBuffer();
 			String mqDeviceStr = "";
 			if (detailRes.getDeviceInfoList() != null && detailRes.getDeviceInfoList().size() > 0) {
@@ -196,7 +174,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				LOGGER.error("MQ process fail {}", mqInfo);
 			}
 		/**
-		 * 4-2. 휴대기기만 invalid 처리
+		 * 3-2. 휴대기기만 invalid 처리
 		 * 	 - 휴대기기 invalid, MQ연동 : memberDelDeviceAmqpTemplate
 		 * 	 - deviceId 탈퇴요청
 		 * 	 - T store 회원, 소셜아이디회원 ( 모바일회원이 아닌경우 )
@@ -205,7 +183,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 			LOGGER.info("deviceId 요청 중 모바일회원이 아닌 경우 > 휴대기기 invalid 처리");
 
-			/** 4-2-1. 휴대기기 정보 조회. */
+			/** 3-2-1. 휴대기기 정보 조회. */
 			String keyType = MemberConstants.KEY_TYPE_MDN;
 			if ( ValidationCheckUtils.isDeviceId(req.getDeviceId()) ) {
 				keyType = MemberConstants.KEY_TYPE_DEVICE_ID;
@@ -214,11 +192,11 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, keyType,
 					req.getDeviceId(), detailRes.getUserInfo().getUserKey());
 
-			/** 4-2-2. 휴대기기 invalid 처리. */
+			/** 3-2-2. 휴대기기 invalid 처리. */
 			this.deviceIdInvalid(requestHeader, detailRes.getUserInfo().getUserKey(), req.getDeviceId(),
 					detailRes.getUserInfo().getIsDormant());
 
-			/** 4-2-3. MQ 연동 (휴대기기 삭제). */
+			/** 3-2-3. MQ 연동 (휴대기기 삭제). */
 			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
 			try {
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
@@ -273,7 +251,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 			if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-				this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes.getUserInfo().getIsDormant());
+				this.rem(requestHeader, detailRes.getUserInfo().getUserKey(),
+						detailRes.getUserInfo().getIsDormant(), mdn);
 
 				/**
 				 * MQ 연동(회원 탈퇴).
@@ -333,7 +312,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	}
 
 	@Override
-	public void removeUser(SacRequestHeader requestHeader, String userId) {
+	public void removeUser(SacRequestHeader requestHeader, String userId, String deviceId) {
 
 		DetailReq detailReq = new DetailReq();
 		detailReq.setUserId(userId);
@@ -380,7 +359,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		}
 
 		// 회원탈퇴처리
-		this.rem(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes.getUserInfo().getIsDormant());
+		this.rem(requestHeader, detailRes.getUserInfo().getUserKey(),
+				detailRes.getUserInfo().getIsDormant(), deviceId);
 	}
 
 	/**
@@ -455,8 +435,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 *            사용자 Key
 	 * @param isDormant
 	 *            휴면계정 유무
+	 * @param deviceId
+	 *            탈퇴 기기 ID (deviceId)
 	 */
-	public void rem(SacRequestHeader requestHeader, String userKey, String isDormant) {
+	public void rem(SacRequestHeader requestHeader, String userKey, String isDormant, String deviceId) {
 
 		LOGGER.info("SC 탈퇴 요청 userKey:{}", userKey);
 		RemoveUserRequest scReq = new RemoveUserRequest();
@@ -464,6 +446,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		scReq.setUserKey(userKey);
 		scReq.setSecedeReasonMessage("");
 		scReq.setIsDormant(isDormant);
+		scReq.setBolterDeviceId(deviceId);
 		this.userSCI.remove(scReq);
 
 	}
