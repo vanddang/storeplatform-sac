@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * [REQUEST] 회원 탈퇴 기능을 제공한다.
@@ -12,6 +13,7 @@ public class WithdrawReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/* 기기 ID(MSISDN, uuId) */
+	@NotBlank
 	private String deviceId;
 	/* 사용자 아이디 */
 	private String userId;
