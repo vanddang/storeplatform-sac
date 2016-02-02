@@ -75,14 +75,6 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	}
 
 	@Override
-	public SearchSapUserSacRes searchSapUserByUserKey(SearchSapUserSacReq searchSapUserSacReq) {
-		LOGGER.info("################ [SAC OTH LocalSCI] SAC Member Start : searchUserSCI.searchSapUserByUserKey");
-		SearchSapUserSacRes searchSapUserSacRes = this.searchUserSCI.searchSapUserByUserKey(searchSapUserSacReq);
-		LOGGER.info("################ [SAC OTH LocalSCI] SAC Member Start : searchUserSCI.searchSapUserByUserKey");
-		return searchSapUserSacRes;
-	}
-
-	@Override
 	public ProdNoti getRegProdNoti(ProdNoti prodNoti) {
 		return this.commonDAO.queryForObject("Feedback.getRegProdNoti", prodNoti, ProdNoti.class);
 	}
