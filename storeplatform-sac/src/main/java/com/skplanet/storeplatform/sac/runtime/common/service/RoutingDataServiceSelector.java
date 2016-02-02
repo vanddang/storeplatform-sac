@@ -11,7 +11,7 @@ import java.util.Map;
 public class RoutingDataServiceSelector {
 
     // TODO : spring 4.x 버전 사용시 @Conditional 로 변경
-    @Value("#{systemProperties['QA_ENV'] != null && systemProperties['QA_ENV'].equals('onestore') ? " +
+    @Value("#{systemProperties['ROUTING_ENV'] != null && systemProperties['ROUTING_ENV'].equals('onestore') ? " +
             "'com.skplanet.storeplatform.sac.runtime.common.service.RoutingDataOnestoreQaServiceImpl' : " +
             "'com.skplanet.storeplatform.sac.runtime.common.service.RoutingDataServiceImpl'}")
     String routingDataServiceBeanName;
