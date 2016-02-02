@@ -3,6 +3,11 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci;
 
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.CreatePurchaseNaverIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.CreatePurchaseNaverIdSacRes;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import com.skplanet.storeplatform.sac.member.user.service.UserExtraInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +41,9 @@ public class UserSCIController implements UserSCI {
 
 	@Autowired
 	private UserSCIService userSCIService;
+
+    @Autowired
+    private UserExtraInfoService userExtraService;
 
 	/*
 	 * (non-Javadoc)
@@ -72,4 +80,23 @@ public class UserSCIController implements UserSCI {
 		return response;
 	}
 
+    /*
+	 * (non-Javadoc)
+	 *
+	 * @see com.skplanet.storeplatform.sac.client.internal.member.user.sci.UserSCI#createPurchaseNaverId(com.skplanet.
+	 * storeplatform.sac.client.internal.member.user.vo.CreatePurchaseNaverIdSacReq)
+	 */
+    @Override
+    @RequestMapping(value = "/createPurchaseNaverId", method = RequestMethod.POST)
+    @ResponseBody
+    public CreatePurchaseNaverIdSacRes createPurchaseNaverId(@RequestBody @Validated CreatePurchaseNaverIdSacReq request) {
+        LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+
+        this.userExtraService.modifyExtraInfo(request.getUserKey(), MemberConstants.USER_EXTRA_SOCIAL_NAVER_ID, request.getNaverId());
+        CreatePurchaseNaverIdSacRes response = new CreatePurchaseNaverIdSacRes();
+        response.setUserKey(request.getUserKey());
+
+        LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
+        return response;
+    }
 }

@@ -147,6 +147,8 @@ public final class MemberConstants {
 
 	public static final String USER_EXTRA_SYRUP_SSO_CREDENTIAL = "US010920"; // syrup Pay에서 발행하는 자격증명 값
 	public static final String USER_EXTRA_SOCIL_MEMBER_NO = "US010922"; // social 아이디 회원번호
+    // 2016-02-02 추가
+	public static final String USER_EXTRA_SOCIAL_NAVER_ID = "US010921"; // NaverId
 
 	public static final String USER_EXTRA_FACEBOOK = "facebook";
 	public static final String USER_EXTRA_KAKAO = "kakao";
