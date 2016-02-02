@@ -60,16 +60,6 @@ public interface FeedbackRepository {
 	public SearchUserSacRes searchUserByUserKey(SearchUserSacReq searchUserSacReq);
 
 	/**
-	 * <pre>
-	 * 일반 회원정보 조회(SAP).
-	 * </pre>
-	 * 
-	 * @param searchSapUserSacReq
-	 * @return
-	 */
-	public SearchSapUserSacRes searchSapUserByUserKey(SearchSapUserSacReq searchSapUserSacReq);
-
-	/**
 	 * 
 	 * <pre>
 	 * 사용후기 기등록 여부 조회.
