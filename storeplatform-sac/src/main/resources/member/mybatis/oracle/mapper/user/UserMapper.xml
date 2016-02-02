@@ -831,7 +831,7 @@
         UPDATE  /* UserMapper.xml, removeUser, SAC(SC), 최진호, 2016-02-01 */
             TB_US_OUSERMBR
         SET
-            BOLTER_REASON_DESC = #{secedeReasonMessage},      /* 탈퇴_사유_설명 */
+            <if test="secedeReasonMessage != null">BOLTER_REASON_DESC = #{secedeReasonMessage},</if>      /* 탈퇴_사유_설명 */
             <if test="bolterDeviceId != null">BOLTER_DEVICE_ID = #{bolterDeviceId},</if> /* 탈퇴 기기 ID */
             MBR_STATUS_MAIN_CD = #{userMainStatus},
             MBR_STATUS_SUB_CD = #{userSubStatus},
