@@ -1780,29 +1780,21 @@ public class LoginServiceImpl implements LoginService {
 
             LOGGER.info("MDN {} 이 회원 아님", req.getDeviceId());
 
-            try {
-                if (System.getProperty("spring.profiles.active", "local").equals("local")) {
-                    // local에서는 외부연동이 안되므로 하드코딩
-                    HashMap<String, String> mdnMap = new HashMap<String, String>();
-                    mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
-                    mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
-                    mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
-                    mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
-                    if (mdnMap.get(req.getDeviceId()) != null) {
-                        svcMangNo = mdnMap.get(req.getDeviceId());
-                    } else {
-                        throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
-                    }
-                } else {
-                    svcMangNo = this.commService.getMappingInfo(req.getDeviceId(), "mdn").getSvcMngNum();
-                }
-            } catch (StorePlatformException spe) {
-                if(StringUtils.equals(spe.getErrorInfo().getCode(), "SAC_MEM_0003")){ // 타사 연동시 비회원 응답
-                    // DB에 회원정보가 있으면 invalid 처리 후 회원정보없음 에러
-                    this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
-                    throw spe;
-                }
-            }
+			if (System.getProperty("spring.profiles.active", "local").equals("local")) {
+				// local에서는 외부연동이 안되므로 하드코딩
+				HashMap<String, String> mdnMap = new HashMap<String, String>();
+				mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
+				mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
+				mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
+				mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
+				if (mdnMap.get(req.getDeviceId()) != null) {
+					svcMangNo = mdnMap.get(req.getDeviceId());
+				} else {
+					throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
+				}
+			} else {
+				svcMangNo = this.commService.getMappingInfo(req.getDeviceId(), "mdn").getSvcMngNum();
+			}
 
 			/** 5-2-2. 가가입 상태인 mac 회원정보를 정상상태로. */
 			/** 5-2-1. 가가입 회원정보를 정상상태로. */
@@ -4673,25 +4665,17 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeSimpleByMdnV2Res authorizeSimpleByMdnV2(SacRequestHeader requestHeader, AuthorizeSimpleByMdnV2Req req) {
 
-		boolean isValid = false;
-
 		String deviceId = req.getDeviceId();
 
-		/** 1. 모번호 조회. */
-		deviceId = this.commService.getOpmdMdnInfo(deviceId);
-
-		/** 2. 심플인증 위한 SC셋팅. */
+		/** 1. 심플인증 위한 SC셋팅. */
 		SimpleLoginRequest simpleLoginRequest = new SimpleLoginRequest();
 
 		simpleLoginRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-
-		if (ValidationCheckUtils.isDeviceId(deviceId)) {
-			simpleLoginRequest.setDeviceID(deviceId);
-		} else {
-			simpleLoginRequest.setMdn(deviceId);
-		}
+		simpleLoginRequest.setDeviceID(deviceId);
 		simpleLoginRequest.setUserType(req.getUserType());
-		simpleLoginRequest.setUserId(req.getUserId());
+		if (StringUtils.isNotBlank(req.getUserId())) {
+			simpleLoginRequest.setUserId(req.getUserId());
+		}
 		simpleLoginRequest.setConnIp(deviceId);
 
 		String svcVersion = requestHeader.getDeviceHeader().getSvc();
@@ -4709,7 +4693,7 @@ public class LoginServiceImpl implements LoginService {
 			simpleLoginRequest.setDeviceOsVersion(os.substring(os.lastIndexOf("/") + 1, os.length()));
 		}
 
-		/** 3. SC 심플인증 처리 (인증후 로그인 이력 저장). */
+		/** 2. SC 심플인증 처리 (인증후 로그인 이력 저장). */
 		SimpleLoginResponse simpleLoginResponse = this.userSCI.simpleLogin(simpleLoginRequest);
 
 		AuthorizeSimpleByMdnV2Res res = new AuthorizeSimpleByMdnV2Res();
