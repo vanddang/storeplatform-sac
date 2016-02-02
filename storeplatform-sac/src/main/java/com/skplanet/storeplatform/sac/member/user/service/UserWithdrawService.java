@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -34,7 +35,7 @@ public interface UserWithdrawService {
 	 * @param userAuthKey
 	 *            String
 	 */
-	public void removeDevice(SacRequestHeader requestHeader, String deviceId);
+	public DetailV2Res removeDevice(SacRequestHeader requestHeader, String deviceId);
 
 	/**
 	 * <pre>

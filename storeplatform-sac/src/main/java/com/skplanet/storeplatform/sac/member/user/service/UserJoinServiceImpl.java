@@ -121,13 +121,7 @@ public class UserJoinServiceImpl implements UserJoinService {
          */
         if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
 
-            // 01. SKT imei 비교
-            if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-                    && !StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getDeviceId()))){
-                    throw new StorePlatformException("SAC_MEM_1503");
-            }
-
-            // 02. MVNO 처리
+            // 01. MVNO 처리
             if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
                     || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
                     || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)){
@@ -147,6 +141,12 @@ public class UserJoinServiceImpl implements UserJoinService {
                         throw new StorePlatformException("SAC_MEM_1515");
                     }
                 }
+            }
+
+            // 02. SKT imei 비교
+            if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+                    && !StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getDeviceId()))){
+                throw new StorePlatformException("SAC_MEM_1503");
             }
         }
 

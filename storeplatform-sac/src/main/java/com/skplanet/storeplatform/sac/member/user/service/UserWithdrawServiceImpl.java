@@ -255,7 +255,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 *            String
 	 */
 	@Override
-	public void removeDevice(SacRequestHeader requestHeader, String mdn) {
+	public DetailV2Res removeDevice(SacRequestHeader requestHeader, String mdn) {
 
 		/**
 		 * deviceId로 회원 정보 조회.
@@ -267,9 +267,11 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 		detailReq.setSearchExtent(searchExtent);
 
+        DetailV2Res detailRes = null;
+
 		try {
 
-			DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+			detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
 			if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
@@ -330,6 +332,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		} catch (StorePlatformException e) {
 			// ignore Exception
 		}
+
+        return detailRes;
 	}
 
 	@Override

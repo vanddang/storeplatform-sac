@@ -1378,34 +1378,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		/** 회원 기본 정보V2. */
-		DetailV2Res res = null;
-        try{
-            res = this.srhUserV2(req, sacHeader);
-        }catch(StorePlatformException ex){
-            if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
-                    || StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-                String requestNm = null;
-                String requestValue = null;
-
-                if(StringUtils.isNotEmpty(req.getUserId())){
-                    requestNm = "userId";
-                    requestValue = req.getUserId();
-                }else if(StringUtils.isNotEmpty(req.getUserKey())){
-                    requestNm = "userKey";
-                    requestValue = req.getUserKey();
-                }else if(StringUtils.isNotEmpty(req.getDeviceId())) {
-                    requestNm = "deviceId";
-                    requestValue = req.getDeviceId();
-                }else if(StringUtils.isNotEmpty(req.getDeviceKey())){
-                    requestNm = "deviceKey";
-                    requestValue = req.getDeviceKey();
-                }
-                throw new StorePlatformException("SAC_MEM_0003", requestNm, requestValue);
-            }else{
-                throw ex;
-            }
-        }
-
+		DetailV2Res res = this.srhUserV2(req, sacHeader);
 
 		/* 정보조회범위 */
 		if (req.getSearchExtent() != null) {
