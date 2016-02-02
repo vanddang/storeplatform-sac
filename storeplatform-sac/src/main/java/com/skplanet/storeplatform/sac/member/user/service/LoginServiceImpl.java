@@ -2778,18 +2778,22 @@ public class LoginServiceImpl implements LoginService {
 								}else{
 									LOGGER.info("marketDeviceKey 변경으로 deviceId 변경 : [ {} ] {} -> {}", marketRes
 													.getDeviceInfo().getDeviceKey(), deviceInfo.getMdn(), marketRes.getDeviceId());
-									//mdn 변경 처리
-									DeviceInfo updateDeviceInfo = new DeviceInfo();
-									updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
-									updateDeviceInfo.setMdn(req.getDeviceId());
-									updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-									updateDeviceInfo.setNativeId(req.getNativeId());
-									updateDeviceInfo.setDeviceExtraInfoList(deviceInfo.getDeviceExtraInfoList());
-									updateDeviceInfo.setSvcMangNum(deviceInfo.getSvcMangNum());
-									this.deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
-
 									// 기존 번호 탈퇴 처리
 									this.removeMarketUser(requestHeader, detailRes);
+
+									//mdn 변경 처리
+									ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+									modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+									modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
+									modifyDeviceRequest.setIsUpdDeviceId(true);
+									UserMbrDevice userMbrDevice = new UserMbrDevice();
+									userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
+									userMbrDevice.setNativeID(req.getNativeId());
+									userMbrDevice.setMdn(req.getDeviceId());
+									userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
+									userMbrDevice.setSimSerialNo(req.getSimSerialNo());
+									modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
+									this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
 									// 회원정보 재조회
 									detailReq.setDeviceId(marketRes.getDeviceId());
@@ -2828,14 +2832,18 @@ public class LoginServiceImpl implements LoginService {
 										.getDeviceInfoList().get(0).getDeviceId(), marketRes.getDeviceId());
 
 								//mdn 변경 처리
-								DeviceInfo updateDeviceInfo = new DeviceInfo();
-								updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
-								updateDeviceInfo.setMdn(req.getDeviceId());
-								updateDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-								updateDeviceInfo.setNativeId(req.getNativeId());
-								updateDeviceInfo.setDeviceExtraInfoList(deviceInfo.getDeviceExtraInfoList());
-								updateDeviceInfo.setSvcMangNum(deviceInfo.getSvcMangNum());
-								this.deviceService.regDeviceInfo(requestHeader, updateDeviceInfo);
+								ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+								modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+								modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
+								modifyDeviceRequest.setIsUpdDeviceId(true);
+								UserMbrDevice userMbrDevice = new UserMbrDevice();
+								userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
+								userMbrDevice.setNativeID(req.getNativeId());
+								userMbrDevice.setMdn(req.getDeviceId());
+								userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
+								userMbrDevice.setSimSerialNo(req.getSimSerialNo());
+								modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
+								this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
 								// 변경된 deviceId로 회원정보 재조회
 								detailReq.setDeviceId(marketRes.getDeviceId());
@@ -4071,7 +4079,7 @@ public class LoginServiceImpl implements LoginService {
 		mqInfo.setUserKey(detailRes.getUserKey());
 		mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getMdn());
 		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-		LOGGER.info("{} 탈퇴 MQ info: {}", detailRes.getDeviceInfoList().get(0).getDeviceId(), mqInfo);
+		LOGGER.info("{} 탈퇴 MQ info: {}", detailRes.getDeviceInfoList().get(0).getMdn(), mqInfo);
 		try {
 			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 		} catch (AmqpException ex) {

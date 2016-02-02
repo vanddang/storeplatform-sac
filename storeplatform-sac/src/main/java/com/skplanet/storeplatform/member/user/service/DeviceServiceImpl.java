@@ -285,14 +285,16 @@ public class DeviceServiceImpl implements DeviceService {
 					}
 
 					if (StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) {
+						boolean isChangeId = false;
 						if (!StringUtils.equals(Constant.USER_TYPE_MOBILE, createUserMbr.getUserType())) {
+							isChangeId = true;
 							// 모바일 회원 전환 정보 셋팅
 							mobileUserMbrDevice = userMbrDevice;
 							this.setMobileUserMemberInfo(mobileUserMbrDevice, createDeviceRequest, createDeviceResponse);
 						}
 						LOGGER.info("모바일 회원 탈퇴 userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 						// 탈퇴처리
-						int row = this.doRemoveMobileUser(userMbrDevice, isDormant);
+						int row = this.doRemoveMobileUser(userMbrDevice, isDormant, isChangeId);
 						if (row < 1)
 							throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 					} else { // 아이디 회원
@@ -373,13 +375,15 @@ public class DeviceServiceImpl implements DeviceService {
 						}
 
 						if (StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) { // 모바일 회원
+							boolean isChangeId = false;
 							if (!StringUtils.equals(Constant.USER_TYPE_MOBILE, createUserMbr.getUserType())) {
+								isChangeId = true;
 								// 모바일 회원 전환 정보 셋팅
 								mobileUserMbrDevice = userMbrDevice;
 								this.setMobileUserMemberInfo(mobileUserMbrDevice, createDeviceRequest, createDeviceResponse);
 							}
 							LOGGER.info("deviceId가 없는 모바일 회원 탈퇴 userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
-							int row = this.doRemoveMobileUser(userMbrDevice, isDormant);
+							int row = this.doRemoveMobileUser(userMbrDevice, isDormant, isChangeId);
 							if (row < 1)
 								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 						} else { // 아이디 회원
@@ -435,7 +439,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 						if (StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) { // 모바일 회원
 							LOGGER.info("모바일 회원 탈퇴 userKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
-							int row = this.doRemoveMobileUser(userMbrDevice, isDormant);
+							int row = this.doRemoveMobileUser(userMbrDevice, isDormant, false);
 							if (row < 1)
 								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 						} else { // 아이디 회원
@@ -1234,7 +1238,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 *            휴면계정유무
 	 * @return row - 결과값 1:성공, 0:실패
 	 */
-	private int doRemoveMobileUser(UserMbrDevice userMbrDevice, String isDormant) {
+	private int doRemoveMobileUser(UserMbrDevice userMbrDevice, String isDormant, boolean isChangeId) {
 		int row = 0;
 		CommonDAO dao = null;
 		if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
@@ -1255,7 +1259,9 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		// 회원 탈퇴
-		userMbr.setSecedeReasonMessage("ID 전환");
+		if(isChangeId){
+			userMbr.setSecedeReasonMessage("ID 전환");
+		}
 		userMbr.setUserMainStatus(MainStateCode.SECEDE.getCode());
 		userMbr.setUserSubStatus(SubStateCode.WITHDRAW.getCode());
 		userMbr.setSecedeDate(Utils.getLocalDateTimeinYYYYMMDD());
@@ -1882,6 +1888,12 @@ public class DeviceServiceImpl implements DeviceService {
 			if (modifyDeviceRequest.getUserMbrDevice().getMdn() != null) {
 				logBuf.append("[mdn]").append(searchDeviceResponse.getUserMbrDevice().getMdn()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getMdn());
 				updateMbrDevice.setMdn(modifyDeviceRequest.getUserMbrDevice().getMdn());
+			}
+
+			// simSerialNo
+			if (modifyDeviceRequest.getUserMbrDevice().getSimSerialNo() != null) {
+				logBuf.append("[simSerialNo]").append(searchDeviceResponse.getUserMbrDevice().getSimSerialNo()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getSimSerialNo());
+				updateMbrDevice.setSimSerialNo(modifyDeviceRequest.getUserMbrDevice().getSimSerialNo());
 			}
 		}
 
