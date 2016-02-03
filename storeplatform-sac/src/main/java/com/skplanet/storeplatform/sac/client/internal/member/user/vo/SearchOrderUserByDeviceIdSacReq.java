@@ -10,16 +10,19 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * deviceId 와 구매일시로 최근 userKey, deviceKey 조회 [REQUEST]
  * 
- * Updated on : 2014. 6. 25. Updated by : Rejoice, Burkhan
+ * Updated on : 2016. 2. 2. Updated by : 최진호, 보고지티.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class SearchOrderUserByDeviceIdSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/** Device ID. */
-	@NotBlank
+	/** 기기 ID. */
 	private String deviceId;
+
+	/** 기기 MDN */
+	private String mdn;
+
 	/** 구매일시. */
 	@NotBlank
 	@Length(min = 14, max = 14)
@@ -38,6 +41,21 @@ public class SearchOrderUserByDeviceIdSacReq extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return the mdn
+	 */
+	public String getMdn() {
+		return this.mdn;
+	}
+
+	/**
+	 * @param mdn
+	 *            the mdn to set
+	 */
+	public void setMdn(String mdn) {
+		this.mdn = mdn;
 	}
 
 	/**

@@ -972,72 +972,97 @@
 
     <!-- 휴대기기의 소유자이력을 조회 -->
     <select id="searchDeviceOwner" parameterType="searchDeviceOwnerRequest" resultType="searchDeviceOwnerResponse">
-		SELECT /* DeviceMapper.searchDeviceOwner, 휴대기기의 소유자이력을 조회, wisestone_mikepark, 2014-06-24 */
-		      userKey AS userKey,
-		       deviceKey AS deviceKey,
-		       auth_dt AS authenticationDate,
-		       isUsed AS isUsed,
-		       srcName AS tableName
-		  FROM (  SELECT *
-		            FROM (SELECT insd_usermbr_no AS userKey,
-		                         insd_device_id AS deviceKey,
-		                         auth_dt AS auth_dt,
-		                         AUTH_YN AS isUsed,
-		                         'TB_US_OUSERMBR_DEVICE' AS srcName,
-		                         start_dt
-		                    FROM tb_us_ousermbr_device
-		                   WHERE <!-- device_id = #{deviceID} -->
-		                         mdn = #{mdn}
-		                         AND TO_DATE (#{regDate}, 'YYYYMMDDHH24MISS') BETWEEN start_dt
-		                                                                        AND end_dt
-                    <if test="isDormant.equalsIgnoreCase('N')">
-		                  UNION ALL
-		                  SELECT insd_usermbr_no AS userKey,
-		                         insd_device_id AS deviceKey,
-		                         auth_dt AS auth_dt,
-		                         AUTH_YN AS isUsed,
-		                         'TB_US_OUSERMBR_DEVICE' AS srcName,
-		                         start_dt
-		                    FROM tb_us_ousermbr_device_his
-		                   WHERE <!-- device_id = #{deviceID} -->
-                                 mdn = #{mdn}
-		                         AND TO_DATE (#{regDate}, 'YYYYMMDDHH24MISS') BETWEEN start_dt
-                                                                                AND end_dt
-                    </if>
-		                  UNION ALL
-		                  SELECT insd_usermbr_no AS userKey,
-		                         insd_device_id AS deviceKey,
-		                         auth_dt AS auth_dt,
-		                         AUTH_YN AS isUsed,
-		                         'TB_US_OUSERMBR_DEVICE_WD' AS srcName,
-		                         start_dt
-		                    FROM tb_us_ousermbr_device_wd
-		                   WHERE <!-- device_id = #{deviceID} -->
-                                 mdn = #{mdn}
-		                         AND TO_DATE (#{regDate}, 'YYYYMMDDHH24MISS') BETWEEN start_dt
-                                                                                AND end_dt)
-		        ORDER BY DECODE (isUsed, 'Y', '1', '2'), start_dt DESC)
-		 WHERE ROWNUM = 1
+	    SELECT /* DeviceMapper.xml, searchDeviceOwner, SAC(SC), 최진호, 2016-02-02 */
+		    userKey AS userKey,
+		    deviceKey AS deviceKey,
+		    auth_dt AS authenticationDate,
+		    isUsed AS isUsed,
+		    srcName AS tableName
+        FROM
+            (
+                SELECT
+                    *
+		        FROM
+                    (
+                        SELECT
+                            INSD_USERMBR_NO AS userKey,
+                            INSD_DEVICE_ID AS deviceKey,
+                            AUTH_DT AS auth_dt,
+		                    AUTH_YN AS isUsed,
+		                    'TB_US_OUSERMBR_DEVICE' AS srcName,
+                            START_DT
+		                FROM
+                            TB_US_OUSERMBR_DEVICE
+		                WHERE
+                            TO_DATE (#{regDate}, 'YYYYMMDDHH24MISS') BETWEEN START_DT AND END_DT
+                            <if test="deviceID != null">AND DEVICE_ID = #{deviceID}</if>
+                            <if test="mdn != null">AND MDN = #{mdn}</if>
+
+                        <if test="isDormant.equalsIgnoreCase('N')">
+		                UNION ALL
+
+		                SELECT
+                            INSD_USERMBR_NO AS userKey,
+                            INSD_DEVICE_ID AS deviceKey,
+                            AUTH_DT AS auth_dt,
+                            AUTH_YN AS isUsed,
+                            'TB_US_OUSERMBR_DEVICE' AS srcName,
+                            START_DT
+		                FROM
+                            TB_US_OUSERMBR_DEVICE_HIS
+		                WHERE
+                            TO_DATE (#{regDate}, 'YYYYMMDDHH24MISS') BETWEEN START_DT AND END_DT
+                            <if test="deviceID != null">AND DEVICE_ID = #{deviceID}</if>
+                            <if test="mdn != null">AND MDN = #{mdn}</if>
+                        </if>
+
+		                UNION ALL
+
+		                SELECT
+                            INSD_USERMBR_NO AS userKey,
+                            INSD_DEVICE_ID AS deviceKey,
+                            AUTH_DT AS auth_dt,
+                            AUTH_YN AS isUsed,
+		                    'TB_US_OUSERMBR_DEVICE_WD' AS srcName,
+                            START_DT
+		                FROM
+                            TB_US_OUSERMBR_DEVICE_WD
+		                WHERE
+                            TO_DATE (#{regDate}, 'YYYYMMDDHH24MISS') BETWEEN START_DT AND END_DT
+                            <if test="deviceID != null">AND DEVICE_ID = #{deviceID}</if>
+                            <if test="mdn != null">AND MDN = #{mdn}</if>
+                    )
+                ORDER BY
+                    DECODE (isUsed, 'Y', '1', '2'), START_DT DESC
+            )
+		WHERE ROWNUM = 1
     </select>
 
     <!-- 휴대기기의 소유자이력을 조회 -->
     <select id="searchDeviceOwnerHis" parameterType="searchDeviceOwnerRequest" resultType="searchDeviceOwnerResponse">
-        SELECT /* DeviceMapper.searchDeviceOwnerHis, 휴대기기의 소유자이력을 조회, wisestone_mikepark, 2014-06-24 */
-               userKey AS userKey,
-               deviceKey AS deviceKey,
-               auth_dt AS authenticationDate
-        FROM (
-        SELECT insd_usermbr_no AS userKey,
-               insd_device_id AS deviceKey,
-               TO_CHAR( auth_dt,'YYYYMMDDHH24MISS') AS auth_dt
-        FROM  tb_us_ousermbr_device_his
-        WHERE <!-- device_id = #{deviceID} -->
-              mdn = #{mdn}
-          AND auth_yn = 'Y'
-          AND start_dt <![CDATA[<=]]> TO_DATE(#{regDate},'YYYYMMDDHH24MISS')
-          AND end_dt <![CDATA[>=]]> TO_DATE(#{regDate},'YYYYMMDDHH24MISS')
-        ORDER BY auth_dt DESC)
-        WHERE ROWNUM = 1
+        SELECT /* DeviceMapper.xml, searchDeviceOwnerHis, SAC(SC), 최진호, 2016-02-02 */
+            userKey AS userKey,
+            deviceKey AS deviceKey,
+            auth_dt AS authenticationDate
+        FROM
+            (
+                SELECT
+                    INSD_USERMBR_NO AS userKey,
+                    INSD_DEVICE_ID AS deviceKey,
+                    TO_CHAR( AUTH_DT,'YYYYMMDDHH24MISS') AS auth_dt
+                FROM
+                    TB_US_OUSERMBR_DEVICE_HIS
+                WHERE
+                    AUTH_YN = 'Y'
+                    <if test="deviceID != null">AND DEVICE_ID = #{deviceID}</if>
+                    <if test="mdn != null">AND MDN = #{mdn}</if>
+                    AND START_DT <![CDATA[<=]]> TO_DATE(#{regDate},'YYYYMMDDHH24MISS')
+                    AND END_DT <![CDATA[>=]]> TO_DATE(#{regDate},'YYYYMMDDHH24MISS')
+                ORDER BY
+                    auth_dt DESC
+            )
+        WHERE
+            ROWNUM = 1
     </select>
 
     <!-- LocalSCI : 등록된 단말 정보 조회 -->

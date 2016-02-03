@@ -614,15 +614,10 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchDeviceOwnerRequest.getCommonRequest().getTenantID() == null
-				|| searchDeviceOwnerRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
-		// 필수 파라미터, Device ID
-		if (searchDeviceOwnerRequest.getDeviceID() == null || searchDeviceOwnerRequest.getDeviceID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
+		// 필수 파라미터, Device ID,  mdn 둘 중 하나.
+		if ((searchDeviceOwnerRequest.getDeviceID() == null || searchDeviceOwnerRequest.getDeviceID().length() <= 0)
+				&& (searchDeviceOwnerRequest.getMdn() == null || searchDeviceOwnerRequest.getMdn().length() <= 0)) {
+			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound",""));
 		}
 
 		try {
@@ -639,9 +634,6 @@ public class DeviceSCIController implements DeviceSCI {
 		} catch (StorePlatformException ex) {
 			throw ex;
 		}
-		// catch (Exception ex) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.unknownErr", ""), ex);
-		// }
 
 	}
 
