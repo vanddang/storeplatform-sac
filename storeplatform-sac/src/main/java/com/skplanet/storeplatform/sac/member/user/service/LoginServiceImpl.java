@@ -1403,7 +1403,7 @@ public class LoginServiceImpl implements LoginService {
             // 서비스관리번호 조회
             deviceTelecomInfo = this.commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
 
-            // 타사 연동시 EC_SYS_ERROR 나 타사 시스템 오류인 경우 mdn, deviceId, imei, sim 일치하면 임시 로그인 성공 처리
+            // 타사 연동시 EC_SYS_ERROR나 타사 시스템 오류인 경우 mdn, deviceId, imei, sim 일치하면 임시 로그인 성공 처리
             if(deviceTelecomInfo == null){
                 boolean isTempLoginSucc = false;
                 boolean isDeviceId = false;

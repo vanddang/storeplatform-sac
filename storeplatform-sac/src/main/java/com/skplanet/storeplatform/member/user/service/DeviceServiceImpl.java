@@ -515,16 +515,19 @@ public class DeviceServiceImpl implements DeviceService {
 								.imei(tlogImei).phone_model(tlogDeviceModelNo).insd_device_id(tlogDeviceKey).mbr_id(tlogUserID);
 					}
 				});
-				for(UserMbrDeviceDetail userMbrDeviceDetail : createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail()){
-					if(StringUtils.equals(userMbrDeviceDetail.getExtraProfile(), MemberConstants.DEVICE_EXTRA_OSVERSION)){
-						final String tlogOsVersion = userMbrDeviceDetail.getExtraProfileValue();
-						new TLogUtil().set(new ShuttleSetter() {
-							@Override
-							public void customize(TLogSentinelShuttle shuttle) {
-								shuttle.os_version(tlogOsVersion);
-							}
-						});
-						break;
+				if(createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail() != null
+						&& createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail().size() > 0){
+					for(UserMbrDeviceDetail userMbrDeviceDetail : createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail()){
+						if(StringUtils.equals(userMbrDeviceDetail.getExtraProfile(), MemberConstants.DEVICE_EXTRA_OSVERSION)){
+							final String tlogOsVersion = userMbrDeviceDetail.getExtraProfileValue();
+							new TLogUtil().set(new ShuttleSetter() {
+								@Override
+								public void customize(TLogSentinelShuttle shuttle) {
+									shuttle.os_version(tlogOsVersion);
+								}
+							});
+							break;
+						}
 					}
 				}
 			}else{
@@ -1142,6 +1145,20 @@ public class DeviceServiceImpl implements DeviceService {
 	 *            기기 Request Value Object
 	 */
 	private void doActivateDevice(UserMbrDevice userMbrDevice, CreateDeviceRequest createDeviceRequest) {
+
+		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getIsPrimary())
+				&& StringUtils.equals(createDeviceRequest.getUserMbrDevice().getIsPrimary(), Constant.TYPE_YN_Y)){
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserKey(createDeviceRequest.getUserKey());
+			UserMbrDevice mainDevice = this.commonDAO.queryForObject("Device.findMainDevice", userMbr, UserMbrDevice.class);
+
+			if (mainDevice != null) {
+				// 휴대기기 이력 테이블 insert.
+				this.commonDAO.update("Device.insertUpdateDeviceHistory", mainDevice);
+				// 휴대기기 속성의 REP_DEVICE_YN = N
+				this.commonDAO.update("Device.unsetDeviceYn", mainDevice);
+			}
+		}
 		// 휴대기기 이력 테이블 insert.
 		this.commonDAO.update("Device.insertUpdateDeviceHistory", userMbrDevice);
 
