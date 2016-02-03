@@ -515,16 +515,19 @@ public class DeviceServiceImpl implements DeviceService {
 								.imei(tlogImei).phone_model(tlogDeviceModelNo).insd_device_id(tlogDeviceKey).mbr_id(tlogUserID);
 					}
 				});
-				for(UserMbrDeviceDetail userMbrDeviceDetail : createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail()){
-					if(StringUtils.equals(userMbrDeviceDetail.getExtraProfile(), MemberConstants.DEVICE_EXTRA_OSVERSION)){
-						final String tlogOsVersion = userMbrDeviceDetail.getExtraProfileValue();
-						new TLogUtil().set(new ShuttleSetter() {
-							@Override
-							public void customize(TLogSentinelShuttle shuttle) {
-								shuttle.os_version(tlogOsVersion);
-							}
-						});
-						break;
+				if(createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail() != null
+						&& createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail().size() > 0){
+					for(UserMbrDeviceDetail userMbrDeviceDetail : createDeviceRequest.getUserMbrDevice().getUserMbrDeviceDetail()){
+						if(StringUtils.equals(userMbrDeviceDetail.getExtraProfile(), MemberConstants.DEVICE_EXTRA_OSVERSION)){
+							final String tlogOsVersion = userMbrDeviceDetail.getExtraProfileValue();
+							new TLogUtil().set(new ShuttleSetter() {
+								@Override
+								public void customize(TLogSentinelShuttle shuttle) {
+									shuttle.os_version(tlogOsVersion);
+								}
+							});
+							break;
+						}
 					}
 				}
 			}else{
