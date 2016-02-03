@@ -139,7 +139,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
                 }
 
-                LOGGER.info("{} 휴대기기 MVNO 단말 여부", req.getDeviceId(), isMvno);
+                LOGGER.info("{} 휴대기기 MVNO 단말 여부 : {}", req.getDeviceId(), isMvno);
                 if(StringUtils.equals(isMvno, MemberConstants.USE_Y)){
                     // 02-01. SKM 만 가입 처리
                     if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
@@ -147,7 +147,7 @@ public class UserJoinServiceImpl implements UserJoinService {
                         req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKM);
                     }else{
                         LOGGER.info("{} 휴대기기 타사 MVNO로 가입 실패 처리", req.getDeviceId());
-                        throw new StorePlatformException("SAC_MEM_1515");
+                        throw new StorePlatformException("SAC_MEM_1203");
                     }
                 }
             }

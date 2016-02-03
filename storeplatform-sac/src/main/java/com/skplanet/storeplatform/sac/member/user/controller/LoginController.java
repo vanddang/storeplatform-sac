@@ -88,16 +88,6 @@ public class LoginController {
             throw new StorePlatformException("SAC_MEM_1203");
         }
 
-        /** SKM/KTM/LGM 일 경우 NATIVE_ID 필수 처리 */
-        if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
-                || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KTM)
-                || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)){
-
-            if(StringUtils.isEmpty(req.getNativeId())) {
-                throw new StorePlatformException("SAC_MEM_0001", "nativeId");
-            }
-        }
-
 		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
@@ -139,16 +129,6 @@ public class LoginController {
                 && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KTM, req.getDeviceTelecom())
                 && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())){
             throw new StorePlatformException("SAC_MEM_1203");
-        }
-
-        /** SKM/KTM/LGM 일 경우 NATIVE_ID 필수 처리 */
-        if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
-                || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KTM)
-                || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)){
-
-            if(StringUtils.isEmpty(req.getNativeId())) {
-                throw new StorePlatformException("SAC_MEM_0001", "nativeId");
-            }
         }
 
         AuthorizeByMdnRes res = this.loginService.authorizeByMdnV2(requestHeader, req);
