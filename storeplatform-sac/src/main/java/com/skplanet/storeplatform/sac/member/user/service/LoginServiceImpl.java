@@ -4778,8 +4778,9 @@ public class LoginServiceImpl implements LoginService {
                 modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
                 UserMbrDevice userMbrDevice = new UserMbrDevice();
                 userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
-                userMbrDevice.setDeviceID(req.getDeviceId());
-                userMbrDevice.setNativeID(req.getNativeId());
+                if(!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())){
+                    userMbrDevice.setDeviceAccount(req.getDeviceAccount());
+                }
 
                 /** 통신사 변경 처리 */
                 if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)){
