@@ -9,21 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.DeviceInfoSac;
-import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
@@ -67,6 +52,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.DeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
@@ -109,7 +95,20 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 사용자 내부 메서드 서비스 구현체
@@ -1041,9 +1040,18 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	public SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceId(SacRequestHeader header,
 			SearchOrderUserByDeviceIdSacReq request) {
 
+		// deviceId 와 mdn 둘 중 하나는 필수
+		if (StringUtils.isBlank(request.getDeviceId()) && StringUtils.isBlank(request.getMdn())) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId, mdn");
+		}
+
 		SearchDeviceOwnerRequest searchDeviceOwnerRequest = new SearchDeviceOwnerRequest();
 		searchDeviceOwnerRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
-		searchDeviceOwnerRequest.setDeviceID(request.getDeviceId());
+		if (StringUtils.isNotBlank(request.getDeviceId())) {
+			searchDeviceOwnerRequest.setDeviceID(request.getDeviceId());
+		} else if (StringUtils.isNotBlank(request.getMdn())) {
+			searchDeviceOwnerRequest.setMdn(request.getMdn());
+		}
 		searchDeviceOwnerRequest.setRegDate(request.getOrderDt());
 
 		// SC.DeviceSCI Call
