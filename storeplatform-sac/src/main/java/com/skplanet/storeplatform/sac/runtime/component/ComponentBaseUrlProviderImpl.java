@@ -9,16 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.runtime.component;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.proxy.ComponentBaseUrlProvider;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.runtime.common.service.RoutingDataService;
+import com.skplanet.storeplatform.sac.runtime.common.service.RoutingDataServiceSelector;
 import com.skplanet.storeplatform.sac.runtime.common.vo.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.annotation.PostConstruct;
 
 /**
 * ComponentBaseUrlProviderImpl 클래스
@@ -32,6 +34,13 @@ public class ComponentBaseUrlProviderImpl implements ComponentBaseUrlProvider {
 	private static final String EC_COMPONENT_ID = "005";
 
 	@Autowired
+	RoutingDataServiceSelector routingDataServiceSelector;
+
+	@PostConstruct
+	public void initRoutingDataService() {
+		dataSvc = routingDataServiceSelector.getRoutingDataService();
+	}
+
 	private RoutingDataService dataSvc;
 	
 	@Override
