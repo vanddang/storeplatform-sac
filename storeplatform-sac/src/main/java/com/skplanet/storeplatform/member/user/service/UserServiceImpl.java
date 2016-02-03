@@ -4234,13 +4234,14 @@ public class UserServiceImpl implements UserService {
 
             // 01-01.01. 브랜드 ID에 매핑되는 제휴사 아이디 5개 초과 시 최초 등록 삭제 후 신규 등록 처리
 			if (giftChargeInfoList != null && giftChargeInfoList.size() >= 5) {
-                GiftChargeInfo firstGiftChargeInfo = new GiftChargeInfo();
                 // list 에서 NVL(reg_dt, upd_dt)로 최신 등록 순으로 조회 함으로 List에서 마지막 row 삭제 처리
-                firstGiftChargeInfo = giftChargeInfoList.get(4);
-
-                row = this.commonDAO.delete("User.deleteGiftChargeInfo", firstGiftChargeInfo);
-                if (row <= 0) {
-                    throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+                for(int i = 4; i < giftChargeInfoList.size(); i++){
+                    GiftChargeInfo firstGiftChargeInfo = new GiftChargeInfo();
+                    firstGiftChargeInfo = giftChargeInfoList.get(i);
+                    row = this.commonDAO.delete("User.deleteGiftChargeInfo", firstGiftChargeInfo);
+                    if (row <= 0) {
+                        throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+                    }
                 }
 			}
 
