@@ -1142,6 +1142,20 @@ public class DeviceServiceImpl implements DeviceService {
 	 *            기기 Request Value Object
 	 */
 	private void doActivateDevice(UserMbrDevice userMbrDevice, CreateDeviceRequest createDeviceRequest) {
+
+		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getIsPrimary())
+				&& StringUtils.equals(createDeviceRequest.getUserMbrDevice().getIsPrimary(), Constant.TYPE_YN_Y)){
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserKey(createDeviceRequest.getUserKey());
+			UserMbrDevice mainDevice = this.commonDAO.queryForObject("Device.findMainDevice", userMbr, UserMbrDevice.class);
+
+			if (mainDevice != null) {
+				// 휴대기기 이력 테이블 insert.
+				this.commonDAO.update("Device.insertUpdateDeviceHistory", mainDevice);
+				// 휴대기기 속성의 REP_DEVICE_YN = N
+				this.commonDAO.update("Device.unsetDeviceYn", mainDevice);
+			}
+		}
 		// 휴대기기 이력 테이블 insert.
 		this.commonDAO.update("Device.insertUpdateDeviceHistory", userMbrDevice);
 
