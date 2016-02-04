@@ -323,16 +323,18 @@ public class UserJoinController {
 			throw new StorePlatformException("SAC_MEM_1509");
 		}
 
+		// NSH, NON, IOS 통신사 에러 처리
+		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NSH, req.getDeviceTelecom())
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_IOS, req.getDeviceTelecom())){
+			throw new StorePlatformException("SAC_MEM_1509");
+		}
+
 		// MVNO 통신사 요청시 에러
 		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKM, req.getDeviceTelecom())
 				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_KTM, req.getDeviceTelecom())
 				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())){
 			throw new StorePlatformException("SAC_MEM_1515");
-		}
-
-		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
-				&& StringUtils.isNotBlank(req.getMdn())){
-			throw new StorePlatformException("SAC_MEM_1514");
 		}
 
 		CreateByMdnV2SacRes res = this.svc.regByMdnV2(sacHeader, req);

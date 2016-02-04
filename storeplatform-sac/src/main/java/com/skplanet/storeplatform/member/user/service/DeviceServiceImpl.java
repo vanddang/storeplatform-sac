@@ -393,10 +393,20 @@ public class DeviceServiceImpl implements DeviceService {
 								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 						}
 					} else {
-						// device_id가 존재하고 ID 회원인 경우 svc_no, mno_cd 널 처리
-						if (!StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) {
+						// device_id가 존재하고 회원타입이 같은경우 svc_no, mno_cd 널 처리
+						boolean isUpd = false;
+						if (StringUtils.equals(Constant.USER_TYPE_MOBILE, createUserMbr.getUserType())) {
+							if (StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) {
+								isUpd = true;
+							}
+						}else{
+							if (!StringUtils.equals(Constant.USER_TYPE_MOBILE, preUserMbr.getUserType())) {
+								isUpd = true;
+							}
+						}
+						if (isUpd) {
 							LOGGER.info("서비스관리번호로 기등록된 회원 존재(usim제거)");
-							LOGGER.info("deviceId가 존재하는 {} 아이디 회원의 휴대기기 svcMangNo, deviceTelecom 초기화 처리  userKey : {}, deviceKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", preUserMbr.getUserID(), userMbrDevice.getUserKey(), userMbrDevice.getDeviceKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
+							LOGGER.info("deviceId가 존재하는 {} 회원의 휴대기기 svcMangNo, deviceTelecom 초기화 처리  userKey : {}, deviceKey : {}, svcMangno : {}, deviceId : {}, mdn : {}", preUserMbr.getUserID(), userMbrDevice.getUserKey(), userMbrDevice.getDeviceKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
 							UserMbrDevice updateMbrDevice = new UserMbrDevice();
 							updateMbrDevice.setSvcMangNum("");
 							updateMbrDevice.setDeviceTelecom("");

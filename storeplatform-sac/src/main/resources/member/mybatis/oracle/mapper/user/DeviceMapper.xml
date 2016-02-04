@@ -76,6 +76,7 @@
                     DISTINCT(l.userKey) AS userKey
                     , #{commonRequest.systemID} AS userID
                     , #{isMainDevice} AS isMainDevice
+                    , #{isUsed} as isUsed
               FROM  (
                       SELECT  a.insd_usermbr_no AS userKey
                         FROM  tb_us_ousermbr a, tb_us_ousermbr_device b
@@ -129,7 +130,7 @@
 
         <collection
             property="userMbrDevice"
-            column="{userKey=userKey, isMainDevice=isMainDevice}"
+            column="{userKey=userKey, isMainDevice=isMainDevice, isUsed=isUsed}"
             javaType="java.util.ArrayList"
             ofType="userMbrDevice"
             select="getDevice"/>
@@ -155,9 +156,12 @@
                     , TO_CHAR( upd_dt,'YYYYMMDDHH24MISS') AS upd_dt
                     , TO_CHAR( last_login_dt,'YYYYMMDDHH24MISS') AS last_login_dt
                     , device_acct
+                    , auth_yn
               FROM  tb_us_ousermbr_device
-             WHERE  auth_yn = 'Y'
-                AND insd_usermbr_no = #{userKey}
+             WHERE insd_usermbr_no = #{userKey}
+                <if test="isUsed == null or isUsed.equalsIgnoreCase('Y')">
+                    AND auth_yn = 'Y'
+                </if>
             <if test="isMainDevice != null and isMainDevice.equalsIgnoreCase('Y')">
                AND rep_device_yn = #{isMainDevice}
             </if>

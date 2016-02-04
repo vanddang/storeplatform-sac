@@ -132,7 +132,7 @@ public class DeviceUtil {
 		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
 		deviceInfo.setIsPrimary(userMbrDevice.getIsPrimary());
         deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
-        deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
+        deviceInfo.setIsAuthenticated(userMbrDevice.getIsUsed());
         deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
 		deviceInfo.setIsRecvSms(userMbrDevice.getIsRecvSMS());
 		deviceInfo.setNativeId(userMbrDevice.getNativeID());

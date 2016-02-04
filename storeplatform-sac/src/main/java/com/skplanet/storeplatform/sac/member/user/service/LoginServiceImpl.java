@@ -741,14 +741,37 @@ public class LoginServiceImpl implements LoginService {
             req.setMdn(this.commService.getOpmdMdnInfo(req.getMdn()));
         }
 
-        // MVNO 처리(mdn으로 imei가 일치하면 로그인 성공처리)
+        // MVNO, NSH 처리(mdn으로 imei가 일치하면 로그인 성공처리)
         if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
                 || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KTM)
-                || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)){
+                || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)
+				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH)){
             deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
             if(deviceInfo != null){
 				LOGGER.info("MVNO 단말인증 mdn : {}", req.getMdn());
-                if(StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())){
+				boolean isValidTelecom = false;
+				if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)){
+					if(StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+							|| StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)){
+						isValidTelecom = true;
+					}
+				}else if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KTM)){
+					if(StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
+							|| StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KTM)){
+						isValidTelecom = true;
+					}
+				}else if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)){
+					if(StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)
+							|| StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)){
+						isValidTelecom = true;
+					}
+				}else if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH)){
+					if(StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH)){
+						isValidTelecom = true;
+					}
+				}
+                if(isValidTelecom
+						&& (StringUtils.isBlank(deviceInfo.getNativeId()) || StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId()))){
                     ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
                     modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
                     modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
@@ -1307,6 +1330,7 @@ public class LoginServiceImpl implements LoginService {
         schDeviceListReq.setCommonRequest(commService.getSCCommonRequest(requestHeader));
         schDeviceListReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
         schDeviceListReq.setIsMainDevice(MemberConstants.USE_N); // 대표기기만 조회(Y), 모든기기 조회(N)
+		schDeviceListReq.setIsUsed(MemberConstants.USE_N);
         List<KeySearch> keySearchList = new ArrayList<KeySearch>();
         KeySearch key = new KeySearch();
         key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -1322,15 +1346,42 @@ public class LoginServiceImpl implements LoginService {
             }
         }
 
-        // MVNO 처리(mdn으로 imei가 일치하면 로그인 성공처리)
+        // MVNO, NSH, IOS 처리(mdn으로 imei가 일치하면 로그인 성공처리)
         if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
                 || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KTM)
-                || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)){
+                || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)
+				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH)
+				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_IOS)){
             if(searchDeviceListResponse != null && searchDeviceListResponse.getUserMbrDevice().size() > 0){
                 for (UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()) {
-                    if(StringUtils.equals(req.getMdn(), userMbrDevice.getMdn())){
+                    if(StringUtils.equals(userMbrDevice.getIsUsed(), MemberConstants.USE_Y) && StringUtils.equals(req.getMdn(), userMbrDevice.getMdn())){
                         LOGGER.info("MVNO 단말인증 mdn : {}", req.getMdn());
-                        if(StringUtils.equals(req.getNativeId(), userMbrDevice.getNativeID())){
+						boolean isValidTelecom = false;
+						if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)){
+							if(StringUtils.equals(userMbrDevice.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+									|| StringUtils.equals(userMbrDevice.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)){
+								isValidTelecom = true;
+							}
+						}else if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KTM)){
+							if(StringUtils.equals(userMbrDevice.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
+									|| StringUtils.equals(userMbrDevice.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KTM)){
+								isValidTelecom = true;
+							}
+						}else if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)){
+							if(StringUtils.equals(userMbrDevice.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)
+									|| StringUtils.equals(userMbrDevice.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)){
+								isValidTelecom = true;
+							}
+						}else if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH)){
+							if(StringUtils.equals(userMbrDevice.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH)){
+								isValidTelecom = true;
+							}
+						}else if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_IOS)){
+							if(StringUtils.equals(userMbrDevice.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_IOS)){
+								isValidTelecom = true;
+							}
+						}
+                        if(isValidTelecom && (StringUtils.isBlank(userMbrDevice.getNativeID()) || StringUtils.equals(req.getNativeId(), userMbrDevice.getNativeID()))){
                             /* 이메일 정보 업데이트 */
                             if(StringUtils.isNotBlank(req.getUserEmail()) && !StringUtils.equals(req.getUserEmail(), chkDupRes.getUserMbr().getUserEmail())){
                                 UserMbr userMbr = new UserMbr();
@@ -1402,7 +1453,6 @@ public class LoginServiceImpl implements LoginService {
         ){
             // 서비스관리번호 조회
             deviceTelecomInfo = this.commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
-
             // 타사 연동시 EC_SYS_ERROR나 타사 시스템 오류인 경우 mdn, deviceId, imei, sim 일치하면 임시 로그인 성공 처리
             if(deviceTelecomInfo == null){
                 boolean isTempLoginSucc = false;
@@ -1412,13 +1462,15 @@ public class LoginServiceImpl implements LoginService {
                 UserMbrDevice deviceInfoByMdn = null;
                 if(searchDeviceListResponse != null && searchDeviceListResponse.getUserMbrDevice().size() > 0) {
                     for (UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()) {
-                        if(StringUtils.equals(req.getDeviceId(), userMbrDevice.getDeviceID())) {
-                            isDeviceId = true;
-                            deviceInfoByDeviceId = userMbrDevice;
-                        }else if(StringUtils.equals(req.getMdn(), userMbrDevice.getMdn())){
-                            isMdn = true;
-                            deviceInfoByMdn = userMbrDevice;
-                        }
+						if(StringUtils.equals(userMbrDevice.getIsUsed(), MemberConstants.USE_Y)){
+							if(StringUtils.equals(req.getDeviceId(), userMbrDevice.getDeviceID())) {
+								isDeviceId = true;
+								deviceInfoByDeviceId = userMbrDevice;
+							}else if(StringUtils.equals(req.getMdn(), userMbrDevice.getMdn())){
+								isMdn = true;
+								deviceInfoByMdn = userMbrDevice;
+							}
+						}
                     }
 
                     if(isDeviceId || isMdn){

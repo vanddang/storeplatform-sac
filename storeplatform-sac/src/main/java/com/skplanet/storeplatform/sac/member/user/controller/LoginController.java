@@ -164,6 +164,12 @@ public class LoginController {
             throw new StorePlatformException("SAC_MEM_1509");
 		}
 
+		// NON, IOS 통신사 에러 처리
+		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
+				|| StringUtils.equals(MemberConstants.DEVICE_TELECOM_IOS, req.getDeviceTelecom())){
+			throw new StorePlatformException("SAC_MEM_1509");
+		}
+
 		AuthorizeByMdnV3SacRes res = this.loginService.authorizeByMdnV3(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
