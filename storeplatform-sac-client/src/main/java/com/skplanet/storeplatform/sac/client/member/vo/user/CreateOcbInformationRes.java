@@ -15,7 +15,13 @@ public class CreateOcbInformationRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
+    public CreateOcbInformationRes() {}
+
+    public CreateOcbInformationRes(String userKey) {
+        this.userKey = userKey;
+    }
+
+    /**
 	 * 사용자 고유키.
 	 */
 	private String userKey;

@@ -25,13 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
  * Updated on : 2016. 01. 18 Updated by : 정희원, SK 플래닛.
  */
 @Service
+@Transactional(value = "transactionManagerForMember", readOnly = true)
 public class UserMemberServiceImpl implements UserMemberService {
 
     @Autowired
     private UserMemberRepository memberRepository;
 
     @Override
-    @Transactional(value = "transactionManagerForMember", readOnly = true)
     public UserMember findByUserKeyAndTransitRepo(String userKey) {
 
         if(Strings.isNullOrEmpty(userKey))
@@ -57,7 +57,6 @@ public class UserMemberServiceImpl implements UserMemberService {
     }
 
     @Override
-    @Transactional(value = "transactionManagerForScMember", readOnly = true)
     public UserMember findByUserKeyAndActive(String userKey) {
         if(Strings.isNullOrEmpty(userKey))
             throw new StorePlatformException("SAC_MEM_0001", "userKey");

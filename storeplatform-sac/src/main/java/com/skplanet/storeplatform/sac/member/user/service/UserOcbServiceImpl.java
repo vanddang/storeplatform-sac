@@ -60,6 +60,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 	private OcbSCI ocbSCI;
 
 	@Override
+    @Deprecated // => OcbService.merge()
 	public CreateOcbInformationRes regOcbInformation(SacRequestHeader sacHeader, CreateOcbInformationReq req) {
 
 		/**
@@ -99,6 +100,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 	}
 
 	@Override
+    @Deprecated // => OcbService.remove()
 	public RemoveOcbInformationRes remOcbInformation(SacRequestHeader sacHeader, RemoveOcbInformationReq req) {
 
 		String ocbCardNumber = req.getCardNumber().replaceAll("-", "");
@@ -158,6 +160,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 	}
 
 	@Override
+    @Deprecated // => OcbService.find()
 	public GetOcbInformationRes getOcbInformation(SacRequestHeader sacHeader, GetOcbInformationReq req) {
 
 		/**
@@ -207,8 +210,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 		/**
 		 * OCB 조회 요청.
 		 */
-		SearchMemberPointResponse searchMemberPointResponse = this.userSCI
-				.searchMemberPointList(searchMemberPointRequest);
+		SearchMemberPointResponse searchMemberPointResponse = this.userSCI.searchMemberPointList(searchMemberPointRequest);
 		LOGGER.debug("### searchMemberPointResponse : {}", searchMemberPointResponse.getMemberPointList());
 
 		return searchMemberPointResponse;
