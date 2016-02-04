@@ -53,7 +53,7 @@ public class SearchDeviceListRequest extends CommonInfo implements Serializable 
 	private String deviceKey;
 
 	/** 휴대기기 auth_yn 여부. */
-	private String isUsed;
+	private String isUsed = "Y";
 
 	/** 내 휴대기기 리스트 여부 Y/N. */
 	private String isMine;
