@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -14,10 +15,11 @@ public interface UserWithdrawService {
 	/**
 	 * 회원탈퇴
 	 * 
-	 * @param SacRequestHeader
-	 * @param WithdrawReq
-	 * @return
-	 * @throws Exception
+	 * @param requestHeader
+	 * 				SacRequestHeader
+	 * @param req
+	 * 				WithdrawReq
+	 * @return WithdrawRes
 	 */
 	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req);
 
@@ -30,8 +32,6 @@ public interface UserWithdrawService {
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param deviceId
-	 *            String
-	 * @param userAuthKey
 	 *            String
 	 */
 	public void removeDevice(SacRequestHeader requestHeader, String deviceId);
@@ -46,6 +46,8 @@ public interface UserWithdrawService {
 	 *            SacRequestHeader
 	 * @param userId
 	 *            String
+	 * @param deviceId
+	 * 			  String
 	 */
-	public void removeUser(SacRequestHeader requestHeader, String userId);
+	public void removeUser(SacRequestHeader requestHeader, String userId, String deviceId);
 }

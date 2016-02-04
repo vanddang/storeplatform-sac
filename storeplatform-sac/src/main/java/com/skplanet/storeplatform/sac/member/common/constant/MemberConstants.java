@@ -147,6 +147,8 @@ public final class MemberConstants {
 
 	public static final String USER_EXTRA_SYRUP_SSO_CREDENTIAL = "US010920"; // syrup Pay에서 발행하는 자격증명 값
 	public static final String USER_EXTRA_SOCIL_MEMBER_NO = "US010922"; // social 아이디 회원번호
+    // 2016-02-02 추가
+	public static final String USER_EXTRA_SOCIAL_NAVER_ID = "US010921"; // NaverId
 
 	public static final String USER_EXTRA_FACEBOOK = "facebook";
 	public static final String USER_EXTRA_KAKAO = "kakao";
@@ -161,11 +163,14 @@ public final class MemberConstants {
 	public static final String DEVICE_EXTRA_SCVERSION = "US011406"; // 샵클 버전
 	@Deprecated
 	public static final String DEVICE_EXTRA_APPSTATISTICS_YN = "US011407"; // 앱 사용통계 사용여부
+	@Deprecated
 	public static final String DEVICE_EXTRA_DODORYAUTH_DATE = "US011408"; // 도토리 인증일
+	@Deprecated
 	public static final String DEVICE_EXTRA_DODORYAUTH_YN = "US011409"; // 도토리 인증여부
 	public static final String DEVICE_EXTRA_EMBEDDED_YN = "US011410"; // 임베디드 여부
 	public static final String DEVICE_EXTRA_OMDUACD = "US011411"; // OMD UA코드
 	public static final String DEVICE_EXTRA_ROOTING_YN = "US011412"; // 루팅 여부
+	@Deprecated
 	public static final String DEVICE_EXTRA_TCLOUD_SUPPORT_YN = "US011413"; // Tcloud 약관동의 여부
 	public static final String DEVICE_EXTRA_PUSH_YN = "US011414"; // PUSH 알림 수신 동의 여부
 	public static final String DEVICE_EXTRA_LIMIT_CHARGE_YN = "US011415"; // 한도요금제 여부
@@ -184,7 +189,9 @@ public final class MemberConstants {
 	public static final String DEVICE_CHANGE_TYPE_SECEDE_ECG = "US012011"; // 부가서비스해지
 	public static final String DEVICE_CHANGE_TYPE_NUMBER_MOVE = "US012012"; // 번호이동
 	public static final String DEVICE_CHANGE_TYPE_IMEI_CHANGE = "US012013"; // imei변경
-	public static final String DEVICE_CHANGE_TYPE_DEVICEID_CHANGE = "US012014"; // deviceId변경(oneStore 재설치) // TODO. 공통코드 추가 필요!!
+	public static final String DEVICE_CHANGE_TYPE_GMAIL_CHANGE = "US012014"; // gmail변경
+	public static final String DEVICE_CHANGE_TYPE_SMS_CHANGE = "US012015"; // SMS 수신동의 변경
+	public static final String DEVICE_CHANGE_TYPE_DEVICEID_CHANGE = "US012016"; // deviceId변경(oneStore 재설치) // TODO. 공통코드 추가 필요!!
 
 	/** 미지원 단말. */
 	public static final String NOT_SUPPORT_HP_CORP = "NSH";

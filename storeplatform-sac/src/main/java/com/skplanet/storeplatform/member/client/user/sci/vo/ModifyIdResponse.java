@@ -5,9 +5,9 @@ import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonResponse;
 
 /**
- * 배송지 삭제 응답 Value Object
+ * ID 변경 응답 Value Object
  *
- * Updated on : 2016. 1. 6. Updated by : 최진호, 보고지티.
+ * Updated on : 2016. 2. 2. Updated by : 최진호, 보고지티.
  */
 public class ModifyIdResponse extends CommonInfo {
 
@@ -16,6 +16,7 @@ public class ModifyIdResponse extends CommonInfo {
 
     /** 공통 응답 Value Object. */
     private CommonResponse commonResponse;
+
     /** 사용자 Key. */
     private String userKey;
 

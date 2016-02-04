@@ -9,16 +9,16 @@
  */
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 
+import java.io.Serializable;
+
 /**
  * 휴대기기 소유자이력 정보 요청 Value Object
  * 
- * Updated on : 2014. 6. 24 Updated by : wisestone_mikepark.
+ * Updated on : 2016. 2. 2. Updated by : 최진호, 보고지티.
  */
 public class SearchDeviceOwnerRequest extends CommonInfo implements Serializable {
 	/** The Constant serial Version UID. */
@@ -36,9 +36,7 @@ public class SearchDeviceOwnerRequest extends CommonInfo implements Serializable
 	/** 등록일시. */
 	private String regDate; // REG_DT
 
-	/**
-	 * 휴면계정유무.
-	 */
+	/** 휴면계정유무. */
 	private String isDormant;
 
 	/**

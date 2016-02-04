@@ -9,14 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.runtime.extend.url;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.runtime.common.service.RoutingDataService;
+import com.skplanet.storeplatform.sac.runtime.common.service.RoutingDataServiceSelector;
+import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
-import com.skplanet.storeplatform.sac.runtime.common.service.RoutingDataService;
-import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
+import javax.annotation.PostConstruct;
 
 /**
  * SAC 외부 호출용 URL 생성기 (EC 호출)
@@ -26,11 +27,19 @@ import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
 @Service // (SacExternalUrlServiceDb 적용 후 문제가 생기면 비활성화 요망)
 public class SacExternalUrlServiceDb implements SacExternalUrlService {
 
-	@Autowired
+	@Autowired RoutingDataServiceSelector routingDataServiceSelector;
+
+	@PostConstruct
+	public void initRoutingDataService() {
+		dataSvc = routingDataServiceSelector.getRoutingDataService();
+	}
+
 	private RoutingDataService dataSvc;
+
 
 	@Override
 	public UriComponentsBuilder buildUrl(String innerRequestURI, String interfaceId, String tenantId) {
+
 		Bypass bypass;
 
 		try {

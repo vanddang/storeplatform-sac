@@ -9,20 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
@@ -66,6 +52,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.DeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
@@ -108,13 +95,25 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * 사용자 내부 메서드 서비스 구현체
  * 
- * Updated on : 2014. 5. 20. Updated by : 심대진, 다모아 솔루션.
- * Updated on : 2016. 1. 26. Updated by : 윤보영, 카레즈.
+ * Updated on : 2016. 2. 1. Updated by : 최진호, 보고지티.
  */
 @Service
 public class SearchUserSCIServiceImpl implements SearchUserSCIService {
@@ -174,8 +173,21 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
                     userInfoSac.setUserMainStatus(userInfoMap.get(userKeyList.get(i)).getUserMainStatus());
                     userInfoSac.setUserSubStatus(userInfoMap.get(userKeyList.get(i)).getUserSubStatus());
                     userInfoSac.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
+
                     // 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
-                    userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
+                    if(userInfoMap.get(userKeyList.get(i)).getDeviceIDList() != null){
+                        List<DeviceInfoSac> deviceIdList = new ArrayList<DeviceInfoSac>();
+                        for(UserMbrDevice userMbrDevice : userInfoMap.get(userKeyList.get(i)).getDeviceIDList()){
+                            DeviceInfoSac deviceInfoSac = new DeviceInfoSac();
+
+                            deviceInfoSac.setDeviceId(StringUtils.isNotEmpty(userMbrDevice.getDeviceID()) ? userMbrDevice.getDeviceID() : "");
+                            deviceInfoSac.setMdn(StringUtils.isNotEmpty(userMbrDevice.getMdn()) ? userMbrDevice.getMdn() : "");
+                            deviceIdList.add(deviceInfoSac);
+                        }
+                        userInfoSac.setDeviceInfoListSac(deviceIdList);
+                    }else {
+                        userInfoSac.setDeviceInfoListSac(new ArrayList<DeviceInfoSac>());
+                    }
 
                     userInfo.put(userKeyList.get(i), userInfoSac);
                 }
@@ -244,7 +256,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 							.setUserSubStatus(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getUserSubStatus());
 					userInfoSac.setUserType(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getUserType());
 					// 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
-					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getDeviceIDList());
+//					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getDeviceIDList());
 					// tenantId 추가, incross_bottangs, 2015.02.10
 					userInfoSac.setTenantId(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getTenantID());
 
@@ -383,7 +395,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 		searchUserRequest.setCommonRequest(commonRequest);
 		searchUserRequest.setKeySearchList(keySearchList);
 
@@ -527,7 +538,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		String userKey = req.getUserKey();
 
@@ -540,9 +550,15 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		ListDeviceRes res = new ListDeviceRes();
 
 		if (StringUtils.isNotBlank(req.getDeviceId())) {
+			DeviceInfo deviceInfo = null;
 			/* 단건 조회 처리 */
-			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
-					req.getDeviceId(), userKey);
+			if (ValidationCheckUtils.isDeviceId(req.getDeviceId())) {
+				deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+						req.getDeviceId(), userKey);
+			} else {
+				deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_MDN,
+						req.getDeviceId(), userKey);
+			}
 			if (deviceInfo != null) {
 				res.setUserId(deviceInfo.getUserId());
 				res.setUserKey(deviceInfo.getUserKey());
@@ -616,7 +632,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 		searchDeviceRequest.setCommonRequest(commonRequest);
@@ -1026,9 +1041,18 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	public SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceId(SacRequestHeader header,
 			SearchOrderUserByDeviceIdSacReq request) {
 
+		// deviceId 와 mdn 둘 중 하나는 필수
+		if (StringUtils.isBlank(request.getDeviceId()) && StringUtils.isBlank(request.getMdn())) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId, mdn");
+		}
+
 		SearchDeviceOwnerRequest searchDeviceOwnerRequest = new SearchDeviceOwnerRequest();
 		searchDeviceOwnerRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
-		searchDeviceOwnerRequest.setDeviceID(request.getDeviceId());
+		if (StringUtils.isNotBlank(request.getDeviceId())) {
+			searchDeviceOwnerRequest.setDeviceID(request.getDeviceId());
+		} else if (StringUtils.isNotBlank(request.getMdn())) {
+			searchDeviceOwnerRequest.setMdn(request.getMdn());
+		}
 		searchDeviceOwnerRequest.setRegDate(request.getOrderDt());
 
 		// SC.DeviceSCI Call
@@ -1301,11 +1325,11 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 					// userId 셋팅
 					if (StringUtils.equals(MemberConstants.USER_TYPE_MOBILE,
 							userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getUserType())) {
-						if (userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList() != null
-								&& userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList().size() > 0) {
-							socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
-									.getDeviceIDList().get(0));
-						}
+//						if (userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList() != null
+//								&& userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList().size() > 0) {
+//							socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+//									.getDeviceIDList().get(0));
+//						}
 					} else {
 						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
 								.getUserID());

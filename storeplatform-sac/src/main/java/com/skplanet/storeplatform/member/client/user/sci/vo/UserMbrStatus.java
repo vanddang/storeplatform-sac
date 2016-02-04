@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.DeviceInfoSac;
 
 /**
  * 사용자 상태정보 Value Object
@@ -57,7 +58,7 @@ public class UserMbrStatus extends CommonInfo implements Serializable {
 	private String userID;
 
 	/** Device Id List. */
-	private List<String> deviceIDList;
+	private List<UserMbrDevice> deviceIDList;
 
 	/** Device key List. */
 	private List<String> deviceKeyList;
@@ -188,26 +189,15 @@ public class UserMbrStatus extends CommonInfo implements Serializable {
 		this.userID = userID;
 	}
 
-	/**
-	 * Device Id List를 리턴한다.
-	 * 
-	 * @return deviceIDList
-	 */
-	public List<String> getDeviceIDList() {
-		return this.deviceIDList;
-	}
+    public List<UserMbrDevice> getDeviceIDList() {
+        return deviceIDList;
+    }
 
-	/**
-	 * Device Id List를 설정한다.
-	 * 
-	 * @param deviceIDList
-	 *            Device Id List
-	 */
-	public void setDeviceIDList(List<String> deviceIDList) {
-		this.deviceIDList = deviceIDList;
-	}
+    public void setDeviceIDList(List<UserMbrDevice> deviceIDList) {
+        this.deviceIDList = deviceIDList;
+    }
 
-	/**
+    /**
 	 * @return the deviceKeyList
 	 */
 	public List<String> getDeviceKeyList() {

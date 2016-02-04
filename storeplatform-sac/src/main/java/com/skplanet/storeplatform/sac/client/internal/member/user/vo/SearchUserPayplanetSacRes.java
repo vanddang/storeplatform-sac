@@ -19,6 +19,8 @@ public class SearchUserPayplanetSacRes extends CommonInfo {
 
 	private String skpAgreementYn;
 
+	private String ocbAgreementYn;
+
 	private String ocbCardNumber;
 
 	private String ocbAuthMethodCode;
@@ -30,6 +32,10 @@ public class SearchUserPayplanetSacRes extends CommonInfo {
 	public void setSkpAgreementYn(String skpAgreementYn) {
 		this.skpAgreementYn = skpAgreementYn;
 	}
+
+	public String getOcbAgreementYn() { return this.ocbAgreementYn; }
+
+	public void setOcbAgreementYn(String ocbAgreementYn) { this.ocbAgreementYn = ocbAgreementYn; }
 
 	public String getOcbCardNumber() {
 		return this.ocbCardNumber;

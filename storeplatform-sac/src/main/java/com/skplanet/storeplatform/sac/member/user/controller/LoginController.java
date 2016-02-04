@@ -78,9 +78,14 @@ public class LoginController {
             throw new StorePlatformException("SAC_MEM_1509");
         }
 
-        if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
-                && StringUtils.equals(MemberConstants.DEVICE_ID_TYPE_MSISDN, req.getDeviceIdType())){
-            throw new StorePlatformException("SAC_MEM_1514");
+        /** 유효한 인증 처리 통신사 체크 */
+        if(!StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKM, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KTM, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())){
+            throw new StorePlatformException("SAC_MEM_1203");
         }
 
 		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
@@ -116,15 +121,14 @@ public class LoginController {
             throw new StorePlatformException("SAC_MEM_1509");
         }
 
-        if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
-                && StringUtils.equals(MemberConstants.DEVICE_ID_TYPE_MSISDN, req.getDeviceIdType())){
-            throw new StorePlatformException("SAC_MEM_1514");
-        }
-
-        /** SKM 일 경우 NATIVE_ID 필수 처리 */
-        if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
-                && StringUtils.isEmpty(req.getNativeId())){
-            throw new StorePlatformException("SAC_MEM_0001", "nativeId");
+        /** 유효한 인증 처리 통신사 체크 */
+        if(!StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKM, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KTM, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())){
+            throw new StorePlatformException("SAC_MEM_1203");
         }
 
         AuthorizeByMdnRes res = this.loginService.authorizeByMdnV2(requestHeader, req);
@@ -158,11 +162,6 @@ public class LoginController {
 
 		if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())) {
             throw new StorePlatformException("SAC_MEM_1509");
-		}
-
-		if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
-				&& StringUtils.isNotBlank(req.getMdn())){
-			throw new StorePlatformException("SAC_MEM_1514");
 		}
 
 		AuthorizeByMdnV3SacRes res = this.loginService.authorizeByMdnV3(requestHeader, req);
@@ -599,7 +598,7 @@ public class LoginController {
 
 		AuthorizeV2SacRes res = this.loginService.authorizeV2(requestHeader, req);
 
-		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
+		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getMdn(), res.getUserInfo().getUserKey(),
 				res.getUserMainStatus());
 
 		return res;

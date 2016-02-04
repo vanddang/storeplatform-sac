@@ -80,10 +80,11 @@ public class UserJoinController {
             throw new StorePlatformException("SAC_MEM_1509");
         }
 
-        /** NON 통신사 시 MSISDN 체크 */
-        if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_NON, req.getDeviceTelecom())
-                && StringUtils.equals(MemberConstants.DEVICE_ID_TYPE_MSISDN, req.getDeviceIdType())){
-            throw new StorePlatformException("SAC_MEM_1514");
+        if(!StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
+            && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
+            && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())
+            && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKM, req.getDeviceTelecom())){
+            throw new StorePlatformException("SAC_MEM_1203");
         }
 
 		/**

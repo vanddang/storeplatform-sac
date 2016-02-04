@@ -104,7 +104,16 @@ public class UserSCIServiceImpl implements UserSCIService {
 		searchExtentUserRequest.setCommonRequest(commonRequest);
 		searchExtentUserRequest.setKeySearchList(keySearchList);
 		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
-		this.userSCI.searchExtentUser(searchExtentUserRequest);
+        try{
+            this.userSCI.searchExtentUser(searchExtentUserRequest);
+        }catch(StorePlatformException e){
+            if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
+                    || StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+                throw new StorePlatformException("SAC_MEM_0003", "userKey", request.getUserKey());
+            }else {
+                throw e;
+            }
+        }
 
 		// 02. 판매자 회원 여부 조회
 		List<KeySearch> sellerKeys = new ArrayList<KeySearch>();
@@ -113,7 +122,9 @@ public class UserSCIServiceImpl implements UserSCIService {
 		keySearch.setKeyString(request.getSellerKey());
 		sellerKeys.add(keySearch);
 		SearchMbrSellerRequest searchMbrSellerRequest = new SearchMbrSellerRequest();
+        commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 		searchMbrSellerRequest.setCommonRequest(commonRequest);
+
 		if (StringUtil.isNotEmpty(request.getSellerKey())) {
 			searchMbrSellerRequest.setKeySearchList(sellerKeys);
 		}

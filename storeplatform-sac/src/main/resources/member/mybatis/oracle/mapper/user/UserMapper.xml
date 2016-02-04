@@ -825,20 +825,22 @@
                     ,SYSDATE
                 )
     </update>
-    
+
     <!-- 사용자 탈퇴 -->
     <update id="removeUser" parameterType="userMbr">
-       UPDATE  /* UserMapper.removeUser, 사용자 탈퇴, wisestone_mikepark, 2013-12-23 */
-               tb_us_ousermbr
-          SET
-               bolter_reason_desc = #{secedeReasonMessage},      /* 탈퇴_사유_설명 */
-               mbr_status_main_cd = #{userMainStatus},
-               mbr_status_sub_cd = #{userSubStatus},
-               bolter_day = #{secedeDate},                       /* 탈퇴_일 */
-               start_dt = SYSDATE,
-               end_dt = SYSDATE,
-               upd_dt = SYSDATE
-        WHERE  insd_usermbr_no = #{userKey}
+        UPDATE  /* UserMapper.xml, removeUser, SAC(SC), 최진호, 2016-02-01 */
+            TB_US_OUSERMBR
+        SET
+            <if test="secedeReasonMessage != null">BOLTER_REASON_DESC = #{secedeReasonMessage},</if>      /* 탈퇴_사유_설명 */
+            <if test="bolterDeviceId != null">BOLTER_DEVICE_ID = #{bolterDeviceId},</if> /* 탈퇴 기기 ID */
+            MBR_STATUS_MAIN_CD = #{userMainStatus},
+            MBR_STATUS_SUB_CD = #{userSubStatus},
+            BOLTER_DAY = #{secedeDate},                       /* 탈퇴_일 */
+            START_DT = SYSDATE,
+            END_DT = SYSDATE,
+            UPD_DT = SYSDATE
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
     </update>
 
 
@@ -1523,7 +1525,7 @@
              ,  a.mbr_status_main_cd as userMainStatus
              ,  a.mbr_status_sub_cd as userSubStatus
              ,  a.mbr_id as userID
-             ,  NVL(b.mdn, b.device_id)  as deviceID
+             ,  b.device_id  as deviceID
              ,  b.insd_device_id as deviceKey
           FROM  tb_us_ousermbr a
           LEFT  OUTER JOIN tb_us_ousermbr_device b
@@ -1563,7 +1565,7 @@
             )
            AND  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
     </select>
-    
+
     <!-- 복수 사용자 상태정보 조회맵 -->
     <resultMap id="searchMbrUserResultMap" type="userMbrStatus">
         <result property="userKey" column="userKey"/>
@@ -1571,15 +1573,30 @@
         <result property="userMainStatus" column="userMainStatus"/>
         <result property="userSubStatus" column="userSubStatus"/>
         <result property="userID" column="userID"/>
-        
-        <collection property="deviceIDList" javaType="java.util.ArrayList" ofType="String" >
-            <result property="deviceID" column="deviceID"/>
-        </collection>
+
+        <collection
+                property="deviceIDList"
+                column="{userKey=userKey}"
+                javaType="java.util.ArrayList"
+                ofType="userMbrDevice"
+                select="getDeviceInfo"/>
 
         <collection property="deviceKeyList" javaType="java.util.ArrayList" ofType="String" >
             <result property="devicekey" column="devicekey"/>
         </collection>
     </resultMap>
+
+    <select id="getDeviceInfo" resultType="userMbrDevice">
+        SELECT  /* UserMapper.xml, getDeviceInfo, SAC(SC), 윤보영, 2016-02-01 */
+                b.device_id AS deviceId,
+                b.mdn AS mdn
+        FROM  tb_us_ousermbr_device b
+        JOIN  tb_us_ousermbr a
+          ON  b.insd_usermbr_no = a.insd_usermbr_no
+        WHERE  b.insd_usermbr_no = #{userKey}
+          AND  b.auth_yn = 'Y'
+          AND  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
+    </select>
 
     <!-- 복수 사용자 기기정보 조회 -->
     <select id="searchMbrDevice" parameterType="searchMbrDeviceRequest" resultMap="searchMbrDeviceResultMap">
@@ -2257,7 +2274,14 @@
             AND brand_id  = #{brandId}
             AND charger_id  = #{chargerId}
    </update>
-   
+
+    <!-- 상품권 충전정보 삭제 -->
+    <delete id="deleteGiftChargeInfo" parameterType="giftChargeInfo">
+        DELETE /* UserMapper.xml, deleteGiftChargeInfo, SAC(SC), 윤보영, 2016-02-01 */
+          FROM tb_us_ousermbr_gift_chrg
+        WHERE seq = #{seq}
+    </delete>
+
    <!-- 상품권 충전소 정보 이관 등록 -->
     <insert id="insertTransferGiftChargeInfo" parameterType="giftChargeInfo">
      INSERT /* UserMapper.xml, insertTransferGiftChargeInfo, SAC(SC), 최진호, 2015-11-24 */
@@ -2320,6 +2344,20 @@
             INSD_USERMBR_NO = #{userKey}
             AND MBR_ID = #{userId}
             AND MBR_CLAS_CD = #{userType}
+    </update>
+
+    <!-- 사용자 pwd 정보 변경 -->
+    <update id="updateUserPwdInfo" parameterType="modifyIdRequest">
+        UPDATE
+            TB_US_OUSERMBR_PWD
+        SET
+            PWD = NULL,
+            SALT = NULL,
+            IDP_ONEID_CD = NULL,
+            ACT_TK = #{newUserAuthToken},
+            UPD_DT = SYSDATE
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
     </update>
 
     <!-- market pin 정보 조회 -->

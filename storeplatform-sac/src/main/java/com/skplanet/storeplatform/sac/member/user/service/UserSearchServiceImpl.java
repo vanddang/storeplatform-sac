@@ -1229,6 +1229,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @return SearchUserSacRes
 	 */
 	@Override
+    @Deprecated
 	public SearchUserSacRes srhUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request) {
 
 		// 공통파라미터 셋팅
@@ -1261,7 +1262,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					userInfoSac.setUserSubStatus(userInfoMap.get(userKeyList.get(i)).getUserSubStatus());
 					userInfoSac.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
 					// 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
-					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
+//					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
 
 					userInfo.put(userKeyList.get(i), userInfoSac);
 				}
@@ -1377,34 +1378,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		/** 회원 기본 정보V2. */
-		DetailV2Res res = null;
-        try{
-            res = this.srhUserV2(req, sacHeader);
-        }catch(StorePlatformException ex){
-            if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
-                    || StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-                String requestNm = null;
-                String requestValue = null;
-
-                if(StringUtils.isNotEmpty(req.getUserId())){
-                    requestNm = "userId";
-                    requestValue = req.getUserId();
-                }else if(StringUtils.isNotEmpty(req.getUserKey())){
-                    requestNm = "userKey";
-                    requestValue = req.getUserKey();
-                }else if(StringUtils.isNotEmpty(req.getDeviceId())) {
-                    requestNm = "deviceId";
-                    requestValue = req.getDeviceId();
-                }else if(StringUtils.isNotEmpty(req.getDeviceKey())){
-                    requestNm = "deviceKey";
-                    requestValue = req.getDeviceKey();
-                }
-                throw new StorePlatformException("SAC_MEM_0003", requestNm, requestValue);
-            }else{
-                throw ex;
-            }
-        }
-
+		DetailV2Res res = this.srhUserV2(req, sacHeader);
 
 		/* 정보조회범위 */
 		if (req.getSearchExtent() != null) {
@@ -2078,8 +2052,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 							userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getUserType())) {
 						if (userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList() != null
 								&& userInfoMap.get(searchSapUserInfoList.get(i).getUserKey()).getDeviceIDList().size() > 0) {
-							socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
-									.getDeviceIDList().get(0));
+//							socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())
+//									.getDeviceIDList().get(0));
 						}
 					} else {
 						socialAccountInfo.setUserId(userInfoMap.get(searchSapUserInfoList.get(i).getUserKey())

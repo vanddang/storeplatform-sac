@@ -4,6 +4,7 @@
 package com.skplanet.storeplatform.sac.member.user.sci;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
@@ -128,10 +129,19 @@ public class SearchUserSCIController implements SearchUserSCI {
 	public UserInfoSacRes searchUserBydeviceId(@RequestBody @Validated UserInfoSacReq request) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
+		// deviceId, mdn 둘중 하나는 값이 있어야 한다.
+		if (StringUtils.isBlank(request.getDeviceId()) && StringUtils.isBlank(request.getMdn())) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId, mdn");
+		}
+
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
 		DetailReq detailReq = new DetailReq();
-		detailReq.setDeviceId(request.getDeviceId());
+		if (StringUtils.isNotBlank(request.getDeviceId())) {
+			detailReq.setDeviceId(request.getDeviceId());
+		} else if (StringUtils.isNotBlank(request.getMdn())) {
+			detailReq.setDeviceId(request.getMdn());
+		}
 		SearchExtentReq searchExtentReq = new SearchExtentReq();
 		searchExtentReq.setDeviceInfoYn(MemberConstants.USE_Y);
 		searchExtentReq.setUserInfoYn(MemberConstants.USE_Y);
