@@ -78,13 +78,14 @@ public class LoginController {
             throw new StorePlatformException("SAC_MEM_1509");
         }
 
-        /** 유효한 인증 처리 통신사 체크 */
+        /** 유효한 인증 처리 - 통신사 체크 5월 패치 시 SKT, SKM, NSH 만 처리 */
         if(!StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
                 && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
                 && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())
                 && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKM, req.getDeviceTelecom())
                 && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KTM, req.getDeviceTelecom())
-                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())){
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_NSH, req.getDeviceTelecom())){
             throw new StorePlatformException("SAC_MEM_1203");
         }
 
@@ -121,13 +122,14 @@ public class LoginController {
             throw new StorePlatformException("SAC_MEM_1509");
         }
 
-        /** 유효한 인증 처리 통신사 체크 */
+        /** 유효한 인증 처리 - 통신사 체크 5월 패치 시 SKT, SKM, NSH 만 처리 */
         if(!StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())
                 && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
                 && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())
                 && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKM, req.getDeviceTelecom())
                 && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_KTM, req.getDeviceTelecom())
-                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())){
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGM, req.getDeviceTelecom())
+                && !StringUtils.equals(MemberConstants.DEVICE_TELECOM_NSH, req.getDeviceTelecom())){
             throw new StorePlatformException("SAC_MEM_1203");
         }
 
