@@ -60,6 +60,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 	private OcbSCI ocbSCI;
 
 	@Override
+    @Deprecated // => OcbService.merge()
 	public CreateOcbInformationRes regOcbInformation(SacRequestHeader sacHeader, CreateOcbInformationReq req) {
 
 		/**
@@ -99,6 +100,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 	}
 
 	@Override
+    @Deprecated // => OcbService.remove()
 	public RemoveOcbInformationRes remOcbInformation(SacRequestHeader sacHeader, RemoveOcbInformationReq req) {
 
 		String ocbCardNumber = req.getCardNumber().replaceAll("-", "");

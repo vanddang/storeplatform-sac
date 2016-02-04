@@ -22,4 +22,12 @@ import java.util.List;
 public interface UserOcbRepository {
 
     List<UserOcb> findByUserKey(String userKey);
+
+    UserOcb findByUserKeyAndOcbNo(String userKey, String ocbNo);
+
+    void updateDisableAll(String userKey);
+
+    void updateDisable(String userKey, String ocbNo);
+
+    void save(UserOcb userOcb);
 }

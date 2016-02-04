@@ -29,11 +29,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceI
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;

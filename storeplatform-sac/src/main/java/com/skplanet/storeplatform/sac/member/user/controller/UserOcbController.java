@@ -55,19 +55,14 @@ public class UserOcbController {
 
 	/**
 	 * <pre>
-	 * 회원 OCB 정보 등록/수정.
+	 * [I01000029] 회원 OCB 정보 등록/수정.
 	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @param req
-	 *            Request Value Object
+	 * @param req Request Value Object
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/member/user/createOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateOcbInformationRes createOcbInformation(SacRequestHeader sacHeader,
-			@Validated @RequestBody CreateOcbInformationReq req) {
+	public CreateOcbInformationRes createOcbInformation(@Validated @RequestBody CreateOcbInformationReq req) {
 
 		LOGGER.debug("########################################");
 		LOGGER.debug("##### 2.1.29 회원 OCB 정보 등록/수정 #####");
@@ -78,9 +73,11 @@ public class UserOcbController {
 		/**
 		 * 회원 OCB 정보 등록/수정 Biz
 		 */
-		CreateOcbInformationRes res = this.svc.regOcbInformation(sacHeader, req);
+//		CreateOcbInformationRes res = this.svc.regOcbInformation(sacHeader, req);
+        ocbService.merge(req.getUserKey(), req.getCardNumber(), req.getAuthMethodCode(), req.getRegId());
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+        CreateOcbInformationRes res = new CreateOcbInformationRes(req.getUserKey());
+        LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -88,19 +85,15 @@ public class UserOcbController {
 
 	/**
 	 * <pre>
-	 * 회원 OCB 정보 삭제.
+	 * [I01000030] 회원 OCB 정보 삭제.
 	 * </pre>
 	 * 
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @param req
-	 *            Request Value Object
+	 * @param req Request Value Object
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/member/user/removeOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoveOcbInformationRes removeOcbInformation(SacRequestHeader sacHeader,
-			@Validated @RequestBody RemoveOcbInformationReq req) {
+	public RemoveOcbInformationRes removeOcbInformation(@Validated @RequestBody RemoveOcbInformationReq req) {
 
 		LOGGER.debug("###################################");
 		LOGGER.debug("##### 2.1.29 회원 OCB 정보 삭제 #####");
@@ -111,9 +104,11 @@ public class UserOcbController {
 		/**
 		 * 회원 OCB 정보 삭제 Biz
 		 */
-		RemoveOcbInformationRes res = this.svc.remOcbInformation(sacHeader, req);
+        ocbService.delete(req.getUserKey(), req.getCardNumber());
+//		RemoveOcbInformationRes res = this.svc.remOcbInformation(sacHeader, req);
+        RemoveOcbInformationRes res = new RemoveOcbInformationRes(req.getUserKey());
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+        LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -123,11 +118,7 @@ public class UserOcbController {
 	 * <pre>
 	 * [I01000031] 회원 OCB 정보 조회.
 	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @param req
-	 *            Request Value Object
+	 * @param req Request Value Object
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/member/user/getOcbInformation/v1", method = RequestMethod.POST)
