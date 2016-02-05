@@ -228,11 +228,9 @@ public class LoginServiceImpl implements LoginService {
     @Value("#{propertiesForSac['sac.member.device.max.cnt']}")
     private Integer deviceRegMaxCnt;
 
-/*	@Autowired
-	private GoogleAuthenticateSCI googleAuthenticateSCI;
-
 	@Autowired
-	private NaverAuthenticateSCI naverAuthenticateSCI;*/
+	private UserExtraInfoService userExtraInfoService;
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -1277,8 +1275,7 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
 		}
 
-		boolean isValid = true;
-		/*	TODO. social 아이디 userAuthToken/socialUserNo 유효성 체크 필요*/
+		boolean isTokenValid = true;
 		if(StringUtils.isNotBlank(req.getUserAuthToken())){ // userAuthToken이 넘어온 경우만 유효성 체크
 			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
 				CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
@@ -1288,34 +1285,42 @@ public class LoginServiceImpl implements LoginService {
 				chkUserAuthTkReqeust.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
 				CheckUserAuthTokenResponse chkUserAuthTkResponse = this.userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
 				if(chkUserAuthTkResponse == null || StringUtils.isBlank(chkUserAuthTkResponse.getUserKey())){
-					isValid = false;
+					isTokenValid = false;
 				}
-			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
-				/*try{
+			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
+					|| StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)
+					|| StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
+				/*String socialUserNo = null;
+				List<UserExtraInfo> userExtraInfoList = userExtraInfoService.findExtraInfo(chkDupRes.getUserMbr().getUserKey());
+				if(userExtraInfoList != null && userExtraInfoList.size() > 0){
+					for(UserExtraInfo info : userExtraInfoList){
+						if(StringUtils.equals(info.getExtraProfile(), MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO)){
+							socialUserNo = info.getExtraProfileValue();
+							break;
+						}
+					}
+				}
 
-				}catch(StorePlatformException e){
-					isValid = false;
-				}*/
-			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
-				/*try{
-					GoogleTokenInfoReq googleTokenInfoReq = new GoogleTokenInfoReq();
-					googleTokenInfoReq.setIdToken(req.getUserAuthToken());
-					googleAuthenticateSCI.tokeninfo(googleTokenInfoReq);
-				}catch(StorePlatformException e){
-					isValid = false;
-				}*/
-			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
-				/*try{
-					NaverTokenVerifyReq naverTokenVerifyReq = new NaverTokenVerifyReq();
-					naverTokenVerifyReq.setAccessToken(req.getUserAuthToken());
-					naverAuthenticateSCI.tokenVerify(naverTokenVerifyReq);
-				}catch(StorePlatformException e){
-					isValid = false;
+				if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+					String facebookId = this.commService.facebookAuthenticate(req.getUserAuthToken());
+					if(facebookId == null || !StringUtils.equals(facebookId, socialUserNo)){
+						isTokenValid = false;
+					}
+				}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
+					String googleId = this.commService.googleAuthenticate(req.getUserAuthToken());
+					if(googleId == null || !StringUtils.equals(googleId, socialUserNo)){
+						isTokenValid = false;
+					}
+				}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
+					String naverId = this.commService.naverAuthenticate(req.getUserAuthToken());
+					if(naverId == null || !StringUtils.equals(naverId, socialUserNo)){
+						isTokenValid = false;
+					}
 				}*/
 			}
 		}
 
-		if(!isValid){
+		if(!isTokenValid){
 			// 로그인 실패이력 저장
 			this.regLoginHistory(requestHeader, req.getUserId(), null, "N", "N", req.getDeviceIp(), "N", null, "N", null);
 			res.setIsLoginSuccess(MemberConstants.USE_N);
@@ -1575,18 +1580,21 @@ public class LoginServiceImpl implements LoginService {
         if(isNew){
 			/* 등록 가능한 휴대기기 개수 초과 체크 */
             if (searchDeviceListResponse != null && searchDeviceListResponse.getUserMbrDevice() != null){
-                if(searchDeviceListResponse.getUserMbrDevice().size() >= deviceRegMaxCnt) {
+				Integer regDeviceCnt = 0;
+				/*	등록된 단말중에 대표기기가 없는경우 대표기기 설정처리 */
+				for(UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()){
+					if(StringUtils.equals(userMbrDevice.getIsUsed(), MemberConstants.USE_Y)){
+						if(StringUtils.isNotBlank(userMbrDevice.getMdn())
+								&& StringUtils.equals(userMbrDevice.getIsPrimary(), MemberConstants.USE_Y)){
+							isExistPrimary = true;
+						}
+						regDeviceCnt++;
+					}
+				}
+                if(regDeviceCnt >= deviceRegMaxCnt) {
                     throw new StorePlatformException("SAC_MEM_1501");
                 }
 
-				/*	등록된 단말중에 대표기기가 없는경우 대표기기 설정처리 */
-                for(UserMbrDevice userMbrDevice : searchDeviceListResponse.getUserMbrDevice()){
-                    if(StringUtils.isNotBlank(userMbrDevice.getMdn())
-                            && StringUtils.equals(userMbrDevice.getIsPrimary(), MemberConstants.USE_Y)){
-                        isExistPrimary = true;
-                        break;
-                    }
-                }
             }else{
                 // 아이디에 첫번째로 등록되는 휴대기기
             }
