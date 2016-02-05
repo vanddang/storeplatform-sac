@@ -3017,7 +3017,7 @@ public class LoginServiceImpl implements LoginService {
         UserDeviceSetting setting = deviceSettingService.find(userKey, deviceKey);
         MarketPinInfo pinInfo = new MarketPinInfo();
         pinInfo.setIsPinSet(setting.getPinNo());
-//        pinInfo.setIsPinRetry(??);
+        pinInfo.setIsPinRetry(MemberConstants.USE_Y);
         pinInfo.setIsPinClosed(setting.getAuthLockYn());
 
         if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_N)) { // PIN 설정
