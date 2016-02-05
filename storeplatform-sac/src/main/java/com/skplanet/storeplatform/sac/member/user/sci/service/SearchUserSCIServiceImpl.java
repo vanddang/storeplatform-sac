@@ -762,6 +762,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	}
 
 	@Override
+    @Deprecated
 	public GetOcbInformationRes getOcbInformation(SacRequestHeader sacHeader, GetOcbInformationReq req) {
 
 		/**

@@ -14,7 +14,7 @@ public class GetOcbInformationReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	@NotEmpty
-	private String userKey = "";
+	private String userKey;
 
 	/**
 	 * @return String : userKey

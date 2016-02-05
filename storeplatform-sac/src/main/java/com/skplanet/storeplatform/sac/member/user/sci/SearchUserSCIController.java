@@ -30,17 +30,16 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceI
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserOcb;
 import com.skplanet.storeplatform.sac.member.user.sci.service.SearchUserSCIService;
+import com.skplanet.storeplatform.sac.member.user.service.OcbService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +49,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,6 +64,9 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 	@Autowired
 	private SearchUserSCIService searchUserSCIService;
+
+    @Autowired
+    private OcbService ocbService;
 
 	/**
 	 * <pre>
@@ -209,24 +212,15 @@ public class SearchUserSCIController implements SearchUserSCI {
 		}
 
 		// OCB 카드번호
-		GetOcbInformationReq ocbReq = new GetOcbInformationReq();
-		ocbReq.setUserKey(request.getUserKey());
+        String ocbCardNumber = "";
+        String ocbAuthMethodCode = "";
 
-		String ocbCardNumber = "";
-		String ocbAuthMethodCode = "";
-		try {
-			GetOcbInformationRes ocbRes = this.searchUserSCIService.getOcbInformation(requestHeader, ocbReq);
-			for (OcbInfo ocb : ocbRes.getOcbInfoList()) {
-				ocbCardNumber = ocb.getCardNumber();
-				ocbAuthMethodCode = ocb.getAuthMethodCode();
-			}
-
-		} catch (StorePlatformException ex) {
-			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				ocbCardNumber = "";
-				ocbAuthMethodCode = "";
-			}
-		}
+        List<UserOcb> ocbList = ocbService.find(request.getUserKey());
+        if(ocbList.size() > 0) {
+            UserOcb ocb = ocbList.get(0);
+            ocbCardNumber = ocb.getOcbNo();
+            ocbAuthMethodCode = ocb.getOcbAuthMtdCd();
+        }
 
 		SearchUserPayplanetSacRes payplanetSacRes = new SearchUserPayplanetSacRes();
 		payplanetSacRes.setSkpAgreementYn(skpAgreementYn);

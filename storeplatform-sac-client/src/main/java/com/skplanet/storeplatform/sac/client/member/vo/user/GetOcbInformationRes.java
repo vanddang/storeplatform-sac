@@ -20,7 +20,13 @@ public class GetOcbInformationRes extends CommonInfo {
 
 	private List<OcbInfo> ocbInfoList = null;
 
-	/**
+    public GetOcbInformationRes() {}
+
+    public GetOcbInformationRes(List<OcbInfo> ocbInfoList) {
+        this.ocbInfoList = ocbInfoList;
+    }
+
+    /**
 	 * @return List<OcbInfo> : ocbInfoList
 	 */
 	public List<OcbInfo> getOcbInfoList() {

@@ -10,6 +10,8 @@
 package com.skplanet.storeplatform.sac.member.domain.shared;
 
 import com.google.common.base.Objects;
+import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,12 +20,18 @@ import java.util.Date;
 /**
  * <p>
  * UserOcb
+ * 암호화 로직 때문에 Native Query 이용
  * </p>
  * Updated on : 2016. 01. 19 Updated by : 정희원, SK 플래닛.
  */
 @Entity
 @Table(name = "TB_US_OUSERMBR_OCB")
 @IdClass(UserOcb.PK.class)
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "UserOcb.insert",
+                query = "insert into TB_US_OUSERMBR_OCB (INSD_USERMBR_NO, OCB_NO, USE_START_DT, USE_END_DT, USE_YN, OCB_AUTH_MTD_CD, REG_DT, REG_ID) values (:userKey, PKG_CRYPTO.ENCRYPT(:ocbNo), :startDt, :endDt, :useYn, :authCd, sysdate, :regId)")
+})
 public class UserOcb {
 
     public static class PK implements Serializable {
@@ -90,6 +98,9 @@ public class UserOcb {
     @Column(columnDefinition = "char(1)")
     private String useYn;
 
+    /**
+     * OCB카드번호. 암호화됨
+     */
     @Id
     private String ocbNo;
 
@@ -116,6 +127,19 @@ public class UserOcb {
     @PreUpdate
     public void preUpdate() {
         updDt = new Date();
+    }
+
+    public OcbInfo convertToOcbInfo() {
+        OcbInfo ocbInfo = new OcbInfo();
+        ocbInfo.setUserKey(member.getInsdUsermbrNo()); // 사용자 Key
+        ocbInfo.setAuthMethodCode(ocbAuthMtdCd); // 인증방법 코드
+        ocbInfo.setCardNumber(ocbNo); // 카드 번호
+        ocbInfo.setStartDate(DateUtils.format(useStartDt)); // 사용시작 일시
+        ocbInfo.setEndDate(DateUtils.format(useEndDt)); // 사용종료 일시
+        ocbInfo.setIsUsed(useYn); // 사용여부 (Y/N)
+        ocbInfo.setRegDate(DateUtils.format(regDt));
+
+        return ocbInfo;
     }
 
     public UserMember getMember() {
