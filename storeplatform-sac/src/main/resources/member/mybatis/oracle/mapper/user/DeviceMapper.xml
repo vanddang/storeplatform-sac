@@ -99,6 +99,7 @@
                       DISTINCT(l.userKey) AS userKey
                       , #{commonRequest.systemID} AS userID
                       , #{isMainDevice} AS isMainDevice
+                      , #{isUsed} as isUsed
                       FROM ( SELECT  a.insd_usermbr_no AS userKey
                         FROM  tb_us_ousermbr a
                    LEFT JOIN  tb_us_ousermbr_device b
