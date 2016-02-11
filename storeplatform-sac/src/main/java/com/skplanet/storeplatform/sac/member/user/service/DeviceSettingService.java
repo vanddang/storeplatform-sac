@@ -85,8 +85,6 @@ public class DeviceSettingService {
 
         if(!Strings.isNullOrEmpty(v.getWiFiAutoDwldYn()))
             setting.setWiFiAutoDwldYn(v.getWiFiAutoDwldYn());
-        if(!Strings.isNullOrEmpty(v.getIcasAuthYn()))
-            setting.setIcasAuthYn(v.getIcasAuthYn());
         if(v.getRnameAuthDate() != null)
             setting.setRnameAuthDate(v.getRnameAuthDate());
         if(!Strings.isNullOrEmpty(v.getRnameAuthMdn()))

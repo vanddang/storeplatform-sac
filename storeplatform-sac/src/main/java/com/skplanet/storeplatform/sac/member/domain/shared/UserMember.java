@@ -44,8 +44,6 @@ public class UserMember {
 
     private String bolterDay;
 
-    private String bolterReasonCd;
-
     private String bolterReasonDesc;
 
     private Date updDt;
@@ -211,14 +209,6 @@ public class UserMember {
 
     public void setBolterDay(String bolterDay) {
         this.bolterDay = bolterDay;
-    }
-
-    public String getBolterReasonCd() {
-        return bolterReasonCd;
-    }
-
-    public void setBolterReasonCd(String bolterReasonCd) {
-        this.bolterReasonCd = bolterReasonCd;
     }
 
     public String getBolterReasonDesc() {
