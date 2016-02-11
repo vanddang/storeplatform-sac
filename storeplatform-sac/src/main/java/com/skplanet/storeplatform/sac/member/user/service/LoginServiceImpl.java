@@ -4169,9 +4169,9 @@ public class LoginServiceImpl implements LoginService {
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
 		userMbr.setUserID(deviceId); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
+        userMbr.setIsRealName(MemberConstants.USE_N);
 		if (StringUtils.isNotBlank(birth)) {
 			userMbr.setUserBirthDay(birth); // 생년월일
-			userMbr.setIsRealName(MemberConstants.USE_Y);
 		}
 		createUserRequest.setUserMbr(userMbr);
 
@@ -4248,7 +4248,6 @@ public class LoginServiceImpl implements LoginService {
                         userMbr = new UserMbr();
 
                     userMbr.setUserBirthDay(userBirthDay);
-                    //userMbr.setIsRealName(MemberConstants.USE_Y);
                 }
 
                 if (userMbr != null) {
