@@ -111,6 +111,18 @@ public class UserDeviceSetting {
     private String icasAuthYn;
 
     @Transient
+    private String showUpdateYn;
+
+    @Transient
+    private String tempStorageCd;
+
+    @Transient
+    private String contentsStorageCd;
+
+    @Transient
+    private String makeShortcutYn;
+
+    @Transient
     private boolean useMarketPin = false;
 
     @Transient
@@ -136,7 +148,6 @@ public class UserDeviceSetting {
     public SearchDeviceSetInfoSacRes convertToResponse() {
         SearchDeviceSetInfoSacRes res = new SearchDeviceSetInfoSacRes();
 
-        // 원래 처리하던 SQL문장의 주석 부분을 반영하여 아래와 같이 주석 처리함
         res.setAutoUpdateSet(autoUpdtSetClsf);
         res.setIsAdult(adultContentsLockYn);
         res.setIsPin(pinNo == null ? "N" : "Y");
@@ -153,6 +164,11 @@ public class UserDeviceSetting {
         res.setIsIcasAuth(StringUtils.defaultString(icasAuthYn, "N"));
         res.setRealNameDate(DateUtils.format(rnameAuthDate));
         res.setRealNameMdn(rnameAuthMdn);
+        res.setIsShowUpdate(showUpdateYn);
+
+        res.setTempStorageCd(tempStorageCd);
+        res.setContentsStorageCd(contentsStorageCd);
+        res.setIsMakeShortcut(makeShortcutYn);
 
         return res;
     }
@@ -170,6 +186,11 @@ public class UserDeviceSetting {
         res.setFailCnt(marketPinFailCnt != null ? marketPinFailCnt.toString() : null);
         res.setIsAdultLock(adultContentsLimtYn);
         res.setIsDownloadWifiOnly(wiFiAutoDwldYn);
+        res.setIsShowUpdate(showUpdateYn);
+
+        res.setTempStorageCd(tempStorageCd);
+        res.setContentsStorageCd(contentsStorageCd);
+        res.setIsMakeShortcut(makeShortcutYn);
 
         return res;
     }
@@ -353,5 +374,37 @@ public class UserDeviceSetting {
 
     public void setMarketPinFailCnt(Integer marketPinFailCnt) {
         this.marketPinFailCnt = marketPinFailCnt;
+    }
+
+    public String getShowUpdateYn() {
+        return showUpdateYn;
+    }
+
+    public void setShowUpdateYn(String showUpdateYn) {
+        this.showUpdateYn = showUpdateYn;
+    }
+
+    public String getTempStorageCd() {
+        return tempStorageCd;
+    }
+
+    public void setTempStorageCd(String tempStorageCd) {
+        this.tempStorageCd = tempStorageCd;
+    }
+
+    public String getContentsStorageCd() {
+        return contentsStorageCd;
+    }
+
+    public void setContentsStorageCd(String contentsStorageCd) {
+        this.contentsStorageCd = contentsStorageCd;
+    }
+
+    public String getMakeShortcutYn() {
+        return makeShortcutYn;
+    }
+
+    public void setMakeShortcutYn(String makeShortcutYn) {
+        this.makeShortcutYn = makeShortcutYn;
     }
 }

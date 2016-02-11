@@ -44,6 +44,26 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	/** 실명인증 MDN. */
 	private String realNameMdn;
 
+    /**
+     * 업데이트 표시 여부
+     */
+    private String isShowUpdate;
+
+    /**
+     * 임시 저장 위치
+     */
+    private String tempStorageCd;
+
+    /**
+     * 콘텐츠 저장 위치
+     */
+    private String contentsStorageCd;
+
+    /**
+     * 바로가기 아이콘 만들기 여부
+     */
+    private String isMakeShortcut;
+
 	/**
 	 * @return the isPin
 	 */
@@ -262,4 +282,35 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 		this.realNameMdn = realNameMdn;
 	}
 
+    public String getIsShowUpdate() {
+        return isShowUpdate;
+    }
+
+    public void setIsShowUpdate(String isShowUpdate) {
+        this.isShowUpdate = isShowUpdate;
+    }
+
+    public String getTempStorageCd() {
+        return tempStorageCd;
+    }
+
+    public void setTempStorageCd(String tempStorageCd) {
+        this.tempStorageCd = tempStorageCd;
+    }
+
+    public String getContentsStorageCd() {
+        return contentsStorageCd;
+    }
+
+    public void setContentsStorageCd(String contentsStorageCd) {
+        this.contentsStorageCd = contentsStorageCd;
+    }
+
+    public String getIsMakeShortcut() {
+        return isMakeShortcut;
+    }
+
+    public void setIsMakeShortcut(String isMakeShortcut) {
+        this.isMakeShortcut = isMakeShortcut;
+    }
 }
