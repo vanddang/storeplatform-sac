@@ -67,17 +67,18 @@ public class DeviceSCIController implements DeviceSCI {
 		SearchDeviceIdSacRes response = new SearchDeviceIdSacRes();
 
 		if (deviceInfo != null) {
-            if(StringUtils.isNotEmpty(deviceInfo.getMdn())
-                    && !ValidationCheckUtils.isDeviceId(deviceInfo.getMdn())){
-                response.setDeviceId(deviceInfo.getMdn());
-            }else if(StringUtils.isNotEmpty(deviceInfo.getDeviceId())
-                    && ValidationCheckUtils.isDeviceId(deviceInfo.getDeviceId())){
+
+            if(StringUtils.isNotEmpty(deviceInfo.getMdn())){
+                response.setMdn(deviceInfo.getMdn());
+
+            }else if(StringUtils.isNotEmpty(deviceInfo.getDeviceId())){
                 response.setDeviceId(deviceInfo.getDeviceId());
+
             }else{
                 throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
             }
 
-			response.setDeviceTelecom(deviceInfo.getDeviceTelecom());
+            response.setDeviceTelecom(deviceInfo.getDeviceTelecom());
 			response.setAuthYn(deviceInfo.getIsAuthenticated());
 
 		}else {
