@@ -198,7 +198,6 @@ public class DeviceSetController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
         UserDeviceSetting setting = new UserDeviceSetting();
-        setting.setIcasAuthYn(req.getIsIcasAuth());
         setting.setAutoUpdtYn(req.getIsAutoUpdate());
 
         String deviceId = settingService.merge(req.getUserKey(), req.getDeviceKey(), setting);
