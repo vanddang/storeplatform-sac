@@ -3021,7 +3021,7 @@ public class LoginServiceImpl implements LoginService {
     private MarketPinInfo getMarketPinInfo(final String userKey, final String deviceKey) {
         UserDeviceSetting setting = deviceSettingService.find(userKey, deviceKey);
         MarketPinInfo pinInfo = new MarketPinInfo();
-		if(StringUtils.isBlank(setting.getPinNo())){
+		if(StringUtils.isBlank(setting.getPinNo()) || StringUtils.equals(setting.getPinNo(), MemberConstants.USE_N)){
 			pinInfo.setIsPinSet(MemberConstants.USE_N);
 		}else{
 			pinInfo.setIsPinSet(MemberConstants.USE_Y);
