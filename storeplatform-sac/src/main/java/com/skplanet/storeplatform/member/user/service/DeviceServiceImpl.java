@@ -1752,6 +1752,18 @@ public class DeviceServiceImpl implements DeviceService {
 			logBuf.append("[device_acct]").append(userMbrDevice.getDeviceAccount()).append("->").append(userMbrDeviceForReq.getDeviceAccount());
 		}
 		if(userMbrDeviceForReq.getIsPrimary() != null && !StringUtils.equals(userMbrDevice.getIsPrimary(), userMbrDeviceForReq.getIsPrimary())){
+			if(StringUtils.equals(userMbrDeviceForReq.getIsPrimary(), Constant.TYPE_YN_Y)){
+				UserMbr userMbr = new UserMbr();
+				userMbr.setUserKey(userMbrDevice.getUserKey());
+				UserMbrDevice mainDevice = this.commonDAO.queryForObject("Device.findMainDevice", userMbr, UserMbrDevice.class);
+
+				if (mainDevice != null) {
+					// 휴대기기 이력 테이블 insert.
+					this.commonDAO.update("Device.insertUpdateDeviceHistory", mainDevice);
+					// 휴대기기 속성의 REP_DEVICE_YN = N
+					this.commonDAO.update("Device.unsetDeviceYn", mainDevice);
+				}
+			}
 			logBuf.append("[rep_device_yn]").append(userMbrDevice.getIsPrimary()).append("->").append(userMbrDeviceForReq.getIsPrimary());
 		}
 
