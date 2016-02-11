@@ -725,7 +725,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 					userDeviceInfoSac.setDeviceTelecom(deviceMbrStatus.getDeviceTelecom());
 					userDeviceInfoSac.setUserMainStatus(deviceMbrStatus.getUserMainStatus());
 					userDeviceInfoSac.setUserSubStatus(deviceMbrStatus.getUserSubStatus());
-					userDeviceInfoSac.setIsRealName(deviceMbrStatus.getIsRealName());
 					userDeviceInfoSac.setUserId(deviceMbrStatus.getUserID());
 					userDeviceInfoSac.setUserType(deviceMbrStatus.getUserType());
 
@@ -745,6 +744,15 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 						userDeviceInfoSac.setUserName(deviceMbrStatus.getUserName());
 
 					}
+
+                    /** userBirthDay 값이 있는 경우 무조건 “Y” 로 처리 */
+                    if(StringUtils.isNotEmpty(userDeviceInfoSac.getUserBirthday())){
+                        userDeviceInfoSac.setIsRealName(MemberConstants.USE_Y);
+
+                    }else {
+                        userDeviceInfoSac.setIsRealName(MemberConstants.USE_N);
+
+                    }
 
 					if (StringUtils.equals(deviceMbrStatus.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
 							|| StringUtils.equals(deviceMbrStatus.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
