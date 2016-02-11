@@ -2345,4 +2345,18 @@
             AND MBR_ID = #{userId}
             AND MBR_CLAS_CD = #{userType}
     </update>
+
+    <!-- 사용자 pwd 정보 변경 -->
+    <update id="updateUserPwdInfo" parameterType="modifyIdRequest">
+        UPDATE
+            TB_US_OUSERMBR_PWD
+        SET
+            PWD = NULL,
+            SALT = NULL,
+            IDP_ONEID_CD = NULL,
+            ACT_TK = #{newUserAuthToken},
+            UPD_DT = SYSDATE
+        WHERE
+            INSD_USERMBR_NO = #{userKey}
+    </update>
 </mapper>
