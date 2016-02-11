@@ -649,7 +649,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
-		String socialUserNo = req.getUserId()+"1234"; // TODO. 임시로 하드코딩
+		String socialUserNo = null;
 		/*try{
 			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 				socialUserNo = this.mcc.facebookAuthenticate(req.getUserAuthToken());
@@ -756,12 +756,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrLglAgent(mbrLglAgent);
 
 		// social 회원번호 부가속성으로 저장
-		List<MbrMangItemPtcr> mbrMangItemPtcrList = new ArrayList<MbrMangItemPtcr>();
-		MbrMangItemPtcr mbrMangItemPtcr = new MbrMangItemPtcr();
-		mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO);
-		mbrMangItemPtcr.setExtraProfileValue(socialUserNo);
-		mbrMangItemPtcrList.add(mbrMangItemPtcr);
-		createUserRequest.setMbrMangItemPtcrList(mbrMangItemPtcrList);
+		if(StringUtils.isNotBlank(socialUserNo)){
+			List<MbrMangItemPtcr> mbrMangItemPtcrList = new ArrayList<MbrMangItemPtcr>();
+			MbrMangItemPtcr mbrMangItemPtcr = new MbrMangItemPtcr();
+			mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO);
+			mbrMangItemPtcr.setExtraProfileValue(socialUserNo);
+			mbrMangItemPtcrList.add(mbrMangItemPtcr);
+			createUserRequest.setMbrMangItemPtcrList(mbrMangItemPtcrList);
+		}
 
 		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 
