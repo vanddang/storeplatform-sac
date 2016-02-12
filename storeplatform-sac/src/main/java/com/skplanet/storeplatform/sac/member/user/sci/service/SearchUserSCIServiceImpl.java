@@ -1194,23 +1194,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 			searchUserExtraInfoSacRes.put(entry.getKey(), userExtraInfoSacList);
 		}
 
-		// Iterator<String> keys = searchUserExtraInfoResponseMap.keySet().iterator();
-		// while (keys.hasNext()) {
-		// String key = keys.next();
-		// for (MbrMangItemPtcr mangItemPtcr : searchUserExtraInfoResponseMap.get(key)) {
-		// userExtraInfoSacList = new ArrayList<UserExtraInfoSac>();
-		// for (MbrMangItemPtcr resultMangItemPtcr : searchUserExtraInfoResponseMap.get(key)) {
-		// if (StringUtils.equals(key, mangItemPtcr.getUserKey())) {
-		// UserExtraInfoSac userExtraInfoSac = new UserExtraInfoSac();
-		// userExtraInfoSac.setExtraProfile(resultMangItemPtcr.getExtraProfile());
-		// userExtraInfoSac.setExtraProfileValue(resultMangItemPtcr.getExtraProfileValue());
-		// userExtraInfoSacList.add(userExtraInfoSac);
-		// }
-		// }
-		// }
-		// searchUserExtraInfoSacRes.put(key, userExtraInfoSacList);
-		// }
-
 		SearchUserExtraInfoSacRes res = new SearchUserExtraInfoSacRes();
 		res.setSearchUserExtraInfoSacRes(searchUserExtraInfoSacRes);
 		return res;
