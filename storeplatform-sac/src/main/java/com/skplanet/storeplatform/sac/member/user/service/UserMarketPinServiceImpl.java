@@ -63,4 +63,20 @@ public class UserMarketPinServiceImpl implements UserMarketPinService {
 
         return res;
     }
+
+    @Transactional("transactionManagerForScMember")
+    public boolean transferMarketPin(String prevInsdUsermbrNo, String newInsdUsermbrNo) {
+        boolean isSuccessTransfer = false;
+        UserMarketPin newUserMarketPin = userMarketPinRepository.findOne(newInsdUsermbrNo);
+        // 이관될 새로운 회원키에 Market Pin 이 존재할 경우 삭제
+        if(newUserMarketPin != null) userMarketPinRepository.remove(newUserMarketPin);
+
+        UserMarketPin prevUserMarketPin = userMarketPinRepository.findOne(prevInsdUsermbrNo);
+        if(prevUserMarketPin != null) {
+            prevUserMarketPin.getMember().setInsdUsermbrNo(newInsdUsermbrNo);
+            isSuccessTransfer = true;
+        }
+
+        return isSuccessTransfer;
+    }
 }
