@@ -9,14 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import com.skplanet.storeplatform.external.client.facebook.sci.FacebookAuthenticateSCI;
-import com.skplanet.storeplatform.external.client.google.sci.GoogleAuthenticateSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeUserEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcReq;
-import com.skplanet.storeplatform.external.client.naver.sci.NaverAuthenticateSCI;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -91,14 +88,14 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Autowired
 	private UserSearchService userSearchService;
 
-	@Autowired
-	private NaverAuthenticateSCI naverAuthenticateSCI;
-
-	@Autowired
-	private GoogleAuthenticateSCI googleAuthenticateSCI;
-
-	@Autowired
-	private FacebookAuthenticateSCI facebookAuthenticateSCI;
+//	@Autowired
+//	private NaverAuthenticateSCI naverAuthenticateSCI;
+//
+//	@Autowired
+//	private GoogleAuthenticateSCI googleAuthenticateSCI;
+//
+//	@Autowired
+//	private FacebookAuthenticateSCI facebookAuthenticateSCI;
 
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) {

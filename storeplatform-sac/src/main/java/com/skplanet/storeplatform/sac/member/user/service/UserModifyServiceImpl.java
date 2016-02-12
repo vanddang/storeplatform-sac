@@ -14,9 +14,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
-import com.skplanet.storeplatform.external.client.facebook.sci.FacebookAuthenticateSCI;
-import com.skplanet.storeplatform.external.client.google.sci.GoogleAuthenticateSCI;
-import com.skplanet.storeplatform.external.client.naver.sci.NaverAuthenticateSCI;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
@@ -130,14 +127,14 @@ public class UserModifyServiceImpl implements UserModifyService {
     @Autowired
     private UserClauseAgreeRepository clauseAgreeRepository;
 
-    @Autowired
-    private NaverAuthenticateSCI naverAuthenticateSCI;
-
-    @Autowired
-    private GoogleAuthenticateSCI googleAuthenticateSCI;
-
-    @Autowired
-    private FacebookAuthenticateSCI facebookAuthenticateSCI;
+//    @Autowired
+//    private NaverAuthenticateSCI naverAuthenticateSCI;
+//
+//    @Autowired
+//    private GoogleAuthenticateSCI googleAuthenticateSCI;
+//
+//    @Autowired
+//    private FacebookAuthenticateSCI facebookAuthenticateSCI;
 
     @Override
     public ModifyRes modUser(SacRequestHeader sacHeader, ModifyReq req) {
