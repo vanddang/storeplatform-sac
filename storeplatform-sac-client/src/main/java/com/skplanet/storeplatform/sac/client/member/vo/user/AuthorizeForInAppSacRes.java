@@ -46,10 +46,6 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	 * 회원 상태코드.
 	 */
 	private String userStatus = "";
-	/**
-	 * 인증 Key.
-	 */
-	private String userAuthKey = "";
 
 	/**
 	 * 사용자 정보.
@@ -75,11 +71,6 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	 * 실명인증 정보.
 	 */
 	private MbrAuth mbrAuth;
-
-	/**
-	 * Tstore 기타 정보.
-	 */
-	private TstoreEtcInfo tstoreEtcInfo;
 
 	/**
 	 * @return trxNo
@@ -157,21 +148,6 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	}
 
 	/**
-	 * @return userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
-	}
-
-	/**
 	 * @return userInfo
 	 */
 	public UserInfo getUserInfo() {
@@ -229,21 +205,6 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	 */
 	public void setMbrAuth(MbrAuth mbrAuth) {
 		this.mbrAuth = mbrAuth;
-	}
-
-	/**
-	 * @return tstoreEtcInfo
-	 */
-	public TstoreEtcInfo getTstoreEtcInfo() {
-		return this.tstoreEtcInfo;
-	}
-
-	/**
-	 * @param tstoreEtcInfo
-	 *            TstoreEtcInfo
-	 */
-	public void setTstoreEtcInfo(TstoreEtcInfo tstoreEtcInfo) {
-		this.tstoreEtcInfo = tstoreEtcInfo;
 	}
 
 	/**

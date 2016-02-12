@@ -330,6 +330,7 @@ public class DeviceServiceImpl implements DeviceService {
 						modifyUserMbrDeviceSet.setUserID(updateMbrDevice.getUserID());
 						modifyUserMbrDeviceSet.setRnameAuthDate("");
 						modifyUserMbrDeviceSet.setRnameAuthMdn("");
+						modifyUserMbrDeviceSet.setRnameAuthMnoCd("");
 						if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
 							this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}else{
@@ -419,6 +420,7 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserID(updateMbrDevice.getUserID());
 							modifyUserMbrDeviceSet.setRnameAuthDate("");
 							modifyUserMbrDeviceSet.setRnameAuthMdn("");
+							modifyUserMbrDeviceSet.setRnameAuthMnoCd("");
 							if(StringUtils.equals(isDormant, Constant.TYPE_YN_N)){
 								this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 							}else{
@@ -561,6 +563,7 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserID(userMbrDevice.getUserID());
 							modifyUserMbrDeviceSet.setRnameAuthDate("");
 							modifyUserMbrDeviceSet.setRnameAuthMdn("");
+							modifyUserMbrDeviceSet.setRnameAuthMnoCd("");
 							this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}
 					}else{
@@ -601,6 +604,7 @@ public class DeviceServiceImpl implements DeviceService {
 							modifyUserMbrDeviceSet.setUserID(userMbrDevice.getUserID());
 							modifyUserMbrDeviceSet.setRnameAuthDate("");
 							modifyUserMbrDeviceSet.setRnameAuthMdn("");
+							modifyUserMbrDeviceSet.setRnameAuthMnoCd("");
 							this.commonDAO.update("DeviceSet.modifyDeviceSet", modifyUserMbrDeviceSet);
 						}
 					}

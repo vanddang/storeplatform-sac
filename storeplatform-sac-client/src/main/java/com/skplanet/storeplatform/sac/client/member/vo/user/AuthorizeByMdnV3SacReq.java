@@ -46,9 +46,15 @@ public class AuthorizeByMdnV3SacReq extends CommonInfo {
 	private String simSerialNo;
 
 	/**
-	 * 접속 아이피
+	 * 접속 아이피.
 	 */
 	private String deviceIp;
+
+	/**
+	 * 접속 단말 구분코드.
+	 */
+	private String deviceType;
+
 
 	/**
 	 * 휴대기기 부가정보 리스트.
@@ -158,5 +164,20 @@ public class AuthorizeByMdnV3SacReq extends CommonInfo {
 	 */
 	public void setMdn(String mdn) {
 		this.mdn = mdn;
+	}
+
+	/**
+	 * @return the deviceType
+	 */
+	public String getDeviceType() {
+		return deviceType;
+	}
+
+	/**
+	 * @param deviceType
+	 *            the deviceType to set
+	 */
+	public void setDeviceType(String deviceType) {
+		this.deviceType = deviceType;
 	}
 }
