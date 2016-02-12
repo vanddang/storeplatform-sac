@@ -1786,10 +1786,10 @@
     </select>
 
     <select id="searchUserExtraInfo" parameterType="searchUserExtraInfoRequest" resultType="mbrMangItemPtcr">
-        SELECT /* UserMapper.searchUserExtraInfo, 회원 부가 정보, burkhan_rejoice, 2014-10-28 */
-               b.INSD_USERMBR_NO AS userKey,
-               b.MANG_ITEM_CD AS extraProfile,
-               b.REG_RESULT_VALUE AS extraProfileValue
+        SELECT /* UserMapper.xml, searchUserExtraInfo, SAC(SC), 윤보영, 2016-02-12 */
+               b.insd_usermbr_no AS userKey,
+               b.mang_item_cd AS extraProfile,
+               b.reg_result_value AS extraProfileValue
           FROM    tb_us_ousermbr a
                LEFT OUTER JOIN
                   tb_us_ousermbr_mang_item_ptcr b
