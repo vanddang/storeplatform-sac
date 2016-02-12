@@ -29,4 +29,10 @@ public interface UserMarketPinRepository {
      * @return Market PIN 정보
      */
     UserMarketPin findOne(String insdUsermbrNo);
+
+    /**
+     * 회원 Market PIN 삭제
+     * @param userMarketPin
+     */
+    void remove(UserMarketPin userMarketPin);
 }

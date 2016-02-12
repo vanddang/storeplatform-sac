@@ -18,34 +18,7 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferMarketPinRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferMarketPinResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
+import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
@@ -55,33 +28,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceTelecomInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ChangeMemberKeyAmqpSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceAmqpSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceKeyListSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
@@ -100,7 +47,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -149,6 +95,9 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Value("#{propertiesForSac['sac.member.device.max.cnt']}")
     private Integer deviceRegMaxCnt;
+
+    @Autowired
+    UserMarketPinService userMarketPinService;
 
     /*
 	 * (non-Javadoc)
@@ -616,10 +565,8 @@ public class DeviceServiceImpl implements DeviceService {
             transferMarketPinRequest.setCommonRequest(commonRequest);
             transferMarketPinRequest.setPreUserKey(previousUserKey);
             transferMarketPinRequest.setUserKey(userKey);
-            TransferMarketPinResponse transferMarketPinResponse = this.userSCI
-                    .transferMarketPin(transferMarketPinRequest);
-            if (transferMarketPinResponse != null
-                    && StringUtil.isNotBlank(transferMarketPinResponse.getUserKey())) {
+            boolean isSuccessTransferMarketPin = userMarketPinService.transferMarketPin(preUserKey, userKey);
+            if (isSuccessTransferMarketPin) {
                 LOGGER.info("기등록된 모바일 회원 Market pin 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
             }
 

@@ -88,6 +88,15 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Autowired
 	private UserSearchService userSearchService;
 
+//	@Autowired
+//	private NaverAuthenticateSCI naverAuthenticateSCI;
+//
+//	@Autowired
+//	private GoogleAuthenticateSCI googleAuthenticateSCI;
+//
+//	@Autowired
+//	private FacebookAuthenticateSCI facebookAuthenticateSCI;
+
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) {
 
@@ -108,20 +117,56 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		 *   - 기존 Tstore 아이디는 단말에서 id/pwd 인증 단계 후에 탈퇴 진행되므로 인증 불필요
 		 *   - 신규 소셜 계정 아이디는 인증단계가 없으므로 userId/userAuthToken 인증 필요
 		 */
-		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_GOOGLE)
-				|| StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER)) {
+		/*
+		String socialUserNo = null;
+		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER)) {
 			if (StringUtils.isBlank(req.getUserAuthToken())) {
 				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
 			} else {
-				LOGGER.info("소셜 아이디(Facebook, google, naver) > userAuthToken 인증(S2S) 시작");
-				boolean isCheckToken = true;
-				LOGGER.info("현재는 by pass");
-				if (!isCheckToken) {
+				LOGGER.info("소셜 아이디(Naver) > userAuthToken 인증(S2S)");
+				NaverTokenVerifyReq naverTkReq = new NaverTokenVerifyReq();
+				naverTkReq.setAccessToken(req.getUserAuthToken());
+				try {
+					NaverTokenVerifyRes naverTkRes = this.naverAuthenticateSCI.verifyToken(naverTkReq);
+					socialUserNo = naverTkRes.getId();
+				} catch (StorePlatformException spe) {
+					throw new StorePlatformException("SAC_MEM_1204");
+				}
+			}
+		} else if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
+			if (StringUtils.isBlank(req.getUserAuthToken())) {
+				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
+			} else {
+				LOGGER.info("소셜 아이디(Google) > userAuthToken 인증(S2S)");
+				GoogleTokenInfoReq googleTkReq = new GoogleTokenInfoReq();
+				googleTkReq.setIdToken(req.getUserAuthToken());
+				try {
+					GoogleTokenInfoRes googleTkRes = this.googleAuthenticateSCI.verifyToken(googleTkReq);
+					socialUserNo = googleTkRes.getAud();
+				} catch (StorePlatformException spe) {
+					throw new StorePlatformException("SAC_MEM_1204");
+				}
+			}
+		} else if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
+			if (StringUtils.isBlank(req.getUserAuthToken())) {
+				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
+			} else {
+				LOGGER.info("소셜 아이디(FaceBook) > userAuthToken 인증(S2S)");
+				FacebookVerifyTokenReq fbTkReq = new FacebookVerifyTokenReq();
+				fbTkReq.setAccessToken(req.getUserAuthToken());
+				try {
+					FacebookVerifyTokenRes fbVeriTkRes = this.facebookAuthenticateSCI.verifyToken(fbTkReq);
+					socialUserNo = fbVeriTkRes.getUserId();
+				} catch (StorePlatformException spe) {
 					throw new StorePlatformException("SAC_MEM_1204");
 				}
 			}
 		}
+
+		if(StringUtils.isNotBlank(socialUserNo) ){
+			//TODO socialUserNo 저장로직 추가되어야 함.
+		}
+		*/
 
 		/**
 		 *  3-1. 요청 파라미터에 따라서 분기 처리한다.

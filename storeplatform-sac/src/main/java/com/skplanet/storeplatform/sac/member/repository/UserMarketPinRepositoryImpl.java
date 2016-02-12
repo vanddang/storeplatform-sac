@@ -29,6 +29,7 @@ public class UserMarketPinRepositoryImpl implements UserMarketPinRepository {
     @PersistenceContext(unitName = "puMbr")
     private EntityManager em;
 
+    @Override
     public void save(UserMarketPin userMarketPin) {
         UserMarketPin findUserMarketPin = em.find(UserMarketPin.class, userMarketPin.getMember().getInsdUsermbrNo());
         if(findUserMarketPin != null) {
@@ -37,11 +38,17 @@ public class UserMarketPinRepositoryImpl implements UserMarketPinRepository {
         else em.persist(userMarketPin);
     }
 
+    @Override
     public UserMarketPin findOne(String insdUsermbrNo) {
         return new JPAQuery(em).from($)
                 .where($.member.insdUsermbrNo.eq(insdUsermbrNo))
                 .uniqueResult($);
     }
 
+
+    @Override
+    public void remove(UserMarketPin userMarketPin) {
+        em.remove(userMarketPin);
+    }
 
 }

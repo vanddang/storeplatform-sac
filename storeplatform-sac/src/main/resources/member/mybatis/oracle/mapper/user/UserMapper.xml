@@ -2359,42 +2359,4 @@
         WHERE
             INSD_USERMBR_NO = #{userKey}
     </update>
-
-    <!-- market pin 정보 조회 -->
-    <select id="searchMarketPin" parameterType="userMbrMarketPin" resultType="userMbrMarketPin">
-        SELECT /* UserMapper.xml, searchMarketPin, SAC(SC), 반범진, 2016-01-27 */
-          insd_usermbr_no AS userKey
-          , pin_no AS pinNo
-          , auth_fail_cnt AS authFailCnt
-        FROM
-          tb_us_ousermbr_pin
-        WHERE
-          insd_usermbr_no = #{userKey}
-    </select>
-
-    <!--  market pin 정보 수정 -->
-    <update id="updateMarketPin" parameterType="userMbrMarketPin">
-        MERGE  /* UserMapper.xml, updateMarketPin, SAC(SC), 반범진, 2016-01-27 */
-        INTO tb_us_ousermbr_pin USING DUAL ON
-        (
-          insd_usermbr_no  = #{userKey}
-        )
-        WHEN MATCHED THEN
-            UPDATE SET
-              pin_no = #{pinNo}
-              ,auth_fail_cnt = #{authFailCnt}
-        WHEN NOT MATCHED THEN
-            INSERT
-            (
-              insd_usermbr_no
-              ,pin_no
-              ,auth_fail_cnt
-            )
-            VALUES
-            (
-                #{userKey}
-                ,#{pinNo}
-                ,#{authFailCnt}
-            )
-    </update>
 </mapper>
