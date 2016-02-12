@@ -75,7 +75,12 @@ public class AuthorizeByIdV2SacReq extends CommonInfo implements Serializable {
 	/**
 	 * 사용자 이메일.
 	 */
-	private String userEmail = "";
+	private String userEmail;
+
+	/**
+	 * 접속 단말 구분코드.
+	 */
+	private String deviceType;
 
 	/**
 	 * @return deviceId
@@ -238,5 +243,20 @@ public class AuthorizeByIdV2SacReq extends CommonInfo implements Serializable {
 	 */
 	public void setIsNativeIdAuth(String isNativeIdAuth) {
 		this.isNativeIdAuth = isNativeIdAuth;
+	}
+
+	/**
+	 * @return the deviceType
+	 */
+	public String getDeviceType() {
+		return deviceType;
+	}
+
+	/**
+	 * @param deviceType
+	 *            the deviceType to set
+	 */
+	public void setDeviceType(String deviceType) {
+		this.deviceType = deviceType;
 	}
 }

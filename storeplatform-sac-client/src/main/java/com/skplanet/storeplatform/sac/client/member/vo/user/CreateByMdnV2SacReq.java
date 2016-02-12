@@ -64,6 +64,11 @@ public class CreateByMdnV2SacReq extends CommonInfo {
 	private String ownBirth = "";
 
 	/**
+	 * 접속 단말 구분코드.
+	 */
+	private String deviceType = "";
+
+	/**
 	 * 사용자 단말 부가 정보 리스트.
 	 */
 	private List<DeviceExtraInfo> deviceExtraInfoList = null;
@@ -464,5 +469,20 @@ public class CreateByMdnV2SacReq extends CommonInfo {
 	 */
 	public void setIsNativeIdAuth(String isNativeIdAuth) {
 		this.isNativeIdAuth = isNativeIdAuth;
+	}
+
+	/**
+	 * @return the deviceType
+	 */
+	public String getDeviceType() {
+		return deviceType;
+	}
+
+	/**
+	 * @param deviceType
+	 *            the deviceType to set
+	 */
+	public void setDeviceType(String deviceType) {
+		this.deviceType = deviceType;
 	}
 }

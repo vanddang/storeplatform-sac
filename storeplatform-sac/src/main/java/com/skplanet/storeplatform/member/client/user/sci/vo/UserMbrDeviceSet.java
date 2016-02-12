@@ -61,6 +61,8 @@ public class UserMbrDeviceSet extends CommonInfo {
 	private String rnameAuthDate; // RNAME_AUTH_DATE
 	/** 실명인증 MDN. */
 	private String rnameAuthMdn; // RNAME_AUTH_MDN
+	/** 실명인증 통신사. */
+	private String rnameAuthMnoCd; // RNAME_AUTH_MNO_CD
 
 	/** 조건 객체. */
 	private List<KeySearch> keySearchList;
@@ -425,7 +427,7 @@ public class UserMbrDeviceSet extends CommonInfo {
 
 	/**
 	 * 실명인증 MDN(을)를 셋팅한다.
-	 * 
+	 *
 	 * @param rnameAuthMdn
 	 *            rnameAuthMdn
 	 */
@@ -433,4 +435,22 @@ public class UserMbrDeviceSet extends CommonInfo {
 		this.rnameAuthMdn = rnameAuthMdn;
 	}
 
+	/**
+	 * 실명인증 통신사를 리턴한다.
+	 *
+	 * @return rnameAuthMnoCd - rnameAuthMnoCd
+	 */
+	public String getRnameAuthMnoCd() {
+		return rnameAuthMnoCd;
+	}
+
+	/**
+	 * 실명인증 통신사를 셋팅한다.
+	 *
+	 * @param rnameAuthMnoCd
+	 *            rnameAuthMnoCd
+	 */
+	public void setRnameAuthMnoCd(String rnameAuthMnoCd) {
+		this.rnameAuthMnoCd = rnameAuthMnoCd;
+	}
 }

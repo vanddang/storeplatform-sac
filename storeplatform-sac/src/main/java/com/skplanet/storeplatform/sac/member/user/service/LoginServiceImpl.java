@@ -2052,7 +2052,6 @@ public class LoginServiceImpl implements LoginService {
 			res.setDeviceInfo(new DeviceInfo());
 			res.setPinInfo(new MarketPinInfo());
 			res.setMbrAuth(new MbrAuth());
-			res.setTstoreEtcInfo(new TstoreEtcInfo());
 			return res;
 		} else {
 			tenantId = userDownloadInfoRes.getLatestTenantId();
@@ -3082,7 +3081,6 @@ public class LoginServiceImpl implements LoginService {
 				res.setDeviceInfo(new DeviceInfo());
 				res.setPinInfo(new MarketPinInfo());
 				res.setMbrAuth(new MbrAuth());
-				res.setTstoreEtcInfo(new TstoreEtcInfo());
 				return res;
 			} else {
 				throw e;
@@ -3099,17 +3097,15 @@ public class LoginServiceImpl implements LoginService {
 				if (StringUtils.equals(req.getNativeId(), cspImei)) {
 					LOGGER.info("{} imei 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList().get(0)
 							.getNativeId(), cspImei);
+					ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+					modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+					modifyDeviceRequest.setChgCaseCd(MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE);
+					modifyDeviceRequest.setUserKey(detailRes.getUserKey());
 					UserMbrDevice userMbrDevice = new UserMbrDevice();
-					userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_IMEI_CHANGE);
-					userMbrDevice.setNativeID(cspImei);
-					userMbrDevice.setDeviceID(req.getDeviceId());
 					userMbrDevice.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-					CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
-					createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-					createDeviceReq.setUserKey(detailRes.getUserKey());
-					//createDeviceReq.setIsNew("N");
-					createDeviceReq.setUserMbrDevice(userMbrDevice);
-					this.deviceSCI.createDevice(createDeviceReq);
+					userMbrDevice.setNativeID(req.getNativeId());
+					modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
+					this.deviceSCI.modifyDevice(modifyDeviceRequest);
 				} else {
 					LOGGER.info("{} IMEI 불일치 : {}, {}", req.getDeviceId(), req.getNativeId(), cspImei);
 					res.setUserStatus(MemberConstants.INAPP_USER_STATUS_IMEI_MISMATCH);
@@ -3118,7 +3114,6 @@ public class LoginServiceImpl implements LoginService {
 					res.setDeviceInfo(new DeviceInfo());
 					res.setPinInfo(new MarketPinInfo());
 					res.setMbrAuth(new MbrAuth());
-					res.setTstoreEtcInfo(new TstoreEtcInfo());
 					return res;
 				}
 			} catch (StorePlatformException e) {
@@ -3142,9 +3137,6 @@ public class LoginServiceImpl implements LoginService {
 		userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
 		userInfo.setUserId(detailRes.getUserInfo().getUserId());
 		userInfo.setUserType(detailRes.getUserInfo().getUserType());
-		userInfo.setImSvcNo(detailRes.getUserInfo().getImSvcNo());
-		userInfo.setImMbrNo(detailRes.getUserInfo().getImMbrNo());
-		userInfo.setUserPhoneCountry(detailRes.getUserInfo().getUserPhoneCountry());
 		userInfo.setUserEmail(detailRes.getUserInfo().getUserEmail());
 		userInfo.setIsRecvEmail(detailRes.getUserInfo().getIsRecvEmail());
 		userInfo.setIsRealName(detailRes.getUserInfo().getIsRealName());
@@ -3161,17 +3153,14 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceExtraInfoList(detailRes.getDeviceInfoList().get(0).getDeviceExtraInfoList());
 
 		// PIN 정보
-        MarketPinInfo pinInfo = getMarketPinInfo(detailRes.getUserKey(), detailRes.getDeviceInfoList().get(0).getDeviceKey());
+        MarketPinInfo pinInfo = this.getMarketPinInfo(detailRes.getUserKey(), detailRes.getDeviceInfoList().get(0).getDeviceKey());
 
 		res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL); // 회원상태 정상
-		res.setUserAuthKey(this.tempUserAuthKey); // 임시 인증키
 		res.setUserInfo(userInfo);
 		res.setAgreementList(detailRes.getAgreementList()); // 약관정보
 		res.setDeviceInfo(deviceInfo);
 		res.setPinInfo(pinInfo);
 		res.setMbrAuth(detailRes.getMbrAuth()); // 실명인증정보
-		res.setTstoreEtcInfo(this.getTstoreEtcInfo(requestHeader, deviceInfo.getDeviceId(),
-				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
 		return res;
 	}
@@ -3796,64 +3785,49 @@ public class LoginServiceImpl implements LoginService {
 					detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 					LOGGER.info("{} Tstore 회원", req.getDeviceId());
 
-					if (!StringUtils.equals(detailRes.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo()
+					if (!StringUtils.equals(detailRes.getDeviceInfoList().get(0).getSvcMangNum(), marketRes.getDeviceInfo()
 							.getDeviceKey())) {
+
 						// Olleh market 일 경우 중복 체크 후 처리 2015.08.10
 						if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, tenantId)) {
-							try {
-								// marketdevicekey 중복 확인 체크 추가
-								detailReq.setDeviceId(null);
-								detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
-								DetailV2Res checkDupDetailRes = this.userSearchService.detailV2(requestHeader,
-										detailReq);
-
+							// marketdevicekey 중복 확인 체크 추가
+							DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_SVC_MANG_NO, marketRes.getDeviceInfo().getDeviceKey(), null);
+							if(deviceInfo == null){
+								// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
+								LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(),
+										detailRes.getDeviceInfoList().get(0).getSvcMangNum(), marketRes.getDeviceInfo()
+												.getDeviceKey());
+								this.removeMarketUser(requestHeader, detailRes);
+								this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+								// 재가입시킨 회원정보 재조회
+								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+							}else{
 								LOGGER.info("marketDeviceKey 변경으로 deviceId 변경 : [ {} ] {} -> {}", marketRes
-										.getDeviceInfo().getDeviceKey(), checkDupDetailRes.getDeviceInfoList().get(0)
-										.getDeviceId(), marketRes.getDeviceId());
-								// deviceId 변경
-								DeviceInfo deviceInfo = new DeviceInfo();
-								deviceInfo.setUserKey(checkDupDetailRes.getUserInfo().getUserKey());
-								deviceInfo.setDeviceKey(checkDupDetailRes.getDeviceInfoList().get(0).getDeviceKey());
-								deviceInfo.setDeviceId(marketRes.getDeviceId());
-								this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
-
+										.getDeviceInfo().getDeviceKey(), deviceInfo.getMdn(), marketRes.getDeviceId());
 								// 기존 번호 탈퇴 처리
 								this.removeMarketUser(requestHeader, detailRes);
+
+								//mdn 변경 처리
+								ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+								modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+								modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
+								modifyDeviceRequest.setIsUpdDeviceId(true);
+								UserMbrDevice userMbrDevice = new UserMbrDevice();
+								userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
+								userMbrDevice.setNativeID(req.getNativeId());
+								userMbrDevice.setMdn(req.getDeviceId());
+								userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
+								userMbrDevice.setSimSerialNo(req.getSimSerialNo());
+								modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
+								this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
 								// 회원정보 재조회
 								detailReq.setDeviceId(marketRes.getDeviceId());
 								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-
-							} catch (StorePlatformException e) {
-								if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-									// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
-									LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
-											.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
-									this.removeMarketUser(requestHeader, detailRes);
-									this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
-
-									TlogInfo tlogInfo = new TlogInfo();
-									tlogInfo.setTlogID("TL_SC_MEM_0006");
-									tlogInfo.setDeviceId(req.getDeviceId());
-									tlogInfo.setUsermbrNoPre(detailRes.getUserInfo().getImMbrNo());
-									tlogInfo.setUsermbrNoPost(marketRes.getDeviceInfo().getDeviceKey());
-
-									// 재가입시킨 회원정보 재조회
-									detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-
-									tlogInfo.setUserKey(detailRes.getUserKey());
-									tlogInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-									TlogRequest tlogRequest = new TlogRequest();
-									tlogRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-									tlogRequest.setTlogInfo(tlogInfo);
-									this.userSCI.tlog(tlogRequest);
-								}
 							}
-
 						} else {
 							// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
-							LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
-									.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
+							LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList().get(0).getSvcMangNum(), marketRes.getDeviceInfo().getDeviceKey());
 							this.removeMarketUser(requestHeader, detailRes);
 							this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
 
@@ -3868,46 +3842,41 @@ public class LoginServiceImpl implements LoginService {
 				} catch (StorePlatformException e) {
 
 					if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-
 						// 타사 회원키로 가입된 회원정보 조회
-						detailReq.setDeviceId(null);
-						detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
-						detailReq.setSearchExtent(searchExtent);
+						DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_SVC_MANG_NO, marketRes.getDeviceInfo().getDeviceKey(), null);
+						if(deviceInfo == null){
+							// 회원정보 없으면 Tstore 회원가입
+							LOGGER.info("{} Tstore 회원가입", req.getDeviceId());
+							this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
 
-						try {
-
+							// 가입된 deviceId로 회원정보 재조회
+							detailReq.setDeviceId(marketRes.getDeviceId());
 							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-
+						}else{
 							// 번호변경 케이스로 판단하여 deviceId 업데이트
-							LOGGER.info("{} deviceId 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList()
-									.get(0).getDeviceId(), marketRes.getDeviceId());
-							DeviceInfo deviceInfo = new DeviceInfo();
-							deviceInfo.setUserKey(detailRes.getUserInfo().getUserKey());
-							deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-							deviceInfo.setDeviceId(marketRes.getDeviceId());
-							this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
+							LOGGER.info("{} deviceId 변경 : {} -> {}", req.getDeviceId(), detailRes
+									.getDeviceInfoList().get(0).getDeviceId(), marketRes.getDeviceId());
+
+							//mdn 변경 처리
+							ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
+							modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+							modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
+							modifyDeviceRequest.setIsUpdDeviceId(true);
+							UserMbrDevice userMbrDevice = new UserMbrDevice();
+							userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
+							userMbrDevice.setNativeID(req.getNativeId());
+							userMbrDevice.setMdn(req.getDeviceId());
+							userMbrDevice.setDeviceTelecom(req.getDeviceTelecom());
+							userMbrDevice.setSimSerialNo(req.getSimSerialNo());
+							modifyDeviceRequest.setUserMbrDevice(userMbrDevice);
+							this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
 							// 변경된 deviceId로 회원정보 재조회
 							detailReq.setDeviceId(marketRes.getDeviceId());
 							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
 							this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
-
-						} catch (StorePlatformException ex) {
-
-							if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-								// 회원정보 없으면 Tstore 회원가입
-								LOGGER.info("{} Tstore 회원가입", req.getDeviceId());
-								this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
-
-								// 가입된 deviceId로 회원정보 재조회
-								detailReq.setDeviceId(marketRes.getDeviceId());
-								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-							} else {
-								throw e;
-							}
 						}
-
 					} else {
 						throw e;
 					}
@@ -3918,9 +3887,6 @@ public class LoginServiceImpl implements LoginService {
 				userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
 				userInfo.setUserId(detailRes.getUserInfo().getUserId());
 				userInfo.setUserType(detailRes.getUserInfo().getUserType());
-				userInfo.setImSvcNo(detailRes.getUserInfo().getImSvcNo());
-				userInfo.setImMbrNo(detailRes.getUserInfo().getImMbrNo());
-				userInfo.setUserPhoneCountry(detailRes.getUserInfo().getUserPhoneCountry());
 				userInfo.setUserEmail(detailRes.getUserInfo().getUserEmail());
 				userInfo.setIsRecvEmail(detailRes.getUserInfo().getIsRecvEmail());
 				userInfo.setIsRealName(detailRes.getUserInfo().getIsRealName());
@@ -3961,13 +3927,11 @@ public class LoginServiceImpl implements LoginService {
 				res.setDeviceId(marketRes.getDeviceId());
 				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
-				res.setUserAuthKey(this.tempUserAuthKey);
 				res.setUserInfo(userInfo);
 				res.setAgreementList(agreementList);
 				res.setDeviceInfo(deviceInfo);
 				res.setPinInfo(pinInfo);
 				res.setMbrAuth(new MbrAuth()); // 타사회원은 존재하지 않음
-				res.setTstoreEtcInfo(new TstoreEtcInfo()); // 타사회원은 존재하지 않음
 
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
@@ -4001,7 +3965,6 @@ public class LoginServiceImpl implements LoginService {
 				res.setDeviceInfo(new DeviceInfo());
 				res.setPinInfo(new MarketPinInfo());
 				res.setMbrAuth(new MbrAuth());
-				res.setTstoreEtcInfo(new TstoreEtcInfo());
 
 			} else {
 
@@ -4015,7 +3978,6 @@ public class LoginServiceImpl implements LoginService {
 				res.setDeviceInfo(new DeviceInfo());
 				res.setPinInfo(new MarketPinInfo());
 				res.setMbrAuth(new MbrAuth());
-				res.setTstoreEtcInfo(new TstoreEtcInfo());
 
 			}
 		}
@@ -4484,48 +4446,10 @@ public class LoginServiceImpl implements LoginService {
 	 *            UserMbr
 	 */
 	private void recorverySleepUser(SacRequestHeader requestHeader, String deviceId, UserMbr userMbr) {
-		String idpResultYn = null;
-		String idpResultErrorCode = null;
-		try {
-
-			if (StringUtils.isNotBlank(userMbr.getImSvcNo())) {
-				ActivateUserEcReq activateUserEcReq = new ActivateUserEcReq();
-				activateUserEcReq.setKeyType("1");
-				activateUserEcReq.setKey(userMbr.getImSvcNo());
-				activateUserEcReq.setReqDate(DateUtil.getToday("yyyyMMdd"));
-				LOGGER.info("{} 휴면 OneID 회원 복구", deviceId);
-				LOGGER.info("{} idp activateUser request : {}", deviceId,
-						ConvertMapperUtils.convertObjectToJson(activateUserEcReq));
-				ActivateUserEcRes activateUserEcRes = this.idpSCI.activateUser(activateUserEcReq);
-				LOGGER.info("{} idp activateUser response : {}", deviceId,
-						ConvertMapperUtils.convertObjectToJson(activateUserEcRes));
-			} else {
-				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
-				authForWapEcReq.setUserMdn(deviceId);
-				authForWapEcReq.setAutoActivate(MemberConstants.USE_Y);
-				LOGGER.info("{} 휴면 {} 회원 복구", deviceId,
-						StringUtils.equals(userMbr.getUserType(), MemberConstants.USER_TYPE_MOBILE) ? "모바일" : "IDP ID");
-				LOGGER.info("{} idp authForWap request : {}", deviceId,
-						ConvertMapperUtils.convertObjectToJson(authForWapEcReq));
-				AuthForWapEcRes authForWapEcRes = this.idpSCI.authForWap(authForWapEcReq);
-				LOGGER.info("{} idp authForWap response : {}", deviceId,
-						ConvertMapperUtils.convertObjectToJson(authForWapEcRes));
-			}
-			idpResultYn = MemberConstants.USE_Y;
-		} catch (StorePlatformException e) {
-			idpResultYn = MemberConstants.USE_N;
-			idpResultErrorCode = StringUtils.substringAfter(e.getErrorInfo().getCode(),
-					MemberConstants.EC_IDP_ERROR_CODE_TYPE);
-			if (!StringUtils.equals(idpResultErrorCode, IdpConstants.IDP_RES_CODE_STATUS_ALREAY_APPLY)
-					&& !StringUtils.equals(idpResultErrorCode, ImIdpConstants.IDP_RES_CODE_STATUS_ALREAY_APPLY)) {
-				throw e;
-			}
-		} finally {
-			MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
-			moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
-			moveUserInfoSacReq.setUserKey(userMbr.getUserKey());
-			this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
-		}
+		MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+		moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+		moveUserInfoSacReq.setUserKey(userMbr.getUserKey());
+		this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 	}
 
 	/**
