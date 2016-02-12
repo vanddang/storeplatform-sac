@@ -125,8 +125,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
-import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
-import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
@@ -4588,7 +4586,6 @@ public class LoginServiceImpl implements LoginService {
 
 		/**  2. 조회된 회원정보 셋팅 */
 		userKey = srhExtUserRes.getUserMbr().getUserKey();
-		userType = srhExtUserRes.getUserMbr().getUserType();
 		isDormant = srhExtUserRes.getUserMbr().getIsDormant();
 
 		/** 3-1. 그외의 회원은 req의 pwd 일치 체크 */
@@ -4619,7 +4616,6 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 정상 로그인 결과 */
 			res.setUserKey(userKey);
-			res.setUserType(userType);
 			res.setIsLoginSuccess("Y");
 
 		/** 3-2. pwd불일치 - 로그인 실패 */

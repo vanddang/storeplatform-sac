@@ -24,11 +24,6 @@ public class AuthorizeByPwdSacRes extends CommonInfo {
     private String userAuthToken = "";
 
     /**
-     * 사용자 구분코드.
-     */
-    private String userType = "";
-
-    /**
      * 로그인 성공유무(Y/N).
      */
     private String isLoginSuccess = "";
@@ -59,20 +54,6 @@ public class AuthorizeByPwdSacRes extends CommonInfo {
      */
     public void setUserAuthToken(String userAuthToken) {
         this.userAuthToken = userAuthToken;
-    }
-
-    /**
-     * @return userType
-     */
-    public String getUserType() {
-        return this.userType;
-    }
-
-    /**
-     * @param userType String
-     */
-    public void setUserType(String userType) {
-        this.userType = userType;
     }
 
     /**
