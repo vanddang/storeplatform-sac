@@ -2291,6 +2291,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchExtentUserResponse schUserRes = null;
 		try{
 			schUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
+			if(!StringUtils.equals(req.getUserKey(), schUserRes.getUserKey())){
+				throw new StorePlatformException("SAC_MEM_0003", "userKey", req.getUserKey());
+			}
 		}catch(StorePlatformException e) {
 			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)){
 				throw new StorePlatformException("SAC_MEM_0003", "deviceKey", req.getDeviceKey());
