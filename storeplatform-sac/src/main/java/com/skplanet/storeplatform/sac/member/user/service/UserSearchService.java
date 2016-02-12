@@ -22,6 +22,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialS
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailForPayPlanetSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailForPayPlanetSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
@@ -347,4 +349,17 @@ public interface UserSearchService {
 	 * @return SearchGiftChargeInfoSacRes
 	 */
 	public SearchGiftChargeInfoSacRes searchGiftChargeInfo(SacRequestHeader header, SearchGiftChargeInfoSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.78.	PayPlanet 회원 정보 조회.
+	 * </pre>
+	 *
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            DetailForPayPlanetSacReq
+	 * @return DetailForPayPlanetSacRes
+	 */
+	public DetailForPayPlanetSacRes detailForPayPlanet(SacRequestHeader header, DetailForPayPlanetSacReq req);
 }

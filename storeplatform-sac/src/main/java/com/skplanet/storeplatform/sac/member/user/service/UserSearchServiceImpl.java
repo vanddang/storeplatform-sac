@@ -39,6 +39,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserClauseAgree;
@@ -2261,6 +2262,74 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchGiftChargeInfoSacRes res = new SearchGiftChargeInfoSacRes();
 		res.setUserKey(searchGiftChargeInfoResponse.getUserKey());
 		res.setGiftChargeInfoList(giftChargeInfoSacList);
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.78.	PayPlanet 회원 정보 조회.
+	 * </pre>
+	 *
+	 * @param header SacRequestHeader
+	 * @param req    DetailForPayPlanetSacReq
+	 * @return DetailForPayPlanetSacRes
+	 */
+	@Override
+	public DetailForPayPlanetSacRes detailForPayPlanet(SacRequestHeader header, DetailForPayPlanetSacReq req) {
+
+		DetailForPayPlanetSacRes res = new DetailForPayPlanetSacRes();
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySchUserKey.setKeyString(req.getDeviceKey());
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		searchExtentUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+		searchExtentUserRequest.setAgreementInfoYn(MemberConstants.USE_Y);
+		SearchExtentUserResponse schUserRes = null;
+		try{
+			schUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
+		}catch(StorePlatformException e) {
+			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)){
+				throw new StorePlatformException("SAC_MEM_0003", "deviceKey", req.getDeviceKey());
+			}else{
+				throw e;
+			}
+
+		}
+		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		searchDeviceRequest.setKeySearchList(keySearchList);
+		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
+		UserInfo userInfo = new UserInfo();
+		userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
+		userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
+		userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
+		userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
+		userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
+		userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
+
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setDeviceKey(StringUtil.setTrim(schDeviceRes.getUserMbrDevice().getDeviceKey()));
+		deviceInfo.setDeviceId(StringUtil.setTrim(schDeviceRes.getUserMbrDevice().getDeviceID()));
+		deviceInfo.setMdn(StringUtil.setTrim(schDeviceRes.getUserMbrDevice().getMdn()));
+		deviceInfo.setDeviceTelecom(StringUtil.setTrim(schDeviceRes.getUserMbrDevice().getDeviceTelecom()));
+		deviceInfo.setDeviceModelNo(StringUtil.setTrim(schDeviceRes.getUserMbrDevice().getDeviceModelNo()));
+		deviceInfo.setSvcMangNum(StringUtil.setTrim(schDeviceRes.getUserMbrDevice().getSvcMangNum()));
+		deviceInfo.setDeviceAccount(StringUtil.setTrim(schDeviceRes.getUserMbrDevice().getDeviceAccount()));
+
+		res.setDeviceId(schDeviceRes.getUserMbrDevice().getDeviceID());
+		res.setMdn(schDeviceRes.getUserMbrDevice().getMdn());
+		res.setDeviceTelecom(schDeviceRes.getUserMbrDevice().getDeviceTelecom());
+		res.setUserStatus(MemberConstants.MAIN_STATUS_NORMAL);
+		res.setUserInfo(userInfo);
+		res.setDeviceInfo(deviceInfo);
+		res.setAgreementList(this.getListAgreementV2(schUserRes));
+
 		return res;
 	}
 }
