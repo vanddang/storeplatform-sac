@@ -84,7 +84,7 @@
             <if test="isLoginLock != null">,LOGIN_LOCK_YN = #{isLoginLock} </if>
             <if test="isAdult != null">,ADULT_CONTENTS_LOCK_YN = #{isAdult} </if>
             <if test="isAdultLock != null">,ADULT_CONTENTS_LIMT_YN = #{isAdultLock} </if>
-            <if test="isDownloadWifiOnly != null">WI_FI_AUTO_DWLD_YN = #{isDownloadWifiOnly} </if>
+            <if test="isDownloadWifiOnly != null">,WI_FI_AUTO_DWLD_YN = #{isDownloadWifiOnly} </if>
             <!--<if test="isIcasAuth != null">,ICAS_AUTH_YN = #{isIcasAuth}, </if>-->
             <if test="rnameAuthDate != null">,RNAME_AUTH_DATE = TO_DATE(#{rnameAuthDate}, 'YYYYMMDDHH24MISS') </if>
             <if test="rnameAuthMdn != null">,RNAME_AUTH_MDN = #{rnameAuthMdn} </if>
