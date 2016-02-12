@@ -2768,12 +2768,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (searchUserExtraInfoRequest.getCommonRequest().getTenantID() == null
-				|| searchUserExtraInfoRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		try {
 			// 회원 segment 정보 조회
 			searchUserExtraInfoResponse = this.service.searchUserExtraInfo(searchUserExtraInfoRequest);
