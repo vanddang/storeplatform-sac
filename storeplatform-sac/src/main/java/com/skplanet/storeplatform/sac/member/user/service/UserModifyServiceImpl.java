@@ -127,6 +127,15 @@ public class UserModifyServiceImpl implements UserModifyService {
     @Autowired
     private UserClauseAgreeRepository clauseAgreeRepository;
 
+//    @Autowired
+//    private NaverAuthenticateSCI naverAuthenticateSCI;
+//
+//    @Autowired
+//    private GoogleAuthenticateSCI googleAuthenticateSCI;
+//
+//    @Autowired
+//    private FacebookAuthenticateSCI facebookAuthenticateSCI;
+
     @Override
     public ModifyRes modUser(SacRequestHeader sacHeader, ModifyReq req) {
 
@@ -191,6 +200,11 @@ public class UserModifyServiceImpl implements UserModifyService {
         /** 회원 정보 조회. */
         UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
+        /** 휴면계정 회인인 경우 오류 처리 */
+        if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
+            throw new StorePlatformException("SAC_MEM_0006");
+        }
+
         /**
          * 비밀 번호 유효성 체크
          *  1. 길이 체크
@@ -254,11 +268,6 @@ public class UserModifyServiceImpl implements UserModifyService {
             if (userInfo.getUserId().indexOf(newPassword.substring(i, i + 3)) > -1) {
                 throw new StorePlatformException("SAC_MEM_1408", userInfo.getUserKey());
             }
-        }
-
-        /** 휴면계정 회인인 경우 오류 처리 */
-        if (StringUtils.equals(userInfo.getIsDormant(), MemberConstants.USE_Y)) {
-            throw new StorePlatformException("SAC_MEM_0006");
         }
 
         /** SC 회원 사용자키, 비밀번호 일치 여부 확인 (휴면상태가 아닌 회원만). */
@@ -1262,17 +1271,59 @@ public class UserModifyServiceImpl implements UserModifyService {
             if (chkUserAuthTkRes.getUserKey() == null || chkUserAuthTkRes.getUserKey().length() <= 0) {
                 throw new StorePlatformException("SAC_MEM_1204");
             }
-        // TODO. 소셜계정 아이디 userAuthToken 값이 있으면 체크 없으면 회원여부로 인증 처리
-        /** 4-2. 네이버 Id 인증 시도 */
-        } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
-            // 네이버 연동 성공처리
-        /** 4-3. 구글 Id 인증 시도 */
-        } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
-            // 구글 연동 성공처리
-        /** 4-4. 페이스북 Id 인증 시도 */
-        } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
-            // 페이스북 연동 성공처리
         }
+        /*
+        String socialUserNo = null;
+        // 4-1. tstore Id 인증 시도
+        if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)) {
+            CheckUserAuthTokenRequest chkUserAuthTkReq = new CheckUserAuthTokenRequest();
+            chkUserAuthTkReq.setCommonRequest(commonRequest);
+            chkUserAuthTkReq.setUserKey(req.getUserKey());
+            chkUserAuthTkReq.setUserAuthToken(req.getUserAuthToken());
+            chkUserAuthTkReq.setIsDormant("N");
+            CheckUserAuthTokenResponse chkUserAuthTkRes = this.userSCI.checkUserAuthToken(chkUserAuthTkReq);
+            if (chkUserAuthTkRes.getUserKey() == null || chkUserAuthTkRes.getUserKey().length() <= 0) {
+                throw new StorePlatformException("SAC_MEM_1204");
+            }
+        // 4-2. 네이버 Id 인증 시도
+        } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
+            LOGGER.info("소셜 아이디(Naver) > userAuthToken 인증(S2S)");
+            NaverTokenVerifyReq naverTkReq = new NaverTokenVerifyReq();
+            naverTkReq.setAccessToken(req.getUserAuthToken());
+            try {
+                NaverTokenVerifyRes naverTkRes = this.naverAuthenticateSCI.verifyToken(naverTkReq);
+                socialUserNo = naverTkRes.getId();
+            } catch (StorePlatformException spe) {
+                throw new StorePlatformException("SAC_MEM_1204");
+            }
+        // 4-3. 구글 Id 인증 시도
+        } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
+            LOGGER.info("소셜 아이디(Google) > userAuthToken 인증(S2S)");
+            GoogleTokenInfoReq googleTkReq = new GoogleTokenInfoReq();
+            googleTkReq.setIdToken(req.getUserAuthToken());
+            try {
+                GoogleTokenInfoRes googleTkRes = this.googleAuthenticateSCI.verifyToken(googleTkReq);
+                socialUserNo = googleTkRes.getAud();
+            } catch (StorePlatformException spe) {
+                throw new StorePlatformException("SAC_MEM_1204");
+            }
+        // 4-4. 페이스북 Id 인증 시도
+        } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
+            LOGGER.info("소셜 아이디(FaceBook) > userAuthToken 인증(S2S)");
+            FacebookVerifyTokenReq fbTkReq = new FacebookVerifyTokenReq();
+            fbTkReq.setAccessToken(req.getUserAuthToken());
+            try {
+                FacebookVerifyTokenRes fbVeriTkRes = this.facebookAuthenticateSCI.verifyToken(fbTkReq);
+                socialUserNo = fbVeriTkRes.getUserId();
+            } catch (StorePlatformException spe) {
+                throw new StorePlatformException("SAC_MEM_1204");
+            }
+        }
+
+        if(StringUtils.isNotBlank(socialUserNo) ){
+            //TODO socialUserNo 저장로직 추가되어야 함.
+        }
+        */
 
         /** 5. userAuthToken 인증이 되었으면 ID변경 */
         ModifyIdSacRes res = new ModifyIdSacRes();
