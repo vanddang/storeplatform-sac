@@ -6,7 +6,6 @@ import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserDeviceSetting;
@@ -207,7 +206,6 @@ public class DeviceSetController {
 
         setting.setAdultContentsLimtYn(req.getIsAdultLock());
         setting.setWiFiAutoDwldYn(req.getIsDownloadWifiOnly());
-        setting.setIcasAuthYn(req.getIsIcasAuth());
         setting.setRnameAuthDate(DateUtils.parseDate(req.getRealNameDate()));
         setting.setRnameAuthMdn(req.getRealNameMdn());
 

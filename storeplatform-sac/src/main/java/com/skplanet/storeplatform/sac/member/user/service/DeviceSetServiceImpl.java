@@ -666,7 +666,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		userMbrDeviceSet.setIsAdult(req.getIsAdult());
 		userMbrDeviceSet.setIsAdultLock(req.getIsAdultLock());
 		userMbrDeviceSet.setIsDownloadWifiOnly(req.getIsDownloadWifiOnly());
-		userMbrDeviceSet.setIsIcasAuth(req.getIsIcasAuth());
 		userMbrDeviceSet.setRnameAuthDate(req.getRealNameDate());
 		userMbrDeviceSet.setRnameAuthMdn(req.getRealNameMdn());
 

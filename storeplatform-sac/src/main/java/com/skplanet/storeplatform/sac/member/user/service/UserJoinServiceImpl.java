@@ -14,13 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
-import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.vo.*;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceTelecomInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -53,7 +50,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 
 /**
  * 회원 가입 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -653,19 +649,22 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
-		/*	TODO. userAuthToken 유효성 체크 필요*/
-		boolean isValid = true; //TODO. 무조건 성공처리
-		String socialUserNo = null; // TODO. Server to Server 연동후 저장 필요!
-		if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
-
-		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
-
-		}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
-
-		}
-		if(!isValid){
+		String socialUserNo = null;
+		/*try{
+			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
+				socialUserNo = this.mcc.facebookAuthenticate(req.getUserAuthToken());
+			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
+				socialUserNo = this.mcc.googleAuthenticate(req.getUserAuthToken());
+			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
+				socialUserNo = this.mcc.naverAuthenticate(req.getUserAuthToken());
+			}
+			if(StringUtils.isBlank(socialUserNo)){
+				throw new StorePlatformException("SAC_MEM_1204");
+			}
+		}catch(StorePlatformException e){
 			throw new StorePlatformException("SAC_MEM_1204");
-		}
+		}*/
+
 
 		// 모번호 조회
 		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
@@ -755,8 +754,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
 		createUserRequest.setMbrLglAgent(mbrLglAgent);
+
+		// social 회원번호 부가속성으로 저장
 		if(StringUtils.isNotBlank(socialUserNo)){
-			// social 회원번호 부가속성으로 저장
 			List<MbrMangItemPtcr> mbrMangItemPtcrList = new ArrayList<MbrMangItemPtcr>();
 			MbrMangItemPtcr mbrMangItemPtcr = new MbrMangItemPtcr();
 			mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO);
@@ -764,6 +764,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrMangItemPtcrList.add(mbrMangItemPtcr);
 			createUserRequest.setMbrMangItemPtcrList(mbrMangItemPtcrList);
 		}
+
 		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 
 		// 휴대기기 등록 요청

@@ -18,8 +18,11 @@ public class SearchDeviceIdSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/** 기기ID ( msisdn, uuid, macAddress ). */
+	/** 기기ID ( uuid, macAddress ). */
 	private String deviceId;
+
+    /** 기기 MDN */
+    private String mdn;
 
 	/** 통신사 코드. */
 	private String deviceTelecom;
@@ -30,6 +33,7 @@ public class SearchDeviceIdSacRes extends CommonInfo {
 	/**
 	 * 테넌트ID.
 	 */
+    @Deprecated
 	private String tenantId;
 
 	/**
@@ -91,4 +95,12 @@ public class SearchDeviceIdSacRes extends CommonInfo {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
+
+    public String getMdn() {
+        return mdn;
+    }
+
+    public void setMdn(String mdn) {
+        this.mdn = mdn;
+    }
 }

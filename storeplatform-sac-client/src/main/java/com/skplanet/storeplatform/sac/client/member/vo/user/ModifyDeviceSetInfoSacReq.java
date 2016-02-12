@@ -38,10 +38,8 @@ public class ModifyDeviceSetInfoSacReq extends CommonInfo {
 	private String isAdultLock;
 	/** Wi-Fi에서만 다운로드 여부. */
 	private String isDownloadWifiOnly;
-	/** ICAS 인증 여부. */
-	private String isIcasAuth;
 
-	/** 실명인증 일자. */
+    /** 실명인증 일자. */
 	private String realNameDate;
 	/** 실명인증 MDN. */
 	private String realNameMdn;
@@ -216,22 +214,7 @@ public class ModifyDeviceSetInfoSacReq extends CommonInfo {
 		this.isDownloadWifiOnly = isDownloadWifiOnly;
 	}
 
-	/**
-	 * @return the isIcasAuth
-	 */
-	public String getIsIcasAuth() {
-		return this.isIcasAuth;
-	}
-
-	/**
-	 * @param isIcasAuth
-	 *            the isIcasAuth to set
-	 */
-	public void setIsIcasAuth(String isIcasAuth) {
-		this.isIcasAuth = isIcasAuth;
-	}
-
-	/**
+    /**
 	 * 실명인증 일자(을)를 리턴한다.
 	 * 
 	 * @return realNameDate - realNameDate

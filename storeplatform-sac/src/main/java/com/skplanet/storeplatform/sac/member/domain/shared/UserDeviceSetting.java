@@ -104,12 +104,6 @@ public class UserDeviceSetting {
     @Column(columnDefinition = "char(1)")
     private String rnameAuthMdn;
 
-    /**
-     * ICAS 인증여부
-     */
-    @Column(columnDefinition = "char(1)")
-    private String icasAuthYn;
-
     @Transient
     private String showUpdateYn;
 
@@ -139,7 +133,6 @@ public class UserDeviceSetting {
         v.setLoginLockYn("N");
         v.setAdultContentsLimtYn("Y");
         v.setWiFiAutoDwldYn("Y");
-        v.setIcasAuthYn("N");
         v.setPinNo("N");
 
         return v;
@@ -161,7 +154,6 @@ public class UserDeviceSetting {
         res.setIsAdultLock(adultContentsLimtYn);
 
         res.setIsDownloadWifiOnly(wiFiAutoDwldYn);
-        res.setIsIcasAuth(StringUtils.defaultString(icasAuthYn, "N"));
         res.setRealNameDate(DateUtils.format(rnameAuthDate));
         res.setRealNameMdn(rnameAuthMdn);
         res.setIsShowUpdate(showUpdateYn);
@@ -350,14 +342,6 @@ public class UserDeviceSetting {
 
     public void setRnameAuthMdn(String rnameAuthMdn) {
         this.rnameAuthMdn = rnameAuthMdn;
-    }
-
-    public String getIcasAuthYn() {
-        return icasAuthYn;
-    }
-
-    public void setIcasAuthYn(String icasAuthYn) {
-        this.icasAuthYn = icasAuthYn;
     }
 
     public boolean isUseMarketPin() {
