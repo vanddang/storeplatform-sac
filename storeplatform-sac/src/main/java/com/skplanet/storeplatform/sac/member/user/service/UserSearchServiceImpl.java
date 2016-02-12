@@ -487,22 +487,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 				res.setSendMean("01");
 			/** 5-2. userId에 userEmail이 없는 경우 */
 			} else {
-				/** 5-2-1. req의 userPhone이 있는 경우 유효성 확인후 sms 발송 */
+				/** 5-2-1. req의 userPhone이 있는 경우 sms 발송 */
 				if (StringUtils.isNotBlank(req.getUserPhone())) {
-
-					String opmdMdn = this.mcc.getOpmdMdnInfo(req.getUserPhone());
-					req.setUserPhone(opmdMdn);
-
-					ListDeviceReq scReq = new ListDeviceReq();
-					scReq.setUserKey(srhExtUserRes.getUserMbr().getUserKey());
-					scReq.setMdn(req.getUserPhone());  // userPhone은 현재 접속 단말의 MDN
-
-					ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
-					// 유효한 MDN이 아니면 오류 처리
-					if (StringUtils.isBlank(listDeviceRes.getUserKey())) {
-						throw new StorePlatformException("SAC_MEM_0002", "Phone");
-					}
-
 					res.setSendInfo(StringUtil.setTrim(req.getUserPhone()));
 					res.setSendMean("02");
 				/** 5-2-2. userId에 userEmail이 없고 req의 userPhone도 없는 경우 */

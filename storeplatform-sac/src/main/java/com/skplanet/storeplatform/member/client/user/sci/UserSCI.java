@@ -760,14 +760,4 @@ public interface UserSCI {
 	 */
 	public ModifyIdResponse modifyId(ModifyIdRequest modifyIdRequest);
 
-	/**
-	 * <pre>
-	 * market pin 이관 기능을 제공한다.
-	 * </pre>
-	 *
-	 * @param transferMarketPinRequest
-	 *            TransferMarketPinRequest
-	 * @return TransferMarketPinResponse
-	 */
-	public TransferMarketPinResponse transferMarketPin(TransferMarketPinRequest transferMarketPinRequest);
 }
