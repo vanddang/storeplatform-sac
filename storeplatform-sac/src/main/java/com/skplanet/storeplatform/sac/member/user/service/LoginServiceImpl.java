@@ -2072,10 +2072,8 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, res.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "",
-					updLastLoginDtYn, null);
+			this.regLoginHistory(requestHeader, res.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "", updLastLoginDtYn, res.getDeviceInfo().getDeviceKey());
 		}
-
 		return res;
 	}
 
@@ -3139,6 +3137,7 @@ public class LoginServiceImpl implements LoginService {
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 		deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+		deviceInfo.setMdn(detailRes.getDeviceInfoList().get(0).getMdn());
 		deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
 		deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
 		deviceInfo.setSvcMangNum(detailRes.getDeviceInfoList().get(0).getSvcMangNum());
