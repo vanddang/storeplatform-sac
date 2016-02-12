@@ -6,6 +6,7 @@ import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserDeviceSetting;
@@ -209,10 +210,10 @@ public class DeviceSetController {
         setting.setRnameAuthDate(DateUtils.parseDate(req.getRealNameDate()));
         setting.setRnameAuthMdn(req.getRealNameMdn());
 
-        setting.setShowUpdateYn(req.getIsShowUpdate());
-        setting.setTempStorageCd(req.getTempStorageCd());
-        setting.setContentsStorageCd(req.getContentsStorageCd());
-        setting.setMakeShortcutYn(req.getIsMakeShortcut());
+        setting.setDisplayUpdtYn(req.getIsShowUpdate());
+        setting.setApkSaveLoc(req.getTempStorageCd());
+        setting.setContentsSaveLoc(req.getContentsStorageCd());
+        setting.setShortcutYn(req.getIsMakeShortcut());
 
         String deviceId = settingService.merge(req.getUserKey(), req.getDeviceKey(), setting);
         ModifyDeviceSetInfoSacRes res = new ModifyDeviceSetInfoSacRes(req.getDeviceKey(), deviceId, req.getUserKey());

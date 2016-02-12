@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.member.domain.shared;
 
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacRes;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -104,17 +103,27 @@ public class UserDeviceSetting {
     @Column(columnDefinition = "char(1)")
     private String rnameAuthMdn;
 
-    @Transient
-    private String showUpdateYn;
+    /**
+     * 업데이트 표시 여부
+     */
+    @Column(columnDefinition = "char(1)")
+    private String displayUpdtYn;
 
-    @Transient
-    private String tempStorageCd;
+    /**
+     * 설치 파일 임시 저장 위치
+     */
+    private String apkSaveLoc;
 
-    @Transient
-    private String contentsStorageCd;
+    /**
+     * 콘텐츠 다운로드 저장 위치
+     */
+    private String contentsSaveLoc;
 
-    @Transient
-    private String makeShortcutYn;
+    /**
+     * 바로가기 생성 여부
+     */
+    @Column(columnDefinition = "char(1)")
+    private String shortcutYn;
 
     @Transient
     private boolean useMarketPin = false;
@@ -147,20 +156,19 @@ public class UserDeviceSetting {
         res.setIsPinClosed(authLockYn);
         res.setFailCnt(authFailCnt != null ? authFailCnt.toString() : null);
 
-        //res.setIsPinRetry(null);    // 컬럼이 존재하지 않아 제거
         res.setIsAutoUpdate(autoUpdtYn);
         res.setIsAutoUpdateWifi(wiFiAutoUpdtYn);
         res.setIsLoginLock(loginLockYn);
         res.setIsAdultLock(adultContentsLimtYn);
-
         res.setIsDownloadWifiOnly(wiFiAutoDwldYn);
+
         res.setRealNameDate(DateUtils.format(rnameAuthDate));
         res.setRealNameMdn(rnameAuthMdn);
-        res.setIsShowUpdate(showUpdateYn);
+        res.setIsShowUpdate(displayUpdtYn);
+        res.setTempStorageCd(apkSaveLoc);
+        res.setContentsStorageCd(contentsSaveLoc);
 
-        res.setTempStorageCd(tempStorageCd);
-        res.setContentsStorageCd(contentsStorageCd);
-        res.setIsMakeShortcut(makeShortcutYn);
+        res.setIsMakeShortcut(shortcutYn);
 
         return res;
     }
@@ -178,11 +186,11 @@ public class UserDeviceSetting {
         res.setFailCnt(marketPinFailCnt != null ? marketPinFailCnt.toString() : null);
         res.setIsAdultLock(adultContentsLimtYn);
         res.setIsDownloadWifiOnly(wiFiAutoDwldYn);
-        res.setIsShowUpdate(showUpdateYn);
+        res.setIsShowUpdate(displayUpdtYn);
 
-        res.setTempStorageCd(tempStorageCd);
-        res.setContentsStorageCd(contentsStorageCd);
-        res.setIsMakeShortcut(makeShortcutYn);
+        res.setTempStorageCd(apkSaveLoc);
+        res.setContentsStorageCd(contentsSaveLoc);
+        res.setIsMakeShortcut(shortcutYn);
 
         return res;
     }
@@ -360,35 +368,35 @@ public class UserDeviceSetting {
         this.marketPinFailCnt = marketPinFailCnt;
     }
 
-    public String getShowUpdateYn() {
-        return showUpdateYn;
+    public String getDisplayUpdtYn() {
+        return displayUpdtYn;
     }
 
-    public void setShowUpdateYn(String showUpdateYn) {
-        this.showUpdateYn = showUpdateYn;
+    public void setDisplayUpdtYn(String displayUpdtYn) {
+        this.displayUpdtYn = displayUpdtYn;
     }
 
-    public String getTempStorageCd() {
-        return tempStorageCd;
+    public String getApkSaveLoc() {
+        return apkSaveLoc;
     }
 
-    public void setTempStorageCd(String tempStorageCd) {
-        this.tempStorageCd = tempStorageCd;
+    public void setApkSaveLoc(String apkSaveLoc) {
+        this.apkSaveLoc = apkSaveLoc;
     }
 
-    public String getContentsStorageCd() {
-        return contentsStorageCd;
+    public String getContentsSaveLoc() {
+        return contentsSaveLoc;
     }
 
-    public void setContentsStorageCd(String contentsStorageCd) {
-        this.contentsStorageCd = contentsStorageCd;
+    public void setContentsSaveLoc(String contentsSaveLoc) {
+        this.contentsSaveLoc = contentsSaveLoc;
     }
 
-    public String getMakeShortcutYn() {
-        return makeShortcutYn;
+    public String getShortcutYn() {
+        return shortcutYn;
     }
 
-    public void setMakeShortcutYn(String makeShortcutYn) {
-        this.makeShortcutYn = makeShortcutYn;
+    public void setShortcutYn(String shortcutYn) {
+        this.shortcutYn = shortcutYn;
     }
 }
