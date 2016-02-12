@@ -414,4 +414,25 @@ public class UserSearchController {
 		LOGGER.info("Response : {}, {}", res.getUserKey(), res.getGiftChargeInfoList().size());
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * 2.1.78.	PayPlanet 회원 정보 조회.
+	 * </pre>
+	 *
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            DetailForPayPlanetSacReq
+	 * @return DetailForPayPlanetSacRes
+	 */
+	@RequestMapping(value = "/member/user/detailForPayPlanet/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public DetailForPayPlanetSacRes detailForPayPlanet(SacRequestHeader header,
+														   @RequestBody @Validated DetailForPayPlanetSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		DetailForPayPlanetSacRes res = this.svc.detailForPayPlanet(header, req);
+		LOGGER.info("Response : {}, {}, {}", res.getUserInfo().getUserKey(), res.getDeviceId(), res.getDeviceInfo().getMdn());
+		return res;
+	}
 }

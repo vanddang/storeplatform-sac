@@ -11,10 +11,6 @@ package com.skplanet.storeplatform.sac.member.user.service;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ActivateUserEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcRes;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
 import com.skplanet.storeplatform.external.client.market.vo.MarketClauseExtraInfoEc;
@@ -35,7 +31,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenRe
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserAuthTokenResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserPwdRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckUserPwdResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserAuthTokenRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserAuthTokenResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
