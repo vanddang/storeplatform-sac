@@ -805,7 +805,11 @@ public class LoginServiceImpl implements LoginService {
                     res.setUserStatus(MemberConstants.MAIN_STATUS_NORMAL);
                     return res;
                 }else{
-					LOGGER.info("MVNO, NSH 단말인증 실패 mdn : {} 삭제처리", req.getMdn());
+					if(!isValidTelecom){
+						LOGGER.info("MVNO, NSH 단말인증 실패 mdn : {} 삭제처리, 통신사 정보 상이 : {}, {}", req.getMdn(), deviceInfo.getDeviceTelecom(), req.getDeviceTelecom());
+					}else{
+						LOGGER.info("MVNO, NSH 단말인증 실패 mdn : {} 삭제처리, imei 정보 상이 : {}, {}", req.getMdn(), deviceInfo.getNativeId(), req.getNativeId());
+					}
                     this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
                     throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
                 }
@@ -1423,7 +1427,11 @@ public class LoginServiceImpl implements LoginService {
                             res.setIsRegDevice(MemberConstants.USE_N);
                             return res;
                         }else{
-                            LOGGER.info("MVNO, NSH, IOS 단말인증 실패 mdn : {} 삭제처리", req.getMdn());
+							if(!isValidTelecom){
+								LOGGER.info("MVNO, NSH 단말인증 실패 mdn : {} 삭제처리, 통신사 정보 상이 : {}, {}", req.getMdn(), userMbrDevice.getDeviceTelecom(), req.getDeviceTelecom());
+							}else{
+								LOGGER.info("MVNO, NSH 단말인증 실패 mdn : {} 삭제처리, imei 정보 상이 : {}, {}", req.getMdn(), userMbrDevice.getNativeID(), req.getNativeId());
+							}
                             this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
 							try {
 								// 휴대기기 삭제 후 재조회
