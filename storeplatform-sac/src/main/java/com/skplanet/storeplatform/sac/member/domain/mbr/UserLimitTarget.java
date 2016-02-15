@@ -24,6 +24,7 @@ import java.util.Date;
  * Client Vo 클래스명
  * </p>
  * Updated on : 2016. 1. 6 Updated by : 임근대, SK 플래닛.
+ * Updated on : 2016. 2. 12 Updated by : 윤보영, 카레즈.
  */
 @Entity
 @Table(name = "TB_US_OLIMT_TARGET")
@@ -53,6 +54,9 @@ public class UserLimitTarget {
     private String regId;
     private Date updDt;
     private String updId;
+
+    /** 통신사 코드 추가 (윤보영) */
+    private String mnoCd;
 
     public Integer getSeq() {
         return seq;
@@ -184,6 +188,14 @@ public class UserLimitTarget {
         this.limtPolicyCd = limtPolicyCd;
     }
 
+    public String getMnoCd() {
+        return mnoCd;
+    }
+
+    public void setMnoCd(String mnoCd) {
+        this.mnoCd = mnoCd;
+    }
+
     @PrePersist
     public void prePersist() {
         Date currDate = new Date();
@@ -266,6 +278,7 @@ public class UserLimitTarget {
         limitTargetVo.setPermissionType(this.getPmtType());
         limitTargetVo.setIsUsed(this.getUseYn());
         limitTargetVo.setLineMangStatus(this.getLineMangStatus());
+        limitTargetVo.setMnoCd(this.getMnoCd());
 
         limitTargetVo.setStartDate(this.getStartDtString(simpleDateFormat));
         limitTargetVo.setEndDate(this.getEndDtString(simpleDateFormat));
@@ -294,6 +307,7 @@ public class UserLimitTarget {
         userLimitTargetDomain.setUseYn(limitTarget.getIsUsed());
         userLimitTargetDomain.setLineMangStatus(limitTarget.getLineMangStatus());
         userLimitTargetDomain.setRegId(limitTarget.getRegID());
+        userLimitTargetDomain.setMnoCd(limitTarget.getMnoCd());
 
         if(StringUtils.isNotEmpty(limitTarget.getPermissionType())) userLimitTargetDomain.setPmtType(limitTarget.getPermissionType());
         if(StringUtils.isNotEmpty(userLimitTargetDomain.getInsDt())) userLimitTargetDomain.setInsDt(limitTarget.getInsDate());

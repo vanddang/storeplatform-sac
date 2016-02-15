@@ -82,4 +82,13 @@ public interface UserLimitTargetRepository {
      * @return 결과 건수
      */
     Integer removePolicy(String limtPolicyKey, String limtPolicyCd);
+
+    /**
+     * 서비스 제한 정책 목록 조회
+     * @param mnoCd 통신사 코드
+     * @param limtPolicyKey 제한정책 키
+     * @param limtPolicyCdList 제한정책 코드 목록
+     * @return List 서비스 제한 정책 목록
+     */
+    List<UserLimitTarget> findByMnoCdAndLimitPolicyKeyAndLimtPolicyCdIn(String mnoCd, String limtPolicyKey, List<String> limtPolicyCdList);
 }

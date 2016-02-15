@@ -57,4 +57,23 @@ public class UserDeviceRepositoryImpl implements UserDeviceRepository {
         return device;
     }
 
+    @Override
+    public UserDevice findDeviceInfoByUserKeyAndDeviceKey(String userKey, String deviceKey) {
+        BooleanBuilder cond = new BooleanBuilder()
+                .and($.id.member.insdUsermbrNo.eq(userKey))
+                .and($.id.member.mbrStatusMainCd.ne(MemberConstants.MAIN_STATUS_SECEDE))
+                .and($.authYn.eq("Y"))
+                .and($.id.insdDeviceId.eq(deviceKey));
+
+        UserDevice device = new JPAQuery(emMbr)
+                .from($)
+                .innerJoin($.id.member)
+                .where(cond).uniqueResult($);
+
+        if(device == null)
+            throw new StorePlatformException("SC_MEM_9995");
+
+        return device;
+    }
+
 }

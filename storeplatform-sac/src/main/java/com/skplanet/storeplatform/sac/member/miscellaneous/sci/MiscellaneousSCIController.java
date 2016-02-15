@@ -4,19 +4,15 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.sci;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
+import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
+import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
+import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.sci.MiscellaneousSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq.PolicyCode;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.miscellaneous.sci.service.MiscellaneousSCIService;
+import com.skplanet.storeplatform.sac.member.user.service.LimitTargetService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +30,15 @@ import java.util.List;
  * 기타 기능 내부메소드 호출 Controller.
  * 
  * Updated on : 2014. 3. 11. Updated by : 강신완, 부르칸.
+ * Updated on : 2016. 2. 12. Updated by : 윤보영, 카레즈.
  */
 @LocalSCI
 @RequestMapping(value = "/member/miscellaneous/sci")
 public class MiscellaneousSCIController implements MiscellaneousSCI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MiscellaneousSCIController.class);
 
-	@Autowired
-	private MiscellaneousSCIService miscellaneousSCIService;
+    @Autowired
+    private LimitTargetService limitTargetService;
 
 	/*
 	 * (non-Javadoc)
@@ -55,46 +52,35 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 	@ResponseBody
 	public GetIndividualPolicySacRes getIndividualPolicy(@RequestBody @Validated GetIndividualPolicySacReq req) {
 
-		// 헤더 정보 셋팅
-		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		List<PolicyCode> codeList = new ArrayList<PolicyCode>();
+		List<String> codeList = new ArrayList<String>();
 		for (int i = 0; i < req.getPolicyCodeList().size(); i++) {
-			PolicyCode code = new PolicyCode();
-			code.setPolicyCode(req.getPolicyCodeList().get(i).getPolicyCode());
-			codeList.add(code);
+            if(StringUtils.isNotEmpty(req.getPolicyCodeList().get(i).getPolicyCode())){
+                codeList.add(req.getPolicyCodeList().get(i).getPolicyCode());
+            }
 		}
-		// @TODO 11월 18일 QA 반영 TENANT_ID
-		TenantHeader tenantHeader = requestHeader.getTenantHeader();
-		tenantHeader.setTenantId(StringUtils.defaultString(req.getTenantId(), tenantHeader.getTenantId()));
-		requestHeader.setTenantHeader(tenantHeader);
 
-		GetIndividualPolicyReq getIndividualPolicyReq = new GetIndividualPolicyReq();
-		getIndividualPolicyReq.setKey(req.getKey());
-		getIndividualPolicyReq.setPolicyCodeList(codeList);
+        SearchPolicyRequest policyRequest = new SearchPolicyRequest();
+        policyRequest.setUserKey(req.getUserKey());
+        policyRequest.setDeviceKey(req.getDeviceKey());
+        policyRequest.setLimitPolicyCodeList(codeList);
 
-		GetIndividualPolicyRes getIndividualPolicyRes = this.miscellaneousSCIService.getIndividualPolicy(requestHeader,
-				getIndividualPolicyReq);
+        SearchPolicyResponse res = this.limitTargetService.searchPolicyListByKey(policyRequest);
 
 		GetIndividualPolicySacRes sacRes = new GetIndividualPolicySacRes();
 		List<IndividualPolicyInfoSac> infoSacList = new ArrayList<IndividualPolicyInfoSac>();
 
-		for (IndividualPolicyInfo policyList : getIndividualPolicyRes.getPolicyList()) {
-			IndividualPolicyInfoSac infoSac = new IndividualPolicyInfoSac();
-			infoSac.setIsUsed(StringUtils.trimToEmpty(policyList.getIsUsed()));
-			infoSac.setKey(StringUtils.trimToEmpty(policyList.getKey()));
-			infoSac.setLimitAmount(StringUtils.trimToEmpty(policyList.getLimitAmount()));
-			infoSac.setPermissionType(StringUtils.trimToEmpty(policyList.getPermissionType()));
-			infoSac.setPolicyCode(StringUtils.trimToEmpty(policyList.getPolicyCode()));
-			infoSac.setPreLimitAmount(StringUtils.trimToEmpty(policyList.getPreLimitAmount()));
-			infoSac.setValue(StringUtils.trimToEmpty(policyList.getValue()));
-
+		for (LimitTarget policyList : res.getLimitTargetList()) {
+            IndividualPolicyInfoSac infoSac = new IndividualPolicyInfoSac();
+            infoSac.setPolicyCode(StringUtils.trimToEmpty(policyList.getLimitPolicyCode()));
+            infoSac.setPolicyValue(StringUtils.trimToEmpty(policyList.getPolicyApplyValue()));
+            infoSac.setDeviceTelecom(StringUtils.trimToEmpty(policyList.getMnoCd()));
 			infoSacList.add(infoSac);
 		}
-		sacRes.setPolicyList(infoSacList);
+		sacRes.setPolicyCodeList(infoSacList);
 
-		LOGGER.info("Response : {}", sacRes.getPolicyList().get(0).getKey());
+        LOGGER.info("Response : {}", sacRes);
 
 		return sacRes;
 

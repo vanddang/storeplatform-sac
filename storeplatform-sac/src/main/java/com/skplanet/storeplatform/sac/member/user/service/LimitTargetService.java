@@ -35,6 +35,18 @@ public interface LimitTargetService {
 	 */
 	List<LimitTarget> searchPolicyList(String limtPolicyKey, List<String> limtPolicyCdList);
 
+    /**
+     * <pre>
+     * 제한 정책 목록을 조회하는 기능을 제공한다.
+     * </pre>
+     *
+     * @param mnoCd
+     * @param limtPolicyKey
+     * @param limtPolicyCdList
+     * @return searchPolicyResponse - 제한 정책 목록 조회 응답 Value Object
+     */
+    List<LimitTarget> searchPolicyList(String mnoCd, String limtPolicyKey, List<String> limtPolicyCdList);
+
 	/**
 	 * <pre>
 	 * 제한 정책 목록을 조회하는 기능을 제공한다.
@@ -119,5 +131,17 @@ public interface LimitTargetService {
 	 * @return updatePolicyValueResponse - 제한 정책정보 Value 수정 응답 Value Object
 	 */
 	UpdatePolicyValueResponse updatePolicyValue(UpdatePolicyValueRequest updatePolicyValueRequest);
+
+
+    /**
+     * <pre>
+     * userKey, deviceKey로 제한 정책 목록을 조회하는 기능을 제공한다.
+     * </pre>
+     *
+     * @param searchPolicyRequest
+     *            제한 정책 목록 조회 요청 Value Object
+     * @return searchPolicyResponse - 제한 정책 목록 조회 응답 Value Object
+     */
+    SearchPolicyResponse searchPolicyListByKey(SearchPolicyRequest searchPolicyRequest);
 
 }
