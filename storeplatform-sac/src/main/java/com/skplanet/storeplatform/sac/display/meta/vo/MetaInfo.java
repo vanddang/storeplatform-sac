@@ -389,6 +389,15 @@ public class MetaInfo extends CommonInfo {
 	private String visitPathNm;
 	private String dwldTypeCd;
 	private String tenantId;
+	private String drmKey; // 컨텐츠 DRM Key
+
+	public String getDrmKey() {
+		return drmKey;
+	}
+
+	public void setDrmKey(String drmKey) {
+		this.drmKey = drmKey;
+	}
 
 	/**
 	 * @return the topMenuId
