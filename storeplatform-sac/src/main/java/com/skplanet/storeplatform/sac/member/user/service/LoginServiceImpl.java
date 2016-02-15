@@ -2291,6 +2291,10 @@ public class LoginServiceImpl implements LoginService {
 				UserInfo userInfo = new UserInfo();
 				userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
 				userInfo.setProdExpoLevl(marketRes.getDeviceInfo().getProdExpoLevl());
+                if(StringUtils.equals(detailRes.getUserInfo().getIsRealName(), MemberConstants.USE_Y)
+                        && StringUtils.isNotEmpty(detailRes.getUserInfo().getRealAge())){
+                    userInfo.setRealAge(detailRes.getUserInfo().getRealAge());
+                }
 
 				// 약관 정보
 				List<Agreement> agreementList = new ArrayList<Agreement>();
@@ -2549,6 +2553,10 @@ public class LoginServiceImpl implements LoginService {
 				UserInfo userInfo = new UserInfo();
 				userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
 				userInfo.setProdExpoLevl(marketRes.getDeviceInfo().getProdExpoLevl());
+                if(StringUtils.equals(detailRes.getUserInfo().getIsRealName(), MemberConstants.USE_Y)
+                        && StringUtils.isNotEmpty(detailRes.getUserInfo().getRealAge())){
+                    userInfo.setRealAge(detailRes.getUserInfo().getRealAge());
+                }
 
 				// 약관 정보
 				List<Agreement> agreementList = new ArrayList<Agreement>();
