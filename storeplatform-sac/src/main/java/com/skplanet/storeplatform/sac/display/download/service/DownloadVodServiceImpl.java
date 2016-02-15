@@ -81,7 +81,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
     @Autowired
     private DownloadSupportService supportService;
-    
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -106,7 +106,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		String idType = downloadVodSacReq.getIdType(); // 조회 상품 ID 유형
 		String productId = downloadVodSacReq.getProductId(); // 조회 상품 ID
-		
+
 		// ID유형 유효값 체크 
 		// Episode만 조회하도록 변경 2015.10.28 update by 이석희, I-S PLUS
 		if (!DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
@@ -121,7 +121,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		MetaInfo metaInfo = getVodMetaInfo(downloadVodSacReq); // VOD 상품 조회
 		Product product = new Product();
-		
+
 		log.debug("----------------------------------------------------------------");
 		log.debug("[DownloadVodServiceImpl] NORMAL scid : {}", metaInfo.getNmSubContsId());
 		log.debug("[DownloadVodServiceImpl] SD scid : {}", metaInfo.getSdSubContsId());
@@ -198,7 +198,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 					/**
 					 * unlimitedDrmExpireDt 값이 true 이면 DL 규격의 ExpirationDate 값이 99991231T125959Z 값으로 내려감  - 2015.8월 CJ E&M 요청 사항
-					 */ 
+					 */
 //					Encryption encryption = supportService.generateEncryptionV2(metaInfo, historySacIn.getProdId(), supportFhdVideo, unlimitedDrmExpireDt);
 					Encryption encryption = supportService.generateEncryption(metaInfo, historySacIn.getProdId(), supportFhdVideo);
 					encryptionList.add(encryption); // 암호화 규격 add
@@ -219,13 +219,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		setProduct(product, metaInfo, supportFhdVideo, downloadVodSacReq.getBaseYn());
 		DownloadVodSacRes response = makeResponse(product); // 응답결과 
- 
+
         sw.stop();
         supportService.logDownloadResult(downloadVodSacReq.getUserKey(), downloadVodSacReq.getDeviceKey(), productId, encryptionList, sw.getTime()); // 다운로드 결과 log
 
 		return response;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -403,13 +403,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		setProduct(product, metaInfo, supportFhdVideo, downloadVodV3SacReq.getBaseYn());
 		DownloadVodSacRes response = makeResponse(product); // 응답결과 
- 
+
         sw.stop();
         supportService.logDownloadResult(downloadVodV3SacReq.getUserKey(), downloadVodV3SacReq.getDeviceKey(), productId, encryptionList, sw.getTime()); // 다운로드 결과 log
 
 		return response;
-	}	
-	
+	}
+
 	private String setPrchsState(HistorySacIn historySacIn) {
 		String prchsState = getDownloadPurchaseStateByDbTime(historySacIn); // 구매 상태
 
@@ -433,7 +433,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		downloadVodSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 		downloadVodSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 	}
-	
+
 	private void setRequestV3(DownloadVodV3SacReq downloadVodV3SacReq, TenantHeader tenantHeader, DeviceHeader deviceHeader) {
 		downloadVodV3SacReq.setTenantId(tenantHeader.getTenantId());
 		downloadVodV3SacReq.setSystemId(tenantHeader.getSystemId());
@@ -466,11 +466,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM, "Y"));
 		supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM, metaInfo.getDolbySprtYn()));
 		product.setSupportList(supportList);
-		
+
 		product.setTitle(commonGenerator.generateTitle(metaInfo)); // 상품명
 		product.setMenuList(commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
 		product.setSourceList(commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
-		
+
 		if("Y".equals(baseYn)){
 			product.setVod(vodGenerator.generateVod(metaInfo, supportFhdVideo)); // VOD 정보
 			product.setRights(commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
@@ -478,7 +478,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			product.setVod(vodGenerator.generateVodV3(metaInfo, supportFhdVideo)); // VOD 정보
 			product.setAuthority(commonGenerator.generateAuthority(metaInfo)); // 이용등급 및 소장/대여 정보(V3)
 		}
-		
+
 		product.setDistributor(commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 
         // 보안을 위해 물리파일 경로는 API응답에서 삭제
@@ -488,7 +488,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
                 info.setFilePath(null);
             }
         }
-        
+
 	}
 
 	private void loggingEncResult(Encryption encryption) {
@@ -521,10 +521,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt())); // 구매상품 가격
 		metaInfo.setExpiredDate(reqExpireDate); // 요청 만료일시
 		metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
-		metaInfo.setUserKey(downloadVodSacReq.getUserKey()); 
+		metaInfo.setUserKey(downloadVodSacReq.getUserKey());
 		metaInfo.setDeviceKey(downloadVodSacReq.getDeviceKey());
 		metaInfo.setDeviceType(deviceIdType); // 단말 유형
-		metaInfo.setDeviceSubKey(deviceId); 
+		metaInfo.setDeviceSubKey(deviceId);
 		metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
 		metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
 
@@ -537,10 +537,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         if ("Y".equals(historySacIn.getDrmYn()) &&	!supportService.isTfreemiumPurchase(historySacIn.getPrchsReqPathCd())) {
 			// 구매 경로가 Tfreemium 제외하고 호출되도록 수정한다.
 			supportService.mapPurchaseDrmInfo(metaInfo);
-			
+
 		}
 	}
-	
+
 	private void setMetaInfoV3(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadVodV3SacReq downloadVodV3SacReq, TenantHeader tenantHeader,
 			String reqExpireDate, String prchsState, SearchDeviceIdSacRes deviceRes) {
 		String deviceId = deviceRes.getDeviceId();
@@ -554,15 +554,20 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		metaInfo.setPurchasePrice(Integer.parseInt(historySacIn.getProdAmt())); // 구매상품 가격
 		metaInfo.setExpiredDate(reqExpireDate); // 요청 만료일시
 		metaInfo.setUseExprDt(historySacIn.getUseExprDt()); // 이용 만료일시
-		metaInfo.setUserKey(downloadVodV3SacReq.getUserKey()); 
+		metaInfo.setUserKey(downloadVodV3SacReq.getUserKey());
 		metaInfo.setDeviceKey(downloadVodV3SacReq.getDeviceKey());
 		metaInfo.setDeviceType(deviceIdType); // 단말 유형
-		metaInfo.setDeviceSubKey(deviceId); 
+		metaInfo.setDeviceSubKey(deviceId);
 		metaInfo.setPurchaseHide(historySacIn.getHidingYn()); // 구매내역 숨김 여부
 		metaInfo.setUpdateAlarm(historySacIn.getAlarmYn()); // 업데이트 알람 수신 여부
 
 		mapProdChrg(metaInfo, historySacIn.getProdId()); // 구매 상품ID
 		mapDrmYn(metaInfo, historySacIn);
+
+		/**
+		 * 컨텐츠 DRM Key setting.
+		 */
+		metaInfo.setDrmKey(this.setDrmKey(downloadVodV3SacReq.getUserType(), metaInfo.getDrmYn(), deviceRes.getMdn(), downloadVodV3SacReq.getUserKey()));
 
 		metaInfo.setSystemId(tenantHeader.getSystemId());
 		metaInfo.setTenantId(tenantHeader.getTenantId());
@@ -570,9 +575,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         if ("Y".equals(historySacIn.getDrmYn()) &&	!supportService.isTfreemiumPurchase(historySacIn.getPrchsReqPathCd())) {
 			// 구매 경로가 Tfreemium 제외하고 호출되도록 수정한다.
 			supportService.mapPurchaseDrmInfo(metaInfo);
-			
+
 		}
-	}	
+	}
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {
 		Purchase p = commonGenerator.generatePurchase(prchsState, historySacIn);
@@ -582,17 +587,17 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	private MetaInfo getVodMetaInfo(DownloadVodSacReq req) {
 		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadVodInfo", req, MetaInfo.class); // VOD 상품 조회
 		if (metaInfo == null)
-			throw new StorePlatformException("SAC_DSP_0009"); // 요청하신 자료가 존재하지 않습니다. 
+			throw new StorePlatformException("SAC_DSP_0009"); // 요청하신 자료가 존재하지 않습니다.
 		// 요청 상품 ID유형이 채널이고, 메타 구분 코드가 CT14(영화 시리즈) 일때
 		if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(req.getIdType()) && DisplayConstants.DP_SERIAL_VOD_META_CLASS_CD.equals(metaInfo.getMetaClsfCd()))
 				throw new StorePlatformException("SAC_DSP_0013"); //단품인 상품만 조회가능 합니다.
 		return metaInfo;
 	}
-	
+
 	private MetaInfo getVodMetaInfoV3(DownloadVodV3SacReq req) {
 		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadVodInfoV3", req, MetaInfo.class); // VOD 상품 조회
 		if (metaInfo == null)
-			throw new StorePlatformException("SAC_DSP_0009"); // 요청하신 자료가 존재하지 않습니다. 
+			throw new StorePlatformException("SAC_DSP_0009"); // 요청하신 자료가 존재하지 않습니다.
 		return metaInfo;
 	}
 
@@ -605,10 +610,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
 		log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
 		log.debug("----------------------------------------------------------------");
-		
+
 		return deviceReq;
 	}
-	
+
 	private SearchDeviceIdSacReq makeSearchDeviceIdV3SacReq(DownloadVodV3SacReq downloadVodV3SacReq) {
 		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
 		deviceReq.setUserKey(downloadVodV3SacReq.getUserKey());
@@ -618,7 +623,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
 		log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
 		log.debug("----------------------------------------------------------------");
-		
+
 		return deviceReq;
 	}
 
@@ -634,7 +639,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		log.debug("[DownloadVodServiceImpl] prchsProdId : {}", historySacIn.getProdId());
 		log.debug("[DownloadVodServiceImpl] prchsPrice : {}", historySacIn.getProdAmt());
 		log.debug("----------------------------------------------------------------");
-		
+
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -678,7 +683,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		historyReq.setProductList(productList);
 		return historyReq;
 	}
-	
+
 	private HistoryListSacInReq makeHistoryListV3SacInReq(DownloadVodV3SacReq downloadVodV3SacReq, List<ProductListSacIn> productList) {
 		HistoryListSacInReq historyReq = new HistoryListSacInReq();
 		historyReq.setTenantId(downloadVodV3SacReq.getTenantId());
@@ -757,4 +762,44 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		// 별다른 조건이 없다면 구매당시의 DRM 정보를 사용하도록 수정 (이전에는 전시 정보 사용)
 		metaInfo.setDrmYn(drmYn);
 	}
+
+	/**
+	 * drmKey 값을 세팅 한다.
+	 * (기존 MDN을 DRM키로 사용하였으나 MDN이 없는 Wi-Fi 전용 단말을 위해 DRM키 정책을 만든다.)
+	 * @param userType
+	 * @param applyDrm
+	 * @param mdn
+	 * @param userKey
+	 * @return
+	 */
+	private String setDrmKey(String userType, String applyDrm, String mdn, String userKey) {
+
+		/**
+		 * userType 이 null 이면 drmKey = 세팅하지않음.
+		 */
+		if(StringUtils.isBlank(userType)) {
+			return null;
+		}
+
+		/**
+		 * applyDrm 값이 "Y" 이면서, 모바일 회원일 경우 drmKey = mdn.
+		 */
+		if(StringUtils.equals(applyDrm, "Y") && StringUtils.equals(userType, "US011501")) {
+			return mdn;
+		}
+
+		/**
+		 *  applyDrm 값이 "Y" 이면서, IDP 회원이거나 OneId 회원이거나 기타 등등  drmKey = userKey.
+		 */
+		if(StringUtils.equals(applyDrm, "Y") && !StringUtils.equals(userType, "US011501")) {
+			return userKey;
+		}
+
+		/**
+		 * 위에 걸리는 항목 없으면 drmKey를 내리지 않는다.
+		 */
+		return null;
+
+	}
+
 }
