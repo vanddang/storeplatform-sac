@@ -1347,7 +1347,7 @@ public class LoginServiceImpl implements LoginService {
         }
 
         // MVNO, NSH, IOS 처리(mdn으로 imei가 일치하면 로그인 성공처리)
-        if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
+        /*if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKM)
                 || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KTM)
                 || StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGM)
 				|| StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH)
@@ -1382,7 +1382,7 @@ public class LoginServiceImpl implements LoginService {
 							}
 						}
                         if(isValidTelecom && (StringUtils.isBlank(userMbrDevice.getNativeID()) || StringUtils.equals(req.getNativeId(), userMbrDevice.getNativeID()))){
-                            /* 이메일 정보 업데이트 */
+                            *//* 이메일 정보 업데이트 *//*
                             if(StringUtils.isNotBlank(req.getUserEmail()) && !StringUtils.equals(req.getUserEmail(), chkDupRes.getUserMbr().getUserEmail())){
                                 UserMbr userMbr = new UserMbr();
                                 userMbr.setUserKey(chkDupRes.getUserMbr().getUserKey());
@@ -1394,7 +1394,7 @@ public class LoginServiceImpl implements LoginService {
                                 LOGGER.info("이메일 정보 변경 {} -> {}", chkDupRes.getUserMbr().getUserEmail(), req.getUserEmail());
                             }
 
-                            /*  휴대기기 수정 처리 */
+                            *//*  휴대기기 수정 처리 *//*
                             ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
                             modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
                             modifyDeviceRequest.setUserKey(userMbrDevice.getUserKey());
@@ -1416,7 +1416,7 @@ public class LoginServiceImpl implements LoginService {
                             modifyDeviceRequest.setIsUpdDeviceId(true);
                             this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
-                            /* 로그인 성공이력 저장 */
+                            *//* 로그인 성공이력 저장 *//*
                             this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceIp(), null, null, "Y", userMbrDevice.getDeviceKey());
 
                             res.setUserKey(chkDupRes.getUserMbr().getUserKey());
@@ -1445,7 +1445,7 @@ public class LoginServiceImpl implements LoginService {
                     }
                 }
             }
-        }
+        }*/
 
         String deviceKey = null;
         DeviceTelecomInfo deviceTelecomInfo = null;
