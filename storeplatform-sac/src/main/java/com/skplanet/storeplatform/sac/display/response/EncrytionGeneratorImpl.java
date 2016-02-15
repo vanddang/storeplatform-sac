@@ -164,6 +164,12 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 			}
 		}
 
+		/**
+		 * vod,이북 컨텐츠 DRM Key setting.
+		 * 기존 MDN을 DRM키로 사용하였으나 MDN이 없는 Wi-Fi 전용 단말을 위해 DRM키 정책을 만든다.
+		 */
+		usagePolicy.setDrmKey(metaInfo.getDrmKey());
+
         data.setUsagePolicy(usagePolicy);
 
         // 기기 정보

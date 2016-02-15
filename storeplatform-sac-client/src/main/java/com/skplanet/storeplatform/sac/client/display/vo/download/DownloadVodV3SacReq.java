@@ -44,6 +44,15 @@ public class DownloadVodV3SacReq extends CommonInfo {
 	private String baseYn; // EP상품의 기준화질 여부
 	private String player; // Chrome Cast 재생 허용 Player
 	private String prchsId; // 구매 요청 아이디.
+	private String userType; // 회원 타입. (US011501 : 모바일회원, US011502 : IDP회원, US011503 : OneID회원, 기타......등등....)
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
 
 	/**
 	 *
