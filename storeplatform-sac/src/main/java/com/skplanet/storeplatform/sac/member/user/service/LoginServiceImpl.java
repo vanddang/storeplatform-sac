@@ -2294,6 +2294,9 @@ public class LoginServiceImpl implements LoginService {
                 if(StringUtils.equals(detailRes.getUserInfo().getIsRealName(), MemberConstants.USE_Y)
                         && StringUtils.isNotEmpty(detailRes.getUserInfo().getRealAge())){
                     userInfo.setRealAge(detailRes.getUserInfo().getRealAge());
+                }else {
+                    String userBirthDay = this.commService.getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl());
+                    userInfo.setRealAge(String.valueOf(CommonUtils.getAge(userBirthDay)));
                 }
 
 				// 약관 정보
@@ -2556,6 +2559,9 @@ public class LoginServiceImpl implements LoginService {
                 if(StringUtils.equals(detailRes.getUserInfo().getIsRealName(), MemberConstants.USE_Y)
                         && StringUtils.isNotEmpty(detailRes.getUserInfo().getRealAge())){
                     userInfo.setRealAge(detailRes.getUserInfo().getRealAge());
+                }else {
+                    String userBirthDay = this.commService.getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl());
+                    userInfo.setRealAge(String.valueOf(CommonUtils.getAge(userBirthDay)));
                 }
 
 				// 약관 정보
