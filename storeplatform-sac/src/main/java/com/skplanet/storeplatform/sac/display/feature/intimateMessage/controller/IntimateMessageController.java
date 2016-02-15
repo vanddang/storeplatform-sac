@@ -45,6 +45,7 @@ public class IntimateMessageController {
 	 */
 	@RequestMapping(value = "/intimateMessage/list/v1", method = RequestMethod.POST)
 	@ResponseBody
+	@Deprecated
 	public IntimateMessageSacRes searchIntimateMessageList(SacRequestHeader header,
 			@RequestBody @Validated IntimateMessageSacReq intimateMessageSacReq) {
 		this.logger.debug("----------------------------------------------------------------");
