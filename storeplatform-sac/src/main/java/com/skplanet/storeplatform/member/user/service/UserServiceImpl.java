@@ -143,8 +143,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeliveryResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferGiftChrgInfoResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferMarketPinRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.TransferMarketPinResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
@@ -169,7 +167,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrInfo;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrMarketPin;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrPnsh;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrSegment;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
@@ -4514,10 +4511,12 @@ public class UserServiceImpl implements UserService {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
 		}
 
-		/** 회원 비밀번호 관련 정보 변경. pwd, salt, idp_one_cd > null, act_tk > newUserAuthToken  */
-		row = this.commonDAO.update("User.updateUserPwdInfo", modifyIdRequest);
-		if (row <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+		/** 스토어아이디에서 소셜아이디 회원변경시 비밀번호 관련 정보 삭제. */
+		if (StringUtils.equals(modifyIdRequest.getUserType(), MemberConstants.USER_TYPE_TSTORE)) {
+			row = this.commonDAO.update("User.deleteUserPwdInfo", modifyIdRequest);
+			if (row <= 0) {
+				throw new StorePlatformException(this.getMessage("response.ResultCode.removeError", ""));
+			}
 		}
 
 		modifyIdResponse.setUserKey(modifyIdRequest.getUserKey());

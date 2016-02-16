@@ -510,7 +510,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 	private void setMetaInfo(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadVodSacReq downloadVodSacReq, TenantHeader tenantHeader,
 			String reqExpireDate, String prchsState, SearchDeviceIdSacRes deviceRes) {
-		String deviceId = deviceRes.getDeviceId();
+		String deviceId = null;
+		if (StringUtils.isNotEmpty(deviceRes.getMdn())) {
+			deviceId = deviceRes.getMdn();
+		} else if (StringUtils.isNotEmpty(deviceRes.getDeviceId())) {
+			deviceId = deviceRes.getDeviceId();
+		}
+
 		String deviceIdType = commonService.getDeviceIdType(deviceId);
 
 		metaInfo.setPurchaseId(historySacIn.getPrchsId()); //구매 ID
@@ -541,9 +547,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		}
 	}
 
-	private void setMetaInfoV3(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadVodV3SacReq downloadVodV3SacReq, TenantHeader tenantHeader,
-			String reqExpireDate, String prchsState, SearchDeviceIdSacRes deviceRes) {
-		String deviceId = deviceRes.getDeviceId();
+	private void setMetaInfoV3(MetaInfo metaInfo, HistorySacIn historySacIn, DownloadVodV3SacReq downloadVodV3SacReq, TenantHeader tenantHeader, String reqExpireDate, String prchsState, SearchDeviceIdSacRes deviceRes) {
+		String deviceId = null;
+		if (StringUtils.isNotEmpty(deviceRes.getMdn())) {
+			deviceId = deviceRes.getMdn();
+		} else if (StringUtils.isNotEmpty(deviceRes.getDeviceId())) {
+			deviceId = deviceRes.getDeviceId();
+		}
+
 		String deviceIdType = commonService.getDeviceIdType(deviceId);
 
 		metaInfo.setPurchaseId(historySacIn.getPrchsId()); //구매 ID

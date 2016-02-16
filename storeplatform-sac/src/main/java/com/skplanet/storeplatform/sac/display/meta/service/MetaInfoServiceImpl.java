@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Meta 정보 조회 Service 구현체
- * 
+ *
  * Updated on : 2016-01-11. Updated by : 정화수, SK Planet
  */
 @Service
@@ -202,6 +202,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		MetaInfo me = new MetaInfo();
 		MetaBeanUtils.setProperties(meta, me);
 
+		bindContentsType( prodId, me );
+
 		return me;
 
 	}
@@ -227,9 +229,9 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		MetaBeanUtils.setProperties(meta, me);
 		me.setFileSize(0L);
 
-		String contentsTypeCd = productInfoManager.getBaseInformation( prodId ).getContentsTypeCd();
+		bindContentsType( prodId, me );
 
-		switch( ContentType.forCode( contentsTypeCd ) ) {
+		switch( ContentType.forCode( me.getContentsTypeCd() ) ) {
 
 			case Channel:
 				me.setProdAmt(meta.getChnlProdAmt());
@@ -273,9 +275,9 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		MetaInfo me = new MetaInfo();
 		MetaBeanUtils.setProperties(meta, me);
 
-		String contentsTypeCd = productInfoManager.getBaseInformation( prodId ).getContentsTypeCd();
+		bindContentsType( prodId, me );
 
-		switch( ContentType.forCode( contentsTypeCd ) ) {
+		switch( ContentType.forCode( me.getContentsTypeCd() ) ) {
 
 			case Channel:
 				me.setProdAmt(meta.getChnlProdAmt());
@@ -318,9 +320,9 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		MetaInfo me = new MetaInfo();
 		MetaBeanUtils.setProperties(meta, me);
 
-		String contentsTypeCd = productInfoManager.getBaseInformation( prodId ).getContentsTypeCd();
+		bindContentsType( prodId, me );
 
-		switch( ContentType.forCode( contentsTypeCd ) ) {
+		switch( ContentType.forCode( me.getContentsTypeCd() ) ) {
 
 			case Channel:
 				me.setProdAmt(meta.getChnlProdAmt());
@@ -381,6 +383,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		MetaInfo me = new MetaInfo();
 		MetaBeanUtils.setProperties( meta, me );
 
+		bindContentsType( channelProdId, me );
+
 		return me;
 
 	}
@@ -424,6 +428,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		MetaInfo me = new MetaInfo();
 		MetaBeanUtils.setProperties( meta, me );
 
+		bindContentsType( channelProdId, me );
+
 		return me;
 
 	}
@@ -431,6 +437,17 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	@Override
 	public MetaInfo getVoucherMetaInfo( ProductBasicInfo productInfo ) {
 		return getVoucherMetaInfo( productInfo.getProdId() );
+	}
+
+	/**
+	 * 상품메타에 ContentsType 정보를 추가한다.
+	 * @param prodId	상품 ID
+	 * @param metaInfo	상품메타
+	 */
+	private void bindContentsType( String prodId, MetaInfo metaInfo ) {
+		// 캐시에서 조회하기 때문에 실제 성능저하는 없음
+		String contentsTypeCd = productInfoManager.getBaseInformation( prodId ).getContentsTypeCd();
+		metaInfo.setContentsTypeCd( contentsTypeCd );
 	}
 
 }

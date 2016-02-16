@@ -142,12 +142,6 @@ public class UserJoinServiceImpl implements UserJoinService {
                     }
                 }
             }
-
-            // 02. SKT imei 비교
-            if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-                    && !StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getDeviceId()))){
-                throw new StorePlatformException("SAC_MEM_1503");
-            }
         }
 
 		/**
