@@ -561,6 +561,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		// 회원타입별 회원정보 조회
+        // TODO deviceType TLog 정의 확인 필요
 		if (StringUtils.equals(loginUserRequest.getIsMobile(), Constant.TYPE_YN_Y)) { // 모바일 회원
 
 			if (tempDevice == null) {
@@ -704,6 +705,11 @@ public class UserServiceImpl implements UserService {
 			if (StringUtils.isNotBlank(loginUserRequest.getDeviceOsVersion())) {
 				userMbrLoginLog.setDeviceOsVersion(loginUserRequest.getDeviceOsVersion());
 			}
+
+            // 접속 단말 구분코드
+            if(StringUtils.isNotBlank(loginUserRequest.getDeviceType())){
+                userMbrLoginLog.setDeviceType(loginUserRequest.getDeviceType());
+            }
 
 			int row = 0;
 

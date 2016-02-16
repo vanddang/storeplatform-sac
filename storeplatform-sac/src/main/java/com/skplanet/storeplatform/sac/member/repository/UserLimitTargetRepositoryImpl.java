@@ -28,6 +28,7 @@ import java.util.List;
  * 서비스 제한 정책 Repository
  * </p>
  * Updated on : 2016. 01. 05 Updated by : 임근대, SK 플래닛.
+ * Updated on : 2016. 02. 12 Updated by : 윤보영, 카레즈.
  */
 @Repository
 public class UserLimitTargetRepositoryImpl implements UserLimitTargetRepository {
@@ -108,6 +109,29 @@ public class UserLimitTargetRepositoryImpl implements UserLimitTargetRepository 
 
     }
 
+    @Override
+    public List<UserLimitTarget> findByMnoCdAndLimitPolicyKeyAndLimtPolicyCdIn(String mnoCd, String limtPolicyKey, List<String> limtPolicyCdList) {
+        JPAQuery query = new JPAQuery(em)
+                .from($)
+                .where($.endDt.gt(new Date()));
+
+        if(StringUtils.isNotEmpty(mnoCd))
+            query.where($.mnoCd.eq(mnoCd));
+
+        if (StringUtils.isNotEmpty(limtPolicyKey))
+            query.where($.limtPolicyKey.eq(limtPolicyKey));
+
+        if(limtPolicyCdList != null && limtPolicyCdList.size() > 0) {
+            BooleanBuilder builder = new BooleanBuilder();
+            for(String limtPolicyCd : limtPolicyCdList) {
+                builder.or($.limtPolicyCd.eq(limtPolicyCd));
+            }
+            query.where(builder);
+        }
+
+        return query.list($);
+    }
+
     public Integer updateLimitPolicyHistory(Integer seq, String updId) {
         //UserMapper.xml updatePolicyHistory
         Date now = new Date();
@@ -136,4 +160,5 @@ public class UserLimitTargetRepositoryImpl implements UserLimitTargetRepository 
                 .set($.policyApplyValue, newPolicyApplyValue)
                 .execute();
     }
+
 }

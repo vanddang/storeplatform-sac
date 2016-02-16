@@ -40,6 +40,13 @@ public class IndividualPolicyInfoSac extends CommonInfo {
 	/** 사용여부 (Y/N). */
 	private String isUsed; // USE_YN
 
+    /** 통신사 코드 */
+    private String deviceTelecom;
+
+    /** 정책 값 */
+    private String policyValue;
+
+
 	/**
 	 * @return the policyCode
 	 */
@@ -145,4 +152,19 @@ public class IndividualPolicyInfoSac extends CommonInfo {
 		this.isUsed = isUsed;
 	}
 
+    public String getPolicyValue() {
+        return policyValue;
+    }
+
+    public void setPolicyValue(String policyValue) {
+        this.policyValue = policyValue;
+    }
+
+    public String getDeviceTelecom() {
+        return deviceTelecom;
+    }
+
+    public void setDeviceTelecom(String deviceTelecom) {
+        this.deviceTelecom = deviceTelecom;
+    }
 }

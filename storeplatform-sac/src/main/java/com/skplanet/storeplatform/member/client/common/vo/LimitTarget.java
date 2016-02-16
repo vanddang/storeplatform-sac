@@ -18,6 +18,7 @@ import java.io.Serializable;
  * 제한 정책 Value Object
  * 
  * Updated on : 2013. 12. 20. Updated by : wisestone_mikepark
+ * Updated on : 2016. 2. 12. Updated by : 윤보영, 카레즈
  */
 public class LimitTarget extends CommonInfo implements Serializable {
 	/** The Constant serial Version UID. */
@@ -72,6 +73,11 @@ public class LimitTarget extends CommonInfo implements Serializable {
 	 * 회선_관리_상태.
 	 */
 	private String lineMangStatus; // LINE_MANG_STATUS
+
+    /**
+     * 통신사 코드.
+     */
+    private String mnoCd; //통신사 코드
 
 	/**
 	 * 정책_적용_값을 리턴한다.
@@ -369,7 +375,15 @@ public class LimitTarget extends CommonInfo implements Serializable {
 		this.insDate = insDate;
 	}
 
-	/**
+    public String getMnoCd() {
+        return mnoCd;
+    }
+
+    public void setMnoCd(String mnoCd) {
+        this.mnoCd = mnoCd;
+    }
+
+    /**
 	 * Returns the serial version UID.
 	 * 
 	 * @return serialVersionUID - the serial version UID

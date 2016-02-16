@@ -26,4 +26,12 @@ public interface UserDeviceRepository {
      * @return
      */
     UserDevice findByUserKeyAndDeviceKey(String userKey, String deviceKey);
+
+    /**
+     * 유효한 기기 정보를 조회한다.
+     * @param userKey
+     * @param deviceKey
+     * @return
+     */
+    UserDevice findDeviceInfoByUserKeyAndDeviceKey(String userKey, String deviceKey);
 }

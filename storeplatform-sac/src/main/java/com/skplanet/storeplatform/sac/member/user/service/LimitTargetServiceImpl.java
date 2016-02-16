@@ -10,12 +10,15 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.member.client.common.vo.*;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyValueRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyValueResponse;
 import com.skplanet.storeplatform.sac.member.domain.mbr.UserLimitTarget;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserDevice;
+import com.skplanet.storeplatform.sac.member.repository.UserDeviceRepository;
 import com.skplanet.storeplatform.sac.member.repository.UserLimitTargetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,7 @@ import java.util.List;
  * 서비스 제한 정책
  * </p>
  * Updated on : 2015. 1. 7. Updated by : 임근대, SKP.
+ * Updated on : 2015. 2. 11. Updated by : 윤보영, 카레즈.
  */
 @Service
 @Transactional("transactionManagerForScMember")
@@ -43,6 +47,9 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 
     @Autowired
     UserLimitTargetRepository limitTargetRepository;
+
+    @Autowired
+    UserDeviceRepository userDeviceRepository;
 
     /** The message source accessor. */
     @Autowired
@@ -90,6 +97,18 @@ public class LimitTargetServiceImpl implements LimitTargetService {
     @Override
     public List<LimitTarget> searchPolicyList(String limtPolicyKey, List<String> limtPolicyCdList) {
         List<UserLimitTarget> userLimitTargets = limitTargetRepository.findByLimitPolicyKeyAndLimtPolicyCdIn(limtPolicyKey, limtPolicyCdList);
+
+        List<LimitTarget> convertedLimitTargetList = new ArrayList<LimitTarget>();
+        for (UserLimitTarget userLimitTarget : userLimitTargets) {
+            convertedLimitTargetList.add(userLimitTarget.convertToVo());
+        }
+
+        return convertedLimitTargetList;
+    }
+
+    @Override
+    public List<LimitTarget> searchPolicyList(String mnoCd, String limtPolicyKey, List<String> limtPolicyCdList){
+        List<UserLimitTarget> userLimitTargets = limitTargetRepository.findByMnoCdAndLimitPolicyKeyAndLimtPolicyCdIn(mnoCd, limtPolicyKey, limtPolicyCdList);
 
         List<LimitTarget> convertedLimitTargetList = new ArrayList<LimitTarget>();
         for (UserLimitTarget userLimitTarget : userLimitTargets) {
@@ -250,7 +269,7 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 	 */
 	@Override
 	public UpdatePolicyValueResponse updatePolicyValue(UpdatePolicyValueRequest updatePolicyValueRequest) {
-		LOGGER.debug("### updatePolicyValueRequest : {}", updatePolicyValueRequest);
+        LOGGER.debug("### updatePolicyValueRequest : {}", updatePolicyValueRequest);
 		UpdatePolicyValueResponse updatePolicyValueResponse = new UpdatePolicyValueResponse();
 
         Integer row = limitTargetRepository.updatePolicyApplyValue(updatePolicyValueRequest.getOldApplyValue(), updatePolicyValueRequest.getNewApplyValue());
@@ -264,13 +283,13 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 		return updatePolicyValueResponse;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.skplanet.storeplatform.member.user.service.UserService#updatePolicyHistory(com.skplanet.storeplatform.member
-	 * .client.common.vo.UpdatePolicyRequest)
-	 */
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.skplanet.storeplatform.member.user.service.UserService#updatePolicyHistory(com.skplanet.storeplatform.member
+     * .client.common.vo.UpdatePolicyRequest)
+     */
 	@Override
 	public UpdatePolicyResponse updatePolicyHistory(UpdatePolicyRequest updatePolicyRequest) {
 		UpdatePolicyResponse updatePolicyResponse = new UpdatePolicyResponse();
@@ -328,4 +347,38 @@ public class LimitTargetServiceImpl implements LimitTargetService {
 		updatePolicyResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success", "response.ResultMessage.success"));
 		return updatePolicyResponse;
 	}
+
+    /**
+     * <pre>
+     * userKey, deviceKey로 제한 정책 목록을 조회하는 기능을 제공한다.
+     * </pre>
+     *
+     * @param searchPolicyRequest
+     *            제한 정책 목록 조회 요청 Value Object
+     * @return searchPolicyResponse - 제한 정책 목록 조회 응답 Value Object
+     */
+    @Override
+    public SearchPolicyResponse searchPolicyListByKey(SearchPolicyRequest searchPolicyRequest) {
+        LOGGER.debug("### searchPolicyListByKey : {}", searchPolicyRequest);
+
+        /** 01. userKey, deviceKey로 단말 정보 조회 */
+        UserDevice device = userDeviceRepository.findDeviceInfoByUserKeyAndDeviceKey(searchPolicyRequest.getUserKey(), searchPolicyRequest.getDeviceKey());
+        if(StringUtils.isEmpty(device.getMnoCd())
+                || StringUtils.isEmpty(device.getSvcMangNo())){
+            LOGGER.info("### 필수 파라메터 없음 : {}, {}", device.getMnoCd(), device.getSvcMangNo());
+            throw new StorePlatformException("SC_MEM_9993");
+        }
+
+        /** 02. 통신사, policyKey 정보로 정책 목록 조회 */
+        List<LimitTarget> limitTargetList = searchPolicyList(device.getMnoCd(), device.getSvcMangNo(), searchPolicyRequest.getLimitPolicyCodeList());
+
+        if (limitTargetList == null || limitTargetList.size() <= 0) {
+            throw new StorePlatformException("SC_MEM_9982");
+        }
+
+        SearchPolicyResponse searchPolicyResponse = new SearchPolicyResponse();
+        searchPolicyResponse.setLimitTargetList(limitTargetList);
+        searchPolicyResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success", "response.ResultMessage.success"));
+        return searchPolicyResponse;
+    }
 }

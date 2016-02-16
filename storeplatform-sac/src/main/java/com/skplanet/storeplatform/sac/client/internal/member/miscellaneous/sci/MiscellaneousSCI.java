@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.Ge
  * 기타 기능 내부 메소드 호출 Interface.
  * 
  * Updated on : 2014. 3. 11. Updated by : 강신완, 부르칸.
+ * Updated on : 2016. 2. 12. Updated by : 윤보영, 카레즈.
  */
 @SCI
 @RequestMapping(value = "/member/miscellaneous/sci")
@@ -24,7 +25,7 @@ public interface MiscellaneousSCI {
 
 	/**
 	 * <pre>
-	 * 2.3.8. 사용자별 정책 조회.
+	 * localSCI. 2.3.1. 사용자별 정책 조회.
 	 * </pre>
 	 * 
 	 * @param header

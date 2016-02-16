@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.member.client.common.util.Utils;
  * 제한 정책 목록 조회 요청 Value Object
  * 
  * Updated on : 2014. 01. 08. Updated by : wisestone_mikepark
+ * Updated on : 2016. 02. 12. Updated by : 윤보영, 카레즈
  */
 public class SearchPolicyRequest extends CommonInfo implements Serializable {
 	/** The Constant serial Version UID. */
@@ -32,6 +33,12 @@ public class SearchPolicyRequest extends CommonInfo implements Serializable {
 
 	/** 제한 정책 테이블 코드 목록. */
 	private List<String> limitPolicyCodeList;
+
+    /** 사용자 key */
+    private String userKey;
+
+    /** 기기 key */
+    private String deviceKey;
 
 	/**
 	 * 공통 요청 Value Object를 리턴한다.
@@ -108,4 +115,20 @@ public class SearchPolicyRequest extends CommonInfo implements Serializable {
 	public String toString() {
 		return Utils.printKeyValues(this);
 	}
+
+    public String getDeviceKey() {
+        return deviceKey;
+    }
+
+    public void setDeviceKey(String deviceKey) {
+        this.deviceKey = deviceKey;
+    }
+
+    public String getUserKey() {
+        return userKey;
+    }
+
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
+    }
 }

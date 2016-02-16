@@ -116,7 +116,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		String userId = StringUtil.setTrim(req.getUserId());
 		String deviceKey = StringUtil.setTrim(req.getDeviceKey());
 		String deviceId = StringUtil.setTrim(req.getDeviceId());
-		String mbrNo = StringUtil.setTrim(req.getMbrNo());
 
 		if (!"".equals(userKey)) {
 			detailReq.setUserKey(userKey);
@@ -126,9 +125,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 			detailReq.setDeviceId(deviceId);
 		} else if (!"".equals(deviceKey)) {
 			detailReq.setDeviceKey(deviceKey);
-		} else if (!"".equals(mbrNo)) {
-			detailReq.setMbrNo(mbrNo);
 		}
+
 		SearchExtentReq searchExtent = new SearchExtentReq();
 		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 		detailReq.setSearchExtent(searchExtent);
@@ -642,9 +640,6 @@ public class UserSearchServiceImpl implements UserSearchService {
         } else if (StringUtils.isNotBlank(req.getDeviceKey())) {
             keyType = MemberConstants.KEY_TYPE_INSD_DEVICE_ID;
             keyValue = req.getDeviceKey();
-        } else if (StringUtils.isNotBlank(req.getMbrNo())) {
-            keyType = MemberConstants.KEY_TYPE_USERMBR_NO;
-            keyValue = req.getMbrNo();
         }
 
         /**
@@ -1435,9 +1430,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		} else if (StringUtils.isNotBlank(req.getDeviceKey())) {
 			keyType = MemberConstants.KEY_TYPE_INSD_DEVICE_ID;
 			keyValue = req.getDeviceKey();
-		} else if (StringUtils.isNotBlank(req.getMbrNo())) {
-			keyType = MemberConstants.KEY_TYPE_USERMBR_NO;
-			keyValue = req.getMbrNo();
 		}
 
 		/**

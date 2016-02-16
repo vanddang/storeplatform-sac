@@ -56,6 +56,9 @@ public class UserMbrLoginLog extends CommonInfo implements Serializable {
 	/** 기기_OS_버전. */
 	private String deviceOsVersion;
 
+    /** 접속 단말 구분코드 */
+    private String deviceType;
+
 	/**
 	 * System ID를 리턴한다.
 	 * 
@@ -249,4 +252,12 @@ public class UserMbrLoginLog extends CommonInfo implements Serializable {
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
 	}
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
 }
