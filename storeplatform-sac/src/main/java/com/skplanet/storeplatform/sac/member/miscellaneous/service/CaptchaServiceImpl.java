@@ -43,6 +43,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 
 	private static final Integer CAPTCHA_WIDTH = 200;
 	private static final Integer CAPTCHA_HEIGHT = 50;
+	private static final String CAPTCHA_IMAGE_EXT = "jpg";
 
 	/**
 	 * <pre>
@@ -65,19 +66,14 @@ public class CaptchaServiceImpl implements CaptchaService {
 
 			// createCaptcha
 			Captcha captcha = captchaGenerator.createCaptcha(CAPTCHA_WIDTH, CAPTCHA_HEIGHT);
-
-			// answer
 			String captchaAnswer = captcha.getAnswer();
-
 			BufferedImage bufferedImage = captcha.getImage();
+
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ImageIO.write(bufferedImage, CAPTCHA_IMAGE_EXT, bos);
 
 			File storePath = getStorePath();
-			File captchaFile = new File(storePath, UUID.randomUUID().toString()+".jpg");
-
-			ImageIO.write(bufferedImage, "jpg", bos);
-
-			// imageUrl : image server url
+			File captchaFile = new File(storePath, UUID.randomUUID().toString()+"."+CAPTCHA_IMAGE_EXT);
 			imageUrl = getImageUrl(captchaFile);
 
 			// write to file
@@ -91,7 +87,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 			imageSign = getImageSign(imageUrl, curTimeMillis, captchaAnswer);
 
 			// signData 는 ImageUrl + '|' + currentTimeMilis
-			signData = imageUrl + '|' + curTimeMillis;
+			signData = imageUrl + "|" + curTimeMillis;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new StorePlatformException("SAC_MEM_3602"); //자동가입방지 이미지 생성 실패
