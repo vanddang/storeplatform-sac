@@ -4895,24 +4895,7 @@ public class LoginServiceImpl implements LoginService {
 
         // 서비스 관리 번호 조회
         try {
-
-            if(System.getProperty("spring.profiles.active", "local").equals("local")) {
-                // local에서는 외부연동이 안되므로 하드코딩
-                HashMap<String, String> mdnMap = new HashMap<String, String>();
-                mdnMap.put("01065260110", "65260110"); // SKT
-                mdnMap.put("01065260114", "KT65260114"); // KT
-                mdnMap.put("01065260118", "LGT65260118"); // LGT
-                mdnMap.put("01065260119", "LGT65260119"); // LGT
-                if(mdnMap.get(req.getDeviceId()) != null){
-                    deviceTelecomInfo = new DeviceTelecomInfo();
-                    deviceTelecomInfo.setSvcMangNum(mdnMap.get(req.getDeviceId()));
-                }else{
-                    throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
-                }
-            }else{
                 deviceTelecomInfo = this.commService.getSvcMangNo(req.getDeviceId(), req.getDeviceTelecom(), req.getNativeId(), null);
-            }
-
         } catch (StorePlatformException e) {
             if (StringUtils.equals(e.getErrorInfo().getCode(), "SAC_MEM_0003")) { // 타사 연동시 비회원 응답
                 // DB에 회원정보가 있으면 invalid 처리 한다.
@@ -5055,8 +5038,7 @@ public class LoginServiceImpl implements LoginService {
                     searchExtentUserRequest.setKeySearchList(keySearchList);
                     searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
                     SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
-                    if(res != null
-                            && res.getUserMbr() != null
+                    if(res != null && res.getUserMbr() != null
                             && StringUtils.equals(res.getUserMbr().getIsRealName(), MemberConstants.USE_N)){
                         UserMbr userMbr = new UserMbr();
                         userMbr.setUserKey(deviceInfo.getUserKey());
