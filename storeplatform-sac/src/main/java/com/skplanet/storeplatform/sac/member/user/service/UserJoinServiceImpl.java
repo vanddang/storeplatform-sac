@@ -74,15 +74,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private ImIdpSCI imIdpSCI;
 
 	@Autowired
-	private SaveAndSyncService saveAndSyncService;
-
-	@Autowired
 	private DeviceService deviceService;
 
 	@Override
 	public CreateByMdnRes regByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
-
-        String svcMangNo = null;
 
         /**
          * MDN 회원 기가입 체크

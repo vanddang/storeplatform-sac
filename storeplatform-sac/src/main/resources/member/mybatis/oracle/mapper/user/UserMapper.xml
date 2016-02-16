@@ -1362,7 +1362,7 @@
 
     <!-- 로그인 요청 로그 기록 -->
     <insert id="insertLoginLog" parameterType="userMbrLoginLog">
-        INSERT /* UserMapper.xml, insertLoginLog, SAC(SC), 최진호, 2015-12-21 */
+        INSERT /* UserMapper.xml, insertLoginLog, SAC(SC), 윤보영, 2016-02-16 */
                INTO tb_us_ousermbr_login_log 
                (
                     insd_usermbr_no
@@ -1374,7 +1374,8 @@
                    <if test="loginReason != null">,login_reason</if>
                    <if test="deviceModelNm != null">,device_model_nm</if>
                    <if test="deviceOsNm != null">,device_os_nm</if>
-                   <if test="deviceOsVersion != null">,device_os_ver</if>                   
+                   <if test="deviceOsVersion != null">,device_os_ver</if>
+                   <if test="deviceType != null">,device_type</if>
                ) 
                VALUES 
                (
@@ -1387,7 +1388,8 @@
                    <if test="loginReason != null">,#{loginReason}</if>
                    <if test="deviceModelNm != null">,#{deviceModelNm}</if>
                    <if test="deviceOsNm != null">,#{deviceOsNm}</if>
-                   <if test="deviceOsVersion != null">,#{deviceOsVersion}</if>                   
+                   <if test="deviceOsVersion != null">,#{deviceOsVersion}</if>
+                   <if test="deviceType != null">,#{deviceType}</if>
                )
     </insert>
     

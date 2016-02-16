@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
-import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
 import com.skplanet.storeplatform.external.client.market.vo.MarketClauseExtraInfoEc;
@@ -23,7 +22,6 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
-import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
@@ -172,9 +170,6 @@ public class LoginServiceImpl implements LoginService {
 	private UserService userService;
 
 	@Autowired
-	private SaveAndSyncService saveAndSyncService;
-
-	@Autowired
 	private UserSearchService userSearchService;
 
 	@Autowired
@@ -182,12 +177,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private UserWithdrawService userWithdrawService;
-
-	@Autowired
-	private IdpSCI idpSCI;
-
-	@Autowired
-	private DeviceSetSCI deviceSetSCI;
 
 	@Autowired
 	private DeviceSCI deviceSCI;
@@ -331,7 +320,7 @@ public class LoginServiceImpl implements LoginService {
 
 		/** 06. 로그인 성공이력 저장 */
 		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceIp(),
-				req.getIsAutoUpdate(), req.getLoginReason(), "Y", deviceInfo.getDeviceKey());
+				req.getIsAutoUpdate(), req.getLoginReason(), "Y", deviceInfo.getDeviceKey(), null);
 
 		/** 07. 요금제 여부 로직 추가 (2015-05-27 => 06-24) */
 		// 공통 파라미터 셋팅
@@ -580,7 +569,7 @@ public class LoginServiceImpl implements LoginService {
 
 		/** 06. Device 로그인 성공이력 저장 */
         this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceIp(),
-                req.getIsAutoUpdate(), req.getLoginReason(), "Y", deviceInfo.getDeviceKey());
+                req.getIsAutoUpdate(), req.getLoginReason(), "Y", deviceInfo.getDeviceKey(), null);
 
 		/** 07. 한도 요금제 여부 로직 추가 (2015-05-27 => 06-24) */
 		// 공통 파라미터 셋팅
@@ -797,7 +786,7 @@ public class LoginServiceImpl implements LoginService {
                     this.deviceSCI.modifyDevice(modifyDeviceRequest);
 
                     /* 로그인 성공이력 저장 */
-                    this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceIp(), null, null, "Y", deviceInfo.getDeviceKey());
+                    this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceIp(), null, null, "Y", deviceInfo.getDeviceKey(), req.getDeviceType());
 
                     AuthorizeByMdnV3SacRes res = new AuthorizeByMdnV3SacRes();
                     res.setUserKey(deviceInfo.getUserKey());
@@ -962,7 +951,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 로그인 성공이력 저장 */
-		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceIp(), null, null, "Y", deviceInfo.getDeviceKey());
+		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceIp(), null, null, "Y", deviceInfo.getDeviceKey(), req.getDeviceType());
 
 		AuthorizeByMdnV3SacRes res = new AuthorizeByMdnV3SacRes();
 		res.setUserKey(deviceInfo.getUserKey());
@@ -1226,7 +1215,7 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			/**  4-1-2. 로그인 성공이력 저장후 리턴 */
-			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "Y", null);
+			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "Y", null, null);
 
 			/** 4-1-3. 로그인 성공 결과 셋팅 */
 			res.setUserKey(userKey);
@@ -1241,7 +1230,7 @@ public class LoginServiceImpl implements LoginService {
 		} else {
 
 			/** 4-2-1. 로그인 실패이력 저장후 리턴 */
-			this.regLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N", null, "N", null);
+			this.regLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N", null, "N", null, null);
 
 			/** 4-2-2. 로그인 실패 결과 셋팅 */
 			res.setIsLoginSuccess("N");
@@ -1496,7 +1485,7 @@ public class LoginServiceImpl implements LoginService {
 
                     if(isTempLoginSucc){
                         // 로그인 이력 저장
-                        this.regLoginHistory(requestHeader, req.getUserId(), null, "Y", "N", req.getDeviceIp(), "N", null, "Y", deviceKey);
+                        this.regLoginHistory(requestHeader, req.getUserId(), null, "Y", "N", req.getDeviceIp(), "N", null, "Y", deviceKey, req.getDeviceType());
 
                         res.setUserKey(chkDupRes.getUserMbr().getUserKey());
                         res.setDeviceKey(deviceKey);
@@ -1644,7 +1633,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceKey = this.deviceService.regDeviceInfo(requestHeader, deviceInfo);
 
 		// 로그인 이력 저장
-		this.regLoginHistory(requestHeader, req.getUserId(), null, "Y", "N", req.getDeviceIp(), "N", null, "Y", deviceKey);
+		this.regLoginHistory(requestHeader, req.getUserId(), null, "Y", "N", req.getDeviceIp(), "N", null, "Y", deviceKey, req.getDeviceType());
 
 		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		res.setDeviceKey(deviceKey);
@@ -1949,7 +1938,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "", "N", null);
+			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "", "N", null, null);
 		}
 
 		return res;
@@ -2016,7 +2005,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, res.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "", "N", null);
+			this.regLoginHistory(requestHeader, res.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "", "N", null, null);
 		}
 
 		return res;
@@ -2080,7 +2069,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, res.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "", updLastLoginDtYn, res.getDeviceInfo().getDeviceKey());
+			this.regLoginHistory(requestHeader, res.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "", updLastLoginDtYn, res.getDeviceInfo().getDeviceKey(), null);
 		}
 		return res;
 	}
@@ -2101,7 +2090,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserMainStatus(), MemberConstants.MAIN_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "", "N", null);
+			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "", "N", null, null);
 		}
 
 		return res;
@@ -2336,7 +2325,7 @@ public class LoginServiceImpl implements LoginService {
 
 				// 로그인 이력 저장
 				this.regLoginHistory(requestHeader, marketRes.getDeviceId(), null, "Y", "Y", marketRes.getDeviceId(),
-						"N", "", "Y", detailRes.getDeviceInfoList().get(0).getDeviceKey());
+						"N", "", "Y", detailRes.getDeviceInfoList().get(0).getDeviceKey(), null);
 
             /** 02. 비회원 */
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) {
@@ -2601,7 +2590,7 @@ public class LoginServiceImpl implements LoginService {
 
                 // 로그인 이력 저장
                 this.regLoginHistory(requestHeader, marketRes.getDeviceId(), null, "Y", "Y", marketRes.getDeviceId(),
-                        "N", "", "Y", detailRes.getDeviceInfoList().get(0).getDeviceKey());
+                        "N", "", "Y", detailRes.getDeviceInfoList().get(0).getDeviceKey(), req.getDeviceType());
 
             /** 02. 비회원 */
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) {
@@ -3018,7 +3007,7 @@ public class LoginServiceImpl implements LoginService {
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserMainStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
 			this.regLoginHistory(requestHeader, res.getDeviceInfo().getMdn(), null, "Y", "Y", res.getDeviceInfo()
-					.getMdn(), "N", "", "N", res.getDeviceInfo().getDeviceKey());
+					.getMdn(), "N", "", "N", res.getDeviceInfo().getDeviceKey(), null);
 		}
 
 		return res;
@@ -3425,11 +3414,13 @@ public class LoginServiceImpl implements LoginService {
 	 *            마지막 로그인 일자 업데이트 유무
 	 * @param deviceKey
 	 *            휴대기기 Key
+     * @param deviceType
+     *            접속 단말 구분코드
 	 * @return LoginUserResponse
 	 */
 	private LoginUserResponse regLoginHistory(SacRequestHeader requestHeader, String userId, String userPw,
 			String isSuccess, String isMobile, String ipAddress, String isAutoUpdate, String loginReason,
-			String isUpdLastLoginDt, String deviceKey) {
+			String isUpdLastLoginDt, String deviceKey, String deviceType) {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 
@@ -3462,6 +3453,10 @@ public class LoginServiceImpl implements LoginService {
 			loginReq.setDeviceOsNm(os.substring(0, os.lastIndexOf("/")));
 			loginReq.setDeviceOsVersion(os.substring(os.lastIndexOf("/") + 1, os.length()));
 		}
+
+        if(StringUtils.isNotBlank(deviceType)){
+            loginReq.setDeviceType(deviceType);
+        }
 
 		return this.userSCI.updateLoginUser(loginReq);
 	}
@@ -4623,7 +4618,7 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			/** 3-1-2. 로그인 성공이력 저장후 리턴 */
-			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", null, "N", null, "Y", null);
+			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", null, "N", null, "Y", null, null);
 
 			/** 3-1-3. 단말 카운트가 0이거나 로그인 성공시 userAuthToken이 없으면 토큰 신규 생성후 넘겨줌 */
 			if (StringUtils.equals(srhExtUserRes.getUserMbr().getDeviceCount(), "0")
@@ -4643,7 +4638,7 @@ public class LoginServiceImpl implements LoginService {
 		} else {
 
 			/** 3-2-1. 로그인 실패이력 저장후 리턴 */
-			this.regLoginHistory(requestHeader, userId, userPw, "N", "N", null, "N", null, "N", null);
+			this.regLoginHistory(requestHeader, userId, userPw, "N", "N", null, "N", null, "N", null, null);
 
 			/* 실패 로그인 결과 */
 			res.setIsLoginSuccess("N");
