@@ -9,11 +9,20 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.external.client.facebook.sci.FacebookAuthenticateSCI;
+import com.skplanet.storeplatform.external.client.facebook.vo.FacebookVerifyTokenReq;
+import com.skplanet.storeplatform.external.client.facebook.vo.FacebookVerifyTokenRes;
+import com.skplanet.storeplatform.external.client.google.sci.GoogleAuthenticateSCI;
+import com.skplanet.storeplatform.external.client.google.vo.GoogleTokenInfoReq;
+import com.skplanet.storeplatform.external.client.google.vo.GoogleTokenInfoRes;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeUserEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcReq;
+import com.skplanet.storeplatform.external.client.naver.sci.NaverAuthenticateSCI;
+import com.skplanet.storeplatform.external.client.naver.vo.NaverTokenVerifyReq;
+import com.skplanet.storeplatform.external.client.naver.vo.NaverTokenVerifyRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -88,14 +97,14 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Autowired
 	private UserSearchService userSearchService;
 
-//	@Autowired
-//	private NaverAuthenticateSCI naverAuthenticateSCI;
-//
-//	@Autowired
-//	private GoogleAuthenticateSCI googleAuthenticateSCI;
-//
-//	@Autowired
-//	private FacebookAuthenticateSCI facebookAuthenticateSCI;
+	@Autowired
+	private NaverAuthenticateSCI naverAuthenticateSCI;
+
+	@Autowired
+	private GoogleAuthenticateSCI googleAuthenticateSCI;
+
+	@Autowired
+	private FacebookAuthenticateSCI facebookAuthenticateSCI;
 
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) {
@@ -117,7 +126,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		 *   - 기존 Tstore 아이디는 단말에서 id/pwd 인증 단계 후에 탈퇴 진행되므로 인증 불필요
 		 *   - 신규 소셜 계정 아이디는 인증단계가 없으므로 userId/userAuthToken 인증 필요
 		 */
-		/*
 		String socialUserNo = null;
 		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_NAVER)) {
 			if (StringUtils.isBlank(req.getUserAuthToken())) {
@@ -164,9 +172,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		}
 
 		if(StringUtils.isNotBlank(socialUserNo) ){
+			LOGGER.info("socialUserNo : {}", socialUserNo);
 			//TODO socialUserNo 저장로직 추가되어야 함.
 		}
-		*/
+
 
 		/**
 		 *  3-1. 요청 파라미터에 따라서 분기 처리한다.
