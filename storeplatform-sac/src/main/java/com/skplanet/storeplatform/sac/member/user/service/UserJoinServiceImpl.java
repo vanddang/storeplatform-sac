@@ -650,7 +650,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
 		String socialUserNo = null;
-		/*try{
+		try{
 			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 				socialUserNo = this.mcc.facebookAuthenticate(req.getUserAuthToken());
 			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
@@ -663,8 +663,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}catch(StorePlatformException e){
 			throw new StorePlatformException("SAC_MEM_1204");
-		}*/
-
+		}
 
 		// 모번호 조회
 		if(StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
@@ -756,14 +755,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrLglAgent(mbrLglAgent);
 
 		// social 회원번호 부가속성으로 저장
-		if(StringUtils.isNotBlank(socialUserNo)){
-			List<MbrMangItemPtcr> mbrMangItemPtcrList = new ArrayList<MbrMangItemPtcr>();
-			MbrMangItemPtcr mbrMangItemPtcr = new MbrMangItemPtcr();
-			mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO);
-			mbrMangItemPtcr.setExtraProfileValue(socialUserNo);
-			mbrMangItemPtcrList.add(mbrMangItemPtcr);
-			createUserRequest.setMbrMangItemPtcrList(mbrMangItemPtcrList);
-		}
+		List<MbrMangItemPtcr> mbrMangItemPtcrList = new ArrayList<MbrMangItemPtcr>();
+		MbrMangItemPtcr mbrMangItemPtcr = new MbrMangItemPtcr();
+		mbrMangItemPtcr.setExtraProfile(MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO);
+		mbrMangItemPtcr.setExtraProfileValue(socialUserNo);
+		mbrMangItemPtcrList.add(mbrMangItemPtcr);
+		createUserRequest.setMbrMangItemPtcrList(mbrMangItemPtcrList);
 
 		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 

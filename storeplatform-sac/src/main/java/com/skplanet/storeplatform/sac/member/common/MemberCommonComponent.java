@@ -16,9 +16,18 @@ import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcReq;
 import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcReq;
 import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcRes;
+import com.skplanet.storeplatform.external.client.facebook.sci.FacebookAuthenticateSCI;
+import com.skplanet.storeplatform.external.client.facebook.vo.FacebookVerifyTokenReq;
+import com.skplanet.storeplatform.external.client.facebook.vo.FacebookVerifyTokenRes;
+import com.skplanet.storeplatform.external.client.google.sci.GoogleAuthenticateSCI;
+import com.skplanet.storeplatform.external.client.google.vo.GoogleTokenInfoReq;
+import com.skplanet.storeplatform.external.client.google.vo.GoogleTokenInfoRes;
 import com.skplanet.storeplatform.external.client.market.sci.MarketSCI;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
+import com.skplanet.storeplatform.external.client.naver.sci.NaverAuthenticateSCI;
+import com.skplanet.storeplatform.external.client.naver.vo.NaverTokenVerifyReq;
+import com.skplanet.storeplatform.external.client.naver.vo.NaverTokenVerifyRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
@@ -106,6 +115,15 @@ public class MemberCommonComponent {
 
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	public String fixedMobileUserAuthKey;
+
+	@Autowired
+	private FacebookAuthenticateSCI facebookAuthenticateSCI;
+
+	@Autowired
+	private GoogleAuthenticateSCI googleAuthenticateSCI;
+
+	@Autowired
+	private NaverAuthenticateSCI naverAuthenticateSCI;
 
 	/**
 	 * <pre>
@@ -1402,5 +1420,60 @@ public class MemberCommonComponent {
 		birth = String.valueOf(year) + "1231";
 
 		return birth;
+	}
+
+
+	/**
+	 * <pre>
+	 * facebook token 인증
+	 * </pre>
+	 *
+	 * @param userAuthToken
+	 *            String
+	 * @return String 회원번호
+	 */
+	public String facebookAuthenticate(String userAuthToken){
+		FacebookVerifyTokenReq req = new FacebookVerifyTokenReq();
+		req.setAccessToken(userAuthToken);
+		LOGGER.info("facebookAuthenticate req : {}", req);
+		FacebookVerifyTokenRes res = this.facebookAuthenticateSCI.verifyToken(req);
+		LOGGER.info("facebookAuthenticate res : {}", res);
+		return res.getUserId();
+	}
+
+	/**
+	 * <pre>
+	 * naver token 인증
+	 * </pre>
+	 *
+	 * @param userAuthToken
+	 *            String
+	 * @return String 회원번호
+	 */
+	public String naverAuthenticate(String userAuthToken){
+		NaverTokenVerifyReq req = new NaverTokenVerifyReq();
+		req.setAccessToken(userAuthToken);
+		LOGGER.info("naverAuthenticate req : {}", req);
+		NaverTokenVerifyRes res = this.naverAuthenticateSCI.verifyToken(req);
+		LOGGER.info("naverAuthenticate res : {}", res);
+		return res.getId();
+	}
+
+	/**
+	 * <pre>
+	 * naver token 인증
+	 * </pre>
+	 *
+	 * @param userAuthToken
+	 *            String
+	 * @return String 회원번호
+	 */
+	public String googleAuthenticate(String userAuthToken){
+		GoogleTokenInfoReq req = new GoogleTokenInfoReq();
+		req.setIdToken(userAuthToken);
+		LOGGER.info("googleAuthenticate req : {}", req);
+		GoogleTokenInfoRes res = this.googleAuthenticateSCI .verifyToken(req);
+		LOGGER.info("googleAuthenticate res : {}", res);
+		return res.getAud();
 	}
 }

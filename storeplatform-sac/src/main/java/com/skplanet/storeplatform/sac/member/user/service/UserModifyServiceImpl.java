@@ -14,6 +14,15 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.external.client.facebook.sci.FacebookAuthenticateSCI;
+import com.skplanet.storeplatform.external.client.facebook.vo.FacebookVerifyTokenReq;
+import com.skplanet.storeplatform.external.client.facebook.vo.FacebookVerifyTokenRes;
+import com.skplanet.storeplatform.external.client.google.sci.GoogleAuthenticateSCI;
+import com.skplanet.storeplatform.external.client.google.vo.GoogleTokenInfoReq;
+import com.skplanet.storeplatform.external.client.google.vo.GoogleTokenInfoRes;
+import com.skplanet.storeplatform.external.client.naver.sci.NaverAuthenticateSCI;
+import com.skplanet.storeplatform.external.client.naver.vo.NaverTokenVerifyReq;
+import com.skplanet.storeplatform.external.client.naver.vo.NaverTokenVerifyRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.member.client.common.constant.Constant;
@@ -127,14 +136,14 @@ public class UserModifyServiceImpl implements UserModifyService {
     @Autowired
     private UserClauseAgreeRepository clauseAgreeRepository;
 
-//    @Autowired
-//    private NaverAuthenticateSCI naverAuthenticateSCI;
-//
-//    @Autowired
-//    private GoogleAuthenticateSCI googleAuthenticateSCI;
-//
-//    @Autowired
-//    private FacebookAuthenticateSCI facebookAuthenticateSCI;
+    @Autowired
+    private NaverAuthenticateSCI naverAuthenticateSCI;
+
+    @Autowired
+    private GoogleAuthenticateSCI googleAuthenticateSCI;
+
+    @Autowired
+    private FacebookAuthenticateSCI facebookAuthenticateSCI;
 
     @Override
     public ModifyRes modUser(SacRequestHeader sacHeader, ModifyReq req) {
@@ -1260,19 +1269,6 @@ public class UserModifyServiceImpl implements UserModifyService {
         }
 
         /** 4. userId, userAuthToken 로 인증시도 실패시 오류.  */
-        /** 4-1. tstore Id 인증 시도 */
-        if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)) {
-            CheckUserAuthTokenRequest chkUserAuthTkReq = new CheckUserAuthTokenRequest();
-            chkUserAuthTkReq.setCommonRequest(commonRequest);
-            chkUserAuthTkReq.setUserKey(req.getUserKey());
-            chkUserAuthTkReq.setUserAuthToken(req.getUserAuthToken());
-            chkUserAuthTkReq.setIsDormant("N");
-            CheckUserAuthTokenResponse chkUserAuthTkRes = this.userSCI.checkUserAuthToken(chkUserAuthTkReq);
-            if (chkUserAuthTkRes.getUserKey() == null || chkUserAuthTkRes.getUserKey().length() <= 0) {
-                throw new StorePlatformException("SAC_MEM_1204");
-            }
-        }
-        /*
         String socialUserNo = null;
         // 4-1. tstore Id 인증 시도
         if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)) {
@@ -1321,9 +1317,9 @@ public class UserModifyServiceImpl implements UserModifyService {
         }
 
         if(StringUtils.isNotBlank(socialUserNo) ){
+            LOGGER.info("socialUserNo : {}", socialUserNo);
             //TODO socialUserNo 저장로직 추가되어야 함.
         }
-        */
 
         /** 5. userAuthToken 인증이 되었으면 ID변경 */
         ModifyIdSacRes res = new ModifyIdSacRes();
