@@ -145,6 +145,9 @@ public class UserModifyServiceImpl implements UserModifyService {
     @Autowired
     private FacebookAuthenticateSCI facebookAuthenticateSCI;
 
+    @Autowired
+    private UserExtraInfoService userExtraService;
+
     @Override
     public ModifyRes modUser(SacRequestHeader sacHeader, ModifyReq req) {
 
@@ -1268,7 +1271,7 @@ public class UserModifyServiceImpl implements UserModifyService {
             throw new StorePlatformException("SAC_MEM_1104");
         }
 
-        /** 4. userId, userAuthToken 로 인증시도 실패시 오류.  */
+        /** 4. AS-IS userId, userAuthToken 로 인증시도 실패시 오류.  */
         String socialUserNo = null;
         // 4-1. tstore Id 인증 시도
         if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)) {
@@ -1283,7 +1286,7 @@ public class UserModifyServiceImpl implements UserModifyService {
             }
         // 4-2. 네이버 Id 인증 시도
         } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)) {
-            LOGGER.info("소셜 아이디(Naver) > userAuthToken 인증(S2S)");
+            LOGGER.info("AS-IS 소셜 아이디(Naver) > userAuthToken 인증(S2S)");
             NaverTokenVerifyReq naverTkReq = new NaverTokenVerifyReq();
             naverTkReq.setAccessToken(req.getUserAuthToken());
             try {
@@ -1294,7 +1297,7 @@ public class UserModifyServiceImpl implements UserModifyService {
             }
         // 4-3. 구글 Id 인증 시도
         } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
-            LOGGER.info("소셜 아이디(Google) > userAuthToken 인증(S2S)");
+            LOGGER.info("AS-IS 소셜 아이디(Google) > userAuthToken 인증(S2S)");
             GoogleTokenInfoReq googleTkReq = new GoogleTokenInfoReq();
             googleTkReq.setIdToken(req.getUserAuthToken());
             try {
@@ -1305,7 +1308,7 @@ public class UserModifyServiceImpl implements UserModifyService {
             }
         // 4-4. 페이스북 Id 인증 시도
         } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
-            LOGGER.info("소셜 아이디(FaceBook) > userAuthToken 인증(S2S)");
+            LOGGER.info("AS-IS 소셜 아이디(FaceBook) > userAuthToken 인증(S2S)");
             FacebookVerifyTokenReq fbTkReq = new FacebookVerifyTokenReq();
             fbTkReq.setAccessToken(req.getUserAuthToken());
             try {
@@ -1316,12 +1319,50 @@ public class UserModifyServiceImpl implements UserModifyService {
             }
         }
 
-        if(StringUtils.isNotBlank(socialUserNo) ){
-            LOGGER.info("socialUserNo : {}", socialUserNo);
-            //TODO socialUserNo 저장로직 추가되어야 함.
+        /** 5.TO-BE userId, userAuthToken 로 인증시도 실패시 오류. */
+        String newSocialUserNo = null;
+        // 5-1. 네이버 Id 인증 시도
+        if (StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_NAVER)) {
+            LOGGER.info("TO-BE 소셜 아이디(Naver) > userAuthToken 인증(S2S)");
+            NaverTokenVerifyReq naverTkReq = new NaverTokenVerifyReq();
+            naverTkReq.setAccessToken(req.getNewUserAuthToken());
+            try {
+                NaverTokenVerifyRes naverTkRes = this.naverAuthenticateSCI.verifyToken(naverTkReq);
+                newSocialUserNo = naverTkRes.getId();
+            } catch (StorePlatformException spe) {
+                throw new StorePlatformException("SAC_MEM_1204");
+            }
+        // 5-2. 구글 Id 인증 시도
+        } else if (StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
+            LOGGER.info("TO-BE 소셜 아이디(Google) > userAuthToken 인증(S2S)");
+            GoogleTokenInfoReq googleTkReq = new GoogleTokenInfoReq();
+            googleTkReq.setIdToken(req.getNewUserAuthToken());
+            try {
+                GoogleTokenInfoRes googleTkRes = this.googleAuthenticateSCI.verifyToken(googleTkReq);
+                newSocialUserNo = googleTkRes.getAud();
+            } catch (StorePlatformException spe) {
+                throw new StorePlatformException("SAC_MEM_1204");
+            }
+        // 5-3. 페이스북 Id 인증 시도
+        } else if (StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
+            LOGGER.info("TO-BE 소셜 아이디(FaceBook) > userAuthToken 인증(S2S)");
+            FacebookVerifyTokenReq fbTkReq = new FacebookVerifyTokenReq();
+            fbTkReq.setAccessToken(req.getNewUserAuthToken());
+            try {
+                FacebookVerifyTokenRes fbVeriTkRes = this.facebookAuthenticateSCI.verifyToken(fbTkReq);
+                newSocialUserNo = fbVeriTkRes.getUserId();
+            } catch (StorePlatformException spe) {
+                throw new StorePlatformException("SAC_MEM_1204");
+            }
         }
 
-        /** 5. userAuthToken 인증이 되었으면 ID변경 */
+        if(StringUtils.isNotBlank(socialUserNo) ){
+            LOGGER.info("socialUserNo : {} -> {} 업데이트", socialUserNo, newSocialUserNo);
+            this.userExtraService.modifyExtraInfo(req.getUserKey(),
+                    MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO, newSocialUserNo);
+        }
+
+        /** 6. userAuthToken 인증이 되었으면 ID변경 */
         ModifyIdSacRes res = new ModifyIdSacRes();
 
         try {
@@ -1334,7 +1375,6 @@ public class UserModifyServiceImpl implements UserModifyService {
             modIdReq.setUserAuthToken(req.getUserAuthToken());
             modIdReq.setNewUserId(req.getNewUserId());
             modIdReq.setNewUserType(req.getNewUserType());
-            modIdReq.setNewUserAuthToken(req.getNewUserAuthToken());
             if (StringUtils.isNotBlank(req.getNewUserEmail())) {
                 modIdReq.setNewUserEmail(req.getNewUserEmail());
             }

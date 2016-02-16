@@ -106,6 +106,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Autowired
 	private FacebookAuthenticateSCI facebookAuthenticateSCI;
 
+	@Autowired
+	private UserExtraInfoService userExtraService;
+
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) {
 
@@ -172,10 +175,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		}
 
 		if(StringUtils.isNotBlank(socialUserNo) ){
-			LOGGER.info("socialUserNo : {}", socialUserNo);
-			//TODO socialUserNo 저장로직 추가되어야 함.
+			LOGGER.info("socialUserNo : {} 업데이트", socialUserNo);
+			this.userExtraService.modifyExtraInfo(detailRes.getUserInfo().getUserKey(),
+					MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO, socialUserNo);
 		}
-
 
 		/**
 		 *  3-1. 요청 파라미터에 따라서 분기 처리한다.
