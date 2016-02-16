@@ -1286,7 +1286,7 @@ public class LoginServiceImpl implements LoginService {
 			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
 					|| StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)
 					|| StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
-				/*String socialUserNo = null;
+				String socialUserNo = null;
 				List<UserExtraInfo> userExtraInfoList = userExtraInfoService.findExtraInfo(chkDupRes.getUserMbr().getUserKey());
 				if(userExtraInfoList != null && userExtraInfoList.size() > 0){
 					for(UserExtraInfo info : userExtraInfoList){
@@ -1300,23 +1300,23 @@ public class LoginServiceImpl implements LoginService {
 				try{
 					if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 						String facebookId = this.commService.facebookAuthenticate(req.getUserAuthToken());
-						if(facebookId == null || !StringUtils.equals(facebookId, socialUserNo)){
+						if(StringUtils.isBlank(facebookId) || !StringUtils.equals(facebookId, socialUserNo)){
 							throw new StorePlatformException("SAC_MEM_1204");
 						}
 					}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
 						String googleId = this.commService.googleAuthenticate(req.getUserAuthToken());
-						if(googleId == null || !StringUtils.equals(googleId, socialUserNo)){
+						if(StringUtils.isBlank(googleId) || !StringUtils.equals(googleId, socialUserNo)){
 							throw new StorePlatformException("SAC_MEM_1204");
 						}
 					}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
 						String naverId = this.commService.naverAuthenticate(req.getUserAuthToken());
-						if(naverId == null || !StringUtils.equals(naverId, socialUserNo)){
+						if(StringUtils.isBlank(naverId) || !StringUtils.equals(naverId, socialUserNo)){
 							throw new StorePlatformException("SAC_MEM_1204");
 						}
 					}
 				}catch(StorePlatformException e){
 					throw new StorePlatformException("SAC_MEM_1204");
-				}*/
+				}
 			}
 		}
 
