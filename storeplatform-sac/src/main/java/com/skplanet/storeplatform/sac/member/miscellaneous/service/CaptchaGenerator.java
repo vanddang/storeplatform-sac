@@ -1,10 +1,11 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
+import com.google.common.collect.Lists;
 import nl.captcha.Captcha;
 import nl.captcha.backgrounds.BackgroundProducer;
-import nl.captcha.backgrounds.TransparentBackgroundProducer;
+import nl.captcha.backgrounds.GradiatedBackgroundProducer;
+import nl.captcha.gimpy.FishEyeGimpyRenderer;
 import nl.captcha.gimpy.GimpyRenderer;
-import nl.captcha.gimpy.RippleGimpyRenderer;
 import nl.captcha.noise.CurvedLineNoiseProducer;
 import nl.captcha.noise.NoiseProducer;
 import nl.captcha.text.producer.DefaultTextProducer;
@@ -14,6 +15,8 @@ import nl.captcha.text.renderer.DefaultWordRenderer;
 import nl.captcha.text.renderer.WordRenderer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
+
+import java.awt.*;
 
 @Component
 public class CaptchaGenerator implements InitializingBean {
@@ -35,6 +38,9 @@ public class CaptchaGenerator implements InitializingBean {
 
         if (isBorder) {
             builder.addBorder();
+        }
+        if(this.gimpyRenderer != null) {
+            builder.gimp(gimpyRenderer);
         }
 
         return builder.build();
@@ -75,15 +81,17 @@ public class CaptchaGenerator implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (this.backgroundProducer == null) {
-            this.backgroundProducer = new TransparentBackgroundProducer();
+            this.backgroundProducer = new GradiatedBackgroundProducer();
         }
 
         if (this.textProducer == null) {
-            this.textProducer = new DefaultTextProducer();
+            this.textProducer = new DefaultTextProducer(6,
+                    new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'k', 'm', 'n', 'p', 'r', 'w', 'x', 'y', '2', '3', '4', '5', '6', '7', '8'});
         }
 
         if (this.wordRenderer == null) {
-            this.wordRenderer = new DefaultWordRenderer();
+            this.wordRenderer = new DefaultWordRenderer(Lists.newArrayList(Color.BLACK),
+                    Lists.newArrayList(new Font("Courier", Font.ITALIC, 50)));
         }
 
         if (this.numbersAnswerProducer == null) {
@@ -95,7 +103,7 @@ public class CaptchaGenerator implements InitializingBean {
         }
 
         if (this.gimpyRenderer == null) {
-            this.gimpyRenderer = new RippleGimpyRenderer();
+            this.gimpyRenderer = new FishEyeGimpyRenderer();
         }
     }
 }
