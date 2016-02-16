@@ -359,7 +359,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					LOGGER.info("MQ process fail {}", mqInfo);
 				}
 
-				LOGGER.info("{} IDP ID 휴대기기 삭제처리", mdn);
+				LOGGER.info("{} ID 휴대기기 삭제처리", mdn);
 			}
 
 		} catch (StorePlatformException e) {

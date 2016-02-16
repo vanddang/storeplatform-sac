@@ -650,20 +650,20 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
 		String socialUserNo = null;
-		/*try{
+		try{
 			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 				socialUserNo = this.mcc.facebookAuthenticate(req.getUserAuthToken());
 			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
-				socialUserNo = this.mcc.googleAuthenticate(req.getUserAuthToken());
+				//socialUserNo = this.mcc.googleAuthenticate(req.getUserAuthToken());
 			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
-				socialUserNo = this.mcc.naverAuthenticate(req.getUserAuthToken());
+				//socialUserNo = this.mcc.naverAuthenticate(req.getUserAuthToken());
 			}
-			if(StringUtils.isBlank(socialUserNo)){
+			/*if(StringUtils.isBlank(socialUserNo)){
 				throw new StorePlatformException("SAC_MEM_1204");
-			}
+			}*/
 		}catch(StorePlatformException e){
 			throw new StorePlatformException("SAC_MEM_1204");
-		}*/
+		}
 
 
 		// 모번호 조회

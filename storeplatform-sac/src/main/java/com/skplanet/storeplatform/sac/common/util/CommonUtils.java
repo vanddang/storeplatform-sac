@@ -143,4 +143,39 @@ public class CommonUtils {
 			return null;
 		}
 	}
+
+    /**
+     * 생년월일로 현재 연도에 해당하는 만 나이를 추출.
+     *
+     * @param birthDt
+     *            생년월일
+     * @return 만 나이
+     */
+    public static int getAge(String birthDt) {
+
+        if(StringUtils.isEmpty(regxNumber(birthDt))){
+            return 0;
+        }
+
+        Calendar cal = Calendar.getInstance();
+
+        int year = Integer.parseInt(birthDt.substring(0, 4));
+        int month = Integer.parseInt(birthDt.substring(4, 6));
+        int day = Integer.parseInt(birthDt.substring(6));
+
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month - 1);
+        cal.set(Calendar.DATE, day);
+
+        Calendar now = Calendar.getInstance();
+
+        int age = now.get(Calendar.YEAR) - cal.get(Calendar.YEAR);
+        if ((cal.get(Calendar.MONTH) > now.get(Calendar.MONTH))
+                || (cal.get(Calendar.MONTH) == now.get(Calendar.MONTH) && cal.get(Calendar.DAY_OF_MONTH) > now
+                .get(Calendar.DAY_OF_MONTH))) {
+            age--;
+        }
+
+        return age;
+    }
 }

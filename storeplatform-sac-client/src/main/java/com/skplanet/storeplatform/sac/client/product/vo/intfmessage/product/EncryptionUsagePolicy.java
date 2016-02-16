@@ -36,6 +36,15 @@ public class EncryptionUsagePolicy extends CommonInfo implements Serializable {
 	//
 	private String player;
 
+	private String drmKey; // 컨텐츠 DRM Key
+
+	public String getDrmKey() {
+		return drmKey;
+	}
+
+	public void setDrmKey(String drmKey) {
+		this.drmKey = drmKey;
+	}
 	/**
 	 * @return the applyDrm
 	 */
