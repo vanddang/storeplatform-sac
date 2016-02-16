@@ -33,7 +33,7 @@ import java.util.List;
  * Device info 기능 관련 인터페이스 구현체
  * 
  * Updated on : 2014. 1. 7. Updated by : 김다슬, 인크로스.
- * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Micellaneos 클래스에서 Device info 관련 기능 클래스 분리
+ * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Miscellaneous 클래스에서 Device info 관련 기능 클래스 분리
  */
 @Service
 public class DeviceInfoServiceImpl implements DeviceInfoService {
