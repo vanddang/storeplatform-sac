@@ -1300,16 +1300,17 @@ public class LoginServiceImpl implements LoginService {
 				try{
 					if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 						String facebookId = this.commService.facebookAuthenticate(req.getUserAuthToken());
+						if(StringUtils.isBlank(facebookId) || !StringUtils.equals(facebookId, socialUserNo)){
 							throw new StorePlatformException("SAC_MEM_1204");
 						}
 					}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)){
 						String googleId = this.commService.googleAuthenticate(req.getUserAuthToken());
-						if(googleId == null || !StringUtils.equals(googleId, socialUserNo)){
+						if(StringUtils.isBlank(googleId) || !StringUtils.equals(googleId, socialUserNo)){
 							throw new StorePlatformException("SAC_MEM_1204");
 						}
 					}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_NAVER)){
 						String naverId = this.commService.naverAuthenticate(req.getUserAuthToken());
-						if(naverId == null || !StringUtils.equals(naverId, socialUserNo)){
+						if(StringUtils.isBlank(naverId) || !StringUtils.equals(naverId, socialUserNo)){
 							throw new StorePlatformException("SAC_MEM_1204");
 						}
 					}
