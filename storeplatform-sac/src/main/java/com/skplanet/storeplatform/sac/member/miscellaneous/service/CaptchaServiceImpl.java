@@ -1,19 +1,25 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
-import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
-import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
-import com.skplanet.storeplatform.external.client.idp.vo.ImageRes;
 import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthImageEcRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.common.crypto.CryptoCode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
-import org.apache.commons.lang3.StringUtils;
+import nl.captcha.Captcha;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * 
@@ -27,10 +33,16 @@ public class CaptchaServiceImpl implements CaptchaService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CaptchaServiceImpl.class);
 
 	@Autowired
-	private IdpSCI idpSCI; // IDP 연동 Interface.
+	private CaptchaGenerator captchaGenerator;
 
-	@Autowired
-	private ImageSCI imageSCI; // 이미지를 String으로 변환 Interface.
+	@Value("${thumbnail.server.url}")
+	String thumbnailServerUrl;
+
+	@Value("${captcha.image.store.path}")
+	String captchaImageStorePath;
+
+	private static final Integer CAPTCHA_WIDTH = 200;
+	private static final Integer CAPTCHA_HEIGHT = 50;
 
 	/**
 	 * <pre>
@@ -41,40 +53,83 @@ public class CaptchaServiceImpl implements CaptchaService {
 	 */
 	@Override
 	public GetCaptchaRes getCaptcha() {
-		String waterMarkImageUrl = "";
-		String waterMarkImageSign = "";
-		String waterMarkImageString = "";
-		String signData = "";
+		String imageData;	// base64 encdoed string
+		String imageUrl;	// image location
+		String imageSign;	// 인증코드 확인을 위한 Signature 발행
+		String signData;	// signature를 구성한 source data
+
 		GetCaptchaRes response = new GetCaptchaRes();
 
-		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
+		try {
+			Long curTimeMillis = System.currentTimeMillis();
 
-		WaterMarkAuthImageEcRes waterMarkAuthImageEcRes = this.idpSCI.warterMarkImageUrl();
+			// createCaptcha
+			Captcha captcha = captchaGenerator.createCaptcha(CAPTCHA_WIDTH, CAPTCHA_HEIGHT);
 
-		if (waterMarkAuthImageEcRes != null && StringUtils.isNotBlank(waterMarkAuthImageEcRes.getImageUrl())) {
-			waterMarkImageUrl = waterMarkAuthImageEcRes.getImageUrl();
-			waterMarkImageSign = waterMarkAuthImageEcRes.getImageSign();
-			signData = waterMarkAuthImageEcRes.getSignData();
+			// answer
+			String captchaAnswer = captcha.getAnswer();
 
-			LOGGER.debug("[CaptchaService.getCaptcha] SAC<-IDP Response : {}", waterMarkAuthImageEcRes);
+			BufferedImage bufferedImage = captcha.getImage();
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-			String urlPath = waterMarkImageUrl.substring(waterMarkImageUrl.indexOf("/watermark"));
+			File storePath = getStorePath();
+			File captchaFile = new File(storePath, UUID.randomUUID().toString()+".jpg");
 
-			ImageReq req = new ImageReq();
-			req.setProtocol(waterMarkImageUrl.substring(0, 5).equals("https") ? "https" : "http"); // HTTP or HTTPS
-			req.setUrlPath(urlPath);
-			ImageRes imageRes = this.imageSCI.convert(req);
+			ImageIO.write(bufferedImage, "jpg", bos);
 
-			if (imageRes != null && StringUtils.isNotBlank(imageRes.getImgData())) {
-				waterMarkImageString = imageRes.getImgData();
-			}
+			// imageUrl : image server url
+			imageUrl = getImageUrl(captchaFile);
+
+			// write to file
+			writeToFile(bos, captchaFile);
+
+			// base64 encoded string
+			imageData = Base64.encodeBase64String(bos.toByteArray());
+
+			// ImageSign : 인증코드 확인을 위한 signature 생성
+			// ImageUrl + '|' + currentTimeMilis +  '|' +  CaptchaText 값을 Sha1Encoding 한 값
+			imageSign = getImageSign(imageUrl, curTimeMillis, captchaAnswer);
+
+			// signData 는 ImageUrl + '|' + currentTimeMilis
+			signData = imageUrl + '|' + curTimeMillis;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new StorePlatformException("SAC_MEM_3602"); //자동가입방지 이미지 생성 실패
 		}
 
-		response.setImageData(waterMarkImageString);
-		response.setImageSign(waterMarkImageSign);
+		response.setImageData(imageData);
+		response.setImageSign(imageSign);
 		response.setSignData(signData);
 
 		return response;
+	}
+
+	private String getImageUrl(File captchaFile) {
+		String imageUrl;
+		imageUrl = thumbnailServerUrl + "/0_0"/*원본*/ + captchaFile.getAbsolutePath();
+		return imageUrl;
+	}
+
+	private String getImageSign(String imageUrl, Long curTimeMillis, String captchaAnswer) throws Exception {
+		String imageSign;CryptoCode crypto = new CryptoCode();
+		imageSign = crypto.getCryptoSHA1EncodeHex(imageUrl + "|" + curTimeMillis + "|" + captchaAnswer);
+		return imageSign;
+	}
+
+	private void writeToFile(ByteArrayOutputStream bos, File captchaFile) throws IOException {
+		OutputStream fileOutputStream = new FileOutputStream(captchaFile);
+		bos.writeTo(fileOutputStream);
+		fileOutputStream.flush();
+		fileOutputStream.close();
+	}
+
+	private File getStorePath() {
+		File rootPath = new File(captchaImageStorePath);
+		if(!rootPath.exists()) rootPath.mkdir();
+
+		File storePath = new File(captchaImageStorePath, DateUtils.formatDate(new Date(), "yyyyMMdd"));
+		if(!storePath.exists()) storePath.mkdir();
+		return storePath;
 	}
 
 	/**
@@ -94,7 +149,8 @@ public class CaptchaServiceImpl implements CaptchaService {
 		waterMarkAuthEcReq.setImageSign(request.getImageSign());
 		waterMarkAuthEcReq.setSignData(request.getSignData());
 
-		this.idpSCI.waterMarkAuth(waterMarkAuthEcReq);
+		//FIXME:
+		//this.idpSCI.waterMarkAuth(waterMarkAuthEcReq);
 
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 		return response;

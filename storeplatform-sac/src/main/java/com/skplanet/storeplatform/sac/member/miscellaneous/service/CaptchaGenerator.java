@@ -24,13 +24,13 @@ public class CaptchaGenerator implements InitializingBean {
     private WordRenderer wordRenderer;
     private NoiseProducer noiseProducer;
     private GimpyRenderer gimpyRenderer;
-    boolean isBorder;
+    boolean isBorder = false;
 
     public Captcha createCaptcha(int width, int height) {
         Captcha.Builder builder = new Captcha.Builder(width, height)
                 .addBackground(backgroundProducer)
-                        //.addText(textProducer, wordRenderer)
-                .addText(numbersAnswerProducer)
+                .addText(textProducer, wordRenderer)
+                //.addText(numbersAnswerProducer)
                 .addNoise(noiseProducer);
 
         if (isBorder) {
