@@ -3,9 +3,10 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.vo;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * TB_CM_SVC_AUTH 테이블 조회 Value Object.
+ * TB_CM_OSVC_AUTH 테이블 조회 Value Object.
  * 
  * Updated on : 2014. 1. 17. Updated by : 김다슬, 인크로스.
+ * Updated on : 2016. 2. 15. Updated by : 임근대, SKP. - Onestore 테이블 변경 TB_CM_SVC_AUTH -> TB_CM_OSVC_AUTH
  */
 public class ServiceAuth extends CommonInfo {
 
@@ -22,14 +23,9 @@ public class ServiceAuth extends CommonInfo {
 	private String mbrNo;
 
 	/**
-	 * 테넌트 아이디.
+	 * MNO Code.
 	 */
-	private String tenantId;
-
-	/**
-	 * 시스템 아이디.
-	 */
-	private String systemId;
+	private String authMnoCd;
 
 	/**
 	 * 인증 대상 MDN ( 휴대폰 인증 SMS ).
@@ -131,34 +127,12 @@ public class ServiceAuth extends CommonInfo {
 		this.mbrNo = mbrNo;
 	}
 
-	/**
-	 * @return the tenantId
-	 */
-	public String getTenantId() {
-		return this.tenantId;
+	public String getAuthMnoCd() {
+		return authMnoCd;
 	}
 
-	/**
-	 * @param tenantId
-	 *            the tenantId to set
-	 */
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
-
-	/**
-	 * @return the systemId
-	 */
-	public String getSystemId() {
-		return this.systemId;
-	}
-
-	/**
-	 * @param systemId
-	 *            the systemId to set
-	 */
-	public void setSystemId(String systemId) {
-		this.systemId = systemId;
+	public void setAuthMnoCd(String authMnoCd) {
+		this.authMnoCd = authMnoCd;
 	}
 
 	/**

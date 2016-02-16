@@ -82,7 +82,7 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 		serviceAuthReq.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_EMAIL);
 
 		// 1. 기존 인증코드 발급 여부 및 인증 여부 확인
-		ServiceAuth authYnInfo = this.commonDao.queryForObject("Miscellaneous.searchEmailAuthYn", serviceAuthReq,
+		ServiceAuth authYnInfo = this.commonDao.queryForObject("ServiceAuth.searchEmailAuthYn", serviceAuthReq,
 				ServiceAuth.class);
 
 		// 2. 이메일 인증 코드 생성 - GUID 수준의 난수
@@ -95,18 +95,16 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 		serviceAuthInfo.setAuthEmail(request.getUserEmail());
 
 		if (authYnInfo == null) {
-			serviceAuthInfo.setTenantId(tenantId);
-			serviceAuthInfo.setSystemId(systemId);
 			serviceAuthInfo.setMbrNo(request.getUserKey());
 			serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_EMAIL);
 			serviceAuthInfo.setAuthSign("EmailAuthorization"); // 의미 없음. DB에 AUTH_SIGN 이 "NOT NULL"로 정의되어있음.
 
-			this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
+			this.commonDao.insert("ServiceAuth.createServiceAuthCode", serviceAuthInfo);
 			LOGGER.debug("인증코드 신규발급. authCode : {}", authCode);
 		} else {
 			// 미인증 상태의 인증코드 존재 - 신규 발급 코드로 업데이트.
 			serviceAuthInfo.setAuthSeq(authYnInfo.getAuthSeq());
-			this.commonDao.update("Miscellaneous.updateServiceAuthCode", serviceAuthInfo);
+			this.commonDao.update("ServiceAuth.updateServiceAuthCode", serviceAuthInfo);
 		}
 
 		// 4. 인증코드 Response
@@ -136,7 +134,7 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 		serviceAuthReq.setAuthValue(authValue);
 		serviceAuthReq.setTimeToLive(timeToLive);
 		serviceAuthReq.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_EMAIL);
-		ServiceAuth serviceAuthInfo = this.commonDao.queryForObject("Miscellaneous.searchEmailAuthInfo",
+		ServiceAuth serviceAuthInfo = this.commonDao.queryForObject("ServiceAuth.searchEmailAuthInfo",
 				serviceAuthReq, ServiceAuth.class);
 
 		/** 2. 인증코드 정보가 존재할 경우, 인증 처리 */
@@ -153,7 +151,7 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 			}
 
 			String authSeq = serviceAuthInfo.getAuthSeq();
-			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
+			this.commonDao.update("ServiceAuth.updateServiceAuthYn", authSeq);
 			LOGGER.debug("## 인증 완료.");
 		} else {
 			throw new StorePlatformException("SAC_MEM_3003"); // 해당 인증코드가 DB Table에 존재하지 않음.
@@ -179,8 +177,6 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 	@Override
 	public GetEmailAuthorizationUrlSacRes getEmailAuthorizationUrl(SacRequestHeader header,
 			GetEmailAuthorizationUrlSacReq req) {
-		String tenantId = header.getTenantHeader().getTenantId();
-		String systemId = header.getTenantHeader().getSystemId();
 
 		ServiceAuth serviceAuthReq = new ServiceAuth();
 		serviceAuthReq.setAuthEmail(req.getUserEmail());
@@ -188,7 +184,7 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 		serviceAuthReq.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_EMAIL_AUTH_URL);
 
 		// 1. 기존 인증코드 발급 여부 및 인증 여부 확인
-		ServiceAuth authYnInfo = this.commonDao.queryForObject("Miscellaneous.searchEmailAuthYn", serviceAuthReq,
+		ServiceAuth authYnInfo = this.commonDao.queryForObject("ServiceAuth.searchEmailAuthYn", serviceAuthReq,
 				ServiceAuth.class);
 
 		// 2. 이메일 인증 코드 생성 - 모바일 웹 인증 URL + GUID 수준의 난수
@@ -202,18 +198,18 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 		serviceAuthInfo.setAuthEmail(req.getUserEmail());
 
 		if (authYnInfo == null) {
-			serviceAuthInfo.setTenantId(tenantId);
-			serviceAuthInfo.setSystemId(systemId);
+			//FIXME: authMnoCd
+			//serviceAuthInfo.setAuthMnoCd();
 			serviceAuthInfo.setMbrNo(req.getUserKey());
 			serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_EMAIL_AUTH_URL);
 			serviceAuthInfo.setAuthSign("EmailAuthorizationUrl"); // 의미 없음. DB에 AUTH_SIGN 이 "NOT NULL"로 정의되어있음.
 
-			this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
+			this.commonDao.insert("ServiceAuth.createServiceAuthCode", serviceAuthInfo);
 			LOGGER.debug("이메일 변경 인증코드 신규발급. authCode : {}", emailAuthUrl);
 		} else {
 			// 미인증 상태의 인증코드 존재 - 신규 발급 코드로 업데이트.
 			serviceAuthInfo.setAuthSeq(authYnInfo.getAuthSeq());
-			this.commonDao.update("Miscellaneous.updateServiceAuthCode", serviceAuthInfo);
+			this.commonDao.update("ServiceAuth.updateServiceAuthCode", serviceAuthInfo);
 		}
 
 		// 4. 인증코드 Response
@@ -245,7 +241,7 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 		serviceAuthReq.setAuthValue(authValue);
 		serviceAuthReq.setTimeToLive(timeToLive);
 		serviceAuthReq.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_EMAIL_AUTH_URL);
-		ServiceAuth serviceAuthInfo = this.commonDao.queryForObject("Miscellaneous.searchEmailAuthUrlInfo",
+		ServiceAuth serviceAuthInfo = this.commonDao.queryForObject("ServiceAuth.searchEmailAuthUrlInfo",
 				serviceAuthReq, ServiceAuth.class);
 
 		/** 2. 인증코드 정보가 존재할 경우, 인증 처리 */
@@ -309,7 +305,7 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 			}
 
 			String authSeq = serviceAuthInfo.getAuthSeq();
-			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
+			this.commonDao.update("ServiceAuth.updateServiceAuthYn", authSeq);
 			LOGGER.debug("## 인증 완료.");
 		} else {
 			throw new StorePlatformException("SAC_MEM_3003"); // 해당 인증코드가 DB Table에 존재하지 않음.

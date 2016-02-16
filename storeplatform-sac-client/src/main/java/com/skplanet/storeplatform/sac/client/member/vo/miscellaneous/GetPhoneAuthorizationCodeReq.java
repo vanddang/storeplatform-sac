@@ -24,7 +24,11 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 
 	/**
 	 * 통신사명.
+	 * - SKT
+	 * - LGT
+	 * - KTF
 	 */
+	@NotBlank
 	private String carrier;
 
 	/**
