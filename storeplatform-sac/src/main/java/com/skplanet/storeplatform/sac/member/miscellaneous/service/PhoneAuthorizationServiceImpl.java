@@ -20,9 +20,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 
@@ -51,6 +49,15 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 	@Value("#{propertiesForSac['sms.auth.cnt']}")
 	private int smsAuthCnt;
 
+	private static final Map<String, String> CARRIER_MNOCD_MAP = new HashMap<String, String>(){
+		{
+			put("SKT", "US001201");
+			put("KTF", "US001202");
+			put("LGT", "US001203");
+		}
+	};
+
+
 	/**
 	 * <pre>
 	 * 휴대폰 인증 SMS 발송.
@@ -71,6 +78,9 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 		String messageText = "auth.message.";
 		String messageSender = "auth.message.sendNum.";
 		String authCode = "";
+
+		String authMnoCd = CARRIER_MNOCD_MAP.get(request.getCarrier());
+
 		// tenantId 별 prefix
 		String prefixMessageText = "";
 		// tenantId 별 cdId
@@ -78,12 +88,11 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 
 		// 3분 이내 동일한 MDN과 SystemID로 요청 여부 확인.
 		ServiceAuth confirmSendedSmsReq = new ServiceAuth();
-		confirmSendedSmsReq.setTenantId(tenantId);
-		confirmSendedSmsReq.setSystemId(systemId);
+		confirmSendedSmsReq.setAuthMnoCd(authMnoCd);
 		confirmSendedSmsReq.setAuthMdn(request.getRecvMdn());
 		confirmSendedSmsReq.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_SMS);
 		confirmSendedSmsReq.setAuthCnt(this.smsAuthCnt); // 인증 실패 횟수 3회
-		ServiceAuth confirmSendedSmsRes = this.commonDao.queryForObject("Miscellaneous.confirmSendedSms",
+		ServiceAuth confirmSendedSmsRes = this.commonDao.queryForObject("ServiceAuth.confirmSendedSms",
 				confirmSendedSmsReq, ServiceAuth.class);
 
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
@@ -158,14 +167,13 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 
 			/* DB에 저장할 파라미터 셋팅 */
 			ServiceAuth serviceAuthInfo = new ServiceAuth();
-			serviceAuthInfo.setTenantId(tenantId);
-			serviceAuthInfo.setSystemId(systemId); // 6/26 TB_CM_SVC_AUTH 신규 컬럼.
+			serviceAuthInfo.setAuthMnoCd(authMnoCd);
 			serviceAuthInfo.setAuthMdn(request.getRecvMdn()); // 6/26 TB_CM_SVC_AUTH 신규 컬럼.
 			serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_SMS);
 			serviceAuthInfo.setAuthSign(authSign);
 			serviceAuthInfo.setAuthValue(authCode);
 
-			this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
+			this.commonDao.insert("ServiceAuth.createServiceAuthCode", serviceAuthInfo);
 
 			/* External Comp.에 SMS 발송 요청 */
 			SmsSendEcReq smsReq = new SmsSendEcReq();
@@ -203,8 +211,6 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 	@Override
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(SacRequestHeader sacRequestHeader,
 			ConfirmPhoneAuthorizationCodeReq request) {
-		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
-		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
 
 		ConfirmPhoneAuthorizationCodeRes res = new ConfirmPhoneAuthorizationCodeRes();
 		String authCode = request.getPhoneAuthCode();
@@ -220,16 +226,14 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 		// 인증정보 확인시 MDN 추가 확인 (2014.10.01)
 		serviceAuthInfo.setAuthMdn(request.getUserPhone());
 
-		ServiceAuth resultInfo = this.commonDao.queryForObject("Miscellaneous.searchPhoneAuthInfo", serviceAuthInfo,
+		ServiceAuth resultInfo = this.commonDao.queryForObject("ServiceAuth.searchPhoneAuthInfo", serviceAuthInfo,
 				ServiceAuth.class);
 
 		if (resultInfo == null) {
 			// (인증코드 불일치, 인증Sign 불일치, 인증정보 없음), 인증 실패 카운트 update
 			serviceAuthInfo.setAuthMdn(userPhone);
-			serviceAuthInfo.setTenantId(tenantId);
-			serviceAuthInfo.setSystemId(systemId);
 			int authCnt = -1;
-			Object authCntObj = this.commonDao.queryForObject("Miscellaneous.searchPhoneAuthCnt", serviceAuthInfo);
+			Object authCntObj = this.commonDao.queryForObject("ServiceAuth.searchPhoneAuthCnt", serviceAuthInfo);
 			if (null != authCntObj) {
 				authCnt = (Integer) authCntObj + 1;
 				if (this.smsAuthCnt <= authCnt) {
@@ -237,7 +241,7 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 					LOGGER.debug("authCnt : " + authCnt);
 					serviceAuthInfo.setAuthComptYn("F"); // 실패 처리 카운트(프로퍼티) 값과 처리전 카운트 + 1 값이 같으면 실패 처리 : F
 				}
-				this.commonDao.update("Miscellaneous.updateServiceAuthCnt", serviceAuthInfo);
+				this.commonDao.update("ServiceAuth.updateServiceAuthCnt", serviceAuthInfo);
 			}
 
 			if (authCnt >= this.smsAuthCnt) {
@@ -261,7 +265,7 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 
 		String authSeq = resultInfo.getAuthSeq();
 		if (StringUtils.isNotBlank(authSeq)) {
-			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
+			this.commonDao.update("ServiceAuth.updateServiceAuthYn", authSeq);
 		}
 		res.setUserPhone(userPhone);
 		LOGGER.debug("## Response : {}", res);
@@ -282,18 +286,14 @@ public class PhoneAuthorizationServiceImpl implements PhoneAuthorizationService 
 	@Override
 	public ConfirmPhoneAuthorizationCheckRes confirmPhoneAutorizationCheck(SacRequestHeader header,
 			ConfirmPhoneAuthorizationCheckReq req) {
-		String tenantId = header.getTenantHeader().getTenantId();
-		String systemId = header.getTenantHeader().getSystemId();
 		String userPhone = req.getUserPhone();
 
 		ServiceAuth serviceAuthInfo = new ServiceAuth();
-		serviceAuthInfo.setTenantId(tenantId);
-		serviceAuthInfo.setSystemId(systemId);
 		serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_SMS);
 		serviceAuthInfo.setAuthMdn(userPhone);
 		serviceAuthInfo.setAuthSign(req.getPhoneSign());
 
-		ServiceAuth resultInfo = this.commonDao.queryForObject("Miscellaneous.searchPhoneAuthCheck", serviceAuthInfo,
+		ServiceAuth resultInfo = this.commonDao.queryForObject("ServiceAuth.searchPhoneAuthCheck", serviceAuthInfo,
 				ServiceAuth.class);
 
 		if (resultInfo == null) {

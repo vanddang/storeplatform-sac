@@ -1,15 +1,9 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
-import com.skplanet.storeplatform.external.client.inicis.sci.InicisSCI;
-import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcReq;
-import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcRes;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.PinAuthorizationCheckRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 import org.slf4j.Logger;
@@ -47,20 +41,16 @@ public class PinServiceImpl implements PinService {
 	 */
 	@Override
 	public PinAuthorizationCheckRes pinAuthorizationCheck(SacRequestHeader header, PinAuthorizationCheckReq req) {
-		String tenantId = header.getTenantHeader().getTenantId();
-		String systemId = header.getTenantHeader().getSystemId();
 		String deviceId = req.getDeviceId();
 
 		ServiceAuth serviceAuthInfo = new ServiceAuth();
-		serviceAuthInfo.setTenantId(tenantId);
-		serviceAuthInfo.setSystemId(systemId);
 		serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_PIN);
 		serviceAuthInfo.setAuthMdn(deviceId);
 		serviceAuthInfo.setAuthValue(req.getPhoneSign());
 		serviceAuthInfo.setTimeToLive(req.getTimeToLive());
 
 		/** pin 인증 signature 확인 */
-		Object authCntObj = this.commonDao.queryForObject("Miscellaneous.searchPinAuthorizationCheckCnt",
+		Object authCntObj = this.commonDao.queryForObject("ServiceAuth.searchPinAuthorizationCheckCnt",
 				serviceAuthInfo);
 
 		PinAuthorizationCheckRes res = new PinAuthorizationCheckRes();

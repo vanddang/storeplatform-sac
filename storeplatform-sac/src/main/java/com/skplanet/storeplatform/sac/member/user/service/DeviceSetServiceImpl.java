@@ -521,14 +521,12 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 			/* DB에 저장할 파라미터 셋팅 */
 			ServiceAuth serviceAuthInfo = new ServiceAuth();
-			serviceAuthInfo.setTenantId(commonRequest.getTenantID());
-			serviceAuthInfo.setSystemId(commonRequest.getSystemID());
 			serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_PIN);
 			serviceAuthInfo.setAuthSign("PinNumberAuthorization");
 			serviceAuthInfo.setAuthValue(phoneSign);
 			serviceAuthInfo.setAuthComptYn(MemberConstants.USE_Y);
 			serviceAuthInfo.setAuthMdn(checkDevicePinResponse.getDeviceId());
-			Object resultObj = this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
+			Object resultObj = this.commonDao.insert("ServiceAuth.createServiceAuthCode", serviceAuthInfo);
 			if (resultObj != null && Integer.parseInt(resultObj.toString()) > 0) {
 				isAuthPin = true;
 			}
