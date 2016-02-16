@@ -1271,6 +1271,7 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
 		}
 
+		boolean isValid = true;
 		if(StringUtils.isNotBlank(req.getUserAuthToken())){ // userAuthToken이 넘어온 경우만 유효성 체크
 			if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
 				CheckUserAuthTokenRequest chkUserAuthTkReqeust = new CheckUserAuthTokenRequest();
@@ -1280,7 +1281,7 @@ public class LoginServiceImpl implements LoginService {
 				chkUserAuthTkReqeust.setIsDormant(chkDupRes.getUserMbr().getIsDormant());
 				CheckUserAuthTokenResponse chkUserAuthTkResponse = this.userSCI.checkUserAuthToken(chkUserAuthTkReqeust);
 				if(chkUserAuthTkResponse == null || StringUtils.isBlank(chkUserAuthTkResponse.getUserKey())){
-					throw new StorePlatformException("SAC_MEM_1204");
+					isValid = false;
 				}
 			}else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)
 					|| StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)
@@ -1295,7 +1296,7 @@ public class LoginServiceImpl implements LoginService {
 						}
 					}
 				}
-				boolean isValid = true;
+
 				try{
 					if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_FACEBOOK)){
 						String facebookId = this.commService.facebookAuthenticate(req.getUserAuthToken());
@@ -1316,14 +1317,14 @@ public class LoginServiceImpl implements LoginService {
 				}catch(StorePlatformException e){
 					isValid = false;
 				}
-
-				if(!isValid){
-					// 로그인 실패이력 저장
-					this.regLoginHistory(requestHeader, req.getUserId(), null, "N", "N", req.getDeviceIp(), "N", null, "N", null, req.getDeviceType());
-					res.setIsLoginSuccess(MemberConstants.USE_N);
-					return res;
-				}
 			}
+		}
+
+		if(!isValid){
+			// 로그인 실패이력 저장
+			this.regLoginHistory(requestHeader, req.getUserId(), null, "N", "N", req.getDeviceIp(), "N", null, "N", null, req.getDeviceType());
+			res.setIsLoginSuccess(MemberConstants.USE_N);
+			return res;
 		}
 
         // 모번호 조회
