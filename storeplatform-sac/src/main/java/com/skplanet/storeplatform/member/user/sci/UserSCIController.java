@@ -916,12 +916,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		// if (updateUserRequest.getCommonRequest().getTenantID() == null
-		// || updateUserRequest.getCommonRequest().getTenantID().length() <= 0) {
-		// throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		// }
-
 		// 사용자키 없음
 		if (updateUserRequest.getUserMbr().getUserKey() == null
 				|| updateUserRequest.getUserMbr().getUserKey().length() <= 0) {
@@ -3040,12 +3034,6 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 테넌트 아이디 없음
-		if (moveUserInfoRequest.getCommonRequest().getTenantID() == null
-				|| moveUserInfoRequest.getCommonRequest().getTenantID().length() <= 0) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.tanentIDNotFound", ""));
-		}
-
 		// 필수 파라미터, UserKey
 		if (moveUserInfoRequest.getUserKey() == null) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));
@@ -3066,7 +3054,6 @@ public class UserSCIController implements UserSCI {
 
 			// 유휴 회원 이관 실패 이력 추가
 			moveUserInfoResponse = new MoveUserInfoResponse();
-			moveUserInfoResponse.setTenantID(moveUserInfoRequest.getCommonRequest().getTenantID());
 			moveUserInfoResponse.setUserKey(moveUserInfoRequest.getUserKey());
 			moveUserInfoResponse.setTransCd(moveUserInfoRequest.getMoveType());
 			this.service.insertUserMbrTransHis(moveUserInfoResponse, Constant.TYPE_YN_N);

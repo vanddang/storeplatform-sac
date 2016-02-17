@@ -83,7 +83,7 @@ public class UserModifyController {
 	public ModifyRes modify(SacRequestHeader sacHeader, @Validated @RequestBody ModifyReq req) {
 
 		LOGGER.debug("#################################");
-		LOGGER.debug("##### 2.1.13. 회원 정보 수정 #####");
+		LOGGER.debug("##### 2.1.10. 회원 정보 수정 #####");
 		LOGGER.debug("#################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
@@ -172,7 +172,7 @@ public class UserModifyController {
 	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, @Validated @RequestBody ModifyEmailReq req) {
 
 		LOGGER.debug("##################################");
-		LOGGER.debug("##### 2.1.15. 이메일 주소 수정 #####");
+		LOGGER.debug("##### 2.1.14. 이메일 주소 수정 #####");
 		LOGGER.debug("##################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));

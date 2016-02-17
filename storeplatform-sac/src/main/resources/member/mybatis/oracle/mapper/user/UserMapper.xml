@@ -733,14 +733,6 @@
          WHERE  insd_usermbr_no = #{userKey}
     </select>
     
-    <select id="isRegisteredKeyAndMbrNo" parameterType="userMbr" resultType="mbrOneID">
-         SELECT  /* UserMapper.xml, isRegisteredKeyAndMbrNo, SAC(SC), 윤보영, 2015-12-14 */
-                insd_usermbr_no as userKey,
-                mbr_id as userID
-          FROM  tb_us_ousermbr
-         WHERE  insd_usermbr_no = #{userKey}
-    </select>
-    
     <!-- 사용자키 조회(userID, tenantID) -->
     <select id="isRegisteredUserID" parameterType="userMbr" resultType="String">
         SELECT  /* UserMapper.isRegisteredUserID, 사용자 ID 조회, wisestone_dinga, 2014-01-22 */
@@ -2038,12 +2030,12 @@
     
     <!-- 유휴회원 이관 프로시저 호출 -->
     <select id="callMoveUserProcedure" parameterType="hashmap" resultType="hashmap" statementType="CALLABLE">
-        { call SPMBR.proc_idle_member_move(#{tenantID}, #{userKey}, #{moveType}) }
+        { call SPMBR.proc_idle_omember_move(#{userKey}, #{moveType}) }
     </select>        
         
     <!-- 유휴회원 이관 이력 추가 -->
     <insert id="insertUserMbrTransHis" parameterType="hashmap">
-            INSERT /* UserMapper.xml, insertUserMbrTransHis, SAC(SC), 이창민, 2015-06-01 */     
+            INSERT /* UserMapper.xml, insertUserMbrTransHis, SAC(SC), 윤보영, 2016-02-17 */
                  INTO tb_us_ousermbr_trans_his (seq
                                                       <if test="insdUserMbrNo != null">,insd_usermbr_no</if>
                                                       <if test="transCd != null">,trans_cd</if>
