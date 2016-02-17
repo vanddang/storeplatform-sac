@@ -3644,6 +3644,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return deviceKey String
 	 */
+    @Deprecated
 	private String modDeviceInfoForLogin(SacRequestHeader requestHeader, String userKey, Object obj, String oDeviceId,
 			DeviceInfo dbDeviceInfo, String version) {
 
@@ -3703,6 +3704,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return HashMap<String, String>
 	 */
+    @Deprecated
 	private HashMap<String, String> getInvalidSiteInfo(String userId, String joinSstList) {
 
 		HashMap<String, String> invalidSiteInfo = new HashMap<String, String>();
@@ -4038,6 +4040,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @param marketClauseAgreeList
 	 *            List<MbrClauseAgree>
 	 */
+    @Deprecated
 	private void updateMarketClauseAgree(SacRequestHeader requestHeader, String deviceId, String userKey,
 			List<Agreement> agreementList, List<MbrClauseAgree> marketClauseAgreeList) {
 		boolean isUpdate = false;
@@ -4506,6 +4509,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @param svcMangNo
 	 *            String
 	 */
+    @Deprecated
 	private void updateMarketDeviceKey(SacRequestHeader requestHeader, String userKey, String deviceId,
 			String deviceTelecom, String nativeId, String svcMangNo) {
 

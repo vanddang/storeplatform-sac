@@ -77,10 +77,10 @@ public class UserSearchController {
 	@ResponseBody
 	public DetailRes detail(@RequestBody DetailReq req, SacRequestHeader sacHeader) {
 
-		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")
-				&& StringUtil.nvl(req.getUserId(), "").equals("") && StringUtil.nvl(req.getUserKey(), "").equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
-		}
+        if(StringUtils.isEmpty(req.getDeviceKey()) && StringUtils.isEmpty(req.getDeviceId())
+                && StringUtils.isEmpty(req.getUserId()) && StringUtils.isEmpty(req.getUserKey())){
+            throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
+        }
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 

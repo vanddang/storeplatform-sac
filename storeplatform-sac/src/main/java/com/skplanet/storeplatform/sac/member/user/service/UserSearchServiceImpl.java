@@ -155,9 +155,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
-		if (req.getDeviceId() != null) {
-			String opmdMdnInfo = this.mcc.getOpmdMdnInfo(req.getDeviceId());
-			req.setDeviceId(opmdMdnInfo);
+		if (StringUtils.isNotEmpty(req.getDeviceId())) {
+			req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 		}
 
 		/* 회원 기본 정보 */
@@ -165,6 +164,7 @@ public class UserSearchServiceImpl implements UserSearchService {
         try{
             // TODO 회원정보 v2 로직으로 내부 로직 변환
             res = this.srhUser(req, sacHeader);
+
         }catch(StorePlatformException ex){
             if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
                     || StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {

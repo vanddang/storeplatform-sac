@@ -1366,177 +1366,167 @@ public class UserServiceImpl implements UserService {
 			dao = this.idleDAO;
 		}
 
-		String isRegistered = null;
-		MbrOneID mbrOneID = null;
-		mbrOneID = dao.queryForObject("User.isRegisteredKeyAndMbrNo", usermbr, MbrOneID.class);
-		if (mbrOneID == null) {
-			isRegistered = null;
-		} else {
-			isRegistered = mbrOneID.getUserKey();
-		}
+		String isRegistered = dao.queryForObject("User.isRegisteredKey", usermbr, String.class);
 
-		if (isRegistered != null) {
-			if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
-				// 회원 이력 테이블 insert.
-				row = dao.update("User.insertUpdateStatusHistory", usermbr);
-				LOGGER.debug("### updateuser - insertUpdateStatusHistory row : {}", row);
-				if (row <= 0) {
-					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
-				}
-			}
+        if (isRegistered == null || isRegistered.length() <= 0) {
+            throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
+        }
 
-			// 성별 파라미터 M/F 인지 체크
-			if (StringUtils.isNotBlank(usermbr.getUserSex())) {
-				if (!this.checkValidateUserSexValue(usermbr.getUserSex())) {
-					usermbr.setUserSex(null);
-				}
-			}
+        if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
+            // 회원 이력 테이블 insert.
+            row = dao.update("User.insertUpdateStatusHistory", usermbr);
+            LOGGER.debug("### updateuser - insertUpdateStatusHistory row : {}", row);
+            if (row <= 0) {
+                throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+            }
+        }
 
-			row = (Integer) dao.insert("User.updateUser", usermbr);
+        // 성별 파라미터 M/F 인지 체크
+        if (StringUtils.isNotBlank(usermbr.getUserSex())) {
+            if (!this.checkValidateUserSexValue(usermbr.getUserSex())) {
+                usermbr.setUserSex(null);
+            }
+        }
 
-			LOGGER.debug("### row : {}", row);
-			if (row == 0) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
-			}
+        row = (Integer) dao.insert("User.updateUser", usermbr);
 
-			// check 법정대리인
-			if (updateUserRequest.getMbrLglAgent() != null) {
-				MbrLglAgent mbrLglAgent = new MbrLglAgent();
-				mbrLglAgent = updateUserRequest.getMbrLglAgent();
-				mbrLglAgent.setMemberKey(updateUserRequest.getUserMbr().getUserKey());
-				row = (Integer) dao.insert("User.updateAgentRealName", mbrLglAgent);
-				LOGGER.debug("### 1 row : {}", row);
-				if (row == 0) {
-					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
-				}
+        LOGGER.debug("### row : {}", row);
+        if (row == 0) {
+            throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+        }
 
-				if (updateUserRequest.getMbrLglAgent().getIsParent() != null) {
+        // check 법정대리인
+        if (updateUserRequest.getMbrLglAgent() != null) {
+            MbrLglAgent mbrLglAgent = new MbrLglAgent();
+            mbrLglAgent = updateUserRequest.getMbrLglAgent();
+            mbrLglAgent.setMemberKey(updateUserRequest.getUserMbr().getUserKey());
+            row = (Integer) dao.insert("User.updateAgentRealName", mbrLglAgent);
+            LOGGER.debug("### 1 row : {}", row);
+            if (row == 0) {
+                throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+            }
 
-					if (updateUserRequest.getMbrLglAgent().getIsParent().equalsIgnoreCase(Constant.TYPE_YN_Y)
-							|| updateUserRequest.getMbrLglAgent().getIsParent().equalsIgnoreCase(Constant.TYPE_YN_N)) {
+            if (updateUserRequest.getMbrLglAgent().getIsParent() != null) {
 
-						// 법정대리인 동의정보 있음
-						// 법정대리인 동의여부 수정 LGL_AGENT_AGREE_YN -> Y
-						UserMbr usermbrLglAgentYN = new UserMbr();
-						usermbrLglAgentYN.setSystemID(usermbr.getSystemID());
-						usermbrLglAgentYN.setUserKey(usermbr.getUserKey());
-						usermbrLglAgentYN.setIsParent(updateUserRequest.getMbrLglAgent().getIsParent());
+                if (updateUserRequest.getMbrLglAgent().getIsParent().equalsIgnoreCase(Constant.TYPE_YN_Y)
+                        || updateUserRequest.getMbrLglAgent().getIsParent().equalsIgnoreCase(Constant.TYPE_YN_N)) {
 
-						row = dao.update("User.updateLglAgentAgreeYN", usermbrLglAgentYN);
-						LOGGER.debug("### User.updateLglAgentAgreeYN row : {}", row);
-						if (row == 0) {
-							throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError",
-									""));
-						}
+                    // 법정대리인 동의정보 있음
+                    // 법정대리인 동의여부 수정 LGL_AGENT_AGREE_YN -> Y
+                    UserMbr usermbrLglAgentYN = new UserMbr();
+                    usermbrLglAgentYN.setSystemID(usermbr.getSystemID());
+                    usermbrLglAgentYN.setUserKey(usermbr.getUserKey());
+                    usermbrLglAgentYN.setIsParent(updateUserRequest.getMbrLglAgent().getIsParent());
 
-					}
+                    row = dao.update("User.updateLglAgentAgreeYN", usermbrLglAgentYN);
+                    LOGGER.debug("### User.updateLglAgentAgreeYN row : {}", row);
+                    if (row == 0) {
+                        throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError",
+                                ""));
+                    }
 
-				}
+                }
 
-			}
+            }
 
-			// check 실명인증
-			if (updateUserRequest.getMbrAuth() != null) {
-				// TLog
-				new TLogUtil().set(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL_SC_MEM_0002");
-					}
-				});
+        }
 
-				MbrAuth mbrAuth = new MbrAuth();
-				mbrAuth = updateUserRequest.getMbrAuth();
-				mbrAuth.setMemberKey(updateUserRequest.getUserMbr().getUserKey());
-				row = (Integer) dao.insert("User.updateOwnRealName", mbrAuth);
-				LOGGER.debug("### 2  row : {}", row);
-				if (row == 0) {
-					throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
-				}
+        // check 실명인증
+        if (updateUserRequest.getMbrAuth() != null) {
+            // TLog
+            new TLogUtil().set(new ShuttleSetter() {
+                @Override
+                public void customize(TLogSentinelShuttle shuttle) {
+                    shuttle.log_id("TL_SC_MEM_0002");
+                }
+            });
 
-				if (updateUserRequest.getMbrAuth().getIsRealName() != null) {
+            MbrAuth mbrAuth = new MbrAuth();
+            mbrAuth = updateUserRequest.getMbrAuth();
+            mbrAuth.setMemberKey(updateUserRequest.getUserMbr().getUserKey());
+            row = (Integer) dao.insert("User.updateOwnRealName", mbrAuth);
+            LOGGER.debug("### 2  row : {}", row);
+            if (row == 0) {
+                throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+            }
 
-					if (updateUserRequest.getMbrAuth().getIsRealName().equalsIgnoreCase(Constant.TYPE_YN_Y)
-							|| updateUserRequest.getMbrAuth().getIsRealName().equalsIgnoreCase(Constant.TYPE_YN_N)) {
+            if (updateUserRequest.getMbrAuth().getIsRealName() != null) {
 
-						// 실명인증 동의정보 있음
-						// 실명_인증_여부 수정 REALNM_AUTH_YN -> Y
-						UserMbr usermbrIsRealNameAuthYN = new UserMbr();
-						usermbrIsRealNameAuthYN.setSystemID(usermbr.getSystemID());
-						usermbrIsRealNameAuthYN.setTenantID(usermbr.getTenantID());
-						usermbrIsRealNameAuthYN.setUserKey(usermbr.getUserKey());
-						usermbrIsRealNameAuthYN.setIsRealName(updateUserRequest.getMbrAuth().getIsRealName());
-						// 2014-08-29 vanddang 실명인증시 tb_us_usermbr 테이블의 MBR_NM, BIRTH, SEX 정보까지 업데이트
-						if (updateUserRequest.getMbrAuth().getIsRealName().equalsIgnoreCase(Constant.TYPE_YN_Y)) {
-							usermbrIsRealNameAuthYN.setUserName(updateUserRequest.getMbrAuth().getName());
-							usermbrIsRealNameAuthYN.setUserBirthDay(updateUserRequest.getMbrAuth().getBirthDay());
-							usermbrIsRealNameAuthYN.setUserSex(updateUserRequest.getMbrAuth().getSex());
+                if (updateUserRequest.getMbrAuth().getIsRealName().equalsIgnoreCase(Constant.TYPE_YN_Y)
+                        || updateUserRequest.getMbrAuth().getIsRealName().equalsIgnoreCase(Constant.TYPE_YN_N)) {
 
-							// 성별 파라미터 M/F 인지 체크
-							if (StringUtils.isNotBlank(updateUserRequest.getMbrAuth().getSex())) {
-								if (this.checkValidateUserSexValue(updateUserRequest.getMbrAuth().getSex())) {
-									usermbrIsRealNameAuthYN.setUserSex(updateUserRequest.getMbrAuth().getSex());
-								}
-							}
-						}
+                    // 실명인증 동의정보 있음
+                    // 실명_인증_여부 수정 REALNM_AUTH_YN -> Y
+                    UserMbr usermbrIsRealNameAuthYN = new UserMbr();
+                    usermbrIsRealNameAuthYN.setSystemID(usermbr.getSystemID());
+                    usermbrIsRealNameAuthYN.setTenantID(usermbr.getTenantID());
+                    usermbrIsRealNameAuthYN.setUserKey(usermbr.getUserKey());
+                    usermbrIsRealNameAuthYN.setIsRealName(updateUserRequest.getMbrAuth().getIsRealName());
+                    // 2014-08-29 vanddang 실명인증시 tb_us_usermbr 테이블의 MBR_NM, BIRTH, SEX 정보까지 업데이트
+                    if (updateUserRequest.getMbrAuth().getIsRealName().equalsIgnoreCase(Constant.TYPE_YN_Y)) {
+                        usermbrIsRealNameAuthYN.setUserName(updateUserRequest.getMbrAuth().getName());
+                        usermbrIsRealNameAuthYN.setUserBirthDay(updateUserRequest.getMbrAuth().getBirthDay());
+                        usermbrIsRealNameAuthYN.setUserSex(updateUserRequest.getMbrAuth().getSex());
 
-						row = dao.update("User.updateRealNameAuthYN", usermbrIsRealNameAuthYN);
-						LOGGER.debug("### User.updateRealNameAuthYN row : {}", row);
-						if (row == 0) {
-							throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError",
-									""));
-						}
-					}
+                        // 성별 파라미터 M/F 인지 체크
+                        if (StringUtils.isNotBlank(updateUserRequest.getMbrAuth().getSex())) {
+                            if (this.checkValidateUserSexValue(updateUserRequest.getMbrAuth().getSex())) {
+                                usermbrIsRealNameAuthYN.setUserSex(updateUserRequest.getMbrAuth().getSex());
+                            }
+                        }
+                    }
 
-				}
+                    row = dao.update("User.updateRealNameAuthYN", usermbrIsRealNameAuthYN);
+                    LOGGER.debug("### User.updateRealNameAuthYN row : {}", row);
+                    if (row == 0) {
+                        throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError",
+                                ""));
+                    }
+                }
 
-				// TLog
-				final String tlogUserKey = updateUserRequest.getUserMbr().getUserKey();
-				final String tlogSystemID = updateUserRequest.getCommonRequest().getSystemID();
-				final String tlogMNO = updateUserRequest.getMbrAuth().getTelecom();
+            }
 
-				new TLogUtil().set(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.insd_usermbr_no(tlogUserKey).system_id(tlogSystemID).mno_type(tlogMNO);
-					}
-				});
+            // TLog
+            final String tlogUserKey = updateUserRequest.getUserMbr().getUserKey();
+            final String tlogSystemID = updateUserRequest.getCommonRequest().getSystemID();
+            final String tlogMNO = updateUserRequest.getMbrAuth().getTelecom();
 
-			}
+            new TLogUtil().set(new ShuttleSetter() {
+                @Override
+                public void customize(TLogSentinelShuttle shuttle) {
+                    shuttle.insd_usermbr_no(tlogUserKey).system_id(tlogSystemID).mno_type(tlogMNO);
+                }
+            });
 
-			// check 부가속성
-			if (updateUserRequest.getMbrMangItemPtcrList() != null) {
-				List<MbrMangItemPtcr> mbrMangItemPtcrList = updateUserRequest.getMbrMangItemPtcrList();
-				for (MbrMangItemPtcr mbrMangItemPtcr : mbrMangItemPtcrList) {
-					mbrMangItemPtcr.setUserKey(updateUserRequest.getUserMbr().getUserKey());
-					row = dao.update("User.updateManagement", mbrMangItemPtcr);
-					LOGGER.debug("###  3 row : {}", row);
-					if (row == 0) {
-						throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
-					}
-				}
-			}
+        }
 
-			// check 이용약관
-			if (updateUserRequest.getMbrClauseAgree() != null) {
-				List<MbrClauseAgree> mbrClauseAgreeList = updateUserRequest.getMbrClauseAgree();
-				for (int i = 0; i < mbrClauseAgreeList.size(); i++) {
-					MbrClauseAgree mbrClauseAgree = mbrClauseAgreeList.get(i);
-					mbrClauseAgree.setMemberKey(updateUserRequest.getUserMbr().getUserKey());
-					row = dao.update("User.updateAgreement", mbrClauseAgree);
-					LOGGER.debug("###  4 row : {}", row);
-					if (row == 0) {
-						throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
-					}
-				}
-			}
+        // check 부가속성
+        if (updateUserRequest.getMbrMangItemPtcrList() != null) {
+            List<MbrMangItemPtcr> mbrMangItemPtcrList = updateUserRequest.getMbrMangItemPtcrList();
+            for (MbrMangItemPtcr mbrMangItemPtcr : mbrMangItemPtcrList) {
+                mbrMangItemPtcr.setUserKey(updateUserRequest.getUserMbr().getUserKey());
+                row = dao.update("User.updateManagement", mbrMangItemPtcr);
+                LOGGER.debug("###  3 row : {}", row);
+                if (row == 0) {
+                    throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+                }
+            }
+        }
 
-		} else {
-			// FAIL 처리
-			throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
-		}
+        // check 이용약관
+        if (updateUserRequest.getMbrClauseAgree() != null) {
+            List<MbrClauseAgree> mbrClauseAgreeList = updateUserRequest.getMbrClauseAgree();
+            for (int i = 0; i < mbrClauseAgreeList.size(); i++) {
+                MbrClauseAgree mbrClauseAgree = mbrClauseAgreeList.get(i);
+                mbrClauseAgree.setMemberKey(updateUserRequest.getUserMbr().getUserKey());
+                row = dao.update("User.updateAgreement", mbrClauseAgree);
+                LOGGER.debug("###  4 row : {}", row);
+                if (row == 0) {
+                    throw new StorePlatformException(this.getMessage("response.ResultCode.insertOrUpdateError", ""));
+                }
+            }
+        }
 
-		// ACTION 2
 		updateUserResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
 		updateUserResponse.setUserKey(updateUserRequest.getUserMbr().getUserKey());
@@ -3667,7 +3657,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("tenantID", usermbr.getTenantID());
 		params.put("userKey", usermbr.getUserKey());
 
 		if (Constant.USERMBR_MOVE_TYPE_ACTIVATE.equals(moveType)) { // 정상 처리
@@ -3679,8 +3668,6 @@ public class UserServiceImpl implements UserService {
 		MoveUserInfoResponse moveUserInfoResponse = new MoveUserInfoResponse();
 		moveUserInfoResponse.setUserKey(userInfo.getInsdUserMbrNo());
 		moveUserInfoResponse.setTransCd(moveType);
-		moveUserInfoResponse.setUserMbrNo(userInfo.getUserMbrNo());
-		moveUserInfoResponse.setIntgSvcNo(userInfo.getIntgSvcNo());
 		moveUserInfoResponse.setMbrId(userInfo.getMbrId());
 		moveUserInfoResponse.setMbrClasCd(userInfo.getMbrClasCd());
 		moveUserInfoResponse.setEmailAddr(userInfo.getEmailAddr());
@@ -3805,18 +3792,10 @@ public class UserServiceImpl implements UserService {
 		LOGGER.debug("### moveUserInfoRequest : {}", moveUserInfoResponse.toString());
 
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("tenantID", moveUserInfoResponse.getTenantID());
 		params.put("insdUserMbrNo", moveUserInfoResponse.getUserKey());
 		params.put("resultYn", resultYn);
 		params.put("transCd", moveUserInfoResponse.getTransCd());
 		params.put("regId", "SAC"); // SAC로 등
-		params.put("intgSvcNo", moveUserInfoResponse.getIntgSvcNo());
-		params.put("userMbrNo", moveUserInfoResponse.getUserMbrNo());
-		params.put("idpResultYn", moveUserInfoResponse.getIdpResultYn());
-
-		if (moveUserInfoResponse.getIdpErrCd() != null) {
-			params.put("idpErrCd", moveUserInfoResponse.getIdpErrCd().replace("EC_IDP_", ""));
-		}
 
 		// tb_us_usermbr_trans_his 남김 (정상)
 		this.commonDAO.insert("User.insertUserMbrTransHis", params);
