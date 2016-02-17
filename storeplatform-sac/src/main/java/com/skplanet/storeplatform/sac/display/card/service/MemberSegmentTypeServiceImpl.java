@@ -50,17 +50,14 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 
 	@Override
 	public void bindFromSci(SegmentRes segmentRes, SearchUserSegmentSacRes segmentFromSci) {
-		String sex = segmentFromSci.getUserSex();
-		String deviceChgYn = segmentFromSci.getIsChanged(); // deviceKey가 들어왔을 때만 내려줌 
-		String newEntryDay = segmentFromSci.getEntryDay();
-		String userBirthDay = segmentFromSci.getUserBirthDay();
-		
-		segmentRes.setSex(sex);
-		segmentRes.setDeviceChgYn(deviceChgYn);
-		String newEntryYn = isRecentlyRegistered(newEntryDay) ? "Y" : "N";
-		segmentRes.setNewEntryYn(newEntryYn);
-		String ageClsfCd = getAgeClsfCd(userBirthDay);
-		segmentRes.setAgeClsfCd(ageClsfCd);
+
+		String newEntryYn = isRecentlyRegistered( segmentFromSci.getEntryDay() ) ? "Y" : "N";
+
+		segmentRes.setSex( segmentFromSci.getUserSex() );
+		segmentRes.setDeviceChgYn( "N" ); // IDP 연동중단으로 기변정보 확인이 불가해짐. default 값을 N 으로 세팅함
+		segmentRes.setNewEntryYn( newEntryYn );
+		segmentRes.setAgeClsfCd( getAgeClsfCd(segmentFromSci.getUserBirthDay()) );
+
 	}
 
 	@Override
