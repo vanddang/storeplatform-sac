@@ -54,7 +54,6 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 		String newEntryYn = isRecentlyRegistered( segmentFromSci.getEntryDay() ) ? "Y" : "N";
 
 		segmentRes.setSex( segmentFromSci.getUserSex() );
-		segmentRes.setDeviceChgYn( "N" ); // IDP 연동중단으로 기변정보 확인이 불가해짐. default 값을 N 으로 세팅함
 		segmentRes.setNewEntryYn( newEntryYn );
 		segmentRes.setAgeClsfCd( getAgeClsfCd(segmentFromSci.getUserBirthDay()) );
 
