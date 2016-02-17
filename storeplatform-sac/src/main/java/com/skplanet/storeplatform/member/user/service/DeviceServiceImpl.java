@@ -120,10 +120,13 @@ public class DeviceServiceImpl implements DeviceService {
 		for (KeySearch keySearch : keySearchList) {
 			if (keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_KEY)
 					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)
-					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)
-                    || keySearch.getKeyType().equals(Constant.SEARCH_TYPE_SVC_MANG_NO)) {
+					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)) {
 				isDeviceRequest = true;
-			}
+
+			}else if(keySearch.getKeyType().equals(Constant.SEARCH_TYPE_SVC_MANG_NO)){
+                isSvcMangDevice = true;
+
+            }
 		}
 
         if(!isSvcMangDevice){
@@ -156,8 +159,17 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/**  휴대기기 정보로 조회 */
 		if (isDeviceRequest) {
-			searchDeviceListResponse = dao.queryForObject("Device.searchDeviceList2D", searchDeviceListRequest,
-					SearchDeviceListResponse.class);
+            searchDeviceListResponse = dao.queryForObject("Device.searchDeviceList2D", searchDeviceListRequest,
+                    SearchDeviceListResponse.class);
+
+        /**  SVC_MANG_NO 정보로 조회 */
+        } else if(isSvcMangDevice){
+            searchDeviceListResponse = new SearchDeviceListResponse();
+
+            List<UserMbrDevice> userMbrDeviceList = dao.queryForList("Device.searchDeviceListBySvcNo", searchDeviceListRequest, UserMbrDevice.class);
+            if(userMbrDeviceList != null && userMbrDeviceList.size() > 0){
+                searchDeviceListResponse.setUserMbrDevice(userMbrDeviceList);
+            }
 
         /** INSD_USERMBR_NO, MBR_ID로 조회 */
         } else {

@@ -1198,6 +1198,35 @@
         </foreach>
     </select>
 
+    <select id="searchDeviceListBySvcNo" parameterType="searchDeviceListRequest" resultType="userMbrDevice">
+        SELECT /* DeviceMapper.xml, searchDeviceListBySvcNo, SAC(SC), 윤보영, 2016-02-16 */
+        a.insd_usermbr_no as userKey,
+        a.mbr_id as userId,
+        b.insd_device_id as deviceKey,
+        b.device_id as deviceId,
+        b.mdn as mdn,
+        b.svc_mang_no as svcMangNum,
+        b.mno_cd as deviceTelecom,
+        b.device_model_cd as deviceModelNo,
+        b.auth_yn as isUsed,
+        b.sms_recv_yn as isRecvSMS,
+        b.device_natv_id as nativeID,
+        b.device_sim_nm as simSerialNo,
+        b.device_acct as deviceAccount,
+        b.rep_device_yn as isPrimary,
+        TO_CHAR (b.last_login_dt, 'YYYYMMDDHH24MISS') as lastLoginDt
+        FROM TB_US_OUSERMBR a
+        INNER JOIN TB_US_OUSERMBR_DEVICE b ON a.insd_usermbr_no = b.insd_usermbr_no
+        WHERE a.mbr_status_main_cd != 'US010202'
+          AND b.auth_yn = 'Y'
+        <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
+            <if test="keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO')">
+                b.svc_mang_no = #{keySearch.keyString}
+            </if>
+        </foreach>
+        ORDER BY auth_dt DESC
+    </select>
+
     <!-- 휴대기기 부가정보 조회 -->
     <select id="getExtraProfile2" parameterType="userMbrDeviceDetail" resultType="userMbrDeviceDetail">
         SELECT  /* DeviceMapper.xml, getExtraProfile, SAC(SC), 반범진, 2016-01-04 */
