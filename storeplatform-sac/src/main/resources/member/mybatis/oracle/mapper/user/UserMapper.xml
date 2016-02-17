@@ -1347,18 +1347,6 @@
             <if test="isDomestic != null">          ,#{isDomestic} </if>
                 )
     </insert>
-    
-    
-
-    <!-- 사용자 아이디의 중복/제한단여 여부 정보 조회 -->
-    <select id="checkExistLimitWord" parameterType="userMbr" resultType="existLimitWordMemberID">
-         SELECT  /* UserMapper.xml, checkExistLimitWord, SAC(SC), 윤보영, 2015-12-14 */
-                mbr_id AS existWordID
-           FROM  tb_us_ousermbr
-          WHERE  mbr_status_main_cd != 'US010202' /* US010202 : 탈퇴 */
-            AND  mbr_id = #{userID}
-    </select>
-
 
     <!-- 로그인 요청 로그 기록 -->
     <insert id="insertLoginLog" parameterType="userMbrLoginLog">
