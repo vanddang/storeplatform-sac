@@ -146,7 +146,7 @@ public class UserModifyServiceImpl implements UserModifyService {
     private FacebookAuthenticateSCI facebookAuthenticateSCI;
 
     @Autowired
-    private UserExtraInfoService userExtraService;
+    private UserExtraInfoService userExtraInfoService;
 
     @Override
     public ModifyRes modUser(SacRequestHeader sacHeader, ModifyReq req) {
@@ -1319,9 +1319,28 @@ public class UserModifyServiceImpl implements UserModifyService {
             }
         }
 
-        /** 5.TO-BE userId, userAuthToken 로 인증시도 실패시 오류. */
+        /** 5. AS-IS userId, userAuthToken 로 인증 성공후 DB의 socialUserNo와 불일치시 오류처리(동일사용자아님). */
+        if(StringUtils.isNotBlank(socialUserNo) ){
+            /** DB에 저장된 socailUserNo 가져온다. */
+            String dbSocialUserNo = null;
+            List<UserExtraInfo> userExtraInfoList = userExtraInfoService.findExtraInfo(req.getUserKey());
+            if(userExtraInfoList != null && userExtraInfoList.size() > 0){
+                for(UserExtraInfo info : userExtraInfoList){
+                    if(StringUtils.equals(info.getExtraProfile(), MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO)){
+                        dbSocialUserNo = info.getExtraProfileValue();
+                        break;
+                    }
+                }
+            }
+            /** DB와 인증받은 socialUserNo 가 불일치하면 오류처리. */
+            if (!StringUtils.equals(socialUserNo, dbSocialUserNo)) {
+                throw new StorePlatformException("SAC_MEM_1204");
+            }
+        }
+
+        /** 6.TO-BE userId, userAuthToken 로 인증시도 실패시 오류. */
         String newSocialUserNo = null;
-        // 5-1. 네이버 Id 인증 시도
+        // 6-1. 네이버 Id 인증 시도
         if (StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_NAVER)) {
             LOGGER.info("TO-BE 소셜 아이디(Naver) > userAuthToken 인증(S2S)");
             NaverTokenVerifyReq naverTkReq = new NaverTokenVerifyReq();
@@ -1332,7 +1351,7 @@ public class UserModifyServiceImpl implements UserModifyService {
             } catch (StorePlatformException spe) {
                 throw new StorePlatformException("SAC_MEM_1204");
             }
-        // 5-2. 구글 Id 인증 시도
+        // 6-2. 구글 Id 인증 시도
         } else if (StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
             LOGGER.info("TO-BE 소셜 아이디(Google) > userAuthToken 인증(S2S)");
             GoogleTokenInfoReq googleTkReq = new GoogleTokenInfoReq();
@@ -1343,7 +1362,7 @@ public class UserModifyServiceImpl implements UserModifyService {
             } catch (StorePlatformException spe) {
                 throw new StorePlatformException("SAC_MEM_1204");
             }
-        // 5-3. 페이스북 Id 인증 시도
+        // 6-3. 페이스북 Id 인증 시도
         } else if (StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_FACEBOOK)) {
             LOGGER.info("TO-BE 소셜 아이디(FaceBook) > userAuthToken 인증(S2S)");
             FacebookVerifyTokenReq fbTkReq = new FacebookVerifyTokenReq();
@@ -1356,13 +1375,14 @@ public class UserModifyServiceImpl implements UserModifyService {
             }
         }
 
-        if(StringUtils.isNotBlank(socialUserNo) ){
+        /** 7. AS-IS, TO-BE의 socialUserNo가 모두 있다면 업데이트처리. */
+        if(StringUtils.isNotBlank(socialUserNo) && StringUtils.isNotBlank(newSocialUserNo)){
             LOGGER.info("socialUserNo : {} -> {} 업데이트", socialUserNo, newSocialUserNo);
-            this.userExtraService.modifyExtraInfo(req.getUserKey(),
+            this.userExtraInfoService.modifyExtraInfo(req.getUserKey(),
                     MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO, newSocialUserNo);
         }
 
-        /** 6. userAuthToken 인증이 되었으면 ID변경 */
+        /** 8. userAuthToken 인증이 되었으면 ID변경 */
         ModifyIdSacRes res = new ModifyIdSacRes();
 
         try {
