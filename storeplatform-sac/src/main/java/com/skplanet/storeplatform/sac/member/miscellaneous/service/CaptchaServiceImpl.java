@@ -1,13 +1,15 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.common.crypto.CryptoCode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
+import com.skplanet.storeplatform.sac.member.domain.mbr.UserCaptcha;
+import com.skplanet.storeplatform.sac.member.repository.UserCaptchaRepository;
 import nl.captcha.Captcha;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,11 +47,12 @@ public class CaptchaServiceImpl implements CaptchaService {
 	private static final Integer CAPTCHA_HEIGHT = 50;
 	private static final String CAPTCHA_IMAGE_EXT = "jpg";
 
+	@Autowired
+	UserCaptchaRepository userCaptchaRepository;
+
 	/**
-	 * <pre>
 	 * Captcha 문자 발급.
-	 * </pre>
-	 * 
+	 *
 	 * @return GetCaptchaRes
 	 */
 	@Override
@@ -74,7 +77,8 @@ public class CaptchaServiceImpl implements CaptchaService {
 
 			File storePath = getStorePath();
 			File captchaFile = new File(storePath, UUID.randomUUID().toString()+"."+CAPTCHA_IMAGE_EXT);
-			imageUrl = getImageUrl(captchaFile);
+			String captchaFilePath = captchaFile.getAbsolutePath();
+			imageUrl = getImageUrl(captchaFilePath);
 
 			// write to file
 			writeToFile(bos, captchaFile);
@@ -88,6 +92,9 @@ public class CaptchaServiceImpl implements CaptchaService {
 
 			// signData 는 ImageUrl + '|' + currentTimeMilis
 			signData = imageUrl + "|" + curTimeMillis;
+
+			// Save
+			userCaptchaRepository.save(new UserCaptcha(captchaAnswer, imageSign, signData, captchaFilePath, "Y"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new StorePlatformException("SAC_MEM_3602"); //자동가입방지 이미지 생성 실패
@@ -100,9 +107,9 @@ public class CaptchaServiceImpl implements CaptchaService {
 		return response;
 	}
 
-	private String getImageUrl(File captchaFile) {
+	private String getImageUrl(String captchaFilePath) {
 		String imageUrl;
-		imageUrl = thumbnailServerUrl + "/0_0"/*원본*/ + captchaFile.getAbsolutePath();
+		imageUrl = thumbnailServerUrl + "/0_0"/*원본*/ + captchaFilePath;
 		return imageUrl;
 	}
 
@@ -129,24 +136,16 @@ public class CaptchaServiceImpl implements CaptchaService {
 	}
 
 	/**
-	 * <pre>
 	 * Captcha 문자 확인.
-	 * </pre>
-	 * 
-	 * @param request
-	 *            ConfirmCaptchaReq
+	 *
+	 * @param request ConfirmCaptchaReq
 	 * @return ConfirmCaptchaRes
 	 */
 	@Override
 	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) {
-
-		WaterMarkAuthEcReq waterMarkAuthEcReq = new WaterMarkAuthEcReq();
-		waterMarkAuthEcReq.setUserCode(request.getAuthCode());
-		waterMarkAuthEcReq.setImageSign(request.getImageSign());
-		waterMarkAuthEcReq.setSignData(request.getSignData());
-
-		//FIXME:
-		//this.idpSCI.waterMarkAuth(waterMarkAuthEcReq);
+		UserCaptcha userCaptcha = userCaptchaRepository.findByImageSignAndSignData(request.getImageSign(), request.getSignData());
+		if(userCaptcha == null || !StringUtils.equals(userCaptcha.getCaptchaValue(), request.getAuthCode()))
+			throw new StorePlatformException("SAC_MEM_3604"); // 워터마크 인증 실패
 
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 		return response;
