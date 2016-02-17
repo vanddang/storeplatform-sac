@@ -209,6 +209,7 @@ public class DeviceSetController {
         setting.setWiFiAutoDwldYn(req.getIsDownloadWifiOnly());
         setting.setRnameAuthDate(DateUtils.parseDate(req.getRealNameDate()));
         setting.setRnameAuthMdn(req.getRealNameMdn());
+        setting.setRnameAuthMnoCd(req.getRealNameDeviceTelecom());
 
         setting.setDisplayUpdtYn(req.getIsShowUpdate());
         setting.setApkSaveLoc(req.getTempStorageCd());

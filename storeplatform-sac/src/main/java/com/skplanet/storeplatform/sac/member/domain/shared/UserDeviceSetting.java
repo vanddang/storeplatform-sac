@@ -98,6 +98,11 @@ public class UserDeviceSetting {
     private Date rnameAuthDate;
 
     /**
+     * 실명인증 통신사
+     */
+    private String rnameAuthMnoCd;
+
+    /**
      * 실명인증 MDN
      */
     @Column(columnDefinition = "char(1)")
@@ -169,6 +174,7 @@ public class UserDeviceSetting {
         res.setContentsStorageCd(contentsSaveLoc);
 
         res.setIsMakeShortcut(shortcutYn);
+        res.setRealNameDeviceTelecom(rnameAuthMnoCd);
 
         return res;
     }
@@ -191,6 +197,7 @@ public class UserDeviceSetting {
         res.setTempStorageCd(apkSaveLoc);
         res.setContentsStorageCd(contentsSaveLoc);
         res.setIsMakeShortcut(shortcutYn);
+        res.setRealNameDeviceTelecom(rnameAuthMnoCd);
 
         return res;
     }
@@ -398,5 +405,13 @@ public class UserDeviceSetting {
 
     public void setShortcutYn(String shortcutYn) {
         this.shortcutYn = shortcutYn;
+    }
+
+    public String getRnameAuthMnoCd() {
+        return rnameAuthMnoCd;
+    }
+
+    public void setRnameAuthMnoCd(String rnameAuthMnoCd) {
+        this.rnameAuthMnoCd = rnameAuthMnoCd;
     }
 }

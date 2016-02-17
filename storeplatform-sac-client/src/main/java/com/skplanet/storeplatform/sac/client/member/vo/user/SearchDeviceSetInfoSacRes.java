@@ -43,6 +43,8 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	private String realNameDate;
 	/** 실명인증 MDN. */
 	private String realNameMdn;
+    /** 실명인증 통신사 */
+    private String realNameDeviceTelecom;
 
     /**
      * 업데이트 표시 여부
@@ -312,5 +314,13 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 
     public void setIsMakeShortcut(String isMakeShortcut) {
         this.isMakeShortcut = isMakeShortcut;
+    }
+
+    public String getRealNameDeviceTelecom() {
+        return realNameDeviceTelecom;
+    }
+
+    public void setRealNameDeviceTelecom(String realNameDeviceTelecom) {
+        this.realNameDeviceTelecom = realNameDeviceTelecom;
     }
 }

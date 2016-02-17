@@ -98,6 +98,8 @@ public class DeviceSettingService {
             setting.setContentsSaveLoc(v.getContentsSaveLoc());
         if(!Strings.isNullOrEmpty(v.getShortcutYn()))
             setting.setShortcutYn(v.getShortcutYn());
+        if(!Strings.isNullOrEmpty(v.getRnameAuthMnoCd()))
+            setting.setRnameAuthMnoCd(v.getRnameAuthMnoCd());
 
         deviceSettingRepository.save(setting);
         return device.getDeviceId();
