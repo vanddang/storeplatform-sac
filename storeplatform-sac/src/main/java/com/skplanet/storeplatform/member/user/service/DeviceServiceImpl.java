@@ -311,7 +311,7 @@ public class DeviceServiceImpl implements DeviceService {
 							throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 					} else { // 아이디 회원
 						LOGGER.info("휴대기기 invalid 처리 userKey : {}, svcMangNo : {}, deviceKey : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceKey(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
-						int row = this.doInvalidDevice(userMbrDevice, isDormant);
+						int row = this.doInvalidDevice(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, isDormant);
 						if (row < 1)
 							throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 					}
@@ -401,7 +401,7 @@ public class DeviceServiceImpl implements DeviceService {
 								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 						} else { // 아이디 회원
 							LOGGER.info("deviceId가 없는 휴대기기 invalid 처리 userKey : {}, svcMangNo : {}, deviceKey : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceKey(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
-							int row = this.doInvalidDevice(userMbrDevice, isDormant);
+							int row = this.doInvalidDevice(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, isDormant);
 							if (row < 1)
 								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 						}
@@ -468,7 +468,7 @@ public class DeviceServiceImpl implements DeviceService {
 								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 						} else { // 아이디 회원
 							LOGGER.info("휴대기기 invalid 처리 userKey : {}, svcMangNo : {}, deviceKey : {}, deviceId : {}, mdn : {}", userMbrDevice.getUserKey(), userMbrDevice.getSvcMangNum(), userMbrDevice.getDeviceKey(), userMbrDevice.getDeviceID(), userMbrDevice.getMdn());
-							int row = this.doInvalidDevice(userMbrDevice, isDormant);
+							int row = this.doInvalidDevice(createDeviceRequest.getCommonRequest().getSystemID(), userMbrDevice, isDormant);
 							if (row < 1)
 								throw new StorePlatformException(this.getMessage("response.ResultCode.editInputItemNotFound", ""));
 						}
@@ -1207,14 +1207,15 @@ public class DeviceServiceImpl implements DeviceService {
 	 * <pre>
 	 * 아이디 회원의 휴대기기를 auth_yn = N 처리.
 	 * </pre>
-	 *
+	 * @param systemID
+	 *            systemID
 	 * @param userMbrDevice
 	 *            사용자 Value Object
 	 * @param isDormant
 	 *            휴면계정 유무
 	 * @return row - 결과값 1:성공, 0:실패
 	 */
-	private int doInvalidDevice(UserMbrDevice userMbrDevice, String isDormant) {
+	private int doInvalidDevice(String systemID, UserMbrDevice userMbrDevice, String isDormant) {
 		int row = 0;
 		CommonDAO dao = null;
 		if (StringUtils.equals(isDormant, Constant.TYPE_YN_N)) {
@@ -1267,6 +1268,18 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
+		// 단말 삭제 Tlog
+		final String tlogSystemId = systemID;
+		final String tlogInsdUserKey = userMbrDevice.getUserKey();
+		final String tlogInsdDeviceId = userMbrDevice.getDeviceKey();
+		new TLogUtil().log(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SC_MEM_0008").result_code("SUCC").result_message("")
+						.insd_usermbr_no(tlogInsdUserKey).insd_device_id(tlogInsdDeviceId)
+						.request_system_id(tlogSystemId).exception_log("");
+			}
+		});
 		return row;
 	}
 
@@ -1786,6 +1799,22 @@ public class DeviceServiceImpl implements DeviceService {
 		// TODO. 휴대기기 이력 변경 코드 우선순위 처리함.
 		if(userMbrDeviceForReq.getDeviceID() != null && !StringUtils.equals(userMbrDevice.getDeviceID(), userMbrDeviceForReq.getDeviceID())){
 			chgCaseCd = MemberConstants.DEVICE_CHANGE_TYPE_DEVICEID_CHANGE;
+			// TL_SC_MEM_0010 deviceId 변경 Tlog
+			final String tlogSystemId = systemID;
+			final String tlogInsdUserKey = userMbrDevice.getUserKey();
+			final String tlogInsdDeviceId = userMbrDevice.getDeviceKey();
+			final String tlogDeviceId = userMbrDeviceForReq.getDeviceID();
+			final String tlogDeviceIdPre = userMbrDevice.getDeviceID();
+			final String tlogMdn = userMbrDeviceForReq.getMdn(); // TODO. header에 mdn 추가 필요
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id("TL_SC_MEM_0010").result_code("SUCC").result_message("")
+							.insd_usermbr_no(tlogInsdUserKey).insd_device_id(tlogInsdDeviceId).device_id(tlogDeviceId)
+							.device_id_pre(tlogDeviceIdPre).device_id_post(tlogDeviceId)
+							.request_system_id(tlogSystemId).exception_log("");
+				}
+			});
 			logBuf.append("[device_id]").append(userMbrDevice.getDeviceID()).append("->").append(userMbrDeviceForReq.getDeviceID());
 		}
 		if(userMbrDeviceForReq.getNativeID() != null && !StringUtils.equals(userMbrDevice.getNativeID(), userMbrDeviceForReq.getNativeID())) {
@@ -1801,6 +1830,21 @@ public class DeviceServiceImpl implements DeviceService {
 		if(userMbrDeviceForReq.getMdn() != null	&& !StringUtils.equals(userMbrDevice.getMdn(), userMbrDeviceForReq.getMdn())){
 			if(StringUtils.isNotBlank(userMbrDeviceForReq.getMdn()) && StringUtils.isNotBlank(userMbrDevice.getMdn())){ // usim 제거 및 삽입 후 접속시 제외
 				chgCaseCd = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE;
+				// TL_SC_MEM_0011 MDN 변경 Tlog
+				final String tlogSystemId = systemID;
+				final String tlogInsdUserKey = userMbrDevice.getUserKey();
+				final String tlogInsdDeviceId = userMbrDevice.getDeviceKey();
+				final String tlogMdn = userMbrDeviceForReq.getMdn(); // TODO. header에 mdn 추가필요, body에 mdn_post 추가필요
+				final String tlogMdnPre = userMbrDevice.getMdn(); // TODO. body에 mdn_pre 추가 필요
+				final String tlogDeviceId = userMbrDeviceForReq.getDeviceID();
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL_SC_MEM_0010").result_code("SUCC").result_message("")
+								.insd_usermbr_no(tlogInsdUserKey).insd_device_id(tlogInsdDeviceId).device_id(tlogDeviceId)
+								.request_system_id(tlogSystemId).exception_log("");
+					}
+				});
 			}
 			logBuf.append("[mdn]").append(userMbrDevice.getMdn()).append("->").append(userMbrDeviceForReq.getMdn());
 		}
@@ -1935,12 +1979,43 @@ public class DeviceServiceImpl implements DeviceService {
 		if(modifyDeviceRequest.isUpdDeviceId()) {
 			// deviceId
 			if (modifyDeviceRequest.getUserMbrDevice().getDeviceID() != null) {
+				// TL_SC_MEM_0010 deviceId 변경 Tlog
+				final String tlogSystemId = modifyDeviceRequest.getCommonRequest().getSystemID();
+				final String tlogInsdUserKey = searchDeviceResponse.getUserMbrDevice().getUserKey();
+				final String tlogInsdDeviceId = searchDeviceResponse.getUserMbrDevice().getDeviceKey();
+				final String tlogDeviceId = modifyDeviceRequest.getUserMbrDevice().getDeviceID();
+				final String tlogDeviceIdPre = searchDeviceResponse.getUserMbrDevice().getMdn();
+				final String tlogMdn = searchDeviceResponse.getUserMbrDevice().getMdn(); // TODO. header에 mdn 추가 필요
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL_SC_MEM_0010").result_code("SUCC").result_message("")
+								.insd_usermbr_no(tlogInsdUserKey).insd_device_id(tlogInsdDeviceId).device_id(tlogDeviceId)
+								.device_id_pre(tlogDeviceIdPre).device_id_post(tlogDeviceId)
+								.request_system_id(tlogSystemId).exception_log("");
+					}
+				});
 				logBuf.append("[device_id]").append(searchDeviceResponse.getUserMbrDevice().getDeviceID()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getDeviceID());
 				updateMbrDevice.setDeviceID(modifyDeviceRequest.getUserMbrDevice().getDeviceID());
 			}
 
 			// MDN
 			if (modifyDeviceRequest.getUserMbrDevice().getMdn() != null) {
+				// TL_SC_MEM_0011 MDN 변경 Tlog
+				final String tlogSystemId = modifyDeviceRequest.getCommonRequest().getSystemID();
+				final String tlogInsdUserKey = searchDeviceResponse.getUserMbrDevice().getUserKey();
+				final String tlogInsdDeviceId = searchDeviceResponse.getUserMbrDevice().getDeviceKey();
+				final String tlogMdn = modifyDeviceRequest.getUserMbrDevice().getMdn(); // TODO. header에 mdn 추가필요, body에 mdn_post 추가필요
+				final String tlogMdnPre = searchDeviceResponse.getUserMbrDevice().getMdn(); // TODO. body에 mdn_pre 추가 필요
+				final String tlogDeviceId = searchDeviceResponse.getUserMbrDevice().getDeviceID();
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL_SC_MEM_0010").result_code("SUCC").result_message("")
+								.insd_usermbr_no(tlogInsdUserKey).insd_device_id(tlogInsdDeviceId).device_id(tlogDeviceId)
+								.request_system_id(tlogSystemId).exception_log("");
+					}
+				});
 				logBuf.append("[mdn]").append(searchDeviceResponse.getUserMbrDevice().getMdn()).append("->").append(modifyDeviceRequest.getUserMbrDevice().getMdn());
 				updateMbrDevice.setMdn(modifyDeviceRequest.getUserMbrDevice().getMdn());
 			}

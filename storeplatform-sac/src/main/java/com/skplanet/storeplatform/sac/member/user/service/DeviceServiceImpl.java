@@ -443,8 +443,7 @@ public class DeviceServiceImpl implements DeviceService {
 					deviceInfo.getDeviceExtraInfoList()));
 		}
 		if (StringUtils.isNotBlank(svcVersion)) {
-			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
-					MemberConstants.DEVICE_EXTRA_SCVERSION,
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
 					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
 					deviceInfo.getDeviceExtraInfoList()));
 		}
@@ -561,11 +560,7 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
             /*  market pin 이관*/
-            TransferMarketPinRequest transferMarketPinRequest = new TransferMarketPinRequest();
-            transferMarketPinRequest.setCommonRequest(commonRequest);
-            transferMarketPinRequest.setPreUserKey(previousUserKey);
-            transferMarketPinRequest.setUserKey(userKey);
-            boolean isSuccessTransferMarketPin = userMarketPinService.transferMarketPin(preUserKey, userKey);
+            boolean isSuccessTransferMarketPin = userMarketPinService.transferMarketPin(previousUserKey, userKey);
             if (isSuccessTransferMarketPin) {
                 LOGGER.info("기등록된 모바일 회원 Market pin 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
             }

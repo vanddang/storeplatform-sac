@@ -243,6 +243,13 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SAC_MEM_0006");
+			}
+		});
+
 		if(!this.commService.isValidDeviceTelecomCode(req.getDeviceTelecom())){
 			throw new StorePlatformException("SAC_MEM_1509");
 		}

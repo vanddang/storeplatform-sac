@@ -261,18 +261,6 @@ public class UserServiceImpl implements UserService {
 		UserMbr usermbr = new UserMbr();
 		usermbr.setUserID(createUserRequest.getUserMbr().getUserID());
 
-		if (!createUserRequest.getUserMbr().getUserType().equals(UserTypeCode.MOBILE_USER.getCode())) {
-			ExistLimitWordMemberID existLimitWordMemberID = this.commonDAO.queryForObject("User.checkExistLimitWord",
-					usermbr, ExistLimitWordMemberID.class);
-			LOGGER.debug("### existLimitWordMemberID : {}", existLimitWordMemberID);
-
-			// ACTION 1-1. userID가 존재하는 경우 Fail 반환
-			if (existLimitWordMemberID != null && existLimitWordMemberID.getExistWordID() != null
-					&& existLimitWordMemberID.getExistWordID().length() > 0) {
-				throw new StorePlatformException(this.getMessage("response.ResultCode.duplicatedMemberID", ""));
-			}
-		}
-
 		// ACTION 2-1. 내부 사용자회원 번호 생성
 		usermbr = createUserRequest.getUserMbr();
 
