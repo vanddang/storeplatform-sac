@@ -35,7 +35,8 @@ public class SegmentRes extends CommonInfo {
 
     private String ageClsfCd;
 
-    private String deviceChgYn;
+    // IDP 연동중단으로 기변정보 확인이 불가해짐. default 값을 N 으로 세팅함
+    private String deviceChgYn = "N";
 
     private String newEntryYn;
 
@@ -78,10 +79,6 @@ public class SegmentRes extends CommonInfo {
 
     public String getDeviceChgYn() {
         return deviceChgYn;
-    }
-
-    public void setDeviceChgYn(String deviceChgYn) {
-        this.deviceChgYn = deviceChgYn;
     }
 
     public String getNewEntryYn() {
