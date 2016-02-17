@@ -6,6 +6,7 @@ import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.sac.client.member.vo.user.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserDeviceSetting;
@@ -198,7 +199,22 @@ public class DeviceSetController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
         UserDeviceSetting setting = new UserDeviceSetting();
+        setting.setAutoUpdtSetClsf(req.getAutoUpdateSet());
+        setting.setAdultContentsLockYn(req.getIsAdult());
         setting.setAutoUpdtYn(req.getIsAutoUpdate());
+        setting.setWiFiAutoUpdtYn(req.getIsAutoUpdateWifi());
+        setting.setLoginLockYn(req.getIsLoginLock());
+
+        setting.setAdultContentsLimtYn(req.getIsAdultLock());
+        setting.setWiFiAutoDwldYn(req.getIsDownloadWifiOnly());
+        setting.setRnameAuthDate(DateUtils.parseDate(req.getRealNameDate()));
+        setting.setRnameAuthMdn(req.getRealNameMdn());
+        setting.setRnameAuthMnoCd(req.getRealNameDeviceTelecom());
+
+        setting.setDisplayUpdtYn(req.getIsShowUpdate());
+        setting.setApkSaveLoc(req.getTempStorageCd());
+        setting.setContentsSaveLoc(req.getContentsStorageCd());
+        setting.setShortcutYn(req.getIsMakeShortcut());
 
         String deviceId = settingService.merge(req.getUserKey(), req.getDeviceKey(), setting);
         ModifyDeviceSetInfoSacRes res = new ModifyDeviceSetInfoSacRes(req.getDeviceKey(), deviceId, req.getUserKey());

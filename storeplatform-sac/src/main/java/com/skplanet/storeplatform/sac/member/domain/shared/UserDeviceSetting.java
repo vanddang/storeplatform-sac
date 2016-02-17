@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.member.domain.shared;
 
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacRes;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -99,10 +98,37 @@ public class UserDeviceSetting {
     private Date rnameAuthDate;
 
     /**
+     * 실명인증 통신사
+     */
+    private String rnameAuthMnoCd;
+
+    /**
      * 실명인증 MDN
      */
     @Column(columnDefinition = "char(1)")
     private String rnameAuthMdn;
+
+    /**
+     * 업데이트 표시 여부
+     */
+    @Column(columnDefinition = "char(1)")
+    private String displayUpdtYn;
+
+    /**
+     * 설치 파일 임시 저장 위치
+     */
+    private String apkSaveLoc;
+
+    /**
+     * 콘텐츠 다운로드 저장 위치
+     */
+    private String contentsSaveLoc;
+
+    /**
+     * 바로가기 생성 여부
+     */
+    @Column(columnDefinition = "char(1)")
+    private String shortcutYn;
 
     @Transient
     private boolean useMarketPin = false;
@@ -129,22 +155,26 @@ public class UserDeviceSetting {
     public SearchDeviceSetInfoSacRes convertToResponse() {
         SearchDeviceSetInfoSacRes res = new SearchDeviceSetInfoSacRes();
 
-        // 원래 처리하던 SQL문장의 주석 부분을 반영하여 아래와 같이 주석 처리함
         res.setAutoUpdateSet(autoUpdtSetClsf);
         res.setIsAdult(adultContentsLockYn);
         res.setIsPin(pinNo == null ? "N" : "Y");
         res.setIsPinClosed(authLockYn);
         res.setFailCnt(authFailCnt != null ? authFailCnt.toString() : null);
 
-        //res.setIsPinRetry(null);    // 컬럼이 존재하지 않아 제거
         res.setIsAutoUpdate(autoUpdtYn);
         res.setIsAutoUpdateWifi(wiFiAutoUpdtYn);
         res.setIsLoginLock(loginLockYn);
         res.setIsAdultLock(adultContentsLimtYn);
-
         res.setIsDownloadWifiOnly(wiFiAutoDwldYn);
+
         res.setRealNameDate(DateUtils.format(rnameAuthDate));
         res.setRealNameMdn(rnameAuthMdn);
+        res.setIsShowUpdate(displayUpdtYn);
+        res.setTempStorageCd(apkSaveLoc);
+        res.setContentsStorageCd(contentsSaveLoc);
+
+        res.setIsMakeShortcut(shortcutYn);
+        res.setRealNameDeviceTelecom(rnameAuthMnoCd);
 
         return res;
     }
@@ -162,6 +192,12 @@ public class UserDeviceSetting {
         res.setFailCnt(marketPinFailCnt != null ? marketPinFailCnt.toString() : null);
         res.setIsAdultLock(adultContentsLimtYn);
         res.setIsDownloadWifiOnly(wiFiAutoDwldYn);
+        res.setIsShowUpdate(displayUpdtYn);
+
+        res.setTempStorageCd(apkSaveLoc);
+        res.setContentsStorageCd(contentsSaveLoc);
+        res.setIsMakeShortcut(shortcutYn);
+        res.setRealNameDeviceTelecom(rnameAuthMnoCd);
 
         return res;
     }
@@ -337,5 +373,45 @@ public class UserDeviceSetting {
 
     public void setMarketPinFailCnt(Integer marketPinFailCnt) {
         this.marketPinFailCnt = marketPinFailCnt;
+    }
+
+    public String getDisplayUpdtYn() {
+        return displayUpdtYn;
+    }
+
+    public void setDisplayUpdtYn(String displayUpdtYn) {
+        this.displayUpdtYn = displayUpdtYn;
+    }
+
+    public String getApkSaveLoc() {
+        return apkSaveLoc;
+    }
+
+    public void setApkSaveLoc(String apkSaveLoc) {
+        this.apkSaveLoc = apkSaveLoc;
+    }
+
+    public String getContentsSaveLoc() {
+        return contentsSaveLoc;
+    }
+
+    public void setContentsSaveLoc(String contentsSaveLoc) {
+        this.contentsSaveLoc = contentsSaveLoc;
+    }
+
+    public String getShortcutYn() {
+        return shortcutYn;
+    }
+
+    public void setShortcutYn(String shortcutYn) {
+        this.shortcutYn = shortcutYn;
+    }
+
+    public String getRnameAuthMnoCd() {
+        return rnameAuthMnoCd;
+    }
+
+    public void setRnameAuthMnoCd(String rnameAuthMnoCd) {
+        this.rnameAuthMnoCd = rnameAuthMnoCd;
     }
 }

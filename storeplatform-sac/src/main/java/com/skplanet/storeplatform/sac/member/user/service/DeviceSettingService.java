@@ -89,6 +89,17 @@ public class DeviceSettingService {
             setting.setRnameAuthDate(v.getRnameAuthDate());
         if(!Strings.isNullOrEmpty(v.getRnameAuthMdn()))
             setting.setRnameAuthMdn(v.getRnameAuthMdn());
+        if(!Strings.isNullOrEmpty(v.getDisplayUpdtYn()))
+            setting.setDisplayUpdtYn(v.getDisplayUpdtYn());
+        if(!Strings.isNullOrEmpty(v.getApkSaveLoc()))
+            setting.setApkSaveLoc(v.getApkSaveLoc());
+
+        if(!Strings.isNullOrEmpty(v.getContentsSaveLoc()))
+            setting.setContentsSaveLoc(v.getContentsSaveLoc());
+        if(!Strings.isNullOrEmpty(v.getShortcutYn()))
+            setting.setShortcutYn(v.getShortcutYn());
+        if(!Strings.isNullOrEmpty(v.getRnameAuthMnoCd()))
+            setting.setRnameAuthMnoCd(v.getRnameAuthMnoCd());
 
         deviceSettingRepository.save(setting);
         return device.getDeviceId();
