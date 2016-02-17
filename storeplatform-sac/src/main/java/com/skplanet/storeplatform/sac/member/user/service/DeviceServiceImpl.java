@@ -443,8 +443,7 @@ public class DeviceServiceImpl implements DeviceService {
 					deviceInfo.getDeviceExtraInfoList()));
 		}
 		if (StringUtils.isNotBlank(svcVersion)) {
-			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
-					MemberConstants.DEVICE_EXTRA_SCVERSION,
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
 					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
 					deviceInfo.getDeviceExtraInfoList()));
 		}
