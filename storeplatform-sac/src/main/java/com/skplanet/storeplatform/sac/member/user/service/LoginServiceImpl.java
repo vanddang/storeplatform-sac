@@ -3075,11 +3075,12 @@ public class LoginServiceImpl implements LoginService {
         MarketPinInfo pinInfo = new MarketPinInfo();
 		if(StringUtils.isBlank(setting.getPinNo()) || StringUtils.equals(setting.getPinNo(), MemberConstants.USE_N)){
 			pinInfo.setIsPinSet(MemberConstants.USE_N);
+			pinInfo.setIsPinClosed(MemberConstants.USE_N);
 		}else{
 			pinInfo.setIsPinSet(MemberConstants.USE_Y);
+			pinInfo.setIsPinClosed(setting.getAuthLockYn());
 		}
         pinInfo.setIsPinRetry(MemberConstants.USE_Y);
-        pinInfo.setIsPinClosed(setting.getAuthLockYn());
 
         if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_N)) { // PIN 설정
             pinInfo.setSetPinUrl(this.pinCodeSetUrl);
@@ -3961,8 +3962,10 @@ public class LoginServiceImpl implements LoginService {
 				// 휴대기기 정보
 				DeviceInfo deviceInfo = new DeviceInfo();
 				deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-				deviceInfo.setMarketDeviceKey(detailRes.getUserInfo().getImMbrNo()); // 타사 회선의 고유 Key
+				deviceInfo.setSvcMangNum(detailRes.getDeviceInfoList().get(0).getSvcMangNum());
+				deviceInfo.setMarketDeviceKey(detailRes.getDeviceInfoList().get(0).getSvcMangNum());
 				deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+				deviceInfo.setMdn(detailRes.getDeviceInfoList().get(0).getMdn());
 				deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
 				deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
 				if (StringUtils.isNotBlank(marketRes.getDeviceInfo().getDeviceKeyAuth())) {
