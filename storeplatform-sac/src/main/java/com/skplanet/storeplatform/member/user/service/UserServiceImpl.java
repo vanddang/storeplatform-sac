@@ -177,8 +177,6 @@ import com.skplanet.storeplatform.member.common.code.SubStateCode;
 import com.skplanet.storeplatform.member.common.code.UserTypeCode;
 import com.skplanet.storeplatform.member.common.crypto.CryptoCode;
 import com.skplanet.storeplatform.member.common.crypto.CryptoCodeIm;
-import com.skplanet.storeplatform.member.common.vo.ExistLimitWordMemberID;
-import com.skplanet.storeplatform.member.user.vo.SearchUserKey;
 import com.skplanet.storeplatform.member.user.vo.UserMbrLoginLog;
 import com.skplanet.storeplatform.member.user.vo.UserMbrRetrieveUserMbrPwd;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -466,9 +464,8 @@ public class UserServiceImpl implements UserService {
 		checkDuplicationResponse.setCommonResponse(this.getErrorResponse("response.ResultCode.success",
 				"response.ResultMessage.success"));
 
-		SearchUserKey searchUserKey = new SearchUserKey();
-		searchUserKey.setKeySearchList(checkDuplicationRequest.getKeySearchList());
-		searchUserKey.setTenantID(checkDuplicationRequest.getCommonRequest().getTenantID());
+		//SearchUserKey searchUserKey = new SearchUserKey();
+		//searchUserKey.setKeySearchList(checkDuplicationRequest.getKeySearchList());
 
 		boolean isDeviceRequest = false;
 
@@ -487,18 +484,18 @@ public class UserServiceImpl implements UserService {
 		CommonDAO dao = this.commonDAO;
 		// 휴대기기 정보로 조회
 		if (isDeviceRequest) {
-			userKey = dao.queryForObject("User.getUserKeyByKeySearchListD", searchUserKey, String.class);
+			userKey = dao.queryForObject("User.getUserKeyByKeySearchListD", checkDuplicationRequest, String.class);
 		} else {
-			userKey = dao.queryForObject("User.getUserKeyByKeySearchList", searchUserKey, String.class);
+			userKey = dao.queryForObject("User.getUserKeyByKeySearchList", checkDuplicationRequest, String.class);
 		}
 
 		// 휴면DB 조회
 		if (StringUtils.isBlank(userKey)) {
 			dao = this.idleDAO;
 			if (isDeviceRequest) {
-				userKey = dao.queryForObject("User.getUserKeyByKeySearchListD", searchUserKey, String.class);
+				userKey = dao.queryForObject("User.getUserKeyByKeySearchListD", checkDuplicationRequest, String.class);
 			} else {
-				userKey = dao.queryForObject("User.getUserKeyByKeySearchList", searchUserKey, String.class);
+				userKey = dao.queryForObject("User.getUserKeyByKeySearchList", checkDuplicationRequest, String.class);
 			}
 			if (StringUtils.isNotBlank(userKey)) {
 				isDormant = Constant.TYPE_YN_Y;
@@ -553,14 +550,14 @@ public class UserServiceImpl implements UserService {
 				throw new StorePlatformException(this.getMessage("response.ResultCode.userKeyNotFound", ""));
 			}
 
-            userMbrRetrieveUserMbrPwd.setUserID(tempDevice.getUserID());
-            userMbrRetrieveUserMbrPwd = this.commonDAO.queryForObject("User.getUserMbrRetrievePWD",
+            userMbrRetrieveUserMbrPwd.setUserKey(loginUserRequest.getUserKey());
+			userMbrRetrieveUserMbrPwd = this.commonDAO.queryForObject("User.getUserMbrRetrievePWD",
                     userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
 
             if (userMbrRetrieveUserMbrPwd == null) {
                 // 휴면DB조회
                 userMbrRetrieveUserMbrPwd = new UserMbrRetrieveUserMbrPwd();
-                userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
+                userMbrRetrieveUserMbrPwd.setUserKey(loginUserRequest.getUserKey());
                 userMbrRetrieveUserMbrPwd = this.idleDAO.queryForObject("User.getUserMbrRetrievePWD",
                         userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
                 if (userMbrRetrieveUserMbrPwd == null) {
@@ -596,16 +593,15 @@ public class UserServiceImpl implements UserService {
 
 		} else { // 아이디 회원
 
-			userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
+			userMbrRetrieveUserMbrPwd.setUserKey(loginUserRequest.getUserKey());
 
-			// TODO. 동일한 userId가 2개 존재한경우 에러가 발생한다. 1건만 조회하도록 수정할지는 추후에 확인 필요.
 			userMbrRetrieveUserMbrPwd = this.commonDAO.queryForObject("User.getUserMbrRetrievePWD",
 					userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
 
 			if (userMbrRetrieveUserMbrPwd == null) {
 				// 휴면DB조회
 				userMbrRetrieveUserMbrPwd = new UserMbrRetrieveUserMbrPwd();
-				userMbrRetrieveUserMbrPwd.setUserID(loginUserRequest.getUserID());
+				userMbrRetrieveUserMbrPwd.setUserKey(loginUserRequest.getUserKey());
 				userMbrRetrieveUserMbrPwd = this.idleDAO.queryForObject("User.getUserMbrRetrievePWD",
 						userMbrRetrieveUserMbrPwd, UserMbrRetrieveUserMbrPwd.class);
 				if (userMbrRetrieveUserMbrPwd == null) {
@@ -616,7 +612,7 @@ public class UserServiceImpl implements UserService {
 			}
 
 			// TLog
-			final String tlogUserID = loginUserRequest.getUserID();
+			final String tlogUserID = userMbrRetrieveUserMbrPwd.getUserID();
 			final String tlogUserKey = userMbrRetrieveUserMbrPwd.getUserKey();
 			new TLogUtil().set(new ShuttleSetter() {
 				@Override

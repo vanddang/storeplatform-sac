@@ -315,8 +315,8 @@ public class UserSCIController implements UserSCI {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.commonNotFound", ""));
 		}
 
-		// 필수 파라미터, userID, isMobile
-		if (loginUserRequest.getUserID() == null || loginUserRequest.getUserID().length() <= 0 // userID
+		// 필수 파라미터, userKey, isMobile
+		if (loginUserRequest.getUserKey() == null || loginUserRequest.getUserKey().length() <= 0 // userKey
 				|| loginUserRequest.getIsMobile() == null || loginUserRequest.getIsMobile().length() <= 0 // isMobile
 		) {
 			throw new StorePlatformException(this.getMessage("response.ResultCode.mandatoryNotFound", ""));

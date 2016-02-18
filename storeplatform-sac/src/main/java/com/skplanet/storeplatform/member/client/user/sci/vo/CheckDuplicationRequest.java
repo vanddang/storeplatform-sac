@@ -9,13 +9,13 @@
  */
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 사용자 존재여부 확인 요청 Value Object.
@@ -44,6 +44,9 @@ public class CheckDuplicationRequest extends CommonInfo implements Serializable 
 	 * </pre>
 	 */
 	private List<KeySearch> keySearchList;
+
+	/** 유저 타입. */
+	private String userType;
 
 	/**
 	 * 공통 요청 Value Object를 리턴한다.
@@ -90,6 +93,25 @@ public class CheckDuplicationRequest extends CommonInfo implements Serializable 
 	 */
 	public void setKeySearchList(List<KeySearch> keySearchList) {
 		this.keySearchList = keySearchList;
+	}
+
+	/**
+	 * 유저 타입을 리턴한다.
+	 *
+	 * @return userType - 유저 타입 Value Object
+	 */
+	public String getUserType() {
+		return this.userType;
+	}
+
+	/**
+	 * 유저 타입을 설정한다.
+	 *
+	 * @param userType
+	 *            유저 타입 Value Object
+	 */
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 	/*
