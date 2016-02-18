@@ -9,6 +9,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * [REQUEST] 회원 정보 조회
  * 
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
+ * Updated on : 2016. 2. 18. Updated by : 윤보영, 카레즈.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DetailReq extends CommonInfo {
@@ -23,6 +24,9 @@ public class DetailReq extends CommonInfo {
 	private String userKey;
 	/* 기기 키 */
 	private String deviceKey;
+
+    /** 사용자 type */
+    private String userType;
 
 	private SearchExtentReq searchExtent;
 
@@ -66,7 +70,15 @@ public class DetailReq extends CommonInfo {
 		this.searchExtent = searchExtent;
 	}
 
-	public static long getSerialversionuid() {
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 

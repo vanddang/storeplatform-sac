@@ -300,26 +300,41 @@ public class LoginServiceImpl implements LoginService {
         }
 
 		/** 02. 회원정보 조회 */
-        CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, deviceInfo.getUserKey());
-
-		/** 03. 회원 존재유무 확인 */
-        if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
-			/* 회원 정보가 존재 하지 않습니다. */
-            throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
+        List<KeySearch> userSearchList = new ArrayList<KeySearch>();
+        KeySearch keySchUserKey = new KeySearch();
+        keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+        keySchUserKey.setKeyString(deviceInfo.getUserKey());
+        userSearchList.add(keySchUserKey);
+        SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+        CommonRequest commonRequest = new CommonRequest();
+        searchExtentUserRequest.setCommonRequest(commonRequest);
+        searchExtentUserRequest.setKeySearchList(userSearchList);
+        searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+        SearchExtentUserResponse searchExtentUserResponse = null;
+        try{
+            searchExtentUserResponse = this.userSCI.searchExtentUser(searchExtentUserRequest);
+        } catch (StorePlatformException ex) {
+            /** 03. 회원 존재유무 확인 */
+            if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+		/* 회원 정보가 존재 하지 않습니다. */
+                throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
+            }else{
+                throw ex;
+            }
         }
 
         /** 04. 휴면계정인 경우 복구 처리 */
-        if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+        if (StringUtils.equals(searchExtentUserResponse.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
             LOGGER.info("{} 휴면 {} 회원 복구", req.getDeviceId(),
-                    StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE) ? "모바일" : "IDP ID");
+                    StringUtils.equals(searchExtentUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE) ? "모바일" : "IDP ID");
             MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
             moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
-            moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+            moveUserInfoSacReq.setUserKey(searchExtentUserResponse.getUserMbr().getUserKey());
             this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
         }
 
 		/** 06. 로그인 성공이력 저장 */
-		this.regLoginHistory(requestHeader, chkDupRes.getUserMbr().getUserKey(), null, "Y", "Y", req.getDeviceIp(),
+		this.regLoginHistory(requestHeader, searchExtentUserResponse.getUserMbr().getUserKey(), null, "Y", "Y", req.getDeviceIp(),
 				req.getIsAutoUpdate(), req.getLoginReason(), "Y", deviceInfo.getDeviceKey(), null);
 
 		/** 07. 요금제 여부 로직 추가 (2015-05-27 => 06-24) */
@@ -331,7 +346,7 @@ public class LoginServiceImpl implements LoginService {
 		 * 검색 조건 setting
 		 */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey = new KeySearch();
 		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 		keySchUserKey.setKeyString(deviceInfo.getDeviceKey());
 		keySearchList.add(keySchUserKey);
@@ -447,12 +462,12 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/** 9. 로그인 결과 */
-		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
-		res.setUserType(chkDupRes.getUserMbr().getUserType());
-		res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
-		res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
+		res.setUserKey(searchExtentUserResponse.getUserMbr().getUserKey());
+		res.setUserType(searchExtentUserResponse.getUserMbr().getUserType());
+		res.setUserMainStatus(searchExtentUserResponse.getUserMbr().getUserMainStatus());
+		res.setUserSubStatus(searchExtentUserResponse.getUserMbr().getUserSubStatus());
 		res.setDeviceKey(deviceInfo.getDeviceKey());
-		res.setIsLoginSuccess("Y");
+		res.setIsLoginSuccess(MemberConstants.USE_Y);
 
 		return res;
 	}
@@ -541,34 +556,49 @@ public class LoginServiceImpl implements LoginService {
         }
 
         /** 02.회원정보 조회 */
-        CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, deviceInfo.getUserKey());
-
-		/** 03.회원 존재유무 확인 */
-        if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
-			/* 회원 정보가 존재 하지 않습니다. */
-            throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
+        List<KeySearch> userSearchList = new ArrayList<KeySearch>();
+        KeySearch keySchUserKey = new KeySearch();
+        keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+        keySchUserKey.setKeyString(deviceInfo.getUserKey());
+        userSearchList.add(keySchUserKey);
+        SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+        CommonRequest commonRequest = new CommonRequest();
+        searchExtentUserRequest.setCommonRequest(commonRequest);
+        searchExtentUserRequest.setKeySearchList(userSearchList);
+        searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+        SearchExtentUserResponse searchExtentUserResponse = null;
+        try{
+            searchExtentUserResponse = this.userSCI.searchExtentUser(searchExtentUserRequest);
+        } catch (StorePlatformException ex) {
+            /** 03. 회원 존재유무 확인 */
+            if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+		/* 회원 정보가 존재 하지 않습니다. */
+                throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
+            }else{
+                throw ex;
+            }
         }
 
         /** 04.개인정보 3자 제공 동의약관 동의여부 체크 */
         if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-                && !StringUtils.equals(this.isAgreementByAgreementCode(requestHeader, chkDupRes.getUserMbr()
-                .getUserKey(), MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS, chkDupRes
+                && !StringUtils.equals(this.isAgreementByAgreementCode(requestHeader, searchExtentUserResponse.getUserMbr()
+                .getUserKey(), MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS, searchExtentUserResponse
                 .getUserMbr().getIsDormant()), "Y")) {
             throw new StorePlatformException("SAC_MEM_1506"); // 개인정보 3자 제공 동의약관 미동의 상태입니다.
         }
 
         /** 05. 휴면계정인 경우 복구 처리 */
-        if (StringUtils.equals(chkDupRes.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+        if (StringUtils.equals(searchExtentUserResponse.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
             LOGGER.info("{} 휴면 {} 회원 복구", req.getDeviceId(),
-                    StringUtils.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE) ? "모바일" : "IDP ID");
+                    StringUtils.equals(searchExtentUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE) ? "모바일" : "IDP ID");
             MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
             moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
-            moveUserInfoSacReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+            moveUserInfoSacReq.setUserKey(searchExtentUserResponse.getUserMbr().getUserKey());
             this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
         }
 
 		/** 06. Device 로그인 성공이력 저장 */
-        this.regLoginHistory(requestHeader, chkDupRes.getUserMbr().getUserKey(), null, "Y", "Y", req.getDeviceIp(),
+        this.regLoginHistory(requestHeader, searchExtentUserResponse.getUserMbr().getUserKey(), null, "Y", "Y", req.getDeviceIp(),
                 req.getIsAutoUpdate(), req.getLoginReason(), "Y", deviceInfo.getDeviceKey(), null);
 
 		/** 07. 한도 요금제 여부 로직 추가 (2015-05-27 => 06-24) */
@@ -580,7 +610,7 @@ public class LoginServiceImpl implements LoginService {
 		 * 검색 조건 setting
 		 */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey = new KeySearch();
 		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 		keySchUserKey.setKeyString(deviceInfo.getDeviceKey());
 		keySearchList.add(keySchUserKey);
@@ -695,12 +725,12 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/** 9. 로그인 결과 */
-		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
-		res.setUserType(chkDupRes.getUserMbr().getUserType());
-		res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
-		res.setUserSubStatus(chkDupRes.getUserMbr().getUserSubStatus());
+		res.setUserKey(searchExtentUserResponse.getUserMbr().getUserKey());
+		res.setUserType(searchExtentUserResponse.getUserMbr().getUserType());
+		res.setUserMainStatus(searchExtentUserResponse.getUserMbr().getUserMainStatus());
+		res.setUserSubStatus(searchExtentUserResponse.getUserMbr().getUserSubStatus());
 		res.setDeviceKey(deviceInfo.getDeviceKey());
-		res.setIsLoginSuccess("Y");
+		res.setIsLoginSuccess(MemberConstants.USE_Y);
 
 		return res;
 	}
