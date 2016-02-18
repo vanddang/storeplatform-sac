@@ -1675,7 +1675,8 @@
                    FROM  tb_us_ousermbr a
               LEFT JOIN  tb_us_ousermbr_device b ON a.insd_usermbr_no = b.insd_usermbr_no
                   WHERE  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
-                    AND  b.auth_yn = 'Y' 
+               <if test="userType != null"> AND a.mbr_clas_cd = #{userType}</if>
+                    AND  b.auth_yn = 'Y'
                <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                    <if test="keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') "> b.insd_device_id =  #{keySearch.keyString} </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> b.device_id =  #{keySearch.keyString} </if>
@@ -1701,6 +1702,7 @@
                ) AS totalDeviceCount
         FROM  tb_us_ousermbr a
         WHERE a.mbr_status_main_cd != 'US010202'
+              <if test="userType != null"> AND a.mbr_clas_cd = #{userType}</if>
               <foreach collection="keySearchList" item="keySearch"   open="AND" close="" separator="AND">
                    <if test="keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO') "> a.insd_usermbr_no =  #{keySearch.keyString} </if>
                    <if test="keySearch.keyType.equalsIgnoreCase('MBR_ID') "> a.mbr_id =  #{keySearch.keyString} </if>

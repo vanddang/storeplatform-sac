@@ -56,6 +56,11 @@ public class SearchExtentUserRequest extends CommonInfo implements Serializable 
 	private String isDormant;
 
 	/**
+	 * 회원타입.
+	 */
+	private String userType;
+
+	/**
 	 * 공통 요청 Value Object를 리턴한다.
 	 * 
 	 * @return commonRequest - 공통 요청 Value Object
@@ -222,4 +227,18 @@ public class SearchExtentUserRequest extends CommonInfo implements Serializable 
 		this.isDormant = isDormant;
 	}
 
+	/**
+	 * @return userType
+	 */
+	public String getUserType() {
+		return userType;
+	}
+
+	/**
+	 * @param userType
+	 *            String
+	 */
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
 }
