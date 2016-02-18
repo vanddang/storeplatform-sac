@@ -195,29 +195,29 @@
             select="getClauseAgreeList"/>
     </resultMap>
 
-    
-    
     <!-- 사용자 회원정보(userID, tenantID), 로그인 -->
     <select id="getUserMbrRetrievePWD" parameterType="userMbrRetrieveUserMbrPwd" resultType="userMbrRetrieveUserMbrPwd">
-         SELECT  /* UserMapper.xml, getUserMbrRetrievePWD, SAC(SC), 최진호, 2015-12-21 */
-                 a.insd_usermbr_no           userKey,
-                 a.mbr_clas_cd               userType,
-                 a.mbr_status_main_cd        userMainStatus,
-                 a.mbr_status_sub_cd         userSubStatus,
-                 a.start_dt,
-                 a.end_dt,
-                 a.mbr_id                    userID,
-                 a.email_addr                userEmail,
-                 a.email_recv_yn             isRecvEmail,
-                 a.mbr_nm                    userName,
-                 a.sex                       userSex,
-                 a.birth                     userBirthDay,
-                 a.entry_day regDate,
-                 TO_CHAR( b.upd_dt ,'YYYYMMDDHH24MISS')            updateDate
-           FROM  tb_us_ousermbr a
-      LEFT JOIN  tb_us_ousermbr_pwd b ON a.insd_usermbr_no = b.insd_usermbr_no 
-          WHERE  a.mbr_id = #{userID}
-            AND  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
+        SELECT  /* UserMapper.xml, getUserMbrRetrievePWD, SAC(SC), 최진호, 2016-02-18 */
+            a.INSD_USERMBR_NO           userKey,
+            a.MBR_CLAS_CD               userType,
+            a.MBR_STATUS_MAIN_CD        userMainStatus,
+            a.MBR_STATUS_SUB_CD         userSubStatus,
+            a.START_DT,
+            a.END_DT,
+            a.MBR_ID                    userID,
+            a.EMAIL_ADDR                userEmail,
+            a.EMAIL_RECV_YN             isRecvEmail,
+            a.MBR_NM                    userName,
+            a.SEX                       userSex,
+            a.BIRTH                     userBirthDay,
+            a.ENTRY_DAY                 regDate,
+            TO_CHAR( b.UPD_DT ,'YYYYMMDDHH24MISS')            updateDate
+        FROM
+            TB_US_OUSERMBR a
+            LEFT JOIN  TB_US_OUSERMBR_PWD b ON a.INSD_USERMBR_NO = b.INSD_USERMBR_NO
+        WHERE
+            a.INSD_USERMBR_NO = #{userKey}
+            AND  a.MBR_STATUS_MAIN_CD != 'US010202' /* 메인상태 != 탈퇴 US010202 */
     </select>
 
 
@@ -275,33 +275,46 @@
 
     <!-- 내부 사용자회원 번호 조회(가입여부 조회) -->
     <select id="getUserKeyByKeySearchList" parameterType="checkDuplicationRequest" resultType="String">
-        SELECT  /* UserMapper.xml, getUserKeyByKeySearchList, SAC(SC), 최진호, 2015-12-21 */
-                DISTINCT(a.insd_usermbr_no) as userKey
-          FROM  tb_us_ousermbr a
-         WHERE  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
-       <foreach collection="keySearchList" item="keySearch" open="AND" close="" separator="AND">
-           <if test=" keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO') "> a.insd_usermbr_no =  #{keySearch.keyString} </if>
-           <if test=" keySearch.keyType.equalsIgnoreCase('MBR_ID') "> a.mbr_id =  #{keySearch.keyString} </if>
-           <if test=" keySearch.keyType.equalsIgnoreCase('EMAIL_ADDR') "> a.email_addr =  #{keySearch.keyString} </if>
-       </foreach>
+        SELECT  /* UserMapper.xml, getUserKeyByKeySearchList, SAC(SC), 최진호, 2016-02-18 */
+            DISTINCT(a.INSD_USERMBR_NO) as userKey
+        FROM
+            TB_US_OUSERMBR a
+        WHERE
+            a.MBR_STATUS_MAIN_CD != 'US010202' /* 메인상태 != 탈퇴 US010202 */
+            <foreach collection="keySearchList" item="keySearch" open="AND" close="" separator="AND">
+                <if test=" keySearch.keyType.equalsIgnoreCase('INSD_USERMBR_NO') "> a.INSD_USERMBR_NO =  #{keySearch.keyString} </if>
+                <if test=" keySearch.keyType.equalsIgnoreCase('MBR_ID') ">
+                    a.MBR_ID =  #{keySearch.keyString}
+                    <if test="userType != null">AND a.MBR_CLAS_CD = #{userType}</if>
+                </if>
+                <if test=" keySearch.keyType.equalsIgnoreCase('EMAIL_ADDR') "> a.EMAIL_ADDR =  #{keySearch.keyString} </if>
+            </foreach>
     </select>
     
     <!-- 내부 사용자회원 번호 조회(가입여부 조회, 휴대기기 정보로 조회) -->
     <select id="getUserKeyByKeySearchListD" parameterType="checkDuplicationRequest" resultType="String">
         SELECT  /* UserMapper.xml, getUserKeyByKeySearchListD, SAC(SC), 최진호, 2015-12-21 */
-                DISTINCT(u.insd_usermbr_no) as userKey
-          FROM  ( SELECT a.insd_usermbr_no FROM tb_us_ousermbr a
-     LEFT JOIN  tb_us_ousermbr_device b ON a.insd_usermbr_no = b.insd_usermbr_no
-         WHERE  a.mbr_status_main_cd != 'US010202' /* 메인상태 != 탈퇴 US010202 */
-           AND  b.auth_yn = 'Y'
-       <foreach collection="keySearchList" item="keySearch" open="AND" close="" separator="AND">
-           <if test=" keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') "> b.insd_device_id =  #{keySearch.keyString} </if>
-           <if test=" keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> b.device_id =  #{keySearch.keyString} </if>
-           <if test=" keySearch.keyType.equalsIgnoreCase('MDN') "> b.mdn =  #{keySearch.keyString} </if>
-           <if test=" keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') "> b.svc_mang_no = #{keySearch.keyString}</if>
-       </foreach>
-         ORDER BY b.auth_dt DESC) u
-         WHERE ROWNUM = 1
+            DISTINCT(u.INSD_USERMBR_NO) as userKey
+        FROM
+            (
+                SELECT
+                    a.INSD_USERMBR_NO
+                FROM
+                    TB_US_OUSERMBR a
+                    LEFT JOIN  TB_US_OUSERMBR_DEVICE b ON a.INSD_USERMBR_NO = b.INSD_USERMBR_NO
+                WHERE
+                    a.MBR_STATUS_MAIN_CD != 'US010202' /* 메인상태 != 탈퇴 US010202 */
+                    AND  b.AUTH_YN = 'Y'
+                    <foreach collection="keySearchList" item="keySearch" open="AND" close="" separator="AND">
+                        <if test=" keySearch.keyType.equalsIgnoreCase('INSD_DEVICE_ID') "> b.INSD_DEVICE_ID = #{keySearch.keyString} </if>
+                        <if test=" keySearch.keyType.equalsIgnoreCase('DEVICE_ID') "> b.DEVICE_ID = #{keySearch.keyString} </if>
+                        <if test=" keySearch.keyType.equalsIgnoreCase('MDN') "> b.MDN = #{keySearch.keyString} </if>
+                        <if test=" keySearch.keyType.equalsIgnoreCase('SVC_MANG_NO') "> b.SVC_MANG_NO = #{keySearch.keyString} </if>
+                    </foreach>
+                ORDER BY b.AUTH_DT DESC
+            ) u
+        WHERE
+            ROWNUM = 1
     </select>
     
 

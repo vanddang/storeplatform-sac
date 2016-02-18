@@ -9,17 +9,16 @@
  */
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+
+import java.io.Serializable;
 
 /**
  * 사용자 로그인 요청을 위한 Value object
  * 
- * Updated on : 2013. 12. 10. Updated by : wisestone_mikepark
+ * Updated on : 2016. 2. 18. Updated by : 최진호, 보고지티.
  */
 public class LoginUserRequest extends CommonInfo implements Serializable {
 
@@ -28,6 +27,9 @@ public class LoginUserRequest extends CommonInfo implements Serializable {
 
 	/** 공통 요청 Value Object. */
 	private CommonRequest commonRequest;
+
+	/** 사용자 키. */
+	private String userKey;
 
 	/** 사용자 ID. */
 	private String userID;
@@ -76,6 +78,25 @@ public class LoginUserRequest extends CommonInfo implements Serializable {
 
     /** 기기타입 */
     private String deviceType;
+
+	/**
+	 * 사용자 키를 리턴한다.
+	 *
+	 * @return userKey - 사용자 키
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * 사용자 키를 설정한다.
+	 *
+	 * @param userKey
+	 *            사용자 키
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
 
 	/**
 	 * 로그인 상태 코드를 리턴한다.
