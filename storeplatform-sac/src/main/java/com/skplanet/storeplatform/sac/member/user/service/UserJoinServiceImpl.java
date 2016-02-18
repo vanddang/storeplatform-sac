@@ -629,6 +629,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		searchExtentUserRequest.setCommonRequest(commonRequest);
 		searchExtentUserRequest.setKeySearchList(keySearchList);
 		searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
+		searchExtentUserRequest.setUserType(req.getUserType());
 		try{
 			this.userSCI.searchExtentUser(searchExtentUserRequest);
 			throw new StorePlatformException("SAC_MEM_1104");

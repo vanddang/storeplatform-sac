@@ -279,6 +279,7 @@ public class LoginController {
 			}
 		}
 
+		// Tstore ID는 userAuthToken 필수.
 		if(StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_TSTORE)){
 			if(StringUtils.isBlank(req.getUserAuthToken())){
 				throw new StorePlatformException("SAC_MEM_0001", "userAuthToken");
