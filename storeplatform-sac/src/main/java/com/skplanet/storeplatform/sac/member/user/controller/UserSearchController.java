@@ -15,7 +15,37 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeliveryInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.*;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckSocialAccountSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSSOCredentialSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailForPayPlanetSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailForPayPlanetSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRemoveDeviceIdReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeliveryInfoSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchGiftChargeInfoSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchSocialAccountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.domain.mbr.UserDelivery;
@@ -65,6 +95,7 @@ public class UserSearchController {
 		existReq.setUserKey(req.getUserKey());
 		existReq.setUserId(req.getUserId());
 		existReq.setDeviceKey(req.getDeviceKey());
+		existReq.setUserType(req.getUserType());
 
 		ExistRes res = this.svc.exist(sacHeader, existReq);
 
