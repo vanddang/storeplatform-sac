@@ -369,7 +369,7 @@ public class DeviceServiceImpl implements DeviceService {
 						preUserMbr = this.idleDAO.queryForObject("User.getUserDetail", preUserMbr, UserMbr.class);
 					}
 
-					if (StringUtils.isBlank(userMbrDevice.getDeviceID())) { // device_id가 없는 경우 auth_yn
+					if (StringUtils.isBlank(userMbrDevice.getDeviceID())) { // device_id가 없는 경우 invalid 처리
 						LOGGER.info("서비스관리번호로 기등록된 회원 존재");
 						// 휴대기기 설정정보 이관처리를 위한 회원키 조회
 						UserMbrDeviceSet userMbrDeviceSet = new UserMbrDeviceSet();
