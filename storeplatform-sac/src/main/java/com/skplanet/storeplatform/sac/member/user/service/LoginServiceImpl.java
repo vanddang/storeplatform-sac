@@ -842,23 +842,26 @@ public class LoginServiceImpl implements LoginService {
             if(deviceInfo != null){
                 isLoginSucc = true;
 
+				// KT, U+ 회원 서비스관리번호 다른경우 처리
                 if(deviceTelecomInfo != null && StringUtils.isNotBlank(deviceTelecomInfo.getSvcMangNum())
                         && !StringUtils.equals(deviceTelecomInfo.getSvcMangNum(), deviceInfo.getSvcMangNum())){
-                    if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())){ // KT 서비스 관리번호 변경 처리
+                    if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())){
                         // 변경된 서비스관리번호로 휴대기기 정보 조회
                         DeviceInfo deviceInfoBySvcMangNo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_SVC_MANG_NO, deviceTelecomInfo.getSvcMangNum(), null);
                         if(deviceInfoBySvcMangNo == null){
-                            // 기존 회원 탈퇴처리
-                            this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
-                            throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
+							LOGGER.info("서비스관리번호가 다른 KT 회원 탈퇴");
+							this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
+							throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
                         }else{
 							// 기존 회원 탈퇴처리 후 조회된 서비스관리번호 회원정보 업데이트
 							this.userWithdrawService.removeDevice(requestHeader, deviceInfo.getMdn());
 							deviceInfo = deviceInfoBySvcMangNo;
+							LOGGER.info("서비스관리번호가 다른 KT 회원 번호변경");
                         }
-                    }else if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())){ // LGT 서비스 관리번호 변경 처리
-                        // 기존 회원 탈퇴처리
-						isRemoveUser = true;
+                    }else if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())){
+						LOGGER.info("서비스관리번호가 다른 U+ 회원 탈퇴");
+						this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
+						throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
                     }
                 }
 
@@ -887,14 +890,13 @@ public class LoginServiceImpl implements LoginService {
 
                                     isLoginSucc = true;
                                 }else{
+									LOGGER.info("서비스관리번호가 없고 imei, 통신사가 다른 회원 탈퇴");
                                     isRemoveUser = true;
                                 }
                             }else{
-                                if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())
-                                        || StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())){
-                                    // 탈퇴처리
-									isRemoveUser = true;
-                                }
+								// 탈퇴처리
+								LOGGER.info("서비스관리번호가 다른 회원 탈퇴 {}, {}", deviceInfo.getSvcMangNum(), deviceTelecomInfo.getSvcMangNum());
+								isRemoveUser = true;
                             }
                         }
                     }
@@ -902,11 +904,12 @@ public class LoginServiceImpl implements LoginService {
                     deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
                     if(deviceInfo != null){
                         if (StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
-                                && StringUtils.equals(req.getSimSerialNo(), deviceInfo.getSimSerialNo())) {
+                                && (StringUtils.isBlank(deviceInfo.getSimSerialNo()) || StringUtils.equals(req.getSimSerialNo(), deviceInfo.getSimSerialNo())) ){
                             // 서비스관리번호 조회 실패 했지만 mdn으로 조회한 결과와 imei, sim정보가 같으면 인증 예외 성공처리
                             isLoginSucc = true;
                             isMdnLoginSucc = true;
                         }else{
+							LOGGER.info("서비스관리번호 조회 실패 후 nativeId, simSerialNona가 다른 회원 탈퇴");
                             isRemoveUser = true;
                         }
                     }
