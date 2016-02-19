@@ -123,6 +123,12 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 		DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
+		if (StringUtils.isNotBlank(req.getUserId())) {
+			if (!StringUtils.equals(req.getUserId(), detailRes.getUserInfo().getUserId())) {
+				throw new StorePlatformException("SAC_MEM_0003", "userId", req.getUserId());
+			}
+		}
+
 		/**
 		 * 2. 소셜아이디인 경우 userAuthToken 이 필수, userAuthToken 인증(S2S)후 회원 탈퇴.
 		 *   - mdn 회원은 인증 단계 없이 탈퇴
