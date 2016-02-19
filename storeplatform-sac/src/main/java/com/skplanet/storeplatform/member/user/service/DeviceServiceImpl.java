@@ -261,16 +261,16 @@ public class DeviceServiceImpl implements DeviceService {
 		userMbr.setUserKey(userKey);
 		createUserMbr = this.commonDAO.queryForObject("User.getUserDetail", userMbr, UserMbr.class);
 		if(createUserMbr == null){
-			throw new StorePlatformException(this.getMessage("response.ResultCode.memberKeyNotFound", ""));
+			createUserMbr = this.idleDAO.queryForObject("User.getUserDetail", userMbr, UserMbr.class);
+			if(createUserMbr == null) {
+				throw new StorePlatformException(this.getMessage("response.ResultCode.memberKeyNotFound", ""));
+			}else{
+				throw new StorePlatformException(this.getMessage("response.ResultCode.sleepUserError", ""));
+			}
 		}
 
 		// 휴대기기 처리시 userId정보가 필요함.
 		createDeviceRequest.getUserMbrDevice().setUserID(createUserMbr.getUserID());
-
-		// 단말 등록/수정 요청 회원은 휴면계정일 수 없다.
-		if (StringUtils.equals(createUserMbr.getIsDormant(), Constant.TYPE_YN_Y)) {
-			throw new StorePlatformException(this.getMessage("response.ResultCode.sleepUserError", ""));
-		}
 
 		/** 타인 정보 처리 start */
 		LOGGER.info("타인 정보 처리 start");
@@ -452,6 +452,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// device_id가 없는 MDN 회원 체크
 		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getMdn())){
+			ownerUserMbrDeviceList = null;
 			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_MDN, createDeviceRequest.getUserMbrDevice().getMdn(), userKey, null, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
 			if(ownerUserMbrDeviceList != null && ownerUserMbrDeviceList.size() > 0) {
 				for (UserMbrDevice userMbrDevice : ownerUserMbrDeviceList) {
@@ -1329,12 +1330,6 @@ public class DeviceServiceImpl implements DeviceService {
 		userMbr.setSecedeDate(Utils.getLocalDateTimeinYYYYMMDD());
 		userMbr.setBolterDeviceId(userMbrDevice.getDeviceKey());
 		row = dao.update("User.removeUser", userMbr);
-		if (row <= 0) {
-			return row;
-		}
-
-		// 휴대기기 변경전 이력 저장
-		row = dao.update("Device.insertUpdateDeviceHistory", userMbrDevice);
 		if (row <= 0) {
 			return row;
 		}

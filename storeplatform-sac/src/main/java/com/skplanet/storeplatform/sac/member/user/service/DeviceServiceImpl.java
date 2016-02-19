@@ -282,7 +282,7 @@ public class DeviceServiceImpl implements DeviceService {
         } else if (StringUtils.isNotEmpty(req.getUserId())) {
             key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
             key.setKeyString(req.getUserId());
-
+            schDeviceListReq.setUserType(req.getUserType()); //userId 조회시 userType 추가 셋팅
         /** 6. userKey가 있으면 searchkey 셋팅 */
         } else if (StringUtils.isNotEmpty(req.getUserKey())) {
             key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -612,7 +612,7 @@ public class DeviceServiceImpl implements DeviceService {
 			if (transferDeviceSetInfoResponse != null
 					&& StringUtil.isNotEmpty(transferDeviceSetInfoResponse.getUserKey())
 					&& StringUtil.isNotEmpty(transferDeviceSetInfoResponse.getDeviceKey())) {
-				LOGGER.info("기등록된 모바일 회원 휴대기기 설정 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
+				LOGGER.info("휴대기기 설정 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
 			}
 
 		}

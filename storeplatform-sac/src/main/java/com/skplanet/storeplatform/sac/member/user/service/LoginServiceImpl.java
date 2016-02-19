@@ -793,6 +793,14 @@ public class LoginServiceImpl implements LoginService {
 				}
 
 				if(isTempLoginSucc){
+					if(StringUtils.equals(deviceInfo.getIsDormant(), MemberConstants.USE_Y)){
+						LOGGER.info("{} 휴면 회원 복구", req.getMdn());
+						MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+						moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+						moveUserInfoSacReq.setUserKey(deviceInfo.getUserKey());
+						this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+					}
+
 					ModifyDeviceRequest modifyDeviceRequest = new ModifyDeviceRequest();
 					modifyDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 					modifyDeviceRequest.setUserKey(deviceInfo.getUserKey());
@@ -945,6 +953,16 @@ public class LoginServiceImpl implements LoginService {
                     }
                 }
             }
+
+			if(isLoginSucc || isMdnLoginSucc){
+				if(StringUtils.equals(deviceInfo.getIsDormant(), MemberConstants.USE_Y)){
+					LOGGER.info("{} 휴면 회원 복구", req.getMdn());
+					MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+					moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+					moveUserInfoSacReq.setUserKey(deviceInfo.getUserKey());
+					this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+				}
+			}
 
             if(isLoginSucc && !isMdnLoginSucc){
                 // SKT 통신사인 경우 IMEI 비교
@@ -1385,6 +1403,14 @@ public class LoginServiceImpl implements LoginService {
 			this.regLoginHistory(requestHeader, searchExtentUserResponse.getUserKey(), null, "N", "N", req.getDeviceIp(), "N", null, "N", null, req.getDeviceType());
 			res.setIsLoginSuccess(MemberConstants.USE_N);
 			return res;
+		}
+
+		if(StringUtils.equals(searchExtentUserResponse.getUserMbr().getIsDormant(), MemberConstants.USE_Y)){
+			LOGGER.info("{} 휴면 회원 복구", req.getMdn());
+			MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+			moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+			moveUserInfoSacReq.setUserKey(searchExtentUserResponse.getUserMbr().getUserKey());
+			this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 		}
 
         // 모번호 조회

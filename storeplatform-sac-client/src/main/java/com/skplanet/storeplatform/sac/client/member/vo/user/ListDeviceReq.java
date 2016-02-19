@@ -7,6 +7,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2015. 12. 28. Updated by : 윤보영. 카레즈.
  * Updated on : 2016. 01. 18. Updated by : 윤보영. 카레즈.
+ * Updated on : 2016. 02. 19. Updated by : 최진호, 보고지티 - userType 추가.
  */
 public class ListDeviceReq extends CommonInfo {
 
@@ -46,6 +47,11 @@ public class ListDeviceReq extends CommonInfo {
      * 서비스망 번호.
      */
     private String svcMangNo;
+
+	/**
+	 * 사용자 타입.
+	 */
+	private String userType;
 
 	/**
 	 * @return userId
@@ -126,6 +132,10 @@ public class ListDeviceReq extends CommonInfo {
         return mdn;
     }
 
+	public void setMdn(String mdn) {
+		this.mdn = mdn;
+	}
+
     public String getSvcMangNo() {
         return svcMangNo;
     }
@@ -134,7 +144,19 @@ public class ListDeviceReq extends CommonInfo {
         this.svcMangNo = svcMangNo;
     }
 
-    public void setMdn(String mdn) {
-        this.mdn = mdn;
-    }
+	/**
+	 * @return userType
+	 */
+	public String getUserType() {
+		return this.userType;
+	}
+
+	/**
+	 * @param userType
+	 *            String
+	 */
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
 }
