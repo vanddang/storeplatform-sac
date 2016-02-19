@@ -63,12 +63,18 @@ public class DeviceController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		// userId, userKey 조회시 isMainDevice는 필수
-		if (StringUtils.isEmpty(req.getDeviceKey())){
+		if (StringUtils.isNotEmpty(req.getUserId()) || StringUtils.isNotEmpty(req.getUserKey())) {
 			if (StringUtils.isEmpty(req.getIsMainDevice())) {
 				throw new StorePlatformException("SAC_MEM_0001", "isMainDevice");
 			}
+			// userId로 조회시 userType의 default값은 OneStore
+			if (StringUtils.isNotEmpty(req.getUserId()) && StringUtils.isEmpty(req.getUserType())) {
+				req.setUserType(MemberConstants.USER_TYPE_TSTORE);
+			}
+		}
+
 		// deviceKey로 조회시 userKey 필수
-		}else{
+		if (StringUtils.isNotEmpty(req.getDeviceKey())) {
 			if (StringUtils.isEmpty(req.getUserKey())) {
 				throw new StorePlatformException("SAC_MEM_0001", "userKey");
 			}
@@ -79,6 +85,7 @@ public class DeviceController {
 		listDeviceReq.setUserKey(req.getUserKey());
 		listDeviceReq.setDeviceKey(req.getDeviceKey());
 		listDeviceReq.setIsMainDevice(req.getIsMainDevice());
+		listDeviceReq.setUserType(req.getUserType());
 
 		ListDeviceRes res = this.deviceService.listDevice(requestHeader, listDeviceReq);
 
