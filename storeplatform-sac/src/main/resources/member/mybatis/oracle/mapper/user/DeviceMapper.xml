@@ -1132,7 +1132,7 @@
         </foreach>
     </select>
 
-    <select id="searchDeviceList3" parameterType="searchDeviceListRequest" resultType="userMbrDevice">
+    <select id="searchDeviceList3" parameterType="searchDeviceListRequest" resultType="userMbrDevice" useCache="false" flushCache="true">
         SELECT /* DeviceMapper.xml, searchDeviceList3, SAC(SC), 반범진, 2016-01-04 */
         a.insd_usermbr_no as userKey,
         a.mbr_id as userId,
