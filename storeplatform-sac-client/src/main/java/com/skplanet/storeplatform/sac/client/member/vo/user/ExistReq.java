@@ -8,22 +8,24 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  *  회원 가입여부 조회 내부 사용
  * 
- * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
+ * Updated on : 2016. 2. 18. Updated by : 최진호, 보고지티.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class ExistReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	/* 사용자ID */
+	/** 사용자ID */
 	private String userId;
-	/* 기기 ID */
+	/** 기기 ID */
 	private String deviceId;
-	/* 사용자 키 */
+	/** 사용자 키 */
 	private String userKey;
-	/* 기기 Key */
+	/** 기기 Key */
 	private String deviceKey;
-	/* 외부연동 Key */
+	/** 외부연동 Key */
 	private String mbrNo;
+	/** 사용자 타입. */
+	private String userType;
 
 	public String getUserId() {
 		return this.userId;
@@ -63,6 +65,14 @@ public class ExistReq extends CommonInfo {
 
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	public String getUserType() {
+		return this.userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 	public static long getSerialversionuid() {

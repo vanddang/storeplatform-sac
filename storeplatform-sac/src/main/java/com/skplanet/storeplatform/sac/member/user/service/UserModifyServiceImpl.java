@@ -1375,8 +1375,8 @@ public class UserModifyServiceImpl implements UserModifyService {
             }
         }
 
-        /** 7. AS-IS, TO-BE의 socialUserNo가 모두 있다면 업데이트처리. */
-        if(StringUtils.isNotBlank(socialUserNo) && StringUtils.isNotBlank(newSocialUserNo)){
+        /** 7. TO-BE의 socialUserNo가 있다면 업데이트처리. */
+        if(StringUtils.isNotBlank(newSocialUserNo)){
             LOGGER.info("socialUserNo : {} -> {} 업데이트", socialUserNo, newSocialUserNo);
             this.userExtraInfoService.modifyExtraInfo(req.getUserKey(),
                     MemberConstants.USER_EXTRA_SOCIL_MEMBER_NO, newSocialUserNo);

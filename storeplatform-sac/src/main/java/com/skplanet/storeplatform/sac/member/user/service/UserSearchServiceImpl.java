@@ -121,6 +121,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 			detailReq.setUserKey(userKey);
 		} else if (!"".equals(userId)) {
 			detailReq.setUserId(userId);
+			// userId로 조회시 userType값 추가 (없으면 OneStore)
+			if (StringUtils.isNotBlank(req.getUserType())) {
+				detailReq.setUserType(req.getUserType());
+			} else {
+				detailReq.setUserType(MemberConstants.USER_TYPE_TSTORE);
+			}
 		} else if (!"".equals(deviceId)) {
 			detailReq.setDeviceId(deviceId);
 		} else if (!"".equals(deviceKey)) {
@@ -461,6 +467,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		srhExtUserReq.setCommonRequest(commonRequest);
 		srhExtUserReq.setKeySearchList(keySearchList);
 		srhExtUserReq.setUserInfoYn(MemberConstants.USE_Y);
+		srhExtUserReq.setUserType(MemberConstants.USER_TYPE_TSTORE); // Password 찾기는 OneStore회원만 가능하다.
 
 		SearchExtentUserResponse srhExtUserRes = this.userSCI.searchExtentUser(srhExtUserReq);
 
