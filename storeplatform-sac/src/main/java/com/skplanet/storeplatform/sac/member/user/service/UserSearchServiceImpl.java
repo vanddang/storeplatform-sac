@@ -906,6 +906,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		} else if (StringUtils.isNotEmpty(req.getUserId())) {
 			listDeviceReq.setUserKey(req.getUserKey());
 			listDeviceReq.setUserId(req.getUserId());
+            listDeviceReq.setUserType(StringUtils.isNotEmpty(req.getUserType()) ? req.getUserType() : MemberConstants.USER_TYPE_TSTORE);
 			listDeviceReq.setIsMainDevice(Constant.TYPE_YN_N);
 
 		} else if (StringUtils.isNotEmpty(req.getDeviceKey())) {
