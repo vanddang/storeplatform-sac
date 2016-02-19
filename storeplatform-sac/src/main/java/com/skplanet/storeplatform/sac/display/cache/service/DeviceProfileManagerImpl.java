@@ -34,7 +34,7 @@ public class DeviceProfileManagerImpl implements DeviceProfileManager {
     private CommonDAO commonDAO;
 
     @Override
-    @Cacheable(value = "sac:display:device:profile:v2", key = "#deviceModelCd + '_' + #langCd", unless = "#result == null")
+    @Cacheable(value = "sac:display:device:profile:v3", key = "#deviceModelCd + '_' + #langCd", unless = "#result == null")
     public DeviceProfile getDeviceProfile(String deviceModelCd, String langCd) {
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("deviceModelCd", deviceModelCd);

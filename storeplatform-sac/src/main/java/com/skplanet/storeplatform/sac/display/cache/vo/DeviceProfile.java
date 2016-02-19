@@ -45,6 +45,7 @@ public class DeviceProfile extends CommonInfo {
     private String WebtoonSprtYn;
     private String vodFixisttSprtYn; // freepassVod
     private String embeddedYn;
+    private String nonUsimPhoneYn;
 
     public String getDeviceModelCd() {
         return deviceModelCd;
@@ -252,5 +253,13 @@ public class DeviceProfile extends CommonInfo {
 
     public void setEmbeddedYn(String embeddedYn) {
         this.embeddedYn = embeddedYn;
+    }
+
+    public String getNonUsimPhoneYn() {
+        return nonUsimPhoneYn;
+    }
+
+    public void setNonUsimPhoneYn(String nonUsimPhoneYn) {
+        this.nonUsimPhoneYn = nonUsimPhoneYn;
     }
 }
