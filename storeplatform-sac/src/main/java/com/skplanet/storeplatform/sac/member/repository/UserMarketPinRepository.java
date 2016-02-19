@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.repository;
 
-import com.skplanet.storeplatform.sac.member.domain.mbr.UserMarketPin;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMarketPin;
 
 /**
  * 회원 Market PIN Repository

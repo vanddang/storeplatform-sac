@@ -5,7 +5,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CheckUserMarketPinRe
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckUserMarketPinRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateUserMarketPinReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateUserMarketPinRes;
-import com.skplanet.storeplatform.sac.member.domain.mbr.UserMarketPin;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMarketPin;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 import com.skplanet.storeplatform.sac.member.repository.UserMarketPinRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -47,11 +47,11 @@ public class UserMarketPinServiceImpl implements UserMarketPinService {
             throw new StorePlatformException("SAC_MEM_3701");
         }
 
+        checkAuthLimit(userMarketPin);
+
         CheckUserMarketPinRes res;
-        if(userMarketPin.getAuthFailCnt() >= MAX_FAIL_CNT) {
-            // Market Pin 5회 실패, 그대로 응답
-        } else if (StringUtils.equals(checkMarketPinReq.getPinNo(), userMarketPin.getPinNo())) {
-            // Market Pin 확인성공 -> 실패 횟수 = 0
+        if (StringUtils.equals(checkMarketPinReq.getPinNo(), userMarketPin.getPinNo())) {
+           // Market Pin 확인성공 -> 실패 횟수 = 0
             userMarketPin.setAuthFailCnt(0);
             userMarketPinRepository.save(userMarketPin);
         } else {
@@ -60,8 +60,14 @@ public class UserMarketPinServiceImpl implements UserMarketPinService {
             userMarketPinRepository.save(userMarketPin);
         }
         res = new CheckUserMarketPinRes(checkMarketPinReq.getUserKey(), userMarketPin.getAuthFailCnt());
-
         return res;
+    }
+
+    private void checkAuthLimit(UserMarketPin userMarketPin) {
+        if(userMarketPin.getAuthFailCnt() >= MAX_FAIL_CNT) {
+            // Market Pin 5회 실패, "Market PIN 인증 횟수 초과" 오류 발생
+            throw new StorePlatformException("SAC_MEM_3702");
+        }
     }
 
     @Transactional("transactionManagerForScMember")

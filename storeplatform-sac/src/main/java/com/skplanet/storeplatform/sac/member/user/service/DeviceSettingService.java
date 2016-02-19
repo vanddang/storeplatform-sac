@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import com.google.common.base.Strings;
-import com.skplanet.storeplatform.sac.member.domain.mbr.UserMarketPin;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMarketPin;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserDevice;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserDeviceSetting;
 import com.skplanet.storeplatform.sac.member.repository.UserDeviceRepository;
