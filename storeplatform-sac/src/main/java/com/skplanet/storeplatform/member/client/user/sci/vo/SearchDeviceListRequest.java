@@ -9,18 +9,19 @@
  */
 package com.skplanet.storeplatform.member.client.user.sci.vo;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.member.client.common.util.Utils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * 사용자 휴대기기 목록조회 요청 Value Object
  * 
  * Updated on : 2014. 1. 6 Updated by : wisestone_brian, wisestone
+ * Updated on : 2016. 2. 19 Updated by : 최진호, 보고지티 - userType 추가
  */
 public class SearchDeviceListRequest extends CommonInfo implements Serializable {
 
@@ -57,6 +58,9 @@ public class SearchDeviceListRequest extends CommonInfo implements Serializable 
 
 	/** 내 휴대기기 리스트 여부 Y/N. */
 	private String isMine;
+
+	/** 사용자 타입. */
+	private String userType;
 
 	/**
 	 * 공통 요청 Value Object를 리턴한다.
@@ -180,11 +184,25 @@ public class SearchDeviceListRequest extends CommonInfo implements Serializable 
 		this.deviceKey = deviceKey;
 	}
 
+	/**
+	 * @return userType
+	 */
+	public String getUserType() {
+		return userType;
+	}
+
+	/**
+	 * @param userType
+	 */
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
 	/*
-                 * (non-Javadoc)
-                 *
-                 * @see com.skplanet.storeplatform.framework.core.common.vo.CommonInfo#toString()
-                 */
+	 * (non-Javadoc)
+	 *
+	 * @see com.skplanet.storeplatform.framework.core.common.vo.CommonInfo#toString()
+	 */
 	@Override
 	public String toString() {
 		return Utils.printKeyValues(this);
