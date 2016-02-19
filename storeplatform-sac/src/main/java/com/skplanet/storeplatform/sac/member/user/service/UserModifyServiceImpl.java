@@ -1265,6 +1265,7 @@ public class UserModifyServiceImpl implements UserModifyService {
         CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
         chkDupReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
         chkDupReq.setKeySearchList(keySearchList);
+        chkDupReq.setUserType(req.getNewUserType());
         CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
 
         if (StringUtils.equals(chkDupRes.getIsRegistered(), MemberConstants.USE_Y)) {
