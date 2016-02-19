@@ -167,6 +167,12 @@ public class DeviceServiceImpl implements DeviceService {
             searchDeviceListResponse = new SearchDeviceListResponse();
 
             List<UserMbrDevice> userMbrDeviceList = dao.queryForList("Device.searchDeviceListBySvcNo", searchDeviceListRequest, UserMbrDevice.class);
+            // 휴면DB 조회
+            if(userMbrDeviceList == null){
+                dao = this.idleDAO;
+                userMbrDeviceList = dao.queryForList("Device.searchDeviceListBySvcNo", searchDeviceListRequest, UserMbrDevice.class);
+            }
+
             if(userMbrDeviceList != null && userMbrDeviceList.size() > 0){
                 searchDeviceListResponse.setUserMbrDevice(userMbrDeviceList);
             }
