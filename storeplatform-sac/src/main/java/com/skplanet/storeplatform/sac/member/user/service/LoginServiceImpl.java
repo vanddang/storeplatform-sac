@@ -4740,6 +4740,7 @@ public class LoginServiceImpl implements LoginService {
 		srhExtUserReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 		srhExtUserReq.setKeySearchList(keySearchList);
 		srhExtUserReq.setUserInfoYn(MemberConstants.USE_Y);
+		srhExtUserReq.setUserType(MemberConstants.USER_TYPE_TSTORE); // ID 회원 패스워드 인증은 OneStore만 가능하다.
 		SearchExtentUserResponse srhExtUserRes = null;
 		try {
 			srhExtUserRes = this.userSCI.searchExtentUser(srhExtUserReq);
