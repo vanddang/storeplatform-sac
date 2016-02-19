@@ -1,9 +1,5 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
-import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
-import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.ModifyEmailEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEmIDPEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -33,7 +29,7 @@ import java.util.UUID;
  * 이메일 인증 기능 관련 인터페이스 구현체
  * 
  * Updated on : 2014. 1. 7. Updated by : 김다슬, 인크로스.
- * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Micellaneos 클래스에서 Email인증 관련 기능 클래스 분리
+ * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Miscellaneous 클래스에서 Email인증 관련 기능 클래스 분리
  */
 @Service
 public class EmailAuthorizationServiceImpl implements EmailAuthorizationService {
@@ -43,10 +39,6 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 	private MemberCommonComponent commonComponent; // 회원 공통기능 컴포넌트
 	@Autowired
 	private UserSCI userSCI; // 회원 Component 사용자 기능 Interface.
-	@Autowired
-	private IdpSCI idpSCI; // IDP 연동 Interface.
-	@Autowired
-	private ImIdpSCI imIdpSCI; // IMIDP 연동 Interface.
 	@Autowired
 	private UserSearchService userSearchService;
 
@@ -198,8 +190,6 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 		serviceAuthInfo.setAuthEmail(req.getUserEmail());
 
 		if (authYnInfo == null) {
-			//FIXME: authMnoCd
-			//serviceAuthInfo.setAuthMnoCd();
 			serviceAuthInfo.setMbrNo(req.getUserKey());
 			serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_EMAIL_AUTH_URL);
 			serviceAuthInfo.setAuthSign("EmailAuthorizationUrl"); // 의미 없음. DB에 AUTH_SIGN 이 "NOT NULL"로 정의되어있음.
@@ -270,25 +260,6 @@ public class EmailAuthorizationServiceImpl implements EmailAuthorizationService 
 			// 2. 사용자 업데이트 이메일 정보를 "" 변경 처리
 			if (StringUtils.equals(StringUtils.defaultString(detailRes.getUserInfo().getUserUpdEmail()),
 					serviceAuthInfo.getAuthEmail())) {
-
-				// IDP
-				if (StringUtils.equals(MemberConstants.USER_TYPE_ONEID, detailRes.getUserInfo().getUserType())
-						&& StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
-					// 통합 IDP 회원
-					UpdateUserInfoEmIDPEcReq updateUserInfoEmIDPEcReq = new UpdateUserInfoEmIDPEcReq();
-					// ImserviceNo
-					updateUserInfoEmIDPEcReq.setKey(detailRes.getUserInfo().getImSvcNo());
-					updateUserInfoEmIDPEcReq.setUserEmail(detailRes.getUserInfo().getUserUpdEmail());
-					this.imIdpSCI.updateUserInfoEmIDP(updateUserInfoEmIDPEcReq);
-
-				} else if (StringUtils.equals(MemberConstants.USER_TYPE_IDPID, detailRes.getUserInfo().getUserType())) {
-					// IDP 회원
-					ModifyEmailEcReq modifyEmailEcReq = new ModifyEmailEcReq();
-					modifyEmailEcReq.setUserId(detailRes.getUserInfo().getUserId()); // ID
-					modifyEmailEcReq.setPreUserEmail(detailRes.getUserInfo().getUserEmail()); // 변경전Email
-					modifyEmailEcReq.setUserEmail(detailRes.getUserInfo().getUserUpdEmail()); // 변경할 Email
-					this.idpSCI.modifyEmail(modifyEmailEcReq);
-				}
 
 				UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 				updateUserRequest.setCommonRequest(this.commonComponent.getSCCommonRequest(header));

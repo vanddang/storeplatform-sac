@@ -10,7 +10,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAddition
  * 부가 서비스 기능 관련 인터페이스
  * 
  * Updated on : 2014. 1. 7. Updated by : 김다슬, 인크로스.
- * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Micellaneos 클래스에서 부가 서비스 관련 기능 클래스 분리
+ * Updated on : 2015. 12. 28. Updated by : 임근대, SKP. - Miscellaneous 클래스에서 부가 서비스 관련 기능 클래스 분리
  * @deprecated Onestore 부가서비스 기능 미 제공
  */
 @Deprecated
