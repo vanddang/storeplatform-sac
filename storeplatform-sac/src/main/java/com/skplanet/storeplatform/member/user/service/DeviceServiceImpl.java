@@ -452,7 +452,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// device_id가 없는 MDN 회원 체크
 		if(StringUtils.isNotBlank(createDeviceRequest.getUserMbrDevice().getMdn())){
-			ownerUserMbrDeviceList = null;
 			ownerUserMbrDeviceList = this.doSearchDevice(Constant.SEARCH_TYPE_MDN, createDeviceRequest.getUserMbrDevice().getMdn(), userKey, null, Constant.TYPE_YN_N, Constant.TYPE_YN_Y);
 			if(ownerUserMbrDeviceList != null && ownerUserMbrDeviceList.size() > 0) {
 				for (UserMbrDevice userMbrDevice : ownerUserMbrDeviceList) {
