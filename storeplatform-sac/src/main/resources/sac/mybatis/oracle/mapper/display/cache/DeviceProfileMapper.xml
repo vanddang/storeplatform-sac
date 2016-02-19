@@ -30,6 +30,7 @@
           ,NVL(DOLBY_SPRT_YN, 'N')                AS DOLBY_SPRT_YN        /*DOLBY_지원_여부 */
           ,NVL(VOD_FIXISTT_SPRT_YN, 'N')          AS VOD_FIXISTT_SPRT_YN  /*정액제_VOD_지원_여부 */
           ,NVL(EMBEDDED_YN, 'N')                  AS EMBEDDED_YN          /*임베딩 여부 */
+          ,NVL(NON_USIM_PHONE_YN, 'N')            AS NON_USIM_PHONE_YN    /*USIM없는 단말 여부*/
       FROM TB_CM_DEVICE
       WHERE 1=1
         AND USE_YN = 'Y'

@@ -67,7 +67,7 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
     private Device makeDevice(DeviceProfile deviceProfile) {
         Device device = new Device();
 
-        device.setIdentifier(deviceProfile.getMakeCompNm()+"/"+deviceProfile.getDeviceModelCd());
+        device.setIdentifier(deviceProfile.getMakeCompNm() + "/" + deviceProfile.getDeviceModelCd());
         device.setType(DP_OMD_TYPE_CD.equals(deviceProfile.getCmntCompCd()) ? DP_OMD_TYPE_NM : DP_OMD_NORMAL_NM);
         device.setManufacturer(deviceProfile.getMakeCompNm());
         device.setModel(deviceProfile.getDeviceModelCd());
@@ -98,6 +98,7 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
         map.put("drm", deviceProfile.getSktDrmSprtYn());
         map.put("webtoon", deviceProfile.getWebtoonSprtYn());
         map.put("view", deviceProfile.getStrmSprtYn());
+        map.put("nonUsimPhone", deviceProfile.getNonUsimPhoneYn());
 
         return map;
     }
