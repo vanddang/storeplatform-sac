@@ -167,7 +167,12 @@ public class UserModifyServiceImpl implements UserModifyService {
             searchExtentUserRequest.setCommonRequest(commonRequest);
             searchExtentUserRequest.setKeySearchList(keySearchList);
             searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
-            this.userSCI.searchExtentUser(searchExtentUserRequest);
+            SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+
+            /** 휴면계정 시 처리 불가 */
+            if(StringUtils.equals(res.getUserMbr().getIsDormant(), MemberConstants.USE_Y)){
+                throw new StorePlatformException("SAC_MEM_0006");
+            }
 
         } catch (StorePlatformException ex) {
             if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
@@ -327,7 +332,12 @@ public class UserModifyServiceImpl implements UserModifyService {
             searchExtentUserRequest.setCommonRequest(commonRequest);
             searchExtentUserRequest.setKeySearchList(keySearchList);
             searchExtentUserRequest.setUserInfoYn(MemberConstants.USE_Y);
-            this.userSCI.searchExtentUser(searchExtentUserRequest);
+            SearchExtentUserResponse res = this.userSCI.searchExtentUser(searchExtentUserRequest);
+
+            /** 휴면계정 시 처리 불가 */
+            if(StringUtils.equals(res.getUserMbr().getIsDormant(), MemberConstants.USE_Y)){
+                throw new StorePlatformException("SAC_MEM_0006");
+            }
 
         } catch (StorePlatformException ex) {
             if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)

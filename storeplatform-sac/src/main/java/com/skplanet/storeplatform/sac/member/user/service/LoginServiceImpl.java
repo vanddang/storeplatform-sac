@@ -229,6 +229,7 @@ public class LoginServiceImpl implements LoginService {
         String oDeviceId = req.getDeviceId();
 
         DeviceInfo deviceInfo = null;
+        boolean preMoveUser = false;
 
         /** 01-01. MSISDN 인증 처리 */
         if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
@@ -261,6 +262,10 @@ public class LoginServiceImpl implements LoginService {
                 /** 01-01-02. MDN 단말 인증 처리 */
                 }else {
                     deviceInfo = this.authrizeByMsisdn(requestHeader, req);
+
+                    if(StringUtils.equals(deviceInfo.getIsDormant(), MemberConstants.USE_Y)){
+                        preMoveUser = true;
+                    }
                 }
 
             /** 01-01-04. 자번호로 인증 요청 한 opmd 단말 처리 (mdn으로 조회한 결과와 deviceTelecom정보가 같으면 인증 성공처리) */
@@ -282,6 +287,16 @@ public class LoginServiceImpl implements LoginService {
             deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
 
             if(deviceInfo != null){
+
+                if (StringUtils.equals(deviceInfo.getIsDormant(), MemberConstants.USE_Y)) {
+                    LOGGER.info("{} 휴면 {} 회원 복구", req.getDeviceId(), "uuid, macadress");
+                    MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+                    moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+                    moveUserInfoSacReq.setUserKey(deviceInfo.getUserKey());
+                    this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+                    preMoveUser = true;
+                }
+
                 DeviceInfo updateDeviceInfo = new DeviceInfo();
                 updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
                 updateDeviceInfo.setDeviceId(req.getDeviceId());
@@ -324,7 +339,7 @@ public class LoginServiceImpl implements LoginService {
         }
 
         /** 04. 휴면계정인 경우 복구 처리 */
-        if (StringUtils.equals(searchExtentUserResponse.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+        if (!preMoveUser & StringUtils.equals(searchExtentUserResponse.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
             LOGGER.info("{} 휴면 {} 회원 복구", req.getDeviceId(),
                     StringUtils.equals(searchExtentUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE) ? "모바일" : "IDP ID");
             MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
@@ -488,6 +503,7 @@ public class LoginServiceImpl implements LoginService {
         String oDeviceId = req.getDeviceId();
 
         DeviceInfo deviceInfo = null;
+        boolean preMoveUser = false;
 
         /** 01-01. MSISDN 인증 처리 */
         if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
@@ -520,6 +536,10 @@ public class LoginServiceImpl implements LoginService {
                 /** 01-01-02. MDN 단말 인증 처리 */
                 }else {
                     deviceInfo = this.authrizeByMsisdn(requestHeader, req);
+
+                    if(StringUtils.equals(deviceInfo.getIsDormant(), MemberConstants.USE_Y)){
+                        preMoveUser = true;
+                    }
                 }
 
             /** 01-01-04. 자번호로 인증 요청 한 opmd 단말 처리 (mdn으로 조회한 결과와 deviceTelecom정보가 같으면 인증 성공처리) */
@@ -539,6 +559,16 @@ public class LoginServiceImpl implements LoginService {
             deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
 
             if(deviceInfo != null){
+
+                if (StringUtils.equals(deviceInfo.getIsDormant(), MemberConstants.USE_Y)) {
+                    LOGGER.info("{} 휴면 {} 회원 복구", req.getDeviceId(), "uuid, macadress");
+                    MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+                    moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+                    moveUserInfoSacReq.setUserKey(deviceInfo.getUserKey());
+                    this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
+                    preMoveUser = true;
+                }
+
                 DeviceInfo updateDeviceInfo = new DeviceInfo();
                 updateDeviceInfo.setUserKey(deviceInfo.getUserKey());
                 updateDeviceInfo.setDeviceId(req.getDeviceId());
@@ -588,7 +618,7 @@ public class LoginServiceImpl implements LoginService {
         }
 
         /** 05. 휴면계정인 경우 복구 처리 */
-        if (StringUtils.equals(searchExtentUserResponse.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
+        if (!preMoveUser && StringUtils.equals(searchExtentUserResponse.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
             LOGGER.info("{} 휴면 {} 회원 복구", req.getDeviceId(),
                     StringUtils.equals(searchExtentUserResponse.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE) ? "모바일" : "IDP ID");
             MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
@@ -5105,6 +5135,15 @@ public class LoginServiceImpl implements LoginService {
                     if (!StringUtils.equals(req.getNativeId(), this.deviceService.getIcasImei(req.getDeviceId()))) {
                         throw new StorePlatformException("SAC_MEM_1503");
                     }
+                }
+
+                /** 휴면 회원 복구 */
+                if (StringUtils.equals(deviceInfo.getIsDormant(), MemberConstants.USE_Y)) {
+                    LOGGER.info("{} 휴면 {} 회원 복구", req.getDeviceId(), "MDN");
+                    MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
+                    moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
+                    moveUserInfoSacReq.setUserKey(deviceInfo.getUserKey());
+                    this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
                 }
 
                 DeviceInfo updateDeviceInfo = new DeviceInfo();
