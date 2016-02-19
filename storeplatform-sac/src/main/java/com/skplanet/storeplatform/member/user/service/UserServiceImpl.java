@@ -2981,7 +2981,14 @@ public class UserServiceImpl implements UserService {
 					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_DEVICE_ID)
 					|| keySearch.getKeyType().equals(Constant.SEARCH_TYPE_MDN)) {
 				isDeviceRequest = true;
-			}
+
+			}else if(keySearch.getKeyType().equals(Constant.SEARCH_TYPE_USER_ID)) {
+
+                /** user_id 조회 시 userType이 null일 경우 ID 사용자 DEFAULT 설정 */
+                if (StringUtils.isEmpty(searchExtentUserRequest.getUserType())) {
+                    searchExtentUserRequest.setUserType(MemberConstants.USER_TYPE_TSTORE);
+                }
+            }
 		}
 
 		HashMap<String, Object> map = null;

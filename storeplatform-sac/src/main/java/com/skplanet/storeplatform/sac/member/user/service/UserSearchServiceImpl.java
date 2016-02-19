@@ -664,7 +664,7 @@ public class UserSearchServiceImpl implements UserSearchService {
         SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
         searchExtentUserRequest.setCommonRequest(CommonRequest.convert(sacHeader));
         searchExtentUserRequest.setKeySearchList(keySearchList);
-		searchExtentUserRequest.setUserType(req.getUserType());
+        searchExtentUserRequest.setUserType(req.getUserType());
 
         // 검색 테이블 조건
         searchExtentUserRequest.setUserInfoYn(req.getSearchExtent().getUserInfoYn());
@@ -1455,6 +1455,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
 		searchExtentUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		searchExtentUserRequest.setKeySearchList(keySearchList);
+        searchExtentUserRequest.setUserType(req.getUserType());
 
 		// 검색 테이블 조건
 		searchExtentUserRequest.setUserInfoYn(req.getSearchExtent().getUserInfoYn());
