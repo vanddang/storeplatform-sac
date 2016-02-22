@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.member.repository;
 
-import com.skplanet.storeplatform.sac.member.domain.mbr.UserMarketPin;
+import com.skplanet.storeplatform.sac.member.domain.shared.UserMarketPin;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
 import org.junit.Test;
 import org.junit.runner.RunWith;

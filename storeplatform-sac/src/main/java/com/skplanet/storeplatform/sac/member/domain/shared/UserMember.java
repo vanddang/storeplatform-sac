@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.member.domain.shared;
 
 import com.google.common.base.Objects;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.domain.mbr.UserMarketPin;
 
 import javax.persistence.*;
 import java.util.Date;

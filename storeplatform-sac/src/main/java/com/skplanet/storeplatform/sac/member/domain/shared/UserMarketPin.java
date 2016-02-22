@@ -1,6 +1,4 @@
-package com.skplanet.storeplatform.sac.member.domain.mbr;
-
-import com.skplanet.storeplatform.sac.member.domain.shared.UserMember;
+package com.skplanet.storeplatform.sac.member.domain.shared;
 
 import javax.persistence.*;
 import java.io.Serializable;
