@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.member.repository;
 
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.skplanet.storeplatform.sac.member.domain.mbr.QUserMarketPin;
+import com.skplanet.storeplatform.sac.member.domain.shared.QUserMarketPin;
 import com.skplanet.storeplatform.sac.member.domain.shared.UserMarketPin;
 import org.springframework.stereotype.Repository;
 
