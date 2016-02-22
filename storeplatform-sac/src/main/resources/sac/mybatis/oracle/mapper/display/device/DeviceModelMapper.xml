@@ -24,4 +24,14 @@
 		                     AND UPPER(#{userAgent}) LIKE '%' || UPPER(DEVICE_MODEL_CD) || '%')
 		   AND  ROWNUM = 1
     </select>
+
+	<!-- 단말 모델코드 조회 (by UaCd) -->
+	<select id="searchDeviceModelCode" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT  /* DeviceModelMapper.searchDeviceModelCode, 단말 모델코드 조회 (by UaCd), 2016-02-19 */
+			DEVICE_MODEL_CD
+		FROM TB_CM_DEVICE
+		WHERE
+			REP_DEVICE_YN = 'Y'
+			AND UA_CD = UPPER(#{uaCd})
+	</select>
 </mapper>

@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvis
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
 import com.skplanet.storeplatform.sac.display.device.service.UseableDeviceService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceModelListService;
+import com.skplanet.storeplatform.sac.display.device.service.DeviceModelCodeService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,6 +51,9 @@ public class DeviceController {
 	
 	@Autowired
 	private DeviceModelListService deviceModelListService;
+
+	@Autowired
+	private DeviceModelCodeService deviceModelCodeService;
 
 	@InitBinder("useableDeviceSacReq")
 	public void initUseableDeviceSacReqBinder(WebDataBinder dataBinder) {
@@ -117,4 +121,14 @@ public class DeviceController {
 			SacRequestHeader header) {
 		return this.deviceModelListService.searchDeviceList(deviceModelListSacReq, header);
 	}
+
+	/**
+	 * 단말 모델코드 조회 (by UaCd).
+	 */
+	@RequestMapping(value = "/uaCd/modelCode/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public DeviceUaCdSacRes searchDeviceModelCode(@RequestBody @Validated DeviceUaCdSacReq req) {
+		return this.deviceModelCodeService.searchDeviceModelCode(req);
+	}
+
 }
