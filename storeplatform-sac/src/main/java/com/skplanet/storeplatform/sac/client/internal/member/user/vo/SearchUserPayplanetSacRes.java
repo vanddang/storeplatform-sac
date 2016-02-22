@@ -19,10 +19,12 @@ public class SearchUserPayplanetSacRes extends CommonInfo {
 
 	private String skpAgreementYn;
 
+	@Deprecated
 	private String ocbAgreementYn;
 
 	private String ocbCardNumber;
 
+	@Deprecated
 	private String ocbAuthMethodCode;
 
 	public String getSkpAgreementYn() {
@@ -33,8 +35,10 @@ public class SearchUserPayplanetSacRes extends CommonInfo {
 		this.skpAgreementYn = skpAgreementYn;
 	}
 
+	@Deprecated
 	public String getOcbAgreementYn() { return this.ocbAgreementYn; }
 
+	@Deprecated
 	public void setOcbAgreementYn(String ocbAgreementYn) { this.ocbAgreementYn = ocbAgreementYn; }
 
 	public String getOcbCardNumber() {
@@ -49,17 +53,12 @@ public class SearchUserPayplanetSacRes extends CommonInfo {
 		return serialVersionUID;
 	}
 
-	/**
-	 * @return String : ocbAuthMethodCode
-	 */
+	@Deprecated
 	public String getOcbAuthMethodCode() {
 		return this.ocbAuthMethodCode;
 	}
 
-	/**
-	 * @param ocbAuthMethodCode
-	 *            String : the ocbAuthMethodCode to set
-	 */
+	@Deprecated
 	public void setOcbAuthMethodCode(String ocbAuthMethodCode) {
 		this.ocbAuthMethodCode = ocbAuthMethodCode;
 	}

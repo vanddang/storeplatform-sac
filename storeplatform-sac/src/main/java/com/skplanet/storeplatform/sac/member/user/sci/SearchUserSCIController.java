@@ -213,19 +213,19 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// OCB 카드번호
         String ocbCardNumber = "";
-        String ocbAuthMethodCode = "";
+		//String ocbAuthMethodCode = "";
 
         List<UserOcb> ocbList = ocbService.find(request.getUserKey());
         if(ocbList.size() > 0) {
             UserOcb ocb = ocbList.get(0);
             ocbCardNumber = ocb.getOcbNo();
-            ocbAuthMethodCode = ocb.getOcbAuthMtdCd();
+            //ocbAuthMethodCode = ocb.getOcbAuthMtdCd();
         }
 
 		SearchUserPayplanetSacRes payplanetSacRes = new SearchUserPayplanetSacRes();
 		payplanetSacRes.setSkpAgreementYn(skpAgreementYn);
 		payplanetSacRes.setOcbCardNumber(StringUtil.setTrim(ocbCardNumber));
-		payplanetSacRes.setOcbAuthMethodCode(ocbAuthMethodCode);
+		//payplanetSacRes.setOcbAuthMethodCode(ocbAuthMethodCode);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(payplanetSacRes));
 
