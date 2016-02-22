@@ -156,7 +156,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			} else {
 				LOGGER.info("소셜 아이디(Google) > userAuthToken 인증(S2S)");
 				GoogleTokenInfoReq googleTkReq = new GoogleTokenInfoReq();
-				googleTkReq.setIdToken(req.getUserAuthToken());
+				googleTkReq.setAccessToken(req.getUserAuthToken());
 				try {
 					GoogleTokenInfoRes googleTkRes = this.googleAuthenticateSCI.verifyToken(googleTkReq);
 					socialUserNo = googleTkRes.getAud();
