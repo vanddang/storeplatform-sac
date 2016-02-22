@@ -697,26 +697,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 
 			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
-		}
 
-		// 약관 유효성 체크
-		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
-
-		// SC 사용자 기본정보 setting
-		UserMbr userMbr = new UserMbr();
-		userMbr.setUserID(req.getUserId());
-		userMbr.setUserType(req.getUserType());
-		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
-		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
-		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
-		userMbr.setUserEmail(req.getUserEmail());
-		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
-		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
-		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
-		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
-
-		// 법정 대리인 정보 setting
-		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+			// 법정 대리인 정보 setting
 			mbrLglAgent = new MbrLglAgent();
 			mbrLglAgent.setIsParent(req.getIsParent()); // 법정대리인 동의 여부
 			mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod()); // 법정대리인 인증방법코드
@@ -736,6 +718,22 @@ public class UserJoinServiceImpl implements UserJoinService {
 				mbrLglAgent.setIsDomestic(req.getParentIsDomestic()); // 내외국인 여부
 			}
 		}
+
+		// 약관 유효성 체크
+		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
+
+		// SC 사용자 기본정보 setting
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserID(req.getUserId());
+		userMbr.setUserType(req.getUserType());
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+		userMbr.setUserEmail(req.getUserEmail());
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
+		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
+		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
 
 		// 사용자 가입요청
 		CreateUserRequest createUserRequest = new CreateUserRequest();
@@ -833,13 +831,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 
 			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
-		}
 
-		// 약관 맵핑정보 세팅.
-		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
-
-		// 법정대리인 setting.
-		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+			// 법정대리인 setting.
 			mbrLglAgent = new MbrLglAgent();
 			mbrLglAgent.setIsParent(req.getIsParent()); // 법정대리인 동의 여부
 			mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod()); // 법정대리인 인증방법코드
@@ -860,6 +853,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 		}
 
+		// 약관 맵핑정보 세팅.
+		List<AgreementInfo> agreementInfoList = this.mcc.getClauseMappingInfo(req.getAgreementList());
+
 		// SC 사용자 기본정보 setting
 		UserMbr userMbr = new UserMbr();
 		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
@@ -874,6 +870,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setUserMbr(userMbr);
+		createUserRequest.setMbrLglAgent(mbrLglAgent);
 		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(agreementInfoList));
 

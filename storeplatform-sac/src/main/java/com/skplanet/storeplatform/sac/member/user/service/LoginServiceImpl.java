@@ -918,17 +918,17 @@ public class LoginServiceImpl implements LoginService {
                         DeviceInfo deviceInfoBySvcMangNo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_SVC_MANG_NO, deviceTelecomInfo.getSvcMangNum(), null);
                         if(deviceInfoBySvcMangNo == null){
 							LOGGER.info("서비스관리번호가 다른 KT 회원 탈퇴");
-							this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
+							this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
 							throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
                         }else{
 							// 기존 회원 탈퇴처리 후 조회된 서비스관리번호 회원정보 업데이트
-							this.userWithdrawService.removeDevice(requestHeader, deviceInfo.getMdn());
+							this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
 							deviceInfo = deviceInfoBySvcMangNo;
 							LOGGER.info("서비스관리번호가 다른 KT 회원 번호변경");
                         }
                     }else if(StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())){
 						LOGGER.info("서비스관리번호가 다른 U+ 회원 탈퇴");
-						this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
+						this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
 						throw new StorePlatformException("SAC_MEM_0003", "mdn", req.getMdn());
                     }
                 }
@@ -972,7 +972,7 @@ public class LoginServiceImpl implements LoginService {
                     deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_AUTHORIZE_MDN, req.getMdn(), null);
                     if(deviceInfo != null){
                         if (StringUtils.equals(req.getNativeId(), deviceInfo.getNativeId())
-                                && (StringUtils.isBlank(deviceInfo.getSimSerialNo()) || StringUtils.equals(req.getSimSerialNo(), deviceInfo.getSimSerialNo())) ){
+                                && (StringUtils.isBlank(deviceInfo.getSimSerialNo()) || StringUtils.equals(req.getSimSerialNo(), deviceInfo.getSimSerialNo()))){
                             // 서비스관리번호 조회 실패 했지만 mdn으로 조회한 결과와 imei, sim정보가 같으면 인증 예외 성공처리
                             isLoginSucc = true;
                             isMdnLoginSucc = true;
@@ -1032,7 +1032,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		if(isRemoveUser) {
-			this.userWithdrawService.removeDevice(requestHeader, req.getMdn());
+			this.userWithdrawService.removeDevice(requestHeader, req.getDeviceId());
 		}
 
 		if(!isLoginSucc) {
@@ -1436,7 +1436,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		if(StringUtils.equals(searchExtentUserResponse.getUserMbr().getIsDormant(), MemberConstants.USE_Y)){
-			LOGGER.info("{} 휴면 회원 복구", req.getMdn());
+			LOGGER.info("{} 휴면 회원 복구", req.getUserId());
 			MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
 			moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
 			moveUserInfoSacReq.setUserKey(searchExtentUserResponse.getUserMbr().getUserKey());
@@ -1588,7 +1588,7 @@ public class LoginServiceImpl implements LoginService {
         ){
             // 서비스관리번호 조회
             deviceTelecomInfo = this.commService.getSvcMangNo(req.getMdn(), req.getDeviceTelecom(), req.getNativeId(), req.getSimSerialNo());
-            // 타사 연동시 EC_SYS_ERROR나 타사 시스템 오류인 경우 mdn, deviceId, imei, sim 일치하면 임시 로그인 성공 처리
+            // 타사 연동시 EC_SYS_ERROR나 타사 시스템 오류인 경우 mdn / deviceId로 imei, sim 일치하면 임시 로그인 성공 처리
             if(deviceTelecomInfo == null){
                 boolean isTempLoginSucc = false;
                 boolean isDeviceId = false;
@@ -1610,16 +1610,14 @@ public class LoginServiceImpl implements LoginService {
 
                     if(isDeviceId || isMdn){
                         if(isDeviceId){
-                            if(StringUtils.equals(req.getMdn(), deviceInfoByDeviceId.getMdn())
-                                    && StringUtils.equals(req.getNativeId(), deviceInfoByDeviceId.getNativeID())
-                                    && StringUtils.equals(req.getSimSerialNo(), deviceInfoByDeviceId.getSimSerialNo())){
+                            if(StringUtils.equals(req.getNativeId(), deviceInfoByDeviceId.getNativeID())
+                                    && (StringUtils.isBlank(deviceInfoByDeviceId.getSimSerialNo()) || StringUtils.equals(req.getSimSerialNo(), deviceInfoByDeviceId.getSimSerialNo()))){
                                 isTempLoginSucc = true;
                                 deviceKey = deviceInfoByDeviceId.getDeviceKey();
                             }
                         }else if(isMdn){
-                            if(StringUtils.equals(req.getDeviceId(), deviceInfoByMdn.getDeviceID())
-                                    && StringUtils.equals(req.getNativeId(), deviceInfoByMdn.getNativeID())
-                                    && StringUtils.equals(req.getSimSerialNo(), deviceInfoByMdn.getSimSerialNo())){
+                            if(StringUtils.equals(req.getNativeId(), deviceInfoByMdn.getNativeID())
+                                    && (StringUtils.isBlank(deviceInfoByMdn.getSimSerialNo()) || StringUtils.equals(req.getSimSerialNo(), deviceInfoByMdn.getSimSerialNo()))){
                                 isTempLoginSucc = true;
                                 deviceKey = deviceInfoByMdn.getDeviceKey();
                             }
@@ -1637,7 +1635,9 @@ public class LoginServiceImpl implements LoginService {
                         res.setIsLoginSuccess(MemberConstants.USE_Y);
                         res.setIsRegDevice(MemberConstants.USE_N);
                         return res;
-                    }
+                    }else{
+						throw new StorePlatformException("SAC_MEM_1106", this.commService.convertDeviceTelecom(req.getDeviceTelecom()));
+					}
                 }else{
 					throw new StorePlatformException("SAC_MEM_1106", this.commService.convertDeviceTelecom(req.getDeviceTelecom()));
 				}
@@ -1678,7 +1678,7 @@ public class LoginServiceImpl implements LoginService {
                                 && StringUtils.isNotBlank(deviceTelecomInfo.getSvcMangNum())
                                 && StringUtils.equals(userMbrDevice.getSvcMangNum(), deviceTelecomInfo.getSvcMangNum())) {
                         isSvcMangNo = true;
-                        deviceInfoBySvcMangNo = userMbrDevice;
+						deviceInfoBySvcMangNo = userMbrDevice;
                     }else if(StringUtils.equals(req.getMdn(), userMbrDevice.getMdn())){
                         if(StringUtils.isBlank(userMbrDevice.getSvcMangNum())
                                 && StringUtils.equals(req.getNativeId(), userMbrDevice.getNativeID())
@@ -1711,17 +1711,17 @@ public class LoginServiceImpl implements LoginService {
 				// 내가 가지고 있었던 휴대기기인 경우는 신규등록으로 본다.
 				if(StringUtils.equals(authYn, MemberConstants.USE_N)){
 					isNew = true;
+				}else{
+					if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+						if (StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)) {
+							if (!StringUtils.equals(req.getNativeId(), nativeId)) {
+								if(!StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getMdn()))){
+									throw new StorePlatformException("SAC_MEM_1503");
+								}
+							}
+						}
+					}
 				}
-
-                if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-                    if (StringUtils.equals(req.getIsNativeIdAuth(), MemberConstants.USE_Y)) {
-                        if (!StringUtils.equals(req.getNativeId(), nativeId)) {
-                            if(!StringUtils.equals(req.getNativeId(), deviceService.getIcasImei(req.getMdn()))){
-                                throw new StorePlatformException("SAC_MEM_1503");
-                            }
-                        }
-                    }
-                }
             }
         }
 
@@ -1739,14 +1739,6 @@ public class LoginServiceImpl implements LoginService {
 					}
 				}
 			}
-		}
-
-		/* 휴유회원 복구 */
-		if (StringUtils.equals(searchExtentUserResponse.getUserMbr().getIsDormant(), MemberConstants.USE_Y)) {
-			MoveUserInfoSacReq moveUserInfoSacReq = new MoveUserInfoSacReq();
-			moveUserInfoSacReq.setMoveType(MemberConstants.USER_MOVE_TYPE_ACTIVATE);
-			moveUserInfoSacReq.setUserKey(searchExtentUserResponse.getUserMbr().getUserKey());
-			this.userService.moveUserInfo(requestHeader, moveUserInfoSacReq);
 		}
 
 		/* 이메일 정보 업데이트 */
@@ -2180,6 +2172,7 @@ public class LoginServiceImpl implements LoginService {
 		if (userDownloadInfoRes == null || StringUtils.isBlank(userDownloadInfoRes.getLatestTenantId())) {
 			res = new AuthorizeForInAppSacRes();
 			res.setTrxNo(req.getTrxNo());
+			res.setTenantId(tenantId);
 			res.setDeviceId(req.getDeviceId());
 			res.setDeviceTelecom(req.getDeviceTelecom());
 			res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NOT_PURCHASE);
@@ -2194,7 +2187,6 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		TenantHeader tenant = requestHeader.getTenantHeader();
-		tenant.setTenantId(tenantId);
 		tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2);
 		requestHeader.setTenantHeader(tenant);
 
@@ -3082,6 +3074,7 @@ public class LoginServiceImpl implements LoginService {
 					deviceInfo.setMdn(detailRes.getDeviceInfoList().get(0).getMdn());
 					deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
 					deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
+					deviceInfo.setDeviceAccount(detailRes.getDeviceInfoList().get(0).getDeviceAccount());
 					if (StringUtils.isNotBlank(marketRes.getDeviceInfo().getDeviceKeyAuth())) {
 						deviceInfo.setDeviceKeyAuth(marketRes.getDeviceInfo().getDeviceKeyAuth()); // U+ Store 필드
 					}
@@ -4062,6 +4055,7 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setMdn(detailRes.getDeviceInfoList().get(0).getMdn());
 				deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
 				deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
+				deviceInfo.setDeviceAccount(detailRes.getDeviceInfoList().get(0).getDeviceAccount());
 				if (StringUtils.isNotBlank(marketRes.getDeviceInfo().getDeviceKeyAuth())) {
 					deviceInfo.setDeviceKeyAuth(marketRes.getDeviceInfo().getDeviceKeyAuth()); // U+ Store 필드
 				}

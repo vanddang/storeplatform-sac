@@ -86,20 +86,11 @@ public class MemberCommonInternalComponent {
 	public void excuteInternalMethod(boolean isCall, String systemId, String userKey,
 			String previousUserKey, String deviceKey, String previousDeviceKey) {
 
-		// StackTraceElement[] ste = new Throwable().getStackTrace();
-		// String methodName = ste[1].getMethodName();
-		// regDeviceInfo : 회원전환(모바일회원 -> ID회원으로 전환);
-		// rXCreateUserIDP : 통합회원 전환생성정보를 사이트에 배포 - CMD : RXCreateUserIDP
-		// rXUpdateAgreeUserIDP : 이용동의 변경사이트 목록 배포 - CMD : rXUpdateAgreeUserIDP
-		// authorizeSaveAndSyncByMac : Save&Sync 인증
-
-		// LOGGER.info("회원 OGG 관련 구매/기타 내부메서드 호출 메서드: {}", ste[1].getMethodName());
-
 		// TODO. 타파트 개발 완료전 오류방지를 위해 임의로 SO1 셋팅
 		String tenantId = "S01";
 		if (isCall) {
 
-			/* 1. 기타/전시 파트 userKey 변경 */
+			// 1. 기타/전시 파트 userKey 변경
 			ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
 			changeDisplayUserSacReq.setNewUseKey(userKey);
 			changeDisplayUserSacReq.setOldUserKey(previousUserKey);

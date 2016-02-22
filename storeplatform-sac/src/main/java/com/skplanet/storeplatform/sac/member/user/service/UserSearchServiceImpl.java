@@ -2280,6 +2280,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		DetailForPayPlanetSacRes res = new DetailForPayPlanetSacRes();
 
+		// 회원 정보 조회
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySchUserKey = new KeySearch();
 		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
@@ -2304,6 +2305,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 
 		}
+
+		// 휴대기기 정보 조회
 		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 		searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
 		searchDeviceRequest.setKeySearchList(keySearchList);
