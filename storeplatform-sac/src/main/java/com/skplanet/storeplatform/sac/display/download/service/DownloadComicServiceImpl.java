@@ -296,6 +296,11 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                 metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
             }
         }
+
+		/**
+		 * 컨텐츠 DRM Key setting.
+		 */
+		metaInfo.setDrmKey(this.setDrmKey(comicReq.getUserType(), metaInfo.getDrmYn(), deviceRes.getMdn(), comicReq.getUserKey()));
 	}
 
 	private void addPurchaseIntoList(List<Purchase> purchaseList, HistorySacIn historySacIn, String prchsState) {
@@ -388,5 +393,43 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		historyReq.setCount(1000);
 		historyReq.setProductList(productList);
 		return historyReq;
+	}
+
+	/**
+	 * drmKey 값 셋팅 (기존 MDN을 DRM키로 사용하였으나 MDN이 없는 Wi-Fi 전용 단말을 위해 DRM키 정책을 만든다.)
+	 * @param userType
+	 * @param applyDrm
+	 * @param mdn
+	 * @param userKey
+	 * @return
+	 */
+	private String setDrmKey(String userType, String applyDrm, String mdn, String userKey) {
+
+		/**
+		 * userType 이 null 이면 drmKey = 세팅하지않음.
+		 */
+		if(StringUtils.isBlank(userType)) {
+			return null;
+		}
+
+		/**
+		 * applyDrm 값이 "Y" 이면서, 모바일 회원일 경우 drmKey = mdn.
+		 */
+		if(StringUtils.equals(applyDrm, "Y") && StringUtils.equals(userType, "US011501")) {
+			return mdn;
+		}
+
+		/**
+		 *  applyDrm 값이 "Y" 이면서, IDP 회원이거나 OneId 회원이거나 기타 등등  drmKey = userKey.
+		 */
+		if(StringUtils.equals(applyDrm, "Y") && !StringUtils.equals(userType, "US011501")) {
+			return userKey;
+		}
+
+		/**
+		 * 위에 걸리는 항목 없으면 drmKey를 내리지 않는다.
+		 */
+		return null;
+
 	}
 }

@@ -41,6 +41,8 @@ public class DownloadEbookSacReq extends CommonInfo {
 	private String imageCd; // 이미지코드
 	private String anyDeviceModelCd; // 가상 프로비저닝 단말모델코드
 
+	private String userType; // 회원 타입. (US011501 : 모바일회원, US011502 : IDP회원, US011503 : OneID회원, 기타......등등....)
+
 	/**
 	 * @return the idType
 	 */
@@ -237,6 +239,12 @@ public class DownloadEbookSacReq extends CommonInfo {
 		this.additionalMsisdn = additionalMsisdn;
 	}
 
+	public String getUserType() {
+		return userType;
+	}
 
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
 
 }
