@@ -1321,7 +1321,7 @@ public class UserModifyServiceImpl implements UserModifyService {
         } else if (StringUtils.equals(req.getUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
             LOGGER.info("AS-IS 소셜 아이디(Google) > userAuthToken 인증(S2S)");
             GoogleTokenInfoReq googleTkReq = new GoogleTokenInfoReq();
-            googleTkReq.setIdToken(req.getUserAuthToken());
+            googleTkReq.setAccessToken(req.getUserAuthToken());
             try {
                 GoogleTokenInfoRes googleTkRes = this.googleAuthenticateSCI.verifyToken(googleTkReq);
                 socialUserNo = googleTkRes.getAud();
@@ -1377,7 +1377,7 @@ public class UserModifyServiceImpl implements UserModifyService {
         } else if (StringUtils.equals(req.getNewUserType(), MemberConstants.USER_TYPE_GOOGLE)) {
             LOGGER.info("TO-BE 소셜 아이디(Google) > userAuthToken 인증(S2S)");
             GoogleTokenInfoReq googleTkReq = new GoogleTokenInfoReq();
-            googleTkReq.setIdToken(req.getNewUserAuthToken());
+            googleTkReq.setAccessToken(req.getNewUserAuthToken());
             try {
                 GoogleTokenInfoRes googleTkRes = this.googleAuthenticateSCI.verifyToken(googleTkReq);
                 newSocialUserNo = googleTkRes.getAud();

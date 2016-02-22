@@ -1470,7 +1470,7 @@ public class MemberCommonComponent {
 	 */
 	public String googleAuthenticate(String userAuthToken){
 		GoogleTokenInfoReq req = new GoogleTokenInfoReq();
-		req.setIdToken(userAuthToken);
+		req.setAccessToken(userAuthToken);
 		LOGGER.info("googleAuthenticate req : {}", req);
 		GoogleTokenInfoRes res = this.googleAuthenticateSCI .verifyToken(req);
 		LOGGER.info("googleAuthenticate res : {}", res);
