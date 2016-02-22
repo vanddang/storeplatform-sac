@@ -590,6 +590,12 @@ public class LoginController {
 			req.setTenantId(MemberConstants.TENANT_ID_TSTORE);
 		}
 
+		if (StringUtils.equals(req.getTenantId(), MemberConstants.TENANT_ID_TSTORE)) {
+			if(StringUtils.isBlank(req.getDeviceTelecom())){
+				req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+			}
+		}
+
 		// 타사 인증시 필수 파라메터 체크
 		if (!StringUtils.equals(req.getTenantId(), MemberConstants.TENANT_ID_TSTORE)) {
 
@@ -606,9 +612,8 @@ public class LoginController {
 			}
 		}
 
-		// tenantId, systemId 설정
+		// systemId 설정
 		TenantHeader tenant = requestHeader.getTenantHeader();
-		tenant.setTenantId(req.getTenantId());
 		if (StringUtils.equals(req.getTenantId(), MemberConstants.TENANT_ID_TSTORE)) {
 			tenant.setSystemId(MemberConstants.SYSTEM_ID_PAYPLANET_S01);
 		} else if (StringUtils.equals(req.getTenantId(), MemberConstants.TENANT_ID_OLLEH_MARKET)) {

@@ -559,7 +559,7 @@ public class DeviceServiceImpl implements DeviceService {
 				LOGGER.info("기등록된 모바일 회원 상품권 충전소 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
 			}
 
-            /*  market pin 이관*/
+            // market pin 이관
             boolean isSuccessTransferMarketPin = userMarketPinService.transferMarketPin(previousUserKey, userKey);
             if (isSuccessTransferMarketPin) {
                 LOGGER.info("기등록된 모바일 회원 Market pin 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
