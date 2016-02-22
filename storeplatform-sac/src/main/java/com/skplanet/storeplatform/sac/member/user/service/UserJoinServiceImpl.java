@@ -9,23 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-
-import com.skplanet.storeplatform.member.client.common.vo.*;
-import com.skplanet.storeplatform.member.client.user.sci.vo.*;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceTelecomInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.*;
-import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
@@ -40,16 +23,52 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.AgreeUserEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
+import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
+import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.DeleteUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceTelecomInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnV2SacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnV2SacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * 회원 가입 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -1273,7 +1292,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	/**
 	 * <pre>
-	 * Save & Sync 회원 가입
+	 * Save & Sync 회원 가입 (deviceId는 msisdn)
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -1319,30 +1338,20 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/** 2-1. 휴대기기 등록을 위한 정보 셋팅 */
 		DeviceInfo deviceInfo = new DeviceInfo();
 
-		// local에서는 외부연동이 안되므로 svcMangNum 하드코딩
-		if (System.getProperty("spring.profiles.active", "local").equals("local")) {
-			HashMap<String, String> mdnMap = new HashMap<String, String>();
-			mdnMap.put("01029088625", "svcNoTest29088625"); // SKT
-			mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
-			mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
-			mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
-			mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
-			if (mdnMap.get(req.getDeviceId()) != null) {
-				deviceInfo.setSvcMangNum(mdnMap.get(req.getDeviceId()));
-			} else {
-				throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
-			}
-		}
-
 		deviceInfo.setUserKey(createUserResponse.getUserKey());
 		deviceInfo.setDeviceId(req.getDeviceId());
 		deviceInfo.setDeviceTelecom(deviceTelecom);
 		deviceInfo.setIsRecvSms(req.getIsRecvSms());
 		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
 		deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList());
+		/** 2-2. msisdn일 경우 서비스관리 번호를 조회 후 셋팅 */
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+			DeviceTelecomInfo deviceTelecomInfo = this.mcc.getSvcMangNo(req.getDeviceId(), deviceTelecom, null, null);
+			deviceInfo.setSvcMangNum(deviceTelecomInfo.getSvcMangNum());
+		}
 
 		try {
-			/** 2-2. 휴대기기 등록. */
+			/** 2-3. 휴대기기 등록. */
 			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
 			deviceKey = this.deviceService.regDeviceInfo(sacHeader, deviceInfo);
 		} catch (StorePlatformException e) {

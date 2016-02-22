@@ -212,7 +212,7 @@ public class UserJoinController {
 
 	/**
 	 * <pre>
-	 * Save&Sync 가입.
+	 * Save&Sync 가입. (deviceId는 msisdn, macaddress, imei)
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -226,15 +226,8 @@ public class UserJoinController {
 	public CreateSaveAndSyncRes createSaveAndSync(SacRequestHeader sacHeader,
 			@Validated @RequestBody CreateSaveAndSyncReq req) {
 
-		LOGGER.debug("#################################");
-		LOGGER.debug("##### 2.1.38. Save&Sync 가입 #####");
-		LOGGER.debug("#################################");
-
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		/**
-		 * Save&Sync 가입 Biz
-		 */
 		CreateSaveAndSyncRes res = this.svc.regSaveAndSync(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));

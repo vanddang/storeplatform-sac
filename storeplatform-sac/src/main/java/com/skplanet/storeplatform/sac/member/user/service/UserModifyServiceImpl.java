@@ -61,6 +61,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
@@ -90,6 +91,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveSocialAccountS
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
@@ -147,6 +149,9 @@ public class UserModifyServiceImpl implements UserModifyService {
 
     @Autowired
     private UserExtraInfoService userExtraInfoService;
+
+    @Autowired
+    private MemberCommonInternalComponent memberCommonInternalComponent;
 
     @Override
     public ModifyRes modUser(SacRequestHeader sacHeader, ModifyReq req) {
@@ -1424,6 +1429,15 @@ public class UserModifyServiceImpl implements UserModifyService {
             // SC ID 변경
             ModifyIdResponse scRes = this.userSCI.modifyId(modIdReq);
             res.setUserKey(scRes.getUserKey());
+
+            // ID 변경에 따른 전시파트 ID변경 메소드 호출
+            ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
+            changeDisplayUserSacReq.setOldUserId(req.getUserId());
+            changeDisplayUserSacReq.setOldUserKey(req.getUserKey());
+            changeDisplayUserSacReq.setNewUserId(req.getNewUserId());
+            changeDisplayUserSacReq.setNewUseKey(req.getUserKey());
+            changeDisplayUserSacReq.setTenantId("S01"); // S01로 고정
+            this.memberCommonInternalComponent.changeUserId(changeDisplayUserSacReq);
 
             // ID 변경 성공시 tlog(TL_SAC_MEM_0001) 데이터 셋팅
             final String fdsMbrIdPre = req.getUserId();
