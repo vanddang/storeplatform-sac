@@ -776,7 +776,7 @@
     <!-- Key에 사용할 시퀀스 조회(사용자) -->
     <select id="getLimitSequence" resultType="Integer">
         SELECT  /* UserMapper.getLimitSequence, 시퀀스 조회, wisestone_mikepark, 2013-12-23 */
-                SQ_US_LIMT_TARGET.NEXTVAL as NEXTVAL
+                SQ_US_OLIMT_TARGET.NEXTVAL as NEXTVAL
           FROM  DUAL
     </select>
     
@@ -1122,7 +1122,7 @@
                <if test="insDate != null">,ins_dt </if>
                ) 
        VALUES  (
-                   SQ_US_LIMT_TARGET.NEXTVAL,
+                   SQ_US_OLIMT_TARGET.NEXTVAL,
                    #{limitPolicyCode},
                    SYSDATE,
                    #{regID},
@@ -1186,7 +1186,7 @@
                <if test="preLimitAmount != null">,pre_limt_amt </if>
                ) 
        VALUES  (
-                   SQ_US_LIMT_TARGET.NEXTVAL,
+                   SQ_US_OLIMT_TARGET.NEXTVAL,
                    #{limitPolicyCode},
                    SYSDATE,
                    #{regID},
@@ -2045,7 +2045,7 @@
                                                       <if test="resultYn != null">,result_yn</if>
                                                       <if test="regId != null">,reg_id</if>
                                                       ,reg_dt)
-              VALUES   (sq_us_usermbr_trans_his.NEXTVAL
+              VALUES   (sq_us_ousermbr_trans_his.NEXTVAL
                        <if test="insdUserMbrNo != null">,#{insdUserMbrNo}</if>
                        <if test="transCd != null">,#{transCd}</if>
                        <if test="resultYn != null">,#{resultYn}</if>
