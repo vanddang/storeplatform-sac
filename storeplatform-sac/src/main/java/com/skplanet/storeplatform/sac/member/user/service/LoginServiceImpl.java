@@ -1871,22 +1871,7 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
 		/** 4. 이관받을 MDN으로 서비스 관리 번호 조회. */
-        if (System.getProperty("spring.profiles.active", "local").equals("local")) {
-            // local에서는 외부연동이 안되므로 하드코딩
-            HashMap<String, String> mdnMap = new HashMap<String, String>();
-            mdnMap.put("01029088625", "svcNoTest29088625"); // SKT
-            mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
-            mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
-            mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
-            mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
-            if (mdnMap.get(req.getDeviceId()) != null) {
-                svcMangNo = mdnMap.get(req.getDeviceId());
-            } else {
-                throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
-            }
-        } else {
-            svcMangNo = this.commService.getMappingInfo(req.getDeviceId(), "mdn").getSvcMngNum();
-        }
+        svcMangNo = this.commService.getMappingInfo(req.getDeviceId(), "mdn").getSvcMngNum();
 
         /** 5. 조회된 서비스 관리 번호로 회원 유무 확인 */
         DeviceInfo mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_SVC_MANG_NO,
@@ -1965,21 +1950,7 @@ public class LoginServiceImpl implements LoginService {
 
             LOGGER.info("MDN {} 이 회원 아님", req.getDeviceId());
 
-			if (System.getProperty("spring.profiles.active", "local").equals("local")) {
-				// local에서는 외부연동이 안되므로 하드코딩
-				HashMap<String, String> mdnMap = new HashMap<String, String>();
-				mdnMap.put("01029088624", "svcNoTest29088624"); // SKT
-				mdnMap.put("01029088623", "svcNoTest29088623"); // SKT
-				mdnMap.put("01029088622", "svcNoTest29088622"); // SKT
-				mdnMap.put("01029088621", "svcNoTest29088621"); // SKT
-				if (mdnMap.get(req.getDeviceId()) != null) {
-					svcMangNo = mdnMap.get(req.getDeviceId());
-				} else {
-					throw new StorePlatformException("정상적으로 svc_mang_no가 조회되지 않았습니다.");
-				}
-			} else {
-				svcMangNo = this.commService.getMappingInfo(req.getDeviceId(), "mdn").getSvcMngNum();
-			}
+			svcMangNo = this.commService.getMappingInfo(req.getDeviceId(), "mdn").getSvcMngNum();
 
 			/** 5-2-2. 가가입 상태인 mac 회원정보를 정상상태로. */
 			/** 5-2-1. 가가입 회원정보를 정상상태로. */

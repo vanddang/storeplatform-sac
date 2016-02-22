@@ -1,17 +1,17 @@
 package com.skplanet.storeplatform.member.common.crypto;
 
 import kr.co.skplanet.crypto.Password;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+//import sun.misc.BASE64Decoder;
+//import sun.misc.BASE64Encoder;
 
 /**
  * OneId crypto
@@ -122,6 +122,9 @@ public class CryptoCodeIm {
 
     public String encode(byte[] hash) {
 
+        return new Base64().encodeToString(hash);
+
+        /*
         BASE64Encoder base64Encoder = new BASE64Encoder();
         ByteArrayInputStream bin = new ByteArrayInputStream(hash);
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -134,10 +137,14 @@ public class CryptoCodeIm {
             e.printStackTrace();
         }
         return ret;
+        */
     }
 
     public byte[] decode(String strDecode) {
 
+        return new Base64().decode(strDecode);
+
+        /*
         BASE64Decoder base64Decoder = new BASE64Decoder();
         ByteArrayInputStream bin = new ByteArrayInputStream(strDecode.getBytes());
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -149,6 +156,7 @@ public class CryptoCodeIm {
             e.printStackTrace();
         }
         return buf;
+        */
     }
 
     private String toHex(byte hash[]) {
